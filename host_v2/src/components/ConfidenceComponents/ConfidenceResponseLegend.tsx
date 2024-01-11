@@ -32,7 +32,7 @@ export default function Legend() {
    * @param name  must be either 'correct' or 'incorrect'
    * @returns legend key component for input key name
    */
-  function legendKey(name: string): any {
+  function legendKey(name: string): React.ReactNode {
     return (
       <svg width={40} height={15}>
         <rect

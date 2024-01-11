@@ -1,20 +1,33 @@
 import React from 'react';
 import { Grid, Typography, Card, Box } from '@mui/material';
-// TODO: import check
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import check from '../../images/correctAnswerCheck.png';
 
-interface DropdownProps {
-  // TODO: change these to their correct types (and make them non-optional)
-  graphClickInfo?: any;
-  selectedConfidenceData?: any;
+interface Player {
+  answer: string; // answer chosen by this player
+  isCorrect: boolean; // true iff the chosen answer is the correct answer 
+  name: string; // this player's name
 }
 
-interface PlayerData {
-  name: string;
-  answer: string;
-  isCorrect: boolean;
+// TODO: maybe also update confidence to use ConfidenceOption type (think this is in networking)
+interface ConfidenceOption {
+  confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
+  correct: number; // number of teams who selected this option and answered correctly 
+  incorrect: number; // number of players who selected tgis option and answered incorrectly 
+  players: Player[]; // an array of the players that selected this option
+}
+
+// TODO: figure out what to do about keeping graph as 'confidence' instead of 
+// current toggle functionality based on click behavior
+interface GraphClickInfo {
+  graph: string | null;
+  selectedIndex: number | null;
+}
+
+interface DropdownProps {
+  graphClickInfo: GraphClickInfo;
+  selectedConfidenceData: ConfidenceOption;
 }
 
 const Container = styled(Box)(({ theme }) => ({
@@ -98,7 +111,7 @@ export default function ConfidenceResponseDropdown({
   selectedConfidenceData }: DropdownProps
 ) {
   const { t } = useTranslation();
-  const ConfidenceLevelDictionary: any = {
+  const ConfidenceLevelDictionary: { [key: number]: string } = {
     0: 'Not Rated',
     1: 'Not At All Confident',
     2: 'Kinda Confident',
@@ -106,7 +119,7 @@ export default function ConfidenceResponseDropdown({
     4: 'Very Confident',
     5: 'Totally Confident',
   };
-  const playerResponse = ({ name, answer, isCorrect }: PlayerData): any => {
+  const playerResponse = ({ name, answer, isCorrect }: Player): React.ReactNode => {
     return (
       <PlayerCard>
         <NameText>{name}</NameText>
@@ -125,11 +138,14 @@ export default function ConfidenceResponseDropdown({
    * @param selectedData confidence data passed in from parent
    * @returns sorted array of input
    */
-  const sortPlayers = (selectedData: any) => {
-    const correctPlayers: any[] = [];
-    const incorrectPlayers: any[] = [];
-    const answerFrequency: any = {};
-    selectedData.players.forEach((playerData: PlayerData) => {
+  const sortPlayers = (selectedData: { players: Player[] }): {
+    correct: Player[];
+    incorrect: Player[];
+  } => {
+    const correctPlayers: Player[] = [];
+    const incorrectPlayers: Player[] = [];
+    const answerFrequency: Record<string, number> = {};
+    selectedData.players.forEach((playerData: Player) => {
       // split players into correct and incorrect so .sort is limited to these subsets
       if (playerData.isCorrect) {
         correctPlayers.push(playerData);
@@ -167,7 +183,7 @@ export default function ConfidenceResponseDropdown({
               {t('gamesession.confidenceCard.graph.dropdown.header.containsResponses')}
             </HeaderText>
             <ConfidenceLevelText>
-              {ConfidenceLevelDictionary[graphClickInfo.selectedIndex]}
+              {graphClickInfo.selectedIndex !== null && ConfidenceLevelDictionary[graphClickInfo.selectedIndex]}
             </ConfidenceLevelText>
             <AnswerLabelText>{t('gamesession.confidenceCard.graph.dropdown.answerLabel')}</AnswerLabelText>
           </HeaderContainer>

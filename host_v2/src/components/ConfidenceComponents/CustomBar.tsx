@@ -1,6 +1,5 @@
 import React from 'react';
 import { Bar } from 'victory';
-import { Box } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 
 interface BarProps {

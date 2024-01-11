@@ -7,18 +7,28 @@ import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled
 import ConfidenceResponsesGraph from './ConfidenceComponents/ConfidenceResponseGraph';
 import ConfidenceResponseDropdown from './ConfidenceComponents/ConfidenceResponseDropdown';
 
+interface Team {
+  name: string; // team name
+}
+
+interface Answer {
+  count: number; // number of teams that selected this answer
+  teams: Team[]; // an array of the teams that selected this answer
+  isCorrect: boolean; // true iff this answer is the correct answer
+}
+
 interface Player {
-  answer: string;
-  isCorrect: boolean;
-  name: string;
+  answer: string; // answer chosen by this player
+  isCorrect: boolean; // true iff the chosen answer is the correct answer 
+  name: string; // this player's name
 }
 
 // TODO: maybe also update confidence to use ConfidenceOption type (think this is in networking)
 interface ConfidenceOption {
-  confidence: string;
-  correct: number;
-  incorrect: number;
-  players: Player[];
+  confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
+  correct: number; // number of teams who selected this option and answered correctly 
+  incorrect: number; // number of players who selected tgis option and answered incorrectly 
+  players: Player[]; // an array of the players that selected this option
 }
 
 // TODO: figure out what to do about keeping graph as 'confidence' instead of 
@@ -32,18 +42,28 @@ interface CardProps {
   // TODO: change these to their correct types (and make them non-optional)
   // TODO: uncomment rest of props later
   confidenceData?: ConfidenceOption[];
-  orderedAnswers?: any;
-  // graphClickInfo?: any;
-  // handleGraphClick?: any;
+  orderedAnswers?: Answer[];
+  // graphClickInfo?: GraphClickInfo;
+  // handleGraphClick?: ({ graph, selectedIndex }: { graph: string | null; selectedIndex: number | null; }) => void;
 }
+
+const CardContentContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'inline'
+}));
+
+const SmallTextContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  flexDirection: 'column',
+  alignItems: 'center',
+  alignSelf: 'stretch',
+  marginTop: `${theme.sizing.extraSmallPadding}px`
+}));
 
 const InstructionsText = styled(Typography)(({ theme }) => ({
   color: `${theme.palette.primary.playerFeedbackLabelColor}`,
   fontSize: `${theme.typography.h4.fontSize}`,
-  // TODO: make this its own styled component
-  // flexDirection: 'column',
-  // alignItems: 'center',
-  // alignSelf: 'stretch'
 }));
 
 const TitleText = styled(Typography)(({ theme }) => ({
@@ -57,9 +77,7 @@ const TitleText = styled(Typography)(({ theme }) => ({
 const DescriptionText = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
   color: `${theme.typography.h2.color}`,
-  fontWeight: `${theme.typography.body1.fontWeight}`,
-  // TODO: make a container with the marginTop:
-  // marginTop: `${theme.sizing.smallPadding}`
+  fontWeight: `${theme.typography.body1.fontWeight}`
 }));
 
 export default function ConfidenceCard({
@@ -82,12 +100,12 @@ export default function ConfidenceCard({
   { confidence: 'VERY', correct: 1, incorrect: 1, players: [samplePlayerThree, samplePlayerFour] },
   { confidence: 'TOTALLY', correct: 0, incorrect: 0, players: [] }]
 
-  const [graphClickInfo, setGraphClickInfo] = useState({
+  const [graphClickInfo, setGraphClickInfo] = useState<GraphClickInfo>({
     graph: null,
-    selectedIndex: null,
+    selectedIndex: null
   });
 
-  const handleGraphClick = ({ graph, selectedIndex }: { graph: any, selectedIndex: any }) => {
+  const handleGraphClick = ({ graph, selectedIndex }: { graph: string | null, selectedIndex: number | null }) => {
     setGraphClickInfo({ graph, selectedIndex });
   };
 
@@ -96,13 +114,15 @@ export default function ConfidenceCard({
   return (
     <HostDefaultCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
-        <Box display="inline" style={{ width: '100%' }}>
+        <CardContentContainer>
           <TitleText>
             {t('gamesession.confidenceCard.title')}
           </TitleText>
-          <DescriptionText>
-            {t('gamesession.confidenceCard.description')}
-          </DescriptionText>
+          <SmallTextContainer>
+            <DescriptionText>
+              {t('gamesession.confidenceCard.description')}
+            </DescriptionText>
+          </SmallTextContainer>
           <ConfidenceResponsesGraph
             confidenceData={sampleConfidenceData}
             graphClickInfo={graphClickInfo}
@@ -113,12 +133,14 @@ export default function ConfidenceCard({
               selectedConfidenceData={
                 sampleConfidenceData[graphClickInfo.selectedIndex]
               } /> :
-            <InstructionsText>
-              {t('gamesession.confidenceCard.instructions')}
-            </InstructionsText>
+            <SmallTextContainer>
+              <InstructionsText>
+                {t('gamesession.confidenceCard.instructions')}
+              </InstructionsText>
+            </SmallTextContainer>
           }
-        </Box>
+        </CardContentContainer>
       </BodyCardContainerStyled>
-    </HostDefaultCardStyled>
+    </HostDefaultCardStyled >
   );
 }

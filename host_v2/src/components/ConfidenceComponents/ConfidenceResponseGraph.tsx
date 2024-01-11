@@ -15,6 +15,38 @@ import { ConfidenceLevel } from '@righton/networking';
 import Legend from './ConfidenceResponseLegend';
 import CustomBar from './CustomBar';
 
+interface Player {
+  answer: string; // answer chosen by this player
+  isCorrect: boolean; // true iff the chosen answer is the correct answer 
+  name: string; // this player's name
+}
+
+// TODO: maybe also update confidence to use ConfidenceOption type (think this is in networking)
+interface ConfidenceOption {
+  confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
+  correct: number; // number of teams who selected this option and answered correctly 
+  incorrect: number; // number of players who selected tgis option and answered incorrectly 
+  players: Player[]; // an array of the players that selected this option
+}
+
+// TODO: figure out what to do about keeping graph as 'confidence' instead of 
+// current toggle functionality based on click behavior
+interface GraphClickInfo {
+  graph: string | null;
+  selectedIndex: number | null;
+}
+
+interface GraphProps {
+  confidenceData: ConfidenceOption[];
+  graphClickInfo: GraphClickInfo;
+  handleGraphClick: ({ graph, selectedIndex }: { graph: string | null; selectedIndex: number | null; }) => void;
+}
+
+interface Response {
+  x: string;
+  y: number;
+}
+
 const LabelStyled = styled(Typography)(({ theme }) => ({
   color: `${theme.palette.primary.playerFeedbackLabelColor}`,
   fontSize: `${theme.typography.caption.fontSize}`,
@@ -35,13 +67,6 @@ const CenteredContainer = styled(Box)({
   display: 'flex',
   justifyContent: 'center'
 });
-
-interface GraphProps {
-  // TODO: change these to their correct types (and make them non-optional)
-  confidenceData?: any;
-  graphClickInfo?: any;
-  handleGraphClick?: any;
-}
 
 export default function ConfidenceResponsesGraph({
   confidenceData,
@@ -103,21 +128,21 @@ export default function ConfidenceResponsesGraph({
     }
   }, []);
   // parse the confidenceData to be used by Victory
-  const correctResponders: any = [];
-  const incorrectResponders: any = [];
+  const correctResponders: Response[] = [];
+  const incorrectResponders: Response[] = [];
 
   /**
    * To avoid repetitive code for rendering victory bar
    * @param name must be either 'correct' or 'incorrect'
    * @returns VictoryBar component for appropriate data based on name arg
    */
-  function customBar(name: string): any {
+  function customBar(name: string): React.ReactNode {
     return (
       <VictoryBar
         name={name}
         data={name === 'incorrect' ? incorrectResponders : correctResponders}
         cornerRadius={({ index }) =>
-          (index !== undefined && correctResponders[index].y === 0) ||
+          (index !== undefined && correctResponders[Number(index)].y === 0) ||
             name === 'correct' ? 5 : 0
         }
         labels={({ index }) =>
@@ -152,7 +177,8 @@ export default function ConfidenceResponsesGraph({
       y: confidenceData[index].incorrect,
     });
   });
-
+  console.log(correctResponders);
+  console.log(incorrectResponders);
   return (
     <ContainerStyled>
       <CenteredContainer>
@@ -176,7 +202,7 @@ export default function ConfidenceResponsesGraph({
             {customBar('incorrect')}
             {customBar('correct')}
             <VictoryAxis
-              tickValues={correctResponders.map((datum: any) => datum.x)}
+              tickValues={correctResponders.map((datum: Response) => datum.x)}
             />
           </VictoryStack>
         </VictoryChart>
