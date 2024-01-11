@@ -1,92 +1,64 @@
 import React from 'react';
-import { Typography, makeStyles } from '@mui/material';
+import { Typography, Box } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
+
+const LegendContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: `${theme.sizing.smallPadding}px`,
+}));
+
+const LabelStyled = styled(Typography)(({ theme }) => ({
+  color: `${theme.palette.primary.playerFeedbackLabelColor}`,
+  fontSize: `${theme.typography.caption.fontSize}`,
+  paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+}));
+
+const KeyContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  marginRight: `${theme.sizing.extraSmallPadding}px`,
+  alignItems: 'center',
+}));
 
 export default function Legend() {
-  // const classes = useStyles();
+  const theme = useTheme(); // eslint-disable-line
+  const { t } = useTranslation();
+  /**
+   * To avoid repetitive code for rendering both legend keys
+   * @param name  must be either 'correct' or 'incorrect'
+   * @returns legend key component for input key name
+   */
+  function legendKey(name: string): any {
+    return (
+      <svg width={40} height={15}>
+        <rect
+          width={40}
+          height={15}
+          style={{
+            fill: name === 'correct' ? `${theme.palette.primary.main}` : 'transparent',
+            stroke: `${theme.palette.primary.main}`,
+            strokeWidth: `${theme.sizing.barStrokeWidth}`,
+          }}
+        />
+      </svg>
+    )
+  }
 
   return (
-    <div
-      // className={classes.legend}
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: '16px',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          marginRight: '12px',
-          alignItems: 'center',
-        }}
-      >
-        <svg width={40} height={15}>
-          <rect
-            width={40}
-            height={15}
-            style={{
-              fill: '#FFF',
-              stroke: '#FFF',
-              strokeWidth: 2,
-            }}
-          />
-        </svg>
-
-        <Typography
-          // className={classes.labels}
-          style={{
-            color: 'rgba(255, 255, 255, 1)',
-            fontSize: 12,
-            opacity: 0.4,
-            paddingLeft: 5,
-          }}
-        >
-          Correct
-        </Typography>
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          marginRight: '12px',
-          alignItems: 'center',
-        }}
-      >
-        <svg width={40} height={15}>
-          <rect
-            width={40}
-            height={15}
-            style={{
-              fill: 'transparent',
-              stroke: '#FFF',
-              strokeWidth: 2,
-            }}
-          />
-        </svg>
-
-        <Typography
-          // className={classes.labels}
-          style={{
-            color: 'rgba(255, 255, 255, 1)',
-            fontSize: 12,
-            opacity: 0.4,
-            paddingLeft: 5,
-          }}
-        >
-          Incorrect
-        </Typography>
-      </div>
-    </div>
+    <LegendContainer>
+      <KeyContainer>
+        {legendKey('correct')}
+        <LabelStyled>{t('gamesession.confidenceCard.graph.legend.correct')}</LabelStyled>
+      </KeyContainer>
+      <KeyContainer>
+        {legendKey('incorrect')}
+        <LabelStyled>{t('gamesession.confidenceCard.graph.legend.incorrect')}</LabelStyled>
+      </KeyContainer>
+    </LegendContainer>
   );
 }
 
-// const useStyles = makeStyles({
-//   legend: {
-//     display: 'flex',
-//     justifyContent: 'center',
-//   },
-// });

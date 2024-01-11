@@ -11,7 +11,11 @@
       "title": "Confianza",
       "description": "Se pregunta a los jugadores qué tan seguros están de su respuesta a esta pregunta.",
       "graph": {
-        "title": "Cantidad de jugadores"
+        "title": "Cantidad de jugadores",
+        "legend": {
+          "correct": "correcto",
+          "incorrect": "incorrecto"
+        }
       }
     },
     "placeholder": "Este es un texto de marcador de posición."

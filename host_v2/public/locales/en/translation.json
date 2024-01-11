@@ -11,7 +11,11 @@
       "title": "Confidence",
       "description": "Players are asked how sure they are of their answer for this question.",
       "graph": {
-        "title": "Number of Players"
+        "title": "Number of Players",
+        "legend": {
+          "correct": "correct",
+          "incorrect": "incorrect"
+        }
       }
     },
     "placeholder": "This is some placeholder text."

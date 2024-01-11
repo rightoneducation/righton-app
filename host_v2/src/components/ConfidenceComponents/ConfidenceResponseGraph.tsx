@@ -59,7 +59,7 @@ export default function ConfidenceResponsesGraph({
         axis: { stroke: `${theme.palette.primary.graphAccentColor}`, strokeWidth: `${theme.sizing.barStrokeWidth}` },
         grid: { stroke: 'transparent' },
         tickLabels: {
-          padding: 10,
+          padding: `${theme.sizing.extraSmallPadding}`,
           fill: `${theme.palette.primary.playerFeedbackLabelColor}`,
           fontSize: `${theme.typography.body2.fontSize}`,
         },
@@ -107,8 +107,9 @@ export default function ConfidenceResponsesGraph({
   const incorrectResponders: any = [];
 
   /**
+   * To avoid repetitive code for rendering victory bar
    * @param name must be either 'correct' or 'incorrect'
-   * @returns VictoryBar component for approproate data based on name arg
+   * @returns VictoryBar component for appropriate data based on name arg
    */
   function customBar(name: string): any {
     return (
@@ -124,7 +125,7 @@ export default function ConfidenceResponsesGraph({
         }
         dataComponent={
           <CustomBar
-            selectedWidth={theme.sizing.confidenceBarThickness}
+            selectedWidth={theme.sizing.confidenceBarThickness + theme.sizing.smallPadding}
             selectedHeight={200}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick}
