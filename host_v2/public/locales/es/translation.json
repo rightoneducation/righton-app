@@ -10,11 +10,19 @@
     "confidenceCard": {
       "title": "Confianza",
       "description": "Se pregunta a los jugadores qué tan seguros están de su respuesta a esta pregunta.",
+      "instructions": "Toca una respuesta para ver más detalles.",
       "graph": {
         "title": "Cantidad de jugadores",
         "legend": {
           "correct": "correcto",
           "incorrect": "incorrecto"
+        },
+        "dropdown": {
+          "header": {
+            "noResponses": "Ningún jugador eligió esta opción",
+            "containsResponses": "Mostrando jugadores que respondieron"
+          },
+          "answerLabel": "Respuesta"
         }
       }
     },

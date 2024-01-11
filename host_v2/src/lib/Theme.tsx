@@ -30,6 +30,7 @@ const greenCorrectColor = '#EBFFDA'; // correct answer background
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
 const playerFeedbackLabelColor = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
 const graphAccentColor = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
+const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns 
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
   `${countdownColor}, 0.4)`,
@@ -119,6 +120,7 @@ declare module '@mui/material/styles' {
     correctColor: string;
     playerFeedbackLabelColor: string;
     graphAccentColor: string;
+    dropdownInfoBackgroundColor: string;
     countdownColor: string;
     radialTimerArray: string[];
   }
@@ -142,6 +144,7 @@ declare module '@mui/material/styles' {
     correctColor?: string;
     playerFeedbackLabelColor?: string;
     graphAccentColor?: string;
+    dropdownInfoBackgroundColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
   }
@@ -186,6 +189,7 @@ export default createTheme({
       correctColor: greenCorrectColor,
       playerFeedbackLabelColor,
       graphAccentColor,
+      dropdownInfoBackgroundColor,
       countdownColor,
       radialTimerArray,
     },

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Grid, Typography, Card, Box } from '@mui/material';
 // TODO: import check
-// import check from '../../images/correctAnswerCheck.png';
+import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
+import check from '../../images/correctAnswerCheck.png';
 
 interface DropdownProps {
   // TODO: change these to their correct types (and make them non-optional)
@@ -50,8 +51,7 @@ const PlayerCard = styled(Card)(({ theme }) => ({
   gap: `${theme.sizing.extraSmallPadding}px`,
   alignSelf: 'stretch',
   borderRadius: `${theme.sizing.extraSmallPadding}px`,
-  // TODO add this val to theme
-  background: '#063772',
+  background: `${theme.palette.primary.dropdownInfoBackgroundColor}`,
 }));
 
 const HeaderText = styled(Typography)(({ theme }) => ({
@@ -82,7 +82,6 @@ const NameText = styled(Typography)(({ theme }) => ({
   textOverflow: 'ellipsis',
   fontFamily: 'Poppins',
   fontSize: `${theme.typography.h5.fontSize}`,
-  fontStyle: 'normal',
   fontWeight: `${theme.typography.body1.fontWeight}`,
   lineHeight: `${theme.typography.subtitle1.lineHeight}`,
   paddingLeft: `${theme.sizing.extraSmallPadding}px`,
@@ -98,7 +97,7 @@ export default function ConfidenceResponseDropdown({
   graphClickInfo,
   selectedConfidenceData }: DropdownProps
 ) {
-  // const classes = useStyles();
+  const { t } = useTranslation();
   const ConfidenceLevelDictionary: any = {
     0: 'Not Rated',
     1: 'Not At All Confident',
@@ -112,8 +111,7 @@ export default function ConfidenceResponseDropdown({
       <PlayerCard>
         <NameText>{name}</NameText>
         <AnswerDataContainer>
-          {/* TODO: put back in once check imported */}
-          {/* {isCorrect && <img src={check} width={18} height={24} />} */}
+          {isCorrect && <img src={check} width={18} height={24} alt="" />}
           <AnswerText>{answer}</AnswerText>
         </AnswerDataContainer>
       </PlayerCard>
@@ -160,18 +158,18 @@ export default function ConfidenceResponseDropdown({
     <Container>
       {selectedConfidenceData.players.length === 0 ? (
         <HeaderText>
-          No players picked this option
+          {t('gamesession.confidenceCard.graph.dropdown.header.noResponses')}
         </HeaderText>
       ) : (
         <>
           <HeaderContainer>
             <HeaderText>
-              Showing players who answered
+              {t('gamesession.confidenceCard.graph.dropdown.header.containsResponses')}
             </HeaderText>
             <ConfidenceLevelText>
               {ConfidenceLevelDictionary[graphClickInfo.selectedIndex]}
             </ConfidenceLevelText>
-            <AnswerLabelText>Answer</AnswerLabelText>
+            <AnswerLabelText>{t('gamesession.confidenceCard.graph.dropdown.answerLabel')}</AnswerLabelText>
           </HeaderContainer>
           <DropDownContainer>
             {sortedPlayers.correct.map((playerData) =>
@@ -187,70 +185,3 @@ export default function ConfidenceResponseDropdown({
   );
 }
 
-// const useStyles = makeStyles((theme) => ({
-// container: {
-//   display: 'flex',
-//   paddingBottom: '16px',
-//   flexDirection: 'column',
-//   alignItems: 'flexEnd',
-//   gap: '7px',
-//   alignSelf: 'stretch',
-// },
-// headerText: {
-//   color: '#FFF',
-//   textAlign: 'left',
-//   fontFamily: 'Rubik',
-//   fontSize: '14px',
-//   fontWeight: '400',
-// },
-// confidenceLevelText: {
-//   color: '#FFF',
-//   textAlign: 'left',
-//   fontFamily: 'Rubik',
-//   fontSize: '16px',
-//   fontWeight: '700',
-//   paddingTop: '8px',
-// },
-// answerLabelText: {
-//   color: 'rgba(255,255,255,0.4)',
-//   textAlign: 'right',
-//   fontFamily: 'Rubik',
-//   fontSize: '12px',
-//   fontWeight: '400',
-// },
-// playerCard: {
-//   display: 'flex',
-//   padding: '8px 12px',
-//   alignItems: 'center',
-//   justifyContent: 'space-between',
-//   gap: '10px',
-//   alignSelf: 'stretch',
-//   borderRadius: '8px',
-//   background: '#063772',
-// },
-// nameText: {
-//   overflow: 'hidden',
-//   color: '#FFF',
-//   textOverflow: 'ellipsis',
-//   fontFamily: 'Poppins',
-//   fontSize: '14px',
-//   fontStyle: 'normal',
-//   fontWeight: 400,
-//   lineHeight: 'normal',
-// },
-// answerDataContainer: {
-//   display: 'flex',
-//   alignItems: 'center',
-//   gap: '8px',
-//   justifyContent: 'center',
-// },
-// answerText: {
-//   fontSize: '16px',
-//   color: '#FFF',
-//   fontWeight: 800,
-// },
-// check: {
-//   width: 18,
-//   height: 24,
-// },
-// }));

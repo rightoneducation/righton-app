@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 import ConfidenceResponsesGraph from './ConfidenceComponents/ConfidenceResponseGraph';
 import ConfidenceResponseDropdown from './ConfidenceComponents/ConfidenceResponseDropdown';
@@ -37,6 +36,31 @@ interface CardProps {
   // graphClickInfo?: any;
   // handleGraphClick?: any;
 }
+
+const InstructionsText = styled(Typography)(({ theme }) => ({
+  color: `${theme.palette.primary.playerFeedbackLabelColor}`,
+  fontSize: `${theme.typography.h4.fontSize}`,
+  // TODO: make this its own styled component
+  // flexDirection: 'column',
+  // alignItems: 'center',
+  // alignSelf: 'stretch'
+}));
+
+const TitleText = styled(Typography)(({ theme }) => ({
+  color: `${theme.palette.primary.main}`,
+  fontSize: `${theme.typography.subtitle1.fontSize}`,
+  fontWeight: `${theme.typography.subtitle1.fontWeight}`,
+  lineHeight: `${theme.typography.subtitle1.lineHeight}`,
+  textAlign: 'left',
+}));
+
+const DescriptionText = styled(Typography)(({ theme }) => ({
+  textAlign: 'center',
+  color: `${theme.typography.h2.color}`,
+  fontWeight: `${theme.typography.body1.fontWeight}`,
+  // TODO: make a container with the marginTop:
+  // marginTop: `${theme.sizing.smallPadding}`
+}));
 
 export default function ConfidenceCard({
   // TODO: uncomment rest of props later
@@ -73,35 +97,26 @@ export default function ConfidenceCard({
     <HostDefaultCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
         <Box display="inline" style={{ width: '100%' }}>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              width: '100%',
-              textAlign: 'left',
-              color: `${theme.typography.h2.color}`
-            }}>
+          <TitleText>
             {t('gamesession.confidenceCard.title')}
-          </Typography>
-          <Typography variant="h4"
-            sx={{
-              width: '100%',
-              textAlign: 'center',
-              color: `${theme.typography.h2.color}`,
-              fontWeight: `${theme.typography.body1.fontWeight}`,
-              marginTop: `${theme.sizing.smallPadding}`,
-            }}>
+          </TitleText>
+          <DescriptionText>
             {t('gamesession.confidenceCard.description')}
-          </Typography>
+          </DescriptionText>
           <ConfidenceResponsesGraph
             confidenceData={sampleConfidenceData}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick} />
-          {graphClickInfo.selectedIndex !== null &&
+          {graphClickInfo.selectedIndex !== null ?
             <ConfidenceResponseDropdown
               graphClickInfo={graphClickInfo}
               selectedConfidenceData={
                 sampleConfidenceData[graphClickInfo.selectedIndex]
-              } />}
+              } /> :
+            <InstructionsText>
+              {t('gamesession.confidenceCard.instructions')}
+            </InstructionsText>
+          }
         </Box>
       </BodyCardContainerStyled>
     </HostDefaultCardStyled>
