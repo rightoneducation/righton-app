@@ -47,10 +47,10 @@ export default function ConfidenceCard({
 }: CardProps) {
 
   // TODO: MOVE THIS UP TO PARENT AND THEN PARENT'S PARENT
-  const samplePlayerOne: Player = { answer: '273', isCorrect: false, name: 'a a' }
-  const samplePlayerTwo: Player = { answer: '273', isCorrect: false, name: 'b b' }
-  const samplePlayerThree: Player = { answer: '714', isCorrect: true, name: 'c c' }
-  const samplePlayerFour: Player = { answer: '55', isCorrect: false, name: 'd d' }
+  const samplePlayerOne: Player = { answer: 'C', isCorrect: false, name: 'Alex Williams' }
+  const samplePlayerTwo: Player = { answer: 'C', isCorrect: false, name: 'Alessandro DeLuca-Smith' }
+  const samplePlayerThree: Player = { answer: 'D', isCorrect: true, name: 'Jackson Cameron' }
+  const samplePlayerFour: Player = { answer: 'A', isCorrect: false, name: 'Jeremiah Tanaka' }
   const sampleConfidenceData: ConfidenceOption[] = [{ confidence: 'NOT_RATED', correct: 0, incorrect: 0, players: [] },
   { confidence: 'NOT_AT_ALL', correct: 0, incorrect: 0, players: [] },
   { confidence: 'KINDA', correct: 0, incorrect: 2, players: [samplePlayerOne, samplePlayerTwo] },

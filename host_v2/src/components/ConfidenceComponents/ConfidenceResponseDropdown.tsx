@@ -16,9 +16,19 @@ interface PlayerData {
   isCorrect: boolean;
 }
 
+const Container = styled(Box)(({ theme }) => ({
+  paddingTop: `${theme.sizing.smallPadding}px`,
+  paddingBottom: `${theme.sizing.smallPadding}px`,
+}));
+
+const HeaderContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.extraSmallPadding}px`
+}));
+
 const DropDownContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  paddingBottom: `${theme.sizing.smallPadding}px`,
   flexDirection: 'column',
   alignItems: 'flexEnd',
   gap: `${theme.sizing.extraSmallPadding}px`,
@@ -30,11 +40,11 @@ const AnswerDataContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: `${theme.sizing.extraSmallPadding}px`,
   justifyContent: 'center',
+  paddingRight: `${theme.sizing.extraSmallPadding}px`,
 }));
 
 const PlayerCard = styled(Card)(({ theme }) => ({
   display: 'flex',
-  padding: `${theme.sizing.extraSmallPadding}`,
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: `${theme.sizing.extraSmallPadding}px`,
@@ -55,8 +65,7 @@ const ConfidenceLevelText = styled(Typography)(({ theme }) => ({
   color: `${theme.palette.primary.main}`,
   textAlign: 'left',
   fontSize: `${theme.typography.h5.fontSize}`,
-  fontWeight: `${theme.typography.caption.fontWeight}`,
-  paddingTop: `${theme.sizing.extraSmallPadding}`
+  fontWeight: `${theme.typography.h6.fontWeight}`,
 }));
 
 const AnswerLabelText = styled(Typography)(({ theme }) => ({
@@ -64,6 +73,7 @@ const AnswerLabelText = styled(Typography)(({ theme }) => ({
   textAlign: 'right',
   fontSize: `${theme.typography.caption.fontSize}`,
   fontWeight: `${theme.typography.body1.fontWeight}`,
+
 }));
 
 const NameText = styled(Typography)(({ theme }) => ({
@@ -74,7 +84,8 @@ const NameText = styled(Typography)(({ theme }) => ({
   fontSize: `${theme.typography.h5.fontSize}`,
   fontStyle: 'normal',
   fontWeight: `${theme.typography.body1.fontWeight}`,
-  lineHeight: 'normal',
+  lineHeight: `${theme.typography.subtitle1.lineHeight}`,
+  paddingLeft: `${theme.sizing.extraSmallPadding}px`,
 }));
 
 const AnswerText = styled(Typography)(({ theme }) => ({
@@ -145,22 +156,23 @@ export default function ConfidenceResponseDropdown({
   };
   // return both and then render them in the correct order
   const sortedPlayers = sortPlayers(selectedConfidenceData);
-
   return (
-    <Box>
-      {selectedConfidenceData.length === 0 ? (
+    <Container>
+      {selectedConfidenceData.players.length === 0 ? (
         <HeaderText>
           No players picked this option
         </HeaderText>
       ) : (
         <>
-          <HeaderText>
-            Showing players who answered
-          </HeaderText>
-          <ConfidenceLevelText>
-            {ConfidenceLevelDictionary[graphClickInfo.selectedIndex]}
-          </ConfidenceLevelText>
-          <AnswerLabelText>Answer</AnswerLabelText>
+          <HeaderContainer>
+            <HeaderText>
+              Showing players who answered
+            </HeaderText>
+            <ConfidenceLevelText>
+              {ConfidenceLevelDictionary[graphClickInfo.selectedIndex]}
+            </ConfidenceLevelText>
+            <AnswerLabelText>Answer</AnswerLabelText>
+          </HeaderContainer>
           <DropDownContainer>
             {sortedPlayers.correct.map((playerData) =>
               playerResponse(playerData),
@@ -171,7 +183,7 @@ export default function ConfidenceResponseDropdown({
           </DropDownContainer>
         </>
       )}
-    </Box>
+    </Container>
   );
 }
 
