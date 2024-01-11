@@ -1,15 +1,21 @@
 import React from 'react';
 import { Bar } from 'victory';
-import { useTheme, styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+
+// TODO: figure out what to do about keeping graph as 'confidence' instead of 
+// current toggle functionality based on click behavior
+interface GraphClickInfo {
+  graph: string | null;
+  selectedIndex: number | null;
+}
 
 interface BarProps {
-  // TODO: change these to their correct types (and make them non-optional)
-  x?: any;
-  selectedWidth?: any;
-  selectedHeight?: any;
-  index?: any;
-  graphClickInfo?: any;
-  handleGraphClick: any;
+  x?: number;
+  selectedWidth: number;
+  selectedHeight: number;
+  index?: number;
+  graphClickInfo: GraphClickInfo;
+  handleGraphClick: ({ graph, selectedIndex }: { graph: string | null; selectedIndex: number | null; }) => void;
 }
 
 export default function CustomBar(props: BarProps) {
@@ -21,18 +27,17 @@ export default function CustomBar(props: BarProps) {
     graphClickInfo,
     handleGraphClick,
   } = props;
+
   const offset = selectedWidth / 2;
   const graphTitleOffset = 28;
 
   const theme = useTheme(); // eslint-disable-line
 
-  // const classes = useStyles();
   return (
     <g style={{ pointerEvents: 'visible' }}>
       <Bar {...props} />
       <rect
-        // className={classes.highlight}
-        x={x - offset}
+        x={x !== undefined ? x - offset : - offset}
         y={graphTitleOffset}
         width={selectedWidth}
         height={selectedHeight - graphTitleOffset}
@@ -45,8 +50,11 @@ export default function CustomBar(props: BarProps) {
         stroke="transparent"
         rx={8}
         ry={8}
-        onClick={() =>
-          handleGraphClick({ graph: 'confidence', selectedIndex: index })
+        onClick={() => {
+          if (index !== null && index !== undefined) {
+            handleGraphClick({ graph: 'confidence', selectedIndex: index })
+          }
+        }
         }
         style={{ cursor: 'pointer' }}
       />

@@ -10,7 +10,6 @@ interface Player {
   name: string; // this player's name
 }
 
-// TODO: maybe also update confidence to use ConfidenceOption type (think this is in networking)
 interface ConfidenceOption {
   confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
   correct: number; // number of teams who selected this option and answered correctly 
