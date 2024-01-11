@@ -6,6 +6,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 import ConfidenceResponsesGraph from './ConfidenceComponents/ConfidenceResponseGraph';
+import ConfidenceResponseDropdown from './ConfidenceComponents/ConfidenceResponseDropdown';
 
 interface Player {
   answer: string;
@@ -95,7 +96,12 @@ export default function ConfidenceCard({
             confidenceData={sampleConfidenceData}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick} />
-
+          {graphClickInfo.selectedIndex !== null &&
+            <ConfidenceResponseDropdown
+              graphClickInfo={graphClickInfo}
+              selectedConfidenceData={
+                sampleConfidenceData[graphClickInfo.selectedIndex]
+              } />}
         </Box>
       </BodyCardContainerStyled>
     </HostDefaultCardStyled>
