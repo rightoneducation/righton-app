@@ -28,17 +28,10 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-// TODO: figure out what to do about keeping graph as 'confidence' instead of 
-// current toggle functionality based on click behavior
-interface GraphClickInfo {
-  graph: string | null;
-  selectedIndex: number | null;
-}
-
 interface GraphProps {
   confidenceData: ConfidenceOption[];
-  graphClickInfo: GraphClickInfo;
-  handleGraphClick: ({ graph, selectedIndex }: { graph: string | null; selectedIndex: number | null; }) => void;
+  graphClickIndex: number | null;
+  handleGraphClick: (selectedIndex: number | null) => void;
 }
 
 interface Response {
@@ -69,7 +62,7 @@ const CenteredContainer = styled(Box)({
 
 export default function ConfidenceResponsesGraph({
   confidenceData,
-  graphClickInfo,
+  graphClickIndex,
   handleGraphClick,
 }: GraphProps) {
   const theme = useTheme(); // eslint-disable-line
@@ -151,7 +144,7 @@ export default function ConfidenceResponsesGraph({
           <CustomBar
             selectedWidth={theme.sizing.confidenceBarThickness + theme.sizing.smallPadding}
             selectedHeight={200}
-            graphClickInfo={graphClickInfo}
+            graphClickIndex={graphClickIndex}
             handleGraphClick={handleGraphClick}
           />
         }
@@ -176,8 +169,7 @@ export default function ConfidenceResponsesGraph({
       y: confidenceData[index].incorrect,
     });
   });
-  console.log(correctResponders);
-  console.log(incorrectResponders);
+
   return (
     <ContainerStyled>
       <CenteredContainer>

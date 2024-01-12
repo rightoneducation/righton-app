@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Typography, Card, Box } from '@mui/material';
+import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import check from '../../images/correctAnswerCheck.png';
 
 interface Player {
@@ -17,15 +17,8 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-// TODO: figure out what to do about keeping graph as 'confidence' instead of 
-// current toggle functionality based on click behavior
-interface GraphClickInfo {
-  graph: string | null;
-  selectedIndex: number | null;
-}
-
 interface DropdownProps {
-  graphClickInfo: GraphClickInfo;
+  graphClickIndex: number | null;
   selectedConfidenceData: ConfidenceOption;
 }
 
@@ -106,7 +99,7 @@ const AnswerText = styled(Typography)(({ theme }) => ({
 }));
 
 export default function ConfidenceResponseDropdown({
-  graphClickInfo,
+  graphClickIndex,
   selectedConfidenceData }: DropdownProps
 ) {
   const { t } = useTranslation();
@@ -182,7 +175,7 @@ export default function ConfidenceResponseDropdown({
               {t('gamesession.confidenceCard.graph.dropdown.header.containsResponses')}
             </HeaderText>
             <ConfidenceLevelText>
-              {graphClickInfo.selectedIndex !== null && ConfidenceLevelDictionary[graphClickInfo.selectedIndex]}
+              {graphClickIndex !== null && ConfidenceLevelDictionary[graphClickIndex]}
             </ConfidenceLevelText>
             <AnswerLabelText>{t('gamesession.confidenceCard.graph.dropdown.answerLabel')}</AnswerLabelText>
           </HeaderContainer>

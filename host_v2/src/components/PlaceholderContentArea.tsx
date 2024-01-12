@@ -31,32 +31,25 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-// TODO: figure out what to do about keeping graph as 'confidence' instead of 
-// current toggle functionality based on click behavior
-interface GraphClickInfo {
-  graph: string | null;
-  selectedIndex: number | null;
-}
-
 interface PlaceholderContentAreaProps {
   // props for Question Card (see QuestionData interface above)
   questionData: QuestionData,
   // props for Answer Card (see AnswerOption interface above)
   answerOptions: AnswerOption[]
-  // props for Confidence Card (see Team, Answer, Player, ConfidenceOption, and GraphClickInfo interfaces above)
+  // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
   confidenceData: ConfidenceOption[],
-  graphClickInfo: GraphClickInfo;
-  handleGraphClick: ({ graph, selectedIndex }: { graph: string | null; selectedIndex: number | null; }) => void;
+  confidenceGraphClickIndex: number | null;
+  handleConfidenceGraphClick: (selectedIndex: number | null) => void
 }// eslint-disable-line
 export default function PlaceholderContentArea({
   questionData,
   answerOptions,
-  confidenceData, graphClickInfo, handleGraphClick }: PlaceholderContentAreaProps) {
+  confidenceData, confidenceGraphClickIndex, handleConfidenceGraphClick }: PlaceholderContentAreaProps) {
   // eslint-disable-line
   return (
     <BodyContentAreaDoubleColumnStyled container style={{ paddingTop: '16px' }}>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        <ConfidenceCard confidenceData={confidenceData} graphClickInfo={graphClickInfo} handleGraphClick={handleGraphClick} />
+        <ConfidenceCard confidenceData={confidenceData} graphClickIndex={confidenceGraphClickIndex} handleGraphClick={handleConfidenceGraphClick} />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
         <QuestionCard questionText={questionData.text} imageUrl={questionData.imageUrl} />

@@ -38,13 +38,6 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-// TODO: figure out what to do about keeping graph as 'confidence' instead of 
-// current toggle functionality based on click behavior
-interface GraphClickInfo {
-  graph: string | null;
-  selectedIndex: number | null;
-}
-
 export default function GameSessionContainer({
   apiClient,
 }: GameInProgressContainerProps) {
@@ -78,13 +71,11 @@ export default function GameSessionContainer({
   { confidence: 'VERY', correct: 1, incorrect: 1, players: [samplePlayerThree, samplePlayerFour] },
   { confidence: 'TOTALLY', correct: 0, incorrect: 0, players: [] }]
 
-  const [graphClickInfo, setGraphClickInfo] = useState<GraphClickInfo>({
-    graph: null,
-    selectedIndex: null
-  });
+  const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(
+    null);
 
-  const handleGraphClick = ({ graph, selectedIndex }: { graph: string | null, selectedIndex: number | null }) => {
-    setGraphClickInfo({ graph, selectedIndex });
+  const handleConfidenceGraphClick = (selectedIndex: number | null) => {
+    setConfidenceGraphClickIndex(selectedIndex);
   };
 
   const { t } = useTranslation();
@@ -104,7 +95,7 @@ export default function GameSessionContainer({
         <PlaceholderContentArea
           questionData={sampleQuestion}
           answerOptions={[sampleAnswerOptionOne, sampleAnswerOptionTwo]}
-          confidenceData={sampleConfidenceData} graphClickInfo={graphClickInfo} handleGraphClick={handleGraphClick} />
+          confidenceData={sampleConfidenceData} confidenceGraphClickIndex={confidenceGraphClickIndex} handleConfidenceGraphClick={handleConfidenceGraphClick} />
       </BodyStackContainerStyled>
     </StackContainerStyled>
   );

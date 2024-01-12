@@ -7,10 +7,6 @@ import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled
 import ConfidenceResponsesGraph from './ConfidenceComponents/ConfidenceResponseGraph';
 import ConfidenceResponseDropdown from './ConfidenceComponents/ConfidenceResponseDropdown';
 
-interface Team {
-  name: string; // team name
-}
-
 interface Player {
   answer: string; // answer chosen by this player
   isCorrect: boolean; // true iff the chosen answer is the correct answer 
@@ -24,17 +20,10 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-// TODO: figure out what to do about keeping graph as 'confidence' instead of 
-// current toggle functionality based on click behavior
-interface GraphClickInfo {
-  graph: string | null;
-  selectedIndex: number | null;
-}
-
 interface CardProps {
   confidenceData: ConfidenceOption[];
-  graphClickInfo: GraphClickInfo;
-  handleGraphClick: ({ graph, selectedIndex }: { graph: string | null; selectedIndex: number | null; }) => void;
+  graphClickIndex: number | null;
+  handleGraphClick: (selectedIndex: number | null) => void;
 }
 
 const CardContentContainer = styled(Box)({
@@ -72,7 +61,7 @@ const DescriptionText = styled(Typography)(({ theme }) => ({
 
 export default function ConfidenceCard({
   confidenceData,
-  graphClickInfo,
+  graphClickIndex,
   handleGraphClick
 }: CardProps) {
   const { t } = useTranslation();
@@ -90,13 +79,13 @@ export default function ConfidenceCard({
           </SmallTextContainer>
           <ConfidenceResponsesGraph
             confidenceData={confidenceData}
-            graphClickInfo={graphClickInfo}
+            graphClickIndex={graphClickIndex}
             handleGraphClick={handleGraphClick} />
-          {graphClickInfo.selectedIndex !== null ?
+          {graphClickIndex !== null ?
             <ConfidenceResponseDropdown
-              graphClickInfo={graphClickInfo}
+              graphClickIndex={graphClickIndex}
               selectedConfidenceData={
-                confidenceData[graphClickInfo.selectedIndex]
+                confidenceData[graphClickIndex]
               } /> :
             <SmallTextContainer>
               <InstructionsText>
