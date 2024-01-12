@@ -23,6 +23,9 @@
       "finished": "Responder la Pregunta",
       "correct": "¡Correcto!",
       "incorrect": "¡Buen Intento!"
+    },
+    "questionCard": {
+      "title": "Pregunta"
     }
   }
 }

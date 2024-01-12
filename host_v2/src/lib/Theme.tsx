@@ -52,10 +52,10 @@ const semiTransparent = `${borderWidth}px solid rgba(255, 255, 255, 0.2)`;
 
 
 // design tokens - breakpoints:
-const xs = 400;
-const sm = 700;
-const md = 900;
-const lg = 1200;
+const xs = 0;
+const sm = 400;
+const md = 700;
+const lg = 1024;
 const xl = 1536;
 
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
@@ -64,6 +64,7 @@ const headerHeight = 150;
 const footerHeight = 60;
 const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
 const extraExtraSmallPadding = 4; //  used on question indicators
+const answerOptionBorderRadius = 22; // border radius of options on answer cards
 const extraSmallPadding = 8; // small icons, text positioning
 const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
 const mediumPadding = 24; // timer margin
@@ -86,6 +87,7 @@ declare module '@mui/material/styles' {
       footerHeight: number;
       pregameMinColumnWidth: number;
       extraExtraSmallPadding: number;
+      answerOptionBorderRadius: number;
       extraSmallPadding: number;
       smallPadding: number;
       mediumPadding: number;
@@ -108,6 +110,7 @@ declare module '@mui/material/styles' {
       footerHeight?: number;
       pregameMinColumnWidth?: number;
       extraExtraSmallPadding?: number;
+      answerOptionBorderRadius?: number;
       extraSmallPadding?: number;
       smallPadding?: number;
       mediumPadding?: number;
@@ -180,12 +183,14 @@ export default createTheme({
     footerHeight,
     pregameMinColumnWidth,
     extraExtraSmallPadding,
+    answerOptionBorderRadius,
     extraSmallPadding,
     smallPadding,
     mediumPadding,
     largePadding,
     extraLargePadding,
     extraExtraLargePadding,
+
   },
   palette: {
     primary: {
