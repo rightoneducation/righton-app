@@ -1,10 +1,6 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Typography, Box } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import { PlayedQuestionBox, UnplayedQuestionBox, CurrentQuestionIndicator, CurrentQuestionBoxPhase2 } from '../lib/styledcomponents/QuestionIndicatorComponents';
 import QuestionIndicatorContainer from '../lib/styledcomponents/QuestionIndicatorContainer';
-import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
 
 interface QuestionIndicatorProps {
     totalQuestions?: number;
@@ -17,8 +13,6 @@ export default function QuestionIndicator({
     currentQuestionIndex,
     statePosition,
 }: QuestionIndicatorProps) {
-    // const theme = useTheme(); // eslint-disable-line
-    // const { t } = useTranslation();
     const indicators = Array.from({ length: totalQuestions ?? 0 }, (_, index) => {
         if (index < currentQuestionIndex!) {
             return <PlayedQuestionBox key={index}>{index + 1}</PlayedQuestionBox>;
@@ -33,10 +27,8 @@ export default function QuestionIndicator({
     });
 
     return (
-        <HeaderStackContainerStyled>
-            <QuestionIndicatorContainer>
-                {indicators}
-            </QuestionIndicatorContainer>
-        </HeaderStackContainerStyled>
+        <QuestionIndicatorContainer>
+            {indicators}
+        </QuestionIndicatorContainer>
     );
 }

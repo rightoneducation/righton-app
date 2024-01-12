@@ -10,6 +10,8 @@ const backgroundGradient =
 // box-shadow: 0px 2.5px 23px 0px rgba(0, 141, 239, 0.30);
 // const radialGradient =
 // 'radial-gradient(circle farthest-side, #7D63C8, #7D63C8 100%)';
+const timerGradient =
+'linear-gradient(90deg, #168CDC 0%, #00A7E8 100%)';
 const radialGradient =
   'radial-gradient(circle 500px at 50% 60%, #7D64C7 13.54%, #514187 51.56%, #3A2D66 77.6%, #352960 88.02%, #312759 100%)';
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
@@ -119,6 +121,7 @@ declare module '@mui/material/styles' {
     accent: string;
     backgroundGradient: string;
     darkBlueCardColor: string;
+    timerGradient: string;
     radialGradient: string;
     highlightGradient: string;
     altHighlightGradient: string;
@@ -140,6 +143,7 @@ declare module '@mui/material/styles' {
     accent?: string;
     backgroundGradient?: string;
     darkBlueCardColor?: string;
+    timerGradient?: string;
     radialGradient?: string;
     highlightGradient?: string;
     altHighlightGradient?: string;
@@ -190,6 +194,7 @@ export default createTheme({
       darkBlueCardColor,
       backgroundGradient,
       radialGradient,
+      timerGradient,
       highlightGradient,
       altHighlightGradient,
       questionGradient,
@@ -296,6 +301,14 @@ export default createTheme({
       lineHeight: '21px',
       color: primaryTextColor,
       textShadow: '0px 1px 1px rgba(0, 0, 0, 0.15)',
+    },
+    subtitle2: {
+      //  player icon text
+      fontFamily: 'Poppins',
+      fontSize: '13px',
+      fontWeight: 600,
+      lineHeight: '22px',
+      color: primaryTextColor,
     },
   },
 });
