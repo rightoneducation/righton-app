@@ -7,6 +7,9 @@
     "questionCard": {
       "title": "Pregunta"
     },
+    "popularMistakeCard": {
+      "title": "Error Popular"
+    },
     "placeholder": "Este es un texto de marcador de posición."
   }
 }

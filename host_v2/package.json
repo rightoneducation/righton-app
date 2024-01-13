@@ -29,6 +29,7 @@
     "swiper": "^11.0.5",
     "typescript": "^4.9.5",
     "uuid": "^9.0.1",
+    "victory": "^36.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

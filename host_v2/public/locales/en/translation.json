@@ -7,6 +7,9 @@
     "questionCard": {
       "title": "Question"
     },
+    "popularMistakeCard": {
+      "title": "Popular Mistake"
+    },
     "placeholder": "This is some placeholder text."
   }
 }

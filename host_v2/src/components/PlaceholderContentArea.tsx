@@ -14,6 +14,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
+import PopularMistakeCard from './PopularMistakeCard';
 
 
 // may have to reformat/restructure this later but here is a sample answer object
@@ -48,7 +49,7 @@ export default function PlaceholderContentArea({ questionData, answerOptions }: 
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
           <Card />
-          <Card />
+          <PopularMistakeCard />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
@@ -85,7 +86,7 @@ export default function PlaceholderContentArea({ questionData, answerOptions }: 
         <SwiperSlide >
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
-              <Card />
+              <PopularMistakeCard />
               <Card />
             </ScrollBoxStyled>
           </Grid>
@@ -127,7 +128,7 @@ export default function PlaceholderContentArea({ questionData, answerOptions }: 
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-              <Card />
+              <PopularMistakeCard />
               <Card />
             </ScrollBoxStyled>
           </Grid>
