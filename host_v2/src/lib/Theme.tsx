@@ -28,6 +28,12 @@ const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answe
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
+const graphTickLabelColorLight = 'rgba(255, 255, 255, 0.25)'; // color of labels on player responses cards if no responses
+const playerFeedbackLabelColor = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
+const graphTickLabelColorDark = 'rgba(255, 255, 255, 0.5)'; // color of labels on player responses cards if at least one response
+const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
+const graphAccentColor = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
+const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns 
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
   `${countdownColor}, 0.4)`,
@@ -58,6 +64,8 @@ const mediumPadding = 24; // timer margin
 const largePadding = 32; // text spacing on answer selector, top margin on titles
 const extraLargePadding = 48; // spacing between card and edge of screen
 const extraExtraLargePadding = 64; // spacing between buttons and bottom of screen
+const barStrokeWidth = 2; // stroke width of the bar outlines on host graph cards
+const confidenceBarThickness = 55; // thickness of each bar component in confidence bar graph
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
@@ -74,6 +82,8 @@ declare module '@mui/material/styles' {
       largePadding: number;
       extraLargePadding: number;
       extraExtraLargePadding: number;
+      barStrokeWidth: number;
+      confidenceBarThickness: number;
     };
   }
 
@@ -90,6 +100,8 @@ declare module '@mui/material/styles' {
       largePadding?: number;
       extraLargePadding?: number;
       extraExtraLargePadding?: number;
+      barStrokeWidth?: number;
+      confidenceBarThickness?: number;
     };
   }
 
@@ -109,6 +121,12 @@ declare module '@mui/material/styles' {
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    graphTickLabelColorLight: string;
+    playerFeedbackLabelColor: string;
+    graphTickLabelColorDark: string;
+    feedbackCardsInstructionsColor: string;
+    graphAccentColor: string;
+    dropdownInfoBackgroundColor: string;
     countdownColor: string;
     radialTimerArray: string[];
   }
@@ -130,6 +148,12 @@ declare module '@mui/material/styles' {
     darkGrey?: string;
     lightGrey?: string;
     correctColor?: string;
+    graphTickLabelColorLight?: string;
+    playerFeedbackLabelColor?: string;
+    graphTickLabelColorDark?: string;
+    feedbackCardsInstructionsColor?: string;
+    graphAccentColor?: string;
+    dropdownInfoBackgroundColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
   }
@@ -151,7 +175,8 @@ export default createTheme({
     largePadding,
     extraLargePadding,
     extraExtraLargePadding,
-
+    barStrokeWidth,
+    confidenceBarThickness
   },
   palette: {
     primary: {
@@ -171,6 +196,12 @@ export default createTheme({
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
+      graphTickLabelColorLight,
+      playerFeedbackLabelColor,
+      graphTickLabelColorDark,
+      feedbackCardsInstructionsColor,
+      graphAccentColor,
+      dropdownInfoBackgroundColor,
       countdownColor,
       radialTimerArray,
     },

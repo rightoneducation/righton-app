@@ -7,6 +7,20 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 import ResponsesGraph from './PopularMistake/ResponsesGraph';
 
+const CardContentContainer = styled(Box)({
+  width: '100%',
+  display: 'inline'
+});
+
+const SmallTextContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  flexDirection: 'column',
+  alignItems: 'center',
+  alignSelf: 'stretch',
+  marginTop: `${theme.sizing.extraSmallPadding}px`
+}));
+
 const TitleText = styled(Typography)(({ theme }) => ({
   color: `${theme.palette.primary.main}`,
   fontSize: `${theme.typography.subtitle1.fontSize}`,
@@ -15,16 +29,16 @@ const TitleText = styled(Typography)(({ theme }) => ({
   textAlign: 'left',
 }));
 
-const CardContentContainer = styled(Box)({
-  width: '100%',
-  display: 'inline'
-});
+const InstructionsText = styled(Typography)(({ theme }) => ({
+  color: `${theme.palette.primary.feedbackCardsInstructionsColor}`,
+  fontSize: `${theme.typography.h4.fontSize}`,
+}));
 
 interface Team {
   name: string;
 }
 
-interface PopularMistakeData {
+interface PopularMistakeOption {
   answerChoice: string;
   answerCorrect: boolean;
   answerCount: number;
@@ -51,13 +65,51 @@ export default function PopularMistakeCard() {
   const { t } = useTranslation();
   // TODO: move up
   const sampleTeam: Team = { name: 'first last' };
-  const sampleData: PopularMistakeData[] = [{
+
+  const sampleChoiceNone: PopularMistakeOption = {
+    answerChoice: '-',
+    answerCorrect: false,
+    answerCount: 2,
+    answerTeams: [sampleTeam, sampleTeam],
+    answerText: 'No Response'
+  }
+
+  const sampleChoiceA: PopularMistakeOption = {
     answerChoice: 'A',
     answerCorrect: true,
+    answerCount: 6,
+    answerTeams: [sampleTeam, sampleTeam, sampleTeam, sampleTeam, sampleTeam, sampleTeam],
+    answerText: ' 714'
+  }
+
+  const sampleChoiceB: PopularMistakeOption = {
+    answerChoice: 'B',
+    answerCorrect: false,
+    answerCount: 2,
+    answerTeams: [sampleTeam, sampleTeam],
+    answerText: ' 55'
+  }
+
+  const sampleChoiceC: PopularMistakeOption = {
+    answerChoice: 'C',
+    answerCorrect: false,
+    answerCount: 4,
+    answerTeams: [sampleTeam, sampleTeam, sampleTeam, sampleTeam],
+    answerText: ' 21'
+  }
+
+  const sampleChoiceD: PopularMistakeOption = {
+    answerChoice: 'D',
+    answerCorrect: false,
     answerCount: 1,
     answerTeams: [sampleTeam],
-    answerText: 'sample answer'
-  }]
+    answerText: ' 273'
+  }
+
+  // sample data has to be 'reversed' because the graph is built bottom -> up
+  const sampleData: PopularMistakeOption[] = [
+    sampleChoiceD, sampleChoiceC, sampleChoiceB, sampleChoiceA, sampleChoiceNone
+  ]
   const sampleNumPlayers = 1;
   const sampleTotalAnswers = 1;
   const sampleQuestionChoices: QuestionChoice[] = [
@@ -98,6 +150,12 @@ export default function PopularMistakeCard() {
             graphClickInfo={sampleGraphClickInfo}
             isShortAnswerEnabled
             handleGraphClick={handleGraphClick} />
+          {/* TODO: add dropdown if selectedGraphIndex is not null */}
+          <SmallTextContainer>
+            <InstructionsText>
+              {t('gamesession.popularMistakeCard.instructions')}
+            </InstructionsText>
+          </SmallTextContainer>
         </CardContentContainer>
       </BodyCardContainerStyled>
     </HostDefaultCardStyled>

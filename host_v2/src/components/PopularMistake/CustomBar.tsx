@@ -1,11 +1,12 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
 import { Bar } from 'victory';
 
+// TODO: proper types
 interface BarProps {
   x?: any;
   y?: any;
   xSmallPadding?: any;
-  mediumPadding?: any;
   defaultVictoryPadding?: any;
   selectedWidth?: any;
   selectedHeight?: any;
@@ -21,7 +22,6 @@ export default function CustomBar(props: BarProps) {
     x,
     y,
     xSmallPadding,
-    mediumPadding,
     defaultVictoryPadding,
     selectedWidth,
     selectedHeight,
@@ -31,27 +31,29 @@ export default function CustomBar(props: BarProps) {
     handleGraphClick,
     isShortAnswerEnabled
   } = props;
-  // const classes = useStyles();
+  const theme = useTheme(); // eslint-disable-line
+
   return (
     <g style={{ pointerEvents: 'auto' }}>
       <Bar {...props} />
       {datum.answerCount > 0 && (
         <rect
-          // className={classes.highlight}
           x={isShortAnswerEnabled ? 0 : defaultVictoryPadding - xSmallPadding}
-          y={y - mediumPadding}
+          y={y - theme.sizing.smallPadding}
           width={selectedWidth + defaultVictoryPadding}
-          height={selectedHeight + mediumPadding - xSmallPadding / 2}
+          // TODO: clean this up
+          height={selectedHeight + theme.sizing.smallPadding - xSmallPadding / 2}
           fill={
-            graphClickInfo.selectedIndex &&
+            graphClickInfo.selectedIndex !== null &&
               graphClickInfo.selectedIndex === index &&
               graphClickInfo.graph === 'realtime'
-              ? 'rgba(255, 255, 255, 0.2)'
+              ? `${theme.palette.primary.graphAccentColor}`
               : 'transparent'
           }
           stroke="transparent"
           rx={8}
           ry={8}
+          // TODO: changle handle graph click based on new definition 
           onClick={() =>
             handleGraphClick({ graph: 'realtime', selectedIndex: index })
           }
@@ -62,10 +64,3 @@ export default function CustomBar(props: BarProps) {
   );
 }
 
-// const useStyles = makeStyles(() => ({
-//   highlight: {
-//     '&:hover': {
-//       fill: 'rgba(255, 255, 255, 0.2)',
-//     },
-//   },
-// }));

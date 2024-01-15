@@ -48,8 +48,8 @@ export default function PlaceholderContentArea({ questionData, answerOptions }: 
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <Card />
           <PopularMistakeCard />
+          <Card />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>

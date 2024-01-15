@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
+import { Typography, Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   VictoryChart,
   VictoryAxis,
@@ -9,6 +11,20 @@ import {
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import CustomBar from './CustomBar';
+
+const Container = styled(Box)(({ theme }) => ({
+  textAlign: 'center',
+  width: '100%',
+  maxWidth: `${theme.breakpoints.values.sm}px`,
+  marginTop: `${theme.sizing.smallPadding}px`,
+  marginBottom: `${theme.sizing.smallPadding}px`,
+}));
+
+const TitleText = styled(Typography)(({ theme }) => ({
+  color: `${theme.palette.primary.graphTickLabelColorDark}`,
+  fontSize: `${theme.typography.h4.fontSize}`,
+  paddingBottom: `${theme.sizing.smallPadding}px`,
+}))
 
 interface GraphProps {
   data?: any;
@@ -31,25 +47,24 @@ export default function ResponsesGraph({
   totalAnswers,
   numPlayers
 }: GraphProps) {
-  // const classes = useStyles();
+  // TODO: maybe add these to theme since there are multiple victory graphs with the same format
+  const theme = useTheme(); // eslint-disable-line
+  const { t } = useTranslation();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
   const barThickness = 18;
   const barThicknessZero = 26;
   const xSmallPadding = 4;
-  const smallPadding = 8;
-  const mediumPadding = 16;
   const mediumLargePadding = 20;
-  const largePadding = 24;
   const xLargePadding = 32;
-  const xxLargePadding = 40;
   const labelOffset = 3;
   const noResponseLabel = '–';
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
   const defaultVictoryPadding = 50;
 
-  const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - defaultVictoryPadding : boundingRect.width - (defaultVictoryPadding + largePadding * 2);
+  // TODO: clean this up
+  const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - defaultVictoryPadding : boundingRect.width - (defaultVictoryPadding + theme.sizing.mediumPadding * 2);
   const correctChoiceIndex = data.findIndex((element: any) => element.answerCorrect);
   const largestAnswerCount = Math.max(
     ...data.map((response: any) => response.answerCount),
@@ -91,7 +106,7 @@ export default function ResponsesGraph({
   const customTheme: any = {
     axis: {
       style: {
-        axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+        axis: { stroke: `${theme.palette.primary.graphAccentColor}`, strokeWidth: `${theme.sizing.barStrokeWidth}` },
         grid: { stroke: 'transparent' },
         tickLabels: {
           padding: mediumLargePadding,
@@ -101,54 +116,53 @@ export default function ResponsesGraph({
     dependentAxis: {
       style: {
         axis: { stroke: 'transparent' },
-        grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+        grid: { stroke: `${theme.palette.primary.graphAccentColor}`, strokeWidth: `${theme.sizing.barStrokeWidth}` },
         tickLabels: {
-          fill: 'rgba(255, 255, 255, 0.5)',
-          fontFamily: 'Rubik',
-          fontWeight: '400',
-          fontSize: '12px',
+          fill: `${theme.palette.primary.graphTickLabelColorDark}`,
+          fontWeight: `${theme.typography.body1.fontWeight}`,
+          fontSize: `${theme.typography.caption.fontSize}`,
         },
       },
     },
     bar: {
       style: {
         data: {
+          // TODO: find better way of determining if this is 'no response' option
           fill: ({ datum, index }: { datum: any, index: any }) =>
-            index === 0 ? 'transparent' : '#FFF',
-          stroke: '#FFF',
+            datum.answerChoice === '-' ? 'transparent' : `${theme.palette.primary.main}`,
+          stroke: `${theme.palette.primary.main}`,
+          // TODO: add this to theme
           strokeWidth: 1,
         },
         labels: {
           fill: ({ datum, index }: { datum: any, index: any }) =>
-            index === 0 || datum.answerCount === 0
-              ? '#FFF'
-              : '#384466',
-          fontFamily: 'Rubik',
-          fontWeight: '400',
+            datum.answerCount === 0
+              ? `${theme.palette.primary.main}`
+              : `${theme.palette.primary.darkBlue}`,
+          fontWeight: `${theme.typography.body1.fontWeight}`,
           textAnchor: 'end',
-          fontSize: '12px',
+          fontSize: `${theme.typography.caption.fontSize}`,
         },
       },
     },
   };
   return (
-    <div>
-      {/* className={classes.container}> */}
-      <div>
-        {/* className={classes.titleContainer}> */}
-        <Typography>
-          {/* className={classes.title}> */}
-          Number of players</Typography>
-      </div>
+    <Container>
+      <TitleText>
+        {t('gamesession.popularMistakeCard.graph.title')}
+      </TitleText>
       <div ref={graphRef}>
         {(isShortAnswerEnabled ? data.length >= 1 : data.length > 1) && (
           <VictoryChart
-            domainPadding={{ x: 36, y: 0 }}
+            domainPadding={{ x: 16, y: 0 }}
             padding={{
-              top: mediumPadding,
-              bottom: smallPadding,
-              left: (isShortAnswerEnabled && statePosition < 6) ? smallPadding : defaultVictoryPadding,
-              right: smallPadding,
+              top: theme.sizing.smallPadding,
+              bottom: theme.sizing.extraSmallPadding,
+              // TODO: fix this
+              left: theme.sizing.smallPadding + 25,
+              // TODO: figure out what this is for
+              // (isShortAnswerEnabled && statePosition < 6) ? smallPadding : defaultVictoryPadding,
+              right: theme.sizing.extraSmallPadding,
             }}
             containerComponent={
               <VictoryContainer
@@ -159,22 +173,21 @@ export default function ResponsesGraph({
             }
             theme={customTheme}
             width={boundingRect.width}
-            height={data.length * 65}
+            // TODO: clean this up
+            height={data.length * 45}
           >
             <VictoryAxis
               standalone={false}
               tickLabelComponent={
                 <CustomTick
-                  mediumPadding={mediumPadding}
-                  largePadding={largePadding}
                   data={data}
                   correctChoiceIndex={correctChoiceIndex}
                   statePosition={statePosition}
                   isShortAnswerEnabled={isShortAnswerEnabled}
                 />
               }
-
             />
+            {/* TODO: maybe abstract the below two into a function to avoid repeating code */}
             {largestAnswerCount < 5 && (
               <VictoryAxis
                 dependentAxis
@@ -212,7 +225,6 @@ export default function ResponsesGraph({
               dataComponent={
                 <CustomBar
                   xSmallPadding={xSmallPadding}
-                  mediumPadding={mediumPadding}
                   defaultVictoryPadding={defaultVictoryPadding}
                   selectedWidth={customBarSelectedWidth}
                   selectedHeight={18}
@@ -238,27 +250,6 @@ export default function ResponsesGraph({
           </VictoryChart>
         )}
       </div>
-    </div>
+    </Container>
   );
 }
-
-// const useStyles = makeStyles({
-//   container: {
-//     textAlign: 'center',
-//     width: '100%',
-//     maxWidth: '500px',
-//   },
-//   title: {
-//     color: 'rgba(255, 255, 255, 0.5)',
-//     fontFamily: 'Rubik',
-//     fontSize: '17px',
-//     paddingBottom: '16px',
-//   },
-//   titleContainer: {
-//     marginTop: '3%',
-//   },
-//   answerContainer: {
-//     display: 'flex',
-//     justifyContent: 'center',
-//   },
-// });

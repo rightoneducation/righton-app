@@ -1,10 +1,8 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
 import { VictoryLabel } from 'victory';
-import { Tooltip } from '@mui/material';
-import check from '../../images/Pickedcheck.svg';
-import noResponse from '../../images/noResponse.svg';
 
-
+// TODO: proper types
 interface TickProps {
   x?: any;
   y?: any;
@@ -13,8 +11,6 @@ interface TickProps {
   data?: any;
   correctChoiceIndex?: any;
   statePosition?: any;
-  mediumPadding?: any;
-  largePadding?: any;
   isShortAnswerEnabled?: any;
 }
 
@@ -26,73 +22,23 @@ export default function CustomTick({
   data,
   correctChoiceIndex,
   statePosition,
-  mediumPadding,
-  largePadding,
   isShortAnswerEnabled
 }: TickProps) {
-  // const classes = useStyles();
+  const theme = useTheme(); // eslint-disable-line
   const showCustomTick = index === correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
-  const isNoResponse = index === 0;
+  // TODO: find some way to check if the datum is 'no response' in a way that is cleaner/more dynamic
+  const isNoResponse = text === '-';
   const commonStyle = {
-    fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
+    fill: fillTick ? `${theme.palette.primary.graphTickLabelColorLight}` : `${theme.palette.primary.graphTickLabelColorDark}`,
     fontFamily: 'Poppins',
-    fontWeight: '800',
-    fontSize: '16px',
+    fontWeight: `${theme.typography.h5.fontWeight}`,
+    fontSize: `${theme.typography.h5.fontSize}`,
   };
 
   return (
     <g>
-      {showCustomTick && (
-        <foreignObject
-          x={x - largePadding}
-          y={y - largePadding / 2.5}
-          width={16}
-          height={18}
-        >
-          <Tooltip
-            title={
-              <div>
-                {/* className={classes.tooltip}> */}
-                This is the {'\n'} correct answer
-              </div>
-            }
-            placement="bottom"
-            arrow
-          >
-            <span>
-              {/* <img src={check} alt="correct answer" /> */}
-            </span>
-          </Tooltip>
-        </foreignObject>
-      )}
-      {isNoResponse ? (
-        <foreignObject x={x - 1} y={y - mediumPadding} width={16} height={32}>
-          <Tooltip
-            title={
-              <div>
-                {/* className={classes.tooltip}> */}
-                Players who {'\n'} have not responded
-              </div>
-            }
-            placement="bottom"
-            arrow
-          >
-            <span>
-              {/* <img src={noResponse} alt="no response" /> */}
-            </span>
-          </Tooltip>
-        </foreignObject>
-      ) : (
-        <VictoryLabel x={x} y={y} text={text} style={commonStyle} />
-      )}
+      <VictoryLabel x={x} y={y} text={text} style={commonStyle} />
     </g>
   );
 }
-
-// const useStyles = makeStyles({
-//   tooltip: {
-//     whiteSpace: 'pre-line',
-//     textAlign: 'center',
-//   },
-// });

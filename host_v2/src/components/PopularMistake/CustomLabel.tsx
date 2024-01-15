@@ -1,7 +1,10 @@
 import React, { useCallback } from 'react';
+import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { VictoryLabel } from 'victory';
-import check from '../../images/Pickedcheck_white.svg';
+import check from '../../images/Pickedcheck.svg';
 
+// TODO: proper types
 interface LabelProps {
   x?: any;
   y?: any;
@@ -33,7 +36,10 @@ export default function CustomLabel(props: LabelProps) {
     questionChoices
   } = props;
 
+  const theme = useTheme(); // eslint-disable-line
   // done to prevent embedding a nested ternary in the render function
+
+  // TODO: if need be, apply this logic to the padding/update this function
   const labelPadding = useCallback(() => {
     if (isShortAnswerEnabled) {
       if (datum.answerCorrect)
@@ -45,46 +51,30 @@ export default function CustomLabel(props: LabelProps) {
 
   return (
     <g>
-      {datum.answerCount !== 0 && isShortAnswerEnabled && (
-        <>
-          {datum.answerCorrect && (
-            <foreignObject x={mediumLargePadding} y={y - xLargePadding} width={16} height={18}>
-              <span>
-                {/* <img src={check} alt="correct answer" /> */}
-              </span>
-            </foreignObject>
-          )}
-          <VictoryLabel
-            {...props}
-            x={labelPadding()}
-            y={y - labelOffset}
-            dx={0}
-            dy={-barThickness / 2 - xSmallPadding}
-            textAnchor="start"
-            verticalAnchor="end"
-            text={datum.answerText}
-            style={{
-              fontSize: 15,
-              fill: 'white',
-            }}
-          />
-        </>
+      {datum.answerCorrect && (
+        // TODO: maybe add these dimensions in theme?
+        <foreignObject x={0} y={y - barThickness / 2} width={16} height={16}>
+          <span>
+            <img src={check} alt="correct answer" />
+          </span>
+        </foreignObject>
       )}
       <VictoryLabel
         {...props}
-        x={x > 70 ? x - labelOffset : x + mediumLargePadding}
+        // TODO: clean this up
+        x={x > 70 ? x - labelOffset : x + 12}
         y={y}
         textAnchor="end"
         verticalAnchor="middle"
         text={datum.answerCount > 0 ? `${Math.ceil(datum.answerCount)}` : ''}
         style={{
-          fontSize: 15,
+          fontSize: `${theme.typography.h5.fontSize}`,
           fill:
             datum.answerCount === 0 ||
-              datum.answerChoice === noResponseLabel ||
+              datum.answerChoice === '-' ||
               x <= 70
-              ? '#FFF'
-              : '#384466',
+              ? `${theme.palette.primary.main}`
+              : `${theme.palette.primary.darkBlue}`,
         }}
       />
     </g>
