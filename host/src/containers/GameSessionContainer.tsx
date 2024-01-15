@@ -11,6 +11,7 @@ import {
   IHints,
   isNullOrUndefined,
 } from '@righton/networking';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
 import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId, rebuildHints } from '../lib/HelperFunctions';
@@ -46,6 +47,8 @@ const GameSessionContainer = () => {
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
   const [isHintEnabled, setIsHintEnabled] = useState(true);
+  const isSmallScreen = useMediaQuery(() => '(max-width:463px)', {noSsr: true});
+  const multipleChoiceText = isSmallScreen ? 'Multiple Choice...' : 'Multiple Choice Answer Explanations';
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -53,20 +56,23 @@ const GameSessionContainer = () => {
     { ref: confidenceCardRef, text: 'Confidence Settings' },
     { ref: hintCardRef, text: 'Player Thinking Settings' },
   ];
-  const gameplayNavDictionary = [
-    { ref: questionCardRef, text: 'Question Card' },
-    { ref: responsesRef, text: 'Real-time Responses' },
-    { ref: gameAnswersRef, text: 'Answer Explanations' },
-  ];
   const [navDictionary, setNavDictionary] = useState(
     questionConfigNavDictionary,
   );
   // assembles fields for module navigator in footer
-  const assembleNavDictionary = (isConfidenceEnabled, isHintEnabled, state) => {
+  const assembleNavDictionary = (multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, state) => {
     if (state === GameSessionState.TEAMS_JOINING) {
       setNavDictionary(questionConfigNavDictionary);
       return;
     }
+    const gameplayNavDictionary = [
+      { ref: questionCardRef, text: 'Question Card' },
+      { ref: responsesRef, text: 'Real-time Responses' },
+      { ref: gameAnswersRef, text: 
+          isShortAnswerEnabled ? 
+           multipleChoiceText
+          : `Answer Explanations` },
+    ];
     let newDictionary = [...gameplayNavDictionary];
     let insertIndex = 2;
     if (isConfidenceEnabled && (state === GameSessionState.CHOOSE_CORRECT_ANSWER || state === GameSessionState.PHASE_1_DISCUSS)) {
@@ -124,6 +130,8 @@ const GameSessionContainer = () => {
 
         setHintsError(false);
         assembleNavDictionary(
+          multipleChoiceText,
+          response.questions[response.currentQuestionIndex].isShortAnswerEnabled,
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.questions[response.currentQuestionIndex].isHintEnabled,
           response.currentState,
