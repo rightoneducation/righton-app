@@ -7,6 +7,25 @@
     "questionCard": {
       "title": "Question"
     },
+    "confidenceCard": {
+      "title": "Confidence",
+      "description": "Players are asked how sure they are of their answer for this question.",
+      "instructions": "Tap on a response to see more details.",
+      "graph": {
+        "title": "Number of Players",
+        "legend": {
+          "correct": "correct",
+          "incorrect": "incorrect"
+        },
+        "dropdown": {
+          "header": {
+            "noResponses": "No players picked this option",
+            "containsResponses": "Showing players who answered"
+          },
+          "answerLabel": "Answer"
+        }
+      }
+    },
     "placeholder": "This is some placeholder text."
   }
 }
