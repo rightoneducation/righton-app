@@ -65,6 +65,8 @@ export const localModelAnswerMock = () => {
     isSubmitted: true,
     currentState: null,
     currentQuestionIndex: null,
+    rawAnswer: '',
+    isShortAnswerEnabled: false,
   };
 };
 
@@ -79,6 +81,7 @@ export const localModelLoaderMock = () => {
     hasRejoined: false,
     currentTimer: currentTime - 100,
     answer: localModelAnswerMock(),
+    hint: {rawHint: '', teamName: '', isHintSubmitted: false},
   } as LocalModel;
 };
 
@@ -108,7 +111,7 @@ export const createValidGameSession = async (numberOfTeams: number) => {
     expect(gameSession).toHaveProperty('teams');
     gameSession.teams.forEach((team) => {
       expect(team).toHaveProperty('teamMembers');
-      team.teamMembers!.forEach((teamMember) => {  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      team.teamMembers!.forEach((teamMember) => { // eslint-disable-line @typescript-eslint/no-non-null-assertion
         expect(teamMember).toHaveProperty('answers');
       });
     });

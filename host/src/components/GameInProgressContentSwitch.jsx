@@ -39,7 +39,7 @@ export default function GameInProgressContentSwitch({
   isShortAnswerEnabled,
   handleShortAnswerChange,
   shortAnswerResponses,
-  handleOnSelectMistake,
+  onSelectMistake,
   hintCardRef,
   isHintEnabled,
   handleHintChange,
@@ -181,7 +181,7 @@ export default function GameInProgressContentSwitch({
               <FeaturedMistakes
                 shortAnswerResponses={shortAnswerResponses}
                 totalAnswers={totalAnswers}
-                handleOnSelectMistake={handleOnSelectMistake}
+                onSelectMistake={onSelectMistake}
                 numPlayers={numPlayers}
               />
             </div>

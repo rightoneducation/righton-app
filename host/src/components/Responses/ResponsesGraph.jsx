@@ -137,7 +137,7 @@ export default function ResponsesGraph({
           containerComponent={
             <VictoryContainer 
               style={{
-              touchAction: "auto"
+                touchAction: "auto"
               }}
             />
           }
