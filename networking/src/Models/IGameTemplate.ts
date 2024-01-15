@@ -14,6 +14,6 @@ export interface IGameTemplate {
   phaseTwoTime?: number | null | undefined,
   imageUrl?: string | null | undefined,
   questionTemplates?: IQuestionTemplate[] | null | undefined,
-  createdAt?: string | null | undefined,
-  updatedAt?: string | null
+  createdAt?: number | null | undefined,
+  updatedAt?: number | null
 }
