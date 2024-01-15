@@ -219,6 +219,7 @@ export default function GameInProgressContentSwitch({
             className={classes.contentContainer}
           >
             <GameAnswers
+              isShortAnswerEnabled={isShortAnswerEnabled}
               questions={questions}
               questionChoices={questionChoices}
               currentQuestionIndex={currentQuestionIndex}
