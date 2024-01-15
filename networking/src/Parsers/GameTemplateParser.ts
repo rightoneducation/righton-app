@@ -15,7 +15,9 @@ export class GameTemplateParser {
                   const { gameTemplates, ...rest } = item.questionTemplate;
                   // Only add to questionTemplates if 'rest' is not empty
                   if (Object.keys(rest).length > 0) {
-                      questionTemplates.push({questionTemplate: rest as IQuestionTemplate, gameQuestionId: item.id as string});
+                    const createdAt = new Date(rest.createdAt)
+                    const updatedAt = new Date(rest.updatedAt)
+                      questionTemplates.push({questionTemplate: {...rest, createdAt, updatedAt} as IQuestionTemplate, gameQuestionId: item.id as string});
                   }
               }
           }
@@ -34,9 +36,10 @@ export class GameTemplateParser {
           phaseOneTime,
           phaseTwoTime,
           imageUrl,
-          createdAt,
-          updatedAt
       } = awsGameTemplate || {}
+
+      const createdAt = new Date(awsGameTemplate.createdAt)
+      const updatedAt = new Date(awsGameTemplate.updatedAt)
 
       if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
@@ -45,7 +48,6 @@ export class GameTemplateParser {
           isNullOrUndefined(description) ||
           isNullOrUndefined(phaseOneTime) ||
           isNullOrUndefined(phaseTwoTime) ||
-          isNullOrUndefined(imageUrl) ||
           isNullOrUndefined(createdAt) ||
           isNullOrUndefined(updatedAt)) {
           throw new Error(

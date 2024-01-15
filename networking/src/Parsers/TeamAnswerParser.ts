@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { ITeamAnswer } from "../Models";
 import { AWSTeamAnswer } from "../Models/AWS";
 import { 

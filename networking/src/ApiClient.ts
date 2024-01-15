@@ -170,10 +170,9 @@ export class ApiClient implements IApiClient {
             return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
         });
         const parsedNextToken = result.data.listQuestionTemplates.nextToken;
-        console.log(result);
         return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
         } catch (e) {
-            console.log(e);
+            console.error(e);
             return null;
         }
     }
@@ -189,20 +188,18 @@ export class ApiClient implements IApiClient {
            questionTemplateID,
         }
         const variables: CreateGameQuestionsMutationVariables = { input }
-        console.log(variables);
+
         try {
             const gameQuestions = await this.callGraphQL<CreateGameQuestionsMutation>(
                 createGameQuestions,
                 variables
             )
-            console.log('sup');
             if (
                 isNullOrUndefined(gameQuestions.data) ||
                 isNullOrUndefined(gameQuestions.data.createGameQuestions)
             ) {
                 throw new Error(`Failed to create game template.`)
             }
-            console.log(gameQuestions);
         } catch (e) {
             console.log(e);
         } 
@@ -217,7 +214,6 @@ export class ApiClient implements IApiClient {
             return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
         });
         const parsedNextToken = result.data.listGameTemplates.nextToken;
-        
         return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
     }
 
@@ -230,32 +226,16 @@ export class ApiClient implements IApiClient {
 
     async createGameSessionFromTemplate(id: string): Promise<string | null> {
         try {
-            console.log('sup');
             const response = await API.graphql(
                 graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
             ) as { data: { createGameSessionFromTemplate: string } };
             const result = response.data.createGameSessionFromTemplate;
-            console.log(result);
             return result;
         } catch (e) {
             console.error(e);
             return null;
         }
     }
-    // async createGameSessionFromTemplate(id: string): Promise< IGameSession | null> {
-    //     try{
-    //         console.log('sup');
-    //     let result = (await API.graphql(
-    //         graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
-    //     )) as any
-    //     console.log(result);
-    //     return null; //  GameSessionParser.gameSessionFromAWSGameSession(result)
-   
-    //     } catch (e) {
-    //         console.log(e);
-    //         return null;
-    //     }
-    // }
 
     createGameSession(
         gameId: number,
@@ -670,14 +650,18 @@ class GameTemplateParser {
     ): IGameTemplate {
         // parse the IQuestionTemplate[] from IModelGameQuestionConnection
         let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
-        if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
+        if (!isNullOrUndefined(awsGameTemplate) &&
+            !isNullOrUndefined(awsGameTemplate.questionTemplates) &&
+            !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
             for (const item of awsGameTemplate.questionTemplates.items) {
   
                 if (item && item.questionTemplate) {
                     const { gameTemplates, ...rest } = item.questionTemplate;
                     // Only add to questionTemplates if 'rest' is not empty
                     if (Object.keys(rest).length > 0) {
-                        questionTemplates.push({questionTemplate: rest as IQuestionTemplate, gameQuestionId: item.id as string});
+                        const createdAt = new Date(rest.createdAt)
+                        const updatedAt = new Date(rest.updatedAt)
+                        questionTemplates.push({questionTemplate: {...rest, createdAt, updatedAt} as IQuestionTemplate, gameQuestionId: item.id as string});
                     }
                 }
             }
@@ -696,9 +680,10 @@ class GameTemplateParser {
             phaseOneTime,
             phaseTwoTime,
             imageUrl,
-            createdAt,
-            updatedAt
         } = awsGameTemplate || {}
+
+        const createdAt = new Date(awsGameTemplate.createdAt)
+        const updatedAt = new Date(awsGameTemplate.updatedAt)
 
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
@@ -741,13 +726,17 @@ class QuestionTemplateParser {
         awsQuestionTemplate: AWSQuestionTemplate
     ): IQuestionTemplate {
         let gameTemplates: Array<{ gameTemplate: IGameTemplate, gameQuestionId: string }> | null = [];
-        if (!isNullOrUndefined(awsQuestionTemplate) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
+        if (!isNullOrUndefined(awsQuestionTemplate) &&
+            !isNullOrUndefined(awsQuestionTemplate.gameTemplates) &&
+            !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
             for (const item of awsQuestionTemplate.gameTemplates.items) {
               if (item && item.gameTemplate) {
                   const { questionTemplates, ...rest } = item.gameTemplate;
                   // Only add to questionTemplates if 'rest' is not empty
                   if (Object.keys(rest).length > 0) {
-                      gameTemplates.push({gameTemplate: rest as IGameTemplate, gameQuestionId: item.id as string});
+                    const createdAt = new Date(rest.createdAt)
+                    const updatedAt = new Date(rest.updatedAt)
+                    gameTemplates.push({gameTemplate: {...rest, createdAt, updatedAt} as IGameTemplate, gameQuestionId: item.id as string});
                   }
               }
           }
@@ -766,9 +755,11 @@ class QuestionTemplateParser {
             grade,
             standard,
             imageUrl,
-            createdAt,
-            updatedAt
         } = awsQuestionTemplate || {}
+
+        const createdAt = new Date(awsQuestionTemplate.createdAt)
+        const updatedAt = new Date(awsQuestionTemplate.updatedAt)
+
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
@@ -792,10 +783,10 @@ class QuestionTemplateParser {
             choices,
             instructions,
             answerSettings,
-            domain: domain ?? null,
-            cluster: cluster ?? null,
-            grade: grade ?? null,
-            standard: standard ?? null,
+            domain,
+            cluster,
+            grade,
+            standard,
             imageUrl,
             gameTemplates,
             createdAt,
