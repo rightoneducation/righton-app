@@ -672,7 +672,6 @@ class GameTemplateParser {
         let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
         if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
             for (const item of awsGameTemplate.questionTemplates.items) {
-  
                 if (item && item.questionTemplate) {
                     const { gameTemplates, ...rest } = item.questionTemplate;
                     // Only add to questionTemplates if 'rest' is not empty
@@ -681,35 +680,34 @@ class GameTemplateParser {
                     }
                 }
             }
+        } else {
+            // assign an empty array if questionTemplates is null
+            questionTemplates = [];
         }
 
+        // destructure AWSGameTemplate and assign default values if null
         const {
             id,
             title,
             owner,
             version,
             description,
-            domain,
-            cluster,
-            grade,
-            standard,
-            phaseOneTime,
-            phaseTwoTime,
-            imageUrl,
-            createdAt,
-            updatedAt
+            domain = awsGameTemplate.domain ?? '', 
+            cluster = awsGameTemplate.cluster ?? '',
+            grade = awsGameTemplate.grade ?? '',
+            standard = awsGameTemplate.standard ?? '',
+            phaseOneTime = awsGameTemplate.phaseOneTime ?? 120,
+            phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 120,
+            imageUrl = awsGameTemplate.imageUrl ?? '',
+            createdAt = awsGameTemplate.createdAt ?? '',
+            updatedAt = awsGameTemplate.updatedAt ?? ''
         } = awsGameTemplate || {}
 
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
             isNullOrUndefined(version) ||
-            isNullOrUndefined(description) ||
-            isNullOrUndefined(phaseOneTime) ||
-            isNullOrUndefined(phaseTwoTime) ||
-            isNullOrUndefined(imageUrl) ||
-            isNullOrUndefined(createdAt) ||
-            isNullOrUndefined(updatedAt)) {
+            isNullOrUndefined(description)) {
             throw new Error(
                 "Game Template has null field for the attributes that are not nullable"
             )
@@ -751,7 +749,10 @@ class QuestionTemplateParser {
                   }
               }
           }
-        } 
+        } else {
+            // assign an empty array if gameTemplates is null
+            gameTemplates = [];
+        }
 
         const {
             id,
@@ -761,24 +762,22 @@ class QuestionTemplateParser {
             choices,
             instructions,
             answerSettings,
-            domain,
-            cluster,
-            grade,
-            standard,
-            imageUrl,
-            createdAt,
-            updatedAt
+            domain = awsQuestionTemplate.domain ?? '',
+            cluster = awsQuestionTemplate.cluster ?? '',
+            grade = awsQuestionTemplate.grade ?? '',
+            standard = awsQuestionTemplate.standard ?? '',
+            imageUrl = awsQuestionTemplate.imageUrl ?? '',
+            createdAt = awsQuestionTemplate.createdAt ?? '',
+            updatedAt = awsQuestionTemplate.updatedAt ?? ''
         } = awsQuestionTemplate || {}
+        
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
             isNullOrUndefined(version) ||
             isNullOrUndefined(choices) ||
             isNullOrUndefined(instructions) ||
-            isNullOrUndefined(answerSettings) ||
-            isNullOrUndefined(imageUrl) ||
-            isNullOrUndefined(createdAt) ||
-            isNullOrUndefined(updatedAt)) {
+            isNullOrUndefined(answerSettings)) {
             throw new Error(
                 "Question Template has null field for the attributes that are not nullable"
             )
@@ -792,10 +791,10 @@ class QuestionTemplateParser {
             choices,
             instructions,
             answerSettings,
-            domain: domain ?? null,
-            cluster: cluster ?? null,
-            grade: grade ?? null,
-            standard: standard ?? null,
+            domain,
+            cluster,
+            grade,
+            standard,
             imageUrl,
             gameTemplates,
             createdAt,
@@ -836,14 +835,14 @@ class TeamParser {
         const {
             id,
             name,
-            teamMembers,
-            score,
-            selectedAvatarIndex,
-            createdAt,
-            updatedAt,
-            gameSessionTeamsId,
-            teamQuestionId,
-            teamQuestionGameSessionId,
+            teamMembers = TeamMemberParser.mapTeamMembers(awsTeam.teamMembers?.items) ?? [],
+            score = awsTeam.score ?? 0,
+            selectedAvatarIndex = awsTeam.selectedAvatarIndex ?? 0,
+            createdAt = awsTeam.createdAt ?? '',
+            updatedAt = awsTeam.updatedAt ?? '',
+            gameSessionTeamsId = awsTeam.gameSessionTeamsId ?? '',
+            teamQuestionId = awsTeam.teamQuestionId ?? '',
+            teamQuestionGameSessionId = awsTeam.teamQuestionGameSessionId ?? '',
         } = awsTeam || {}
 
         if (isNullOrUndefined(id)) {
@@ -855,7 +854,7 @@ class TeamParser {
         const team: ITeam = {
             id,
             name,
-            teamMembers: TeamMemberParser.mapTeamMembers(teamMembers?.items),
+            teamMembers,
             score,
             selectedAvatarIndex,
             createdAt,
@@ -900,15 +899,15 @@ class TeamMemberParser {
     ): ITeamMember {
         const {
             id,
-            isFacilitator,
-            answers,
-            deviceId,
-            createdAt,
-            updatedAt,
-            teamTeamMembersId,
+            isFacilitator = awsTeamMember.isFacilitator ?? false,
+            answers = TeamAnswerParser.mapTeamAnswers(awsTeamMember.answers?.items) ?? [],
+            deviceId = awsTeamMember.deviceId ?? '',
+            createdAt = awsTeamMember.createdAt ?? '',
+            updatedAt = awsTeamMember.updatedAt ?? '',
+            teamTeamMembersId = awsTeamMember.teamTeamMembersId ?? '',
         } = awsTeamMember || {}
 
-        if (isNullOrUndefined(id) || isNullOrUndefined(teamTeamMembersId)) {
+        if (isNullOrUndefined(id)) {
             throw new Error(
                 "Team member has null field for the attributes that are not nullable"
             )
@@ -917,7 +916,7 @@ class TeamMemberParser {
         const teamMember: ITeamMember = {
             id,
             isFacilitator,
-            answers: TeamAnswerParser.mapTeamAnswers(answers?.items),
+            answers,
             deviceId,
             createdAt,
             updatedAt,
@@ -962,21 +961,20 @@ class TeamAnswerParser {
             return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
         })
     }
-
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
     ): ITeamAnswer {
         const {
             id,
-            questionId,
+            questionId = awsTeamAnswer.questionId ?? '',
             isChosen,
             isTrickAnswer,
-            text,
-            awsAnswerContents,
+            text = awsTeamAnswer.text ?? '',
+            awsAnswerContents = awsTeamAnswer.awsAnswerContents ?? '',
             createdAt,
             updatedAt,
-            teamMemberAnswersId,
-            confidenceLevel
+            teamMemberAnswersId = awsTeamAnswer.teamMemberAnswersId ?? '',
+            confidenceLevel = awsTeamAnswer.confidenceLevel ?? ConfidenceLevel.NOT_RATED
         } = awsTeamAnswer || {}
 
         if (isNullOrUndefined(id) ||
