@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -17,6 +17,7 @@ import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
+
 
 // may have to reformat/restructure this later but here is a sample answer object
 interface AnswerOption {
@@ -83,6 +84,7 @@ export default function PlaceholderContentArea({
           <Card />
         </ScrollBoxStyled>
       </Grid>
+
     </BodyContentAreaTripleColumnStyled>
 
   const mediumScreen =
@@ -193,4 +195,5 @@ export default function PlaceholderContentArea({
       />
     </>
   );
+
 }
