@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '64px',
     background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
-    gap: 16
+    gap: 16,
   },
   pageButton: {
     border: '4px solid #159EFA',

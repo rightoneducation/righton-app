@@ -38,8 +38,9 @@ type QuestionTemplate @model {
   title: String!
   owner: String!
   version: Int!
-  choices: String
-  instructions: String
+  choices: AWSJSON
+  instructions: AWSJSON
+  answerSettings: AWSJSON
   domain: String
   cluster: String
   grade: String
