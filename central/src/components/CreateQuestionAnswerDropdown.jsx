@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Card, CardContent, Collapse, Button, IconButton, TextField, List, ListItem, Box, RadioGroup, Radio, FormControlLabel } from "@material-ui/core";
 import { ExpandMore, Add } from '@material-ui/icons';
+import { AnswerType, AnswerPrecision } from '@righton/networking';
 
 export default function QuestionFormAnswerDropdown({
   choice,
@@ -44,8 +45,8 @@ export default function QuestionFormAnswerDropdown({
   }
   const instructionsArray = instructionsHandler(instructions);
   const handleOnTypeChange = (event) => {
-    setAnswerType(event.target.value);
-    onChoiceTextChangeMaker(index, event.target.value)({ currentTarget: { value: choice.text } });
+    setAnswerType(event);
+    onChoiceTextChangeMaker(choice, index, event)({ currentTarget: { value: choice.text } });
   };
   return (
     <Grid item xs={12}>
@@ -53,13 +54,13 @@ export default function QuestionFormAnswerDropdown({
         <Box className={classes.correctCardBox}>
           <CardContent style={{ display: 'flex', justifyContent: 'space-between', padding: 0 }}>
             <Box style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 16 }}>
-              <Typography className={classes.answer}>{index === 0 ? 'Correct Answer:' : `Wrong Answer ${index}:`}</Typography>
+              <Typography className={classes.answer}>{choice.isAnswer === true ? 'Correct Answer:' : `Wrong Answer ${index}:`}</Typography>
               <TextField
                 size="small"
                 style={{ width: 600, margin: 0, position: 'relative', left: 16 }}
                 id={`choice${index + 1}`}
                 value={choice.text}
-                onChange={onChoiceTextChangeMaker(index, answerType)}
+                onChange={onChoiceTextChangeMaker(choice, index, answerType)}
                 label="Type Answer Here"
                 variant="outlined"
                 required
@@ -69,56 +70,56 @@ export default function QuestionFormAnswerDropdown({
               <ExpandMore fontSize='large' />
             </IconButton>
           </CardContent>
-          { index === 0 ? 
+          { choice.isAnswer === true ? 
             <>
               <Box className={classes.answerTypeBox}> 
                 <Typography className={classes.answerType}>{"Answer Type: "}</Typography>
-                <RadioGroup value={answerType} row onChange={(event) =>{ handleOnTypeChange(event)}}>
+                <RadioGroup value={answerType} row onChange={(event) =>{ handleOnTypeChange(Number(event.target.value))}}>
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'text'}
+                    value={AnswerType.STRING}
                     control={<Radio className={classes.radioButton} />} 
                     label={'Text'} 
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'number'}
+                    value={AnswerType.NUMBER}
                     control={<Radio className={classes.radioButton} />} 
                     label={'Number'} 
                   />
                     <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'expresssion'}
+                    value={AnswerType.EXPRESSION}
                     control={<Radio className={classes.radioButton} />} 
                     label={'Mathematical Expression'} 
                   />
                 </RadioGroup>
               </Box>
-              {answerType === 'number' ?
+              {answerType === AnswerType.NUMBER ?
               <Box className={classes.answerTypeBox}> 
                 <Typography className={classes.answerType}>{"Decimal Places: "}</Typography>
-                <RadioGroup value={answerPrecision} row onChange={(event) => setAnswerPrecision(event.target.value)}>
+                <RadioGroup value={answerPrecision} row onChange={(event) => {setAnswerPrecision(Number(event.target.value))}}>
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'WHOLE'} 
+                    value={AnswerPrecision.WHOLE} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Ones (0)'} 
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'TENTH'} 
+                    value={AnswerPrecision.TENTH} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Tenths (0.1)'} 
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'HUNDREDTH'} 
+                    value={AnswerPrecision.HUNDREDTH} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Hundredths (0.01)'}
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'THOUSANDTH'}
+                    value={AnswerPrecision.THOUSANDTH}
                     control={<Radio className={classes.radioButton} />} 
                     label={'Thousandths (0.001)'}
                   />

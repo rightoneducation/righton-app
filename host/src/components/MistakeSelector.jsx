@@ -5,14 +5,14 @@ export default function MistakeSelector({
   mistakeText,
   mistakePercent,
   mistakeIndex,
-  isTop3Mode,
+  isPopularMode,
   isSelected,
   handleSelectMistake,
 }) {
   const classes = useStyles();
   const circleIndicator = [
     <>
-      {((isTop3Mode && isSelected) || !isTop3Mode) 
+      {((isPopularMode && isSelected) || !isPopularMode) 
         ?
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -23,7 +23,7 @@ export default function MistakeSelector({
           >
             {isSelected
               ? <circle cx="8" cy="8" r="8" fill="white"/>
-              : (!isTop3Mode ? <circle cx="8.00391" cy="8" r="7.5" stroke="#B1BACB"/> : null)
+              : (!isPopularMode ? <circle cx="8.00391" cy="8" r="7.5" stroke="#B1BACB"/> : null)
             }
           </svg>
         : null
@@ -35,10 +35,10 @@ export default function MistakeSelector({
       <Typography
         variant="body2"
         style={{
-          paddingLeft:   '16px',
+          paddingLeft: '16px',
           paddingRight: '32px',
           opacity: isSelected ? 1 : 0.5,
-          textAlign: 'leftt',
+          textAlign: 'left',
         }}
       >
         {mistakeText}
@@ -53,13 +53,13 @@ export default function MistakeSelector({
         >
           {mistakePercent}%
         </Typography>
-        <Box className={classes.selectIndicatorContainer} style={{right:  `16px`}} >
+        <Box className={classes.selectIndicatorContainer} style={{right: `16px`}} >
           {circleIndicator} 
         </Box>
       </Box>
     </>
   );
-  switch (isTop3Mode) {
+  switch (isPopularMode) {
     case true:
     default:
       return (

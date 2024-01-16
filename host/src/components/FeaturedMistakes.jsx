@@ -13,45 +13,40 @@ import MistakeSelector from "./MistakeSelector";
 export default function FeaturedMistakes({
   shortAnswerResponses,
   totalAnswers,
-  handleOnSelectMistake,
+  onSelectMistake,
 }) {
   const classes = useStyles();
   const title = "Featured Mistakes";
   const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
   const radioButtonText1 = "Use the top 3 answers by popularity";
   const radioButtonText2 = "Manually pick the options";
-  const [isTop3Mode, setIsTop3Mode] = useState(true);
+  const numOfPopularMistakes = 3;
+  const [isPopularMode, setIsPopularMode] = useState(true);
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const sortMistakes = (shortAnswerResponses, totalAnswers) => {
-    const extractedMistakes = shortAnswerResponses.reduce((acc, shortAnswerResponse) => {
-      if (!shortAnswerResponse.isCorrect){
-        acc.push({
-          answer: shortAnswerResponse.rawAnswer, 
-          percent: Math.round((shortAnswerResponse.count/totalAnswers)*100), 
-          isSelected: shortAnswerResponse.isSelectedMistake ?? false
-        });
-      };
-      return acc;
-    }, []);
-    let sortedMistakes = [];
-    if (extractedMistakes.length > 0) {
-      sortedMistakes = extractedMistakes.sort((a, b) => {
-        return b.percent - a.percent;
-      });
-      if (isTop3Mode) {
-        for (let i = 0; i < Math.min(sortedMistakes.length, 3); i++){
-          sortedMistakes[i].isSelected = true;
-          handleOnSelectMistake(sortedMistakes[i].answer, true);
-        }
+    const extractedMistakes = shortAnswerResponses
+      .filter(shortAnswerResponse => !shortAnswerResponse.isCorrect)
+      .reduce((mistakes, shortAnswerResponse) => mistakes.push({ 
+        answer: shortAnswerResponse.rawAnswer, 
+        percent: Math.round((shortAnswerResponse.count/totalAnswers)*100), 
+        isSelected: shortAnswerResponse.isSelectedMistake ?? false
+      }), []);
+    let sortedMistakes = extractedMistakes.sort((a, b) => {
+      return b.percent - a.percent;
+    });
+    if (isPopularMode) {
+      for (let i = 0; i < Math.min(sortedMistakes.length, numOfPopularMistakes); i++){
+        sortedMistakes[i].isSelected = true;
+        onSelectMistake(sortedMistakes[i].answer, true);
       }
     }
-    return sortedMistakes ?? [];
+    return sortedMistakes;
   };
   const [sortedMistakes, setSortedMistakes] = useState([]);
-  const resetMistakesToTop3 = () => {
+  const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
-      if (index < 3){
-        handleOnSelectMistake(mistake.answer, true);
+      if (index < numOfPopularMistakes){
+        onSelectMistake(mistake.answer, true);
         return {...mistake, isSelected: true};
       }
       return {...mistake, isSelected: false};
@@ -61,15 +56,15 @@ export default function FeaturedMistakes({
 
   const handleModeChange = (event) => {
     if (event.target.value === 'A') {
-      resetMistakesToTop3();
-      setIsTop3Mode(true);
+      resetMistakesToPopular();
+      setIsPopularMode(true);
     } else {
-      setIsTop3Mode(false);
+      setIsPopularMode(false);
     }
   };
 
   const handleSelectMistake = (index) => {
-    handleOnSelectMistake(sortedMistakes[index].answer, false);
+    onSelectMistake(sortedMistakes[index].answer, false);
     setSortedMistakes((prev) => {
       const newMistakes = [...prev];
       newMistakes[index].isSelected = !newMistakes[index].isSelected;
@@ -105,7 +100,7 @@ export default function FeaturedMistakes({
                   key={index} 
                   mistakeText={mistake.answer} 
                   mistakePercent={mistake.percent} 
-                  isTop3Mode={isTop3Mode} 
+                  isPopularMode={isPopularMode} 
                   isSelected={mistake.isSelected} 
                   mistakeIndex={index}
                   handleSelectMistake={handleSelectMistake} 
@@ -132,7 +127,6 @@ const useStyles = makeStyles(({
     borderRadius: '24px',
     padding: `16px`,
     backgroundColor: 'rgba(0,0,0,0)', 
-    // boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.40)',
     gap:16,
   },
   title: {
