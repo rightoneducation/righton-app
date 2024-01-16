@@ -182,7 +182,6 @@ export default function GameInProgress({
       const responseGame = await apiClient.getGameSession(
         localModel.gameSessionId
       );
-      console.log(responseGame);
       setTeamAnswerId(response.id);
       setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
       setDisplaySubmitted(true);

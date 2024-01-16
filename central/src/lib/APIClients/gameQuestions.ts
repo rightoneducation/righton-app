@@ -1,13 +1,13 @@
 import {
   Environment,
   IGameQuestions,
-  IGameQuestionsAPIClient,
+  IGameQuestionAPIClient,
   GameQuestionsAPIClient,
   CreateGameQuestionsInput,
   UpdateGameQuestionsInput
 } from '@righton/networking';
 
-let gameQuestionsAPIClient: IGameQuestionsAPIClient = new GameQuestionsAPIClient(Environment.Testing);
+let gameQuestionsAPIClient: IGameQuestionAPIClient = new GameQuestionsAPIClient(Environment.Testing);
 export const createGameQuestions = async (createGameQuestionsInput: CreateGameQuestionsInput): Promise<IGameQuestions | null> => {
   try {
     const gameQuestions = await gameQuestionsAPIClient.createGameQuestions(createGameQuestionsInput);
@@ -31,7 +31,7 @@ export const getGameQuestions = async (id: string): Promise<IGameQuestions | nul
 
 export const deleteGameQuestions = async (id: string): Promise<IGameQuestions | null> => {
   try {
-    const gameQuestions = await gameQuestionsAPIClient.deleteGameQuestions(id);
+    const gameQuestions = await gameQuestionsAPIClient.deleteGameQuestion(id);
     return gameQuestions;
   } catch (e) {
     console.log(e);

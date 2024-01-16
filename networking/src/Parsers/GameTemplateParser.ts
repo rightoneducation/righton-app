@@ -37,9 +37,10 @@ export class GameTemplateParser {
             phaseOneTime = awsGameTemplate.phaseOneTime ?? 120,
             phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 120,
             imageUrl = awsGameTemplate.imageUrl ?? '',
-            createdAt = awsGameTemplate.createdAt ?? '',
-            updatedAt = awsGameTemplate.updatedAt ?? ''
         } = awsGameTemplate || {}
+
+        const createdAt = new Date(awsGameTemplate.createdAt ?? 0)
+        const updatedAt = new Date(awsGameTemplate.updatedAt ?? 0)
 
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
@@ -67,7 +68,7 @@ export class GameTemplateParser {
             questionTemplates,
             createdAt,
             updatedAt
-        }
+        } as IGameTemplate
         return gameTemplate
     }
 }

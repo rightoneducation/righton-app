@@ -35,10 +35,11 @@ export class QuestionTemplateParser {
             grade = awsQuestionTemplate.grade ?? '',
             standard = awsQuestionTemplate.standard ?? '',
             imageUrl = awsQuestionTemplate.imageUrl ?? '',
-            createdAt = awsQuestionTemplate.createdAt ?? '',
-            updatedAt = awsQuestionTemplate.updatedAt ?? ''
         } = awsQuestionTemplate || {}
-        
+
+        const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
+        const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
+
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
