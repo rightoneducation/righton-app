@@ -62,7 +62,7 @@ export default function CustomLabel(props: LabelProps) {
       <VictoryLabel
         {...props}
         // TODO: clean this up
-        x={x > 70 ? x - labelOffset : x + 12}
+        x={x > (theme.typography.h5.fontSize !== undefined && x <= theme.typography.h5.fontSize) ? x - labelOffset : x + 12}
         y={y}
         textAnchor="end"
         verticalAnchor="middle"
@@ -72,7 +72,7 @@ export default function CustomLabel(props: LabelProps) {
           fill:
             datum.answerCount === 0 ||
               datum.answerChoice === '-' ||
-              x <= 70
+              (theme.typography.h5.fontSize !== undefined && x <= theme.typography.h5.fontSize)
               ? `${theme.palette.primary.main}`
               : `${theme.palette.primary.darkBlue}`,
         }}

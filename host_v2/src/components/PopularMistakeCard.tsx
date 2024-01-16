@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
-import ResponsesGraph from './PopularMistake/ResponsesGraph';
+import ResponsesGraph from './PopularMistake/ResponseGraph';
+import ResponseDropdown from './PopularMistake/ResponseDropdown';
 
 const CardContentContainer = styled(Box)({
   width: '100%',
@@ -110,14 +111,22 @@ export default function PopularMistakeCard() {
   const sampleData: PopularMistakeOption[] = [
     sampleChoiceD, sampleChoiceC, sampleChoiceB, sampleChoiceA, sampleChoiceNone
   ]
-  const sampleNumPlayers = 1;
-  const sampleTotalAnswers = 1;
+
   const sampleQuestionChoices: QuestionChoice[] = [
     { reason: '', text: '714', isAnswer: true },
     { reason: 'Although 21 and 34 are the nex..', text: '55', isAnswer: false },
     { reason: 'knknknknkn…', text: '21', isAnswer: false },
     { reason: 'wdijwdiwidjwi…', text: '273', isAnswer: false },
   ]
+
+  function getNumPlayers(responseData: PopularMistakeOption[]) {
+    let sum = 0;
+    responseData.forEach((datum) => { sum += datum.answerCount });
+    return sum;
+  }
+
+  const sampleNumPlayers = getNumPlayers(sampleData);
+  console.log(sampleNumPlayers);
 
   const sampleStatePosition = 2;
   const [sampleGraphClickInfo, setSampleGraphClickInfo] = useState<GraphClickInfo>({
@@ -142,20 +151,20 @@ export default function PopularMistakeCard() {
       <BodyCardContainerStyled spacing={2}>
         <CardContentContainer>
           <TitleText>{t('gamesession.popularMistakeCard.title')}</TitleText>
-          <ResponsesGraph data={sampleData}
-            numPlayers={sampleNumPlayers}
-            totalAnswers={sampleTotalAnswers}
+          <ResponsesGraph
+            data={sampleData}
             questionChoices={sampleQuestionChoices}
             statePosition={sampleStatePosition}
             graphClickInfo={sampleGraphClickInfo}
             isShortAnswerEnabled
             handleGraphClick={handleGraphClick} />
           {/* TODO: add dropdown if selectedGraphIndex is not null */}
-          <SmallTextContainer>
+          {sampleGraphClickInfo.selectedIndex !== null ?
+            <ResponseDropdown responseData={sampleData} graphClickIndex={sampleGraphClickInfo.selectedIndex} numPlayers={sampleNumPlayers} /> :
             <InstructionsText>
               {t('gamesession.popularMistakeCard.instructions')}
             </InstructionsText>
-          </SmallTextContainer>
+          }
         </CardContentContainer>
       </BodyCardContainerStyled>
     </HostDefaultCardStyled>

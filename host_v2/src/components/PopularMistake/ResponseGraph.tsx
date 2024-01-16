@@ -33,8 +33,6 @@ interface GraphProps {
   graphClickInfo?: any;
   isShortAnswerEnabled?: any;
   handleGraphClick?: any;
-  numPlayers?: any;
-  totalAnswers?: any;
 }
 
 export default function ResponsesGraph({
@@ -43,9 +41,7 @@ export default function ResponsesGraph({
   statePosition,
   graphClickInfo,
   isShortAnswerEnabled,
-  handleGraphClick,
-  totalAnswers,
-  numPlayers
+  handleGraphClick
 }: GraphProps) {
   // TODO: maybe add these to theme since there are multiple victory graphs with the same format
   const theme = useTheme(); // eslint-disable-line
