@@ -2,6 +2,7 @@
 
 export * from './GameSessionParser';
 export * from './GameTemplateParser';
+export * from './QuestionParser';
 export * from './QuestionTemplateParser';
 export * from './TeamAnswerParser';
 export * from './TeamMemberParser';

@@ -8,7 +8,7 @@ export interface IGameSession {
     startTime: string
     phaseOneTime: number
     phaseTwoTime: number
-    teams?: Array<ITeam>
+    teams: Array<ITeam>
     currentQuestionIndex: number
     currentState: GameSessionState
     gameCode: number

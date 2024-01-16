@@ -65,6 +65,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { GameSessionParser } from "./Parsers/GameSessionParser"
+import { QuestionParser } from "./Parsers/QuestionParser"
 import { Environment } from "./APIClients/BaseAPIClient"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
 import { IGameTemplate, IQuestionTemplate, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
@@ -585,7 +586,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update question`)
         }
-        return question.data.updateQuestion as IQuestion
+        return QuestionParser.questionFromAWSQuestion(question.data.updateQuestion) as IQuestion
     }
 
     // Private methods

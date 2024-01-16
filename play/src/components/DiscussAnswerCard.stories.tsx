@@ -36,7 +36,7 @@ const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as AWSGameSession
 ) as IGameSession;
 
-const answerChoices = gameSession.questions[0].choices!.map(  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+const answerChoices = gameSession.questions[0].choices.map(
   (choice: IChoice) => ({
     id: uuidv4(),
     text: choice.text,
@@ -51,7 +51,7 @@ const currentQuestion = questions[0];
 export const PHASE_1_DISCUSS = Template.bind({});
 PHASE_1_DISCUSS.args = {
   isPlayerCorrect: true,
-  instructions: currentQuestion.instructions!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  instructions: currentQuestion.instructions,
   answerStatus: AnswerState.CORRECT,
   answerText: '60%',
   answerIndex: 0,
@@ -62,7 +62,7 @@ PHASE_1_DISCUSS.args = {
 export const PHASE_2_DISCUSS = Template.bind({});
 PHASE_2_DISCUSS.args = {
   isPlayerCorrect: true,
-  instructions: currentQuestion.instructions!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  instructions: currentQuestion.instructions,
   answerStatus: AnswerState.SELECTED,
   answerText: '60%',
   answerIndex: 0,

@@ -1,11 +1,12 @@
 import { isNullOrUndefined } from "../IApiClient"
-import { IGameSession, ITeam, IQuestion, IChoice, ITeamMember } from "../Models"
+import { IGameSession, ITeam, IQuestion, ITeamMember } from "../Models"
 import { AWSGameSession, AWSTeam, AWSQuestion } from "../Models/AWS"
 import { 
   OnUpdateGameSessionSubscription, 
   UpdateGameSessionMutation, 
   OnGameSessionUpdatedByIdSubscription 
 } from "../AWSMobileApi"
+import { QuestionParser } from "./QuestionParser"
 import { TeamMemberParser } from "./TeamMemberParser"
 
 export class GameSessionParser {
@@ -133,47 +134,12 @@ export class GameSessionParser {
       })
   }
 
-  private static parseServerArray<T>(input: any | T[]): Array<T> {
-      if (input instanceof Array) {
-          return input as T[]
-      } else if (typeof input === "string") {
-          return JSON.parse(input as string)
-      }
-      return []
-  }
-
   private static mapQuestions(
-      awsQuestions: Array<AWSQuestion | null>
+      awsQuestions: Array<AWSQuestion>
   ): Array<IQuestion> {
       return awsQuestions
           .map((awsQuestion) => {
-              if (isNullOrUndefined(awsQuestion)) {
-                  throw new Error("Question cannot be null.")
-              }
-              const question: IQuestion = {
-                  id: awsQuestion.id,
-                  text: awsQuestion.text,
-                  choices: isNullOrUndefined(awsQuestion.choices)
-                      ? []
-                      : this.parseServerArray<IChoice>(awsQuestion.choices),
-                  responses: [],
-                  imageUrl: awsQuestion.imageUrl,
-                  instructions: isNullOrUndefined(awsQuestion.instructions)
-                      ? []
-                      : this.parseServerArray<string>(
-                          awsQuestion.instructions
-                      ),
-                  standard: awsQuestion.standard ?? '',
-                  cluster: awsQuestion.cluster ?? '',
-                  domain: awsQuestion.domain ?? '',
-                  grade: awsQuestion.grade ?? '',
-                  gameSessionId: awsQuestion.gameSessionId,
-                  order: awsQuestion.order ?? '',
-                  isConfidenceEnabled: awsQuestion.isConfidenceEnabled,
-                  isShortAnswerEnabled: awsQuestion.isShortAnswerEnabled,
-                  isHintEnabled: awsQuestion.isHintEnabled
-              }
-              return question
+              return QuestionParser.questionFromAWSQuestion(awsQuestion);
           })
           .sort((lhs, rhs) => {
               return lhs.order - rhs.order

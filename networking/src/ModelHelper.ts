@@ -7,7 +7,7 @@ import { GameSessionState } from './AWSMobileApi'
 export abstract class ModelHelper {
     private static correctAnswerScore = 10
 
-    static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: string): Array<ITeamAnswer | null> | null {
+    static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: string): Array<ITeamAnswer> | null {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length == 0) {
             console.error("Team members is null")
@@ -24,7 +24,7 @@ export abstract class ModelHelper {
         return teamMember.answers.filter((answer) => {
             return !isNullOrUndefined(answer) &&
                 !isNullOrUndefined(answer.questionId) &&
-                answer.questionId === questionId
+                answer.questionId === questionId 
         })
     }
 

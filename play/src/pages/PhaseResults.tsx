@@ -23,10 +23,10 @@ import 'swiper/css/pagination';
 
 interface PhaseResultsProps {
   apiClient: ApiClient;
-  teams?: ITeam[];
+  teams: ITeam[];
   currentState: GameSessionState;
   teamAvatar: number;
-  currentQuestionIndex?: number | null;
+  currentQuestionIndex: number;
   teamId: string;
   gameSession: IGameSession;
   answerChoices: {
@@ -74,8 +74,8 @@ export default function PhaseResults({
     error: boolean;
     withheldPoints: number;
   }>({ error: false, withheldPoints: 0 });
-  const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
-  const currentTeam = teams?.find((team) => team.id === teamId);
+  const currentQuestion = gameSession.questions[currentQuestionIndex];
+  const currentTeam = teams.find((team) => team.id === teamId);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
