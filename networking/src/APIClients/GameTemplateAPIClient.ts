@@ -32,7 +32,7 @@ export class GameTemplateAPIClient
 {
   async createGameTemplate( 
     createGameTemplateInput: CreateGameTemplateInput
-  ): Promise<IGameTemplate | null> {
+  ): Promise<IGameTemplate> {
     const variables: CreateGameTemplateMutationVariables = { input: createGameTemplateInput }
     const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
         createGameTemplate,
@@ -47,7 +47,7 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate as AWSGameTemplate)
   } 
 
-  async getGameTemplate(id: string): Promise<IGameTemplate | null> {
+  async getGameTemplate(id: string): Promise<IGameTemplate> {
     const variables: GetGameTemplateQueryVariables = { id }
     const result = await this.callGraphQL<GetGameTemplateQuery>(
       getGameTemplate,
@@ -62,7 +62,7 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data.getGameTemplate as AWSGameTemplate);
   }
 
-  async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate | null> {
+  async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate> {
     const input: UpdateGameTemplateInput = updateGameTemplateInput;
     const variables: UpdateGameTemplateMutationVariables = { input };
     const gameTemplate = await this.callGraphQL<UpdateGameTemplateMutation>(
@@ -78,7 +78,7 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.updateGameTemplate as AWSGameTemplate);
   }
 
-  async deleteGameTemplate(id: string): Promise<IGameTemplate | null> {
+  async deleteGameTemplate(id: string): Promise<IGameTemplate> {
     const input: DeleteGameTemplateInput = {id};
     const variables: DeleteGameTemplateMutationVariables = { input };
     const gameTemplate = await this.callGraphQL<DeleteGameTemplateMutation>(

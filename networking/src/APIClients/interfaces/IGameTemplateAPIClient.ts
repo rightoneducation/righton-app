@@ -4,19 +4,19 @@ import { CreateGameTemplateInput, UpdateGameTemplateInput } from "../../AWSMobil
 export interface IGameTemplateAPIClient {
   createGameTemplate(
     createGameTemplateInput: CreateGameTemplateInput
-  ): Promise<IGameTemplate | null>;
+  ): Promise<IGameTemplate>;
 
   getGameTemplate(
     id: string
-  ): Promise<IGameTemplate | null>;
+  ): Promise<IGameTemplate>;
 
   updateGameTemplate(
     updateGameTemplateInput: UpdateGameTemplateInput
-  ): Promise<IGameTemplate | null>;
+  ): Promise<IGameTemplate>;
 
   deleteGameTemplate(
     id: string
-  ): Promise<IGameTemplate | null>;
+  ): Promise<IGameTemplate>;
 
   listGameTemplates(
     limit: number,

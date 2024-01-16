@@ -567,7 +567,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update team`)
         }
-        return team.data.updateTeam as ITeam
+        return TeamParser.teamFromAWSTeam(team.data.updateTeam) as ITeam
     }
 
     async updateQuestion(
@@ -850,7 +850,7 @@ class TeamParser {
                 "Team has null field for the attributes that are not nullable"
             )
         }
-
+        // using type assertion here because we've already provided default values for all nullable fields above
         const team: ITeam = {
             id,
             name,
@@ -862,7 +862,7 @@ class TeamParser {
             gameSessionTeamsId,
             teamQuestionId,
             teamQuestionGameSessionId,
-        }
+        } as ITeam;
         return team
     }
 }
@@ -912,7 +912,7 @@ class TeamMemberParser {
                 "Team member has null field for the attributes that are not nullable"
             )
         }
-
+        // using type assertion here because we've already provided default values for all nullable fields above
         const teamMember: ITeamMember = {
             id,
             isFacilitator,
@@ -921,7 +921,7 @@ class TeamMemberParser {
             createdAt,
             updatedAt,
             teamTeamMembersId,
-        }
+        } as ITeamMember;
         return teamMember
     }
 }
@@ -998,7 +998,7 @@ class TeamAnswerParser {
             updatedAt,
             teamMemberAnswersId,
             confidenceLevel
-        }
+        } as ITeamAnswer;
         return teamAnswer
     }
 }

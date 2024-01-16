@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   IGameSession,
-  IAWSGameSession,
+  AWSGameSession,
   GameSessionState,
   GameSessionParser,
   IChoice,
@@ -40,7 +40,7 @@ const Template: StoryFn<typeof GameInProgress> =
   };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-  MockGameSession as IAWSGameSession
+  MockGameSession as AWSGameSession
 ) as IGameSession;
 
 const answerChoices = gameSession.questions[0].choices!.map(  // eslint-disable-line @typescript-eslint/no-non-null-assertion

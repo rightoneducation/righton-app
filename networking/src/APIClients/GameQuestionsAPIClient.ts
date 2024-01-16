@@ -25,7 +25,7 @@ export class GameQuestionsAPIClient
 {
   async createGameQuestions(
     createGameQuestionsInput: CreateGameQuestionsInput
-): Promise<IGameQuestions | null> {
+): Promise<IGameQuestions> {
     const variables: CreateGameQuestionsMutationVariables = { input: createGameQuestionsInput }
     const gameQuestions = await this.callGraphQL<CreateGameQuestionsMutation>(
         createGameQuestions,
@@ -40,7 +40,7 @@ export class GameQuestionsAPIClient
     return gameQuestions.data.createGameQuestions as IGameQuestions;
 }
 
-async getGameQuestions(id: string): Promise<IGameQuestions | null> {
+async getGameQuestions(id: string): Promise<IGameQuestions> {
     const variables: GetGameQuestionsQueryVariables = { id }
     const result = await this.callGraphQL<GetGameQuestionsQuery>(
       getGameQuestions,
@@ -55,7 +55,7 @@ async getGameQuestions(id: string): Promise<IGameQuestions | null> {
     return result.data.getGameQuestions as IGameQuestions;
 }
 
-async deleteGameQuestions(id: string): Promise<IGameQuestions | null> {
+async deleteGameQuestions(id: string): Promise<IGameQuestions> {
     const variables: DeleteGameQuestionsMutationVariables = { input: { id } }
     const gameQuestions = await this.callGraphQL<DeleteGameQuestionsMutation>(
         deleteGameQuestions,
@@ -70,7 +70,7 @@ async deleteGameQuestions(id: string): Promise<IGameQuestions | null> {
     return gameQuestions.data.deleteGameQuestions as IGameQuestions;
 }
 
-async listGameQuestions(limit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestions[], nextToken: string } | null> {
+async listGameQuestions(limit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestions[], nextToken: string }> {
     let result = (await API.graphql(
         graphqlOperation(listGameQuestions, {limit, nextToken })
     )) as { data: any }

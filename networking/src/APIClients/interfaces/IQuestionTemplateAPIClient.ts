@@ -4,19 +4,19 @@ import { CreateQuestionTemplateInput, UpdateQuestionTemplateInput } from "../../
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate(
     input: CreateQuestionTemplateInput
-  ): Promise<IQuestionTemplate | null>;
+  ): Promise<IQuestionTemplate>;
 
   getQuestionTemplate(
     id: string
-  ): Promise<IQuestionTemplate | null>;
+  ): Promise<IQuestionTemplate>;
 
   updateQuestionTemplate(
     updateQuestionTemplateInput: UpdateQuestionTemplateInput
-  ): Promise<IQuestionTemplate | null>;
+  ): Promise<IQuestionTemplate>;
 
   deleteQuestionTemplate(
     id: string
-  ): Promise<IQuestionTemplate | null>;
+  ): Promise<IQuestionTemplate>;
 
   listQuestionTemplates(
     limit: number,

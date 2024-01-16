@@ -7,66 +7,65 @@ import {
 } from "../AWSMobileApi";
 import { TeamMemberParser } from "./TeamMemberParser"
 
-
 export class TeamParser {
-  static teamFromCreateTeamSubscription(
-      subscription: OnCreateTeamSubscription
-  ): ITeam {
-      const createTeam = subscription.onCreateTeam
-      if (isNullOrUndefined(createTeam)) {
-          throw new Error(
-              "subscription.teamFromCreateTeamSubscription can't be null."
-          )
-      }
-      //@ts-ignore
-      return this.teamFromAWSTeam(createTeam)
-  }
+    static teamFromCreateTeamSubscription(
+        subscription: OnCreateTeamSubscription
+    ): ITeam {
+        const createTeam = subscription.onCreateTeam
+        if (isNullOrUndefined(createTeam)) {
+            throw new Error(
+                "subscription.teamFromCreateTeamSubscription can't be null."
+            )
+        }
+        //@ts-ignore
+        return this.teamFromAWSTeam(createTeam)
+    }
 
-  static teamFromDeleteTeamSubscription(
-      subscription: OnDeleteTeamSubscription
-  ): ITeam {
-      const deleteTeam = subscription.onDeleteTeam
-      if (isNullOrUndefined(deleteTeam)) {
-          throw new Error(
-              "subscription.teamFromDeleteTeamSubscription can't be null."
-          )
-      }
-      //@ts-ignore
-      return this.teamFromAWSTeam(deleteTeam)
-  }
+    static teamFromDeleteTeamSubscription(
+        subscription: OnDeleteTeamSubscription
+    ): ITeam {
+        const deleteTeam = subscription.onDeleteTeam
+        if (isNullOrUndefined(deleteTeam)) {
+            throw new Error(
+                "subscription.teamFromDeleteTeamSubscription can't be null."
+            )
+        }
+        //@ts-ignore
+        return this.teamFromAWSTeam(deleteTeam)
+    }
 
-  static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
-      const {
-          id,
-          name,
-          teamMembers,
-          score,
-          selectedAvatarIndex,
-          createdAt,
-          updatedAt,
-          gameSessionTeamsId,
-          teamQuestionId,
-          teamQuestionGameSessionId,
-      } = awsTeam || {}
+    static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
+        const {
+            id,
+            name,
+            teamMembers = TeamMemberParser.mapTeamMembers(awsTeam.teamMembers?.items) ?? [],
+            score = awsTeam.score ?? 0,
+            selectedAvatarIndex = awsTeam.selectedAvatarIndex ?? 0,
+            createdAt = awsTeam.createdAt ?? '',
+            updatedAt = awsTeam.updatedAt ?? '',
+            gameSessionTeamsId = awsTeam.gameSessionTeamsId ?? '',
+            teamQuestionId = awsTeam.teamQuestionId ?? '',
+            teamQuestionGameSessionId = awsTeam.teamQuestionGameSessionId ?? '',
+        } = awsTeam || {}
 
-      if (isNullOrUndefined(id)) {
-          throw new Error(
-              "Team has null field for the attributes that are not nullable"
-          )
-      }
-
-      const team: ITeam = {
-          id,
-          name,
-          teamMembers: TeamMemberParser.mapTeamMembers(teamMembers?.items),
-          score,
-          selectedAvatarIndex,
-          createdAt,
-          updatedAt,
-          gameSessionTeamsId,
-          teamQuestionId,
-          teamQuestionGameSessionId,
-      }
-      return team
-  }
+        if (isNullOrUndefined(id)) {
+            throw new Error(
+                "Team has null field for the attributes that are not nullable"
+            )
+        }
+        // using type assertion here because we've already provided default values for all nullable fields above
+        const team: ITeam = {
+            id,
+            name,
+            teamMembers,
+            score,
+            selectedAvatarIndex,
+            createdAt,
+            updatedAt,
+            gameSessionTeamsId,
+            teamQuestionId,
+            teamQuestionGameSessionId,
+        } as ITeam;
+        return team
+    }
 }

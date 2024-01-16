@@ -29,7 +29,7 @@ export class QuestionTemplateAPIClient
   extends BaseAPIClient
   implements IQuestionTemplateAPIClient
 {
-  async createQuestionTemplate(inputParams: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> {
+  async createQuestionTemplate(inputParams: CreateQuestionTemplateInput): Promise<IQuestionTemplate> {
     const variables: CreateQuestionTemplateMutationVariables = {input: inputParams}
     const questionTemplate = await this.callGraphQL<CreateQuestionTemplateMutation>(
         createQuestionTemplate,
@@ -43,7 +43,7 @@ export class QuestionTemplateAPIClient
     }
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate as AWSQuestionTemplate)
   }
-  async getQuestionTemplate(id: string): Promise<IQuestionTemplate | null> {
+  async getQuestionTemplate(id: string): Promise<IQuestionTemplate> {
     const variables: GetQuestionTemplateQueryVariables = { id }
     const result = await this.callGraphQL<GetQuestionTemplateQuery>(
       getQuestionTemplate,
@@ -58,7 +58,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(result.data.getQuestionTemplate as AWSQuestionTemplate);
   }
 
-  async updateQuestionTemplate(updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate | null> {
+  async updateQuestionTemplate(updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate> {
     const input: UpdateQuestionTemplateInput = updateQuestionTemplateInput;
     const variables: UpdateQuestionTemplateMutationVariables = { input };
     const questionTemplate = await this.callGraphQL<UpdateQuestionTemplateMutation>(
@@ -74,7 +74,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.updateQuestionTemplate as AWSQuestionTemplate);
   }
 
-  async deleteQuestionTemplate(id: string): Promise<IQuestionTemplate | null> {
+  async deleteQuestionTemplate(id: string): Promise<IQuestionTemplate> {
     const input: DeleteQuestionTemplateInput = {id};
     const variables: DeleteQuestionTemplateMutationVariables = { input };
     const questionTemplate = await this.callGraphQL<DeleteQuestionTemplateMutation>(
