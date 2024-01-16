@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "../IApiClient";
-import { ITeamMember } from "../Models";
+import { ITeamMember, ITeamAnswer } from "../Models";
 import { AWSTeamMember } from "../Models/AWS";
 import { OnUpdateTeamMemberSubscription } from "../AWSMobileApi";
 import { TeamAnswerParser } from "./TeamAnswerParser"
@@ -22,7 +22,6 @@ export class TeamMemberParser {
         if (isNullOrUndefined(awsTeamMembers)) {
             return []
         }
-
         return awsTeamMembers.map((awsTeamMember) => {
             if (isNullOrUndefined(awsTeamMember)) {
                 throw new Error("Team can't be null in the backend.")
@@ -34,10 +33,13 @@ export class TeamMemberParser {
     static teamMemberFromAWSTeamMember(
         awsTeamMember: AWSTeamMember
     ): ITeamMember {
+        let answers: ITeamAnswer[] = [];
+        if (!isNullOrUndefined(awsTeamMember.answers?.items)) {
+            answers = TeamAnswerParser.mapTeamAnswers(awsTeamMember.answers?.items)
+        }
         const {
             id,
             isFacilitator = awsTeamMember.isFacilitator ?? false,
-            answers = TeamAnswerParser.mapTeamAnswers(awsTeamMember.answers?.items) ?? [],
             deviceId = awsTeamMember.deviceId ?? '',
             createdAt = awsTeamMember.createdAt ?? '',
             updatedAt = awsTeamMember.updatedAt ?? '',

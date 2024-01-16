@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "../IApiClient"
-import { IGameSession, ITeam, IQuestion, IChoice } from "../Models"
+import { IGameSession, ITeam, IQuestion, IChoice, ITeamMember } from "../Models"
 import { AWSGameSession, AWSTeam, AWSQuestion } from "../Models/AWS"
 import { 
   OnUpdateGameSessionSubscription, 
@@ -95,7 +95,6 @@ export class GameSessionParser {
       subscription: OnGameSessionUpdatedByIdSubscription
   ): IGameSession {
       const updateGameSession = subscription.onGameSessionUpdatedById
-      console.log(updateGameSession);
       if (isNullOrUndefined(updateGameSession)) {
           throw new Error("subscription.onUpdateGameSession can't be null.")
       }
@@ -113,6 +112,10 @@ export class GameSessionParser {
           if (isNullOrUndefined(awsTeam)) {
               throw new Error("Team can't be null in the backend.")
           }
+          let teamMembers: ITeamMember[] = [];
+          if (awsTeam.teamMembers?.items) {
+              teamMembers = TeamMemberParser.mapTeamMembers(awsTeam.teamMembers?.items);
+          }
 
           const team: ITeam = {
               id: awsTeam.id,
@@ -124,9 +127,7 @@ export class GameSessionParser {
               updatedAt: awsTeam.updatedAt ?? '',
               gameSessionTeamsId: awsTeam.gameSessionTeamsId ?? '',
               teamQuestionGameSessionId: awsTeam.teamQuestionGameSessionId ?? '',
-              teamMembers: TeamMemberParser.mapTeamMembers(
-                  awsTeam.teamMembers?.items
-              ),
+              teamMembers
           } as ITeam;
           return team
       })

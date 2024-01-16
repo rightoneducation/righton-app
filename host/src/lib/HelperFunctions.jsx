@@ -40,7 +40,6 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
 */
 export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
   let results = [];
-
   teamsArray.forEach(team => {
     team.teamMembers && team.teamMembers.forEach(teamMember => {
       teamMember.answers && teamMember.answers.forEach(answer => {

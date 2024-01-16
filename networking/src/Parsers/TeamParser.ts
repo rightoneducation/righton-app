@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "../IApiClient";
-import { ITeam } from "../Models";
+import { ITeam, ITeamMember } from "../Models";
 import { AWSTeam } from "../Models/AWS";
 import { 
   OnCreateTeamSubscription, 
@@ -35,10 +35,13 @@ export class TeamParser {
     }
 
     static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
+        let teamMembers: ITeamMember[] = [];
+        if (awsTeam.teamMembers?.items) {
+            teamMembers = TeamMemberParser.mapTeamMembers(awsTeam.teamMembers?.items);
+        }
         const {
             id,
             name,
-            teamMembers = TeamMemberParser.mapTeamMembers(awsTeam.teamMembers?.items) ?? [],
             score = awsTeam.score ?? 0,
             selectedAvatarIndex = awsTeam.selectedAvatarIndex ?? 0,
             createdAt = awsTeam.createdAt ?? '',
