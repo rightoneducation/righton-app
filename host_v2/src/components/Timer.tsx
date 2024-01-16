@@ -9,7 +9,7 @@ const TimerContainer = styled(Container)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   marginLeft: `-${theme.sizing.mediumPadding}px`,
-  marginRight: `${theme.sizing.mediumPadding}px`,
+  paddingRight: `${theme.sizing.extraExtraLargePadding}px`,
   marginTop: `${theme.sizing.extraSmallPadding}px`,
   marginBottom: `${theme.sizing.extraSmallPadding}px`,
 }));
@@ -111,7 +111,7 @@ export default function Timer({
   }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <TimerContainer maxWidth="sm">
+    <TimerContainer maxWidth="md">
       <TimerBar value={progress} variant="determinate" />
       <TimerText maxWidth="sm">
         <Typography alignSelf="center" variant="h6" style={{ fontSize: '14px', fontWeight: '400' }}>

@@ -11,5 +11,6 @@ export default styled(Box)(({ theme }) => ({
     boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.30)',
     justifyContent: 'center',
     alignItems: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginLeft: `-${theme.sizing.extraExtraLargePadding}px`,
 }));
