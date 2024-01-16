@@ -23,7 +23,7 @@ export default function StudentViews({
 }) {
   let statePosition;
   let isLastQuestion =
-    currentQuestionIndex + 1 === (questions ? questions.length : 0);
+    (currentQuestionIndex + 1) === questions.length;
 
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -73,7 +73,7 @@ export default function StudentViews({
   };
 
   let isLastGameScreen =
-    currentQuestionIndex + 1 === (questions ? questions.length : 0) &&
+    ((currentQuestionIndex + 1) === questions.length) &&
     currentState === GameSessionState.PHASE_2_RESULTS; // if last screen of last question, head to view final results
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
