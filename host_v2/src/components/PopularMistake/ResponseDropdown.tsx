@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/material/styles';
-import check from '../../images/correctAnswerCheck.png';
 
 interface PopularMistakeOption {
   answerChoice: string;
@@ -102,12 +101,6 @@ export default function ResponseDropdown({
   };
 
   const header = (count: number): string => {
-    if (count === 0 && graphClickIndex !== responseData.length - 1) {
-      return t('gamesession.popularMistakeCard.graph.dropdown.header.noResponses');
-    }
-    if (count === 0 && graphClickIndex === responseData.length - 1) {
-      return t('gamesession.popularMistakeCard.graph.dropdown.header.noResponseEmpty');
-    }
     if (count > 0 && graphClickIndex === responseData.length - 1) {
       return t('gamesession.popularMistakeCard.graph.dropdown.header.noResponse');
     }

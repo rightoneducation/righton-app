@@ -81,8 +81,8 @@ export default function PopularMistakeCard() {
   const sampleChoiceB: PopularMistakeOption = {
     answerChoice: 'B',
     answerCorrect: false,
-    answerCount: 2,
-    answerTeams: [sampleTeam, sampleTeam],
+    answerCount: 0,
+    answerTeams: [],
     answerText: ' 55'
   }
 

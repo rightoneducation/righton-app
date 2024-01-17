@@ -16,49 +16,26 @@ interface PopularMistakeOption {
   answerText: string;
 }
 
+// TODO: try to type x, datum
 interface LabelProps {
   x?: any;
   y?: number;
   datum?: any;
-  barThickness: number;
-  labelOffset: number;
-  xSmallPadding: number;
-  mediumLargePadding: number;
-  defaultVictoryPadding: number;
-  isShortAnswerEnabled: boolean;
 }
 
 export default function CustomLabel(props: LabelProps) {
   const {
     x,
     y,
-    datum,
-    barThickness,
-    labelOffset,
-    xSmallPadding,
-    mediumLargePadding,
-    defaultVictoryPadding,
-    isShortAnswerEnabled
+    datum
   } = props;
 
   const theme = useTheme(); // eslint-disable-line
-  // done to prevent embedding a nested ternary in the render function
-
-  // TODO: if need be, apply this logic to the padding/update this function
-  // const labelPadding = useCallback(() => {
-  //   if (isShortAnswerEnabled) {
-  //     if (datum !== undefined && datum.answerCorrect)
-  //       return mediumLargePadding * 2;
-  //     return mediumLargePadding;
-  //   }
-  //   return defaultVictoryPadding + xSmallPadding;
-  // }, [isShortAnswerEnabled, datum.answerCorrect, mediumLargePadding, defaultVictoryPadding, xSmallPadding]);
 
   return (
     <g>
       {datum.answerCorrect && (
-        // TODO: maybe add these dimensions in theme?
-        <foreignObject x={2} y={y !== undefined ? y - barThickness / 2 : 0} width={16} height={16}>
+        <foreignObject x={5} y={y !== undefined ? y - theme.sizing.responseBarThickness / 2 : 0} width={16} height={16}>
           <span>
             <img src={check} alt="correct answer" />
           </span>
@@ -66,11 +43,7 @@ export default function CustomLabel(props: LabelProps) {
       )}
       <VictoryLabel
         {...props}
-        // TODO: clean this up
-        x={theme.typography.h5.fontSize !== undefined &&
-          x > theme.typography.h5.fontSize &&
-          x <= theme.typography.h5.fontSize ?
-          x - labelOffset : x + 12}
+        x={x - theme.sizing.countLabelPadding}
         y={y}
         textAnchor="end"
         verticalAnchor="middle"
@@ -79,8 +52,7 @@ export default function CustomLabel(props: LabelProps) {
           fontSize: `${theme.typography.h5.fontSize}`,
           fill:
             datum.answerCount === 0 ||
-              datum.answerChoice === '-' ||
-              (theme.typography.h5.fontSize !== undefined && x <= theme.typography.h5.fontSize)
+              datum.answerChoice === '-'
               ? `${theme.palette.primary.main}`
               : `${theme.palette.primary.darkBlue}`,
         }}

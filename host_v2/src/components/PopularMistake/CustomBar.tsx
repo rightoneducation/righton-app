@@ -15,45 +15,36 @@ interface PopularMistakeOption {
 }
 
 interface BarProps {
-  x?: number;
   y?: number;
-  xSmallPadding: number;
-  defaultVictoryPadding: number;
-  selectedWidth: number;
-  selectedHeight: number;
+  dynamicWidth: number;
   datum?: PopularMistakeOption;
   index?: number;
   graphClickIndex: number | null;
   handleGraphClick: (selectedIndex: number | null) => void;
-  isShortAnswerEnabled: boolean;
 }
 
 export default function CustomBar(props: BarProps) {
   const {
-    x,
     y,
-    xSmallPadding,
-    defaultVictoryPadding,
-    selectedWidth,
-    selectedHeight,
+    dynamicWidth,
     datum,
     index,
     graphClickIndex,
-    handleGraphClick,
-    isShortAnswerEnabled
+    handleGraphClick
   } = props;
   const theme = useTheme(); // eslint-disable-line
+
+  const highlightHeight = theme.sizing.responseBarThickness + theme.sizing.barHighlightPadding;
 
   return (
     <g style={{ pointerEvents: 'auto' }}>
       <Bar {...props} />
       {datum !== undefined && datum.answerCount > 0 && (
         <rect
-          x={isShortAnswerEnabled ? 0 : defaultVictoryPadding - xSmallPadding}
-          y={y !== undefined ? y - theme.sizing.smallPadding : - theme.sizing.smallPadding}
-          width={selectedWidth + defaultVictoryPadding}
-          // TODO: clean this up
-          height={selectedHeight + theme.sizing.smallPadding - xSmallPadding / 2}
+          x={0}
+          y={y !== undefined ? y - highlightHeight / 2 : 0}
+          width={dynamicWidth + theme.sizing.defaultVictoryPadding}
+          height={highlightHeight}
           fill={
             graphClickIndex !== null &&
               graphClickIndex === index

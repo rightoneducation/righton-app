@@ -64,8 +64,16 @@ const mediumPadding = 24; // timer margin
 const largePadding = 32; // text spacing on answer selector, top margin on titles
 const extraLargePadding = 48; // spacing between card and edge of screen
 const extraExtraLargePadding = 64; // spacing between buttons and bottom of screen
+// (sizing for victory bar graphs)
+const barStrokeWidthThin = 1 // stroke width of the horizontal response bar graphs 
 const barStrokeWidth = 2; // stroke width of the bar outlines on host graph cards
 const confidenceBarThickness = 55; // thickness of each bar component in confidence bar graph
+const responseBarThickness = 18; // thickness of each bar in horizontally aligned response graphs
+const barHighlightPadding = 12; // extra space around bar occupied by highlight on response graphs
+const defaultVictoryPadding = 50; // victory toolkit's default padding 
+const countLabelPadding = 3; // padding for response counts label on the interior of each horizontal bar 
+const responseAxisPadding = 42; // padding on the left of the horizontal response graphs
+const responseGraphVerticalScale = 40; // the constant we multiply by the number of answer choices, determines height of response graphs
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
@@ -82,8 +90,15 @@ declare module '@mui/material/styles' {
       largePadding: number;
       extraLargePadding: number;
       extraExtraLargePadding: number;
+      barStrokeWidthThin: number;
       barStrokeWidth: number;
       confidenceBarThickness: number;
+      responseBarThickness: number;
+      barHighlightPadding: number;
+      defaultVictoryPadding: number;
+      countLabelPadding: number;
+      responseAxisPadding: number;
+      responseGraphVerticalScale: number;
     };
   }
 
@@ -100,8 +115,15 @@ declare module '@mui/material/styles' {
       largePadding?: number;
       extraLargePadding?: number;
       extraExtraLargePadding?: number;
+      barStrokeWidthThin?: number;
       barStrokeWidth?: number;
       confidenceBarThickness?: number;
+      responseBarThickness?: number;
+      barHighlightPadding?: number;
+      defaultVictoryPadding?: number;
+      countLabelPadding?: number;
+      responseAxisPadding?: number;
+      responseGraphVerticalScale?: number;
     };
   }
 
@@ -175,8 +197,15 @@ export default createTheme({
     largePadding,
     extraLargePadding,
     extraExtraLargePadding,
+    barStrokeWidthThin,
     barStrokeWidth,
-    confidenceBarThickness
+    confidenceBarThickness,
+    responseBarThickness,
+    barHighlightPadding,
+    defaultVictoryPadding,
+    countLabelPadding,
+    responseAxisPadding,
+    responseGraphVerticalScale
   },
   palette: {
     primary: {

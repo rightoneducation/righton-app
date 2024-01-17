@@ -33,9 +33,7 @@
         "title": "Cantidad de jugadores",
         "dropdown": {
           "header": {
-            "noResponses": "Ningún jugador pensó que esta es la respuesta más complicada",
             "noResponse": "Jugadores que no respondieron",
-            "noResponseEmpty": "Todos los jugadores seleccionaron una respuesta más complicada",
             "containsResponses": "Los jugadores que piensan que esta es la respuesta más complicada"
           }
         }

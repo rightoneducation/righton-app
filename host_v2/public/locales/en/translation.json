@@ -33,9 +33,7 @@
         "title": "Number of Players",
         "dropdown": {
           "header": {
-            "noResponses": "No players thought this is the trickiest answer",
             "noResponse": "Players who did not respond",
-            "noResponseEmpty": "All players selected a trickiest answer",
             "containsResponses": "Players who think this is trickiest answer"
           }
         }
