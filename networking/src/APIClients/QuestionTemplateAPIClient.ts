@@ -23,14 +23,21 @@ import {
 } from "../AWSMobileApi";
 import { QuestionTemplateParser } from '../Parsers/QuestionTemplateParser';
 import { IQuestionTemplate, AWSQuestionTemplate } from "../Models";
-import { isNullOrUndefined } from "../global";
+import { isNullOrUndefined, doesObjectHaveDate } from "../global";
 
 export class QuestionTemplateAPIClient
   extends BaseAPIClient
   implements IQuestionTemplateAPIClient
 {
-  async createQuestionTemplate(inputParams: CreateQuestionTemplateInput): Promise<IQuestionTemplate> {
-    const variables: CreateQuestionTemplateMutationVariables = {input: inputParams}
+  async createQuestionTemplate(createQuestionTemplateInput: CreateQuestionTemplateInput | IQuestionTemplate): Promise<IQuestionTemplate> {
+    if (doesObjectHaveDate(createQuestionTemplateInput) && createQuestionTemplateInput.createdAt && createQuestionTemplateInput.updatedAt) {
+      createQuestionTemplateInput = {
+        ...createQuestionTemplateInput,
+        createdAt: createQuestionTemplateInput.createdAt.toString(),
+        updatedAt: createQuestionTemplateInput.updatedAt.toString()
+      }
+    }
+    const variables: CreateQuestionTemplateMutationVariables = {input: createQuestionTemplateInput as CreateQuestionTemplateInput}
     const questionTemplate = await this.callGraphQL<CreateQuestionTemplateMutation>(
         createQuestionTemplate,
         variables
@@ -58,8 +65,15 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(result.data.getQuestionTemplate as AWSQuestionTemplate);
   }
 
-  async updateQuestionTemplate(updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate> {
-    const input: UpdateQuestionTemplateInput = updateQuestionTemplateInput;
+  async updateQuestionTemplate(updateQuestionTemplateInput: UpdateQuestionTemplateInput | IQuestionTemplate): Promise<IQuestionTemplate> {
+    if (doesObjectHaveDate(updateQuestionTemplateInput) && updateQuestionTemplateInput.createdAt && updateQuestionTemplateInput.updatedAt) {
+      updateQuestionTemplateInput = {
+        ...updateQuestionTemplateInput,
+        createdAt: updateQuestionTemplateInput.createdAt.toString(),
+        updatedAt: updateQuestionTemplateInput.updatedAt.toString()
+      }
+    }
+    const input: UpdateQuestionTemplateInput = updateQuestionTemplateInput as UpdateQuestionTemplateInput;
     const variables: UpdateQuestionTemplateMutationVariables = { input };
     const questionTemplate = await this.callGraphQL<UpdateQuestionTemplateMutation>(
         updateQuestionTemplate,

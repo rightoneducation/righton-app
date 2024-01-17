@@ -303,12 +303,14 @@ const GameSessionContainer = () => {
             checkGameTimer(response);
             setGameSession(response);
             const teamDataRequests = response.teams.map((team) => {
-              return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
+              return apiClient.getTeam(team.id).then((response) => {
+                return TeamParser.teamFromAWSTeam(response);
+            });
             });
 
             Promise.all(teamDataRequests)
               .then((responses) => {
-                setTeamsArray(responses);
+               setTeamsArray(responses);
               })
               .catch((reason) => console.log(reason));
           });

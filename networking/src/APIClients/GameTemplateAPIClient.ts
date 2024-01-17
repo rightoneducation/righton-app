@@ -24,16 +24,23 @@ import {
   DeleteGameTemplateMutationVariables
 } from "../AWSMobileApi";
 import { AWSGameTemplate } from "../Models";
-import { isNullOrUndefined } from "../global";
+import { isNullOrUndefined, doesObjectHaveDate } from "../global";
 
 export class GameTemplateAPIClient
   extends BaseAPIClient
   implements IGameTemplateAPIClient
 {
   async createGameTemplate( 
-    createGameTemplateInput: CreateGameTemplateInput
+    createGameTemplateInput: CreateGameTemplateInput | IGameTemplate
   ): Promise<IGameTemplate> {
-    const variables: CreateGameTemplateMutationVariables = { input: createGameTemplateInput }
+    if (doesObjectHaveDate(createGameTemplateInput) && createGameTemplateInput.createdAt && createGameTemplateInput.updatedAt) {
+      createGameTemplateInput = {
+        ...createGameTemplateInput,
+        createdAt: createGameTemplateInput.createdAt.toString(),
+        updatedAt: createGameTemplateInput.updatedAt.toString()
+      }
+    }
+    const variables: CreateGameTemplateMutationVariables = { input: createGameTemplateInput as CreateGameTemplateInput }
     const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
         createGameTemplate,
         variables
@@ -62,8 +69,15 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data.getGameTemplate as AWSGameTemplate);
   }
 
-  async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate> {
-    const input: UpdateGameTemplateInput = updateGameTemplateInput;
+  async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput | IGameTemplate): Promise<IGameTemplate> {
+    if (doesObjectHaveDate(updateGameTemplateInput) && updateGameTemplateInput.createdAt && updateGameTemplateInput.updatedAt) {
+      updateGameTemplateInput = {
+        ...updateGameTemplateInput,
+        createdAt: updateGameTemplateInput.createdAt.toString(),
+        updatedAt: updateGameTemplateInput.updatedAt.toString()
+      }
+    }
+    const input: UpdateGameTemplateInput = updateGameTemplateInput as UpdateGameTemplateInput;
     const variables: UpdateGameTemplateMutationVariables = { input };
     const gameTemplate = await this.callGraphQL<UpdateGameTemplateMutation>(
         updateGameTemplate,

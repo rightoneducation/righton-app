@@ -3,7 +3,7 @@ import { CreateGameTemplateInput, UpdateGameTemplateInput } from "../../AWSMobil
 
 export interface IGameTemplateAPIClient {
   createGameTemplate(
-    createGameTemplateInput: CreateGameTemplateInput
+    createGameTemplateInput: CreateGameTemplateInput | IGameTemplate
   ): Promise<IGameTemplate>;
 
   getGameTemplate(
@@ -11,7 +11,7 @@ export interface IGameTemplateAPIClient {
   ): Promise<IGameTemplate>;
 
   updateGameTemplate(
-    updateGameTemplateInput: UpdateGameTemplateInput
+    updateGameTemplateInput: UpdateGameTemplateInput | IGameTemplate
   ): Promise<IGameTemplate>;
 
   deleteGameTemplate(

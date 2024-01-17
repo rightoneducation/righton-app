@@ -3,7 +3,7 @@ import { CreateQuestionTemplateInput, UpdateQuestionTemplateInput } from "../../
 
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate(
-    input: CreateQuestionTemplateInput
+    input: CreateQuestionTemplateInput | IQuestionTemplate
   ): Promise<IQuestionTemplate>;
 
   getQuestionTemplate(
@@ -11,7 +11,7 @@ export interface IQuestionTemplateAPIClient {
   ): Promise<IQuestionTemplate>;
 
   updateQuestionTemplate(
-    updateQuestionTemplateInput: UpdateQuestionTemplateInput
+    updateQuestionTemplateInput: UpdateQuestionTemplateInput | IQuestionTemplate
   ): Promise<IQuestionTemplate>;
 
   deleteQuestionTemplate(
