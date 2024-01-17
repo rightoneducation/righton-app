@@ -53,11 +53,6 @@ interface QuestionChoice {
   isAnswer: boolean;
 }
 
-// TODO: change this later
-interface GraphClickInfo {
-  graph: string | null;
-  selectedIndex: number | null;
-}
 // interface CardProps {
 // }
 
@@ -107,7 +102,6 @@ export default function PopularMistakeCard() {
     answerText: ' 273'
   }
 
-  // sample data has to be 'reversed' because the graph is built bottom -> up
   const sampleData: PopularMistakeOption[] = [
     sampleChoiceD, sampleChoiceC, sampleChoiceB, sampleChoiceA, sampleChoiceNone
   ]
@@ -126,26 +120,14 @@ export default function PopularMistakeCard() {
   }
 
   const sampleNumPlayers = getNumPlayers(sampleData);
-  console.log(sampleNumPlayers);
+
 
   const sampleStatePosition = 2;
-  const [sampleGraphClickInfo, setSampleGraphClickInfo] = useState<GraphClickInfo>({
-    graph: null,
-    selectedIndex: null,
-  });
+  const [sampleGraphClickIndex, setSampleGraphClickIndex] = useState<(number | null)>(null);
 
-  const handleGraphClick = ({ graph, selectedIndex }: { graph: string | null, selectedIndex: number | null }) => {
-    setSampleGraphClickInfo({ graph, selectedIndex });
-    // setTimeout(() => {
-    //   if (graph === 'realtime')
-    //     responsesRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    //   else if (graph === 'confidence')
-    //     confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
-    //   else
-    //     hintCardRef.current.scrollIntoView({ behavior: 'smooth' });
-    // }, 0);
+  const handleGraphClick = (selectedIndex: number | null) => {
+    setSampleGraphClickIndex(selectedIndex);
   };
-
   return (
     <HostDefaultCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
@@ -155,15 +137,16 @@ export default function PopularMistakeCard() {
             data={sampleData}
             questionChoices={sampleQuestionChoices}
             statePosition={sampleStatePosition}
-            graphClickInfo={sampleGraphClickInfo}
+            graphClickIndex={sampleGraphClickIndex}
             isShortAnswerEnabled
             handleGraphClick={handleGraphClick} />
-          {/* TODO: add dropdown if selectedGraphIndex is not null */}
-          {sampleGraphClickInfo.selectedIndex !== null ?
-            <ResponseDropdown responseData={sampleData} graphClickIndex={sampleGraphClickInfo.selectedIndex} numPlayers={sampleNumPlayers} /> :
-            <InstructionsText>
-              {t('gamesession.popularMistakeCard.instructions')}
-            </InstructionsText>
+          {sampleGraphClickIndex !== null ?
+            <ResponseDropdown responseData={sampleData} graphClickIndex={sampleGraphClickIndex} numPlayers={sampleNumPlayers} /> :
+            <SmallTextContainer>
+              <InstructionsText>
+                {t('gamesession.popularMistakeCard.instructions')}
+              </InstructionsText>
+            </SmallTextContainer>
           }
         </CardContentContainer>
       </BodyCardContainerStyled>

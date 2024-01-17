@@ -26,20 +26,38 @@ const TitleText = styled(Typography)(({ theme }) => ({
   paddingBottom: `${theme.sizing.smallPadding}px`,
 }))
 
+interface Team {
+  name: string;
+}
+
+interface PopularMistakeOption {
+  answerChoice: string;
+  answerCorrect: boolean;
+  answerCount: number;
+  answerTeams: Team[];
+  answerText: string;
+}
+
+interface QuestionChoice {
+  reason: string;
+  text: string;
+  isAnswer: boolean;
+}
+
 interface GraphProps {
-  data?: any;
-  questionChoices?: any;
-  statePosition?: any;
-  graphClickInfo?: any;
-  isShortAnswerEnabled?: any;
-  handleGraphClick?: any;
+  data: PopularMistakeOption[];
+  questionChoices: QuestionChoice[];
+  statePosition: number;
+  graphClickIndex: number | null;
+  isShortAnswerEnabled: boolean;
+  handleGraphClick: (selectedIndex: number | null) => void;
 }
 
 export default function ResponsesGraph({
   data,
   questionChoices,
   statePosition,
-  graphClickInfo,
+  graphClickIndex,
   isShortAnswerEnabled,
   handleGraphClick
 }: GraphProps) {
@@ -224,7 +242,7 @@ export default function ResponsesGraph({
                   defaultVictoryPadding={defaultVictoryPadding}
                   selectedWidth={customBarSelectedWidth}
                   selectedHeight={18}
-                  graphClickInfo={graphClickInfo}
+                  graphClickIndex={graphClickIndex}
                   handleGraphClick={handleGraphClick}
                   isShortAnswerEnabled={isShortAnswerEnabled}
                 />
@@ -234,11 +252,8 @@ export default function ResponsesGraph({
                   labelOffset={labelOffset}
                   barThickness={barThickness}
                   xSmallPadding={xSmallPadding}
-                  xLargePadding={xLargePadding}
                   mediumLargePadding={mediumLargePadding}
                   defaultVictoryPadding={defaultVictoryPadding}
-                  questionChoices={questionChoices}
-                  noResponseLabel={noResponseLabel}
                   isShortAnswerEnabled={isShortAnswerEnabled}
                 />
               }

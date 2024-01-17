@@ -2,16 +2,28 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { VictoryLabel } from 'victory';
 
+interface PopularMistakeOption {
+  answerChoice: string;
+  answerCorrect: boolean;
+  answerCount: number;
+  answerTeams: Team[];
+  answerText: string;
+}
+
+interface Team {
+  name: string;
+}
+
 // TODO: proper types
 interface TickProps {
-  x?: any;
-  y?: any;
-  index?: any;
-  text?: any;
-  data?: any;
-  correctChoiceIndex?: any;
-  statePosition?: any;
-  isShortAnswerEnabled?: any;
+  x?: number;
+  y?: number;
+  index?: number;
+  text?: string;
+  data: PopularMistakeOption[];
+  correctChoiceIndex: number;
+  statePosition: number;
+  isShortAnswerEnabled: boolean;
 }
 
 export default function CustomTick({

@@ -2,19 +2,30 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Bar } from 'victory';
 
-// TODO: proper types
+interface Team {
+  name: string;
+}
+
+interface PopularMistakeOption {
+  answerChoice: string;
+  answerCorrect: boolean;
+  answerCount: number;
+  answerTeams: Team[];
+  answerText: string;
+}
+
 interface BarProps {
-  x?: any;
-  y?: any;
-  xSmallPadding?: any;
-  defaultVictoryPadding?: any;
-  selectedWidth?: any;
-  selectedHeight?: any;
-  datum?: any;
-  index?: any;
-  graphClickInfo?: any;
-  handleGraphClick?: any;
-  isShortAnswerEnabled?: any;
+  x?: number;
+  y?: number;
+  xSmallPadding: number;
+  defaultVictoryPadding: number;
+  selectedWidth: number;
+  selectedHeight: number;
+  datum?: PopularMistakeOption;
+  index?: number;
+  graphClickIndex: number | null;
+  handleGraphClick: (selectedIndex: number | null) => void;
+  isShortAnswerEnabled: boolean;
 }
 
 export default function CustomBar(props: BarProps) {
@@ -27,7 +38,7 @@ export default function CustomBar(props: BarProps) {
     selectedHeight,
     datum,
     index,
-    graphClickInfo,
+    graphClickIndex,
     handleGraphClick,
     isShortAnswerEnabled
   } = props;
@@ -36,26 +47,27 @@ export default function CustomBar(props: BarProps) {
   return (
     <g style={{ pointerEvents: 'auto' }}>
       <Bar {...props} />
-      {datum.answerCount > 0 && (
+      {datum !== undefined && datum.answerCount > 0 && (
         <rect
           x={isShortAnswerEnabled ? 0 : defaultVictoryPadding - xSmallPadding}
-          y={y - theme.sizing.smallPadding}
+          y={y !== undefined ? y - theme.sizing.smallPadding : - theme.sizing.smallPadding}
           width={selectedWidth + defaultVictoryPadding}
           // TODO: clean this up
           height={selectedHeight + theme.sizing.smallPadding - xSmallPadding / 2}
           fill={
-            graphClickInfo.selectedIndex !== null &&
-              graphClickInfo.selectedIndex === index &&
-              graphClickInfo.graph === 'realtime'
+            graphClickIndex !== null &&
+              graphClickIndex === index
               ? `${theme.palette.primary.graphAccentColor}`
               : 'transparent'
           }
           stroke="transparent"
           rx={8}
           ry={8}
-          // TODO: changle handle graph click based on new definition 
-          onClick={() =>
-            handleGraphClick({ graph: 'realtime', selectedIndex: index })
+          onClick={() => {
+            if (index !== undefined) {
+              handleGraphClick(index)
+            }
+          }
           }
           style={{ cursor: 'pointer' }}
         />

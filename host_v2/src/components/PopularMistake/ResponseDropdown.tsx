@@ -4,11 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/material/styles';
 import check from '../../images/correctAnswerCheck.png';
 
-// TODO: proper types
+interface PopularMistakeOption {
+  answerChoice: string;
+  answerCorrect: boolean;
+  answerCount: number;
+  answerTeams: Team[];
+  answerText: string;
+}
+
 interface DropdownProps {
-  graphClickIndex: any;
-  responseData: any;
-  numPlayers: any;
+  graphClickIndex: number;
+  responseData: PopularMistakeOption[];
+  numPlayers: number;
 }
 
 interface Team {
@@ -53,7 +60,7 @@ const PlayerCountText = styled(Typography)(({ theme }) => ({
 const PlayerCountContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
-  gap: `${theme.sizing.extraSmallPadding / 2}px`
+  marginLeft: `${theme.sizing.extraSmallPadding}`
 }));
 
 const DropDownContainer = styled(Box)(({ theme }) => ({
@@ -81,7 +88,8 @@ export default function ResponseDropdown({
   responseData,
   numPlayers
 }: DropdownProps) {
-  console.log(responseData[graphClickIndex]);
+  console.log(responseData);
+  console.log(graphClickIndex);
   const { t } = useTranslation();
   const percentage = Math.round(responseData[graphClickIndex].answerCount / numPlayers * 100);
 
