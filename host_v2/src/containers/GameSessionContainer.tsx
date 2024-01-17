@@ -78,6 +78,9 @@ export default function GameSessionContainer({
     setConfidenceGraphClickIndex(selectedIndex);
   };
 
+  const inputNum = 5;
+  const totalNum = 7;
+
   const { t } = useTranslation();
   return (
     <StackContainerStyled
