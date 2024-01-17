@@ -23,7 +23,7 @@ import {
 } from "../AWSMobileApi";
 import { QuestionTemplateParser } from '../Parsers/QuestionTemplateParser';
 import { IQuestionTemplate, AWSQuestionTemplate } from "../Models";
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 
 export class QuestionTemplateAPIClient
   extends BaseAPIClient

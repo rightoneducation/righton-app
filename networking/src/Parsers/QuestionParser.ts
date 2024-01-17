@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { IQuestion, IChoice } from "../Models";
 import { AWSQuestion } from "../Models/AWS";
 

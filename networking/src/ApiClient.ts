@@ -67,7 +67,8 @@ import {
 import { GameSessionParser } from "./Parsers/GameSessionParser"
 import { QuestionParser } from "./Parsers/QuestionParser"
 import { Environment } from "./APIClients/BaseAPIClient"
-import { IApiClient, isNullOrUndefined } from "./IApiClient"
+import { IApiClient } from "./IApiClient"
+import { isNullOrUndefined } from "./global"
 import { IGameTemplate, IQuestionTemplate, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
 import { AWSGameTemplate, AWSQuestionTemplate, AWSTeam, AWSTeamAnswer, AWSTeamMember } from "./Models/AWS"
 import { IGameSession } from "./Models/IGameSession"
@@ -791,7 +792,7 @@ class QuestionTemplateParser {
             gameTemplates,
             createdAt,
             updatedAt
-        }
+        } as IQuestionTemplate
         return questionTemplate
     }
 }

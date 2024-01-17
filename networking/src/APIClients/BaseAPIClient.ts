@@ -1,7 +1,7 @@
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
 import awsconfig from "../aws-exports";
 import { Amplify, API, graphqlOperation } from "aws-amplify";
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { Environment } from "./interfaces/IBaseAPIClient";
 
 Amplify.configure(awsconfig);

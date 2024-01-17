@@ -1,7 +1,7 @@
 // created from 'create-ts-index'
 
 export * from './IBaseAPIClient';
-export * from './IGameQuestionsAPIClient';
+export * from './IGameQuestionAPIClient';
 export * from './IGameSessionAPIClient';
 export * from './IGameTemplateAPIClient';
 export * from './IQuestionTemplateAPIClient';

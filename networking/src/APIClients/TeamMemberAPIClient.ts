@@ -4,7 +4,7 @@ import {
   CreateTeamMemberMutationVariables,
   OnUpdateTeamMemberSubscription,
 } from "../AWSMobileApi";
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { AWSTeamMember, ITeamMember } from "../Models";
 import { TeamMemberParser } from "../Parsers/TeamMemberParser";
 import { createTeamMember, onUpdateTeamMember } from "../graphql";

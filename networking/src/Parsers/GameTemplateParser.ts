@@ -1,6 +1,7 @@
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { IGameTemplate, IQuestionTemplate } from "../Models";
 import { AWSGameTemplate } from "../Models/AWS";
+import { QuestionTemplateParser } from "./QuestionTemplateParser";
 
 export class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
@@ -14,7 +15,7 @@ export class GameTemplateParser {
                     const { gameTemplates, ...rest } = item.questionTemplate;
                     // Only add to questionTemplates if 'rest' is not empty
                     if (Object.keys(rest).length > 0) {
-                        questionTemplates.push({questionTemplate: rest as IQuestionTemplate, gameQuestionId: item.id as string});
+                        questionTemplates.push({questionTemplate: QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(rest) as IQuestionTemplate, gameQuestionId: item.id as string});
                     }
                 }
             }

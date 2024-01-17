@@ -18,7 +18,7 @@ import {
   onDeleteTeam,
   updateTeam,
 } from "../graphql";
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { ITeamAPIClient } from "./interfaces/ITeamAPIClient";
 
 export class TeamAPIClient
