@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import {
   IAnswerSettings
 } from '@righton/networking';
 import { Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
@@ -80,6 +80,15 @@ export default function ChooseAnswer({
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const swiper = useSwiper();
+  useEffect(() => {
+    console.log(confidenceCardRef.current);
+    if (isSubmitted && isConfidenceEnabled && isSmallDevice && swiper?.activeIndex === 1){
+      setTimeout(() => {
+        confidenceCardRef.current?.scrollIntoView({behavior: 'smooth'});
+      }, 1000); // Adjust the delay as needed
+    }
+  }, [isSubmitted, isConfidenceEnabled, confidenceCardRef, isSmallDevice, swiper?.activeIndex]);
   const questionContents = (
     <ScrollBoxStyled>
       <QuestionCard questionText={questionText} imageUrl={questionUrl} />
@@ -127,35 +136,33 @@ export default function ChooseAnswer({
           handleSubmitAnswer={handleSubmitAnswer}
         />
       ) : (
-        <AnswerCard
-          answers={answerChoices}
-          isSubmitted={answerContent.isSubmitted ?? false}
-          isShortAnswerEnabled={isShortAnswerEnabled}
-          handleSubmitAnswer={handleSubmitAnswer}
-          currentState={currentState}
-          currentQuestionIndex={currentQuestionIndex}
-          selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
-          handleSelectAnswer={handleSelectAnswer}
-        />
+          <>
+            <AnswerCard
+              answers={answerChoices}
+              isSubmitted={answerContent.isSubmitted ?? false}
+              isShortAnswerEnabled={isShortAnswerEnabled}
+              handleSubmitAnswer={handleSubmitAnswer}
+              currentState={currentState}
+              currentQuestionIndex={currentQuestionIndex}
+              selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
+              handleSelectAnswer={handleSelectAnswer}
+            />
+            <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }} id="confidencecard-scrollbox" ref={confidenceCardRef}>
+            <ConfidenceMeterCard
+              selectedOption={selectedConfidenceOption}
+              handleSelectOption={handleSelectConfidence}
+              isSelected={isConfidenceSelected}
+              isSmallDevice={isSmallDevice}
+              timeOfLastSelect={timeOfLastConfidenceSelect}
+              setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+            />
+        </Box>
+        </>
       )}
      
       {isSubmitted ? (
         <>
-          {isConfidenceEnabled &&
-            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && (
-            <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }} id="confidencecard-scrollbox" ref={confidenceCardRef}>
-                <ConfidenceMeterCard
-                  selectedOption={selectedConfidenceOption}
-                  handleSelectOption={handleSelectConfidence}
-                  isSelected={isConfidenceSelected}
-                  isSmallDevice={isSmallDevice}
-                  timeOfLastSelect={timeOfLastConfidenceSelect}
-                  setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
-                />
-              </Box>
-            </Fade>
-          )}
+     
           {isHintEnabled &&
             currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
             <Fade in={isSubmitted} timeout={500}>
