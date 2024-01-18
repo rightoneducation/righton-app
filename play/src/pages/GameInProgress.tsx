@@ -77,6 +77,7 @@ export default function GameInProgress({
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
+  const confidenceCardRef = React.useRef<HTMLDivElement>(null);
   const [answerHint, setAnswerHint] = useState<ITeamAnswerHint>(() => {
     const rejoinSubmittedHint = checkForSubmittedHintOnRejoin(
       localModel,
@@ -355,6 +356,7 @@ export default function GameInProgress({
             handleSubmitHint={handleSubmitHint}
             isHintSubmitted={answerHint?.isHintSubmitted ?? false}
             currentTeam={currentTeam ?? null}
+            confidenceCardRef={confidenceCardRef}
           />
         ) : (
           <DiscussAnswer

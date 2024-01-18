@@ -48,6 +48,7 @@ interface ChooseAnswerProps {
   handleSubmitHint: (result: ITeamAnswerHint) => void;
   isHintSubmitted: boolean;
   currentTeam: ITeam | null;
+  confidenceCardRef: React.RefObject<HTMLDivElement>;
 }
 
 export default function ChooseAnswer({
@@ -75,6 +76,7 @@ export default function ChooseAnswer({
   handleSubmitHint,
   isHintSubmitted,
   currentTeam,
+  confidenceCardRef
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -142,7 +144,7 @@ export default function ChooseAnswer({
           {isConfidenceEnabled &&
             currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && (
             <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
+              <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }} id="confidencecard-scrollbox" ref={confidenceCardRef}>
                 <ConfidenceMeterCard
                   selectedOption={selectedConfidenceOption}
                   handleSelectOption={handleSelectConfidence}
