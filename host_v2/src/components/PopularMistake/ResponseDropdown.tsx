@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 
 interface PopularMistakeOption {
   answerChoice: string;
@@ -12,7 +12,7 @@ interface PopularMistakeOption {
 }
 
 interface DropdownProps {
-  graphClickIndex: number;
+  graphClickIndex: number | null;
   responseData: PopularMistakeOption[];
   numPlayers: number;
 }
@@ -87,10 +87,9 @@ export default function ResponseDropdown({
   responseData,
   numPlayers
 }: DropdownProps) {
-  console.log(responseData);
-  console.log(graphClickIndex);
+  const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
-  const percentage = Math.round(responseData[graphClickIndex].answerCount / numPlayers * 100);
+  const percentage = graphClickIndex !== null ? Math.round(responseData[graphClickIndex].answerCount / numPlayers * 100) : 0;
 
   const playerResponse = ({ name }: Team): React.ReactNode => {
     return (
@@ -101,32 +100,36 @@ export default function ResponseDropdown({
   };
 
   const header = (count: number): string => {
-    if (count > 0 && graphClickIndex === responseData.length - 1) {
+    if (count > 0 && graphClickIndex !== null && responseData[graphClickIndex].answerChoice === theme.sizing.noResponseToken) {
       return t('gamesession.popularMistakeCard.graph.dropdown.header.noResponse');
     }
     return t('gamesession.popularMistakeCard.graph.dropdown.header.containsResponses');
   }
 
+
   return (
     <Container>
-      <HeaderContainer>
-        <HeaderText>
-          {header(responseData[graphClickIndex].answerCount)}
-        </HeaderText>
-        <PlayerCountContainer>
-          <PlayerCountText>
-            {responseData[graphClickIndex].answerCount}
-          </PlayerCountText>
+      {graphClickIndex !== null &&
+        <HeaderContainer>
           <HeaderText>
-            ({percentage}%)
+            {header(responseData[graphClickIndex].answerCount)}
           </HeaderText>
-        </PlayerCountContainer>
-      </HeaderContainer>
-      <DropDownContainer>
-        {responseData[graphClickIndex].answerTeams.map((teamData: Team) =>
-          playerResponse(teamData)
-        )}
-      </DropDownContainer>
+          <PlayerCountContainer>
+            <PlayerCountText>
+              {responseData[graphClickIndex].answerCount}
+            </PlayerCountText>
+            <HeaderText>
+              ({percentage}%)
+            </HeaderText>
+          </PlayerCountContainer>
+        </HeaderContainer>}
+      {graphClickIndex !== null &&
+        <DropDownContainer>
+          {responseData[graphClickIndex].answerTeams.map((teamData: Team) =>
+            playerResponse(teamData)
+          )}
+        </DropDownContainer>}
     </Container>
   );
+
 }

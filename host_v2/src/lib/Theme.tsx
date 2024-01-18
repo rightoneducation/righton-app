@@ -75,6 +75,9 @@ const countLabelPadding = 3; // padding for response counts label on the interio
 const responseAxisPadding = 42; // padding on the left of the horizontal response graphs
 const responseGraphVerticalScale = 40; // the constant we multiply by the number of answer choices, determines height of response graphs
 
+// token that represents no response option 
+const noResponseToken = '-';
+
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
@@ -99,6 +102,7 @@ declare module '@mui/material/styles' {
       countLabelPadding: number;
       responseAxisPadding: number;
       responseGraphVerticalScale: number;
+      noResponseToken: string;
     };
   }
 
@@ -124,6 +128,7 @@ declare module '@mui/material/styles' {
       countLabelPadding?: number;
       responseAxisPadding?: number;
       responseGraphVerticalScale?: number;
+      noResponseToken?: string;
     };
   }
 
@@ -205,7 +210,8 @@ export default createTheme({
     defaultVictoryPadding,
     countLabelPadding,
     responseAxisPadding,
-    responseGraphVerticalScale
+    responseGraphVerticalScale,
+    noResponseToken
   },
   palette: {
     primary: {

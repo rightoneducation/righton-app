@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { useTheme, styled } from '@mui/material/styles';
+import React from 'react';
+import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 import ResponsesGraph from './PopularMistake/ResponseGraph';
 import ResponseDropdown from './PopularMistake/ResponseDropdown';
@@ -47,101 +46,35 @@ interface PopularMistakeOption {
   answerText: string;
 }
 
-interface QuestionChoice {
-  reason: string;
-  text: string;
-  isAnswer: boolean;
+interface CardProps {
+  responseData: PopularMistakeOption[],
+  totalNumPlayers: number;
+  statePositon: number;
+  graphClickIndex: number | null;
+  handleGraphClick: (selectedIndex: number | null) => void;
 }
 
-// interface CardProps {
-// }
+export default function PopularMistakeCard({
+  responseData,
+  totalNumPlayers,
+  statePositon,
+  graphClickIndex,
+  handleGraphClick
+}: CardProps) {
 
-export default function PopularMistakeCard() {
-  const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
-  // TODO: move up
-  const sampleTeam: Team = { name: 'first last' };
-
-  const sampleChoiceNone: PopularMistakeOption = {
-    answerChoice: '-',
-    answerCorrect: false,
-    answerCount: 2,
-    answerTeams: [sampleTeam, sampleTeam],
-    answerText: 'No Response'
-  }
-
-  const sampleChoiceA: PopularMistakeOption = {
-    answerChoice: 'A',
-    answerCorrect: true,
-    answerCount: 6,
-    answerTeams: [sampleTeam, sampleTeam, sampleTeam, sampleTeam, sampleTeam, sampleTeam],
-    answerText: ' 714'
-  }
-
-  const sampleChoiceB: PopularMistakeOption = {
-    answerChoice: 'B',
-    answerCorrect: false,
-    answerCount: 0,
-    answerTeams: [],
-    answerText: ' 55'
-  }
-
-  const sampleChoiceC: PopularMistakeOption = {
-    answerChoice: 'C',
-    answerCorrect: false,
-    answerCount: 4,
-    answerTeams: [sampleTeam, sampleTeam, sampleTeam, sampleTeam],
-    answerText: ' 21'
-  }
-
-  const sampleChoiceD: PopularMistakeOption = {
-    answerChoice: 'D',
-    answerCorrect: false,
-    answerCount: 1,
-    answerTeams: [sampleTeam],
-    answerText: ' 273'
-  }
-
-  const sampleData: PopularMistakeOption[] = [
-    sampleChoiceD, sampleChoiceC, sampleChoiceB, sampleChoiceA, sampleChoiceNone
-  ]
-
-  const sampleQuestionChoices: QuestionChoice[] = [
-    { reason: '', text: '714', isAnswer: true },
-    { reason: 'Although 21 and 34 are the nex..', text: '55', isAnswer: false },
-    { reason: 'knknknknkn…', text: '21', isAnswer: false },
-    { reason: 'wdijwdiwidjwi…', text: '273', isAnswer: false },
-  ]
-
-  function getNumPlayers(responseData: PopularMistakeOption[]) {
-    let sum = 0;
-    responseData.forEach((datum) => { sum += datum.answerCount });
-    return sum;
-  }
-
-  const sampleNumPlayers = getNumPlayers(sampleData);
-
-
-  const sampleStatePosition = 2;
-  const [sampleGraphClickIndex, setSampleGraphClickIndex] = useState<(number | null)>(null);
-
-  const handleGraphClick = (selectedIndex: number | null) => {
-    setSampleGraphClickIndex(selectedIndex);
-  };
   return (
     <HostDefaultCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
         <CardContentContainer>
           <TitleText>{t('gamesession.popularMistakeCard.title')}</TitleText>
           <ResponsesGraph
-            data={sampleData}
-            questionChoices={sampleQuestionChoices}
-            statePosition={sampleStatePosition}
-            graphClickIndex={sampleGraphClickIndex}
-            isShortAnswerEnabled
+            data={responseData}
+            statePosition={statePositon}
+            graphClickIndex={graphClickIndex}
             handleGraphClick={handleGraphClick} />
-          {sampleGraphClickIndex !== null ?
-            <ResponseDropdown responseData={sampleData} graphClickIndex={sampleGraphClickIndex} numPlayers={sampleNumPlayers} /> :
+          {graphClickIndex !== null ?
+            <ResponseDropdown responseData={responseData} graphClickIndex={graphClickIndex} numPlayers={totalNumPlayers} /> :
             <SmallTextContainer>
               <InstructionsText>
                 {t('gamesession.popularMistakeCard.instructions')}

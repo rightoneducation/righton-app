@@ -16,11 +16,10 @@ interface PopularMistakeOption {
   answerText: string;
 }
 
-// TODO: try to type x, datum
 interface LabelProps {
-  x?: any;
+  x?: any; // setting this as any because typescript/victory requirements
   y?: number;
-  datum?: any;
+  datum?: any; // setting this as any because typescript/victory requirements
 }
 
 export default function CustomLabel(props: LabelProps) {
@@ -52,7 +51,7 @@ export default function CustomLabel(props: LabelProps) {
           fontSize: `${theme.typography.h5.fontSize}`,
           fill:
             datum.answerCount === 0 ||
-              datum.answerChoice === '-'
+              datum.answerChoice === theme.sizing.noResponseToken
               ? `${theme.palette.primary.main}`
               : `${theme.palette.primary.darkBlue}`,
         }}

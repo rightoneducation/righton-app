@@ -29,11 +29,36 @@ interface QuestionData {
   imageUrl: string | undefined;
 }
 
-interface PlaceholderContentAreaProps { questionData: QuestionData, answerOptions: AnswerOption[] } // eslint-disable-line
+interface Team {
+  name: string;
+}
 
-export default function PlaceholderContentArea({ questionData, answerOptions }: PlaceholderContentAreaProps) {
+interface PopularMistakeOption {
+  answerChoice: string;
+  answerCorrect: boolean;
+  answerCount: number;
+  answerTeams: Team[];
+  answerText: string;
+}
+
+interface PlaceholderContentAreaProps {
+  questionData: QuestionData,
+  answerOptions: AnswerOption[],
+  popularMistakeResponseData: PopularMistakeOption[],
+  totalNumPlayers: number;
+  statePositon: number;
+  popularMistakeGraphClickIndex: number | null;
+  handlePopularMistakeGraphClick: (selectedIndex: number | null) => void;
+}
+
+export default function PlaceholderContentArea({ questionData, answerOptions,
+  popularMistakeResponseData,
+  totalNumPlayers,
+  statePositon,
+  popularMistakeGraphClickIndex,
+  handlePopularMistakeGraphClick
+}: PlaceholderContentAreaProps) {
   // eslint-disable-line
-
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -48,7 +73,12 @@ export default function PlaceholderContentArea({ questionData, answerOptions }: 
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <PopularMistakeCard />
+          <PopularMistakeCard
+            responseData={popularMistakeResponseData}
+            totalNumPlayers={totalNumPlayers}
+            statePositon={statePositon}
+            graphClickIndex={popularMistakeGraphClickIndex}
+            handleGraphClick={handlePopularMistakeGraphClick} />
           <Card />
         </ScrollBoxStyled>
       </Grid>
@@ -86,7 +116,12 @@ export default function PlaceholderContentArea({ questionData, answerOptions }: 
         <SwiperSlide >
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
-              <PopularMistakeCard />
+              <PopularMistakeCard
+                responseData={popularMistakeResponseData}
+                totalNumPlayers={totalNumPlayers}
+                statePositon={statePositon}
+                graphClickIndex={popularMistakeGraphClickIndex}
+                handleGraphClick={handlePopularMistakeGraphClick} />
               <Card />
             </ScrollBoxStyled>
           </Grid>
@@ -128,7 +163,12 @@ export default function PlaceholderContentArea({ questionData, answerOptions }: 
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-              <PopularMistakeCard />
+              <PopularMistakeCard
+                responseData={popularMistakeResponseData}
+                totalNumPlayers={totalNumPlayers}
+                statePositon={statePositon}
+                graphClickIndex={popularMistakeGraphClickIndex}
+                handleGraphClick={handlePopularMistakeGraphClick} />
               <Card />
             </ScrollBoxStyled>
           </Grid>

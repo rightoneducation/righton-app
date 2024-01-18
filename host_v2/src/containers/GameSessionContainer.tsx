@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ApiClient } from '@righton/networking';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,18 @@ interface QuestionData {
   imageUrl: string | undefined;
 }
 
+interface Team {
+  name: string;
+}
+
+interface PopularMistakeOption {
+  answerChoice: string;
+  answerCorrect: boolean;
+  answerCount: number;
+  answerTeams: Team[];
+  answerText: string;
+}
+
 export default function GameSessionContainer({
   apiClient,
 }: GameInProgressContainerProps) {
@@ -47,6 +59,69 @@ export default function GameSessionContainer({
     content: "another answer choice"
   }
 
+  // For popular mistake card
+  const sampleTeam: Team = { name: 'first last' };
+
+  const sampleChoiceNone: PopularMistakeOption = {
+    answerChoice: '-',
+    answerCorrect: false,
+    answerCount: 2,
+    answerTeams: [sampleTeam, sampleTeam],
+    answerText: 'No Response'
+  }
+
+  const sampleChoiceA: PopularMistakeOption = {
+    answerChoice: 'A',
+    answerCorrect: true,
+    answerCount: 6,
+    answerTeams: [sampleTeam, sampleTeam, sampleTeam, sampleTeam, sampleTeam, sampleTeam],
+    answerText: ' 714'
+  }
+
+  const sampleChoiceB: PopularMistakeOption = {
+    answerChoice: 'B',
+    answerCorrect: false,
+    answerCount: 0,
+    answerTeams: [],
+    answerText: ' 55'
+  }
+
+  const sampleChoiceC: PopularMistakeOption = {
+    answerChoice: 'C',
+    answerCorrect: false,
+    answerCount: 4,
+    answerTeams: [sampleTeam, sampleTeam, sampleTeam, sampleTeam],
+    answerText: ' 21'
+  }
+
+  const sampleChoiceD: PopularMistakeOption = {
+    answerChoice: 'D',
+    answerCorrect: false,
+    answerCount: 1,
+    answerTeams: [sampleTeam],
+    answerText: ' 273'
+  }
+
+  const sampleData: PopularMistakeOption[] = [
+    sampleChoiceD, sampleChoiceC, sampleChoiceB, sampleChoiceA, sampleChoiceNone
+  ]
+
+  function getNumPlayers(responsesData: PopularMistakeOption[]) {
+    let sum = 0;
+    responsesData.forEach((datum) => { sum += datum.answerCount });
+    return sum;
+  }
+
+  const sampleNumPlayers = getNumPlayers(sampleData);
+
+
+  const sampleStatePosition = 2;
+  const [sampleGraphClickIndex, setSampleGraphClickIndex] = useState<(number | null)>(null);
+
+  const handlePopularMistakeGraphClick = (selectedIndex: number | null) => {
+    setSampleGraphClickIndex(selectedIndex);
+  };
+
   const { t } = useTranslation();
   return (
     <StackContainerStyled
@@ -61,7 +136,14 @@ export default function GameSessionContainer({
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <PlaceholderContentArea questionData={sampleQuestion} answerOptions={[sampleAnswerOptionOne, sampleAnswerOptionTwo]} />
+        <PlaceholderContentArea
+          questionData={sampleQuestion}
+          answerOptions={[sampleAnswerOptionOne, sampleAnswerOptionTwo]}
+          popularMistakeResponseData={sampleData}
+          totalNumPlayers={sampleNumPlayers}
+          statePositon={sampleStatePosition}
+          popularMistakeGraphClickIndex={sampleGraphClickIndex}
+          handlePopularMistakeGraphClick={handlePopularMistakeGraphClick} />
       </BodyStackContainerStyled>
     </StackContainerStyled>
   );
