@@ -264,30 +264,6 @@ export class MultiChoiceAnswer extends BaseAnswer<string> {
   }
 
   isEqualTo(otherAnswers: string[]): Boolean {
-    if (this.answer.normAnswer) {
-      for (let i =0; i < this.answer.normAnswer.length; i++) {
-        for (let y = 0; y < otherAnswers.length; y++) {
-          try {
-            const exp1 = parse(this.answer.normAnswer[i].toString()).toString();
-            const exp2 = parse(otherAnswers[y].toString()).toString();
-            if (exp1 === exp2)
-              return true;
-          } catch (e) {
-            console.error(e);
-          }
-        }
-      }
-    }
-   return false;
-  }
-
-   // checks if expression can be parsed via mathjs
-   static isAnswerTypeValid(input: string): Boolean {
-    try {
-      parse(input);
-      return true;
-    } catch {
-      return false;
-    }
+    return otherAnswers.includes(this.answer.rawAnswer);
   }
 }
