@@ -52,7 +52,8 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswer, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, IAnswerContent, BaseAnswer, AnswerType, NumberAnswer, StringAnswer, ExpressionAnswer } from "./Models"
+import { ILocalAnswer } from "./Models/AnswerClasses"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, BaseAnswer, AnswerType, NumberAnswer, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -363,21 +364,17 @@ export class ApiClient implements IApiClient {
     async addTeamAnswer(
         inputAnswer: BaseAnswer<any>
     ): Promise<BaseAnswer<any>> {
-        if (isNullOrUndefined(inputAnswer.teamAnswerAttributes) ||
-            isNullOrUndefined(inputAnswer.teamAnswerAttributes.questionId) ||
-            isNullOrUndefined(inputAnswer.teamAnswerAttributes.isChosen) ||
-            isNullOrUndefined(inputAnswer.teamAnswerAttributes.isTrickAnswer) ||
-            isNullOrUndefined(inputAnswer.teamAnswerAttributes.text) 
+        if (isNullOrUndefined(inputAnswer) ||
+            isNullOrUndefined(inputAnswer.questionId) ||
+            isNullOrUndefined(inputAnswer.text) 
         ) {
             throw new Error(`Missing required answer attributes`);
         }
         const input: CreateTeamAnswerInput = {
-            questionId: inputAnswer.teamAnswerAttributes.questionId,
-            isChosen: inputAnswer.teamAnswerAttributes.isChosen,
-            isTrickAnswer: inputAnswer.teamAnswerAttributes.isTrickAnswer,
-            text: inputAnswer.teamAnswerAttributes.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            awsAnswerContent: JSON.stringify(inputAnswer.answerContent), 
-            teamMemberAnswersId: inputAnswer.teamAnswerAttributes.teamMemberAnswersId,
+            questionId: inputAnswer.questionId,
+            text: inputAnswer.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
+            answer: JSON.stringify(inputAnswer.answer), 
+            teamMemberId: inputAnswer.teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
@@ -413,26 +410,22 @@ export class ApiClient implements IApiClient {
     }
     async updateTeamAnswerConfidence(
         teamAnswerId: string,
-        isChosen: boolean | null = null,
         confidenceLevel?: ConfidenceLevel
     ): Promise<BaseAnswer<any>> {
         const input: UpdateTeamAnswerInput = {
             id: teamAnswerId,
-            isChosen,
             confidenceLevel
         }
        return this.updateTeamAnswerBase(input);
     }
     async updateTeamAnswerHint(
         teamAnswerId: string,
-        isChosen: boolean | null = null,
         hint: ITeamAnswerHint
     ): Promise<BaseAnswer<any>> {
         const awsHint = JSON.stringify(hint)
         const input: UpdateTeamAnswerInput = {
             id: teamAnswerId,
-            isChosen,
-            awsHint
+            hint: awsHint
         }
         return this.updateTeamAnswerBase(input);
     }
@@ -588,7 +581,7 @@ type AWSTeam = {
 }
 
 type AWSQuestion = {
-    id: number
+    id: string
     text: string
     choices?: string | null
     answerSettings?: string | null
@@ -611,7 +604,7 @@ type AWSTeamMember = {
     id: string
     isFacilitator?: boolean | null
     answers?: {
-        items: Array<ITeamAnswer> | null
+        items: Array<AWSTeamAnswer> | null
     } | null
     deviceId?: string | null
     createdAt?: string | null
@@ -621,9 +614,7 @@ type AWSTeamMember = {
 
 type AWSTeamAnswer = {
     id: string
-    questionId?: number | null
-    isChosen: boolean
-    isTrickAnswer: boolean
+    questionId?: string | null
     text?: string | null
     awsAnswerContent?: string | null
     awsHint?: string | null
@@ -973,7 +964,7 @@ class TeamAnswerParser {
     }
     static answerContentFromAWSAnswerContent(
         awsAnswerContent: string
-    ): IAnswerContent {
+    ): ILocalAnswer {
         let parsedAnswerContent;
         try {
             parsedAnswerContent = JSON.parse(awsAnswerContent);
@@ -987,7 +978,7 @@ class TeamAnswerParser {
             console.log(e)
             throw new Error("Failed to parse answer content")
         }
-        return parsedAnswerContent as IAnswerContent;
+        return parsedAnswerContent as ILocalAnswer;
     }   
     static hintFromAWSHint(
         awsHint: string
@@ -1013,8 +1004,6 @@ class TeamAnswerParser {
         const {
             id,
             questionId,
-            isChosen,
-            isTrickAnswer,
             text,
             awsAnswerContent,
             awsHint,
@@ -1039,14 +1028,12 @@ class TeamAnswerParser {
         const answerConfigBase = {
             id,
             questionId,
-            isChosen,
-            isTrickAnswer,
             text,
-            answerContent,
+            answer: answerContent,
             hint,
             createdAt,
             updatedAt,
-            teamMemberAnswersId,
+            teamMemberId: teamMemberAnswersId,
             confidenceLevel
           };
         switch (answerContent.answerType) {

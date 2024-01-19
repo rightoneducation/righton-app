@@ -1,7 +1,7 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
 
 export interface IQuestion {
-    id: number
+    id: string
     text: string
     choices?: Array<IChoice> | null
     answerSettings?: IAnswerSettings | null

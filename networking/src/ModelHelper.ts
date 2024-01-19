@@ -6,8 +6,13 @@ import { GameSessionState } from './AWSMobileApi'
 
 export abstract class ModelHelper {
     private static correctAnswerScore = 10
+    private static isAnswerFromPhaseOne(answer: NumberAnswer | StringAnswer | ExpressionAnswer | null): boolean {
+        return !isNullOrUndefined(answer) &&
+            (answer.answer.currentState === GameSessionState.PHASE_1_DISCUSS ||
+                answer.answer.currentState === GameSessionState.PHASE_1_RESULTS)
+    }
 
-    static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: number): Array<NumberAnswer | StringAnswer | ExpressionAnswer | null> | null {
+    static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: string): Array<NumberAnswer | StringAnswer | ExpressionAnswer | null> | null {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length == 0) {
             console.error("Team members is null")
@@ -23,8 +28,8 @@ export abstract class ModelHelper {
 
         return teamMember.answers.filter((answer) => {
             return !isNullOrUndefined(answer) &&
-                !isNullOrUndefined(answer.teamAnswerAttributes?.questionId) &&
-                answer.teamAnswerAttributes?.questionId === questionId
+                !isNullOrUndefined(answer.questionId) &&
+                answer.questionId === questionId
         })
     }
 
@@ -33,7 +38,7 @@ export abstract class ModelHelper {
             return !isNullOrUndefined(choice.isAnswer) && choice.isAnswer
         }) ?? null
     }
-    static getSelectedAnswer(team: ITeam, question: IQuestion, currentState: GameSessionState): NumberAnswer | StringAnswer | ExpressionAnswer | null {
+    static getSelectedAnswer(team: ITeam, question: IQuestion): NumberAnswer | StringAnswer | ExpressionAnswer | null {
         // step 1: get all answers from player
         let teamAnswers;
         if (team != null) {
@@ -45,9 +50,9 @@ export abstract class ModelHelper {
         // step 2: get the answer the player selected this round
         const findSelectedAnswer = (answers: (NumberAnswer | StringAnswer | ExpressionAnswer | null)[]) => {
             const selectedAnswer = answers.find((teamAnswer: NumberAnswer | StringAnswer | ExpressionAnswer | null) => 
-                currentState === GameSessionState.PHASE_1_RESULTS || currentState === GameSessionState.PHASE_1_DISCUSS
-                    ? teamAnswer?.teamAnswerAttributes?.isChosen === true
-                    : teamAnswer?.teamAnswerAttributes?.isTrickAnswer === true
+                this.isAnswerFromPhaseOne(teamAnswer)
+                    ? teamAnswer?.answer.currentState === GameSessionState.PHASE_1_RESULTS || teamAnswer?.answer.currentState === GameSessionState.PHASE_1_DISCUSS
+                    : teamAnswer?.answer.currentState === GameSessionState.PHASE_2_RESULTS || teamAnswer?.answer.currentState === GameSessionState.PHASE_2_DISCUSS
             );
             return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
         };
@@ -57,7 +62,7 @@ export abstract class ModelHelper {
         }
         return null;
     }
-    static getSelectedTrickAnswer(team: ITeam, questionId: number): NumberAnswer | StringAnswer | ExpressionAnswer | null {
+    static getSelectedTrickAnswer(team: ITeam, questionId: string): NumberAnswer | StringAnswer | ExpressionAnswer | null {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length !== 1) {
             throw new Error("Given team has no members or more than one members")
@@ -69,14 +74,14 @@ export abstract class ModelHelper {
                 return false
             }
 
-            return answer.teamAnswerAttributes?.questionId === questionId &&
-                answer.teamAnswerAttributes?.isTrickAnswer
+            return answer.questionId === questionId &&
+                (!this.isAnswerFromPhaseOne(answer))
         })
 
         return trickAnswer ?? null
     }
 
-    static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, answerText: string, questionId: number): number {
+    static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, answerText: string, questionId: string): number {
         if (isNullOrUndefined(gameSession.teams)) {
             throw new Error("'teams' can't be null")
         }
@@ -98,10 +103,10 @@ export abstract class ModelHelper {
 
             const answersToQuestion = teamMember.answers.find((answer) => {
                 return !isNullOrUndefined(answer) &&
-                    !isNullOrUndefined(answer!.teamAnswerAttributes?.questionId) &&
-                    answer.teamAnswerAttributes?.questionId === questionId &&
-                    !answer.teamAnswerAttributes?.isTrickAnswer &&
-                    answer!.teamAnswerAttributes?.text === answerText
+                    !isNullOrUndefined(answer!.questionId) &&
+                    answer.questionId === questionId &&
+                    this.isAnswerFromPhaseOne(answer) &&
+                    answer!.text === answerText
             })
 
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
@@ -130,12 +135,12 @@ export abstract class ModelHelper {
 
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
-        let submittedTrickAnswer = answers.find(answer => answer?.teamAnswerAttributes?.isTrickAnswer && answer.teamAnswerAttributes.questionId === currentQuestion.id)
+        let submittedTrickAnswer = answers.find(answer => (!this.isAnswerFromPhaseOne(answer)) && answer?.questionId === currentQuestion.id)
 
         if (submittedTrickAnswer){
-          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.teamAnswerAttributes?.text ?? '', currentQuestion.id)
+          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
         } else {
-            if (!isShortAnswerEnabled && answers.find(answer => answer?.teamAnswerAttributes?.isChosen && answer?.teamAnswerAttributes?.text === correctAnswer?.text && answer.teamAnswerAttributes?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
+            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
                 return this.correctAnswerScore
             } else {
                 const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses

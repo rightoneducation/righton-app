@@ -37,7 +37,9 @@ export interface ILocalAnswer {
 }
 
 export interface IBaseAnswerConfig<T> {
-  id?: string;
+  id: string;
+  questionId: string;
+  teamMemberId: string;
   answer: ILocalAnswer;
   value: T;
 }
@@ -110,18 +112,20 @@ export class LocalAnswer {
 }
 
 export abstract class BaseAnswer<T> {
-  id?: string;
+  id: string;
+  questionId: string;
+  teamMemberId: string;
   answer: ILocalAnswer;
-  questionId?: number;
-  teamMemberAnswersId?: string;
   text?: string;
   hint?: ITeamAnswerHint;
   confidenceLevel?: ConfidenceLevel;
   value: T;
 
   constructor(config: IBaseAnswerConfig<T>) {
-    const { id, answer, value } = config;
+    const { id, questionId, teamMemberId, answer, value } = config;
     this.id = id;
+    this.questionId = questionId;
+    this.teamMemberId = teamMemberId;
     this.answer = answer;
     this.value = value;
   }

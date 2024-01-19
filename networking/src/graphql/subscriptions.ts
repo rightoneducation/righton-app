@@ -47,12 +47,11 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
               items {
                 id
                 questionId
-                isChosen
+                teamMemberId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -132,12 +131,11 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `subscription OnTeamMemb
       items {
         id
         questionId
-        isChosen
+        teamMemberId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -189,12 +187,11 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
           items {
             id
             questionId
-            isChosen
+            teamMemberId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -259,12 +256,11 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
           items {
             id
             questionId
-            isChosen
+            teamMemberId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -338,12 +334,11 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
               items {
                 id
                 questionId
-                isChosen
+                teamMemberId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -456,12 +451,11 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
               items {
                 id
                 questionId
-                isChosen
+                teamMemberId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -574,12 +568,11 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
               items {
                 id
                 questionId
-                isChosen
+                teamMemberId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -683,12 +676,11 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
           items {
             id
             questionId
-            isChosen
+            teamMemberId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -753,12 +745,11 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
           items {
             id
             questionId
-            isChosen
+            teamMemberId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -823,12 +814,11 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
           items {
             id
             questionId
-            isChosen
+            teamMemberId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -871,12 +861,11 @@ export const onCreateTeamMember = /* GraphQL */ `subscription OnCreateTeamMember
       items {
         id
         questionId
-        isChosen
+        teamMemberId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -906,12 +895,11 @@ export const onUpdateTeamMember = /* GraphQL */ `subscription OnUpdateTeamMember
       items {
         id
         questionId
-        isChosen
+        teamMemberId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -941,12 +929,11 @@ export const onDeleteTeamMember = /* GraphQL */ `subscription OnDeleteTeamMember
       items {
         id
         questionId
-        isChosen
+        teamMemberId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -972,12 +959,11 @@ export const onCreateTeamAnswer = /* GraphQL */ `subscription OnCreateTeamAnswer
   onCreateTeamAnswer(filter: $filter) {
     id
     questionId
-    isChosen
+    teamMemberId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -994,12 +980,11 @@ export const onUpdateTeamAnswer = /* GraphQL */ `subscription OnUpdateTeamAnswer
   onUpdateTeamAnswer(filter: $filter) {
     id
     questionId
-    isChosen
+    teamMemberId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -1016,12 +1001,11 @@ export const onDeleteTeamAnswer = /* GraphQL */ `subscription OnDeleteTeamAnswer
   onDeleteTeamAnswer(filter: $filter) {
     id
     questionId
-    isChosen
+    teamMemberId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
     teamMemberAnswersId

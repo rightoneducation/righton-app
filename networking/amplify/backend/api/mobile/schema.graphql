@@ -37,7 +37,7 @@ enum GameSessionState {
 }
 
 type Question @model(subscriptions: null, timestamps: null) {
-  id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
+  id: ID! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON
   answerSettings: AWSJSON
@@ -83,13 +83,12 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
-  questionId: Int!
-  isChosen: Boolean!
+  questionId: ID!
+  teamMemberId: ID!
   text: String!
-  awsAnswerContent: AWSJSON!
-  isTrickAnswer: Boolean!
+  answer: AWSJSON!
   confidenceLevel: ConfidenceLevel! @default(value: "NOT_RATED")
-  awsHint: AWSJSON
+  hint: String
 }
 
 type Subscription {

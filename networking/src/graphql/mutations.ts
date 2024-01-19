@@ -50,12 +50,11 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
               items {
                 id
                 questionId
-                isChosen
+                teamMemberId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -169,12 +168,11 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
               items {
                 id
                 questionId
-                isChosen
+                teamMemberId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -288,12 +286,11 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
               items {
                 id
                 questionId
-                isChosen
+                teamMemberId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -487,12 +484,11 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
           items {
             id
             questionId
-            isChosen
+            teamMemberId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -560,12 +556,11 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
           items {
             id
             questionId
-            isChosen
+            teamMemberId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -633,12 +628,11 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
           items {
             id
             questionId
-            isChosen
+            teamMemberId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -682,12 +676,11 @@ export const createTeamMember = /* GraphQL */ `mutation CreateTeamMember(
       items {
         id
         questionId
-        isChosen
+        teamMemberId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -718,12 +711,11 @@ export const updateTeamMember = /* GraphQL */ `mutation UpdateTeamMember(
       items {
         id
         questionId
-        isChosen
+        teamMemberId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -754,12 +746,11 @@ export const deleteTeamMember = /* GraphQL */ `mutation DeleteTeamMember(
       items {
         id
         questionId
-        isChosen
+        teamMemberId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -786,12 +777,11 @@ export const createTeamAnswer = /* GraphQL */ `mutation CreateTeamAnswer(
   createTeamAnswer(input: $input, condition: $condition) {
     id
     questionId
-    isChosen
+    teamMemberId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -809,12 +799,11 @@ export const updateTeamAnswer = /* GraphQL */ `mutation UpdateTeamAnswer(
   updateTeamAnswer(input: $input, condition: $condition) {
     id
     questionId
-    isChosen
+    teamMemberId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -832,12 +821,11 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
   deleteTeamAnswer(input: $input, condition: $condition) {
     id
     questionId
-    isChosen
+    teamMemberId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
     teamMemberAnswersId
