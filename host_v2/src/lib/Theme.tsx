@@ -37,6 +37,7 @@ const playerFeedbackLabelColor = 'rgba(255, 255, 255, 0.4)'; // color of text on
 const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
 const graphAccentColor = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
 const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns 
+const answerBarBackgroundColor = 'rgba(8, 69, 143, 0.20)';
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
   `${countdownColor}, 0.4)`,
@@ -66,6 +67,8 @@ const xl = 1536;
 const fullHeaderHeight = 228;
 const headerHeight = 150;
 const footerHeight = 60;
+const answerBarHeight = 18;
+const nextStateButtonWidth = 300;
 const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
 const extraExtraSmallPadding = 4; //  used on question indicators
 const answerOptionBorderRadius = 22; // border radius of options on answer cards
@@ -91,6 +94,8 @@ declare module '@mui/material/styles' {
       fullHeaderHeight: number;
       headerHeight: number;
       footerHeight: number;
+      answerBarHeight: number;
+      nextStateButtonWidth: number;
       pregameMinColumnWidth: number;
       extraExtraSmallPadding: number;
       answerOptionBorderRadius: number;
@@ -116,6 +121,8 @@ declare module '@mui/material/styles' {
       fullHeaderHeight?: number;
       headerHeight?: number;
       footerHeight?: number;
+      answerBarHeight?: number;
+      nextStateButtonWidth?: number;
       pregameMinColumnWidth?: number;
       extraExtraSmallPadding?: number;
       answerOptionBorderRadius?: number;
@@ -152,6 +159,7 @@ declare module '@mui/material/styles' {
     feedbackCardsInstructionsColor: string;
     graphAccentColor: string;
     dropdownInfoBackgroundColor: string;
+    answerBarBackgroundColor: string;
     countdownColor: string;
     radialTimerArray: string[];
   }
@@ -180,6 +188,7 @@ declare module '@mui/material/styles' {
     feedbackCardsInstructionsColor?: string;
     graphAccentColor?: string;
     dropdownInfoBackgroundColor?: string;
+    answerBarBackgroundColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
   }
@@ -199,6 +208,8 @@ export default createTheme({
     fullHeaderHeight,
     headerHeight,
     footerHeight,
+    answerBarHeight,
+    nextStateButtonWidth,
     pregameMinColumnWidth,
     extraExtraSmallPadding,
     answerOptionBorderRadius,
@@ -236,12 +247,13 @@ export default createTheme({
       feedbackCardsInstructionsColor,
       graphAccentColor,
       dropdownInfoBackgroundColor,
+      answerBarBackgroundColor,
       countdownColor,
       radialTimerArray,
     },
   },
   typography: {
-    fontFamily: 'Karla',
+    fontFamily: 'Karla', 
     h1: {
       // screen titles
       fontWeight: '800',

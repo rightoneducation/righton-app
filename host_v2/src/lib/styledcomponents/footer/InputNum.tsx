@@ -1,15 +1,13 @@
 import { styled, useTheme } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Typography } from '@mui/material';
 
-export default styled(Box)(({ theme, progressPercent }) => ({
+export default styled(Typography)(({ theme, progressPercent }) => ({
     position: 'absolute',
     top: '0',
-    left: '0',
-    width: `${progressPercent - 2}%`,
-    textAlign: 'right',
-    fontFamily: 'Helvetica',
+    left: `${progressPercent - 3}%`,
+    zIndex: 1,
     fontSize: '12px',
-    fontWeight: 'bold',
-    zIndex: '1',
-    lineHeight: '18px',
+    fontWeight: '400',
+    fontFamily: 'Rubik',
+    color: theme.palette.primary.main
 }));

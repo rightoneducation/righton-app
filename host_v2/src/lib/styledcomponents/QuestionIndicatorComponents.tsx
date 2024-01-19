@@ -10,6 +10,9 @@ export const BaseQuestionIndicator = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   color: theme.palette.primary.baseQuestionColor,
   boxSizing: 'border-box',
+  fontFamily: 'Poppins',
+  fontSize: '12px',
+  fontWeight: '400'
 }));
 
 export const CurrentQuestionIndicator = styled(BaseQuestionIndicator,)(({ theme }) => ({

@@ -114,7 +114,7 @@ export default function Timer({
     <TimerContainer maxWidth="md">
       <TimerBar value={progress} variant="determinate" />
       <TimerText maxWidth="sm">
-        <Typography alignSelf="center" variant="h6" style={{ fontSize: '14px', fontWeight: '400' }}>
+        <Typography alignSelf="center" variant="h6" style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik' }}>
           {timerString}
         </Typography>
       </TimerText>

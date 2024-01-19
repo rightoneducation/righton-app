@@ -10,6 +10,9 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import PlaceholderContentArea from '../components/PlaceholderContentArea';
 import HeaderContent from '../components/HeaderContent';
 import { LocalModel } from '../lib/HostModels';
+import AnswerBar from '../components/FooterComponents/AnswerBar';
+import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
+import FooterContent from '../components/FooterComponents/FooterContent';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -79,8 +82,8 @@ export default function GameSessionContainer({
     setConfidenceGraphClickIndex(selectedIndex);
   };
 
-  const inputNum = 5;
-  const totalNum = 7;
+  const inputNum = 23;
+  const totalNum = 24;
 
   const { t } = useTranslation();
   const totalQuestions = 5;
@@ -131,7 +134,13 @@ export default function GameSessionContainer({
           questionData={sampleQuestion}
           answerOptions={[sampleAnswerOptionOne, sampleAnswerOptionTwo]}
           confidenceData={sampleConfidenceData} confidenceGraphClickIndex={confidenceGraphClickIndex} handleConfidenceGraphClick={handleConfidenceGraphClick} />
+      
       </BodyStackContainerStyled>
+      <FooterBackgroundStyled />
+      <FooterContent
+        inputNum={inputNum}
+        totalNum={totalNum}
+      />
     </StackContainerStyled>
   );
 }

@@ -105,7 +105,7 @@ export default function HeaderContent({
                     </Grid>
                 </Grid>
                 <Grid item style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
-                    <Typography variant="h1">
+                    <Typography variant="h1" style={{fontFamily: 'Poppins'}}>
                         {stateCheck(currentState, isCorrect, isIncorrect)}
                     </Typography>
                 </Grid>
