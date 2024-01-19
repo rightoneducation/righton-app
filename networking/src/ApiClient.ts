@@ -53,7 +53,7 @@ import {
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
 import { ILocalAnswer } from "./Models/AnswerClasses"
-import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, BaseAnswer, AnswerType, NumberAnswer, StringAnswer, ExpressionAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, IAnswerHint, ITeamMember, IGameSession, ITeam, BaseAnswer, AnswerType, NumberAnswer, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -420,7 +420,7 @@ export class ApiClient implements IApiClient {
     }
     async updateTeamAnswerHint(
         teamAnswerId: string,
-        hint: ITeamAnswerHint
+        hint: IAnswerHint
     ): Promise<BaseAnswer<any>> {
         const awsHint = JSON.stringify(hint)
         const input: UpdateTeamAnswerInput = {
@@ -982,7 +982,7 @@ class TeamAnswerParser {
     }   
     static hintFromAWSHint(
         awsHint: string
-    ): ITeamAnswerHint {
+    ): IAnswerHint {
         let parsedHint;
         try {
             parsedHint = JSON.parse(awsHint);
@@ -996,7 +996,7 @@ class TeamAnswerParser {
             console.log(e)
             throw new Error("Failed to parse hint")
         }
-        return parsedHint as ITeamAnswerHint;
+        return parsedHint as IAnswerHint;
     }  
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   isNullOrUndefined,
   GameSessionState,
-  ITeamAnswerContent,
+  LocalAnswer,
   IChoice,
 } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
@@ -18,11 +18,11 @@ interface AnswerCardProps {
   answers: IChoice[] | undefined;
   isSubmitted: boolean;
   isShortAnswerEnabled: boolean;
-  handleSubmitAnswer: (answerText: ITeamAnswerContent) => void;
+  handleSubmitAnswer: (answerText: LocalAnswer) => void;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  selectedAnswer: number | null;
-  handleSelectAnswer: (index: number) => void;
+  selectedAnswer: string | null;
+  handleSelectAnswer: (answerText: string) => void;
 }
 
 export default function AnswerCard({
@@ -75,7 +75,7 @@ export default function AnswerCard({
     answer: { text: string; isAnswer: boolean },
     index: number
   ) => {
-    if (selectedAnswer === index) return AnswerState.SELECTED;
+    if (selectedAnswer === answer.text) return AnswerState.SELECTED;
     if (
       answer.isAnswer &&
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER

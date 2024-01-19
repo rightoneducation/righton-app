@@ -19,7 +19,7 @@ export enum AnswerPrecision {
   THOUSANDTH = 3,
 }
 
-export interface ITeamAnswerHint {
+export interface IAnswerHint {
   rawHint: string;
   teamName: string;
   isHintSubmitted: boolean;
@@ -38,15 +38,13 @@ export interface ILocalAnswer {
   currentQuestionIndex?: number | null;
 }
 
-export interface IBaseAnswerConfig<T> {
+export interface IBaseAnswer<T> {
   id: string;
   questionId: string;
   teamMemberId: string;
   answer: ILocalAnswer;
   value: T;
 }
-
-
 
 function normalizeAnswers(currentItem: string, answerType: AnswerType) {
   const normAnswers = [];
@@ -128,11 +126,11 @@ export abstract class BaseAnswer<T> {
   teamMemberId: string;
   answer: LocalAnswer;
   text?: string;
-  hint?: ITeamAnswerHint;
+  hint?: IAnswerHint;
   confidenceLevel?: ConfidenceLevel;
   value: T;
 
-  constructor(config: IBaseAnswerConfig<T>) {
+  constructor(config: IBaseAnswer<T>) {
     const { id, questionId, teamMemberId, answer, value } = config;
     this.id = id;
     this.questionId = questionId;
@@ -145,7 +143,7 @@ export abstract class BaseAnswer<T> {
 }
 
 export class NumberAnswer extends BaseAnswer<number> {
-  constructor(config: IBaseAnswerConfig<number>) {
+  constructor(config: IBaseAnswer<number>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answer.answerContent.rawAnswer, AnswerType.NUMBER);
     
@@ -201,7 +199,7 @@ export class NumberAnswer extends BaseAnswer<number> {
 }
 
 export class StringAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
+  constructor(config: IBaseAnswer<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answer.answerContent.rawAnswer, AnswerType.STRING);
 
@@ -232,7 +230,7 @@ export class StringAnswer extends BaseAnswer<string> {
 }
 
 export class ExpressionAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
+  constructor(config: IBaseAnswer<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answer.answerContent.rawAnswer, AnswerType.EXPRESSION);
 
@@ -277,7 +275,7 @@ export class ExpressionAnswer extends BaseAnswer<string> {
 }
 
 export class MultiChoiceAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
+  constructor(config: IBaseAnswer<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
 
     this.answer = {
