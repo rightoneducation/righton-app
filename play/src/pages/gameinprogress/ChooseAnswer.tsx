@@ -41,7 +41,7 @@ interface ChooseAnswerProps {
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
-  answerContent: LocalAnswer;
+  localAnswer: LocalAnswer;
   currentQuestionIndex: number;
   answerHint: IAnswerHint | null;
   isHintEnabled: boolean;
@@ -68,7 +68,7 @@ export default function ChooseAnswer({
   timeOfLastConfidenceSelect,
   setTimeOfLastConfidenceSelect,
   isShortAnswerEnabled,
-  answerContent,
+  localAnswer,
   currentQuestionIndex,
   answerHint,
   isHintEnabled,
@@ -116,8 +116,8 @@ export default function ChooseAnswer({
       {isShortAnswerEnabled &&
       currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
         <OpenAnswerCard
-          localAnswer={answerContent}
-          isSubmitted={answerContent.isSubmitted ?? false}
+          localAnswer={localAnswer}
+          isSubmitted={localAnswer.isSubmitted ?? false}
           isShortAnswerEnabled={isShortAnswerEnabled}
           answerSettings={answerSettings}
           currentState={currentState}
@@ -127,12 +127,12 @@ export default function ChooseAnswer({
       ) : (
         <AnswerCard
           answers={answerChoices}
-          isSubmitted={answerContent.isSubmitted ?? false}
+          isSubmitted={localAnswer.isSubmitted ?? false}
           isShortAnswerEnabled={isShortAnswerEnabled}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
-          selectedAnswer={answerContent.answerContent.rawAnswer}
+          selectedAnswer={localAnswer.answerContent.rawAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
       )}

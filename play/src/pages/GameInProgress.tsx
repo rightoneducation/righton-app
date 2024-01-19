@@ -144,7 +144,7 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [answerContent, setAnswerContent] = useState<LocalAnswer>(() => {
+  const [localAnswer, setLocalAnswer] = useState<LocalAnswer>(() => {
     const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
       localModel,
       hasRejoined,
@@ -156,7 +156,7 @@ export default function GameInProgress({
   });
 
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
-    !isNullOrUndefined(answerContent?.isSubmitted)
+    !isNullOrUndefined(localAnswer?.isSubmitted)
   );
   const currentAnswer = teamAnswers?.find(
     (answer) => answer?.questionId === currentQuestion.id
@@ -165,7 +165,7 @@ export default function GameInProgress({
     currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
   const handleTimerIsFinished = () => {
-    setAnswerContent((prev) => ({ ...prev, isSubmitted: true }));
+    setLocalAnswer((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
 
@@ -227,7 +227,7 @@ export default function GameInProgress({
       const response = await apiClient.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
-      setAnswerContent(answer?.answer as LocalAnswer);
+      setLocalAnswer(answer?.answer as LocalAnswer);
       setDisplaySubmitted(true);
     } catch (e) {
       setIsAnswerError(true);
@@ -247,7 +247,7 @@ export default function GameInProgress({
   const handleRetry = () => {
     if (isAnswerError) {
       setIsAnswerError(false);
-      setAnswerContent((prev) => ({ ...prev, isSubmitted: false }));
+      setLocalAnswer((prev) => ({ ...prev, isSubmitted: false }));
     }
     if (isConfidenceError) {
       setIsConfidenceError(false);
@@ -271,7 +271,7 @@ export default function GameInProgress({
         currentQuestionIndex: currentQuestionIndex ?? 0,
       } as LocalAnswer)
     );
-    setAnswerContent((prev) => ({ ...prev, answerContent: { rawAnswer: answerText } }));
+    setLocalAnswer((prev) => ({ ...prev, answerContent: { rawAnswer: answerText } }));
   };
 
   const setTimeOfLastConfidenceSelect = (time: number) => {
@@ -338,7 +338,7 @@ export default function GameInProgress({
             questionUrl={questionUrl ?? ''}
             answerSettings = {currentQuestion.answerSettings ?? null}
             answerChoices={answerChoices}
-            isSubmitted={answerContent.isSubmitted ?? false}
+            isSubmitted={localAnswer.isSubmitted ?? false}
             displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
@@ -350,7 +350,7 @@ export default function GameInProgress({
             timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
-            answerContent={answerContent}
+            localAnswer={localAnswer}
             currentQuestionIndex={currentQuestionIndex ?? 0}
             answerHint={answerHint ?? null}
             isHintEnabled={currentQuestion.isHintEnabled}
