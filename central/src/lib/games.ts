@@ -5,9 +5,16 @@ import { createGame as CG, updateGame as UG, createGameQuestion as CGQ, deleteGa
 import { SORT_TYPES, sortGamesBySortType } from './sorting';
 
 export const fetchGames = async (sortType: SORT_TYPES = SORT_TYPES.UPDATED): Promise<Array<Game | null>> => {
+  try {
   const result = await API.graphql(graphqlOperation(listGames)) as { data: ListGamesQuery | null | undefined };
+  console.log('sup');
+  console.log(result);
   const games = result?.data?.listGames || [];
   return games;
+  } catch (err) {
+    console.log(err)
+  }
+  return [];
 }
 
 export const sortGames = (games: Array<Game | null>, sortType: SORT_TYPES = SORT_TYPES.UPDATED) => {

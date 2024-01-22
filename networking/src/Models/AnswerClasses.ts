@@ -123,8 +123,12 @@ export class LocalAnswer {
 export abstract class BaseAnswer<T> {
   id: string;
   questionId: string;
-  teamMemberId: string;
-  answer: LocalAnswer;
+  currentState: GameSessionState;
+  answer: {
+    rawAnswer: string;
+    normAnswer?: (NormAnswerType)[] | null;
+  };
+  answerType?: AnswerType;
   text?: string;
   hint?: IAnswerHint;
   confidenceLevel?: ConfidenceLevel;
