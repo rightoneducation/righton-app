@@ -45,7 +45,7 @@ export default function OpenAnswerCard({
   const [isBadInput, setIsBadInput] = useState(false); 
   const [katexAnswer, setKatexAnswer] = useState('');
 
-  const answerType = AnswerType[answerSettings?.answerType as keyof typeof AnswerType] ?? AnswerType.STRING;
+  const answerType = answerSettings?.answerType ?? AnswerType.STRING;
   const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
     switch (inputAnswerSettings?.answerType) {
