@@ -78,6 +78,7 @@ export default function GameInProgress({
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
   const confidenceCardRef = React.useRef<HTMLDivElement>(null);
+  const hintCardRef = React.useRef<HTMLDivElement>(null); 
   const [answerHint, setAnswerHint] = useState<ITeamAnswerHint>(() => {
     const rejoinSubmittedHint = checkForSubmittedHintOnRejoin(
       localModel,
@@ -98,7 +99,6 @@ export default function GameInProgress({
       currentQuestion.id
     );
   }
-  console.log(currentQuestion);
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
   // second, if there isn't a question mark, it looks for the last period and cuts the question from the proceeding period to the end of the string
@@ -230,13 +230,6 @@ export default function GameInProgress({
       setTeamAnswerId(response.id ?? '');
       setAnswerContent(answer?.answerContent as ITeamAnswerContent);
       setDisplaySubmitted(true);
-      console.log(confidenceCardRef.current);
-      console.log(currentQuestion);
-      console.log(currentQuestion.isConfidenceEnabled);
-      if (currentQuestion.isConfidenceEnabled && confidenceCardRef.current){
-        console.log('sup');
-        confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
     } catch (e) {
       setIsAnswerError(true);
     }
@@ -364,6 +357,7 @@ export default function GameInProgress({
             isHintSubmitted={answerHint?.isHintSubmitted ?? false}
             currentTeam={currentTeam ?? null}
             confidenceCardRef={confidenceCardRef}
+            hintCardRef={hintCardRef}
           />
         ) : (
           <DiscussAnswer

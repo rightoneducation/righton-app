@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import {
   IAnswerSettings
 } from '@righton/networking';
 import { Pagination } from 'swiper';
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
+import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
@@ -49,6 +49,7 @@ interface ChooseAnswerProps {
   isHintSubmitted: boolean;
   currentTeam: ITeam | null;
   confidenceCardRef: React.RefObject<HTMLDivElement>;
+  hintCardRef: React.RefObject<HTMLDivElement>;
 }
 
 export default function ChooseAnswer({
@@ -76,19 +77,20 @@ export default function ChooseAnswer({
   handleSubmitHint,
   isHintSubmitted,
   currentTeam,
-  confidenceCardRef
+  confidenceCardRef,
+  hintCardRef
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const swiper = useSwiper();
+  const swiperRef = useRef<SwiperRef>(null);
+  
   useEffect(() => {
-    console.log(confidenceCardRef.current);
-    if (isSubmitted && isConfidenceEnabled && isSmallDevice && swiper?.activeIndex === 1){
-      setTimeout(() => {
-        confidenceCardRef.current?.scrollIntoView({behavior: 'smooth'});
-      }, 1000); // Adjust the delay as needed
+    if (isSubmitted && isSmallDevice && swiperRef?.current?.swiper.activeIndex !== 0 && 
+      ((isConfidenceEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER)
+       || (isHintEnabled && currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER))) {
+      swiperRef?.current?.swiper.slideTo(swiperRef?.current?.swiper?.slides.length);
     }
-  }, [isSubmitted, isConfidenceEnabled, confidenceCardRef, isSmallDevice, swiper?.activeIndex]);
+  }, [isSubmitted, isConfidenceEnabled, isHintEnabled, isSmallDevice, currentState, swiperRef]);
   const questionContents = (
     <ScrollBoxStyled>
       <QuestionCard questionText={questionText} imageUrl={questionUrl} />
@@ -126,47 +128,49 @@ export default function ChooseAnswer({
     <ScrollBoxStyled>
       {isShortAnswerEnabled &&
       currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
-        <OpenAnswerCard
-          answerContent={answerContent}
-          isSubmitted={answerContent.isSubmitted ?? false}
-          isShortAnswerEnabled={isShortAnswerEnabled}
-          answerSettings={answerSettings}
-          currentState={currentState}
-          currentQuestionIndex={currentQuestionIndex}
-          handleSubmitAnswer={handleSubmitAnswer}
-        />
+        (!isSubmitted || !isConfidenceEnabled || !isHintEnabled || !isSmallDevice) &&
+          <OpenAnswerCard
+            answerContent={answerContent}
+            isSubmitted={answerContent.isSubmitted ?? false}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+            answerSettings={answerSettings}
+            currentState={currentState}
+            currentQuestionIndex={currentQuestionIndex}
+            handleSubmitAnswer={handleSubmitAnswer}
+          />
       ) : (
-          <>
-            <AnswerCard
-              answers={answerChoices}
-              isSubmitted={answerContent.isSubmitted ?? false}
-              isShortAnswerEnabled={isShortAnswerEnabled}
-              handleSubmitAnswer={handleSubmitAnswer}
-              currentState={currentState}
-              currentQuestionIndex={currentQuestionIndex}
-              selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
-              handleSelectAnswer={handleSelectAnswer}
-            />
-            <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }} id="confidencecard-scrollbox" ref={confidenceCardRef}>
-            <ConfidenceMeterCard
-              selectedOption={selectedConfidenceOption}
-              handleSelectOption={handleSelectConfidence}
-              isSelected={isConfidenceSelected}
-              isSmallDevice={isSmallDevice}
-              timeOfLastSelect={timeOfLastConfidenceSelect}
-              setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
-            />
-        </Box>
-        </>
+          <AnswerCard
+            answers={answerChoices}
+            isSubmitted={answerContent.isSubmitted ?? false}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+            handleSubmitAnswer={handleSubmitAnswer}
+            currentState={currentState}
+            currentQuestionIndex={currentQuestionIndex}
+            selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
+            handleSelectAnswer={handleSelectAnswer}
+          />
       )}
-     
-      {isSubmitted ? (
+      {isSubmitted && !isSmallDevice ? (
         <>
-     
+        { isConfidenceEnabled && 
+          (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) ?
+            <Fade in={isSubmitted} timeout={500}>
+              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="confidencecard-scrollbox" ref={confidenceCardRef}>
+                <ConfidenceMeterCard
+                  selectedOption={selectedConfidenceOption}
+                  handleSelectOption={handleSelectConfidence}
+                  isSelected={isConfidenceSelected}
+                  isSmallDevice={isSmallDevice}
+                  timeOfLastSelect={timeOfLastConfidenceSelect}
+                  setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+                />
+              </Box>
+            </Fade>
+          : null }
           {isHintEnabled &&
             currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
             <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
+              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox" ref={hintCardRef}>
                 <HintCard
                   answerHintText={answerHint?.rawHint ?? ''}
                   currentState={currentState}
@@ -178,6 +182,7 @@ export default function ChooseAnswer({
               </Box>
             </Fade>
           )}
+
            {displaySubmitted ? onSubmitDisplay : null}
           <Typography
             sx={{
@@ -218,6 +223,7 @@ export default function ChooseAnswer({
               },
             }}
             style={{ height: '100%' }}
+            ref={swiperRef}
           >
             <SwiperSlide
               style={{
@@ -235,6 +241,38 @@ export default function ChooseAnswer({
             >
               {answerContents}
             </SwiperSlide>
+            { isSubmitted && isSmallDevice &&
+         
+                <SwiperSlide
+                  style={{
+                    width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                    height: '100%',
+                  }}
+                >
+                   <ScrollBoxStyled>
+                   { (isConfidenceEnabled && (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS)) &&
+                      <ConfidenceMeterCard
+                        selectedOption={selectedConfidenceOption}
+                        handleSelectOption={handleSelectConfidence}
+                        isSelected={isConfidenceSelected}
+                        isSmallDevice={isSmallDevice}
+                        timeOfLastSelect={timeOfLastConfidenceSelect}
+                        setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+                      />
+                   }
+                   {isHintEnabled && currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER  &&
+                    <HintCard
+                      answerHintText={answerHint?.rawHint ?? ''}
+                      currentState={currentState}
+                      currentQuestionIndex={currentQuestionIndex}
+                      isHintSubmitted={isHintSubmitted}
+                      handleSubmitHint={handleSubmitHint}
+                      currentTeam={currentTeam ?? null}
+                    />
+                   }
+                  </ScrollBoxStyled>
+                </SwiperSlide>
+            }
           </Swiper>
         ) : (
           questionContents

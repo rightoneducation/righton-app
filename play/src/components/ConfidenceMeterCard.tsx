@@ -181,7 +181,6 @@ export default function ConfidenceMeterCard({
   return (
     <BodyCardStyled
       sx={{
-        marginTop: `${theme.sizing.smallPadding}px`,
         paddingLeft: `${theme.sizing.extraSmallPadding}px`,
         paddingRight: `${theme.sizing.extraSmallPadding}px`
       }}
