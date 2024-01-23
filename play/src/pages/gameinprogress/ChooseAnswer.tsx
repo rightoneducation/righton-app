@@ -128,7 +128,6 @@ export default function ChooseAnswer({
     <ScrollBoxStyled>
       {isShortAnswerEnabled &&
       currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
-        (!isSubmitted || !isConfidenceEnabled || !isHintEnabled || !isSmallDevice) &&
           <OpenAnswerCard
             answerContent={answerContent}
             isSubmitted={answerContent.isSubmitted ?? false}
