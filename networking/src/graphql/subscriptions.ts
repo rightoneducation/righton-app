@@ -347,6 +347,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -368,6 +369,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -379,6 +381,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         questionTemplate {
@@ -418,6 +421,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -439,6 +443,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -450,6 +455,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         createdAt
@@ -461,6 +467,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
     }
     createdAt
     updatedAt
+    type
     __typename
   }
 }
@@ -526,6 +533,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -547,6 +555,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -558,6 +567,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         questionTemplate {
@@ -597,6 +607,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -618,6 +629,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -629,6 +641,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         createdAt
@@ -640,6 +653,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
     }
     createdAt
     updatedAt
+    type
     __typename
   }
 }
@@ -705,6 +719,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -726,6 +741,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -737,6 +753,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         questionTemplate {
@@ -776,6 +793,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -797,6 +815,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -808,6 +827,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         createdAt
@@ -819,6 +839,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
     }
     createdAt
     updatedAt
+    type
     __typename
   }
 }
@@ -884,6 +905,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -905,6 +927,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -916,6 +939,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         questionTemplate {
@@ -955,6 +979,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -976,6 +1001,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -987,6 +1013,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         createdAt
@@ -998,6 +1025,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
     }
     createdAt
     updatedAt
+    type
     __typename
   }
 }
@@ -1063,6 +1091,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -1084,6 +1113,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -1095,6 +1125,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         questionTemplate {
@@ -1134,6 +1165,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -1155,6 +1187,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -1166,6 +1199,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         createdAt
@@ -1177,6 +1211,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
     }
     createdAt
     updatedAt
+    type
     __typename
   }
 }
@@ -1242,6 +1277,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -1263,6 +1299,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -1274,6 +1311,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         questionTemplate {
@@ -1313,6 +1351,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               questionTemplate {
@@ -1334,6 +1373,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 }
                 createdAt
                 updatedAt
+                type
                 __typename
               }
               createdAt
@@ -1345,6 +1385,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
           }
           createdAt
           updatedAt
+          type
           __typename
         }
         createdAt
@@ -1356,6 +1397,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
     }
     createdAt
     updatedAt
+    type
     __typename
   }
 }
@@ -2135,6 +2177,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2152,6 +2195,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2163,6 +2207,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           questionTemplate {
@@ -2198,6 +2243,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2215,6 +2261,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2226,6 +2273,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           createdAt
@@ -2237,6 +2285,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       }
       createdAt
       updatedAt
+      type
       __typename
     }
     questionTemplate {
@@ -2290,6 +2339,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2307,6 +2357,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2318,6 +2369,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           questionTemplate {
@@ -2353,6 +2405,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2370,6 +2423,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2381,6 +2435,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           createdAt
@@ -2392,6 +2447,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       }
       createdAt
       updatedAt
+      type
       __typename
     }
     createdAt
@@ -2461,6 +2517,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2478,6 +2535,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2489,6 +2547,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           questionTemplate {
@@ -2524,6 +2583,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2541,6 +2601,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2552,6 +2613,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           createdAt
@@ -2563,6 +2625,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
       }
       createdAt
       updatedAt
+      type
       __typename
     }
     questionTemplate {
@@ -2616,6 +2679,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2633,6 +2697,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2644,6 +2709,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           questionTemplate {
@@ -2679,6 +2745,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2696,6 +2763,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2707,6 +2775,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           createdAt
@@ -2718,6 +2787,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
       }
       createdAt
       updatedAt
+      type
       __typename
     }
     createdAt
@@ -2787,6 +2857,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2804,6 +2875,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2815,6 +2887,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           questionTemplate {
@@ -2850,6 +2923,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2867,6 +2941,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2878,6 +2953,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           createdAt
@@ -2889,6 +2965,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
       }
       createdAt
       updatedAt
+      type
       __typename
     }
     questionTemplate {
@@ -2942,6 +3019,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -2959,6 +3037,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -2970,6 +3049,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           questionTemplate {
@@ -3005,6 +3085,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 questionTemplate {
@@ -3022,6 +3103,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   imageUrl
                   createdAt
                   updatedAt
+                  type
                   __typename
                 }
                 createdAt
@@ -3033,6 +3115,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             }
             createdAt
             updatedAt
+            type
             __typename
           }
           createdAt
@@ -3044,6 +3127,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
       }
       createdAt
       updatedAt
+      type
       __typename
     }
     createdAt

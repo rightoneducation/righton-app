@@ -77,7 +77,8 @@ export const RouteContainer = ({
 
   const getAllGameTemplates = async (nextToken: string | null) => {
     try { 
-      const games = await listGameTemplates(queryLimit, nextToken);
+      console.log(nextToken);
+      const games = await listGameTemplates(queryLimit, nextToken, "ASC");
       if (games?.gameTemplates){
         setGames(games?.gameTemplates);
         setNextToken(games?.nextToken ?? null);
@@ -103,7 +104,7 @@ export const RouteContainer = ({
   const handleScrollDown = async (nextToken: string | null) => {
     let currentToken = nextToken;
     if (location.pathname === '/'){
-      const games = await listGameTemplates(queryLimit, nextToken);
+      const games = await listGameTemplates(queryLimit, nextToken, "ASC");
       if (games?.gameTemplates){
         setGames((prev) => [
           ...(prev ?? []),

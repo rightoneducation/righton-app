@@ -11,7 +11,7 @@ type Mutation {
 input CreateGameSessionFromTemplateInput {
   gameTemplateId: ID!
 }
-
+# define a GameTemplate in amplify and graphql to list all gametemplates sorted by updatedAt
 type GameTemplate @model{
   id: ID!
   title: String!
@@ -32,6 +32,7 @@ type GameTemplate @model{
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
+  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplateByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"])
 }
 
 input GameTemplateInput {
@@ -57,6 +58,7 @@ type QuestionTemplate @model {
   gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
+   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplateByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"])
 }
 
 input QuestionTemplateInput {

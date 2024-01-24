@@ -22,4 +22,10 @@ export interface IGameTemplateAPIClient {
     limit: number,
     nextToken: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
+
+  listGameTemplatesByDate(
+    limit: number,
+    nextToken: string | null,
+    sortDirection: string
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 }

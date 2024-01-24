@@ -8,7 +8,8 @@ import {
   getGameTemplate,
   updateGameTemplate,
   deleteGameTemplate,
-  listGameTemplates 
+  listGameTemplates,
+  gameTemplatesByDate
 } from "../graphql";
 import { 
   CreateGameTemplateInput, 
@@ -102,6 +103,17 @@ export class GameTemplateAPIClient
         return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
     });
     const parsedNextToken = result.data.listGameTemplates.nextToken;
+    return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+  }
+
+  async listGameTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    let result = (await API.graphql(
+      graphqlOperation(gameTemplatesByDate, {limit, nextToken, sortDirection, type: "GameTemplate"})
+    )) as { data: any }
+    const parsedGameTemplates = result.data.gameTemplatesByDate.items.map((gameTemplate: AWSGameTemplate) => {
+      return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
+    });
+    const parsedNextToken = result.data.gameTemplatesByDate.nextToken;
     return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
   }
 }
