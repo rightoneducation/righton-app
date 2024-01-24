@@ -1,11 +1,11 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Grid, Card, CardContent, Typography } from '@mui/material';
-
+import { IQuestion } from '@righton/networking';
 
 
 interface GameCardProps {
-    questions: string[] | null;
+    questions: IQuestion[];
     title: string;
 }
 

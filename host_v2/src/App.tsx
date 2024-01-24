@@ -6,19 +6,20 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
-import { ApiClient, Environment, GameSessionState } from '@righton/networking';
+import { ApiClient, Environment, GameSessionState, GameSessionParser } from '@righton/networking';
 import GameSessionContainer from './containers/GameSessionContainer';
 import StartGame from './pages/StartGame'
 import Theme from './lib/Theme';
-// import { GameSessionParser } from '@righton/networking';
-// import MockGameSession from './mock/MockGameSession.json';
+import MockGameSession from './mock/MockGameSession.json';
 
 function RedirectToPlayIfMissing() {
   window.location.href = 'http://dev-central.rightoneducation.com/';
   return null;
 }
-// const mockGameSession =
-//   GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
+const mockGameSession = GameSessionParser.gameSessionFromAWSGameSession({
+  ...MockGameSession,
+  currentState: MockGameSession.currentState as GameSessionState,
+});
 const handleStartGame = ()=>{
   console.log("test")
 }
@@ -33,22 +34,13 @@ const router = createBrowserRouter(
       />
       <Route
         path="/StartGame"
-        element={<StartGame teams= {[1,2,3]} currentQuestionIndex={0} questions={[1,2,3]} title= '' gameSessionId='1' 
-        gameCode='1234' currentState={GameSessionState.TEAMS_JOINING} handleStartGame={handleStartGame} />}
+        element={<StartGame teams={mockGameSession.teams ?? []} currentQuestionIndex={mockGameSession.currentQuestionIndex ?? 0} questions={mockGameSession.questions} title={mockGameSession.title ?? ''} gameSessionId={mockGameSession.id} 
+        gameCode={mockGameSession.gameCode ?? 1100} currentState={mockGameSession.currentState} handleStartGame={handleStartGame} />}
       />
       <Route element={<RedirectToPlayIfMissing />} />
     </>,
   ),
 );
-
-// teams: any[]
-// currentQuestionIndex: number
-// questions: any[]
-// title: string
-// gameSessionId: string
-// gameCode: string
-// currentState: any
-// handleStartGame: () => void
 
 function App() {
   return (

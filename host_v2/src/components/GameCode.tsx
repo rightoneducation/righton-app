@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
 interface GameCodeProps{
-    gameCode: string;
+    gameCode: number;
 }
 
 const GameCodeCard = styled(Grid)(({ theme }) => ({

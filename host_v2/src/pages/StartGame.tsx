@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {Box, Paper} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import {
+  ITeam,
+  IQuestion,
+  GameSessionState
+} from '@righton/networking';
 import HostHeader from '../components/HostHeader';
 import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
@@ -8,13 +13,13 @@ import FooterStartGame from '../components/FooterStartGame';
 
 
 interface StartGameProps {
-  teams: any[]
+  teams: ITeam[]
   currentQuestionIndex: number
-  questions: any[]
+  questions:IQuestion[]
   title: string
   gameSessionId: string
-  gameCode: string
-  currentState: any
+  gameCode: number
+  currentState: GameSessionState
   handleStartGame: () => void
 }  
 
