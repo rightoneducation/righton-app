@@ -1,65 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { SORT_TYPES } from '../lib/sorting';
 import { Collapse, MenuItem, Select, Tooltip } from '@material-ui/core';
+import { SORT_TYPES } from '../lib/sorting';
+import { SortDirection, SortField } from '../lib/API/QueryInputs';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 import SortbyIcon from '../images/SortByIcon.svg';
 import SortAscendingIcon from '../images/SortAscendingIcon.svg';
 import SortDescendingIcon from '../images/SortDescendingIcon.svg';
 
-export default function SortByDropdown({ handleSortChange, sortByCheck, setSortByCheck, isResolutionMobile }) {
-  const classes = useStyles(sortByCheck, isResolutionMobile)();
+export default function SortByDropdown({ listQuerySettings, handleUpdateListQuerySettings, sortByCheck, setSortByCheck }) {
+  const classes = useStyles(sortByCheck)();
   const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
+  const [sortDirection, setSortDirection] = useState(null);
+  const [sortField, setSortField] = useState(null);
+  
+  const handleUpdateValue = (sortField) => {
+    setSortDirection((currentDirection) => currentDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC);
+    setSortField(sortField);
+    handleUpdateListQuerySettings({...listQuerySettings, sortDirection: sortDirection, sortField: sortField});
+  };
 
-  const [updatedValue, setUpdatedValue] = React.useState(SORT_TYPES.UPDATED);
-  const [qcValue, setQCValue] = React.useState("");
-  const [gradeValue, setGradeValue] = React.useState("");
-
-  const handleUpdatedValue = () => {
-    switch (updatedValue){
-      case SORT_TYPES.UPDATED:
-        setUpdatedValue(SORT_TYPES.OLDEST);
-        handleSortChange(SORT_TYPES.OLDEST);
-        break;
-      case SORT_TYPES.OLDEST:
-      case "":
-        setUpdatedValue(SORT_TYPES.UPDATED);
-        handleSortChange(SORT_TYPES.UPDATED);
-        break;
-    }
-    setQCValue("");
-    setGradeValue("");
-  };
-  const handleQCValue = () => {
-    switch (qcValue){
-      case SORT_TYPES.QUESTIONDESCENDING:
-          setQCValue(SORT_TYPES.QUESTIONASCENDING);
-          handleSortChange(SORT_TYPES.QUESTIONASCENDING);
-          break;
-      case SORT_TYPES.QUESTIONASCENDING:
-      case "":
-        setQCValue(SORT_TYPES.QUESTIONDESCENDING);
-        handleSortChange(SORT_TYPES.QUESTIONDESCENDING);
-        break;
-    }
-    setUpdatedValue("");
-    setGradeValue("");
-  };
-  const handleGradeValue = () => {
-    switch (gradeValue){
-      case SORT_TYPES.GRADEDESCENDING:
-        setGradeValue(SORT_TYPES.GRADEASCENDING);
-        handleSortChange(SORT_TYPES.GRADEASCENDING);
-        break;
-      case SORT_TYPES.GRADEASCENDING:
-      case "":
-        setGradeValue(SORT_TYPES.GRADEDESCENDING);
-        handleSortChange(SORT_TYPES.GRADEDESCENDING);
-        break;
-    }
-    setUpdatedValue("");
-    setQCValue("");
-  };
+  const sortDirectionIconElement = [
+    listQuerySettings.sortDirection === SortDirection.DESC 
+      ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon} />
+      : <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon} />
+  ];
 
   return(
     <div className={classes.sortByWrapper}>
@@ -79,29 +44,26 @@ export default function SortByDropdown({ handleSortChange, sortByCheck, setSortB
               </tr>
               <tr className={classes.sortByTableRow}>
                 <td>
-                  <div className={classes.sortByName} onClick={()=>handleUpdatedValue()}>Last Updated</div>
+                  <div className={classes.sortByName} onClick={()=>handleUpdateValue(SortField.UPDATEDAT)}>Last Updated</div>
                 </td>
                 <td >
-                  {updatedValue === SORT_TYPES.UPDATED ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon} /> : null}
-                  {updatedValue === SORT_TYPES.OLDEST ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
+                  {listQuerySettings.sortField === SortField.UPDATEDAT && sortDirectionIconElement}
+                  </td>
+              </tr>
+              <tr className={classes.sortByTableRow}>
+                <td>
+                  <div className={classes.sortByName} onClick={()=>handleUpdateValue(SortField.QUESTIONCOUNT)}>Question Count</div>
+                </td>
+                <td className={classes.sortByIcon}>
+                  {listQuerySettings.sortField === SortField.QUESTIONCOUNT && sortDirectionIconElement} 
                 </td>
               </tr>
               <tr className={classes.sortByTableRow}>
                 <td>
-                  <div className={classes.sortByName} onClick={()=>handleQCValue()}>Question Count</div>
+                  <div className={classes.sortByName} onClick={()=>handleUpdateValue(SortField.GRADE)}>Grade Level</div>
                 </td>
                 <td className={classes.sortByIcon}>
-                  {qcValue === SORT_TYPES.QUESTIONDESCENDING ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon}/> : null}
-                  {qcValue === SORT_TYPES.QUESTIONASCENDING ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
-                </td>
-              </tr>
-              <tr className={classes.sortByTableRow}>
-                <td>
-                  <div className={classes.sortByName} onClick={()=>handleGradeValue()}>Grade Level</div>
-                </td>
-                <td className={classes.sortByIcon}>
-                  {gradeValue === SORT_TYPES.GRADEDESCENDING ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon}/> : null}
-                  {gradeValue === SORT_TYPES.GRADEASCENDING ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
+                  {listQuerySettings.sortField === SortField.GRADE && sortDirectionIconElement} 
                 </td>
                 
               </tr>
@@ -113,7 +75,7 @@ export default function SortByDropdown({ handleSortChange, sortByCheck, setSortB
   );
 };
 
-const useStyles = (sortByCheck, isResolutionMobile) => makeStyles(theme => ({
+const useStyles = (sortByCheck) => makeStyles(theme => ({
     sortByWrapper: {
       color: 'white',
       fontFamily: 'Poppins',

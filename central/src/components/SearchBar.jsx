@@ -3,7 +3,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '../images/SearchIcon.svg';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 
-export default function SearchBar({ setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile }) {
+export default function SearchBar({ handleSearchChange, searchInput, isSearchClick, handleSearchClick, isResolutionMobile }) {
     const classes = useStyles(isResolutionMobile)();
 
     return (
@@ -16,7 +16,7 @@ export default function SearchBar({ setSearchInput, searchInput, isSearchClick, 
             placeholder="Search games"
             className={classes.inputInput}
             value={searchInput}
-            onChange={({ target }) => setSearchInput(target.value)}
+            onChange={({ target }) => handleSearchChange(target.value)}
             inputProps={{ 'aria-label': 'search' }} /> 
         : null }
      </div>

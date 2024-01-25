@@ -20,12 +20,21 @@ export interface IGameTemplateAPIClient {
 
   listGameTemplates(
     limit: number,
-    nextToken: string | null
+    nextToken: string | null,
+    filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByDate(
     limit: number,
     nextToken: string | null,
-    sortDirection: string
+    sortDirection: string | null,
+    filterString: string | null
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
+
+  listGameTemplatesByGrade(
+    limit: number,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 }

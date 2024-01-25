@@ -6,6 +6,7 @@ import {
   CreateGameTemplateInput,
   UpdateGameTemplateInput
 } from '@righton/networking';
+import { IListQuerySettings, SortField } from './QueryInputs';
 
 let gameTemplateAPIClient: IGameTemplateAPIClient = new GameTemplateAPIClient(Environment.Testing);
 
@@ -50,11 +51,21 @@ export const deleteGameTemplate = async (id: string): Promise<IGameTemplate | nu
   return null;
 };
 
-export const listGameTemplates = async (queryLimit: number, nextToken: string | null, sortDirection: string): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
+export const listGameTemplates = async (queryLimit: number, nextToken: string | null, listQuerySettings: IListQuerySettings | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
   try {
-    console.log(nextToken);
-    const games = await gameTemplateAPIClient.listGameTemplatesByDate(queryLimit, nextToken, sortDirection);
-    return games;
+    const sortDirection = listQuerySettings?.sortDirection ?? null;
+    const sortField = listQuerySettings?.sortField ?? null;
+    const filterString = listQuerySettings?.filterString ?? null;
+    switch (sortField) {
+      case SortField.GRADE:
+        return await gameTemplateAPIClient.listGameTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);
+      case SortField.UPDATEDAT:
+        return await gameTemplateAPIClient.listGameTemplatesByDate(queryLimit, nextToken, sortDirection, filterString);
+      case SortField.QUESTIONCOUNT:
+        break;
+      default:
+        return await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken, filterString);
+    }
   } catch (e) {
     console.log(e);
   }
