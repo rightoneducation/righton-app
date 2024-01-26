@@ -33,7 +33,7 @@ const router = createBrowserRouter(
       />
       <Route
         path="/StartGame"
-        element={<StartGame teams= {[1,2,3]} currentQuestionIndex={0} questions={[1,2,3]} title= '' gameSessionId='1' 
+        element={<StartGame teams= {[1,2,3]} currentQuestionIndex={0} questions={[1,2,3]} title= 'Algebra' gameSessionId='1' 
         gameCode='1234' currentState={GameSessionState.TEAMS_JOINING} handleStartGame={handleStartGame} />}
       />
       <Route element={<RedirectToPlayIfMissing />} />

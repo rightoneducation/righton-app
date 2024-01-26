@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Box, Paper} from '@mui/material';
+import {Box, Paper, Typography} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import HostHeader from '../components/HostHeader';
 import GameCard from '../components/GameCard';
@@ -24,7 +24,7 @@ const BackgroundStyled = styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
-  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)'
 }))
 
 const UpperStyled = styled(Box)(({ theme }) => ({
@@ -36,14 +36,13 @@ const UpperStyled = styled(Box)(({ theme }) => ({
     
 }))
 
-const GameStyled = styled(Box)(({ theme }) => ({
+const GameStyled = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
   fontWeight: 'bold',
-  fontStyle: 'italic',
+  fontStyle: 'Italic',
   fontSize: '18px',
   color: 'rgba(255, 255, 255, 0.46)',
   paddingTop: '10%',
-
 }))
 
 function StartGame({teams,
@@ -54,8 +53,6 @@ function StartGame({teams,
   gameCode,
   currentState,
   handleStartGame}: StartGameProps) {
-   // const classes= useStyles();
-
     return (
       <BackgroundStyled>
         <UpperStyled>
@@ -77,31 +74,5 @@ function StartGame({teams,
     )
 
   }
-
-  // const useStyles = makeStyles((theme: Theme) => ({
-  //   background: {
-  //     display: 'flex',
-  //     minHeight: '100vh',
-  //     flexDirection: 'column',
-  //     justifyContent: 'space-between',
-  //     alignItems: 'center',
-  //     background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
-  //   },
-  //   upperContainer: {
-  //     display: 'flex',
-  //     flexDirection: 'column',
-  //     justifyContent: 'flex-start',
-  //     alignItems: 'center',
-  //     gap: '24px',
-  //   },
-  //   gameMode: {
-  //     textAlign: 'center',
-  //     fontWeight: 'bold',
-  //     fontStyle: 'italic',
-  //     fontSize: '18px',
-  //     color: 'rgba(255, 255, 255, 0.46)',
-  //     paddingTop: '10%',
-  //   },
-  // }));
   
   export default StartGame;

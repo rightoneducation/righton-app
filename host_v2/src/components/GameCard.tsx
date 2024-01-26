@@ -19,13 +19,13 @@ const CardStyled = styled(Card)(({ theme }) => ({
 const TypographyCCSS = styled(Typography)(({ theme }) => ({
     fontWeight: '700',
     color: 'rgba(155, 169, 208, 1)',
-    textAlign: 'right',
+    // textAlign: 'right',
     fontFamily: 'Poppins',
     fontStyle: 'Bold',
     fontSize: '12px',
     lineHeight: '18px',
    // lineHeight: '100%',
-  //  textAlign: 'left',
+    textAlign: 'left',
     marginTop: '7px',
 }))
 
@@ -36,8 +36,8 @@ const TypographyQuestion = styled(Typography)(({ theme }) => ({
     fontFamily: 'Poppins',
     fontStyle: 'Bold',
     fontSize: '12px',
-    lineHeight: '18px',
-   // lineHeight: '100%',
+    // lineHeight: '18px',
+    lineHeight: '100%',
     marginTop: '7px',
     marginRight: '-120%',
 }))
@@ -84,51 +84,5 @@ function GameCard ({questions, title }: GameCardProps) {
     )
 }
 
-// const useStyles = makeStyles((theme : Theme) => ({
-//   gameCard: {
-//     height: '95px',
-//     width: '311px',
-//     borderRadius: '18px',
-//     margin: 'auto',
-//   },
-
-//   gameTitle: {
-//     color: 'rgba(56, 68, 102, 1)',
-//     fontFamily: 'Poppins',
-//     fontSize: '14px',
-//     fontWeight: 'bold',
-//     lineHeight: '21px',
-//   //  lineHeight: '100%',
-//     verticalAlign: 'Top',
-//     marginTop: '7px',
-//     fontStyle: 'normal',
-//   },
-
-//   questionCount: {
-//     fontWeight: 'bold',
-//     color: 'rgba(155, 169, 208, 1)',
-//     textAlign: 'right',
-//     fontFamily: 'Poppins',
-//     fontStyle: 'Bold',
-//     fontSize: '12px',
-//     lineHeight: '18px',
-//    // lineHeight: '100%',
-//     marginTop: '7px',
-//     marginRight: '-120%',
-//   },
-
-//   ccss: {
-//     fontWeight: '700',
-//     color: 'rgba(155, 169, 208, 1)',
-//     textAlign: 'right',
-//     fontFamily: 'Poppins',
-//     fontStyle: 'Bold',
-//     fontSize: '12px',
-//     lineHeight: '18px',
-//    // lineHeight: '100%',
-//   //  textAlign: 'left',
-//     marginTop: '7px',
-//   },
-// }));
 
 export default GameCard;

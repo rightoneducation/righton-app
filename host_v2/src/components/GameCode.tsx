@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 interface GameCodeProps{
     gameCode: string;
@@ -27,11 +27,16 @@ const GameCodeText = styled(Grid)(({ theme }) => ({
   color: 'rgba(255, 255, 255, 1)',
 }))
 
+const GameCodeParagraph = styled(Typography)(({ theme }) => ({
+  fontSize: '16px',
+  color: 'rgba(255, 255, 255, 1)',
+  margin: 'auto',
+}))
 
 function GameCode({ gameCode }: GameCodeProps){
     return (
         <GameCodeCard container>
-            <p>Game Code: </p>
+            <GameCodeParagraph>Game Code: </GameCodeParagraph>
             <GameCodeText>{gameCode}</GameCodeText>
         </GameCodeCard>
     )
