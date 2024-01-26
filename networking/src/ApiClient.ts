@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswer, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -603,7 +603,7 @@ type AWSTeamMember = {
     id: string
     isFacilitator?: boolean | null
     answers?: {
-        items: Array<ITeamAnswer> | null
+        items: Array<AWSTeamAnswer> | null
     } | null
     deviceId?: string | null
     createdAt?: string | null
@@ -622,7 +622,7 @@ type AWSTeamAnswer = {
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
-    confidenceLevel: ConfidenceLevel
+    confidenceLevel: string
 }
 
 export class GameSessionParser {
@@ -972,7 +972,7 @@ class TeamAnswerParser {
             if (isNullOrUndefined(parsedAnswerContent) ||
             isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
                 throw new Error(
-                    "Team answer has null field for the attributes that are not nullable"
+                    "Team answer content has null field for the attributes that are not nullable"
                 )
             }
         } catch (e) {
@@ -1027,6 +1027,7 @@ class TeamAnswerParser {
         // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
         const hint = awsHint ? this.hintFromAWSHint(awsHint) : undefined;
+        const confidenceLevelEnum = ConfidenceLevel[confidenceLevel as keyof typeof ConfidenceLevel];
         let teamAnswer;
         const answerConfigBase = {
             id,
@@ -1039,7 +1040,7 @@ class TeamAnswerParser {
             createdAt,
             updatedAt,
             teamMemberAnswersId,
-            confidenceLevel
+            confidenceLevel: confidenceLevelEnum
           };
         switch (answerContent.answerType) {
             case(AnswerType.NUMBER):

@@ -6,7 +6,7 @@ import GameCode from './GameCode';
 
 
 interface HostHeaderProps{
-    gameCode: string;
+    gameCode: number;
     currentQuestionIndex: number;
 }
 
