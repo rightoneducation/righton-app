@@ -38,7 +38,6 @@ import {
 } from '../lib/API/gamequestions';
 import { IListQuerySettings } from '../lib/API/QueryInputs';
 import { updateQuestion, cloneQuestion } from '../lib/questions';
-import { SORT_TYPES } from '../lib/sorting';
 import {useMediaQuery} from '../hooks/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import AlertBar from '../components/AlertBar';
@@ -60,7 +59,6 @@ export const RouteContainer = ({
   }: RouteContainerProps ) => {
   const [startup, setStartup] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [sortType, setSortType] = useState(SORT_TYPES.UPDATED);
   const [searchInput, setSearchInput] = useState('');
   const [games, setGames] = useState<(IGameTemplate[])>([]);
   const [questions, setQuestions] = useState<(IQuestionTemplate[] | null)>([]);
@@ -81,21 +79,24 @@ export const RouteContainer = ({
   })
 
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
-    setListQuerySettings({
-      nextToken: nextToken,
+    const updatedListQuerySettings = {
+      nextToken: null,
       limit: queryLimit,
       sortDirection: listQuerySettings.sortDirection,
-      sortField: listQuerySettings.sortField,
-    })
-    getAllGameTemplates(nextToken, listQuerySettings);
+      sortField: listQuerySettings.sortField
+    }
+    setListQuerySettings(updatedListQuerySettings)
+    getAllGameTemplates(nextToken, updatedListQuerySettings);
   }
 
   const getAllGameTemplates = async (nextToken: string | null, listQuerySettings: IListQuerySettings | null) => {
     try { 
+      setLoading(true);
       const games = await listGameTemplates(queryLimit, nextToken, listQuerySettings);
       if (games?.gameTemplates){
         setGames(games?.gameTemplates);
         setNextToken(games?.nextToken ?? null);
+        setLoading(false);
       }
     } catch (e) {
       console.log(e);
@@ -143,23 +144,19 @@ export const RouteContainer = ({
     setNextToken((prev) => nextToken);
   }
 
-  const debouncedApiCall = useCallback(debounce(async (updatedListQuerySettings) => {
-    const games = await listGameTemplates(queryLimit, nextToken, updatedListQuerySettings);
-    if (games?.gameTemplates) {
-      setGames([...games.gameTemplates]);
-    } else {
-      setNextToken(null);
-    }
+  const debouncedApiCall = useCallback(debounce((nextToken, updatedListQuerySettings) => {
+    getAllGameTemplates(nextToken, updatedListQuerySettings);
   }, 500), []);
 
   const handleSearchChange = (searchValue: string) => {
     const updatedListQuerySettings = {
       ...listQuerySettings,
-      filterString: searchValue
+      filterString: searchValue,
+      nextToken: null
     };
     setListQuerySettings(updatedListQuerySettings);
     setSearchInput(searchValue);
-    debouncedApiCall(updatedListQuerySettings);
+    debouncedApiCall(nextToken, updatedListQuerySettings);
   };
 
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
@@ -365,15 +362,10 @@ export const RouteContainer = ({
     }
   });
 
-  const getGames = async () => {
-    setLoading(true);
-    await getAllGameTemplates(nextToken, listQuerySettings);
-    setLoading(false);
-  };
-
   const isResolutionMobile = useMediaQuery("(max-width: 760px)");
 
   const handleSearchClick = (isClick: boolean) => {
+    setNextToken(null);
     setIsSearchClick(isClick);
   }
 
@@ -395,26 +387,6 @@ export const RouteContainer = ({
       return true;
   };
 
-  const filterGame = (game: IGameTemplate | null, search: string) => {
-    if (!game || !game?.title) {
-      return false;
-    }
-    if (game.title.toLowerCase().indexOf(search) > -1 || (game.description && game.description.toLowerCase().indexOf(search) > -1)) {
-      return true;
-    }
-    else {
-      // if (game?.questions) {
-      //   for (let i = 0; i < game.questions.length; i++) {
-      //     let questionText = game.questions[i]?.text;
-      //     if (questionText !== undefined && questionText.toLowerCase().indexOf(search) > -1) {
-      //       return true;
-      //     }
-      //   }
-      // }
-      return false;
-    }
-  };
-
   useEffect(() => {
     persistUserAuth();
     if (location.pathname === '/questions'){
@@ -423,7 +395,7 @@ export const RouteContainer = ({
       getAllGameTemplates(null, listQuerySettings);
     }
     setStartup(false);
-  }, [sortType]);
+  }, []);
 
   useEffect(() => {
     // get either a list of games or questions when the route changes
@@ -485,8 +457,6 @@ export const RouteContainer = ({
           handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} 
           deleteGame={handleDeleteGameTemplate} 
           cloneGameTemplate={cloneGameTemplate} 
-          sortType={sortType} 
-          setSortType={setSortType} 
           cloneQuestion={cloneQuestion} 
           isUserAuth={isUserAuth}  
           isSearchClick={isSearchClick} 

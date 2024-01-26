@@ -11,8 +11,8 @@ export enum SortField {
 
 export interface IListQuerySettings {
   nextToken: string | null
-  sortDirection?: SortDirection
-  sortField?: SortField
+  sortDirection?: SortDirection | null
+  sortField?: SortField | null
   filterString?: string
   limit: number
 }

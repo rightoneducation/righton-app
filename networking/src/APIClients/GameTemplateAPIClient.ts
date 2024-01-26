@@ -120,9 +120,12 @@ export class GameTemplateAPIClient
   }
 
   async listGameTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    let queryParameters: IQueryParameters = { limit, nextToken, sortDirection, type: "GameTemplate" };
+    let queryParameters: IQueryParameters = { limit, nextToken, type: "GameTemplate" };
     if (filterString != null) {
       queryParameters.filter = { title: { contains: filterString } };
+    }
+    if (sortDirection != null) {
+      queryParameters.sortDirection = sortDirection;
     }
     let result = (await API.graphql(
       graphqlOperation(gameTemplatesByDate, queryParameters)
@@ -135,9 +138,12 @@ export class GameTemplateAPIClient
   }
 
   async listGameTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    let queryParameters: IQueryParameters = { limit, nextToken, sortDirection, type: "GameTemplate" };
+    let queryParameters: IQueryParameters = { limit, nextToken, type: "GameTemplate" };
     if (filterString != null) {
       queryParameters.filter = { title: { contains: filterString } };
+    }
+    if (sortDirection != null) {
+      queryParameters.sortDirection = sortDirection;
     }
     let result = (await API.graphql(
       graphqlOperation(gameTemplatesByGrade, queryParameters)

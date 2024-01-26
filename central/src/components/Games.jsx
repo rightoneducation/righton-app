@@ -28,8 +28,6 @@ export default function Games({
   handleCreateQuestionTemplate, 
   handleUpdateQuestionTemplate, 
   handleCloneQuestionTemplate,
-  sortType, 
-  setSortType, 
   cloneQuestion, 
   isUserAuth, 
   setSearchInput, 
@@ -48,9 +46,6 @@ export default function Games({
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
-  const handleSortChange = (value) => {
-    setSortType(value);
-  };
   const [sortByCheck, setSortByCheck] = React.useState(false);
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const handleQuestionSelected = (question, isSelected) => {

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Collapse, MenuItem, Select, Tooltip } from '@material-ui/core';
-import { SORT_TYPES } from '../lib/sorting';
 import { SortDirection, SortField } from '../lib/API/QueryInputs';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 import SortbyIcon from '../images/SortByIcon.svg';
