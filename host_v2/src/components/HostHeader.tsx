@@ -12,26 +12,18 @@ interface HostHeaderProps{
 
 
 const ClearIconGameCodeStyled = styled(Box)(({ theme }) => ({
-  clearIconGameCode: {
     color: 'white',
-    position: 'absolute',
-    padding: '3%',
-    marginLeft: '3%',
-  },
+    display: 'block',
+    padding: `${theme.spacing(4)}`,
 }))
-
-
 
 function HostHeader({ gameCode, currentQuestionIndex }: HostHeaderProps) {
     return (
-      <Box style= {{padding: '8%'}}>
-        <ClearIconGameCodeStyled>
-          <GameCode gameCode = {gameCode} 
-          />
-        </ClearIconGameCodeStyled>
-      </Box>
+      <ClearIconGameCodeStyled>
+        <GameCode gameCode = {gameCode} 
+        />
+      </ClearIconGameCodeStyled>
     )
 }
-
 
 export default HostHeader;
