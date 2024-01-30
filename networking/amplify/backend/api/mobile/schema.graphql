@@ -68,7 +68,7 @@ type Team @model {
 type TeamMember @model {
   id: ID!
   isFacilitator: Boolean
-  answers: [TeamAnswer] @hasMany
+  answers: [TeamAnswer] @hasMany(indexName: "byTeamMember", fields:["id"])
   deviceId: ID!
 }
 
@@ -83,12 +83,16 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
+  isSubmitted: Boolean! @default(value: "false")
+  isShortAnswerEnabled: Boolean! @default(value: "false")
+  currentState: GameSessionState!
+  currentQuestionIndex: Int!
   questionId: ID!
-  teamMemberId: ID!
+  teamMemberId: ID! @index(name: "byTeamMember", sortKeyFields: ["answer"])
   text: String!
   answer: AWSJSON!
   confidenceLevel: ConfidenceLevel! @default(value: "NOT_RATED")
-  hint: String
+  hint: AWSJSON!
 }
 
 type Subscription {

@@ -1,5 +1,5 @@
 import { GameSessionState } from "../AWSMobileApi"
-import { IBaseAnswer } from "./AnswerClasses"
+import { BackendAnswer } from "./AnswerClasses"
 
 export interface IAWSGameSession {
   id: string
@@ -61,7 +61,7 @@ type AWSTeamMember = {
   id: string
   isFacilitator?: boolean | null
   answers?: {
-      items: Array<IBaseAnswer<any>> | null
+      items: Array<BackendAnswer> | null
   } | null
   deviceId?: string | null
   createdAt?: string | null

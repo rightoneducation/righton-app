@@ -19,7 +19,7 @@ export enum AnswerPrecision {
   THOUSANDTH = 3,
 }
 
-type Answer = NumericAnswer | StringAnswer | ExpressionAnswer | MultiChoiceAnswer
+export type Answer = NumericAnswer | StringAnswer | ExpressionAnswer | MultiChoiceAnswer
 
 export interface IAnswerHint {
   rawHint: string;
@@ -27,23 +27,7 @@ export interface IAnswerHint {
   isHintSubmitted: boolean;
 }
 
-export interface IBackendAnswer {
-  answer: Answer;
-  isSubmitted?: boolean;
-  isShortAnswerEnabled?: boolean;
-  currentState?: GameSessionState | null;
-  currentQuestionIndex?: number | null;
-}
-
-export interface IBaseAnswer<T> {
-  id: string;
-  questionId: string;
-  teamMemberId: string;
-  answer: IBackendAnswer;
-  value: T;
-}
-
-abstract class BaseAnswer<T> {
+export abstract class BaseAnswer<T> {
   rawAnswer: string
   answerType: AnswerType
 
@@ -52,7 +36,7 @@ abstract class BaseAnswer<T> {
       this.answerType = answerType;
   }
 
-  abstract isEqualTo(otherAnswers: T[]): Boolean;
+  abstract isNormAnswerUnique(otherNormAnswers: T[]): Boolean;
 }
 
 export class StringAnswer extends BaseAnswer<string>{
@@ -73,13 +57,13 @@ export class StringAnswer extends BaseAnswer<string>{
      return normAnswers;
   }
 
-  isEqualTo(otherAnswers: string[]): Boolean {
+  isNormAnswerUnique(otherNormAnswers: string[]): Boolean {
     if (this.normAnswer) {
       return this.normAnswer.some((answer) => {
-        return otherAnswers.includes(answer as string);
+        return !otherNormAnswers.includes(answer as string);
       }) 
     }
-    return false;
+    return true;
   }
 
 }
@@ -111,7 +95,7 @@ export class NumericAnswer extends BaseAnswer<Number>{
     return normAnswers;
   }
   
-  isEqualTo(otherAnswers: number[]): Boolean {
+  isNormAnswerUnique(otherNormAnswers: number[]): Boolean {
     const answerPrecisionDictionary = {
       [AnswerPrecision.WHOLE]: 0,
       [AnswerPrecision.TENTH]: 1,
@@ -120,7 +104,7 @@ export class NumericAnswer extends BaseAnswer<Number>{
     }
     if (this.normAnswer){
       return this.normAnswer.some((answer) => {
-        if (otherAnswers.includes(answer as number)){
+        if (otherNormAnswers.includes(answer as number)){
           if ( this.answerPrecision)
           {
             // we clean up the raw answer again to remove commas and the percent sign
@@ -130,13 +114,14 @@ export class NumericAnswer extends BaseAnswer<Number>{
 
             // this is going to round the number we found that matches to the precision that the teacher requested
             const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[this.answerPrecision]);
-            return normRawAnswer === roundedNumberAsString;
+            if (normRawAnswer === roundedNumberAsString)
+              return false;
           }
         }
-        return false;
+        return true;
       }) 
     }
-    return false;
+    return true;
   }
 
   static isAnswerTypeValid(input: string): Boolean {
@@ -170,22 +155,22 @@ export class ExpressionAnswer extends BaseAnswer<string>{
     return normAnswers;
   }
 
-  isEqualTo(otherAnswers: string[]): Boolean {
+  isNormAnswerUnique(otherNormAnswers: string[]): Boolean {
     if (this.normAnswer) {
       for (let i =0; i < this.normAnswer.length; i++) {
-        for (let y = 0; y < otherAnswers.length; y++) {
+        for (let y = 0; y < otherNormAnswers.length; y++) {
           try {
             const exp1 = parse(this.normAnswer[i].toString()).toString();
-            const exp2 = parse(otherAnswers[y].toString()).toString();
+            const exp2 = parse(otherNormAnswers[y].toString()).toString();
             if (exp1 === exp2)
-              return true;
+              return false;
           } catch (e) {
             console.error(e);
           }
         }
       }
     }
-    return false;
+    return true;
   }
 
   // checks if expression can be parsed via mathjs
@@ -213,26 +198,32 @@ export class MultiChoiceAnswer extends BaseAnswer<string> {
     return normAnswers;
   }
 
-  isEqualTo(otherAnswers: string[]): Boolean {
-    return otherAnswers.includes(this.rawAnswer);
+  isNormAnswerUnique(otherNormAnswers: string[]): Boolean {
+    return !otherNormAnswers.includes(this.rawAnswer);
   }
 }
 
 export class BackendAnswer {
   answer: Answer;
-  isSubmitted?: boolean;
-  isShortAnswerEnabled?: boolean;
-  currentState?: GameSessionState | null;
-  currentQuestionIndex?: number | null;
+  isSubmitted: boolean;
+  isShortAnswerEnabled: boolean;
+  currentState: GameSessionState;
+  currentQuestionIndex: number;
+  questionId: string;
+  teamMemberId: string;
+  text: string; // temporary to maintain build compatibility
   confidenceLevel?: ConfidenceLevel | null;
   hint?: IAnswerHint | null;
 
   constructor (
     answer: Answer, 
-    isSubmitted?: boolean, 
-    isShortAnswerEnabled?: boolean, 
-    currentState?: GameSessionState | null, 
-    currentQuestionIndex?: number | null,
+    isSubmitted: boolean, 
+    isShortAnswerEnabled: boolean, 
+    currentState: GameSessionState, 
+    currentQuestionIndex: number,
+    questionId: string,
+    teamMemberId: string,
+    text: string,
     confidenceLevel?: ConfidenceLevel | null,
     hint?: IAnswerHint | null
   ){
@@ -241,6 +232,9 @@ export class BackendAnswer {
     this.isShortAnswerEnabled = isShortAnswerEnabled;
     this.currentState = currentState;
     this.currentQuestionIndex = currentQuestionIndex;
+    this.questionId = questionId;
+    this.teamMemberId = teamMemberId;
+    this.text = text;
     this.confidenceLevel = confidenceLevel;
     this.hint = hint;
   }
@@ -266,6 +260,8 @@ export class BackendAnswer {
         rest.isShortAnswerEnabled,
         rest.currentState,
         rest.currentQuestionIndex,
+        rest.questionId,
+        rest.teamMemberId,
         rest.confidenceLevel,
         rest.hint);
       return backendAnswer;

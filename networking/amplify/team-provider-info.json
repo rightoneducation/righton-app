@@ -19,22 +19,19 @@
           "userPoolName": "RightOn Central",
           "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
         }
-      },
-      "api": {
-        "mobile": {}
       }
     }
   },
   "devtemp": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-devtemp-115816-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtemp-115816-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtemp-115816-authRole",
+      "AuthRoleName": "amplify-mobile-devtemp-94330-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtemp-94330-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtemp-94330-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-devtemp-115816-deployment",
-      "UnauthRoleName": "amplify-mobile-devtemp-115816-unauthRole",
-      "StackName": "amplify-mobile-devtemp-115816",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtemp-115816/091dc280-b6c2-11ee-99e8-12122872c9dd",
+      "DeploymentBucketName": "amplify-mobile-devtemp-94330-deployment",
+      "UnauthRoleName": "amplify-mobile-devtemp-94330-unauthRole",
+      "StackName": "amplify-mobile-devtemp-94330",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtemp-94330/a6b33980-bf4b-11ee-82fc-124d7b11e279",
       "AmplifyAppId": "d2z6928w5qibze"
     },
     "categories": {

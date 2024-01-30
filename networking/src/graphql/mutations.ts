@@ -49,6 +49,10 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
             answers {
               items {
                 id
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
                 questionId
                 teamMemberId
                 text
@@ -57,7 +61,6 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
                 hint
                 createdAt
                 updatedAt
-                teamMemberAnswersId
                 __typename
               }
               nextToken
@@ -167,6 +170,10 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
             answers {
               items {
                 id
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
                 questionId
                 teamMemberId
                 text
@@ -175,7 +182,6 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
                 hint
                 createdAt
                 updatedAt
-                teamMemberAnswersId
                 __typename
               }
               nextToken
@@ -285,6 +291,10 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
             answers {
               items {
                 id
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
                 questionId
                 teamMemberId
                 text
@@ -293,7 +303,6 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
                 hint
                 createdAt
                 updatedAt
-                teamMemberAnswersId
                 __typename
               }
               nextToken
@@ -483,6 +492,10 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
             teamMemberId
             text
@@ -491,7 +504,6 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
             hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -555,6 +567,10 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
             teamMemberId
             text
@@ -563,7 +579,6 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
             hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -627,6 +642,10 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
             teamMemberId
             text
@@ -635,7 +654,6 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
             hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -675,6 +693,10 @@ export const createTeamMember = /* GraphQL */ `mutation CreateTeamMember(
     answers {
       items {
         id
+        isSubmitted
+        isShortAnswerEnabled
+        currentState
+        currentQuestionIndex
         questionId
         teamMemberId
         text
@@ -683,7 +705,6 @@ export const createTeamMember = /* GraphQL */ `mutation CreateTeamMember(
         hint
         createdAt
         updatedAt
-        teamMemberAnswersId
         __typename
       }
       nextToken
@@ -710,6 +731,10 @@ export const updateTeamMember = /* GraphQL */ `mutation UpdateTeamMember(
     answers {
       items {
         id
+        isSubmitted
+        isShortAnswerEnabled
+        currentState
+        currentQuestionIndex
         questionId
         teamMemberId
         text
@@ -718,7 +743,6 @@ export const updateTeamMember = /* GraphQL */ `mutation UpdateTeamMember(
         hint
         createdAt
         updatedAt
-        teamMemberAnswersId
         __typename
       }
       nextToken
@@ -745,6 +769,10 @@ export const deleteTeamMember = /* GraphQL */ `mutation DeleteTeamMember(
     answers {
       items {
         id
+        isSubmitted
+        isShortAnswerEnabled
+        currentState
+        currentQuestionIndex
         questionId
         teamMemberId
         text
@@ -753,7 +781,6 @@ export const deleteTeamMember = /* GraphQL */ `mutation DeleteTeamMember(
         hint
         createdAt
         updatedAt
-        teamMemberAnswersId
         __typename
       }
       nextToken
@@ -776,6 +803,10 @@ export const createTeamAnswer = /* GraphQL */ `mutation CreateTeamAnswer(
 ) {
   createTeamAnswer(input: $input, condition: $condition) {
     id
+    isSubmitted
+    isShortAnswerEnabled
+    currentState
+    currentQuestionIndex
     questionId
     teamMemberId
     text
@@ -784,7 +815,6 @@ export const createTeamAnswer = /* GraphQL */ `mutation CreateTeamAnswer(
     hint
     createdAt
     updatedAt
-    teamMemberAnswersId
     __typename
   }
 }
@@ -798,6 +828,10 @@ export const updateTeamAnswer = /* GraphQL */ `mutation UpdateTeamAnswer(
 ) {
   updateTeamAnswer(input: $input, condition: $condition) {
     id
+    isSubmitted
+    isShortAnswerEnabled
+    currentState
+    currentQuestionIndex
     questionId
     teamMemberId
     text
@@ -806,7 +840,6 @@ export const updateTeamAnswer = /* GraphQL */ `mutation UpdateTeamAnswer(
     hint
     createdAt
     updatedAt
-    teamMemberAnswersId
     __typename
   }
 }
@@ -820,6 +853,10 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
 ) {
   deleteTeamAnswer(input: $input, condition: $condition) {
     id
+    isSubmitted
+    isShortAnswerEnabled
+    currentState
+    currentQuestionIndex
     questionId
     teamMemberId
     text
@@ -828,7 +865,6 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
     hint
     createdAt
     updatedAt
-    teamMemberAnswersId
     __typename
   }
 }
