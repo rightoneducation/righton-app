@@ -102,24 +102,30 @@ export function PregameContainer({ apiClient }: PregameFinished) {
         teamName,
         null
       );
+      console.log(team);
       if (!team) {
         setIsAPIError(true);
       } else {
         try {
+          console.log("sup0");
           const teamMember = await apiClient.addTeamMemberToTeam(
             team.id,
             true,
             uuidv4()
           );
+          console.log('sup');
+          console.log(teamMember);
           if (!teamMember) {
             setIsAPIError(true);
           }
           return { teamId: team.id, teamMemberId: teamMember.id };
         } catch (error) {
+          console.log(error);
           setIsAPIError(true);
         }
       }
     } catch (error) {
+      console.log(error);
       setIsAPIError(true);
     }
     return undefined;
@@ -142,7 +148,6 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,
           answer: null,
-          hint: null
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
         navigate(`/game`);

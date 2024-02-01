@@ -2,7 +2,7 @@ import {
   isNullOrUndefined,
   GameSessionState,
   ConfidenceLevel,
-  NumberAnswer,
+  NumericAnswer,
   StringAnswer,
   ExpressionAnswer,
   AnswerType
@@ -271,7 +271,7 @@ export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
   switch (answerSettings.answerType){
     case (AnswerType.NUMBER):
     default:
-      correctAnswer = new NumberAnswer(answerConfigBase);
+      correctAnswer = new NumericAnswer(answerConfigBase);
       break;
     case(AnswerType.STRING):
       correctAnswer = new StringAnswer(answerConfigBase);

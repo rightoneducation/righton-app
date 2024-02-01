@@ -182,8 +182,8 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
   if (loading) return <Skeleton variant="rect" height={500} />;
   const questions = game?.questions || [];
   const questionCount = game?.questions?.length || 0;
-
-  const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.id}`;
+  
+  const LAUNCH_GAME_URL = `http://localhost:3001/new/${game.id}`;
 
   return (
     <>

@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, IAnswerHint, ITeamMember, IGameSession, ITeam, AnswerType, NumericAnswer, StringAnswer, ExpressionAnswer, Answer, BackendAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, IAnswerHint, ITeamMember, IGameSession, ITeam, AnswerType, NumericAnswer, StringAnswer, ExpressionAnswer, MultiChoiceAnswer, Answer, BackendAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -125,6 +125,7 @@ export class ApiClient implements IApiClient {
         gameId: number,
         isAdvancedMode: Boolean
     ): Promise<IGameSession> {
+        console.log("hey");
         return fetch(this.endpoint, {
             method: HTTPMethod.Post,
             headers: {
@@ -138,12 +139,17 @@ export class ApiClient implements IApiClient {
             }),
         })
             .then((response) => {
+                console.log(response);
                 if (!response.ok) {
-                    throw new Error(response.statusText)
+                    console.log('error');
+                    console.log(response);
+                    throw new Error(response.statusText)        
                 }
                 return response.json()
             })
             .then((response) => {
+                console.log("hi");
+                console.log(response);
                 return GameSessionParser.gameSessionFromAWSGameSession(response)
             })
     }
@@ -347,10 +353,12 @@ export class ApiClient implements IApiClient {
             teamTeamMembersId: teamId,
         }
         const variables: CreateTeamMemberMutationVariables = { input }
+        console.log('supppp');
         const member = await this.callGraphQL<CreateTeamMemberMutation>(
             createTeamMember,
             variables
         )
+        console.log(member);
         if (
             isNullOrUndefined(member.data) ||
             isNullOrUndefined(member.data.createTeamMember)
@@ -654,6 +662,7 @@ export class GameSessionParser {
     static gameSessionFromAWSGameSession(
         awsGameSession: AWSGameSession
     ): IGameSession {
+        console.log(awsGameSession);
         const {
             id,
             gameId,
@@ -685,7 +694,8 @@ export class GameSessionParser {
             isNullOrUndefined(isAdvancedMode)
         ) {
             throw new Error(
-                "GameSession has null field for the attributes that are not nullable"
+                `${id}${currentState}${gameCode}${gameId}${phaseOneTime}${phaseTwoTime}${questions}${updatedAt}${createdAt}${isAdvancedMode}
+                GameSession has null field for the attributes that are not nullable`
             )
         }
         const gameSession: IGameSession = {
@@ -972,8 +982,9 @@ class TeamAnswerParser {
         awsAnswerContent: string
     ): Answer {
         let parsedAnswerContent;
+        console.log(awsAnswerContent);
         try {
-            parsedAnswerContent = JSON.parse(awsAnswerContent);
+            parsedAnswerContent = JSON.parse(awsAnswerContent as string);
             if (isNullOrUndefined(parsedAnswerContent) || 
                 (parsedAnswerContent.answerType === AnswerType.NUMBER && isNullOrUndefined(parsedAnswerContent.answerPrecision))) {
                 throw new Error(
@@ -1028,6 +1039,8 @@ class TeamAnswerParser {
                 "Team answer has null field for the attributes that are not nullable"
             )
         }
+        console.log(answer);
+        console.log(JSON.parse(answer as string));
         // aws answer content is a stringified json object, parse it below into an IAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(answer);
         const hintParsed = hint ? this.hintFromAWSHint(hint) : undefined;
@@ -1047,8 +1060,12 @@ class TeamAnswerParser {
                 answerParsed = new ExpressionAnswer(answerContent.rawAnswer, answerContent.answerType);
                 break;
             }
+            case(AnswerType.MULTICHOICE): {
+                answerParsed = new MultiChoiceAnswer(answerContent.rawAnswer, answerContent.answerType);
+                break;
+            }
         }
- 
+        console.log(answerParsed);
         const teamAnswer = {
             id,
             isSubmitted,

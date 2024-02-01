@@ -18,7 +18,13 @@ const CreateNewGameSession = () => {
         })
         .then((response) => {
           window.location.replace(`/host/${response.id}`);
+        }).catch((error) => {
+          console.log(error);
         });
+    })
+    .catch((error) => {
+      console.log("error");
+      console.log(error);
     });
   }, []);
 

@@ -97,7 +97,11 @@ const GameSessionContainer = () => {
 
   // initial query for gameSessions and teams
   useEffect(() => {
+    let gameSessionId = '7b3d85e0-a5ea-45a7-8c78-f1fd86e9c7c6';
+    console.log('sup');
+    try{
     apiClient.getGameSession(gameSessionId).then((response) => {
+      console.log(response);
       setGameSession(response); // set initial gameSession state
       gameSessionId = response.id; // set gameSessionId to the response id (in case it was a new gameSession)
       checkGameTimer(response); // checks if the timer needs to start
@@ -157,6 +161,9 @@ const GameSessionContainer = () => {
         })
         .catch((reason) => console.log(reason));
     });
+   } catch (e){
+    console.log(e);
+    }
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(
       gameSessionId,

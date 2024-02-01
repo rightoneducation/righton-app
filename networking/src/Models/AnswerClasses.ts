@@ -2,6 +2,7 @@ import { parse } from 'mathjs';
 import { removeStopwords, eng } from 'stopword';
 import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
 import { isNullOrUndefined } from '../IApiClient';
+import {v4 as uuidv4} from 'uuid';
 
 export enum AnswerType {
   NUMBER = 0,
@@ -204,6 +205,7 @@ export class MultiChoiceAnswer extends BaseAnswer<string> {
 }
 
 export class BackendAnswer {
+  id: string;
   answer: Answer;
   isSubmitted: boolean;
   isShortAnswerEnabled: boolean;
@@ -224,6 +226,7 @@ export class BackendAnswer {
     questionId: string,
     teamMemberId: string,
     text: string,
+    id?: string | null,
     confidenceLevel?: ConfidenceLevel | null,
     hint?: IAnswerHint | null
   ){
@@ -235,6 +238,7 @@ export class BackendAnswer {
     this.questionId = questionId;
     this.teamMemberId = teamMemberId;
     this.text = text;
+    this.id = id ?? uuidv4();
     this.confidenceLevel = confidenceLevel;
     this.hint = hint;
   }
@@ -262,6 +266,7 @@ export class BackendAnswer {
         rest.currentQuestionIndex,
         rest.questionId,
         rest.teamMemberId,
+        rest.id,
         rest.confidenceLevel,
         rest.hint);
       return backendAnswer;

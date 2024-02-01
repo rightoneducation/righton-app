@@ -41,7 +41,7 @@ const Template: StoryFn<typeof PhaseResults> = function PhaseResultsTemplate(
 };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-  MockGameSession as IAWSGameSession
+  MockGameSession as unknown as IAWSGameSession
 ) as IGameSession;
 
 const answerChoices = gameSession.questions[0].choices!.map( // eslint-disable-line @typescript-eslint/no-non-null-assertion
