@@ -19,6 +19,139 @@
           "userPoolName": "RightOn Central",
           "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
         }
+      },
+      "api": {
+        "mobile": {}
+      }
+    }
+  },
+  "devtemptwo": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-devtemptwo-153334-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtemptwo-153334-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtemptwo-153334-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-devtemptwo-153334-deployment",
+      "UnauthRoleName": "amplify-mobile-devtemptwo-153334-unauthRole",
+      "StackName": "amplify-mobile-devtemptwo-153334",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtemptwo-153334/0d762f90-c1d8-11ee-856b-0aa1c961c451",
+      "AmplifyAppId": "d2z6928w5qibze"
+    },
+    "categories": {
+      "auth": {
+        "mobile0a6d6e96": {
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
+        }
+      },
+      "api": {
+        "mobile": {}
+      }
+    }
+  },
+  "devtmpthr": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-devtmpthr-162633-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtmpthr-162633-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtmpthr-162633-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-devtmpthr-162633-deployment",
+      "UnauthRoleName": "amplify-mobile-devtmpthr-162633-unauthRole",
+      "StackName": "amplify-mobile-devtmpthr-162633",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtmpthr-162633/7551b1a0-c1df-11ee-8632-12ca095a50a1",
+      "AmplifyAppId": "d2z6928w5qibze"
+    },
+    "categories": {
+      "auth": {
+        "mobile0a6d6e96": {
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
+        }
+      },
+      "api": {
+        "mobile": {}
+      }
+    }
+  },
+  "devtempf": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-devtempf-181124-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtempf-181124-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtempf-181124-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-devtempf-181124-deployment",
+      "UnauthRoleName": "amplify-mobile-devtempf-181124-unauthRole",
+      "StackName": "amplify-mobile-devtempf-181124",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtempf-181124/19f81510-c1ee-11ee-9d67-0a520be79207",
+      "AmplifyAppId": "d2z6928w5qibze"
+    },
+    "categories": {
+      "auth": {
+        "mobile0a6d6e96": {
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
+        }
+      },
+      "api": {
+        "mobile": {}
+      }
+    }
+  },
+  "devtmpone": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-devtmpone-110045-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtmpone-110045-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtmpone-110045-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-devtmpone-110045-deployment",
+      "UnauthRoleName": "amplify-mobile-devtmpone-110045-unauthRole",
+      "StackName": "amplify-mobile-devtmpone-110045",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtmpone-110045/70111250-c40d-11ee-a990-0e673960798b",
+      "AmplifyAppId": "d2z6928w5qibze"
+    },
+    "categories": {
+      "auth": {
+        "mobile0a6d6e96": {
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
+        }
+      },
+      "api": {
+        "mobile": {}
+      }
+    }
+  },
+  "devtmptwo": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-devtmptwo-112836-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtmptwo-112836-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtmptwo-112836-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-devtmptwo-112836-deployment",
+      "UnauthRoleName": "amplify-mobile-devtmptwo-112836-unauthRole",
+      "StackName": "amplify-mobile-devtmptwo-112836",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtmptwo-112836/53b0ae00-c411-11ee-895f-0e4a38902653",
+      "AmplifyAppId": "d2z6928w5qibze"
+    },
+    "categories": {
+      "auth": {
+        "mobile0a6d6e96": {
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
+        }
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }

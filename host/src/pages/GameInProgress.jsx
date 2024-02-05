@@ -110,6 +110,7 @@ export default function GameInProgress({
       correctChoiceIndex
     ],
   );
+  console.log(answers);
   const totalAnswers = getTotalAnswers(answers.answersArray);
   const noResponseTeams = getNoResponseTeams(teams, answers.answersArray);
   const noResponseLabel = '–';

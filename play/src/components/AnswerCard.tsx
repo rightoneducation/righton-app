@@ -23,7 +23,7 @@ interface AnswerCardProps {
   currentQuestionIndex: number;
   selectedAnswer: string | null;
   questionId: string;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
   handleSelectAnswer: (answerText: string) => void;
 }
 
@@ -36,7 +36,7 @@ export default function AnswerCard({
   currentQuestionIndex,
   selectedAnswer,
   questionId,
-  teamMemberId,
+  teamMemberAnswersId,
   handleSelectAnswer,
 }: AnswerCardProps) {
   const theme = useTheme();
@@ -117,7 +117,7 @@ export default function AnswerCard({
           handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
           questionId={questionId}
-          teamMemberId={teamMemberId}
+          teamMemberAnswersId={teamMemberAnswersId}
         />
       </BodyCardContainerStyled>
     </BodyCardStyled>

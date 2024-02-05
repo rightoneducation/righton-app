@@ -23,7 +23,7 @@ interface ButtonSubmitAnswerProps {
   currentState: GameSessionState;
   currentQuestionIndex: number;
   questionId: string,
-  teamMemberId: string,
+  teamMemberAnswersId: string,
   handleSubmitAnswer: (answer: BackendAnswer) => void;
 }
 
@@ -37,7 +37,7 @@ export default function ButtonSubmitAnswer({
   currentState,
   currentQuestionIndex,
   questionId,
-  teamMemberId,
+  teamMemberAnswersId,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
@@ -64,8 +64,10 @@ export default function ButtonSubmitAnswer({
           currentState,
           currentQuestionIndex,
           questionId,
-          teamMemberId,
+          teamMemberAnswersId,
           selectedAnswer ?? '',
+          null,
+          null
         );
 
         handleSubmitAnswer(submitAnswer);

@@ -167,6 +167,7 @@ export class ApiClient implements IApiClient {
         let result = (await API.graphql(graphqlOperation(getTeam, { id }))) as {
             data: any
         }
+        console.log(result);
         return TeamParser.teamFromAWSTeam(result.data.getTeam)
     }
 
@@ -296,9 +297,12 @@ export class ApiClient implements IApiClient {
     }
 
     async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
+        console.log("ab");
         let result = (await API.graphql(
             graphqlOperation(gameSessionByCode, { gameCode })
         )) as { data: any }
+        console.log("a");
+        console.log(result);
         if (
             isNullOrUndefined(result.data) ||
             isNullOrUndefined(result.data.gameSessionByCode) ||
@@ -353,7 +357,6 @@ export class ApiClient implements IApiClient {
             teamTeamMembersId: teamId,
         }
         const variables: CreateTeamMemberMutationVariables = { input }
-        console.log('supppp');
         const member = await this.callGraphQL<CreateTeamMemberMutation>(
             createTeamMember,
             variables
@@ -383,18 +386,19 @@ export class ApiClient implements IApiClient {
             currentState: inputAnswer.currentState,
             currentQuestionIndex: inputAnswer.currentQuestionIndex,
             questionId: inputAnswer.questionId,
-            teamMemberId: inputAnswer.teamMemberId,
+            teamMemberAnswersId: inputAnswer.teamMemberAnswersId,
             text: inputAnswer.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
             answer: JSON.stringify(inputAnswer.answer), 
             confidenceLevel: ConfidenceLevel.NOT_RATED,
             hint: JSON.stringify(inputAnswer.hint)
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
-        
+        console.log(input);
         const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
             createTeamAnswer,
             variables
         )
+        console.log('sup2');
         if (
             isNullOrUndefined(answer.data) ||
             isNullOrUndefined(answer.data.createTeamAnswer)
@@ -631,11 +635,11 @@ type AWSTeamAnswer = {
     currentState: GameSessionState
     currentQuestionIndex: number
     questionId: string
-    teamMemberId: string
+    teamMemberAnswersId: string
     text: string
     answer: string
-    confidenceLevel: ConfidenceLevel
-    hint: string
+    confidenceLevel?: ConfidenceLevel | null
+    hint?: string | null
 }
 
 export class GameSessionParser {
@@ -929,7 +933,7 @@ class TeamMemberParser {
                 "Team member has null field for the attributes that are not nullable"
             )
         }
-
+        
         const teamMember: ITeamMember = {
             id,
             isFacilitator,
@@ -970,7 +974,7 @@ class TeamAnswerParser {
         if (isNullOrUndefined(awsTeamAnswers)) {
             return []
         }
-
+        console.log(awsTeamAnswers);
         return awsTeamAnswers.map((awsTeamAnswer) => {
             if (isNullOrUndefined(awsTeamAnswer)) {
                 throw new Error("Team can't be null in the backend.")
@@ -1026,7 +1030,7 @@ class TeamAnswerParser {
             currentState,
             currentQuestionIndex,
             questionId,
-            teamMemberId,
+            teamMemberAnswersId,
             text,
             confidenceLevel,
             hint
@@ -1073,7 +1077,7 @@ class TeamAnswerParser {
             currentState,
             currentQuestionIndex,
             questionId,
-            teamMemberId,
+            teamMemberAnswersId,
             text,
             confidenceLevel,
             answer: answerParsed,

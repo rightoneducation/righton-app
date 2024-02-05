@@ -13,7 +13,8 @@ import {
   IChoice,
   IAnswerHint,
   AnswerFactory,
-  AnswerType
+  AnswerType,
+  IAnswerSettings
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
@@ -39,7 +40,7 @@ interface GameInProgressProps {
   apiClient: ApiClient;
   teams?: ITeam[];
   currentState: GameSessionState;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
   teamAvatar: number;
   phaseOneTime: number;
   phaseTwoTime: number;
@@ -58,7 +59,7 @@ export default function GameInProgress({
   apiClient,
   teams,
   currentState,
-  teamMemberId,
+  teamMemberAnswersId,
   teamAvatar,
   questions,
   phaseOneTime,
@@ -72,6 +73,7 @@ export default function GameInProgress({
   localModel,
   isShortAnswerEnabled,
 }: GameInProgressProps) {
+
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
@@ -87,6 +89,9 @@ export default function GameInProgress({
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
+  const answerSettings: IAnswerSettings = {
+    answerType: AnswerType[currentQuestion?.answerSettings?.answerType as keyof typeof AnswerType]
+  } ?? {answerType: AnswerType.STRING};
   let teamAnswers: (BackendAnswer | null)[] | null | undefined;
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
@@ -184,12 +189,15 @@ export default function GameInProgress({
   // contents is the quill pad contents
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
-      const response = await apiClient.addTeamAnswer(answer);
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
+      const answer2 = answer;
+      console.log(answer);
+      const response = await apiClient.addTeamAnswer(answer2);
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer2.answer));
       setTeamAnswerId(response.id ?? '');
-      setBackendAnswer(answer);
+      setBackendAnswer(answer2);
       setDisplaySubmitted(true);
     } catch (e) {
+      console.log(e);
       setIsAnswerError(true);
     }
   };
@@ -227,7 +235,7 @@ export default function GameInProgress({
       currentState,
       currentQuestionIndex ?? 0,
       currentQuestion.id,
-      teamMemberId,
+      teamMemberAnswersId,
       answerText
     )
     window.localStorage.setItem(
@@ -299,7 +307,7 @@ export default function GameInProgress({
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
-            answerSettings = {currentQuestion.answerSettings ?? null}
+            answerSettings = {answerSettings}
             answerChoices={answerChoices}
             isSubmitted={backendAnswer.isSubmitted ?? false}
             displaySubmitted={displaySubmitted}
@@ -321,7 +329,7 @@ export default function GameInProgress({
             isHintSubmitted={answerHint?.isHintSubmitted ?? false}
             currentTeam={currentTeam ?? null}
             questionId={currentQuestion.id ?? ''}
-            teamMemberId={teamMemberId}
+            teamMemberAnswersId={teamMemberAnswersId}
           />
         ) : (
           <DiscussAnswer

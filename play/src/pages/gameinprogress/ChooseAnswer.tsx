@@ -49,7 +49,7 @@ interface ChooseAnswerProps {
   isHintSubmitted: boolean;
   currentTeam: ITeam | null;
   questionId: string;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
 }
 
 export default function ChooseAnswer({
@@ -78,7 +78,7 @@ export default function ChooseAnswer({
   isHintSubmitted,
   currentTeam,
   questionId,
-  teamMemberId
+  teamMemberAnswersId
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -128,7 +128,7 @@ export default function ChooseAnswer({
           currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
           questionId={questionId}
-          teamMemberId={teamMemberId}
+          teamMemberAnswersId={teamMemberAnswersId}
         />
       ) : (
         <AnswerCard
@@ -141,7 +141,7 @@ export default function ChooseAnswer({
           selectedAnswer={backendAnswer.answer.rawAnswer}
           handleSelectAnswer={handleSelectAnswer}
           questionId={questionId}
-          teamMemberId={teamMemberId}
+          teamMemberAnswersId={teamMemberAnswersId}
         />
       )}
      
@@ -174,7 +174,7 @@ export default function ChooseAnswer({
                   handleSubmitHint={handleSubmitHint}
                   currentTeam={currentTeam ?? null}
                   questionId={questionId}
-                  teamMemberId={teamMemberId}
+                  teamMemberAnswersId={teamMemberAnswersId}
                 />
               </Box>
             </Fade>

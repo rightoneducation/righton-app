@@ -51,7 +51,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
                 currentState
                 currentQuestionIndex
                 questionId
-                teamMemberId
+                teamMemberAnswersId
                 text
                 answer
                 confidenceLevel
@@ -138,7 +138,7 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `subscription OnTeamMemb
         currentState
         currentQuestionIndex
         questionId
-        teamMemberId
+        teamMemberAnswersId
         text
         answer
         confidenceLevel
@@ -197,7 +197,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
             currentState
             currentQuestionIndex
             questionId
-            teamMemberId
+            teamMemberAnswersId
             text
             answer
             confidenceLevel
@@ -269,7 +269,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
             currentState
             currentQuestionIndex
             questionId
-            teamMemberId
+            teamMemberAnswersId
             text
             answer
             confidenceLevel
@@ -350,7 +350,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
                 currentState
                 currentQuestionIndex
                 questionId
-                teamMemberId
+                teamMemberAnswersId
                 text
                 answer
                 confidenceLevel
@@ -470,7 +470,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
                 currentState
                 currentQuestionIndex
                 questionId
-                teamMemberId
+                teamMemberAnswersId
                 text
                 answer
                 confidenceLevel
@@ -590,7 +590,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
                 currentState
                 currentQuestionIndex
                 questionId
-                teamMemberId
+                teamMemberAnswersId
                 text
                 answer
                 confidenceLevel
@@ -701,7 +701,7 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
             currentState
             currentQuestionIndex
             questionId
-            teamMemberId
+            teamMemberAnswersId
             text
             answer
             confidenceLevel
@@ -773,7 +773,7 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
             currentState
             currentQuestionIndex
             questionId
-            teamMemberId
+            teamMemberAnswersId
             text
             answer
             confidenceLevel
@@ -845,7 +845,7 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
             currentState
             currentQuestionIndex
             questionId
-            teamMemberId
+            teamMemberAnswersId
             text
             answer
             confidenceLevel
@@ -895,7 +895,7 @@ export const onCreateTeamMember = /* GraphQL */ `subscription OnCreateTeamMember
         currentState
         currentQuestionIndex
         questionId
-        teamMemberId
+        teamMemberAnswersId
         text
         answer
         confidenceLevel
@@ -932,7 +932,7 @@ export const onUpdateTeamMember = /* GraphQL */ `subscription OnUpdateTeamMember
         currentState
         currentQuestionIndex
         questionId
-        teamMemberId
+        teamMemberAnswersId
         text
         answer
         confidenceLevel
@@ -969,7 +969,7 @@ export const onDeleteTeamMember = /* GraphQL */ `subscription OnDeleteTeamMember
         currentState
         currentQuestionIndex
         questionId
-        teamMemberId
+        teamMemberAnswersId
         text
         answer
         confidenceLevel
@@ -1002,7 +1002,7 @@ export const onCreateTeamAnswer = /* GraphQL */ `subscription OnCreateTeamAnswer
     currentState
     currentQuestionIndex
     questionId
-    teamMemberId
+    teamMemberAnswersId
     text
     answer
     confidenceLevel
@@ -1026,7 +1026,7 @@ export const onUpdateTeamAnswer = /* GraphQL */ `subscription OnUpdateTeamAnswer
     currentState
     currentQuestionIndex
     questionId
-    teamMemberId
+    teamMemberAnswersId
     text
     answer
     confidenceLevel
@@ -1050,7 +1050,7 @@ export const onDeleteTeamAnswer = /* GraphQL */ `subscription OnDeleteTeamAnswer
     currentState
     currentQuestionIndex
     questionId
-    teamMemberId
+    teamMemberAnswersId
     text
     answer
     confidenceLevel

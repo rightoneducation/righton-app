@@ -73,6 +73,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       return false;
     }
     try {
+      console.log(inputGameCodeValue);
       const gameSessionResponse = await apiClient.getGameSessionByCode(
         parseInt(inputGameCodeValue, 10)
       );
@@ -89,6 +90,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       setPregameState(PregameState.ENTER_NAME);
       return true;
     } catch (error) {
+      console.log(error);
       return false;
     }
   };
@@ -118,7 +120,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           if (!teamMember) {
             setIsAPIError(true);
           }
-          return { teamId: team.id, teamMemberId: teamMember.id };
+          return { teamId: team.id, teamMemberAnswersId: teamMember.id };
         } catch (error) {
           console.log(error);
           setIsAPIError(true);
@@ -143,20 +145,21 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           currentTime: new Date().getTime() / 60000,
           gameSessionId: gameSession.id,
           teamId: teamInfo.teamId,
-          teamMemberId: teamInfo.teamMemberId,
+          teamMemberAnswersId: teamInfo.teamMemberAnswersId,
           selectedAvatar,
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,
           answer: null,
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+        console.log(window.localStorage.getItem(StorageKey));
         navigate(`/game`);
       }
     } catch (error) {
       setIsAPIError(true);
     }
   };
-
+  console.log(window.localStorage.getItem(StorageKey));
   switch (pregameState) {
     case PregameState.SELECT_AVATAR:
       return (

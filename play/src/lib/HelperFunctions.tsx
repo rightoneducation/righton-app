@@ -71,7 +71,7 @@ export const checkForSubmittedAnswerOnRejoin = (
     currentQuestionIndex: 0,
     isShortAnswerEnabled,
     questionId: '',
-    teamMemberId: '',
+    teamMemberAnswersId: '',
     text: ''
   };
   if (hasRejoined) {
@@ -176,7 +176,7 @@ export const validateLocalModel = (
       parsedLocalModel.currentTime,
       parsedLocalModel.gameSessionId,
       parsedLocalModel.teamId,
-      parsedLocalModel.teamMemberId,
+      parsedLocalModel.teamMemberAnswersId,
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
       parsedLocalModel.currentTimer,

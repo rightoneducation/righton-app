@@ -212,7 +212,7 @@ export class BackendAnswer {
   currentState: GameSessionState;
   currentQuestionIndex: number;
   questionId: string;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
   text: string; // temporary to maintain build compatibility
   confidenceLevel?: ConfidenceLevel | null;
   hint?: IAnswerHint | null;
@@ -224,7 +224,7 @@ export class BackendAnswer {
     currentState: GameSessionState, 
     currentQuestionIndex: number,
     questionId: string,
-    teamMemberId: string,
+    teamMemberAnswersId: string,
     text: string,
     id?: string | null,
     confidenceLevel?: ConfidenceLevel | null,
@@ -236,7 +236,7 @@ export class BackendAnswer {
     this.currentState = currentState;
     this.currentQuestionIndex = currentQuestionIndex;
     this.questionId = questionId;
-    this.teamMemberId = teamMemberId;
+    this.teamMemberAnswersId = teamMemberAnswersId;
     this.text = text;
     this.id = id ?? uuidv4();
     this.confidenceLevel = confidenceLevel;
@@ -265,7 +265,7 @@ export class BackendAnswer {
         rest.currentState,
         rest.currentQuestionIndex,
         rest.questionId,
-        rest.teamMemberId,
+        rest.teamMemberAnswersId,
         rest.id,
         rest.confidenceLevel,
         rest.hint);
@@ -278,6 +278,7 @@ export class BackendAnswer {
 
 export class AnswerFactory {
   static createAnswer(rawAnswer: string, answerType: AnswerType, answerPrecision?: AnswerPrecision): Answer {
+    console.log(answerType);
     switch (answerType) {
       case AnswerType.NUMBER:
         return new NumericAnswer(rawAnswer, answerType, answerPrecision || AnswerPrecision.WHOLE);

@@ -97,7 +97,7 @@ const GameSessionContainer = () => {
 
   // initial query for gameSessions and teams
   useEffect(() => {
-    let gameSessionId = '7b3d85e0-a5ea-45a7-8c78-f1fd86e9c7c6';
+    let gameSessionId = '9e2bedfe-4c29-4490-a018-d2079192e3ba';
     console.log('sup');
     try{
     apiClient.getGameSession(gameSessionId).then((response) => {
@@ -140,6 +140,7 @@ const GameSessionContainer = () => {
 
       Promise.all(teamDataRequests)
         .then((responses) => {
+          console.log(responses);
           // if shortAnswer is enabled we need to rebuild the shortAnswerResponses object on refresh
           if (response.questions[response.currentQuestionIndex].isShortAnswerEnabled === true) {
             responses.forEach((team) => {
@@ -228,6 +229,7 @@ const GameSessionContainer = () => {
           setTeamsArray((prevState) => {
             const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
             const newState = JSON.parse(JSON.stringify(prevState));
+            console.log(newState);
             newState.map((team) => {
               if (team.id === teamId) {
                 team.teamMembers.map((teamMember) => {

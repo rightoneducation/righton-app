@@ -29,7 +29,7 @@ interface OpenAnswerCardProps {
   currentState: GameSessionState;
   currentQuestionIndex: number;
   questionId: string;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
   handleSubmitAnswer: (result: BackendAnswer) => void;
 }
 
@@ -41,7 +41,7 @@ export default function OpenAnswerCard({
   currentState,
   currentQuestionIndex,
   questionId,
-  teamMemberId,
+  teamMemberAnswersId,
   handleSubmitAnswer,
 }: OpenAnswerCardProps) {
   const theme = useTheme();
@@ -50,8 +50,8 @@ export default function OpenAnswerCard({
   const [isBadInput, setIsBadInput] = useState(false); 
   const [katexAnswer, setKatexAnswer] = useState('');
 
-  const answerType = answerSettings?.answerType as AnswerType ?? AnswerType.STRING;
-  const answerPrecision = answerSettings?.answerPrecision as AnswerPrecision ?? null;
+  const answerType: AnswerType = answerSettings?.answerType ?? AnswerType.STRING;
+  const answerPrecision = answerSettings?.answerPrecision as AnswerPrecision;
   const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
     switch (inputAnswerSettings?.answerType) {
@@ -97,7 +97,7 @@ export default function OpenAnswerCard({
       currentState,
       currentQuestionIndex,
       questionId,
-      teamMemberId,
+      teamMemberAnswersId,
       currentAnswer
     );
     window.localStorage.setItem(
@@ -115,7 +115,7 @@ export default function OpenAnswerCard({
       currentState,
       currentQuestionIndex,
       questionId,
-      teamMemberId,
+      teamMemberAnswersId,
       currentContents
     );
     handleSubmitAnswer(packagedAnswer);
@@ -233,7 +233,7 @@ export default function OpenAnswerCard({
               handlePresubmit(editorContents)
             }
             questionId={questionId}
-            teamMemberId={teamMemberId}
+            teamMemberAnswersId={teamMemberAnswersId}
           />
         </Box>
       </BodyCardContainerStyled>

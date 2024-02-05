@@ -30,7 +30,7 @@ export interface IChoice {
 
 export interface IAnswerSettings {
     answerType: AnswerType
-    answerPrecision: AnswerPrecision
+    answerPrecision?: AnswerPrecision
 }
 
 export interface IResponse {

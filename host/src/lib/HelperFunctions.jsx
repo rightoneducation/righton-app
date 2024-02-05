@@ -46,6 +46,27 @@ export const getNoResponseTeams = (teams, answers) => {
   return teamsWithoutResponses;
 };
 
+/* 
+* checks that the gamesessionstate that the answer was created in matches the current state of the game
+* done to prevent students from being able to answer repeatedly etc
+* @param {GameSessionState} answerState - state of the game when answer was created
+* @param {GameSessionState} currentState - current state of the game
+* @returns {boolean} - true if the answer state matches the current state, false if not
+*/
+const isAnswerStateCurrent = (answerState, currentState) => {
+  const stateMappings = {
+    [GameSessionState.PHASE_1_DISCUSS]: GameSessionState.CHOOSE_CORRECT_ANSWER,
+    [GameSessionState.PHASE_1_RESULTS]: GameSessionState.CHOOSE_CORRECT_ANSWER,
+    [GameSessionState.PHASE_2_DISCUSS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+    [GameSessionState.PHASE_2_RESULTS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+  };
+  console.log(answerState);
+  console.log(currentState);
+  return answerState === currentState || 
+       answerState === stateMappings[currentState] || 
+       false;
+}
+
 /*
 * returns team and answer data for each answer
 * for use in getTeamByQuestion and getAnswersByQuestion, below
@@ -56,21 +77,14 @@ export const getNoResponseTeams = (teams, answers) => {
 */
 export const extractAnswers =  (teamsArray, currentState, currentQuestionId) => {
   let results = [];
+  console.log(teamsArray);
   teamsArray.forEach(team => {
     team.teamMembers && team.teamMembers.forEach(teamMember => {
       teamMember.answers && teamMember.answers.forEach(answer => {
-        if (answer.questionId === currentQuestionId) {
-          const isGameInPhaseOne = (
-            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-            currentState === GameSessionState.PHASE_1_DISCUSS
-          ) && answer.isChosen;
-          const isGameInPhaseTwo = (
-            currentState === GameSessionState.PHASE_2_DISCUSS ||
-            currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-          ) && answer.isTrickAnswer;
-          if (isGameInPhaseOne || isGameInPhaseTwo) {
+        console.log(answer);
+        if (answer.questionId === currentQuestionId && isAnswerStateCurrent(answer.currentState, currentState)) {
+          console.log("made it");
             results.push({team, answer});
-          }
         }
       });
     });
@@ -114,6 +128,7 @@ export const getMultiChoiceAnswers = (
   currentState,
   correctChoiceIndex
 ) => {
+  console.log(teamsArray);
   // create this to use as an index reference for the confidence levels to avoid find/findIndex
   const confidenceLevelsArray = Object.values(ConfidenceLevel);
   let confidenceArray = createBlankConfidenceArray();
@@ -130,7 +145,7 @@ export const getMultiChoiceAnswers = (
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
     answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
-        if (answer.answerContent.rawAnswer === choice.text) {
+        if (answer.answer.rawAnswer === choice.text) {
           const index = confidenceLevelsArray.indexOf(
             answer.confidenceLevel,
           );
@@ -240,16 +255,16 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
 /**
  * returns team info to be used when receiving team answers from createteamanswers
  * @param {ITeam[]} teamsArray 
- * @param {string} teamMemberAnswersId 
+ * @param {string} teamMemberId 
  * @returns {teamName: string, teamId: string}
  */
-export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
+export const getTeamInfoFromAnswerId = (teamsArray, teamMemberId) => {
   let teamName = '';
   let teamId = '';
   teamsArray.forEach((team) => {
     team.teamMembers &&
       team.teamMembers.forEach((teamMember) => {
-        if (teamMember.id === teamMemberAnswersId){
+        if (teamMember.id === teamMemberId){
           teamName=team.name;
           teamId=team.id;
         }

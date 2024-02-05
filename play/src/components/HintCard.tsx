@@ -22,7 +22,7 @@ interface HintProps {
   handleSubmitHint: (result: IAnswerHint) => void;
   currentTeam: ITeam | null;
   questionId: string;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
 }
 
 export default function HintCard({
@@ -33,7 +33,7 @@ export default function HintCard({
   handleSubmitHint,
   currentTeam,
   questionId,
-  teamMemberId
+  teamMemberAnswersId
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -120,7 +120,7 @@ export default function HintCard({
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={handleNormalizeAnswerOnSubmit}
             questionId={questionId}
-            teamMemberId={teamMemberId}
+            teamMemberAnswersId={teamMemberAnswersId}
           />
         </Box>
       </BodyCardContainerStyled>
