@@ -139,7 +139,7 @@ export class ApiClient implements IApiClient {
         })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error(response.statusText)        
+                    throw new Error(response.statusText)
                 }
                 return response.json()
             })
@@ -684,8 +684,7 @@ export class GameSessionParser {
             isNullOrUndefined(isAdvancedMode)
         ) {
             throw new Error(
-                `${id}${currentState}${gameCode}${gameId}${phaseOneTime}${phaseTwoTime}${questions}${updatedAt}${createdAt}${isAdvancedMode}
-                GameSession has null field for the attributes that are not nullable`
+                `GameSession has null field for the attributes that are not nullable`
             )
         }
         const gameSession: IGameSession = {
@@ -930,7 +929,7 @@ class TeamMemberParser {
                 "Team member has null field for the attributes that are not nullable"
             )
         }
-        
+
         const teamMember: ITeamMember = {
             id,
             isFacilitator,

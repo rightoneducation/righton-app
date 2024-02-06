@@ -97,7 +97,6 @@ const GameSessionContainer = () => {
 
   // initial query for gameSessions and teams
   useEffect(() => {
-    let gameSessionId = 'a2a78c7d-46d7-4c0f-82ea-edcc98f1e6dc';
     try{
     apiClient.getGameSession(gameSessionId).then((response) => {
       setGameSession(response); // set initial gameSession state

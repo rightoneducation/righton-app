@@ -224,7 +224,7 @@ export default function OpenAnswerCard({
             isSelected={
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
-            isSubmitted={false}
+            isSubmitted={isSubmitted}
             isHint={false}
             isShortAnswerEnabled={isShortAnswerEnabled}
             currentState={currentState}
