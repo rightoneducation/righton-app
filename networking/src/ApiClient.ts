@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, IAnswerHint, ITeamMember, IGameSession, ITeam, AnswerType, NumericAnswer, StringAnswer, ExpressionAnswer, MultiChoiceAnswer, Answer, BackendAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, IAnswerHint, ITeamMember, IGameSession, ITeam, AnswerType, AnswerPrecision, NumericAnswer, StringAnswer, ExpressionAnswer, MultiChoiceAnswer, Answer, BackendAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -125,7 +125,6 @@ export class ApiClient implements IApiClient {
         gameId: number,
         isAdvancedMode: Boolean
     ): Promise<IGameSession> {
-        console.log("hey");
         return fetch(this.endpoint, {
             method: HTTPMethod.Post,
             headers: {
@@ -139,17 +138,12 @@ export class ApiClient implements IApiClient {
             }),
         })
             .then((response) => {
-                console.log(response);
                 if (!response.ok) {
-                    console.log('error');
-                    console.log(response);
                     throw new Error(response.statusText)        
                 }
                 return response.json()
             })
             .then((response) => {
-                console.log("hi");
-                console.log(response);
                 return GameSessionParser.gameSessionFromAWSGameSession(response)
             })
     }
@@ -167,7 +161,6 @@ export class ApiClient implements IApiClient {
         let result = (await API.graphql(graphqlOperation(getTeam, { id }))) as {
             data: any
         }
-        console.log(result);
         return TeamParser.teamFromAWSTeam(result.data.getTeam)
     }
 
@@ -297,12 +290,9 @@ export class ApiClient implements IApiClient {
     }
 
     async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
-        console.log("ab");
         let result = (await API.graphql(
             graphqlOperation(gameSessionByCode, { gameCode })
         )) as { data: any }
-        console.log("a");
-        console.log(result);
         if (
             isNullOrUndefined(result.data) ||
             isNullOrUndefined(result.data.gameSessionByCode) ||
@@ -361,7 +351,6 @@ export class ApiClient implements IApiClient {
             createTeamMember,
             variables
         )
-        console.log(member);
         if (
             isNullOrUndefined(member.data) ||
             isNullOrUndefined(member.data.createTeamMember)
@@ -393,12 +382,10 @@ export class ApiClient implements IApiClient {
             hint: JSON.stringify(inputAnswer.hint)
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
-        console.log(input);
         const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
             createTeamAnswer,
             variables
         )
-        console.log('sup2');
         if (
             isNullOrUndefined(answer.data) ||
             isNullOrUndefined(answer.data.createTeamAnswer)
@@ -666,7 +653,6 @@ export class GameSessionParser {
     static gameSessionFromAWSGameSession(
         awsGameSession: AWSGameSession
     ): IGameSession {
-        console.log(awsGameSession);
         const {
             id,
             gameId,
@@ -771,9 +757,20 @@ export class GameSessionParser {
         return []
     }
 
-    private static parseAnswerType<t>(input: any | t): t {
+    private static convertProperty<T>(obj: any, propertyName: string, enumType: T) {
+        if (!isNullOrUndefined(obj) && !isNullOrUndefined(obj[propertyName])) {
+            obj[propertyName] = enumType[obj[propertyName] as keyof typeof enumType];
+        }
+    }
+
+    private static parseAnswerSettings<t>(input: any | t): t {
         if (typeof input === "string") {
-            return JSON.parse(input as string)
+            const answerSettingsObject = JSON.parse(input as string);
+            if (!isNullOrUndefined(answerSettingsObject)) {
+                GameSessionParser.convertProperty(answerSettingsObject, 'answerType', AnswerType);
+                GameSessionParser.convertProperty(answerSettingsObject, 'answerPrecision', AnswerPrecision);
+            }
+            return answerSettingsObject as t;
         }
         return input
     }
@@ -794,7 +791,7 @@ export class GameSessionParser {
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
                     answerSettings: isNullOrUndefined(awsQuestion.answerSettings)
                         ? null
-                        : this.parseAnswerType<IAnswerSettings>(awsQuestion.answerSettings),
+                        : this.parseAnswerSettings<IAnswerSettings>(awsQuestion.answerSettings),
                     responses: isNullOrUndefined(awsQuestion.responses)
                          ? []
                          : this.parseServerArray<IResponse>(awsQuestion.responses),
@@ -974,7 +971,6 @@ class TeamAnswerParser {
         if (isNullOrUndefined(awsTeamAnswers)) {
             return []
         }
-        console.log(awsTeamAnswers);
         return awsTeamAnswers.map((awsTeamAnswer) => {
             if (isNullOrUndefined(awsTeamAnswer)) {
                 throw new Error("Team can't be null in the backend.")
@@ -986,7 +982,6 @@ class TeamAnswerParser {
         awsAnswerContent: string
     ): Answer {
         let parsedAnswerContent;
-        console.log(awsAnswerContent);
         try {
             parsedAnswerContent = JSON.parse(awsAnswerContent as string);
             if (isNullOrUndefined(parsedAnswerContent) || 
@@ -1043,8 +1038,6 @@ class TeamAnswerParser {
                 "Team answer has null field for the attributes that are not nullable"
             )
         }
-        console.log(answer);
-        console.log(JSON.parse(answer as string));
         // aws answer content is a stringified json object, parse it below into an IAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(answer);
         const hintParsed = hint ? this.hintFromAWSHint(hint) : undefined;
@@ -1069,7 +1062,6 @@ class TeamAnswerParser {
                 break;
             }
         }
-        console.log(answerParsed);
         const teamAnswer = {
             id,
             isSubmitted,

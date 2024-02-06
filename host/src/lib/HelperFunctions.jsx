@@ -60,8 +60,6 @@ const isAnswerStateCurrent = (answerState, currentState) => {
     [GameSessionState.PHASE_2_DISCUSS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
     [GameSessionState.PHASE_2_RESULTS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
   };
-  console.log(answerState);
-  console.log(currentState);
   return answerState === currentState || 
        answerState === stateMappings[currentState] || 
        false;
@@ -77,14 +75,11 @@ const isAnswerStateCurrent = (answerState, currentState) => {
 */
 export const extractAnswers =  (teamsArray, currentState, currentQuestionId) => {
   let results = [];
-  console.log(teamsArray);
   teamsArray.forEach(team => {
     team.teamMembers && team.teamMembers.forEach(teamMember => {
       teamMember.answers && teamMember.answers.forEach(answer => {
-        console.log(answer);
         if (answer.questionId === currentQuestionId && isAnswerStateCurrent(answer.currentState, currentState)) {
-          console.log("made it");
-            results.push({team, answer});
+          results.push({team, answer});
         }
       });
     });
@@ -128,7 +123,6 @@ export const getMultiChoiceAnswers = (
   currentState,
   correctChoiceIndex
 ) => {
-  console.log(teamsArray);
   // create this to use as an index reference for the confidence levels to avoid find/findIndex
   const confidenceLevelsArray = Object.values(ConfidenceLevel);
   let confidenceArray = createBlankConfidenceArray();
@@ -240,7 +234,7 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
     let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
     answers.forEach(({team, answer}) => {
       for (let i = 0; i < choices.length; i++){ 
-        if (answer.answerContent.rawAnswer === choices[i].rawAnswer) {
+        if (answer.answer.rawAnswer === choices[i].rawAnswer) {
           answersArray[i].count += 1;
           answersArray[i].teams.push({name: team.name});
           break;
@@ -276,8 +270,8 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberId) => {
 
 export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
   const answerConfigBase = {
-    answerContent: {
-      rawAnswer:  correctAnswerValue,
+    answer: {
+      rawAnswer: correctAnswerValue,
       answerType: answerSettings.answerType,
       answerPrecision: answerSettings.answerPrecision
     },
@@ -286,13 +280,13 @@ export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
   switch (answerSettings.answerType){
     case (AnswerType.NUMBER):
     default:
-      correctAnswer = new NumericAnswer(answerConfigBase);
+      correctAnswer = new NumericAnswer(correctAnswerValue, answerSettings.answerType, answerSettings.answerPrecision);
       break;
     case(AnswerType.STRING):
-      correctAnswer = new StringAnswer(answerConfigBase);
+      correctAnswer = new StringAnswer(correctAnswerValue, answerSettings.answerType);
       break;
     case(AnswerType.EXPRESSION):
-      correctAnswer = new ExpressionAnswer(answerConfigBase);
+      correctAnswer = new ExpressionAnswer(correctAnswerValue, answerSettings.answerType);
       break;
   }
   return correctAnswer;
@@ -310,7 +304,7 @@ export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
 export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettings, newAnswer, newAnswerTeamName, teamId) => {
   // if the answer is empty, skip and return the previous answer
   // an empty answer could mean that a user was able to submit an answer of the wrong type
-  if (newAnswer.answerContent.normAnswer.length === 0) {
+  if (newAnswer.answer.normAnswer.length === 0) {
     return prevShortAnswer;
   }
   // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
@@ -318,8 +312,8 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
     const correctAnswerValue = choices.find(choice => choice.isAnswer).text;
     const correctAnswer = createCorrectAnswer(correctAnswerValue, answerSettings);
     prevShortAnswer.push({
-      rawAnswer: correctAnswer.answerContent.rawAnswer,
-      normAnswer: correctAnswer.answerContent.normAnswer,
+      rawAnswer: correctAnswer.rawAnswer,
+      normAnswer: correctAnswer.normAnswer,
       isCorrect: true,
       isSelectedMistake: false,
       count: 0,
@@ -329,7 +323,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
   let isExistingAnswer = false;  
   // check the new answer against the previously submitted answers and the correct answer
   prevShortAnswer.forEach((prevAnswer) => {
-    if(newAnswer.isEqualTo(prevAnswer.normAnswer)){
+    if(newAnswer.answer.isEqualTo(prevAnswer.normAnswer)){
       isExistingAnswer = true;
       prevAnswer.count += 1;
       prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
@@ -338,8 +332,8 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
   // if there was no match above, add the new answer to the array of previous answers
   if (!isExistingAnswer){
     prevShortAnswer.push({
-      rawAnswer: newAnswer.answerContent.rawAnswer,
-      normAnswer: newAnswer.answerContent.normAnswer,
+      rawAnswer: newAnswer.answer.rawAnswer,
+      normAnswer: newAnswer.answer.normAnswer,
       isCorrect: false,
       isSelectedMistake: false,
       count: 1,

@@ -89,9 +89,7 @@ export default function GameInProgress({
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
-  const answerSettings: IAnswerSettings = {
-    answerType: AnswerType[currentQuestion?.answerSettings?.answerType as keyof typeof AnswerType]
-  } ?? {answerType: AnswerType.STRING};
+  const answerSettings: IAnswerSettings | null = currentQuestion.answerSettings ?? null;
   let teamAnswers: (BackendAnswer | null)[] | null | undefined;
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
@@ -190,7 +188,6 @@ export default function GameInProgress({
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
       const answer2 = answer;
-      console.log(answer);
       const response = await apiClient.addTeamAnswer(answer2);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer2.answer));
       setTeamAnswerId(response.id ?? '');

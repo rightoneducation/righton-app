@@ -28,7 +28,6 @@ export default function DiscussAnswerCard({
   answerReason,
   currentState,
 }: DiscussAnswerCardProps) {
-  console.log(instructions);
   const theme = useTheme();
   const { t } = useTranslation();
   const resultText = isPlayerCorrect

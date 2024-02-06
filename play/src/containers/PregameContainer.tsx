@@ -73,7 +73,6 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       return false;
     }
     try {
-      console.log(inputGameCodeValue);
       const gameSessionResponse = await apiClient.getGameSessionByCode(
         parseInt(inputGameCodeValue, 10)
       );
@@ -104,19 +103,15 @@ export function PregameContainer({ apiClient }: PregameFinished) {
         teamName,
         null
       );
-      console.log(team);
       if (!team) {
         setIsAPIError(true);
       } else {
         try {
-          console.log("sup0");
           const teamMember = await apiClient.addTeamMemberToTeam(
             team.id,
             true,
             uuidv4()
           );
-          console.log('sup');
-          console.log(teamMember);
           if (!teamMember) {
             setIsAPIError(true);
           }
@@ -152,14 +147,12 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           answer: null,
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-        console.log(window.localStorage.getItem(StorageKey));
         navigate(`/game`);
       }
     } catch (error) {
       setIsAPIError(true);
     }
   };
-  console.log(window.localStorage.getItem(StorageKey));
   switch (pregameState) {
     case PregameState.SELECT_AVATAR:
       return (

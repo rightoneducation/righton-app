@@ -97,11 +97,9 @@ const GameSessionContainer = () => {
 
   // initial query for gameSessions and teams
   useEffect(() => {
-    let gameSessionId = '9e2bedfe-4c29-4490-a018-d2079192e3ba';
-    console.log('sup');
+    let gameSessionId = 'a2a78c7d-46d7-4c0f-82ea-edcc98f1e6dc';
     try{
     apiClient.getGameSession(gameSessionId).then((response) => {
-      console.log(response);
       setGameSession(response); // set initial gameSession state
       gameSessionId = response.id; // set gameSessionId to the response id (in case it was a new gameSession)
       checkGameTimer(response); // checks if the timer needs to start
@@ -140,15 +138,13 @@ const GameSessionContainer = () => {
 
       Promise.all(teamDataRequests)
         .then((responses) => {
-          console.log(responses);
           // if shortAnswer is enabled we need to rebuild the shortAnswerResponses object on refresh
           if (response.questions[response.currentQuestionIndex].isShortAnswerEnabled === true) {
             responses.forEach((team) => {
               team.teamMembers && team.teamMembers.forEach((teamMember) => {
                 teamMember.answers && teamMember.answers.forEach((answer) => {
                   if (answer.questionId === response.questions[response.currentQuestionIndex].id
-                    && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS)
-                      && answer.isChosen)
+                    && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS))
                   ) {
                     setShortAnswerResponses((prev) => {
                       return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), response.questions[response.currentQuestionIndex].answerSettings, answer, team.name)
@@ -229,7 +225,6 @@ const GameSessionContainer = () => {
           setTeamsArray((prevState) => {
             const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
             const newState = JSON.parse(JSON.stringify(prevState));
-            console.log(newState);
             newState.map((team) => {
               if (team.id === teamId) {
                 team.teamMembers.map((teamMember) => {
@@ -244,6 +239,8 @@ const GameSessionContainer = () => {
               // if we did this outside of the setTeamsArray function we would be using stale state values
               setShortAnswerResponses((prevShortAnswerState) => {
                 const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, gameSession.questions[gameSession.currentQuestionIndex].answerSettings, teamAnswerResponse, teamName, teamId);
+                console.log(newShortAnswerState);
+                console.log(gameSession);
                 apiClient
                   .updateQuestion({
                     gameSessionId: gameSession.id,

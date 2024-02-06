@@ -46,7 +46,6 @@ export abstract class ModelHelper {
             question.id
             );
         }
-        console.log(teamAnswers);
         // step 2: get the answer the player selected this round
         const findSelectedAnswer = (answers: (BackendAnswer | null)[]) => {
             const selectedAnswer = answers.find((teamAnswer: BackendAnswer | null) => 
@@ -54,7 +53,6 @@ export abstract class ModelHelper {
                     ? currentState === GameSessionState.PHASE_1_RESULTS
                     : currentState === GameSessionState.PHASE_2_RESULTS
             );
-            console.log(selectedAnswer);
             return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
         };
 

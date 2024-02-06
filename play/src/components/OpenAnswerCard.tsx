@@ -51,7 +51,7 @@ export default function OpenAnswerCard({
   const [katexAnswer, setKatexAnswer] = useState('');
 
   const answerType: AnswerType = answerSettings?.answerType ?? AnswerType.STRING;
-  const answerPrecision = answerSettings?.answerPrecision as AnswerPrecision;
+  const answerPrecision: AnswerPrecision = answerSettings?.answerPrecision as AnswerPrecision;
   const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
     switch (inputAnswerSettings?.answerType) {
@@ -224,7 +224,7 @@ export default function OpenAnswerCard({
             isSelected={
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
-            isSubmitted={isSubmitted}
+            isSubmitted={false}
             isHint={false}
             isShortAnswerEnabled={isShortAnswerEnabled}
             currentState={currentState}
