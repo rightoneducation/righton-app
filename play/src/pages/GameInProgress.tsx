@@ -187,11 +187,10 @@ export default function GameInProgress({
   // contents is the quill pad contents
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
-      const answer2 = answer;
-      const response = await apiClient.addTeamAnswer(answer2);
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer2.answer));
+      const response = await apiClient.addTeamAnswer(answer);
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
-      setBackendAnswer(answer2);
+      setBackendAnswer(answer);
       setDisplaySubmitted(true);
     } catch (e) {
       console.log(e);
@@ -226,7 +225,7 @@ export default function GameInProgress({
 
   const handleSelectAnswer = (answerText: string) => {
     const answer = new BackendAnswer(
-      AnswerFactory.createAnswer(answerText, AnswerType.EXPRESSION),
+      AnswerFactory.createAnswer(answerText, AnswerType.MULTICHOICE),
       false,
       false,
       currentState,

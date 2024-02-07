@@ -115,7 +115,6 @@ export class NumericAnswer extends BaseAnswer<Number>{
 
             // this is going to round the number we found that matches to the precision that the teacher requested
             const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[this.answerPrecision]);
-            console.log(roundedNumberAsString);
             if (normRawAnswer === roundedNumberAsString)
               return true;
           }

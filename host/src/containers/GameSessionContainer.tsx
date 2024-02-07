@@ -238,8 +238,6 @@ const GameSessionContainer = () => {
               // if we did this outside of the setTeamsArray function we would be using stale state values
               setShortAnswerResponses((prevShortAnswerState) => {
                 const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, gameSession.questions[gameSession.currentQuestionIndex].answerSettings, teamAnswerResponse, teamName, teamId);
-                console.log(newShortAnswerState);
-                console.log(gameSession);
                 apiClient
                   .updateQuestion({
                     gameSessionId: gameSession.id,

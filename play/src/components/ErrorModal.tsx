@@ -104,8 +104,6 @@ export default function ErrorModal({
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
           {upperTextMap[errorType]}
         </Typography>
-        sup
-        {errorType}
         {lowerText}
       </Stack>
       <Stack spacing={2} style={{ alignItems: 'center' }}>

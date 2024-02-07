@@ -249,16 +249,16 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
 /**
  * returns team info to be used when receiving team answers from createteamanswers
  * @param {ITeam[]} teamsArray 
- * @param {string} teamMemberId 
+ * @param {string} teamMemberAnswersId 
  * @returns {teamName: string, teamId: string}
  */
-export const getTeamInfoFromAnswerId = (teamsArray, teamMemberId) => {
+export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   let teamName = '';
   let teamId = '';
   teamsArray.forEach((team) => {
     team.teamMembers &&
       team.teamMembers.forEach((teamMember) => {
-        if (teamMember.id === teamMemberId){
+        if (teamMember.id === teamMemberAnswersId){
           teamName=team.name;
           teamId=team.id;
         }
