@@ -1,14 +1,14 @@
 export interface IQuestion {
     id: string
     text: string
-    choices?: Array<IChoice> | null
-    responses?: Array<string> | null
-    imageUrl?: string | null
-    instructions?: Array<string> | null
-    standard?: string | null
-    cluster?: string | null
-    domain?: string | null
-    grade?: string | null
+    choices: Array<IChoice>
+    responses: Array<string>
+    imageUrl: string
+    instructions: Array<string>
+    standard: string
+    cluster: string
+    domain: string
+    grade: string
     gameSessionId: string
     order: number
     isConfidenceEnabled: boolean
@@ -18,6 +18,6 @@ export interface IQuestion {
 
 export interface IChoice {
     text: string
-    reason?: string
+    reason: string
     isAnswer: boolean
 }

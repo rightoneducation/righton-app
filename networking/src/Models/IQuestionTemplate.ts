@@ -2,18 +2,18 @@ import { IGameTemplate } from './IGameTemplate';
 
 export interface IQuestionTemplate {
   id: string,
-  title?: string | null,
-  owner?: string | null,
-  version?: number | null,
+  title: string,
+  owner: string,
+  version: number,
   choices?: string | null,
   instructions?: string | null,
-  answerSettings: string | null,
-  domain: string | null;
-  cluster: string | null;
-  grade: string | null;
-  standard: string | null;
+  answerSettings?: string | null,
+  domain: string;
+  cluster: string;
+  grade: string;
+  standard: string;
   imageUrl?: string | null | undefined,
-  gameTemplates?: IGameTemplate[] | null,
-  createdAt?: string | null | undefined,
-  updatedAt?: string | null
+  gameTemplates: { gameTemplate: IGameTemplate, gameQuestionId: string }[] | [],
+  createdAt: Date,
+  updatedAt: Date
 }

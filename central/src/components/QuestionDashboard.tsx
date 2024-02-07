@@ -1,22 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from './LoadingIndicator';
-import { IQuestionTemplate } from '@righton/networking';
+import { IQuestionTemplate, isNullOrUndefined } from '@righton/networking';
 import QuestionCard from './QuestionCard';
 
 type QuestionDashboardProps = {
+  gameId: string | null;
   questions: IQuestionTemplate[];
   loading: boolean;
+  isUserAuth: boolean;
+  handleDeleteQuestionTemplate: (id: string) => void;
+  handleCloneQuestionTemplate: (question: IQuestionTemplate) => void;
+  nextToken: string | null; 
+  handleScrollDown: (nextToken: string | null) => void;
+  handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
 };
 
 export default function QuestionDashboard({
+  gameId,
   questions,
-  loading
+  loading,
+  isUserAuth,
+  handleCloneQuestionTemplate,
+  handleDeleteQuestionTemplate,
+  nextToken,
+  handleScrollDown,
+  handleQuestionSelected
 }: QuestionDashboardProps) {
   const classes = useStyles();
-  return (
-     loading ?   
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const match = useRouteMatch('/questions/:questionIndex');
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+    setActiveIndex(Number(event.currentTarget.dataset.questionIndex));
+    event.stopPropagation();
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setActiveIndex(null);
+  };
+  const cloneHandler = (question: IQuestionTemplate) => () => {
+    handleCloneQuestionTemplate(question);
+    handleClose();
+  };
+  const deleteHandler = (id: string) => () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this questions?');
+    if (confirmDelete) {
+      handleDeleteQuestionTemplate(id);
+    }
+    handleClose();
+  };
+
+    if (loading) return ( 
       <>
         <div className={classes.loadingContainer}>
           <div>
@@ -44,25 +83,50 @@ export default function QuestionDashboard({
           </div>
         </div>
       </>
-  :
-    <Grid container item xs={12} md={6} lg={4} className={classes.container} >
-    {
-      questions.map((question) => {
-        return <QuestionCard  {...question} />
-      })
-    }
-    </Grid>
+    );
+
+  if (questions.length >= 1) {
+    return (
+        <InfiniteScroll
+          dataLength={questions.length}
+          next={() => handleScrollDown(nextToken)}
+          hasMore={nextToken !== null}
+          loader={<h4>Loading...</h4>}
+          height={`calc(100vh - 156px)`}
+          scrollableTarget="questionsDashboard"
+          style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll', zIndex: -2}}
+        > 
+          {questions.map((question, index) => 
+            <Grid key={index} container item xs={12} md={match ? 12 : 6} lg={match ? 12 : 4} style={{width: '100%'}}>
+              <QuestionCard  
+                gameId={gameId}
+                question={question}
+                anchorEl={anchorEl}
+                isUserAuth={isUserAuth}
+                match={match}
+                index={index}
+                activeIndex={activeIndex}
+                handleClick={handleClick}
+                cloneHandler={cloneHandler}
+                deleteHandler={deleteHandler}
+                handleClose={handleClose}
+                handleQuestionSelected={handleQuestionSelected}
+              />
+            </Grid>
+          )}
+      </InfiniteScroll>
+   
+    );
+  };
+  return (
+    <Typography gutterBottom>
+      Loading...
+    </Typography>
   );
-}
+};
+
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-   display: 'flex',
-   flexDirection: 'column',
-   alignItems: 'center',
-   width: '100%',
-   height: '100vh'
-  },
   loadingContainer: {
     margin: 'auto',
     width: '60%',

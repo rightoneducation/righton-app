@@ -8,7 +8,9 @@ import {
 } from '@righton/networking';
 
 let questionTemplateAPIClient: IQuestionTemplateAPIClient = new QuestionTemplateAPIClient(Environment.Testing);
-export const createQuestionTemplate = async (createQuestionTemplateInput: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
+
+
+export const createQuestionTemplate = async (createQuestionTemplateInput: CreateQuestionTemplateInput | IQuestionTemplate): Promise<IQuestionTemplate | null> => {
   try {
     return questionTemplateAPIClient.createQuestionTemplate(createQuestionTemplateInput);
   } catch (e) {
@@ -24,7 +26,7 @@ export const getQuestionTemplate = async (id: string): Promise<IQuestionTemplate
   }
 }
 
-export const updateQuestionTemplate = async (updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
+export const updateQuestionTemplate = async (updateQuestionTemplateInput: UpdateQuestionTemplateInput | IQuestionTemplate): Promise<IQuestionTemplate | null> => {
   try {
     return questionTemplateAPIClient.updateQuestionTemplate(updateQuestionTemplateInput);
   } catch (e) {
@@ -40,7 +42,7 @@ export const deleteQuestionTemplate = async (id: string): Promise<IQuestionTempl
   }
 };
 
-export const getSortedQuestionTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> => {
+export const listQuestionTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null> => {
   try {
     return await questionTemplateAPIClient.listQuestionTemplates(queryLimit, nextToken);
   } catch (e) {

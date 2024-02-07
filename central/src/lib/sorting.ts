@@ -14,11 +14,11 @@ export enum SORT_TYPES {
 const sortByUpdated = (a: IGameTemplate, b: IGameTemplate) => {
   if (isNullOrUndefined(a.updatedAt)) return 1;
   if (isNullOrUndefined(b.updatedAt)) return -1;
-  return a.updatedAt - b.updatedAt;
+  return 1; //a.updatedAt - b.updatedAt;
 };
 
 const sortByOldest = (a: IGameTemplate, b: IGameTemplate) => {
-  return sortByUpdated(a, b) * -1;
+  return 1; //sortByUpdated(a, b) * -1;
 };
 
 const sortAlphabetically = (a: IGameTemplate | null, b: IGameTemplate | null) => {

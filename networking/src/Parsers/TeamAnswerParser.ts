@@ -1,86 +1,85 @@
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { ITeamAnswer } from "../Models";
 import { AWSTeamAnswer } from "../Models/AWS";
 import { 
+  ConfidenceLevel,
   OnCreateTeamAnswerSubscription, 
   OnUpdateTeamAnswerSubscription 
 } from "../AWSMobileApi";
 
-
 export class TeamAnswerParser {
-  static teamAnswerFromCreateTeamAnswerSubscription(
-      subscription: OnCreateTeamAnswerSubscription
-  ): ITeamAnswer {
-      const createTeamAnswer = subscription.onCreateTeamAnswer
-      if (isNullOrUndefined(createTeamAnswer)) {
-          throw new Error("subscription.onCreateTeamAnswer can't be null.")
-      }
-      return this.teamAnswerFromAWSTeamAnswer(createTeamAnswer)
-  }
+    static teamAnswerFromCreateTeamAnswerSubscription(
+        subscription: OnCreateTeamAnswerSubscription
+    ): ITeamAnswer {
+        const createTeamAnswer = subscription.onCreateTeamAnswer
+        if (isNullOrUndefined(createTeamAnswer)) {
+            throw new Error("subscription.onCreateTeamAnswer can't be null.")
+        }
+        return this.teamAnswerFromAWSTeamAnswer(createTeamAnswer)
+    }
 
-  static teamAnswerFromUpdateTeamAnswerSubscription(
-      subscription: OnUpdateTeamAnswerSubscription
-  ): ITeamAnswer {
-      const updateTeamAnswer = subscription.onUpdateTeamAnswer
-      if (isNullOrUndefined(updateTeamAnswer)) {
-          throw new Error("subscription.onCreateTeamAnswer can't be null.")
-      }
-      return this.teamAnswerFromAWSTeamAnswer(updateTeamAnswer)
-  }
+    static teamAnswerFromUpdateTeamAnswerSubscription(
+        subscription: OnUpdateTeamAnswerSubscription
+    ): ITeamAnswer {
+        const updateTeamAnswer = subscription.onUpdateTeamAnswer
+        if (isNullOrUndefined(updateTeamAnswer)) {
+            throw new Error("subscription.onCreateTeamAnswer can't be null.")
+        }
+        return this.teamAnswerFromAWSTeamAnswer(updateTeamAnswer)
+    }
 
-  static mapTeamAnswers(
-      awsTeamAnswers: Array<AWSTeamAnswer | null> | null | undefined
-  ): Array<ITeamAnswer> {
-      if (isNullOrUndefined(awsTeamAnswers)) {
-          return []
-      }
+    static mapTeamAnswers(
+        awsTeamAnswers: Array<AWSTeamAnswer | null> | null | undefined
+    ): Array<ITeamAnswer> {
+        if (isNullOrUndefined(awsTeamAnswers)) {
+            return []
+        }
 
-      return awsTeamAnswers.map((awsTeamAnswer) => {
-          if (isNullOrUndefined(awsTeamAnswer)) {
-              throw new Error("Team can't be null in the backend.")
-          }
-          return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
-      })
-  }
+        return awsTeamAnswers.map((awsTeamAnswer) => {
+            if (isNullOrUndefined(awsTeamAnswer)) {
+                throw new Error("Team can't be null in the backend.")
+            }
+            return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
+        })
+    }
+    static teamAnswerFromAWSTeamAnswer(
+        awsTeamAnswer: AWSTeamAnswer
+    ): ITeamAnswer {
+        const {
+            id,
+            questionId = awsTeamAnswer.questionId ?? '',
+            isChosen,
+            isTrickAnswer,
+            text = awsTeamAnswer.text ?? '',
+            awsAnswerContents = awsTeamAnswer.awsAnswerContents ?? '',
+            createdAt,
+            updatedAt,
+            teamMemberAnswersId = awsTeamAnswer.teamMemberAnswersId ?? '',
+            confidenceLevel = awsTeamAnswer.confidenceLevel ?? ConfidenceLevel.NOT_RATED
+        } = awsTeamAnswer || {}
 
-  static teamAnswerFromAWSTeamAnswer(
-      awsTeamAnswer: AWSTeamAnswer
-  ): ITeamAnswer {
-      const {
-          id,
-          questionId,
-          isChosen,
-          isTrickAnswer,
-          text,
-          awsAnswerContents,
-          createdAt,
-          updatedAt,
-          teamMemberAnswersId,
-          confidenceLevel
-      } = awsTeamAnswer || {}
+        if (isNullOrUndefined(id) ||
+            isNullOrUndefined(teamMemberAnswersId) ||
+            isNullOrUndefined(questionId) ||
+            isNullOrUndefined(text) ||
+            isNullOrUndefined(awsAnswerContents)) {
+            throw new Error(
+                "Team answer has null field for the attributes that are not nullable"
+            )
+        }
 
-      if (isNullOrUndefined(id) ||
-          isNullOrUndefined(teamMemberAnswersId) ||
-          isNullOrUndefined(questionId) ||
-          isNullOrUndefined(text) ||
-          isNullOrUndefined(awsAnswerContents)) {
-          throw new Error(
-              "Team answer has null field for the attributes that are not nullable"
-          )
-      }
-
-      const teamAnswer: ITeamAnswer = {
-          id,
-          questionId,
-          isChosen,
-          isTrickAnswer,
-          text,
-          answerContents: awsAnswerContents,
-          createdAt,
-          updatedAt,
-          teamMemberAnswersId,
-          confidenceLevel
-      }
-      return teamAnswer
-  }
+        const teamAnswer: ITeamAnswer = {
+            id,
+            questionId,
+            isChosen,
+            isTrickAnswer,
+            text,
+            answerContents: awsAnswerContents,
+            createdAt,
+            updatedAt,
+            teamMemberAnswersId,
+            confidenceLevel
+        } as ITeamAnswer;
+        return teamAnswer
+    }
 }

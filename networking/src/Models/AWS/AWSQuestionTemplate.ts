@@ -8,12 +8,12 @@ export type AWSQuestionTemplate = {
     choices?: string | null,
     instructions?: string | null,
     answerSettings?: string | null,
-    domain?: string | null | undefined,
-    cluster?: string | null | undefined,
-    grade?: string | null | undefined,
-    standard?: string | null | undefined,
+    domain?: string | null,
+    cluster?: string | null,
+    grade?: string | null,
+    standard?: string | null,
     imageUrl?: string | null | undefined,
-    gameTemplates?: AWSModelGameQuestionConnection | null,
-    createdAt: string | null | undefined,
-    updatedAt: string | null
+    gameTemplates?:  AWSModelGameQuestionConnection | null,
+    createdAt: string,
+    updatedAt: string
 }

@@ -1,14 +1,14 @@
 import {
   Environment,
-  IGameQuestions,
-  IGameQuestionsAPIClient,
+  IGameQuestion,
+  IGameQuestionAPIClient,
   GameQuestionsAPIClient,
   CreateGameQuestionsInput,
   UpdateGameQuestionsInput
 } from '@righton/networking';
 
-let gameQuestionsAPIClient: IGameQuestionsAPIClient = new GameQuestionsAPIClient(Environment.Testing);
-export const createGameQuestions = async (createGameQuestionsInput: CreateGameQuestionsInput): Promise<IGameQuestions | null> => {
+let gameQuestionsAPIClient: IGameQuestionAPIClient = new GameQuestionsAPIClient(Environment.Testing);
+export const createGameQuestions = async (createGameQuestionsInput: CreateGameQuestionsInput): Promise<IGameQuestion | null> => {
   try {
     return await gameQuestionsAPIClient.createGameQuestions(createGameQuestionsInput);
   } catch (e) {
@@ -16,7 +16,7 @@ export const createGameQuestions = async (createGameQuestionsInput: CreateGameQu
   }
 }
 
-export const getGameQuestions = async (id: string): Promise<IGameQuestions | null> => {
+export const getGameQuestions = async (id: string): Promise<IGameQuestion | null> => {
   try {
     return await gameQuestionsAPIClient.getGameQuestions(id);
   } catch (e) {
@@ -24,7 +24,7 @@ export const getGameQuestions = async (id: string): Promise<IGameQuestions | nul
   }
 }
 
-export const deleteGameQuestions = async (id: string): Promise<IGameQuestions | null> => {
+export const deleteGameQuestions = async (id: string): Promise<IGameQuestion | null> => {
   try {
     return await gameQuestionsAPIClient.deleteGameQuestions(id);
   } catch (e) {
@@ -32,7 +32,7 @@ export const deleteGameQuestions = async (id: string): Promise<IGameQuestions | 
   }
 };
 
-export const getSortedGameQuestions = async (queryLimit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestions[], nextToken: string } | null> => {
+export const getSortedGameQuestions = async (queryLimit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestion[], nextToken: string } | null> => {
   try {
     return await gameQuestionsAPIClient.listGameQuestions(queryLimit, nextToken);
   } catch (e) {

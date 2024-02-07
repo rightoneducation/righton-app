@@ -9,7 +9,7 @@ export type AWSGameSession = {
   phaseOneTime: number
   phaseTwoTime: number
   teams?: {
-      items: Array<AWSTeam | null>
+      items: Array<AWSTeam>
   } | null
   currentQuestionIndex?: number | null
   currentState: GameSessionState
@@ -20,7 +20,7 @@ export type AWSGameSession = {
   title?: string | null
   currentTimer?: number | null
   questions?: {
-      items: Array<AWSQuestion | null>
+      items: Array<AWSQuestion>
   } | null
   createdAt: string
   updatedAt: string

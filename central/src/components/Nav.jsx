@@ -42,12 +42,21 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
             </>
             : null }
             {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
+            <>
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
                <Typography className={classes.title} variant="h6" >
                 Game Maker
               </Typography> 
-            </NavLink> : null}
+            </NavLink>
+               <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={'/questionmaker/0'}>
+               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
+                <Typography className={classes.title} variant="h6" >
+                 Question Maker
+               </Typography> 
+             </NavLink>
+            </>
+            : null}
             {!isResolutionMobile ?
             <div className={classes.help} id='Help' onClick={() => handleModalOpen(true, false)}>
               <img src={helpIcon} alt="Help Icon" className={classes.icon} />
@@ -69,7 +78,6 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
 
 const useStyles = (isResolutionMobile) => makeStyles(theme => ({  
   grow: {
-    flexGrow: 1,
     zIndex: 2,
   },
   bar: {

@@ -3,18 +3,16 @@ import { IGameTemplate } from "./IGameTemplate"
 
 
 export type IModelGameQuestionConnection = {
-  items: Array<IGameQuestions>;
-  __typename: string;
+  items: Array<IGameQuestion>;
   nextToken: string | null;
 };
 
-export type IGameQuestions = {
+export type IGameQuestion = {
   id: string,
   questionTemplateID: string,
   gameTemplateID: string,
-  questionTemplate?: IQuestionTemplate | null | undefined,
-  gameTemplate?: IGameTemplate | null | undefined,
-  createdAt: string,
-  updatedAt: string,
-  __typename: string
+  questionTemplate?: IQuestionTemplate | null,
+  gameTemplate?: IGameTemplate | null,
+  createdAt: Date,
+  updatedAt: Date,
 };

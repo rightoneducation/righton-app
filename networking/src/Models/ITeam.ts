@@ -4,13 +4,13 @@ import { ITeamMember } from "./ITeamMember"
 export interface ITeam {
     id: string
     name: string
-    question?: IQuestion | null
-    teamMembers?: Array<ITeamMember | null> | null
+    question: IQuestion
+    teamMembers: Array<ITeamMember> 
     score: number
     selectedAvatarIndex: number
     createdAt: string
-    updatedAt?: string | null
-    gameSessionTeamsId?: string | null
-    teamQuestionId?: string | null
-    teamQuestionGameSessionId?: string | null
+    updatedAt: string
+    gameSessionTeamsId: string
+    teamQuestionId: string
+    teamQuestionGameSessionId: string
 }

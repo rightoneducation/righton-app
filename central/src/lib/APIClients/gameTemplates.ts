@@ -9,7 +9,7 @@ import {
 
 let gameTemplateAPIClient: IGameTemplateAPIClient = new GameTemplateAPIClient(Environment.Testing);
 
-export const createGameTemplate = async (createGameTemplateInput: CreateGameTemplateInput): Promise<IGameTemplate | null> => {
+export const createGameTemplate = async (createGameTemplateInput: CreateGameTemplateInput | IGameTemplate): Promise<IGameTemplate | null> => {
   try {
     return await gameTemplateAPIClient.createGameTemplate(createGameTemplateInput);
   } catch (e) {
@@ -25,7 +25,7 @@ export const getGameTemplate = async (id: string): Promise<IGameTemplate | null>
   }
 }
 
-export const updateGameTemplate = async (updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate | null> => {
+export const updateGameTemplate = async (updateGameTemplateInput: UpdateGameTemplateInput | IGameTemplate): Promise<IGameTemplate | null> => {
   try {
     return await gameTemplateAPIClient.updateGameTemplate(updateGameTemplateInput);
   } catch (e) {
@@ -41,7 +41,7 @@ export const deleteGameTemplate = async (id: string): Promise<IGameTemplate | nu
   }
 };
 
-export const getSortedGameTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
+export const listGameTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
   try {
     return await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken);
   } catch (e) {

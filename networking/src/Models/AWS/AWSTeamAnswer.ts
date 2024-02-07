@@ -11,4 +11,5 @@ export type AWSTeamAnswer = {
   updatedAt: string
   teamMemberAnswersId?: string | null
   confidenceLevel: ConfidenceLevel
+  __typename?: string | null
 }
