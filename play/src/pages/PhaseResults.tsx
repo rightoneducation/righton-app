@@ -5,6 +5,7 @@ import {
   IGameSession,
   ITeam,
   IChoice,
+  IQuestion,
   ModelHelper,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
@@ -73,12 +74,11 @@ export default function PhaseResults({
     error: boolean;
     withheldPoints: number;
   }>({ error: false, withheldPoints: 0 });
-  const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
+  const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0] as IQuestion;
   const currentTeam = teams?.find((team) => team.id === teamId);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    currentQuestion,
-    currentState
+    currentQuestion
   );
 
   const [newPoints, setNewPoints] = React.useState<number>(0);

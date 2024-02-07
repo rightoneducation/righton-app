@@ -4,11 +4,11 @@ import {
   StringAnswer,
   ExpressionAnswer,
   ITeam,
-  ITeamAnswerHint,
+  IAnswerHint,
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
-  ITeamAnswerContent
+  LocalAnswer
 } from '@righton/networking';
 import {
   InputPlaceholder,
@@ -60,11 +60,12 @@ export const checkForSubmittedAnswerOnRejoin = (
   currentState: GameSessionState,
   currentQuestionIndex: number,
   isShortAnswerEnabled: boolean,
-): ITeamAnswerContent => {
-  let returnedAnswer: ITeamAnswerContent = {
-    rawAnswer: '',
-    normAnswer: [],
-    multiChoiceAnswerIndex: null,
+): LocalAnswer => {
+  let returnedAnswer: LocalAnswer = {
+    answerContent: {
+      rawAnswer: '',
+      normAnswer: [],
+    },
     isSubmitted: false,
     currentState: null,
     currentQuestionIndex: null,
@@ -83,7 +84,7 @@ export const checkForSubmittedAnswerOnRejoin = (
       window.localStorage.setItem(StorageKey, JSON.stringify(localModel));
     }
   }
-  return returnedAnswer as ITeamAnswerContent;
+  return returnedAnswer as LocalAnswer;
 };
 
 /**
@@ -99,8 +100,8 @@ export const checkForSubmittedHintOnRejoin = (
   hasRejoined: boolean,
   currentState: GameSessionState,
   currentQuestionIndex: number
-): ITeamAnswerHint => {
-  let returnedHint: ITeamAnswerHint = {
+): IAnswerHint => {
+  let returnedHint: IAnswerHint = {
     rawHint: '',
     teamName: '',
     isHintSubmitted: false,
@@ -116,7 +117,7 @@ export const checkForSubmittedHintOnRejoin = (
       returnedHint = localModel.hint;
     }
   }
-  return returnedHint as ITeamAnswerHint;
+  return returnedHint as IAnswerHint;
 };
 
 /**
@@ -145,7 +146,7 @@ export const checkForSelectedConfidenceOnRejoin = (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
-    !isNullOrUndefined(currentAnswer)
+    !isNullOrUndefined(currentAnswer) && !isNullOrUndefined(currentAnswer.confidenceLevel)
   ) {
     isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
     selectedConfidenceOption = currentAnswer.confidenceLevel;

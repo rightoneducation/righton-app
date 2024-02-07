@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import {
   ConfidenceLevel,
   GameSessionState,
-  ITeamAnswerContent,
+  LocalAnswer,
   IChoice,
   ITeam,
-  ITeamAnswerHint,
+  IAnswerHint,
   IAnswerSettings
 } from '@righton/networking';
 import { Pagination } from 'swiper';
@@ -31,9 +31,9 @@ interface ChooseAnswerProps {
   answerChoices: IChoice[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
+  handleSubmitAnswer: (answer: LocalAnswer) => void;
   currentState: GameSessionState;
-  handleSelectAnswer: (answer: number) => void;
+  handleSelectAnswer: (answer: string) => void;
   isConfidenceEnabled: boolean;
   selectedConfidenceOption: string;
   handleSelectConfidence: (confidence: ConfidenceLevel) => void;
@@ -41,11 +41,11 @@ interface ChooseAnswerProps {
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
-  answerContent: ITeamAnswerContent;
+  localAnswer: LocalAnswer;
   currentQuestionIndex: number;
-  answerHint: ITeamAnswerHint | null;
+  answerHint: IAnswerHint | null;
   isHintEnabled: boolean;
-  handleSubmitHint: (result: ITeamAnswerHint) => void;
+  handleSubmitHint: (result: IAnswerHint) => void;
   isHintSubmitted: boolean;
   currentTeam: ITeam | null;
 }
@@ -68,7 +68,7 @@ export default function ChooseAnswer({
   timeOfLastConfidenceSelect,
   setTimeOfLastConfidenceSelect,
   isShortAnswerEnabled,
-  answerContent,
+  localAnswer,
   currentQuestionIndex,
   answerHint,
   isHintEnabled,
@@ -116,8 +116,8 @@ export default function ChooseAnswer({
       {isShortAnswerEnabled &&
       currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
         <OpenAnswerCard
-          answerContent={answerContent}
-          isSubmitted={answerContent.isSubmitted ?? false}
+          localAnswer={localAnswer}
+          isSubmitted={localAnswer.isSubmitted ?? false}
           isShortAnswerEnabled={isShortAnswerEnabled}
           answerSettings={answerSettings}
           currentState={currentState}
@@ -127,12 +127,12 @@ export default function ChooseAnswer({
       ) : (
         <AnswerCard
           answers={answerChoices}
-          isSubmitted={answerContent.isSubmitted ?? false}
+          isSubmitted={localAnswer.isSubmitted ?? false}
           isShortAnswerEnabled={isShortAnswerEnabled}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
-          selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
+          selectedAnswer={localAnswer.answerContent.rawAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
       )}

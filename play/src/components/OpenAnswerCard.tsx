@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 import {
   isNullOrUndefined,
-  ITeamAnswerContent,
+  LocalAnswer,
   IAnswerSettings,
   GameSessionState,
   AnswerType,
@@ -21,17 +21,17 @@ import ShortAnswerTextFieldStyled from '../lib/styledcomponents/ShortAnswerTextF
 window.katex = katex;
 
 interface OpenAnswerCardProps {
-  answerContent: ITeamAnswerContent;
+  localAnswer: LocalAnswer;
   answerSettings: IAnswerSettings | null;
   isSubmitted: boolean;
   isShortAnswerEnabled: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitAnswer: (result: ITeamAnswerContent) => void;
+  handleSubmitAnswer: (result: LocalAnswer) => void;
 }
 
 export default function OpenAnswerCard({
-  answerContent,
+  localAnswer,
   answerSettings,
   isSubmitted,
   isShortAnswerEnabled,
@@ -45,7 +45,7 @@ export default function OpenAnswerCard({
   const [isBadInput, setIsBadInput] = useState(false); 
   const [katexAnswer, setKatexAnswer] = useState('');
 
-  const answerType = AnswerType[answerSettings?.answerType as keyof typeof AnswerType] ?? AnswerType.STRING;
+  const answerType = AnswerType[answerSettings?.answerType as AnswerType] ?? AnswerType.STRING;
   const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
     switch (inputAnswerSettings?.answerType) {
@@ -71,7 +71,7 @@ export default function OpenAnswerCard({
 
   const answerText = getAnswerText(answerSettings);
   const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
-    answerContent?.rawAnswer ?? ''
+    localAnswer.answerContent?.rawAnswer ?? ''
   );
   const handleEditorContentsChange = (
     event: ChangeEvent<HTMLInputElement>
@@ -83,13 +83,15 @@ export default function OpenAnswerCard({
       currentAnswer = currentAnswer.replace(/[^0-9.%-]/g, '');
       setIsBadInput(isBadInputDetected);
     }
-    const extractedAnswer: ITeamAnswerContent = {
-      rawAnswer: currentAnswer,
+    const extractedAnswer =  new LocalAnswer({
+      answerContent: {
+        rawAnswer: currentAnswer,
+      },
       currentState,
       currentQuestionIndex,
       isShortAnswerEnabled,
-      isSubmitted: answerContent.isSubmitted,
-    };
+      isSubmitted: localAnswer.isSubmitted,
+    });
     window.localStorage.setItem(
       StorageKeyAnswer,
       JSON.stringify(extractedAnswer)
@@ -98,14 +100,16 @@ export default function OpenAnswerCard({
   };
   
   const handlePresubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    const packagedAnswer: ITeamAnswerContent = {
-      rawAnswer: currentContents,
+    const packagedAnswer = new LocalAnswer({
+      answerContent: {
+        rawAnswer: currentContents,
+      },
       currentState,
       currentQuestionIndex,
       isShortAnswerEnabled,
       isSubmitted: true,
-      answerPrecision: answerSettings?.answerPrecision,
-    } as ITeamAnswerContent;
+      answerPrecision: answerSettings?.answerPrecision.toString(),
+    });
     handleSubmitAnswer(packagedAnswer);
   };
 

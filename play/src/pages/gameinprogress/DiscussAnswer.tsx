@@ -52,8 +52,7 @@ export default function DiscussAnswer({
   const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    currentQuestion,
-    currentState
+    currentQuestion
   );
   const isPlayerCorrect = isShortAnswerEnabled
     ? ModelHelper.isShortAnswerResponseCorrect(

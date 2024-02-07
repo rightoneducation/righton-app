@@ -2,9 +2,8 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
-  ITeamAnswerContent,
+  LocalAnswer,
   GameSessionState,
-  INormAnswer,
   IChoice,
   AnswerType
 } from '@righton/networking';
@@ -18,11 +17,11 @@ interface ButtonSubmitAnswerProps {
   isSubmitted: boolean;
   isHint: boolean;
   isShortAnswerEnabled: boolean;
-  selectedAnswer?: number | null;
+  selectedAnswer?: string | null;
   answers?: IChoice[] | undefined;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
+  handleSubmitAnswer: (answer: LocalAnswer) => void;
 }
 
 export default function ButtonSubmitAnswer({
@@ -52,16 +51,17 @@ export default function ButtonSubmitAnswer({
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
       onClick={() => {
-        const answerText = answers?.[selectedAnswer ?? 0]?.text;
-        const answer = {
-          rawAnswer: answerText ?? '',
-          normAnswer: [],
-          multiChoiceAnswerIndex: selectedAnswer,
+        const answerText = selectedAnswer;
+        const answer = new LocalAnswer({
+          answerContent: {
+            rawAnswer: answerText ?? '',
+            normAnswer: [],
+          },
           isShortAnswerEnabled,
           isSubmitted: true,
           currentState,
           currentQuestionIndex,
-        } as ITeamAnswerContent;
+        });
 
         handleSubmitAnswer(answer);
       }}
