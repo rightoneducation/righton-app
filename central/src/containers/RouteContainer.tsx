@@ -11,32 +11,31 @@ import {
   ApiClient,
   IGameTemplate,
   IQuestionTemplate,
+  AWSQuestionTemplate,
   CreateQuestionTemplateInput,
-  getQuestion,
   isNullOrUndefined
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
-import { Game, Questions } from '../API';
+import { Game } from '../API';
 import { 
   createGameTemplate, 
   getGameTemplate, 
   updateGameTemplate,
   deleteGameTemplate, 
   listGameTemplates
-} from '../lib/API/gametemplates';
+} from '../lib/APIClients/gameTemplates';
 import { 
   createQuestionTemplate, 
   getQuestionTemplate, 
   updateQuestionTemplate,
   deleteQuestionTemplate,
   listQuestionTemplates
-} from '../lib/API/questiontemplates';
+} from '../lib/APIClients/questionTemplates';
 import {
   createGameQuestions,
   deleteGameQuestions
-} from '../lib/API/gamequestions';
-import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from '../lib/games';
-import { updateQuestion, cloneQuestion } from '../lib/questions';
+} from '../lib/APIClients/gameQuestions';
+import { updateQuestion } from '../lib/questions';
 import { SORT_TYPES } from '../lib/sorting';
 import {useMediaQuery} from '../hooks/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
@@ -169,7 +168,7 @@ export const RouteContainer = ({
     else {
       // update all fields except for the questionTemplates
       const {questionTemplates, ...rest} = updatedGame;
-      const gameTemplateUpdate = rest; 
+      const gameTemplateUpdate = rest as IGameTemplate; 
       const backendGame = await updateGameTemplate(gameTemplateUpdate);
     }
     if (!isNullOrUndefined(updatedGame.questionTemplates) && !isNullOrUndefined(existingGame.questionTemplates)) {
@@ -277,7 +276,10 @@ export const RouteContainer = ({
       const {gameTemplates, ...rest} = newQuestion;
       const questionTemplateUpdate = rest; 
       const gameTemplatesUpdate = gameTemplates;
-      const question = await updateQuestionTemplate(questionTemplateUpdate);
+      const updatedAt = questionTemplateUpdate.updatedAt.toString();
+      const createdAt = questionTemplateUpdate.createdAt.toString();
+      const updatedQuestion = {...questionTemplateUpdate, updatedAt, createdAt};
+      const question = await updateQuestionTemplate(updatedQuestion);
         if (question) {  
           const question = await getQuestionTemplates(nextToken);
         } else {
@@ -294,7 +296,10 @@ export const RouteContainer = ({
     const {gameTemplates, ...rest} = question;
     const gameTemplatesUpdate = gameTemplates;
     const newQuestionTemplate = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`};
-    const result = await createQuestionTemplate(newQuestionTemplate);
+    const updatedAt = newQuestionTemplate.updatedAt.toString();
+    const createdAt = newQuestionTemplate.createdAt.toString();
+    const updatedQuestionTemplate = {...newQuestionTemplate, updatedAt, createdAt};
+    const result = await createQuestionTemplate(updatedQuestionTemplate);
     if (result) {
       getAllGameTemplates(nextToken);
       setAlert({ message: 'Question cloned.', type: 'success' });

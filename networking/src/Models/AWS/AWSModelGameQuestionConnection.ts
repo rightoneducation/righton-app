@@ -2,11 +2,11 @@ import { AWSQuestionTemplate } from "./AWSQuestionTemplate";
 import { AWSGameTemplate } from "./AWSGameTemplate";
 
 export type AWSModelGameQuestionConnection = {
-  items: Array<AWSGameQuestions>;
+  items: Array<AWSGameQuestion>;
   nextToken: string | null;
 }
 
-export type AWSGameQuestions = {
+export type AWSGameQuestion = {
   id: string,
   questionTemplateID: string,
   gameTemplateID: string,

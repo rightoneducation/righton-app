@@ -52,7 +52,7 @@ export default function GameInProgress({
     8: 'Go to Next Question',
     9: 'Proceed to RightOn Central',
   };
-  const numPlayers = teams ? teams.length : 0;
+  const numPlayers = teams.length;
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answersByQuestion = useMemo(
@@ -202,7 +202,7 @@ export default function GameInProgress({
         }}
       >
         <HeaderGame
-          totalQuestions={questions ? questions.length : 0}
+          totalQuestions={questions.length}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
           statePosition={statePosition}
@@ -251,7 +251,7 @@ export default function GameInProgress({
           phaseTwoTime={phaseTwoTime}
           gameTimer={gameTimer} //flag GameInProgress vs StudentView
           footerButtonText={getFooterText(
-            teams ? teams.length : 0,
+            teams.length,
             totalAnswers,
             statePosition,
           )} // provides index of current state for use in footer dictionary

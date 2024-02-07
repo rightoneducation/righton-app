@@ -1,11 +1,12 @@
-import { isNullOrUndefined } from "../IApiClient"
-import { IGameSession, ITeam, IQuestion, IChoice } from "../Models"
+import { isNullOrUndefined } from "../global";
+import { IGameSession, ITeam, IQuestion, ITeamMember } from "../Models"
 import { AWSGameSession, AWSTeam, AWSQuestion } from "../Models/AWS"
 import { 
   OnUpdateGameSessionSubscription, 
   UpdateGameSessionMutation, 
   OnGameSessionUpdatedByIdSubscription 
 } from "../AWSMobileApi"
+import { QuestionParser } from "./QuestionParser"
 import { TeamMemberParser } from "./TeamMemberParser"
 
 export class GameSessionParser {
@@ -32,32 +33,36 @@ export class GameSessionParser {
   static gameSessionFromAWSGameSession(
       awsGameSession: AWSGameSession
   ): IGameSession {
+      let teams: ITeam[] = [];
+      if (!isNullOrUndefined(awsGameSession.teams) && !isNullOrUndefined(awsGameSession.teams.items)) {
+        teams = GameSessionParser.mapTeams(awsGameSession.teams.items);    
+      }
+      let questions: IQuestion[] = [];
+        if (!isNullOrUndefined(awsGameSession.questions) && !isNullOrUndefined(awsGameSession.questions.items)) {
+            questions = GameSessionParser.mapQuestions(awsGameSession.questions.items);    
+        }
       const {
           id,
           gameId,
-          startTime,
+          startTime = awsGameSession.startTime ?? '',
           phaseOneTime,
           phaseTwoTime,
-          teams,
-          currentQuestionIndex,
+          currentQuestionIndex = awsGameSession.currentQuestionIndex ?? 0,
           currentState,
           gameCode,
-          questions,
-          currentTimer,
+          currentTimer = awsGameSession.currentTimer ?? 120,
           updatedAt,
           createdAt,
-          title,
+          title = awsGameSession.title ?? '',
           isAdvancedMode,
       } = awsGameSession || {}
       if (
           isNullOrUndefined(id) ||
-          isNullOrUndefined(currentState) ||
-          isNullOrUndefined(gameCode) ||
           isNullOrUndefined(gameId) ||
           isNullOrUndefined(phaseOneTime) ||
           isNullOrUndefined(phaseTwoTime) ||
-          isNullOrUndefined(questions) ||
-          isNullOrUndefined(questions.items) ||
+          isNullOrUndefined(currentState) ||
+          isNullOrUndefined(gameCode) ||
           isNullOrUndefined(updatedAt) ||
           isNullOrUndefined(createdAt) ||
           isNullOrUndefined(isAdvancedMode)
@@ -73,17 +78,17 @@ export class GameSessionParser {
           startTime,
           phaseOneTime,
           phaseTwoTime,
-          teams: GameSessionParser.mapTeams(teams),
+          teams,
           currentQuestionIndex,
           currentState,
           gameCode,
           currentTimer,
-          questions: GameSessionParser.mapQuestions(questions.items),
+          questions,
           isAdvancedMode,
           updatedAt,
           createdAt,
           title,
-      }
+      } as IGameSession;
       return gameSession
   }
 
@@ -99,75 +104,42 @@ export class GameSessionParser {
   }
 
   static mapTeams(
-      awsTeams: { items: (AWSTeam | null)[] } | null | undefined
+      awsTeams: AWSTeam[]
   ): Array<ITeam> {
-      if (isNullOrUndefined(awsTeams) || isNullOrUndefined(awsTeams.items)) {
+      if (isNullOrUndefined(awsTeams)) {
           return []
       }
-      return awsTeams.items.map((awsTeam) => {
+      return awsTeams.map((awsTeam) => {
           if (isNullOrUndefined(awsTeam)) {
               throw new Error("Team can't be null in the backend.")
+          }
+          let teamMembers: ITeamMember[] = [];
+          if (awsTeam.teamMembers?.items) {
+              teamMembers = TeamMemberParser.mapTeamMembers(awsTeam.teamMembers?.items);
           }
 
           const team: ITeam = {
               id: awsTeam.id,
               name: awsTeam.name,
-              teamQuestionId: awsTeam.teamQuestionId,
-              score: awsTeam.score,
+              teamQuestionId: awsTeam.teamQuestionId ?? '',
+              score: awsTeam.score ?? 0,
               selectedAvatarIndex: awsTeam.selectedAvatarIndex,
-              createdAt: awsTeam.createdAt,
-              updatedAt: awsTeam.updatedAt,
-              gameSessionTeamsId: awsTeam.gameSessionTeamsId,
-              teamQuestionGameSessionId: awsTeam.teamQuestionGameSessionId,
-              teamMembers: TeamMemberParser.mapTeamMembers(
-                  awsTeam.teamMembers?.items
-              ),
-          }
+              createdAt: awsTeam.createdAt ?? '',
+              updatedAt: awsTeam.updatedAt ?? '',
+              gameSessionTeamsId: awsTeam.gameSessionTeamsId ?? '',
+              teamQuestionGameSessionId: awsTeam.teamQuestionGameSessionId ?? '',
+              teamMembers
+          } as ITeam;
           return team
       })
   }
 
-  private static parseServerArray<T>(input: any | T[]): Array<T> {
-      if (input instanceof Array) {
-          return input as T[]
-      } else if (typeof input === "string") {
-          return JSON.parse(input as string)
-      }
-      return []
-  }
-
   private static mapQuestions(
-      awsQuestions: Array<AWSQuestion | null>
+      awsQuestions: Array<AWSQuestion>
   ): Array<IQuestion> {
       return awsQuestions
           .map((awsQuestion) => {
-              if (isNullOrUndefined(awsQuestion)) {
-                  throw new Error("Question cannot be null.")
-              }
-              const question: IQuestion = {
-                  id: awsQuestion.id,
-                  text: awsQuestion.text,
-                  choices: isNullOrUndefined(awsQuestion.choices)
-                      ? []
-                      : this.parseServerArray<IChoice>(awsQuestion.choices),
-                  responses: [],
-                  imageUrl: awsQuestion.imageUrl,
-                  instructions: isNullOrUndefined(awsQuestion.instructions)
-                      ? []
-                      : this.parseServerArray<string>(
-                          awsQuestion.instructions
-                      ),
-                  standard: awsQuestion.standard,
-                  cluster: awsQuestion.cluster,
-                  domain: awsQuestion.domain,
-                  grade: awsQuestion.grade,
-                  gameSessionId: awsQuestion.gameSessionId,
-                  order: awsQuestion.order,
-                  isConfidenceEnabled: awsQuestion.isConfidenceEnabled,
-                  isShortAnswerEnabled: awsQuestion.isShortAnswerEnabled,
-                  isHintEnabled: awsQuestion.isHintEnabled
-              }
-              return question
+              return QuestionParser.questionFromAWSQuestion(awsQuestion);
           })
           .sort((lhs, rhs) => {
               return lhs.order - rhs.order

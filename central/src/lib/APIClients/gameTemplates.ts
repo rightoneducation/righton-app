@@ -9,7 +9,7 @@ import {
 
 let gameTemplateAPIClient: IGameTemplateAPIClient = new GameTemplateAPIClient(Environment.Testing);
 
-export const createGameTemplate = async (createGameTemplateInput: CreateGameTemplateInput): Promise<IGameTemplate | null> => {
+export const createGameTemplate = async (createGameTemplateInput: CreateGameTemplateInput | IGameTemplate): Promise<IGameTemplate | null> => {
   try {
     const game = await gameTemplateAPIClient.createGameTemplate(createGameTemplateInput);
     return game;
@@ -30,7 +30,7 @@ export const getGameTemplate = async (id: string): Promise<IGameTemplate | null>
   return null;
 }
 
-export const updateGameTemplate = async (updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate | null> => {
+export const updateGameTemplate = async (updateGameTemplateInput: UpdateGameTemplateInput | IGameTemplate): Promise<IGameTemplate | null> => {
   try {
     const game = await gameTemplateAPIClient.updateGameTemplate(updateGameTemplateInput);
     return game;

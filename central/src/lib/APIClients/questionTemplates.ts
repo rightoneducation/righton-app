@@ -8,7 +8,9 @@ import {
 } from '@righton/networking';
 
 let questionTemplateAPIClient: IQuestionTemplateAPIClient = new QuestionTemplateAPIClient(Environment.Testing);
-export const createQuestionTemplate = async (createQuestionTemplateInput: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
+
+
+export const createQuestionTemplate = async (createQuestionTemplateInput: CreateQuestionTemplateInput | IQuestionTemplate): Promise<IQuestionTemplate | null> => {
   try {
     const question = await questionTemplateAPIClient.createQuestionTemplate(createQuestionTemplateInput);
     return question;
@@ -29,7 +31,7 @@ export const getQuestionTemplate = async (id: string): Promise<IQuestionTemplate
   return null;
 }
 
-export const updateQuestionTemplate = async (updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
+export const updateQuestionTemplate = async (updateQuestionTemplateInput: UpdateQuestionTemplateInput | IQuestionTemplate): Promise<IQuestionTemplate | null> => {
   try {
     const question = await questionTemplateAPIClient.updateQuestionTemplate(updateQuestionTemplateInput);
     return question;

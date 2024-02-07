@@ -1,4 +1,4 @@
-import { IModelGameQuestionConnection } from "../IModelGameQuestionConnection";
+import { AWSModelGameQuestionConnection } from "../AWS/AWSModelGameQuestionConnection";
 
 export type AWSGameTemplate = {
     id: string,
@@ -13,7 +13,7 @@ export type AWSGameTemplate = {
     phaseOneTime?: number | null | undefined,
     phaseTwoTime?: number | null | undefined,
     imageUrl?: string | null | undefined,
-    questionTemplates?: IModelGameQuestionConnection | null,
+    questionTemplates?: AWSModelGameQuestionConnection | null,
     createdAt: string,
     updatedAt: string
 }

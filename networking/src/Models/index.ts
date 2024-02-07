@@ -1,6 +1,5 @@
 // created from 'create-ts-index'
 
-export * from './IAWSGameSession';
 export * from './IGameSession';
 export * from './IGameTemplate';
 export * from './IModelGameQuestionConnection';

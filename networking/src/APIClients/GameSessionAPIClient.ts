@@ -14,7 +14,7 @@ import {
   UpdateGameSessionMutation,
   UpdateGameSessionMutationVariables,
 } from "../AWSMobileApi";
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { IGameSessionAPIClient } from "./interfaces/IGameSessionAPIClient";
 
 export class GameSessionAPIClient

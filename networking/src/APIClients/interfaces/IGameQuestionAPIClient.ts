@@ -1,21 +1,21 @@
-import { IGameQuestions } from "../../Models";
+import { IGameQuestion } from "../../Models";
 import { CreateGameQuestionsInput } from "../../AWSMobileApi";
 
-export interface IGameQuestionsAPIClient {
+export interface IGameQuestionAPIClient {
   createGameQuestions(
     createGameQuestionsInput: CreateGameQuestionsInput
-  ): Promise<IGameQuestions | null>;
+  ): Promise<IGameQuestion>;
 
   getGameQuestions(
     id: string
-  ): Promise<IGameQuestions | null>;
+  ): Promise<IGameQuestion>;
 
   deleteGameQuestions(
     id: string
-  ): Promise<IGameQuestions | null>;
+  ): Promise<IGameQuestion>;
 
   listGameQuestions(
     limit: number,
     nextToken: string | null,
-  ): Promise<{ gameQuestions: IGameQuestions[], nextToken: string } | null>;
+  ): Promise<{ gameQuestions: IGameQuestion[], nextToken: string }>;
 }

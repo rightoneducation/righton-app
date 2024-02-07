@@ -13,4 +13,5 @@ export type AWSTeam = {
   gameSessionTeamsId?: string | null
   teamQuestionId?: string | null
   teamQuestionGameSessionId?: string | null
+  __typename?: string | null
 }

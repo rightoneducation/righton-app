@@ -26,10 +26,12 @@ type GameTemplate @model{
   cluster: String
   grade: String
   standard: String
-  phaseOneTime: Int!
-  phaseTwoTime: Int!
+  phaseOneTime: Int
+  phaseTwoTime: Int
   imageUrl: String
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }
 
 input GameTemplateInput {
@@ -44,15 +46,17 @@ type QuestionTemplate @model {
   title: String!
   owner: String!
   version: Int!
-  choices: AWSJSON @default(value: "[]")
-  instructions: AWSJSON @default(value: "[]")
-  answerSettings: AWSJSON @default(value: "{AnswerType.NUMBER, AnswerPrecision.WHOLE}")
+  choices: AWSJSON
+  instructions: AWSJSON
+  answerSettings: AWSJSON
   domain: String
   cluster: String
   grade: String
   standard: String
   imageUrl: String
   gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }
 
 input QuestionTemplateInput {

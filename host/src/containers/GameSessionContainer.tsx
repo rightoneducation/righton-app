@@ -9,6 +9,7 @@ import {
   GameSessionState,
   IGameSession,
   isNullOrUndefined,
+  TeamParser,
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
@@ -84,7 +85,9 @@ const GameSessionContainer = () => {
       }
       // the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
       const teamDataRequests = response.teams.map((team) => {
-        return apiClient.getTeam(team.id); // got to call the get the teams from the APi so we can see the answers
+        return apiClient.getTeam(team.id).then((response) => {
+            return TeamParser.teamFromAWSTeam(response);
+        });
       });
 
       Promise.all(teamDataRequests)
@@ -300,12 +303,14 @@ const GameSessionContainer = () => {
             checkGameTimer(response);
             setGameSession(response);
             const teamDataRequests = response.teams.map((team) => {
-              return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
+              return apiClient.getTeam(team.id).then((response) => {
+                return TeamParser.teamFromAWSTeam(response);
+            });
             });
 
             Promise.all(teamDataRequests)
               .then((responses) => {
-                setTeamsArray(responses);
+               setTeamsArray(responses);
               })
               .catch((reason) => console.log(reason));
           });

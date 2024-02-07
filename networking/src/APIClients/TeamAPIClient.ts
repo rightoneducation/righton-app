@@ -18,7 +18,7 @@ import {
   onDeleteTeam,
   updateTeam,
 } from "../graphql";
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { ITeamAPIClient } from "./interfaces/ITeamAPIClient";
 
 export class TeamAPIClient
@@ -34,20 +34,22 @@ export class TeamAPIClient
     return TeamParser.teamFromAWSTeam(result.data.getTeam);
   }
 
-  async updateTeam(teamInput: UpdateTeamInput): Promise<ITeam> {
-    const input: UpdateTeamInput = teamInput;
-    const variables: UpdateTeamMutationVariables = { input };
+  async updateTeam(
+    teamInput: UpdateTeamInput
+  ): Promise<ITeam> {
+    const input: UpdateTeamInput = teamInput
+    const variables: UpdateTeamMutationVariables = { input }
     const team = await this.callGraphQL<UpdateTeamMutation>(
-      updateTeam,
-      variables
-    );
+        updateTeam,
+        variables
+    )
     if (
-      isNullOrUndefined(team.data) ||
-      isNullOrUndefined(team.data.updateTeam)
+        isNullOrUndefined(team.data) ||
+        isNullOrUndefined(team.data.updateTeam)
     ) {
-      throw new Error(`Failed to update team`);
+        throw new Error(`Failed to update team`)
     }
-    return team.data.updateTeam as ITeam;
+    return TeamParser.teamFromAWSTeam(team.data.updateTeam) as ITeam
   }
 
   async addTeamToGameSessionId(

@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from "aws-amplify";
 import { BaseAPIClient } from "./BaseAPIClient";
-import { IGameQuestionsAPIClient } from "./interfaces";
-import { IGameQuestions, AWSGameQuestions } from "../Models";
+import { IGameQuestionAPIClient } from "./interfaces";
+import { IGameQuestion, AWSGameQuestion } from "../Models";
 import { 
     createGameQuestions, 
     listGameQuestions,
@@ -17,15 +17,16 @@ import {
     DeleteGameQuestionsMutation,
     DeleteGameQuestionsMutationVariables,
 } from "../AWSMobileApi";
-import { isNullOrUndefined } from "../IApiClient";
+import { GameQuestionParser } from "../Parsers/GameQuestionParser";
+import { isNullOrUndefined } from "../global";
 
 export class GameQuestionsAPIClient
   extends BaseAPIClient
-  implements IGameQuestionsAPIClient
+  implements IGameQuestionAPIClient
 {
   async createGameQuestions(
     createGameQuestionsInput: CreateGameQuestionsInput
-): Promise<IGameQuestions | null> {
+): Promise<IGameQuestion> {
     const variables: CreateGameQuestionsMutationVariables = { input: createGameQuestionsInput }
     const gameQuestions = await this.callGraphQL<CreateGameQuestionsMutation>(
         createGameQuestions,
@@ -37,10 +38,10 @@ export class GameQuestionsAPIClient
     ) {
         throw new Error(`Failed to create gameQuestions.`)
     }
-    return gameQuestions.data.createGameQuestions as IGameQuestions;
+    return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions.data.createGameQuestions as AWSGameQuestion) as IGameQuestion;
 }
 
-async getGameQuestions(id: string): Promise<IGameQuestions | null> {
+async getGameQuestions(id: string): Promise<IGameQuestion> {
     const variables: GetGameQuestionsQueryVariables = { id }
     const result = await this.callGraphQL<GetGameQuestionsQuery>(
       getGameQuestions,
@@ -52,10 +53,10 @@ async getGameQuestions(id: string): Promise<IGameQuestions | null> {
     ) {
         throw new Error(`Failed to create gameQuestions.`)
     }
-    return result.data.getGameQuestions as IGameQuestions;
+    return GameQuestionParser.gameQuestionFromAWSGameQuestion(result.data.getGameQuestions as AWSGameQuestion) as IGameQuestion;
 }
 
-async deleteGameQuestions(id: string): Promise<IGameQuestions | null> {
+async deleteGameQuestions(id: string): Promise<IGameQuestion> {
     const variables: DeleteGameQuestionsMutationVariables = { input: { id } }
     const gameQuestions = await this.callGraphQL<DeleteGameQuestionsMutation>(
         deleteGameQuestions,
@@ -67,15 +68,15 @@ async deleteGameQuestions(id: string): Promise<IGameQuestions | null> {
     ) {
         throw new Error(`Failed to create gameQuestions.`)
     }
-    return gameQuestions.data.deleteGameQuestions as IGameQuestions;
+    return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions.data.deleteGameQuestions as AWSGameQuestion) as IGameQuestion;
 }
 
-async listGameQuestions(limit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestions[], nextToken: string } | null> {
+async listGameQuestions(limit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestion[], nextToken: string }> {
     let result = (await API.graphql(
         graphqlOperation(listGameQuestions, {limit, nextToken })
     )) as { data: any }
-    const parsedGameQuestions = result.data.listGameQuestions.items.map((gameQuestions: AWSGameQuestions) => {
-        return gameQuestions as IGameQuestions;
+    const parsedGameQuestions = result.data.listGameQuestions.items.map((gameQuestions: AWSGameQuestion) => {
+        return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions) as IGameQuestion;
     });
     const parsedNextToken = result.data.listGameQuestions.nextToken;
     
