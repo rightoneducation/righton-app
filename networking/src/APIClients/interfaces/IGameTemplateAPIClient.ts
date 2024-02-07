@@ -19,20 +19,20 @@ export interface IGameTemplateAPIClient {
   ): Promise<IGameTemplate | null>;
 
   listGameTemplates(
-    limit: number,
+    limit: number | null,
     nextToken: string | null,
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByDate(
-    limit: number,
+    limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByGrade(
-    limit: number,
+    limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null

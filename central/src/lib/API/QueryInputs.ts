@@ -14,5 +14,5 @@ export interface IListQuerySettings {
   sortDirection?: SortDirection | null
   sortField?: SortField | null
   filterString?: string
-  limit: number
+  queryLimit?: number
 }

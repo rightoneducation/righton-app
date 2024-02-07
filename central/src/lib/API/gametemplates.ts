@@ -51,11 +51,13 @@ export const deleteGameTemplate = async (id: string): Promise<IGameTemplate | nu
   return null;
 };
 
-export const listGameTemplates = async (queryLimit: number, nextToken: string | null, listQuerySettings: IListQuerySettings | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
+export const listGameTemplates = async (listQuerySettings: IListQuerySettings | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
   try {
+    const nextToken = listQuerySettings?.nextToken ?? null;
     const sortDirection = listQuerySettings?.sortDirection ?? null;
     const sortField = listQuerySettings?.sortField ?? null;
     const filterString = (listQuerySettings?.filterString && listQuerySettings?.filterString != "") ? listQuerySettings?.filterString : null;
+    const queryLimit = listQuerySettings?.queryLimit ?? null;
     console.log("sortDirection: " + sortDirection);
     console.log("sortField: " + sortField);
     console.log("filterString: " + filterString);

@@ -29,7 +29,7 @@ import { AWSGameTemplate } from "../Models";
 import { isNullOrUndefined } from "../IApiClient";
 
 interface IQueryParameters {
-  limit: number;
+  limit?: number | null;
   nextToken: string | null;
   sortDirection?: string | null;
   type: string;
@@ -104,7 +104,7 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.deleteGameTemplate as AWSGameTemplate);
   }
 
-  async listGameTemplates(limit: number, nextToken: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+  async listGameTemplates(limit: number | null, nextToken: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     let queryParameters: IQueryParameters = { limit, nextToken, type: "GameTemplate" };
     if (filterString != null) {
       queryParameters.filter = { title: { contains: filterString } };

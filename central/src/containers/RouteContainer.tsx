@@ -72,10 +72,10 @@ export const RouteContainer = ({
   const [nextToken, setNextToken] = useState<string | null>(null);
   const location = useLocation();
   const history = useHistory();
-  const queryLimit = 12; // number of games retreiived on main page
+  const queryLimit = 12; // number of games retrieved on main page
   const [listQuerySettings, setListQuerySettings] = useState<IListQuerySettings>({
     nextToken: null,
-    limit: queryLimit,
+    queryLimit,
   })
 
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
@@ -86,13 +86,13 @@ export const RouteContainer = ({
       sortField: listQuerySettings.sortField
     }
     setListQuerySettings(updatedListQuerySettings)
-    getAllGameTemplates(nextToken, updatedListQuerySettings);
+    getAllGameTemplates(updatedListQuerySettings);
   }
 
-  const getAllGameTemplates = async (nextToken: string | null, listQuerySettings: IListQuerySettings | null) => {
+  const getAllGameTemplates = async (listQuerySettings: IListQuerySettings | null) => {
     try { 
       setLoading(true);
-      const games = await listGameTemplates(queryLimit, nextToken, listQuerySettings);
+      const games = await listGameTemplates(listQuerySettings);
       if (games?.gameTemplates){
         setGames(games?.gameTemplates);
         setNextToken(games?.nextToken ?? null);
@@ -119,7 +119,8 @@ export const RouteContainer = ({
   const handleScrollDown = async (nextToken: string | null) => {
     let currentToken = nextToken;
     if (location.pathname === '/'){
-      const games = await listGameTemplates(queryLimit, nextToken, listQuerySettings);
+      listQuerySettings.nextToken = nextToken;
+      const games = await listGameTemplates(listQuerySettings);
       if (games?.gameTemplates){
         setGames((prev) => [
           ...(prev ?? []),
@@ -144,19 +145,20 @@ export const RouteContainer = ({
     setNextToken((prev) => nextToken);
   }
 
-  const debouncedApiCall = useCallback(debounce((nextToken, updatedListQuerySettings) => {
-    getAllGameTemplates(nextToken, updatedListQuerySettings);
+  const debouncedApiCall = useCallback(debounce((updatedListQuerySettings) => {
+    getAllGameTemplates(updatedListQuerySettings);
   }, 500), []);
 
   const handleSearchChange = (searchValue: string) => {
     const updatedListQuerySettings = {
       ...listQuerySettings,
       filterString: searchValue,
-      nextToken: null
+      nextToken: null,
+      queryLimit: undefined
     };
     setListQuerySettings(updatedListQuerySettings);
     setSearchInput(searchValue);
-    debouncedApiCall(nextToken, updatedListQuerySettings);
+    debouncedApiCall(updatedListQuerySettings);
   };
 
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
@@ -227,7 +229,8 @@ export const RouteContainer = ({
       });
       const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
     }
-    const games = await getAllGameTemplates(null, listQuerySettings);
+    listQuerySettings.nextToken = null;
+    const games = await getAllGameTemplates(listQuerySettings);
     setLoading(false);
     setAlert({ message: 'Save Completed.', type: 'success' });
   };
@@ -243,8 +246,8 @@ export const RouteContainer = ({
       const game = await updateGameTemplate(gameTemplateUpdate);
         if (game) {
           // ~~~~ add questions to game ~~~~~~ using , questionIDSet
-  
-          const games = await getAllGameTemplates(nextToken, listQuerySettings);
+          listQuerySettings.nextToken = nextToken;
+          const games = await getAllGameTemplates(listQuerySettings);
         } else {
           throw new Error ('Game was unable to be created');
         }
@@ -267,7 +270,8 @@ export const RouteContainer = ({
     const newGameTemplate = { ...rest, id: uuidv4(), title: `Clone of ${game.title}`};
     const result = await createGameTemplate(newGameTemplate);
     if (result) {
-      getAllGameTemplates(nextToken, listQuerySettings);
+      listQuerySettings.nextToken = nextToken;
+      getAllGameTemplates(listQuerySettings);
       setAlert({ message: 'Game cloned.', type: 'success' });
     }
     return result
@@ -276,7 +280,8 @@ export const RouteContainer = ({
   const handleDeleteGameTemplate = async (id: string) => {
     const result = await deleteGameTemplate(id);
     if (result) {
-      const games = await getAllGameTemplates(nextToken, listQuerySettings);
+      listQuerySettings.nextToken = nextToken;
+      const games = await getAllGameTemplates(listQuerySettings);
     }
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
@@ -330,7 +335,8 @@ export const RouteContainer = ({
     const newQuestionTemplate = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`};
     const result = await createQuestionTemplate(newQuestionTemplate);
     if (result) {
-      getAllGameTemplates(nextToken, listQuerySettings);
+      listQuerySettings.nextToken = nextToken;
+      getAllGameTemplates(listQuerySettings);
       setAlert({ message: 'Question cloned.', type: 'success' });
     }
     return result
@@ -392,7 +398,8 @@ export const RouteContainer = ({
     if (location.pathname === '/questions'){
       getQuestionTemplates(null);
     } else {
-      getAllGameTemplates(null, listQuerySettings);
+      listQuerySettings.nextToken = null;
+      getAllGameTemplates(listQuerySettings);
     }
     setStartup(false);
   }, []);
@@ -406,7 +413,8 @@ export const RouteContainer = ({
       if (location.pathname === '/questions'){
         await getQuestionTemplates(null);
       } else {
-        await getAllGameTemplates(null, listQuerySettings);
+        listQuerySettings.nextToken = null;
+        await getAllGameTemplates(listQuerySettings);
       }
       setLoading(false);
     };
