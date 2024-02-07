@@ -10,7 +10,7 @@ export interface IGameQuestionAPIClient {
     id: string
   ): Promise<IGameQuestion>;
 
-  deleteGameQuestions(
+  deleteGameQuestion(
     id: string
   ): Promise<IGameQuestion>;
 

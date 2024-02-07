@@ -11,51 +11,40 @@ let gameTemplateAPIClient: IGameTemplateAPIClient = new GameTemplateAPIClient(En
 
 export const createGameTemplate = async (createGameTemplateInput: CreateGameTemplateInput | IGameTemplate): Promise<IGameTemplate | null> => {
   try {
-    const game = await gameTemplateAPIClient.createGameTemplate(createGameTemplateInput);
-    return game;
+    return await gameTemplateAPIClient.createGameTemplate(createGameTemplateInput);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error creating gameTemplate: ${e}`);
   }
-  return null;
 }
 
 export const getGameTemplate = async (id: string): Promise<IGameTemplate | null> => {
   try {
-    const game = await gameTemplateAPIClient.getGameTemplate(id);
-    return game;
-
+    return await gameTemplateAPIClient.getGameTemplate(id);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error getting gameTemplate: ${e}`);
   }
-  return null;
 }
 
 export const updateGameTemplate = async (updateGameTemplateInput: UpdateGameTemplateInput | IGameTemplate): Promise<IGameTemplate | null> => {
   try {
-    const game = await gameTemplateAPIClient.updateGameTemplate(updateGameTemplateInput);
-    return game;
+    return await gameTemplateAPIClient.updateGameTemplate(updateGameTemplateInput);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error updating gameTemplate: ${e}`);
   }
-  return null;
 };
 
 export const deleteGameTemplate = async (id: string): Promise<IGameTemplate | null> => {
   try {
-    const game = await gameTemplateAPIClient.deleteGameTemplate(id);
-    return game;
+    return await gameTemplateAPIClient.deleteGameTemplate(id);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error deleting gameTemplate: ${e}`);
   }
-  return null;
 };
 
 export const listGameTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
   try {
-    const games = await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken);
-    return games;
+    return await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error listing gameTemplate: ${e}`);
   }
-  return null;
 };

@@ -276,8 +276,8 @@ export const RouteContainer = ({
       const {gameTemplates, ...rest} = newQuestion;
       const questionTemplateUpdate = rest; 
       const gameTemplatesUpdate = gameTemplates;
-      const updatedAt = questionTemplateUpdate.updatedAt.toString();
-      const createdAt = questionTemplateUpdate.createdAt.toString();
+      const updatedAt = questionTemplateUpdate.updatedAt?.toString();
+      const createdAt = questionTemplateUpdate.createdAt?.toString();
       const updatedQuestion = {...questionTemplateUpdate, updatedAt, createdAt};
       const question = await updateQuestionTemplate(updatedQuestion);
         if (question) {  

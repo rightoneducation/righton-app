@@ -9,8 +9,8 @@ export type AWSTeamMember = {
     nextToken?: string | null,
   } | null
   deviceId?: string | null
-  createdAt?: string | null
-  updatedAt?: string | null
+  createdAt: string | null
+  updatedAt: string | null
   teamTeamMembersId?: string | null
   __typename?: string | null
 }
