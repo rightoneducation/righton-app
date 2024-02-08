@@ -47,7 +47,7 @@ export default function GameInProgress({
   confidenceCardRef,
   featuredMistakesRef,
   shortAnswerResponses,
-  handleOnSelectMistake,
+  onSelectMistake,
   hintCardRef,
   isHintEnabled,
   handleHintChange,
@@ -79,27 +79,27 @@ export default function GameInProgress({
   const answers = useMemo(
     () =>
     (isShortAnswerEnabled
-      ? ( statePosition < 6 
-          ? getShortAnswers(
-              shortAnswerResponses
-            )
-          : getShortAnswersPhaseTwo(
-              shortAnswerResponses,
-              teamsArray, 
-              currentState, 
-              questions,
-              currentQuestionIndex
-            )
-        ) 
-      : getMultiChoiceAnswers(
-          questionChoices,
-          teamsArray,
-          currentQuestionIndex,
-          questions,
-          currentState,
-          correctChoiceIndex,
+      ? (statePosition < 6
+        ? getShortAnswers(
+          shortAnswerResponses
         )
-      ),
+        : getShortAnswersPhaseTwo(
+          shortAnswerResponses,
+          teamsArray,
+          currentState,
+          questions,
+          currentQuestionIndex
+        )
+      )
+      : getMultiChoiceAnswers(
+        questionChoices,
+        teamsArray,
+        currentQuestionIndex,
+        questions,
+        currentState,
+        correctChoiceIndex,
+      )
+    ),
     [
       shortAnswerResponses,
       questionChoices,
@@ -121,24 +121,24 @@ export default function GameInProgress({
     answerTeams: noResponseTeams,
   };
   // data object used in Victory graph for real-time responses
-  const data = (isShortAnswerEnabled )
-    ? ( statePosition < 6 
+  const data = (isShortAnswerEnabled)
+    ? (statePosition < 6
       ? buildVictoryDataObjectShortAnswer(
-          shortAnswerResponses, 
-          noResponseObject
-        ) 
-        : 
-        buildVictoryDataObjectShortAnswerPhaseTwo(
-          shortAnswerResponses,
-          answers, 
-          noResponseObject
-        )
-      )
-    : buildVictoryDataObject(
-        answers, 
-        questionChoices,
+        shortAnswerResponses,
         noResponseObject
-      );
+      )
+      :
+      buildVictoryDataObjectShortAnswerPhaseTwo(
+        shortAnswerResponses,
+        answers,
+        noResponseObject
+      )
+    )
+    : buildVictoryDataObject(
+      answers,
+      questionChoices,
+      noResponseObject
+    );
   // data object used in Victory graph for confidence responses
   const confidenceData = answers.confidenceArray;
   // handles if a graph is clicked, noting which graph and which bar on that graph
@@ -151,8 +151,8 @@ export default function GameInProgress({
     setGraphClickInfo({ graph, selectedIndex });
     setTimeout(() => {
       if (graph === 'realtime')
-        responsesRef.current.scrollIntoView({ behavior: 'smooth' });
-      else if (graph=== 'confidence') 
+        responsesRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else if (graph === 'confidence')
         confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
       else
         hintCardRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -282,7 +282,7 @@ export default function GameInProgress({
             isShortAnswerEnabled={isShortAnswerEnabled}
             handleShortAnswerChange={handleShortAnswerChange}
             shortAnswerResponses={shortAnswerResponses}
-            handleOnSelectMistake={handleOnSelectMistake}
+            onSelectMistake={onSelectMistake}
             hintCardRef={hintCardRef}
             isHintEnabled={isHintEnabled}
             handleHintChange={handleHintChange}
@@ -314,6 +314,7 @@ export default function GameInProgress({
           setGraphClickInfo={setGraphClickInfo}
           showFooterButtonOnly={showFooterButtonOnly}
           navDictionary={navDictionary}
+          statePosition={statePosition}
         />
       </div>
     </div>

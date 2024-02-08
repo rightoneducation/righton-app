@@ -72,7 +72,6 @@ import {
     IQuestion, 
     IHints, 
     IAnswerSettings, 
-    ITeamAnswer, 
     ITeamAnswerHint, 
     ITeamMember, 
     IGameSession, 
@@ -804,7 +803,7 @@ type AWSTeamMember = {
     id: string
     isFacilitator?: boolean | null
     answers?: {
-        items: Array<ITeamAnswer> | null
+        items: Array<AWSTeamAnswer> | null
     } | null
     deviceId?: string | null
     createdAt?: string | null
@@ -823,7 +822,7 @@ type AWSTeamAnswer = {
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
-    confidenceLevel: ConfidenceLevel
+    confidenceLevel: string
 }
 // ~~~~~~~~~GAMETEMPLATE~~~~~~~~~~~~~~
 class GameTemplateParser {
@@ -1311,7 +1310,7 @@ class TeamAnswerParser {
             if (isNullOrUndefined(parsedAnswerContent) ||
             isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
                 throw new Error(
-                    "Team answer has null field for the attributes that are not nullable"
+                    "Team answer content has null field for the attributes that are not nullable"
                 )
             }
         } catch (e) {
@@ -1366,6 +1365,7 @@ class TeamAnswerParser {
         // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
         const hint = awsHint ? this.hintFromAWSHint(awsHint) : undefined;
+        const confidenceLevelEnum = ConfidenceLevel[confidenceLevel as keyof typeof ConfidenceLevel];
         let teamAnswer;
         const answerConfigBase = {
             id,
@@ -1378,7 +1378,7 @@ class TeamAnswerParser {
             createdAt,
             updatedAt,
             teamMemberAnswersId,
-            confidenceLevel
+            confidenceLevel: confidenceLevelEnum
           };
         switch (answerContent.answerType) {
             case(AnswerType.NUMBER):

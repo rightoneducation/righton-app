@@ -5,6 +5,7 @@ import GameAnswersDropdown from './GameAnswersDropdown';
 import { isNullOrUndefined } from '@righton/networking';
 
 export default function GameAnswers({
+  isShortAnswerEnabled,
   questions,
   questionChoices,
   currentQuestionIndex,
@@ -35,7 +36,7 @@ export default function GameAnswers({
   return (
     <Box className={classes.background}>
       <Typography className={classes.titleStyle}>
-        Answer Explanations
+       {isShortAnswerEnabled ? `Multiple Choice Answer Explanations` : `Answer Explanations`}
       </Typography>
       {questionChoices
         ? questionChoices.map((choice, index) => {

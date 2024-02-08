@@ -4,16 +4,16 @@ import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
 import { isNullOrUndefined } from '../IApiClient';
 
 export enum AnswerType {
-  NUMBER = 'number',
-  STRING = 'string',
-  EXPRESSION = 'expression'
+  NUMBER = 0,
+  STRING = 1,
+  EXPRESSION = 2
 }
 
 export enum AnswerPrecision {
-  WHOLE = 'WHOLE',
-  TENTH = 'TENTH',
-  HUNDREDTH = 'HUNDREDTH',
-  THOUSANDTH = 'THOUSANDTH',
+  WHOLE = 0,
+  TENTH = 1,
+  HUNDREDTH = 2,
+  THOUSANDTH = 3,
 }
 
 export interface ITeamAnswerHint {
@@ -75,7 +75,7 @@ abstract class BaseAnswer<T> {
   }
 }
 
-abstract class TeamAnswer<T> extends BaseAnswer<T> {
+export abstract class TeamAnswerClass<T> extends BaseAnswer<T> {
   id?: string;
   questionId: number;
   teamMemberAnswersId: string;
@@ -191,7 +191,7 @@ export class CorrectExpressionAnswer extends BaseAnswer<string> {
   }
 }
 
-export class NumberAnswer extends TeamAnswer<number> {
+export class NumberAnswer extends TeamAnswerClass<number> {
   constructor(config: ITeamAnswerConfig<number>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
@@ -234,7 +234,7 @@ export class NumberAnswer extends TeamAnswer<number> {
   }
 }
 
-export class StringAnswer extends TeamAnswer<string> {
+export class StringAnswer extends TeamAnswerClass<string> {
   constructor(config: ITeamAnswerConfig<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.STRING);
@@ -256,7 +256,7 @@ export class StringAnswer extends TeamAnswer<string> {
   }
 }
 
-export class ExpressionAnswer extends TeamAnswer<string> {
+export class ExpressionAnswer extends TeamAnswerClass<string> {
   constructor(config: ITeamAnswerConfig<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.EXPRESSION);

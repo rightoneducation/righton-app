@@ -11,28 +11,20 @@ export default function PlayersSelectedAnswer(props) {
   const hintCount = gptHints[graphClickInfo.selectedIndex].teamCount;
   const percentage = (hintCount / numPlayers) * 100;
   const teamsWithSelectedAnswer = gptHints[graphClickInfo.selectedIndex].teams.map((team) => team);
-
   return (
     <div>
       <div className={classes.textContainer}>
         <Typography className={classes.titleText}>
-          Players who submitted this hint:
+          {`Players who submitted hints that were categorized under "${gptHints[graphClickInfo.selectedIndex].themeText}":`}
         </Typography>
-        <div className={classes.numberContainer}>
-          <Typography className={classes.countText}>
-            {/* count from stateposition === 6 saved and displayed here for stateposition === 6 */}
-            {hintCount}
-          </Typography>
-          <Typography className={classes.percentageText}>
-            {/* percentage from  stateposition === 6saved and displayed here for stateposition === 6 */}
-            ({Math.round(percentage)}%)
-          </Typography>
-        </div>
       </div>
-      {teamsWithSelectedAnswer.map((teamChoice, index) => (
+      {teamsWithSelectedAnswer.map((team, index) => (
         <div key={index} className={classes.rectStyle}>
-          <Typography className={classes.nameText}>
-            {teamChoice}
+          <Typography className={classes.nameText} >
+            {team.name}
+          </Typography>
+          <Typography className={classes.nameText} style={{color: 'rgba(255,255,255,0.6)'}}>
+            {team.rawHint}
           </Typography>
         </div>
       ))}
@@ -114,7 +106,6 @@ const useStyles = makeStyles({
   },
   rectStyle: {
     width: '100%',
-    height: '40px',
     color: 'white',
     backgroundColor: '#063772',
     fontSize: '16px',

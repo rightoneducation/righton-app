@@ -57,7 +57,6 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
     borderRadius: '24px',
-    //padding: `16px`,
     backgroundColor: 'rgba(0,0,0,0)', // this will be converted to Paper with background color for host 2.0
     width: "100%", // hardcoded to match GameCard width
     gap: '16px',

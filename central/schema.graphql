@@ -75,7 +75,7 @@ type Question {
 	id: Int!
 	text: String!
 	choices: AWSJSON!
-	answerSettings: AWSJSON
+	answerSettings: AWSJSON!
 	imageUrl: String
 	instructions: AWSJSON
 	updatedAt: AWSDateTime!
