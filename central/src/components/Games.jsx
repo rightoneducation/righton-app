@@ -35,7 +35,6 @@ export default function Games({
   isSearchClick, 
   handleSearchClick, 
   isResolutionMobile, 
-  addQToGT, 
   handleQuestionBankClick,
   handleDeleteGameQuestion,
   saveGameTemplate,
@@ -98,7 +97,6 @@ export default function Games({
                 games={games} 
                 cloneQuestion={cloneQuestion} 
                 updateQuestion={updateQuestion} 
-                addQToGT={addQToGT} 
                 handleQuestionBankClick={handleQuestionBankClick} 
                 handleDeleteGameQuestion={handleDeleteGameQuestion} 
                 selectedQuestions={selectedQuestions} 

@@ -19,7 +19,22 @@ export interface IQuestionTemplateAPIClient {
   ): Promise<IQuestionTemplate | null>;
 
   listQuestionTemplates(
-    limit: number,
+    limit: number | null,
     nextToken: string | null,
+    filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
+
+  listQuestionTemplatesByDate(
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null>;
+
+  listQuestionTemplatesByGrade(
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null>;
 }

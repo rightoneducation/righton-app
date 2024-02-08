@@ -55,6 +55,7 @@ export default function QuestionDashboard({
     handleClose();
   };
 
+  const renderQuestions = (loading: boolean) => {
     if (loading) return ( 
       <>
         <div className={classes.loadingContainer}>
@@ -84,44 +85,47 @@ export default function QuestionDashboard({
         </div>
       </>
     );
-
-  if (questions.length >= 1) {
+  
+    if (questions.length >= 1) {
+      return (
+          <InfiniteScroll
+            dataLength={questions.length}
+            next={() => handleScrollDown(nextToken)}
+            hasMore={nextToken !== null}
+            loader={<h4>Loading...</h4>}
+            height={`calc(100vh - 156px)`}
+            scrollableTarget="questionsDashboard"
+            style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll', zIndex: -2}}
+          > 
+            {questions.map((question, index) => 
+              <Grid key={index} container item xs={12} md={match ? 12 : 6} lg={match ? 12 : 4} style={{width: '100%'}}>
+                <QuestionCard  
+                  gameId={gameId}
+                  question={question}
+                  anchorEl={anchorEl}
+                  isUserAuth={isUserAuth}
+                  match={match}
+                  index={index}
+                  activeIndex={activeIndex}
+                  handleClick={handleClick}
+                  cloneHandler={cloneHandler}
+                  deleteHandler={deleteHandler}
+                  handleClose={handleClose}
+                  handleQuestionSelected={handleQuestionSelected}
+                />
+              </Grid>
+            )}
+        </InfiniteScroll>
+      );
+    };
     return (
-        <InfiniteScroll
-          dataLength={questions.length}
-          next={() => handleScrollDown(nextToken)}
-          hasMore={nextToken !== null}
-          loader={<h4>Loading...</h4>}
-          height={`calc(100vh - 156px)`}
-          scrollableTarget="questionsDashboard"
-          style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll', zIndex: -2}}
-        > 
-          {questions.map((question, index) => 
-            <Grid key={index} container item xs={12} md={match ? 12 : 6} lg={match ? 12 : 4} style={{width: '100%'}}>
-              <QuestionCard  
-                gameId={gameId}
-                question={question}
-                anchorEl={anchorEl}
-                isUserAuth={isUserAuth}
-                match={match}
-                index={index}
-                activeIndex={activeIndex}
-                handleClick={handleClick}
-                cloneHandler={cloneHandler}
-                deleteHandler={deleteHandler}
-                handleClose={handleClose}
-                handleQuestionSelected={handleQuestionSelected}
-              />
-            </Grid>
-          )}
-      </InfiniteScroll>
-   
+      <Typography gutterBottom>
+        No results found.
+      </Typography>
     );
   };
   return (
-    <Typography gutterBottom>
-      Loading...
-    </Typography>
+    renderQuestions(loading)
   );
 };
 

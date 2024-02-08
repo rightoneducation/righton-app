@@ -23,6 +23,15 @@ export interface SubscriptionValue<T> {
   };
 }
 
+// used in GameTemplateAPIClient and QuestionTemplateAPIClient to store query settings
+export interface IQueryParameters { 
+  limit?: number | null;
+  nextToken: string | null;
+  sortDirection?: string | null;
+  type: string;
+  [key: string]: any; // This line allows for additional properties like 'filter'
+}
+
 export abstract class BaseAPIClient {
   protected endpoint: string;
   protected env: Environment;

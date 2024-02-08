@@ -58,24 +58,15 @@ export const listGameTemplates = async (listQuerySettings: IListQuerySettings | 
     const sortField = listQuerySettings?.sortField ?? null;
     const filterString = (listQuerySettings?.filterString && listQuerySettings?.filterString != "") ? listQuerySettings?.filterString : null;
     const queryLimit = listQuerySettings?.queryLimit ?? null;
-    console.log("sortDirection: " + sortDirection);
-    console.log("sortField: " + sortField);
-    console.log("filterString: " + filterString);
-    console.log("queryLimit: " + queryLimit);
-    console.log("nextToken: " + nextToken);
     switch (sortField) {
       case SortField.GRADE:
-        const games = await gameTemplateAPIClient.listGameTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);
-        console.log(games);
-        return games;
+        return await gameTemplateAPIClient.listGameTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);
       case SortField.UPDATEDAT:
         return await gameTemplateAPIClient.listGameTemplatesByDate(queryLimit, nextToken, sortDirection, filterString);
       case SortField.QUESTIONCOUNT:
         break;
       default:
-        const games2 = await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken, filterString);
-        console.log(games2);
-        return games2;
+        return await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken, filterString);
     }
   } catch (e) {
     console.log(e);

@@ -26,15 +26,8 @@ import {
   DeleteGameTemplateMutationVariables
 } from "../AWSMobileApi";
 import { AWSGameTemplate } from "../Models";
+import { IQueryParameters } from "./BaseAPIClient";
 import { isNullOrUndefined } from "../IApiClient";
-
-interface IQueryParameters {
-  limit?: number | null;
-  nextToken: string | null;
-  sortDirection?: string | null;
-  type: string;
-  [key: string]: any; // This line allows for additional properties like 'filter'
-}
 
 export class GameTemplateAPIClient
   extends BaseAPIClient

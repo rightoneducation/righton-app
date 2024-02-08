@@ -3,7 +3,8 @@ import {
   Route,
   Switch,
   useHistory,
-  useLocation
+  useLocation,
+  useRouteMatch
 } from "react-router-dom";
 import { Auth } from 'aws-amplify';
 import { Box } from '@material-ui/core';
@@ -77,7 +78,6 @@ export const RouteContainer = ({
     nextToken: null,
     queryLimit,
   })
-
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
     const updatedListQuerySettings = {
       nextToken: null,
@@ -85,8 +85,11 @@ export const RouteContainer = ({
       sortDirection: listQuerySettings.sortDirection,
       sortField: listQuerySettings.sortField
     }
-    setListQuerySettings(updatedListQuerySettings)
-    getAllGameTemplates(updatedListQuerySettings);
+    setListQuerySettings(updatedListQuerySettings);
+    if (location.pathname === "/questions")
+      getAllQuestionTemplates(updatedListQuerySettings);
+    else if (location.pathname === "/")
+      getAllGameTemplates(updatedListQuerySettings);
   }
 
   const getAllGameTemplates = async (listQuerySettings: IListQuerySettings | null) => {
@@ -103,13 +106,14 @@ export const RouteContainer = ({
     }
   }
 
-  const getQuestionTemplates = async (nextToken: string | null) => {
+  const getAllQuestionTemplates = async (listQuerySettings: IListQuerySettings | null) => {
     try {
-      const questions = await listQuestionTemplates(queryLimit, nextToken);
+      setLoading(true);
+      const questions = await listQuestionTemplates(listQuerySettings);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
         setNextToken(questions?.nextToken ?? null);
-        return questions;
+        setLoading(false);
       }
     } catch (e) {
       console.log(e);
@@ -118,8 +122,8 @@ export const RouteContainer = ({
 
   const handleScrollDown = async (nextToken: string | null) => {
     let currentToken = nextToken;
+    listQuerySettings.nextToken = nextToken;
     if (location.pathname === '/'){
-      listQuerySettings.nextToken = nextToken;
       const games = await listGameTemplates(listQuerySettings);
       if (games?.gameTemplates){
         setGames((prev) => [
@@ -129,8 +133,8 @@ export const RouteContainer = ({
         nextToken = games?.nextToken ?? null;
       }
   
-    } else {
-      const questions = await listQuestionTemplates(queryLimit, nextToken);
+    } else if (location.pathname === '/questions'){
+      const questions = await listQuestionTemplates(listQuerySettings);
       if (questions?.questionTemplates){
         setQuestions((prev) => [
           ...(prev ?? []),
@@ -166,15 +170,6 @@ export const RouteContainer = ({
     try{
     const question = await apiClient.createQuestionTemplate(questionInput);
     } catch (e) {
-      console.log(e);
-    }
-  }
-
-  const addQToGT = async (gameId: string, questionId: string) => {
-    try{
-      const game = await apiClient.createGameQuestions(uuidv4(), '5561', 'f98648a9-84e4-48b0-8ffa-5e5dfcb8a752');
-    }
-    catch (e) {
       console.log(e);
     }
   }
@@ -238,12 +233,11 @@ export const RouteContainer = ({
     // update existing game template with changes from game maker
     const editGameTemplate = async (newGame: { id: string, owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string, questionTemplates?: IQuestionTemplate[] }, questionIDSet: number[]) => {
       setLoading(true);
-      try{
-        console.log(newGame);
-      const {questionTemplates, ...rest} = newGame;
-      const gameTemplateUpdate = rest; 
-      const questionTemplatesUpdate = questionTemplates;
-      const game = await updateGameTemplate(gameTemplateUpdate);
+      try {
+        const {questionTemplates, ...rest} = newGame;
+        const gameTemplateUpdate = rest; 
+        const questionTemplatesUpdate = questionTemplates;
+        const game = await updateGameTemplate(gameTemplateUpdate);
         if (game) {
           // ~~~~ add questions to game ~~~~~~ using , questionIDSet
           listQuerySettings.nextToken = nextToken;
@@ -259,7 +253,7 @@ export const RouteContainer = ({
     }
 
   const handleQuestionBankClick = (gameDetails: any) => {
-    getQuestionTemplates(null);
+    getAllQuestionTemplates(null);
     history.push(`/gamemaker/${gameDetails.id}/addquestion`)
   }
 
@@ -288,9 +282,9 @@ export const RouteContainer = ({
 
   const handleDeleteQuestionTemplate = async (id: string, game: Game) => {
     const result = await deleteQuestionTemplate(id);
-    console.log(result);
     if (result) {
-      getQuestionTemplates(nextToken)
+      listQuerySettings.nextToken = nextToken;
+      getAllQuestionTemplates(listQuerySettings)
     }
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
@@ -299,9 +293,8 @@ export const RouteContainer = ({
     try {
       const result = await createQuestionTemplate(question);
       if (result) {
-        getQuestionTemplates(null);
+        getAllQuestionTemplates(null);
       }
-      console.log(result);
       return result;
     } catch (e) {
       console.log(e);
@@ -318,7 +311,8 @@ export const RouteContainer = ({
       const gameTemplatesUpdate = gameTemplates;
       const question = await updateQuestionTemplate(questionTemplateUpdate);
         if (question) {  
-          const question = await getQuestionTemplates(nextToken);
+          listQuerySettings.nextToken = nextToken;
+          const question = await getAllQuestionTemplates(listQuerySettings);
         } else {
           throw new Error ('Question was unable to be update');
         }
@@ -395,33 +389,26 @@ export const RouteContainer = ({
 
   useEffect(() => {
     persistUserAuth();
-    if (location.pathname === '/questions'){
-      getQuestionTemplates(null);
-    } else {
-      listQuerySettings.nextToken = null;
-      getAllGameTemplates(listQuerySettings);
-    }
-    setStartup(false);
-  }, []);
-
-  useEffect(() => {
     // get either a list of games or questions when the route changes
     const fetchData = async () => {
       setNextToken(null);
       setPrevTokens([null]);
+
       setLoading(true);
-      if (location.pathname === '/questions'){
-        await getQuestionTemplates(null);
-      } else {
+      if (location.pathname === "/questions"){
+        listQuerySettings.nextToken = null;
+        getAllQuestionTemplates(listQuerySettings);
+      } else if (location.pathname === "/") {
         listQuerySettings.nextToken = null;
         await getAllGameTemplates(listQuerySettings);
       }
       setLoading(false);
     };
 
-    if (location.pathname === '/questions' || location.pathname === '/') 
+    if ((location.pathname === "/questions") || (location.pathname === "/") ) 
       fetchData();
-  }, [location]);
+    setStartup(false);
+  }, [location.pathname]);
 
   if (startup) return null;
 
@@ -472,7 +459,6 @@ export const RouteContainer = ({
           setSearchInput={setSearchInput} 
           searchInput={searchInput} 
           isResolutionMobile={isResolutionMobile} 
-          addQToGT={addQToGT} 
           handleQuestionBankClick={handleQuestionBankClick}
           handleCreateQuestionTemplate={handleCreateQuestionTemplate}
           handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}

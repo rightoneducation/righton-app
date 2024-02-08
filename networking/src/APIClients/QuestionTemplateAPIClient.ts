@@ -6,7 +6,9 @@ import {
   getQuestionTemplate,
   updateQuestionTemplate,
   deleteQuestionTemplate,
-  listQuestionTemplates 
+  listQuestionTemplates,
+  questionTemplatesByDate,
+  questionTemplatesByGrade
 } from "../graphql";
 import { 
   CreateQuestionTemplateInput, 
@@ -23,6 +25,7 @@ import {
 } from "../AWSMobileApi";
 import { QuestionTemplateParser } from '../Parsers/QuestionTemplateParser';
 import { IQuestionTemplate, AWSQuestionTemplate } from "../Models";
+import { IQueryParameters } from "./BaseAPIClient";
 import { isNullOrUndefined } from "../IApiClient";
 
 export class QuestionTemplateAPIClient
@@ -90,19 +93,54 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.deleteQuestionTemplate as AWSQuestionTemplate);
   }
 
-  async listQuestionTemplates(limit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    try{
+  async listQuestionTemplates(limit: number | null, nextToken: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    let queryParameters: IQueryParameters = { limit, nextToken, type: "QuestionTemplate" };
+    if (filterString != null) {
+      queryParameters.filter = { title: { contains: filterString } };
+    }
     let result = (await API.graphql(
-        graphqlOperation(listQuestionTemplates, {limit: limit, nextToken })
+        graphqlOperation(listQuestionTemplates, queryParameters)
     )) as { data: any }
     const parsedQuestionTemplates = result.data.listQuestionTemplates.items.map((questionTemplate: AWSQuestionTemplate) => {
         return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
     });
     const parsedNextToken = result.data.listQuestionTemplates.nextToken;
     return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
-    } catch (e) {
-        console.log(e);
-        return null;
+  }
+
+  async listQuestionTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    let queryParameters: IQueryParameters = { limit, nextToken, type: "QuestionTemplate" };
+    if (filterString != null) {
+      queryParameters.filter = { title: { contains: filterString } };
     }
+    if (sortDirection != null) {
+      queryParameters.sortDirection = sortDirection;
+    }
+    let result = (await API.graphql(
+      graphqlOperation(questionTemplatesByDate, queryParameters)
+    )) as { data: any }
+    const parsedQuestionTemplates = result.data.questionTemplatesByDate.items.map((questionTemplate: AWSQuestionTemplate) => {
+      return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
+    });
+    const parsedNextToken = result.data.questionTemplatesByDate.nextToken;
+    return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
+  }
+
+  async listQuestionTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    let queryParameters: IQueryParameters = { limit, nextToken, type: "QuestionTemplate" };
+    if (filterString != null) {
+      queryParameters.filter = { title: { contains: filterString } };
+    }
+    if (sortDirection != null) {
+      queryParameters.sortDirection = sortDirection;
+    }
+    let result = (await API.graphql(
+      graphqlOperation(questionTemplatesByGrade, queryParameters)
+    )) as { data: any }
+    const parsedQuestionTemplates = result.data.questionTemplatesByGrade.items.map((questionTemplate: AWSQuestionTemplate) => {
+      return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
+    });
+    const parsedNextToken = result.data.questionTemplatesByGrade.nextToken;
+    return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
   }
 }
