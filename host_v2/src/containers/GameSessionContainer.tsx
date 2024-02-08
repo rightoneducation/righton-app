@@ -13,6 +13,7 @@ import { LocalModel } from '../lib/HostModels';
 import AnswerBar from '../components/FooterComponents/AnswerBar';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
 import FooterContent from '../components/FooterComponents/FooterContent';
+import GameInProgress from '../pages/GameInProgress';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -137,10 +138,14 @@ export default function GameSessionContainer({
       
       </BodyStackContainerStyled>
       <FooterBackgroundStyled />
-      <FooterContent
+      {/* <FooterContent
         inputNum={inputNum}
         totalNum={totalNum}
-      />
+        footerButtonText = {currentState}
+        phaseOneTime = {phaseOneTime}
+        phaseTwoTime = {phaseTwoTime}
+      /> */}
+      <GameInProgress />
     </StackContainerStyled>
   );
 }
