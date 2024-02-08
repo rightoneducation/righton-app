@@ -1,4 +1,5 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
+import { AnswerPrecision, AnswerType } from "./AnswerClasses";
 
 export interface IQuestion {
     id: number
@@ -28,8 +29,8 @@ export interface IChoice {
 }
 
 export interface IAnswerSettings {
-    answerType: string
-    answerPrecision: string
+    answerType: AnswerType
+    answerPrecision: AnswerPrecision
 }
 
 export interface IResponse {
@@ -49,6 +50,9 @@ export interface IResponseTeam {
 
 export interface IHints {
     themeText: string;
-    teams: string[];
+    teams: {
+        name: string;
+        rawHint: string;
+    }[];
     teamCount: number;
 }

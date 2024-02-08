@@ -11,6 +11,7 @@ import {
   IHints,
   isNullOrUndefined,
 } from '@righton/networking';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
 import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId, rebuildHints } from '../lib/HelperFunctions';
@@ -46,6 +47,8 @@ const GameSessionContainer = () => {
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
   const [isHintEnabled, setIsHintEnabled] = useState(true);
+  const isSmallScreen = useMediaQuery(() => '(max-width:463px)', {noSsr: true});
+  const multipleChoiceText = isSmallScreen ? 'Multiple Choice...' : 'Multiple Choice Answer Explanations';
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -53,20 +56,23 @@ const GameSessionContainer = () => {
     { ref: confidenceCardRef, text: 'Confidence Settings' },
     { ref: hintCardRef, text: 'Player Thinking Settings' },
   ];
-  const gameplayNavDictionary = [
-    { ref: questionCardRef, text: 'Question Card' },
-    { ref: responsesRef, text: 'Real-time Responses' },
-    { ref: gameAnswersRef, text: 'Answer Explanations' },
-  ];
   const [navDictionary, setNavDictionary] = useState(
     questionConfigNavDictionary,
   );
   // assembles fields for module navigator in footer
-  const assembleNavDictionary = (isConfidenceEnabled, isHintEnabled, state) => {
+  const assembleNavDictionary = (multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, state) => {
     if (state === GameSessionState.TEAMS_JOINING) {
       setNavDictionary(questionConfigNavDictionary);
       return;
     }
+    const gameplayNavDictionary = [
+      { ref: questionCardRef, text: 'Question Card' },
+      { ref: responsesRef, text: 'Real-time Responses' },
+      { ref: gameAnswersRef, text: 
+          isShortAnswerEnabled ? 
+           multipleChoiceText
+          : `Answer Explanations` },
+    ];
     let newDictionary = [...gameplayNavDictionary];
     let insertIndex = 2;
     if (isConfidenceEnabled && (state === GameSessionState.CHOOSE_CORRECT_ANSWER || state === GameSessionState.PHASE_1_DISCUSS)) {
@@ -124,6 +130,8 @@ const GameSessionContainer = () => {
 
         setHintsError(false);
         assembleNavDictionary(
+          multipleChoiceText,
+          response.questions[response.currentQuestionIndex].isShortAnswerEnabled,
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.questions[response.currentQuestionIndex].isHintEnabled,
           response.currentState,
@@ -489,12 +497,26 @@ const GameSessionContainer = () => {
       const correctChoiceIndex =
         currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
       const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
-
       apiClient.groupHints(hints, questionText, correctAnswer).then((response) => {
         const parsedHints = JSON.parse(response.gptHints.content);
-        setGptHints(parsedHints);
+        // adds rawHint text to parsedHints received from GPT
+        // (we want to minimize the amount of data we send and receive to/from OpenAI
+        // so we do this ourselves instead of asking GPT to return data we already have)
+        const hintsLookup = new Map(hints.map(hint => [hint.teamName, hint.rawHint]));
+        const combinedHints = parsedHints.map(parsedHint => {
+          const updatedTeams = parsedHint.teams.map(team => {
+            if (hintsLookup.has(team)) {
+              return { name: team, rawHint: hintsLookup.get(team) };
+            } else {
+              return team;
+            }
+          });
+
+          return { ...parsedHint, teams: updatedTeams };
+        });
+        setGptHints(combinedHints);
         setisHintLoading(false);
-        if (parsedHints) {
+        if (combinedHints) {
           setHints([]);
           apiClient.getGameSession(gameSessionId).then((gameSession) => {
             apiClient
@@ -502,7 +524,7 @@ const GameSessionContainer = () => {
                 gameSessionId: gameSession.id,
                 id: gameSession.questions[gameSession.currentQuestionIndex].id,
                 order: gameSession.questions[gameSession.currentQuestionIndex].order,
-                hints: JSON.stringify(parsedHints as IHints[]),
+                hints: JSON.stringify(combinedHints as IHints[]),
               });
           });
         }

@@ -10,11 +10,15 @@ const backgroundGradient =
 // box-shadow: 0px 2.5px 23px 0px rgba(0, 141, 239, 0.30);
 // const radialGradient =
 // 'radial-gradient(circle farthest-side, #7D63C8, #7D63C8 100%)';
+const timerGradient =
+'linear-gradient(90deg, #168CDC 0%, #00A7E8 100%)';
 const radialGradient =
   'radial-gradient(circle 500px at 50% 60%, #7D64C7 13.54%, #514187 51.56%, #3A2D66 77.6%, #352960 88.02%, #312759 100%)';
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
 const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
+const questionGradient =
+  'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
@@ -27,7 +31,12 @@ const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
+const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
+const playerFeedbackLabelColor = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
+const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
+const graphAccentColor = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
+const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns 
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
   `${countdownColor}, 0.4)`,
@@ -39,11 +48,18 @@ const radialTimerArray = [
   `${countdownColor}, 1)`,
 ]; // radial timer color array - appended with '0.x )' opacity when used in countdown
 
+//  borders
+const borderWidth = 1;
+const solidWhite = `${borderWidth}px solid rgba(255, 255, 255, 1)`;
+const transparent = `${borderWidth}px solid rgba(255, 255, 255, 0)`;
+const semiTransparent = `${borderWidth}px solid rgba(255, 255, 255, 0.2)`;
+
+
 // design tokens - breakpoints:
-const xs = 400;
-const sm = 700;
-const md = 900;
-const lg = 1200;
+const xs = 0;
+const sm = 400;
+const md = 700;
+const lg = 1024;
 const xl = 1536;
 
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
@@ -51,42 +67,66 @@ const fullHeaderHeight = 228;
 const headerHeight = 150;
 const footerHeight = 60;
 const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
+const extraExtraSmallPadding = 4; //  used on question indicators
+const answerOptionBorderRadius = 22; // border radius of options on answer cards
 const extraSmallPadding = 8; // small icons, text positioning
 const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
 const mediumPadding = 24; // timer margin
 const largePadding = 32; // text spacing on answer selector, top margin on titles
 const extraLargePadding = 48; // spacing between card and edge of screen
 const extraExtraLargePadding = 64; // spacing between buttons and bottom of screen
+const barStrokeWidth = 2; // stroke width of the bar outlines on host graph cards
+const confidenceBarThickness = 55; // thickness of each bar component in confidence bar graph
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
+    borders: {
+      borderWidth: number;
+      solidWhite: string;
+      transparent: string;
+      semiTransparent: string;
+    };
     sizing: {
       fullHeaderHeight: number;
       headerHeight: number;
       footerHeight: number;
       pregameMinColumnWidth: number;
+      extraExtraSmallPadding: number;
+      answerOptionBorderRadius: number;
       extraSmallPadding: number;
       smallPadding: number;
       mediumPadding: number;
       largePadding: number;
       extraLargePadding: number;
       extraExtraLargePadding: number;
+      barStrokeWidth: number;
+      confidenceBarThickness: number;
     };
   }
 
   interface ThemeOptions {
+    borders?: {
+      borderWidth?: number;
+      solidWhite?: string;
+      transparent?: string;
+      semiTransparent?: string;
+    };
     sizing?: {
       fullHeaderHeight?: number;
       headerHeight?: number;
       footerHeight?: number;
       pregameMinColumnWidth?: number;
+      extraExtraSmallPadding?: number;
+      answerOptionBorderRadius?: number;
       extraSmallPadding?: number;
       smallPadding?: number;
       mediumPadding?: number;
       largePadding?: number;
       extraLargePadding?: number;
       extraExtraLargePadding?: number;
+      barStrokeWidth?: number;
+      confidenceBarThickness?: number;
     };
   }
 
@@ -94,9 +134,11 @@ declare module '@mui/material/styles' {
     accent: string;
     backgroundGradient: string;
     darkBlueCardColor: string;
+    timerGradient: string;
     radialGradient: string;
     highlightGradient: string;
     altHighlightGradient: string;
+    questionGradient: string;
     red: string;
     green: string;
     darkPurple: string;
@@ -106,6 +148,10 @@ declare module '@mui/material/styles' {
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    playerFeedbackLabelColor: string;
+    feedbackCardsInstructionsColor: string;
+    graphAccentColor: string;
+    dropdownInfoBackgroundColor: string;
     countdownColor: string;
     radialTimerArray: string[];
   }
@@ -114,9 +160,11 @@ declare module '@mui/material/styles' {
     accent?: string;
     backgroundGradient?: string;
     darkBlueCardColor?: string;
+    timerGradient?: string;
     radialGradient?: string;
     highlightGradient?: string;
     altHighlightGradient?: string;
+    questionGradient?: string;
     red?: string;
     green?: string;
     darkPurple?: string;
@@ -127,6 +175,11 @@ declare module '@mui/material/styles' {
     darkGrey?: string;
     lightGrey?: string;
     correctColor?: string;
+    baseQuestionColor?: string;
+    playerFeedbackLabelColor?: string;
+    feedbackCardsInstructionsColor?: string;
+    graphAccentColor?: string;
+    dropdownInfoBackgroundColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
   }
@@ -136,17 +189,27 @@ export default createTheme({
   breakpoints: {
     values: { xs, sm, md, lg, xl },
   },
+  borders: {
+    borderWidth,
+    solidWhite,
+    transparent,
+    semiTransparent,
+  },
   sizing: {
     fullHeaderHeight,
     headerHeight,
     footerHeight,
     pregameMinColumnWidth,
+    extraExtraSmallPadding,
+    answerOptionBorderRadius,
     extraSmallPadding,
     smallPadding,
     mediumPadding,
     largePadding,
     extraLargePadding,
     extraExtraLargePadding,
+    barStrokeWidth,
+    confidenceBarThickness
   },
   palette: {
     primary: {
@@ -155,8 +218,10 @@ export default createTheme({
       darkBlueCardColor,
       backgroundGradient,
       radialGradient,
+      timerGradient,
       highlightGradient,
       altHighlightGradient,
+      questionGradient,
       red: redColor,
       green: greenColor,
       darkPurple: darkPurpleColor,
@@ -166,6 +231,11 @@ export default createTheme({
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
+      baseQuestionColor,
+      playerFeedbackLabelColor,
+      feedbackCardsInstructionsColor,
+      graphAccentColor,
+      dropdownInfoBackgroundColor,
       countdownColor,
       radialTimerArray,
     },
@@ -259,6 +329,14 @@ export default createTheme({
       lineHeight: '21px',
       color: primaryTextColor,
       textShadow: '0px 1px 1px rgba(0, 0, 0, 0.15)',
+    },
+    subtitle2: {
+      //  player icon text
+      fontFamily: 'Poppins',
+      fontSize: '13px',
+      fontWeight: 600,
+      lineHeight: '22px',
+      color: primaryTextColor,
     },
   },
 });

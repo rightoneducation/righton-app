@@ -84,8 +84,6 @@ export default function GameInProgressContentSwitch({
       case ('confidence'):
         return (
           <div
-            id="confidencecard-scrollbox"
-            ref={confidenceCardRef}
             className={classes.contentContainer}
           >
             <ConfidenceResponseCard
@@ -94,21 +92,20 @@ export default function GameInProgressContentSwitch({
               graphClickInfo={graphClickInfo}
               handleGraphClick={handleGraphClick}
             />
-            <ConfidenceResponseDropdown
-              graphClickInfo={graphClickInfo}
-              selectedConfidenceData={
-                confidenceData[graphClickInfo.selectedIndex]
-              }
-            />
+            <div id="confidencecard-scrollbox"
+              ref={confidenceCardRef}>
+              <ConfidenceResponseDropdown
+                graphClickInfo={graphClickInfo}
+                selectedConfidenceData={
+                  confidenceData[graphClickInfo.selectedIndex]
+                }
+              />
+            </div>
           </div>
         );
       case ('hint'):
         return (
-          <div
-            id="hint-scrollbox"
-            ref={hintCardRef}
-            className={classes.contentContainer}
-          >
+          <div className={classes.contentContainer}>
             <PlayerThinking
               hints={hints}
               gptHints={gptHints}
@@ -126,11 +123,16 @@ export default function GameInProgressContentSwitch({
               isHintLoading={isHintLoading}
               handleProcessHints={handleProcessHints}
             />
-            <PlayerThinkingSelectedAnswer
-              gptHints={gptHints}
-              graphClickInfo={graphClickInfo}
-              numPlayers={numPlayers}
-            />
+            <div
+              id="hint-scrollbox"
+              ref={hintCardRef}
+            >
+              <PlayerThinkingSelectedAnswer
+                gptHints={gptHints}
+                graphClickInfo={graphClickInfo}
+                numPlayers={numPlayers}
+              />
+            </div>
           </div>
         );
     }
@@ -218,6 +220,7 @@ export default function GameInProgressContentSwitch({
             className={classes.contentContainer}
           >
             <GameAnswers
+              isShortAnswerEnabled={isShortAnswerEnabled}
               questions={questions}
               questionChoices={questionChoices}
               currentQuestionIndex={currentQuestionIndex}
