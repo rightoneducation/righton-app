@@ -62,7 +62,6 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
           </div>
         </div>
     );
-
     if (games.length >= 1) {
       return <InfiniteScroll
           dataLength={games.length}

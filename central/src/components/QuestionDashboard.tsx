@@ -85,7 +85,6 @@ export default function QuestionDashboard({
         </div>
       </>
     );
-  
     if (questions.length >= 1) {
       return (
           <InfiniteScroll

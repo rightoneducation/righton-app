@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { Auth } from 'aws-amplify';
 import { Box } from '@material-ui/core';
-import {debounce} from 'lodash';
+import {debounce, set} from 'lodash';
 import { 
   ApiClient,
   IGameTemplate,
@@ -77,11 +77,13 @@ export const RouteContainer = ({
   const [listQuerySettings, setListQuerySettings] = useState<IListQuerySettings>({
     nextToken: null,
     queryLimit,
-  })
+  });
+  const [sortByCheck, setSortByCheck] = React.useState(false);
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
+    setSortByCheck(false);
     const updatedListQuerySettings = {
       nextToken: null,
-      limit: queryLimit,
+      queryLimit,
       sortDirection: listQuerySettings.sortDirection,
       sortField: listQuerySettings.sortField
     }
@@ -149,8 +151,11 @@ export const RouteContainer = ({
     setNextToken((prev) => nextToken);
   }
 
-  const debouncedApiCall = useCallback(debounce((updatedListQuerySettings) => {
-    getAllGameTemplates(updatedListQuerySettings);
+  const debouncedApiCall = useCallback(debounce((updatedListQuerySettings, location) => {
+    if (location.pathname === "/")
+      getAllGameTemplates(updatedListQuerySettings);
+    else 
+      getAllQuestionTemplates(updatedListQuerySettings);
   }, 500), []);
 
   const handleSearchChange = (searchValue: string) => {
@@ -162,7 +167,7 @@ export const RouteContainer = ({
     };
     setListQuerySettings(updatedListQuerySettings);
     setSearchInput(searchValue);
-    debouncedApiCall(updatedListQuerySettings);
+    debouncedApiCall(updatedListQuerySettings, location);
   };
 
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
@@ -390,17 +395,22 @@ export const RouteContainer = ({
   useEffect(() => {
     persistUserAuth();
     // get either a list of games or questions when the route changes
+    setSearchInput('');
+    const updatedListQuerySettings = {
+      nextToken: null,
+      queryLimit,
+      sortDirection: listQuerySettings.sortDirection,
+      sortField: null,
+      filterString: ''
+    }
     const fetchData = async () => {
       setNextToken(null);
       setPrevTokens([null]);
-
       setLoading(true);
       if (location.pathname === "/questions"){
-        listQuerySettings.nextToken = null;
-        getAllQuestionTemplates(listQuerySettings);
+        await getAllQuestionTemplates(updatedListQuerySettings);
       } else if (location.pathname === "/") {
-        listQuerySettings.nextToken = null;
-        await getAllGameTemplates(listQuerySettings);
+        await getAllGameTemplates(updatedListQuerySettings);
       }
       setLoading(false);
     };
@@ -468,6 +478,8 @@ export const RouteContainer = ({
           listQuerySettings={listQuerySettings} 
           handleUpdateListQuerySettings={handleUpdateListQuerySettings}
           handleSearchChange={handleSearchChange}
+          sortByCheck={sortByCheck}
+          setSortByCheck={setSortByCheck}
         />
       </Box>
       <AlertBar />
