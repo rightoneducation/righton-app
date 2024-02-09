@@ -153,7 +153,7 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
                 margin: 0,
                 padding: 0,
                 backgroundColor: 'rgba(0, 0, 0, 0.80)',
-                zIndex:2,
+                zIndex:5,
               
             }}}
             onRequestClose={() => handleModalClose(false)}
@@ -264,7 +264,7 @@ const useStyles = makeStyles({
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
-    zIndex: 3,
+    zIndex: 6,
     gap: 10,
     touchAction: 'none' 
   },

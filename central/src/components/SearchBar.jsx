@@ -10,7 +10,7 @@ export default function SearchBar({ isGames, handleSearchChange, searchInput, is
        <div className={classes.searchIcon} onClick={() => handleSearchClick(!isSearchClick)}>
           <img src={SearchIcon} alt="Search Icon" />
        </div>
-       { !isResolutionMobile || isSearchClick ? 
+       { isSearchClick ? 
           <InputBase
             placeholder={isGames ? "Search Games" : "Search Questions"}
             className={classes.inputInput}

@@ -70,7 +70,7 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
           loader={<h4>Loading...</h4>}
           height={`calc(100vh - 156px)`}
           scrollableTarget="GameDashboard"
-          style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll', zIndex: -2}}
+          className={classes.infiniteScroll}
         > 
           {games.map((game, index) => 
             <Grid key={index} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4} style={{width: '100%'}}>
@@ -124,5 +124,20 @@ const useStyles = makeStyles(theme => ({
     lineHeight: '24px',
     letterSpacing: '0em',
     textAlign: 'center',
+  },
+  infiniteScroll : {
+    display: 'flex', 
+    justifyContent: 'flex-start', 
+    width: '100%', 
+    flexWrap: 'wrap', 
+    overflowX: 'hidden', 
+    overflowY: 'auto',
+    zIndex: -2,
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE and Edge
   }
 }));

@@ -133,14 +133,14 @@ export default function Games({
               <SearchBar isGames={location.pathname === "/"} handleSearchChange={handleSearchChange} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
               <SortByDropdown listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} style={{zIndex: 5}}/>
             </Box>
-            <Grid container onClick={() => setSortByCheck(false)}>
+            <Box onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
                 <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate}/>   
               }/>
               <Route exact path="/" render= { () => 
                 <GameDashboard id="GameDashboard" nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />
               }/>
-            </Grid>
+            </Box>
           </Grid>
         </Route>
       </Switch>

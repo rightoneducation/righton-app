@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Collapse, MenuItem, Select, Tooltip } from '@material-ui/core';
+import { Collapse, Fade, MenuItem, Select, Tooltip } from '@material-ui/core';
 import { SortDirection, SortField } from '../lib/API/QueryInputs';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 import SortbyIcon from '../images/SortByIcon.svg';
@@ -32,7 +32,7 @@ export default function SortByDropdown({ listQuerySettings, handleUpdateListQuer
            <img src={SortbyIcon} className={classes.sortByTitleIcon}  alt="Sort By Icon" />
           </Tooltip>
         </div>
-        <Collapse in={sortByCheck} timeout={0}>
+        <Fade in={sortByCheck} timeout={500}>
           <div className={classes.sortByBody}>
             <table width='100%'>
             <tbody>
@@ -69,7 +69,7 @@ export default function SortByDropdown({ listQuerySettings, handleUpdateListQuer
               </tbody>
             </table>
           </div>
-        </Collapse>
+        </Fade>
     </div>
   );
 };

@@ -1,17 +1,14 @@
 import React from 'react';
 import { NavLink, useRouteMatch } from "react-router-dom";
 import { alpha, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import exploreIcon from '../images/ExploreIcon.svg';
 import questionBankIcon from '../images/QuestionBankIcon.svg';
 import betaLogo from '../images/BetaLogo.svg';
 import quizMakerIcon from '../images/GameMakerIcon.svg';
 import helpIcon from '../images/HelpIcon.svg';
 import HelpDropdown from './HelpDropdown';
-import { BoltRounded } from '@mui/icons-material';
 
 export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, handleModalOpen }) {
   const classes = useStyles(isResolutionMobile)();
@@ -19,12 +16,11 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
 
   return (
     <div className={classes.grow}>
-      <AppBar className={classes.bar}>
-        <Toolbar>
-          <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Logo' to={'/'}>
-              <img src={betaLogo} alt="Logo" className={classes.logo} />
-          </NavLink>
-          <Grid className={classes.container}> 
+      <Box className={classes.bar}>
+        <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Logo' to={'/'}>
+            <img src={betaLogo} alt="Logo" className={classes.logo} />
+        </NavLink>
+        <Box className={classes.container}> 
           {(isResolutionMobile && !match) || !isResolutionMobile ?
             <>
               <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
@@ -45,33 +41,32 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
             <>
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
-               <Typography className={classes.title} variant="h6" >
+              <Typography className={classes.title} variant="h6" >
                 Game Maker
               </Typography> 
             </NavLink>
-               <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={'/questionmaker/0'}>
-               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
+              <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={'/questionmaker/0'}>
+              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6" >
-                 Question Maker
-               </Typography> 
-             </NavLink>
+                Question Maker
+              </Typography> 
+            </NavLink>
             </>
             : null}
-            {!isResolutionMobile ?
-            <div className={classes.help} id='Help' onClick={() => handleModalOpen(true, false)}>
-              <img src={helpIcon} alt="Help Icon" className={classes.icon} />
-               <Typography className={classes.helpText} variant="h6" >
-                Help
-              </Typography>
-            </div> 
-            :
-            <div className={classes.help}>
-              <HelpDropdown isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
-            </div>
-            }
-          </Grid>
-        </Toolbar>
-      </AppBar>
+        </Box>
+        {!isResolutionMobile ?
+          <div className={classes.help} id='Help' onClick={() => handleModalOpen(true, false)}>
+            <img src={helpIcon} alt="Help Icon" className={classes.icon} />
+              <Typography className={classes.helpText} variant="h6" >
+              Help
+            </Typography>
+          </div> 
+          :
+          <div className={classes.help}>
+            <HelpDropdown isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
+          </div>
+        }
+      </Box>
     </div>
   );
 }
@@ -83,33 +78,35 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
   bar: {
     position: 'sticky',
     background: 'linear-gradient(right,#0F78BD,#043373)',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingTop: '10px',
+
   },
   container: {
     display: "flex",
-    margin:  'auto',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: '10px',
     gap: 20,
+    paddingBottom: '10px'
   },
   link: {
     color: 'inherit',
     textDecoration: 'none',
     display: 'flex',
     opacity: '0.5',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingLeft: '10px'
   },
   logoContainer: {
     display: 'flex',
     alignItems: 'center',
-    position: 'absolute',
-    left: '20px'
+    paddingLeft: '10px'
   },
   logo: {
     minHeight: !isResolutionMobile ? '60px' : '43px',
-    paddingTop: '10%',
-    paddingBottom: '10%'
   },
   icon: {
     minWidth: '43px',
@@ -120,18 +117,19 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
     fontSize: '22px',
     lineHeight: '30px',
     minWidth: '100%',
+    color: 'white'
   },
   help: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     textTransform: 'none',
-    position: 'absolute',
-    right: '20px',
     cursor: 'pointer',
+    paddingRight: '10px',
+    paddingBottom: '10px'
   },
   helpText: {
-    color:'white',
-    minWidth: '100%',
+    color:'white'
   },
   active: {
     opacity: '1',
