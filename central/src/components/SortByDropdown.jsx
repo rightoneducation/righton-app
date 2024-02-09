@@ -10,11 +10,12 @@ import SortDescendingIcon from '../images/SortDescendingIcon.svg';
 export default function SortByDropdown({ listQuerySettings, handleUpdateListQuerySettings, sortByCheck, setSortByCheck }) {
   const classes = useStyles(sortByCheck)();
   const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
-  const [sortDirection, setSortDirection] = useState(null);
+  let sortDirection = listQuerySettings.sortDirection;
   const [sortField, setSortField] = useState(null);
+  console.log(sortDirection);
   
   const handleUpdateValue = (sortField) => {
-    setSortDirection((currentDirection) => currentDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC);
+    sortDirection = listQuerySettings.sortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC;
     setSortField(sortField);
     handleUpdateListQuerySettings({...listQuerySettings, sortDirection: sortDirection, sortField: sortField});
   };

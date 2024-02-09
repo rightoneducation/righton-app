@@ -10,14 +10,13 @@ export default function SearchBar({ isGames, handleSearchChange, searchInput, is
        <div className={classes.searchIcon} onClick={() => handleSearchClick(!isSearchClick)}>
           <img src={SearchIcon} alt="Search Icon" />
        </div>
-       { isSearchClick ? 
-          <InputBase
+        <InputBase
             placeholder={isGames ? "Search Games" : "Search Questions"}
             className={classes.inputInput}
             value={searchInput}
             onChange={({ target }) => handleSearchChange(target.value)}
-            inputProps={{ 'aria-label': 'search' }} /> 
-        : null }
+            inputProps={{ 'aria-label': 'search' }} 
+        /> 
      </div>
     );
 }
