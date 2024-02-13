@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useAnimate } from "framer-motion";
+import { useTheme } from '@mui/material/styles';
 import { GameSessionState, ApiClient, GameSessionParser } from '@righton/networking';
 import StartGame from '../pages/StartGame';
 import GamePlayContainer from './GamePlayContainer';
@@ -16,9 +18,15 @@ export default function GameSessionContainer({
     ...MockGameSession,
     currentState: MockGameSession.currentState as GameSessionState,
   });
-
-  const handleStartGame = ()=>{
-    setGameSessionState(GameSessionState.CHOOSE_CORRECT_ANSWER);
+  const [scope, animate] = useAnimate();
+  const [scope2, animate2] = useAnimate();
+  const [scope3, animate3] = useAnimate();
+  const theme = useTheme(); // eslint-disable-line
+  const handleStartGame = () =>{
+    animate(scope.current, { y: `calc(-100vh + ${theme.sizing.fullHeaderHeight}px)`, zIndex: -1, position: 'relative'}, { duration: 1 })
+    animate2(scope2.current, { opacity: 0, position: 'relative'}, { duration: 1 })
+    animate3(scope3.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 })
+    // setGameSessionState(GameSessionState.CHOOSE_CORRECT_ANSWER);
   }
 
   switch(gameSessionState) {
@@ -30,7 +38,7 @@ export default function GameSessionContainer({
     default: 
       return (
         <StartGame teams={mockGameSession.teams ?? []} currentQuestionIndex={mockGameSession.currentQuestionIndex ?? 0} questions={mockGameSession.questions} title={mockGameSession.title ?? ''} gameSessionId={mockGameSession.id} 
-          gameCode={mockGameSession.gameCode ?? 1100} currentState={mockGameSession.currentState} handleStartGame={handleStartGame} />
+          gameCode={mockGameSession.gameCode ?? 1100} currentState={mockGameSession.currentState} scope={scope} scope2={scope2} scope3={scope3} handleStartGame={handleStartGame} />
       )
   }
 }
