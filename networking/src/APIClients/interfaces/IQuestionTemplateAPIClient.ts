@@ -37,4 +37,11 @@ export interface IQuestionTemplateAPIClient {
     sortDirection: string | null,
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null>;
+
+  listQuestionTemplatesByNumGameTemplates(
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    filterString: string | null
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null>;
 }

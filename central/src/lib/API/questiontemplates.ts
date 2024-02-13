@@ -32,8 +32,7 @@ export const getQuestionTemplate = async (id: string): Promise<IQuestionTemplate
 
 export const updateQuestionTemplate = async (updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
   try {
-    const question = await questionTemplateAPIClient.updateQuestionTemplate(updateQuestionTemplateInput);
-    return question;
+    return await questionTemplateAPIClient.updateQuestionTemplate(updateQuestionTemplateInput);
   } catch (e) {
     console.log(e);
   }
@@ -42,8 +41,7 @@ export const updateQuestionTemplate = async (updateQuestionTemplateInput: Update
 
 export const deleteQuestionTemplate = async (id: string): Promise<IQuestionTemplate | null> => {
   try {
-    const question = await questionTemplateAPIClient.deleteQuestionTemplate(id);
-    return question;
+    return await questionTemplateAPIClient.deleteQuestionTemplate(id);
   } catch (e) {
     console.log(e);
   }
@@ -62,8 +60,8 @@ export const listQuestionTemplates = async (listQuerySettings: IListQuerySetting
         return await questionTemplateAPIClient.listQuestionTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);
       case SortField.UPDATEDAT:
         return await questionTemplateAPIClient.listQuestionTemplatesByDate(queryLimit, nextToken, sortDirection, filterString);
-      case SortField.QUESTIONCOUNT:
-        break;
+      case SortField.COUNT:
+        return await questionTemplateAPIClient.listQuestionTemplatesByNumGameTemplates(queryLimit, nextToken, sortDirection, filterString);
       default:
         return await questionTemplateAPIClient.listQuestionTemplates(queryLimit, nextToken, filterString);
     }

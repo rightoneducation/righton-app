@@ -342,12 +342,34 @@ export const RouteContainer = ({
   }
 
   const handleCreateGameQuestion = async (gameId: string, questionId: string) => {
-    const result = await createGameQuestions({gameTemplateID: gameId, questionTemplateID: questionId});
-    return result;
+    try {
+      const result = await createGameQuestions({gameTemplateID: gameId, questionTemplateID: questionId});
+      // when a game and question are linked, we update the respective numGameTemplates and numQuestionTemplates
+      if (
+        !isNullOrUndefined(result) &&
+        !isNullOrUndefined(result.gameTemplate) &&
+        !isNullOrUndefined(result.questionTemplate) &&
+        !isNullOrUndefined(result.gameTemplate.questionTemplates) &&
+        !isNullOrUndefined(result.questionTemplate.gameTemplates) &&
+        result.gameTemplate.questionTemplates.length >= 0 &&
+        result.questionTemplate.gameTemplates.length >= 0
+      ) {
+        const {questionTemplates, ...restGame} = result.gameTemplate;
+        const gameTemplateUpdate = {...restGame, numQuestionTemplates: questionTemplates.length}; 
+        const {gameTemplates, ...restQuestion} = result.questionTemplate;
+        const questionTemplateUpdate = {...restQuestion, numGameTemplates: gameTemplates.length};
+        await updateQuestionTemplate(gameTemplateUpdate);
+        await updateQuestionTemplate(questionTemplateUpdate);
+      }
+      return result;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleDeleteGameQuestion = async (id: string) => {
     const result = await deleteGameQuestions(id);
+    console.log(result);
   }
 
   const handleUserAuth = (isAuth: boolean) => {

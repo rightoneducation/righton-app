@@ -345,6 +345,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -367,6 +368,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -379,6 +381,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
             nextToken
             __typename
           }
+          numQuestionTemplates
           createdAt
           updatedAt
           type
@@ -419,6 +422,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -441,6 +445,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -453,6 +458,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
             nextToken
             __typename
           }
+          numGameTemplates
           createdAt
           updatedAt
           type
@@ -465,6 +471,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
       nextToken
       __typename
     }
+    numQuestionTemplates
     createdAt
     updatedAt
     type
@@ -531,6 +538,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -553,6 +561,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -565,6 +574,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
             nextToken
             __typename
           }
+          numQuestionTemplates
           createdAt
           updatedAt
           type
@@ -605,6 +615,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -627,6 +638,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -639,6 +651,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
             nextToken
             __typename
           }
+          numGameTemplates
           createdAt
           updatedAt
           type
@@ -651,6 +664,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
       nextToken
       __typename
     }
+    numQuestionTemplates
     createdAt
     updatedAt
     type
@@ -717,6 +731,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -739,6 +754,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -751,6 +767,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
             nextToken
             __typename
           }
+          numQuestionTemplates
           createdAt
           updatedAt
           type
@@ -791,6 +808,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -813,6 +831,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -825,6 +844,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
             nextToken
             __typename
           }
+          numGameTemplates
           createdAt
           updatedAt
           type
@@ -837,6 +857,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
       nextToken
       __typename
     }
+    numQuestionTemplates
     createdAt
     updatedAt
     type
@@ -903,6 +924,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -925,6 +947,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -937,6 +960,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
             nextToken
             __typename
           }
+          numQuestionTemplates
           createdAt
           updatedAt
           type
@@ -977,6 +1001,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -999,6 +1024,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -1011,6 +1037,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
             nextToken
             __typename
           }
+          numGameTemplates
           createdAt
           updatedAt
           type
@@ -1023,6 +1050,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
       nextToken
       __typename
     }
+    numGameTemplates
     createdAt
     updatedAt
     type
@@ -1089,6 +1117,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -1111,6 +1140,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -1123,6 +1153,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
             nextToken
             __typename
           }
+          numQuestionTemplates
           createdAt
           updatedAt
           type
@@ -1163,6 +1194,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -1185,6 +1217,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -1197,6 +1230,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
             nextToken
             __typename
           }
+          numGameTemplates
           createdAt
           updatedAt
           type
@@ -1209,6 +1243,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
       nextToken
       __typename
     }
+    numGameTemplates
     createdAt
     updatedAt
     type
@@ -1275,6 +1310,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -1297,6 +1333,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -1309,6 +1346,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
             nextToken
             __typename
           }
+          numQuestionTemplates
           createdAt
           updatedAt
           type
@@ -1349,6 +1387,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                   nextToken
                   __typename
                 }
+                numQuestionTemplates
                 createdAt
                 updatedAt
                 type
@@ -1371,6 +1410,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                   nextToken
                   __typename
                 }
+                numGameTemplates
                 createdAt
                 updatedAt
                 type
@@ -1383,6 +1423,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
             nextToken
             __typename
           }
+          numGameTemplates
           createdAt
           updatedAt
           type
@@ -1395,6 +1436,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
       nextToken
       __typename
     }
+    numGameTemplates
     createdAt
     updatedAt
     type
@@ -2175,6 +2217,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2193,6 +2236,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2205,6 +2249,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
               nextToken
               __typename
             }
+            numQuestionTemplates
             createdAt
             updatedAt
             type
@@ -2241,6 +2286,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2259,6 +2305,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2271,6 +2318,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
               nextToken
               __typename
             }
+            numGameTemplates
             createdAt
             updatedAt
             type
@@ -2283,6 +2331,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
         nextToken
         __typename
       }
+      numQuestionTemplates
       createdAt
       updatedAt
       type
@@ -2337,6 +2386,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2355,6 +2405,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2367,6 +2418,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
               nextToken
               __typename
             }
+            numQuestionTemplates
             createdAt
             updatedAt
             type
@@ -2403,6 +2455,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2421,6 +2474,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2433,6 +2487,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
               nextToken
               __typename
             }
+            numGameTemplates
             createdAt
             updatedAt
             type
@@ -2445,6 +2500,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
         nextToken
         __typename
       }
+      numGameTemplates
       createdAt
       updatedAt
       type
@@ -2515,6 +2571,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2533,6 +2590,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2545,6 +2603,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
               nextToken
               __typename
             }
+            numQuestionTemplates
             createdAt
             updatedAt
             type
@@ -2581,6 +2640,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2599,6 +2659,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2611,6 +2672,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
               nextToken
               __typename
             }
+            numGameTemplates
             createdAt
             updatedAt
             type
@@ -2623,6 +2685,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
         nextToken
         __typename
       }
+      numQuestionTemplates
       createdAt
       updatedAt
       type
@@ -2677,6 +2740,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2695,6 +2759,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2707,6 +2772,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
               nextToken
               __typename
             }
+            numQuestionTemplates
             createdAt
             updatedAt
             type
@@ -2743,6 +2809,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2761,6 +2828,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2773,6 +2841,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
               nextToken
               __typename
             }
+            numGameTemplates
             createdAt
             updatedAt
             type
@@ -2785,6 +2854,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
         nextToken
         __typename
       }
+      numGameTemplates
       createdAt
       updatedAt
       type
@@ -2855,6 +2925,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2873,6 +2944,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2885,6 +2957,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
               nextToken
               __typename
             }
+            numQuestionTemplates
             createdAt
             updatedAt
             type
@@ -2921,6 +2994,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -2939,6 +3013,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -2951,6 +3026,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
               nextToken
               __typename
             }
+            numGameTemplates
             createdAt
             updatedAt
             type
@@ -2963,6 +3039,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
         nextToken
         __typename
       }
+      numQuestionTemplates
       createdAt
       updatedAt
       type
@@ -3017,6 +3094,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -3035,6 +3113,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -3047,6 +3126,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
               nextToken
               __typename
             }
+            numQuestionTemplates
             createdAt
             updatedAt
             type
@@ -3083,6 +3163,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  numQuestionTemplates
                   createdAt
                   updatedAt
                   type
@@ -3101,6 +3182,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   grade
                   standard
                   imageUrl
+                  numGameTemplates
                   createdAt
                   updatedAt
                   type
@@ -3113,6 +3195,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
               nextToken
               __typename
             }
+            numGameTemplates
             createdAt
             updatedAt
             type
@@ -3125,6 +3208,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
         nextToken
         __typename
       }
+      numGameTemplates
       createdAt
       updatedAt
       type

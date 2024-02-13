@@ -6,7 +6,7 @@ export enum SortDirection {
 export enum SortField {
   GRADE = 'grade',
   UPDATEDAT = 'updatedAt',
-  QUESTIONCOUNT = 'questionCount',
+  COUNT = 'count',
 }
 
 export interface IListQuerySettings {

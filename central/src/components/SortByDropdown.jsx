@@ -7,12 +7,11 @@ import SortbyIcon from '../images/SortByIcon.svg';
 import SortAscendingIcon from '../images/SortAscendingIcon.svg';
 import SortDescendingIcon from '../images/SortDescendingIcon.svg';
 
-export default function SortByDropdown({ listQuerySettings, handleUpdateListQuerySettings, sortByCheck, setSortByCheck }) {
+export default function SortByDropdown({ isGames, listQuerySettings, handleUpdateListQuerySettings, sortByCheck, setSortByCheck }) {
   const classes = useStyles(sortByCheck)();
   const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
   let sortDirection = listQuerySettings.sortDirection;
   const [sortField, setSortField] = useState(null);
-  console.log(sortDirection);
   
   const handleUpdateValue = (sortField) => {
     sortDirection = listQuerySettings.sortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC;
@@ -52,10 +51,10 @@ export default function SortByDropdown({ listQuerySettings, handleUpdateListQuer
               </tr>
               <tr className={classes.sortByTableRow}>
                 <td>
-                  <div className={classes.sortByName} onClick={()=>handleUpdateValue(SortField.QUESTIONCOUNT)}>Question Count</div>
+                  <div className={classes.sortByName} onClick={()=>handleUpdateValue(SortField.COUNT)}> {isGames ? `Question` : `Game`} Count</div>
                 </td>
                 <td className={classes.sortByIcon}>
-                  {listQuerySettings.sortField === SortField.QUESTIONCOUNT && sortDirectionIconElement} 
+                  {listQuerySettings.sortField === SortField.COUNT && sortDirectionIconElement} 
                 </td>
               </tr>
               <tr className={classes.sortByTableRow}>

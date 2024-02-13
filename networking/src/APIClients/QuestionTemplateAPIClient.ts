@@ -8,7 +8,8 @@ import {
   deleteQuestionTemplate,
   listQuestionTemplates,
   questionTemplatesByDate,
-  questionTemplatesByGrade
+  questionTemplatesByGrade,
+  questionTemplatesByNumGameTemplates
 } from "../graphql";
 import { 
   CreateQuestionTemplateInput, 
@@ -141,6 +142,24 @@ export class QuestionTemplateAPIClient
       return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
     });
     const parsedNextToken = result.data.questionTemplatesByGrade.nextToken;
+    return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
+  }
+
+  async listQuestionTemplatesByNumGameTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    let queryParameters: IQueryParameters = { limit, nextToken, type: "QuestionTemplate" };
+    if (filterString != null) {
+      queryParameters.filter = { title: { contains: filterString } };
+    }
+    if (sortDirection != null) {
+      queryParameters.sortDirection = sortDirection;
+    }
+    let result = (await API.graphql(
+      graphqlOperation(questionTemplatesByNumGameTemplates, queryParameters)
+    )) as { data: any }
+    const parsedQuestionTemplates = result.data.questionTemplatesByNumGameTemplates.items.map((questionTemplate: AWSQuestionTemplate) => {
+      return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
+    });
+    const parsedNextToken = result.data.questionTemplatesByNumGameTemplates.nextToken;
     return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
   }
 }

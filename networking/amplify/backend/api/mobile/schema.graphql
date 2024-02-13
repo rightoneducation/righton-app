@@ -29,10 +29,11 @@ type GameTemplate @model{
   phaseOneTime: Int!
   phaseTwoTime: Int!
   imageUrl: String
-  questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
+  questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions") 
+  numQuestionTemplates: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplateByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"])
+  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByNumQuestionTemplates", queryField: "gameTemplatesByNumQuestionTemplates", sortKeyFields: ["numQuestionTemplates"])
 }
 
 input GameTemplateInput {
@@ -56,9 +57,10 @@ type QuestionTemplate @model {
   standard: String
   imageUrl: String
   gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
+  numGameTemplates: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplateByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"])
+   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplatesByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "questionTemplatesByNumGameTemplates", queryField: "questionTemplatesByNumGameTemplates", sortKeyFields: ["numGameTemplates"])
 }
 
 input QuestionTemplateInput {

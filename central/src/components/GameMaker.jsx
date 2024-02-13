@@ -67,7 +67,8 @@ export default function GameMaker({
   isSearchClick, 
   handleSearchClick, 
   isResolutionMobile, 
-  handleSortChange, 
+  listQuerySettings,
+  handleUpdateListQuerySettings,
   sortByCheck, 
   setSortByCheck, 
   cloneQuestion,
@@ -409,7 +410,9 @@ export default function GameMaker({
                       isResolutionMobile={isResolutionMobile} 
                     />
                     <SortByDropdown 
-                      handleSortChange={handleSortChange} 
+                      isGames={location.pathname === "/"} 
+                      listQuerySettings={listQuerySettings} 
+                      handleUpdateListQuerySettings={handleUpdateListQuerySettings} 
                       sortByCheck={sortByCheck} 
                       setSortByCheck={setSortByCheck} 
                       isResolutionMobile={isResolutionMobile} 

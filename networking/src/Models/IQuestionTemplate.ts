@@ -14,6 +14,7 @@ export interface IQuestionTemplate {
   standard: string | null;
   imageUrl?: string | null | undefined,
   gameTemplates?: { gameTemplate: IGameTemplate, gameQuestionId: string }[] | null,
+  numGameTemplates: number,
   createdAt?: string | null | undefined,
   updatedAt?: string | null
 }
