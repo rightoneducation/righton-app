@@ -3,6 +3,7 @@ import { GameSessionState } from '@righton/networking';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Box, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { motion, useAnimate } from "framer-motion";
 import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
 import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
@@ -22,6 +23,7 @@ interface HeaderContentProps {
     currentTimer: number;
     isPaused: boolean;
     isFinished: boolean;
+    scope4: React.RefObject<HTMLDivElement>;
     handleTimerIsFinished: () => void;
     localModel?: LocalModel;
 
@@ -39,6 +41,7 @@ export default function HeaderContent({
     isPaused,
     isFinished,
     localModel,
+    scope4,
     handleTimerIsFinished,
 }: HeaderContentProps) {
     const theme = useTheme(); // eslint-disable-line
@@ -86,51 +89,53 @@ export default function HeaderContent({
 
     return (
         <HeaderStackContainerStyled>
-            <Container maxWidth="md">
-                <Grid container justifyContent="space-between" alignItems="center">
-                    <Grid item>
-                        <QuestionIndicator
-                            totalQuestions={totalQuestions}
-                            currentQuestionIndex={currentQuestionIndex}
-                            statePosition={statePosition}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <HostPlayerIconContainer>
-                            <Typography variant="subtitle2">
-                                {t('gamesession.player')}
-                            </Typography>
-                            <img src={playerIcon} alt="Player Icon" />
-                        </HostPlayerIconContainer>
-                    </Grid>
-                </Grid>
-                <Grid item style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
-                    <Typography variant="h1">
-                        {stateCheck(currentState, isCorrect, isIncorrect)}
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    <Grid container justifyContent="space-between" alignItems="center" >
-                        {(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-                            currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
-                            localModel ? (
-                            <Timer
-                                totalTime={totalTime}
-                                currentTimer={currentTimer}
-                                isFinished={isFinished}
-                                isPaused={isPaused}
-                                handleTimerIsFinished={handleTimerIsFinished}
-                                localModel={localModel}
+            <motion.div ref={scope4} initial={{translateX: "50vw"}}>
+                <Container maxWidth="md">
+                    <Grid container justifyContent="space-between" alignItems="center">
+                        <Grid item>
+                            <QuestionIndicator
+                                totalQuestions={totalQuestions}
+                                currentQuestionIndex={currentQuestionIndex}
+                                statePosition={statePosition}
                             />
-                        ) : null}
-                        <TimerAddButton onClick={handleTimerAddButtonClick}>
-                            <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
-                                {t('gamesession.addtime')}
-                            </Typography>
-                        </TimerAddButton>
+                        </Grid>
+                        <Grid item>
+                            <HostPlayerIconContainer>
+                                <Typography variant="subtitle2">
+                                    {t('gamesession.player')}
+                                </Typography>
+                                <img src={playerIcon} alt="Player Icon" />
+                            </HostPlayerIconContainer>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Container>
+                    <Grid item style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
+                        <Typography variant="h1">
+                            {stateCheck(currentState, isCorrect, isIncorrect)}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Grid container justifyContent="space-between" alignItems="center" >
+                            {(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+                                currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
+                                localModel ? (
+                                <Timer
+                                    totalTime={totalTime}
+                                    currentTimer={currentTimer}
+                                    isFinished={isFinished}
+                                    isPaused={isPaused}
+                                    handleTimerIsFinished={handleTimerIsFinished}
+                                    localModel={localModel}
+                                />
+                            ) : null}
+                            <TimerAddButton onClick={handleTimerAddButtonClick}>
+                                <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
+                                    {t('gamesession.addtime')}
+                                </Typography>
+                            </TimerAddButton>
+                        </Grid>
+                    </Grid>
+                </Container>
+            </motion.div>
         </HeaderStackContainerStyled>
     );
 }
