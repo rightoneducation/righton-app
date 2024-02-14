@@ -10,8 +10,6 @@ import {
   BodyContentAreaSingleColumnStyled
 } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
-import QuestionCard from './QuestionCard';
-import AnswerCard from './AnswerCard';
 import ConfidenceCard from './ConfidenceCard';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
@@ -65,27 +63,26 @@ export default function PlaceholderContentArea({
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
   const largeScreen =
-    <BodyContentAreaTripleColumnStyled container>
-      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
-        <ScrollBoxStyled>
-          <ConfidenceCard confidenceData={confidenceData} graphClickIndex={confidenceGraphClickIndex} handleGraphClick={handleConfidenceGraphClick} />
-          <Card />
-        </ScrollBoxStyled>
-      </Grid>
-      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
-        <ScrollBoxStyled>
-          <Card />
-          <Card />
-        </ScrollBoxStyled>
-      </Grid>
-      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
-        <ScrollBoxStyled>
-          <Card />
-          <Card />
-        </ScrollBoxStyled>
-      </Grid>
-
-    </BodyContentAreaTripleColumnStyled>
+      <BodyContentAreaTripleColumnStyled container>
+        <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+          <ScrollBoxStyled>
+            <ConfidenceCard confidenceData={confidenceData} graphClickIndex={confidenceGraphClickIndex} handleGraphClick={handleConfidenceGraphClick} />
+            <Card />
+          </ScrollBoxStyled>
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+          <ScrollBoxStyled>
+            <Card />
+            <Card />
+          </ScrollBoxStyled>
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+          <ScrollBoxStyled>
+            <Card />
+            <Card />
+          </ScrollBoxStyled>
+        </Grid>
+      </BodyContentAreaTripleColumnStyled>
 
   const mediumScreen =
     <BodyContentAreaDoubleColumnStyled>
@@ -177,23 +174,23 @@ export default function PlaceholderContentArea({
     );
   } if (isMediumScreen) {
     return (
+        <>
+          {mediumScreen}
+          <PaginationContainerStyled
+            className="swiper-pagination-container"
+            style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
+          />
+        </>
+    );
+  }
+  return (
       <>
-        {mediumScreen}
+        {smallScreen}
         <PaginationContainerStyled
           className="swiper-pagination-container"
           style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
         />
       </>
-    );
-  }
-  return (
-    <>
-      {smallScreen}
-      <PaginationContainerStyled
-        className="swiper-pagination-container"
-        style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
-      />
-    </>
   );
 
 }

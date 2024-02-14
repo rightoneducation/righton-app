@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { GameSessionState, ApiClient } from '@righton/networking';
-import { Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { motion, useAnimate } from "framer-motion";
 import { useTranslation } from 'react-i18next';
+import { GameSessionState, ApiClient } from '@righton/networking';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -40,9 +40,22 @@ interface ConfidenceOption {
 }
 
 export default function GameSessionContainer({
-  apiClient,
+  apiClient
 }: GameInProgressContainerProps) {
   console.log(apiClient); // eslint-disable-line
+  const [scope4, animate4] = useAnimate();
+  const [scope5, animate5] = useAnimate();
+  const AnimatedPlaceholderContentArea = motion(PlaceholderContentArea);
+  useEffect(() => {
+    // Ensure the element is present
+    if (scope4.current) {
+      animate4(scope4.current, { x: '-50vw', position: 'relative' }, { duration: 1 });
+    }
+    if (scope5.current) {
+      animate5(scope5.current, { x: '-50vw', position: 'fixed', zIndex: 2 }, { duration: 1 });
+    }
+  }, []); // eslint-disable-line
+
   // TODO: delete hard coded values later
   const sampleQuestion: QuestionData = {
     text: "A pair of shoes were 10% off last week. This week, theres an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that youd get if you buy the shoes this week?",
@@ -107,28 +120,34 @@ export default function GameSessionContainer({
     <StackContainerStyled
     >
       <HeaderBackgroundStyled />
-      <HeaderContent
-        currentState={currentState}
-        totalQuestions={totalQuestions}
-        currentQuestionIndex={currentQuestionIndex}
-        statePosition={statePosition}
-        isCorrect={isCorrect}
-        isIncorrect={isIncorrect}
-        totalTime={totalTime}
-        currentTimer={hasRejoined ? currentTimer : totalTime}
-        isPaused={false}
-        isFinished={false}
-        handleTimerIsFinished={handleTimerIsFinished}
-        localModel={localModelMock}
-      />
-      <BodyStackContainerStyled>
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
-        <PlaceholderContentArea
-          questionData={sampleQuestion}
-          answerOptions={[sampleAnswerOptionOne, sampleAnswerOptionTwo]}
-          confidenceData={sampleConfidenceData} confidenceGraphClickIndex={confidenceGraphClickIndex} handleConfidenceGraphClick={handleConfidenceGraphClick} />
-      </BodyStackContainerStyled>
+        <motion.div ref={scope5} initial={{translateX: "50vw"}} style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column', zIndex: 2 }}>
+          <HeaderContent
+            currentState={currentState}
+            totalQuestions={totalQuestions}
+            currentQuestionIndex={currentQuestionIndex}
+            statePosition={statePosition}
+            isCorrect={isCorrect}
+            isIncorrect={isIncorrect}
+            totalTime={totalTime}
+            currentTimer={hasRejoined ? currentTimer : totalTime}
+            isPaused={false}
+            isFinished={false}
+            scope4={scope4}
+            handleTimerIsFinished={handleTimerIsFinished}
+            localModel={localModelMock}
+          />
+          <BodyStackContainerStyled>
+            <BodyBoxUpperStyled />
+            <BodyBoxLowerStyled />
+            <PlaceholderContentArea
+              questionData={sampleQuestion}
+              answerOptions={[sampleAnswerOptionOne, sampleAnswerOptionTwo]}
+              confidenceData={sampleConfidenceData} 
+              confidenceGraphClickIndex={confidenceGraphClickIndex} 
+              handleConfidenceGraphClick={handleConfidenceGraphClick} 
+            />
+          </BodyStackContainerStyled>
+        </motion.div>
     </StackContainerStyled>
   );
 }
