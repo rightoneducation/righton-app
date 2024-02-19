@@ -21,15 +21,17 @@ export default function GameSessionContainer({
   const [scope, animate] = useAnimate();
   const [scope2, animate2] = useAnimate();
   const [scope3, animate3] = useAnimate();
+  const [scope4, animate4] = useAnimate();
 
   const theme = useTheme(); // eslint-disable-line
   const handleStartGame = () =>{
     const exitAnimation = () => {
       // Start all animations concurrently and return a promise that resolves when all animations are complete
       return Promise.all([
-        animate(scope.current, { scaleY: 0.345, zIndex: -1, position: 'relative'}, { duration: 1 }),
+        animate(scope.current, { y: 'calc(-100vh + 252px)', zIndex: -1, position: 'relative'}, { duration: 1 }),
         animate2(scope2.current, { opacity: 0, position: 'relative'}, { duration: 1 }),
-        animate3(scope3.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 })
+        animate3(scope3.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
+        animate4(scope4.current, { opacity: 0, position: 'relative'}, { duration: 0.1 }),
       ]);
     };
     exitAnimation().then(() => {
@@ -46,7 +48,7 @@ export default function GameSessionContainer({
     default: 
       return (
         <StartGame teams={mockGameSession.teams ?? []} currentQuestionIndex={mockGameSession.currentQuestionIndex ?? 0} questions={mockGameSession.questions} title={mockGameSession.title ?? ''} gameSessionId={mockGameSession.id} 
-          gameCode={mockGameSession.gameCode ?? 1100} currentState={mockGameSession.currentState} scope={scope} scope2={scope2} scope3={scope3} handleStartGame={handleStartGame} />
+          gameCode={mockGameSession.gameCode ?? 1100} currentState={mockGameSession.currentState} scope={scope} scope2={scope2} scope3={scope3} scope4={scope4} handleStartGame={handleStartGame} />
       )
   }
 }

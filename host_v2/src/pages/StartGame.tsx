@@ -24,6 +24,7 @@ interface StartGameProps {
   scope: React.RefObject<HTMLDivElement>
   scope2: React.RefObject<HTMLDivElement>
   scope3: React.RefObject<HTMLDivElement>
+  scope4: React.RefObject<HTMLDivElement>
   handleStartGame: () => void
 }  
 
@@ -83,6 +84,7 @@ function StartGame({teams,
   scope,
   scope2,
   scope3,
+  scope4,
   handleStartGame}: StartGameProps) {
     const theme = useTheme(); // eslint-disable-line
 
@@ -105,11 +107,12 @@ function StartGame({teams,
             </motion.div>
            
          </ContentContainer>
-         <motion.div ref={scope3} exit={{ y: 0, opacity: 0}}>
+         <motion.div ref={scope4} exit={{opacity: 0}}>
           <FooterStartGame 
               teamsLength={teams ? teams.length : 0}
               gameSessionId = {gameSessionId}
               currentQuestionIndex={currentQuestionIndex}
+              scope3={scope3}
               handleStateGame={handleStartGame}
             />
           </motion.div>
