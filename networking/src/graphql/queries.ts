@@ -24,6 +24,8 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           text
           choices
           answerSettings
+          responses
+          hints
           imageUrl
           instructions
           standard
@@ -47,9 +49,10 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
                 questionId
                 isChosen
                 text
-                awsAnswerContents
+                awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -94,6 +97,8 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
         text
         choices
         answerSettings
+        responses
+        hints
         imageUrl
         instructions
         standard
@@ -140,6 +145,8 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             text
             choices
             answerSettings
+            responses
+            hints
             imageUrl
             instructions
             standard
@@ -163,9 +170,10 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
                   questionId
                   isChosen
                   text
-                  awsAnswerContents
+                  awsAnswerContent
                   isTrickAnswer
                   confidenceLevel
+                  awsHint
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -210,6 +218,8 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
           text
           choices
           answerSettings
+          responses
+          hints
           imageUrl
           instructions
           standard
@@ -244,6 +254,8 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
     text
     choices
     answerSettings
+    responses
+    hints
     imageUrl
     instructions
     standard
@@ -283,6 +295,8 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       text
       choices
       answerSettings
+      responses
+      hints
       imageUrl
       instructions
       standard
@@ -313,6 +327,8 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       text
       choices
       answerSettings
+      responses
+      hints
       imageUrl
       instructions
       standard
@@ -336,9 +352,10 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
             questionId
             isChosen
             text
-            awsAnswerContents
+            awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -382,6 +399,8 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         text
         choices
         answerSettings
+        responses
+        hints
         imageUrl
         instructions
         standard
@@ -405,9 +424,10 @@ export const listTeams = /* GraphQL */ `query ListTeams(
               questionId
               isChosen
               text
-              awsAnswerContents
+              awsAnswerContent
               isTrickAnswer
               confidenceLevel
+              awsHint
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -450,9 +470,10 @@ export const getTeamMember = /* GraphQL */ `query GetTeamMember($id: ID!) {
         questionId
         isChosen
         text
-        awsAnswerContents
+        awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -487,9 +508,10 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
           questionId
           isChosen
           text
-          awsAnswerContents
+          awsAnswerContent
           isTrickAnswer
           confidenceLevel
+          awsHint
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -518,9 +540,10 @@ export const getTeamAnswer = /* GraphQL */ `query GetTeamAnswer($id: ID!) {
     questionId
     isChosen
     text
-    awsAnswerContents
+    awsAnswerContent
     isTrickAnswer
     confidenceLevel
+    awsHint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -542,9 +565,10 @@ export const listTeamAnswers = /* GraphQL */ `query ListTeamAnswers(
       questionId
       isChosen
       text
-      awsAnswerContents
+      awsAnswerContent
       isTrickAnswer
       confidenceLevel
+      awsHint
       createdAt
       updatedAt
       teamMemberAnswersId
@@ -587,6 +611,8 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             text
             choices
             answerSettings
+            responses
+            hints
             imageUrl
             instructions
             standard
@@ -610,9 +636,10 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
                   questionId
                   isChosen
                   text
-                  awsAnswerContents
+                  awsAnswerContent
                   isTrickAnswer
                   confidenceLevel
+                  awsHint
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -657,6 +684,8 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
           text
           choices
           answerSettings
+          responses
+          hints
           imageUrl
           instructions
           standard
@@ -714,6 +743,8 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             text
             choices
             answerSettings
+            responses
+            hints
             imageUrl
             instructions
             standard
@@ -737,9 +768,10 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
                   questionId
                   isChosen
                   text
-                  awsAnswerContents
+                  awsAnswerContent
                   isTrickAnswer
                   confidenceLevel
+                  awsHint
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -784,6 +816,8 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
           text
           choices
           answerSettings
+          responses
+          hints
           imageUrl
           instructions
           standard
