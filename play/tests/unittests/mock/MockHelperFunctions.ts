@@ -57,6 +57,19 @@ export const createTeamAnswerMock = (
   } as ITeamAnswer;
 };
 
+export const localModelAnswerMock = () => {
+  return {
+    answerTexts: [],
+    answerTypes: [],
+    multiChoiceAnswerIndex: null,
+    isSubmitted: true,
+    currentState: null,
+    currentQuestionIndex: null,
+    rawAnswer: '',
+    isShortAnswerEnabled: false,
+  };
+};
+
 export const localModelLoaderMock = () => {
   const currentTime = new Date().getTime() / 60000;
   return {
@@ -67,6 +80,8 @@ export const localModelLoaderMock = () => {
     selectedAvatar: 0,
     hasRejoined: false,
     currentTimer: currentTime - 100,
+    answer: localModelAnswerMock(),
+    hint: {rawHint: '', teamName: '', isHintSubmitted: false},
   } as LocalModel;
 };
 

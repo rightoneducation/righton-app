@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, BottomNavigation } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import PlayersAnsweredBar from './PlayersAnsweredBar';
+import LinearProgressBar from './LinearProgressBar';
 import ModuleNavigator from './ModuleNavigator';
 
 export default function FooterGame({
@@ -16,6 +16,7 @@ export default function FooterGame({
   setGraphClickInfo,
   showFooterButtonOnly,
   navDictionary,
+  statePosition
 }) {
   const classes = useStyles();
   return (
@@ -39,15 +40,16 @@ export default function FooterGame({
           <>
             <div style={{ opacity: gameTimer ? 1 : 0.4, width: '100%' }}>
               <div className={classes.playerNum}>Players who have answered</div>
-              <PlayersAnsweredBar
-                numPlayers={numPlayers}
-                totalAnswers={totalAnswers}
+              <LinearProgressBar
+                inputNum={totalAnswers}
+                totalNum={numPlayers}
               />
             </div>
             <ModuleNavigator
               graphClickInfo={graphClickInfo}
               setGraphClickInfo={setGraphClickInfo}
               navDictionary={navDictionary}
+              statePosition={statePosition}
             />
           </>
         )}

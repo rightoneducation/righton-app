@@ -38,7 +38,8 @@
                     "text": "90%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"90%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.9,\"90%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:39.668Z",
@@ -50,7 +51,8 @@
                     "text": "70%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"70%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.7,\"70%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:14.624Z",
@@ -62,7 +64,8 @@
                     "text": "72%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"72%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.72,\"72%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:29.282Z",
@@ -74,7 +77,8 @@
                     "text": "50%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"50%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.5,\"50%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:04.347Z",
@@ -86,7 +90,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent":"{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:51.121Z",
@@ -98,7 +103,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   }
                 ]
               }
@@ -129,7 +135,8 @@
                     "text": "90%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent":"{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"90%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.90,\"90%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:39.668Z",
@@ -141,7 +148,8 @@
                     "text": "70%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"70%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.7,\"70%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:14.624Z",
@@ -153,7 +161,8 @@
                     "text": "72%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"72%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.72,\"72%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:29.282Z",
@@ -165,7 +174,8 @@
                     "text": "50%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"50%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.50,\"50%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:04.347Z",
@@ -177,7 +187,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:51.121Z",
@@ -189,7 +200,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   }
                 ]
               }
@@ -220,7 +232,8 @@
                     "text": "90%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"90%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.90,\"90%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:39.668Z",
@@ -232,7 +245,8 @@
                     "text": "70%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"70%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.70,\"70%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:14.624Z",
@@ -244,7 +258,8 @@
                     "text": "72%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"72%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.72,\"72%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:29.282Z",
@@ -256,7 +271,8 @@
                     "text": "50%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"50%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.50,\"50%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:04.347Z",
@@ -268,7 +284,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:51.121Z",
@@ -280,7 +297,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   }
                 ]
               }
@@ -311,7 +329,8 @@
                     "text": "90%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"90%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.90,\"90%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:39.668Z",
@@ -323,7 +342,8 @@
                     "text": "70%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"70%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.70,\"70%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:14.624Z",
@@ -335,7 +355,8 @@
                     "text": "72%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"72%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.72,\"72%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:29.282Z",
@@ -347,7 +368,8 @@
                     "text": "50%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"46%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.46,\"46%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:04.347Z",
@@ -359,7 +381,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:51.121Z",
@@ -371,7 +394,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   }
                 ]
               }
@@ -402,7 +426,8 @@
                     "text": "90%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"90%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.90,\"90%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:39.668Z",
@@ -414,7 +439,8 @@
                     "text": "70%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"70%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.70,\"70%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:14.624Z",
@@ -426,7 +452,8 @@
                     "text": "72%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"72%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.72,\"72%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:29.282Z",
@@ -438,7 +465,8 @@
                     "text": "50%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"50%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.50,\"50%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:04.347Z",
@@ -450,7 +478,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:51.121Z",
@@ -462,7 +491,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   }
                 ]
               }
@@ -493,7 +523,8 @@
                     "text": "90%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"90%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.90,\"90%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:39.668Z",
@@ -505,7 +536,8 @@
                     "text": "70%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"70%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.70,\"70%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:14.624Z",
@@ -517,7 +549,8 @@
                     "text": "72%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"72%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.72,\"72%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:29.282Z",
@@ -529,7 +562,8 @@
                     "text": "50%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"50%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.50,\"50%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:16:04.347Z",
@@ -541,7 +575,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   },
                   {
                     "createdAt": "2023-03-07T17:15:51.121Z",
@@ -553,7 +588,8 @@
                     "text": "54%",
                     "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
-                    "confidenceLevel": "NOT_RATED"
+                    "confidenceLevel": "NOT_RATED",
+                    "awsAnswerContent": "{\"currentQuestionIndex\":0,\"isSubmitted\":true,\"isShortAnswerEnabled\":false,\"rawAnswer\":\"54%\",\"multiChoiceAnswerIndex\":1,\"answerType\":0,\"currentState\":\"CHOOSE_CORRECT_ANSWER\",\"normAnswer\":[0.54,\"54%\"]}"
                   }
                 ]
               }

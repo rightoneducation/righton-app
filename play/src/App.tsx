@@ -18,11 +18,11 @@ import {
 import Theme from './lib/Theme';
 
 function RedirectToPlayIfMissing() {
-  window.location.href = 'http://play.rightoneducation.com/';
+  window.location.href = 'http://dev-play.rightoneducation.com/';
   return null;
 }
 
-const apiClient = new ApiClient(Environment.Staging);
+const apiClient = new ApiClient(Environment.Developing);
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>

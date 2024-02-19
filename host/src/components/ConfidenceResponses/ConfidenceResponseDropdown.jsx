@@ -8,8 +8,8 @@ export default function ConfidenceResponseDropdown({
   selectedConfidenceData,
 }) {
   const classes = useStyles();
-   // TODO: integrate this into ConfidenceLevel enum to prevent use of dictionaries here and in confidenceresponsegraph
-   // see: https://github.com/rightoneducation/righton-app/issues/806
+  // TODO: integrate this into ConfidenceLevel enum to prevent use of dictionaries here and in confidenceresponsegraph
+  // see: https://github.com/rightoneducation/righton-app/issues/806
   const ConfidenceLevelDictionary = {
     0: 'Not Rated',
     1: 'Not At All Confident',

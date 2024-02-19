@@ -11,9 +11,7 @@ export default {
   component: Congrats,
 } as Meta<typeof Congrats>;
 
-const Template: StoryFn<typeof Congrats> = function CongratsTemplate(
-  args
-) {
+const Template: StoryFn<typeof Congrats> = function CongratsTemplate(args) {
   return (
     <ThemeProvider theme={Theme}>
       <I18nextProvider i18n={i18n}>

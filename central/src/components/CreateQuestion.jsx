@@ -6,6 +6,7 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
+import { AnswerType, AnswerPrecision } from '@righton/networking';
 
 export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion }) {
   useEffect(() => {
@@ -16,6 +17,11 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const history = useHistory();
   const location = useLocation();
   const originalQuestion = location.state || initialState || null;
+  const [answerType, setAnswerType] = useState(AnswerType.NUMBER);
+  const [answerPrecision, setAnswerPrecision] = useState(AnswerPrecision.WHOLE);
+  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
+  const [isAnswerTypeInvalid, setIsAnswerTypeInvalid] = useState(false);
+  const [isAnswerDecimalInvalid, setIsAnswerDecimalInvalid] = useState(false);
 
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
@@ -35,6 +41,10 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
   });
 
+  const decimalValidator = (inputValue) => {
+    const roundedNumberAsString = Number(inputValue).toFixed(answerPrecision);
+    return inputValue.toString() === roundedNumberAsString;
+  }
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if (gameId != null) {
@@ -58,12 +68,18 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
   // When a wrong answer is changed/update this function handles that change
-  const onChoiceTextChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
+  const onChoiceTextChangeMaker = (choice, choiceIndex, answerType) => ({ currentTarget }) => {
+    if (choice.isAnswer === true && answerType === AnswerType.NUMBER) {
+      setIsAnswerTypeInvalid(!numericAnswerRegex.test(currentTarget.value));
+      currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
+      setIsAnswerDecimalInvalid(!decimalValidator(currentTarget.value));
+    } else {
+      setIsAnswerDecimalInvalid(false);
+    }
     const newChoices = [...question.choices];
     newChoices[choiceIndex].text = handleStringInput(currentTarget.value);
     setQuestion({ ...question, choices: newChoices });
-  }, [question, setQuestion]);
-
+  };
   // When the wrong answer reasoning is changed/update this function handles that change
   const onChoiceReasonChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
     const newChoices = [...question.choices];
@@ -129,6 +145,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
     questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
+    questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
 
     let newQuestion;
     if (questionToSend.id) {
@@ -185,6 +202,12 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
                 handleRemoveInstruction={handleRemoveInstruction}
                 addInstruction={addInstruction}
                 instructions={question?.instructions}
+                answerType={answerType}
+                setAnswerType={setAnswerType}
+                answerPrecision={answerPrecision}
+                setAnswerPrecision={setAnswerPrecision}
+                isAnswerTypeInvalid={isAnswerTypeInvalid}
+                isAnswerDecimalInvalid={isAnswerDecimalInvalid}
               />
             ))}
           </Grid>

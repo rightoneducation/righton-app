@@ -2,6 +2,13 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
+  ITeamAnswerContent,
+  GameSessionState,
+  INormAnswer,
+  IChoice,
+  AnswerType
+} from '@righton/networking';
+import {
   GamePlayButtonStyled,
   GamePlayButtonStyledDisabled,
 } from '../lib/styledcomponents/GamePlayButtonStyled';
@@ -9,35 +16,54 @@ import {
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
-  selectedAnswer: number | null;
-  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
-  handleSubmitAnswer: (answer: string) => void;
+  isHint: boolean;
+  isShortAnswerEnabled: boolean;
+  selectedAnswer?: number | null;
+  answers?: IChoice[] | undefined;
+  currentState: GameSessionState;
+  currentQuestionIndex: number;
+  handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
 }
 
 export default function ButtonSubmitAnswer({
   isSelected,
   isSubmitted,
+  isHint,
+  isShortAnswerEnabled,
   selectedAnswer,
   answers,
+  currentState,
+  currentQuestionIndex,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
   const buttonText = isSubmitted
     ? t('gameinprogress.button.submitted')
     : t('gameinprogress.button.submit');
+  const hintButtonText = isSubmitted
+    ? t('gameinprogress.button.submitted')
+    : t('gameinprogress.button.hint');
   const buttonContents = (
     <Typography sx={{ textTransform: 'none' }} variant="button">
-      {' '}
-      {buttonText}{' '}
+      {isHint ? hintButtonText : buttonText}
     </Typography>
   );
-
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
       onClick={() => {
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
-        handleSubmitAnswer(answerText ?? '');
+        const answer = {
+          rawAnswer: answerText ?? '',
+          normAnswer: [],
+          multiChoiceAnswerIndex: selectedAnswer,
+          isShortAnswerEnabled,
+          isSubmitted: true,
+          currentState,
+          currentQuestionIndex,
+        } as ITeamAnswerContent;
+
+        handleSubmitAnswer(answer);
       }}
     >
       {buttonContents}

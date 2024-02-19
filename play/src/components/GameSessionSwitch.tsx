@@ -3,6 +3,7 @@ import {
   ApiClient,
   IChoice,
   IGameSession,
+  IResponse,
   GameSessionState,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
@@ -44,13 +45,39 @@ export default function GameSessionSwitch({
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
+  const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
   const answerChoices =
-    currentQuestion?.choices?.map((choice: IChoice) => ({
-      id: uuidv4(),
-      text: choice.text,
-      isCorrectAnswer: choice.isAnswer,
-      reason: choice.reason ?? '',
-    })) ?? [];
+    (isShortAnswerEnabled
+      ? currentQuestion?.responses?.reduce(
+          (acc: IChoice[], response: IResponse) => {
+            const shouldAddResponse = 
+              (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
+              currentState !== GameSessionState.PHASE_1_DISCUSS && 
+              currentState !== GameSessionState.PHASE_1_RESULTS) 
+                ? (response.isSelectedMistake || response.isCorrect) 
+                : true;
+          
+            if (shouldAddResponse) {
+              acc.push({
+                id: uuidv4(),
+                text: response.rawAnswer,
+                isAnswer: response.isCorrect,
+              } as IChoice);
+            }
+            
+            return acc;
+          },
+          []
+        )
+      : currentQuestion?.choices?.map(
+          (choice: IChoice) =>
+            ({
+              id: uuidv4(),
+              text: choice.text,
+              isAnswer: choice.isAnswer,
+              reason: choice.reason ?? '',
+            } as IChoice)
+        )) ?? [];
 
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
@@ -68,6 +95,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -85,6 +113,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -100,6 +129,7 @@ export default function GameSessionSwitch({
           answerChoices={answerChoices}
           score={score}
           hasRejoined={hasRejoined}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.PHASE_2_START:

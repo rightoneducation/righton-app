@@ -2,10 +2,10 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-export default function PlayersAnsweredBar({ numPlayers, totalAnswers }) {
+export default function LinearProgressBar({ inputNum, totalNum }) {
   const classes = useStyles();
   const progressPercent =
-    numPlayers !== 0 ? (totalAnswers / numPlayers) * 100 : 0;
+    inputNum !== 0 ? (inputNum / totalNum) * 100 : 0;
 
   return (
     <div className={classes.bargroup}>
@@ -33,10 +33,10 @@ export default function PlayersAnsweredBar({ numPlayers, totalAnswers }) {
             lineHeight: '18px',
           }}
         >
-          {totalAnswers}
+          {inputNum}
         </div>
       </div>
-      <div className={classes.totalPlayers}>{numPlayers}</div>
+      <div className={classes.totalNum}>{totalNum}</div>
     </div>
   );
 }
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     gap: '10px',
     width: '100%',
   },
-  totalPlayers: {
+  totalNum: {
     fontSize: '12px',
     lineHeight: '12px',
     color: 'white',

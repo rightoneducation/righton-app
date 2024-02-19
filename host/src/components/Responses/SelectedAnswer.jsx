@@ -9,9 +9,9 @@ export default function SelectedAnswer(props) {
     data,
     correctChoiceIndex,
     numPlayers,
-    teamsPickedChoices,
     statePosition,
     graphClickInfo,
+    isShortAnswerEnabled
   } = props;
   const classes = useStyles();
   const showCustomTick =
@@ -28,9 +28,11 @@ export default function SelectedAnswer(props) {
             Showing players who answered:
           </Typography>
           <div className={classes.rectStyle}>
+            { !isShortAnswerEnabled &&
             <div className={classes.choiceContainer}>
               {data[graphClickInfo.selectedIndex].answerChoice}
             </div>
+            }
             <div className={classes.textContainer}>
               {data[graphClickInfo.selectedIndex].answerText}
             </div>
@@ -54,8 +56,8 @@ export default function SelectedAnswer(props) {
             data={data}
             graphClickInfo={graphClickInfo}
             numPlayers={numPlayers}
-            teamsPickedChoices={teamsPickedChoices}
             statePosition={statePosition}
+            isShortAnswerEnabled={isShortAnswerEnabled}
           />
         </div>
       )}

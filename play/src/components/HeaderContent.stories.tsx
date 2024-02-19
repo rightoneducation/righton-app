@@ -12,16 +12,17 @@ export default {
   component: HeaderContent,
 } as Meta<typeof HeaderContent>;
 
-const Template: StoryFn<typeof HeaderContent> =
-  function HeaderContentTemplate(args) {
-    return (
-      <ThemeProvider theme={Theme}>
-        <I18nextProvider i18n={i18n}>
-          <HeaderContent {...args} />
-        </I18nextProvider>
-      </ThemeProvider>
-    );
-  };
+const Template: StoryFn<typeof HeaderContent> = function HeaderContentTemplate(
+  args
+) {
+  return (
+    <ThemeProvider theme={Theme}>
+      <I18nextProvider i18n={i18n}>
+        <HeaderContent {...args} />
+      </I18nextProvider>
+    </ThemeProvider>
+  );
+};
 
 const handleTimerIsFinished = () => {
   console.debug('finished');
