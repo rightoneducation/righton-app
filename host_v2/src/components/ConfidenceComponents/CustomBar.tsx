@@ -30,13 +30,12 @@ export default function CustomBar(props: BarProps) {
     <g style={{ pointerEvents: 'visible' }}>
       <Bar {...props} />
       <rect
-        x={x !== undefined ? x - offset : - offset}
+        x={x !== undefined ? x - offset : -offset}
         y={graphTitleOffset}
         width={selectedWidth}
         height={selectedHeight - graphTitleOffset}
         fill={
-          graphClickIndex != null &&
-            graphClickIndex === index
+          graphClickIndex != null && graphClickIndex === index
             ? `${theme.palette.primary.graphAccentColor}`
             : 'transparent'
         }
@@ -45,13 +44,11 @@ export default function CustomBar(props: BarProps) {
         ry={8}
         onClick={() => {
           if (index !== null && index !== undefined) {
-            handleGraphClick(index)
+            handleGraphClick(index);
           }
-        }
-        }
+        }}
         style={{ cursor: 'pointer' }}
       />
     </g>
   );
 }
-

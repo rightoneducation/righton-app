@@ -25,19 +25,19 @@ export const answerbar = Template.bind({});
 
 answerbar.args = {
   inputNum: 5,
-  totalNum: 12
+  totalNum: 12,
 };
 
 export const answerBarNoAnswers = Template.bind({});
 
 answerBarNoAnswers.args = {
   inputNum: 0,
-  totalNum: 12
+  totalNum: 12,
 };
 
 export const answerBarAllAnswers = Template.bind({});
 
 answerBarAllAnswers.args = {
   inputNum: 12,
-  totalNum: 12
+  totalNum: 12,
 };

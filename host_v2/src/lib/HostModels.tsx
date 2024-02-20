@@ -5,6 +5,6 @@ import { ITeamAnswerContent, ITeamAnswerHint } from '@righton/networking';
 export const StorageKey = 'rightOn';
 
 export interface LocalModel {
-    hasRejoined: boolean;
-    currentTimer: number;
+  hasRejoined: boolean;
+  currentTimer: number;
 }

@@ -27,11 +27,13 @@ export const correctCard = Template.bind({});
 correctCard.args = {
   isCorrectAnswer: true,
   answerIndex: 2,
-  answerContent: "1080",
-  instructions: [" A stop sign is a regular octagon, a polygon with 8 congruent sides.",
-    "We can create triangles within the octagon. For example, starting with any vertex, or corner, we can draw a line to each of the 5 non-adjacent vertices (or corners) of the octagon.",
-    "Count the number of triangles that have been created."],
-  answerReason: undefined
+  answerContent: '1080',
+  instructions: [
+    ' A stop sign is a regular octagon, a polygon with 8 congruent sides.',
+    'We can create triangles within the octagon. For example, starting with any vertex, or corner, we can draw a line to each of the 5 non-adjacent vertices (or corners) of the octagon.',
+    'Count the number of triangles that have been created.',
+  ],
+  answerReason: undefined,
 };
 
 export const incorrectCard = Template.bind({});
@@ -39,7 +41,8 @@ export const incorrectCard = Template.bind({});
 incorrectCard.args = {
   isCorrectAnswer: false,
   answerIndex: 0,
-  answerContent: "8",
+  answerContent: '8',
   instructions: undefined,
-  answerReason: "Students might think that the number of sides (8) or the number of interior angles (8) is the same as the sum of the interior angles."
+  answerReason:
+    'Students might think that the number of sides (8) or the number of interior angles (8) is the same as the sum of the interior angles.',
 };

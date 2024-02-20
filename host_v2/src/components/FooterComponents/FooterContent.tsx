@@ -7,14 +7,13 @@ import AnswerBar from './AnswerBar';
 import NextStateButton from '../../lib/styledcomponents/footer/NextStateButton';
 
 interface FooterContentProps {
-    inputNum: number;
-    totalNum: number;
-    footerBar: string
-    footerButtonText: string ,
-    phaseOneTime: number,
-    phaseTwoTime: number
+  inputNum: number;
+  totalNum: number;
+  footerBar: string;
+  footerButtonText: string;
+  phaseOneTime: number;
+  phaseTwoTime: number;
 } // eslint-disable-line
-
 
 const EndStyled = styled(Button)(({ theme }) => ({
   border: '4px solid #159EFA',
@@ -70,55 +69,62 @@ const NextStyled = styled(Button)(({ theme }) => ({
     cursor: 'not-allowed',
   },
 }));
-  
+
 export default function FooterContent({
-    inputNum,
-    totalNum,
-    footerBar,
-    footerButtonText,
-    phaseOneTime,
-    phaseTwoTime
+  inputNum,
+  totalNum,
+  footerBar,
+  footerButtonText,
+  phaseOneTime,
+  phaseTwoTime,
 }: FooterContentProps) {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    const handleNextStateButtonClick = () => {
-        console.log('NextStateButton clicked!');
-    };
-    const isPhaseOneDisabled = phaseOneTime < 0;
-    const isPhaseTwoDisabled = phaseTwoTime < 0;
+  const handleNextStateButtonClick = () => {
+    console.log('NextStateButton clicked!');
+  };
+  const isPhaseOneDisabled = phaseOneTime < 0;
+  const isPhaseTwoDisabled = phaseTwoTime < 0;
 
-    return (
-        <FooterStackContainerStyled>
-            <Container maxWidth="md">
-                <Typography variant="body1" style={{ fontFamily: 'Rubik', textAlign: 'left' }}>
-                    {t('gamesession.answerbar')}
-                </Typography>
-                <Box style={{ opacity: footerBar === 'CHOOSE_CORRECT_ANSWER' || footerBar === 'CHOOSE_TRICKIEST_ANSWER' ? 1 : 0.4, width: '100%' }}>
-                    <AnswerBar
-                        inputNum={inputNum}
-                        totalNum={totalNum}
-                    />
-                </Box>
-                <NextStateButton>
-                  {footerButtonText === 'End Answering' ? (
-                      <EndStyled
-                          disabled={isPhaseOneDisabled || isPhaseTwoDisabled}
-                          onClick={handleNextStateButtonClick}
-                      >
-                          {footerButtonText}
-                      </EndStyled>
-                  ) : (
-                      <NextStyled
-                          disabled={isPhaseOneDisabled || isPhaseTwoDisabled}
-                          onClick={handleNextStateButtonClick}
-                      >
-                          {footerButtonText}
-                      </NextStyled>
-                  )}
-                </NextStateButton>
-                
-            </Container>
-        </FooterStackContainerStyled>
-    );
+  return (
+    <FooterStackContainerStyled>
+      <Container maxWidth="md">
+        <Typography
+          variant="body1"
+          style={{ fontFamily: 'Rubik', textAlign: 'left' }}
+        >
+          {t('gamesession.answerbar')}
+        </Typography>
+        <Box
+          style={{
+            opacity:
+              footerBar === 'CHOOSE_CORRECT_ANSWER' ||
+              footerBar === 'CHOOSE_TRICKIEST_ANSWER'
+                ? 1
+                : 0.4,
+            width: '100%',
+          }}
+        >
+          <AnswerBar inputNum={inputNum} totalNum={totalNum} />
+        </Box>
+        <NextStateButton>
+          {footerButtonText === 'End Answering' ? (
+            <EndStyled
+              disabled={isPhaseOneDisabled || isPhaseTwoDisabled}
+              onClick={handleNextStateButtonClick}
+            >
+              {footerButtonText}
+            </EndStyled>
+          ) : (
+            <NextStyled
+              disabled={isPhaseOneDisabled || isPhaseTwoDisabled}
+              onClick={handleNextStateButtonClick}
+            >
+              {footerButtonText}
+            </NextStyled>
+          )}
+        </NextStateButton>
+      </Container>
+    </FooterStackContainerStyled>
+  );
 }
-
