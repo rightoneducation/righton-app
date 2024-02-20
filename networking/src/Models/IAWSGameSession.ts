@@ -1,4 +1,5 @@
 import { GameSessionState } from "../AWSMobileApi"
+import { BackendAnswer } from "./AnswerClasses"
 
 export interface IAWSGameSession {
   id: string
@@ -40,7 +41,7 @@ type AWSTeam = {
 }
 
 type AWSQuestion = {
-  id: number
+  id: string
   text: string
   choices?: string | null
   imageUrl?: string | null
@@ -60,22 +61,10 @@ type AWSTeamMember = {
   id: string
   isFacilitator?: boolean | null
   answers?: {
-      items: Array<AWSTeamAnswer> | null
+      items: Array<BackendAnswer> | null
   } | null
   deviceId?: string | null
   createdAt?: string | null
   updatedAt?: string | null
   teamTeamMembersId?: string | null
-}
-
-type AWSTeamAnswer = {
-  id: string
-  questionId?: number | null
-  isChosen: boolean
-  isTrickAnswer: boolean
-  text?: string | null
-  answerContents?: string | null
-  createdAt?: string
-  updatedAt?: string
-  teamMemberAnswersId?: string | null
 }

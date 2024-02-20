@@ -6,7 +6,7 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
-import { NumberAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision } from '@righton/networking';
+import { NumericAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision } from '@righton/networking';
 
 export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion }) {
   useEffect(() => {
@@ -72,9 +72,9 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
           setIsAnswerPrecisionValid(true);
           break;
         case AnswerType.NUMBER:
-          setIsAnswerTypeValid(NumberAnswer.isAnswerTypeValid(currentTarget.value));
+          setIsAnswerTypeValid(NumericAnswer.isAnswerTypeValid(currentTarget.value));
           currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
-          setIsAnswerPrecisionValid((prev) => NumberAnswer.isAnswerPrecisionValid(currentTarget.value, answerPrecision));
+          setIsAnswerPrecisionValid((prev) => NumericAnswer.isAnswerPrecisionValid(currentTarget.value, answerPrecision));
           break;
         case AnswerType.EXPRESSION:
           setIsAnswerTypeValid(ExpressionAnswer.isAnswerTypeValid(currentTarget.value));

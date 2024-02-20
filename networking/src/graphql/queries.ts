@@ -46,16 +46,18 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
             answers {
               items {
                 id
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
                 questionId
-                isChosen
+                teamMemberAnswersId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
-                teamMemberAnswersId
                 __typename
               }
               nextToken
@@ -167,16 +169,18 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
               answers {
                 items {
                   id
+                  isSubmitted
+                  isShortAnswerEnabled
+                  currentState
+                  currentQuestionIndex
                   questionId
-                  isChosen
+                  teamMemberAnswersId
                   text
-                  awsAnswerContent
-                  isTrickAnswer
+                  answer
                   confidenceLevel
-                  awsHint
+                  hint
                   createdAt
                   updatedAt
-                  teamMemberAnswersId
                   __typename
                 }
                 nextToken
@@ -248,7 +252,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
   APITypes.ListGameSessionsQueryVariables,
   APITypes.ListGameSessionsQuery
 >;
-export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: Int!, $gameSessionId: ID!) {
+export const getQuestion = /* GraphQL */ `query GetQuestion($id: ID!, $order: Int!, $gameSessionId: ID!) {
   getQuestion(id: $id, order: $order, gameSessionId: $gameSessionId) {
     id
     text
@@ -275,7 +279,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
   APITypes.GetQuestionQuery
 >;
 export const listQuestions = /* GraphQL */ `query ListQuestions(
-  $id: Int
+  $id: ID
   $orderGameSessionId: ModelQuestionPrimaryCompositeKeyConditionInput
   $filter: ModelQuestionFilterInput
   $limit: Int
@@ -349,16 +353,18 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
-            isChosen
+            teamMemberAnswersId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -421,16 +427,18 @@ export const listTeams = /* GraphQL */ `query ListTeams(
           answers {
             items {
               id
+              isSubmitted
+              isShortAnswerEnabled
+              currentState
+              currentQuestionIndex
               questionId
-              isChosen
+              teamMemberAnswersId
               text
-              awsAnswerContent
-              isTrickAnswer
+              answer
               confidenceLevel
-              awsHint
+              hint
               createdAt
               updatedAt
-              teamMemberAnswersId
               __typename
             }
             nextToken
@@ -467,16 +475,18 @@ export const getTeamMember = /* GraphQL */ `query GetTeamMember($id: ID!) {
     answers {
       items {
         id
+        isSubmitted
+        isShortAnswerEnabled
+        currentState
+        currentQuestionIndex
         questionId
-        isChosen
+        teamMemberAnswersId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
-        teamMemberAnswersId
         __typename
       }
       nextToken
@@ -505,16 +515,18 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
       answers {
         items {
           id
+          isSubmitted
+          isShortAnswerEnabled
+          currentState
+          currentQuestionIndex
           questionId
-          isChosen
+          teamMemberAnswersId
           text
-          awsAnswerContent
-          isTrickAnswer
+          answer
           confidenceLevel
-          awsHint
+          hint
           createdAt
           updatedAt
-          teamMemberAnswersId
           __typename
         }
         nextToken
@@ -537,16 +549,18 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
 export const getTeamAnswer = /* GraphQL */ `query GetTeamAnswer($id: ID!) {
   getTeamAnswer(id: $id) {
     id
+    isSubmitted
+    isShortAnswerEnabled
+    currentState
+    currentQuestionIndex
     questionId
-    isChosen
+    teamMemberAnswersId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
-    teamMemberAnswersId
     __typename
   }
 }
@@ -562,16 +576,18 @@ export const listTeamAnswers = /* GraphQL */ `query ListTeamAnswers(
   listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      isSubmitted
+      isShortAnswerEnabled
+      currentState
+      currentQuestionIndex
       questionId
-      isChosen
+      teamMemberAnswersId
       text
-      awsAnswerContent
-      isTrickAnswer
+      answer
       confidenceLevel
-      awsHint
+      hint
       createdAt
       updatedAt
-      teamMemberAnswersId
       __typename
     }
     nextToken
@@ -633,16 +649,18 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
               answers {
                 items {
                   id
+                  isSubmitted
+                  isShortAnswerEnabled
+                  currentState
+                  currentQuestionIndex
                   questionId
-                  isChosen
+                  teamMemberAnswersId
                   text
-                  awsAnswerContent
-                  isTrickAnswer
+                  answer
                   confidenceLevel
-                  awsHint
+                  hint
                   createdAt
                   updatedAt
-                  teamMemberAnswersId
                   __typename
                 }
                 nextToken
@@ -765,16 +783,18 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
               answers {
                 items {
                   id
+                  isSubmitted
+                  isShortAnswerEnabled
+                  currentState
+                  currentQuestionIndex
                   questionId
-                  isChosen
+                  teamMemberAnswersId
                   text
-                  awsAnswerContent
-                  isTrickAnswer
+                  answer
                   confidenceLevel
-                  awsHint
+                  hint
                   createdAt
                   updatedAt
-                  teamMemberAnswersId
                   __typename
                 }
                 nextToken

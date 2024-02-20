@@ -1,14 +1,16 @@
 import i18n from 'i18next';
+import { v4 as uuidv4 } from 'uuid';
 import {
-  NumberAnswer,
   StringAnswer,
   ExpressionAnswer,
   ITeam,
-  ITeamAnswerHint,
+  IAnswerHint,
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
-  ITeamAnswerContent
+  AnswerFactory,
+  AnswerType,
+  BackendAnswer
 } from '@righton/networking';
 import {
   InputPlaceholder,
@@ -60,15 +62,17 @@ export const checkForSubmittedAnswerOnRejoin = (
   currentState: GameSessionState,
   currentQuestionIndex: number,
   isShortAnswerEnabled: boolean,
-): ITeamAnswerContent => {
-  let returnedAnswer: ITeamAnswerContent = {
-    rawAnswer: '',
-    normAnswer: [],
-    multiChoiceAnswerIndex: null,
+): BackendAnswer => {
+  let returnedAnswer: BackendAnswer = {
+    id: uuidv4(),
+    answer: AnswerFactory.createAnswer('', AnswerType.STRING),
     isSubmitted: false,
-    currentState: null,
-    currentQuestionIndex: null,
+    currentState: GameSessionState.TEAMS_JOINING,
+    currentQuestionIndex: 0,
     isShortAnswerEnabled,
+    questionId: '',
+    teamMemberAnswersId: '',
+    text: ''
   };
   if (hasRejoined) {
     if (
@@ -83,7 +87,7 @@ export const checkForSubmittedAnswerOnRejoin = (
       window.localStorage.setItem(StorageKey, JSON.stringify(localModel));
     }
   }
-  return returnedAnswer as ITeamAnswerContent;
+  return returnedAnswer as BackendAnswer;
 };
 
 /**
@@ -99,8 +103,8 @@ export const checkForSubmittedHintOnRejoin = (
   hasRejoined: boolean,
   currentState: GameSessionState,
   currentQuestionIndex: number
-): ITeamAnswerHint => {
-  let returnedHint: ITeamAnswerHint = {
+): IAnswerHint => {
+  let returnedHint: IAnswerHint = {
     rawHint: '',
     teamName: '',
     isHintSubmitted: false,
@@ -108,15 +112,15 @@ export const checkForSubmittedHintOnRejoin = (
   if (hasRejoined) {
     if (
       localModel.answer !== null &&
-      localModel.hint!== null &&
+      !isNullOrUndefined(localModel.answer.hint) &&
       localModel.answer.currentState === currentState &&
       localModel.answer.currentQuestionIndex === currentQuestionIndex
     ) {
       // set hint to localModel.hint
-      returnedHint = localModel.hint;
+      returnedHint = localModel.answer.hint;
     }
   }
-  return returnedHint as ITeamAnswerHint;
+  return returnedHint as IAnswerHint;
 };
 
 /**
@@ -128,7 +132,7 @@ export const checkForSubmittedHintOnRejoin = (
  */
 export const checkForSelectedConfidenceOnRejoin = (
   hasRejoined: boolean,
-  currentAnswer: NumberAnswer | StringAnswer | ExpressionAnswer | null | undefined,
+  currentAnswer: BackendAnswer | null | undefined,
   currentState: GameSessionState
 ): {
   selectedConfidenceOption: string;
@@ -145,7 +149,7 @@ export const checkForSelectedConfidenceOnRejoin = (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
-    !isNullOrUndefined(currentAnswer)
+    !isNullOrUndefined(currentAnswer) && !isNullOrUndefined(currentAnswer.confidenceLevel)
   ) {
     isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
     selectedConfidenceOption = currentAnswer.confidenceLevel;
@@ -172,7 +176,7 @@ export const validateLocalModel = (
       parsedLocalModel.currentTime,
       parsedLocalModel.gameSessionId,
       parsedLocalModel.teamId,
-      parsedLocalModel.teamMemberId,
+      parsedLocalModel.teamMemberAnswersId,
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
       parsedLocalModel.currentTimer,

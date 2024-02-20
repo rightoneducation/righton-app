@@ -1,8 +1,8 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
-import { AnswerPrecision, AnswerType } from "./AnswerClasses";
+import { AnswerType, AnswerPrecision } from "./AnswerClasses";
 
 export interface IQuestion {
-    id: number
+    id: string
     text: string
     choices?: Array<IChoice> | null
     answerSettings?: IAnswerSettings | null
@@ -30,7 +30,7 @@ export interface IChoice {
 
 export interface IAnswerSettings {
     answerType: AnswerType
-    answerPrecision: AnswerPrecision
+    answerPrecision?: AnswerPrecision
 }
 
 export interface IResponse {

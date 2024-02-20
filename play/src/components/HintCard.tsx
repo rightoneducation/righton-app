@@ -5,7 +5,7 @@ import { Typography, Box } from '@mui/material';
 import {
   isNullOrUndefined,
   ITeam,
-  ITeamAnswerHint,
+  IAnswerHint,
   GameSessionState,
 } from '@righton/networking';
 import { StorageKeyHint } from '../lib/PlayModels';
@@ -19,8 +19,10 @@ interface HintProps {
   isHintSubmitted: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitHint: (result: ITeamAnswerHint) => void;
+  handleSubmitHint: (result: IAnswerHint) => void;
   currentTeam: ITeam | null;
+  questionId: string;
+  teamMemberAnswersId: string;
 }
 
 export default function HintCard({
@@ -29,7 +31,9 @@ export default function HintCard({
   currentState,
   currentQuestionIndex,
   handleSubmitHint,
-  currentTeam
+  currentTeam,
+  questionId,
+  teamMemberAnswersId
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -50,11 +54,11 @@ export default function HintCard({
   };
 
   const handleNormalizeAnswerOnSubmit = () => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    const packagedAnswer: ITeamAnswerHint = {
+    const packagedAnswer: IAnswerHint = {
       rawHint: editorContents,
       teamName: currentTeam?.name ?? '',
       isHintSubmitted: true
-    } as ITeamAnswerHint;
+    } as IAnswerHint;
     handleSubmitHint(packagedAnswer);
   };
 
@@ -116,6 +120,8 @@ export default function HintCard({
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={handleNormalizeAnswerOnSubmit}
+            questionId={questionId}
+            teamMemberAnswersId={teamMemberAnswersId}
           />
         </Box>
       </BodyCardContainerStyled>
