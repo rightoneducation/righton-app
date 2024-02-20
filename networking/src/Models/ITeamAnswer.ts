@@ -3,13 +3,13 @@ import { ITeamAnswerContent } from "./AnswerClasses";
 
 export interface ITeamAnswer {
     id: string,
-    questionId: number
+    questionId: string
     isChosen: boolean
     text: string
-    answerContent: ITeamAnswerContent
-    createdAt?: string
-    updatedAt?: string
-    teamMemberAnswersId?: string | null
+    answerContents: string
+    createdAt: string
+    updatedAt: string
+    teamMemberAnswersId: string
     isTrickAnswer: boolean
     confidenceLevel: ConfidenceLevel
 }

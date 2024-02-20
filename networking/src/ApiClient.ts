@@ -19,13 +19,11 @@ import {
     CreateTeamMemberMutationVariables,
     CreateTeamMutation,
     CreateTeamMutationVariables,
-    GameSessionState,
     OnCreateTeamAnswerSubscription,
     OnUpdateTeamAnswerSubscription,
     OnCreateTeamSubscription,
     OnDeleteTeamSubscription,
     OnGameSessionUpdatedByIdSubscription,
-    OnUpdateGameSessionSubscription,
     OnUpdateTeamMemberSubscription,
     UpdateGameSessionInput,
     UpdateGameSessionMutation,
@@ -43,6 +41,7 @@ import {
 import {
     listGameTemplates,
     listQuestionTemplates,
+    createGameSessionFromTemplate,
     gameSessionByCode,
     getGameSession,
     getTeam,
@@ -65,34 +64,17 @@ import {
     updateTeam,
     updateQuestion
 } from "./graphql/mutations"
-import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { 
-    IChoice, 
-    IResponse, 
-    IQuestion, 
-    IHints, 
-    IAnswerSettings, 
-    ITeamAnswerHint, 
-    ITeamMember, 
-    IGameSession, 
-    ITeam, 
-    ITeamAnswerContent, 
-    NumberAnswer, 
-    AnswerType, 
-    StringAnswer, 
-    ExpressionAnswer, 
-    IGameTemplate, 
-    IQuestionTemplate,
-     IModelGameQuestionConnection 
-} from "./Models"
+import { GameSessionParser } from "./Parsers/GameSessionParser"
+import { QuestionParser } from "./Parsers/QuestionParser"
+import { Environment } from "./APIClients/BaseAPIClient"
+import { IApiClient } from "./IApiClient"
+import { isNullOrUndefined } from "./global"
+import { IGameTemplate, IQuestionTemplate, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
+import { AWSGameTemplate, AWSQuestionTemplate, AWSTeam, AWSTeamAnswer, AWSTeamMember } from "./Models/AWS"
+import { IGameSession } from "./Models/IGameSession"
+import { ITeam } from "./Models/ITeam"
 
 Amplify.configure(awsconfig)
-
-export enum Environment {
-    Staging = "staging",
-    Developing = "developing",
-    Testing = "testing"
-}
 
 enum HTTPMethod {
     Post = "POST",
@@ -119,15 +101,14 @@ export class ApiClient implements IApiClient {
         owner: string,
         version: number,
         description: string,
-        domain: string,
-        cluster: string,
-        grade: string,
-        standard: string,
+        domain: string | null,
+        cluster: string | null,
+        grade: string | null,
+        standard: string | null,
         phaseOneTime: number,
         phaseTwoTime: number,
         imageUrl: string
     ): Promise<IGameTemplate | null> {
-        console.log("here");
         const input: CreateGameTemplateInput = {
            id,
            title,
@@ -146,23 +127,22 @@ export class ApiClient implements IApiClient {
         const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
             createGameTemplate,
             variables
-        )
+        ) 
         if (
             isNullOrUndefined(gameTemplate.data) ||
             isNullOrUndefined(gameTemplate.data.createGameTemplate)
         ) {
             throw new Error(`Failed to create game template.`)
         }
-        console.log(gameTemplate);
-        return null; //GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate;
+        return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate as AWSGameTemplate)
     } 
 
     async listGameTemplates(limit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
         let result = (await API.graphql(
-            graphqlOperation(listGameTemplates, {limit, nextToken })
+            graphqlOperation(listGameTemplates, {limit, nextToken})
         )) as { data: any }
         const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
-            return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
+            return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
         });
         const parsedNextToken = result.data.listGameTemplates.nextToken;
         return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
@@ -180,8 +160,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create question template.`)
         }
-        console.log(questionTemplate);
-        return null; // QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate) as IQuestionTemplate
+        return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate as AWSQuestionTemplate)
     }
 
     async listQuestionTemplates(limit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
@@ -190,13 +169,12 @@ export class ApiClient implements IApiClient {
             graphqlOperation(listQuestionTemplates, {limit: limit, nextToken })
         )) as { data: any }
         const parsedQuestionTemplates = result.data.listQuestionTemplates.items.map((questionTemplate: AWSQuestionTemplate) => {
-            return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate) as IQuestionTemplate
+            return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
         });
         const parsedNextToken = result.data.listQuestionTemplates.nextToken;
-        
         return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
         } catch (e) {
-            console.log(e);
+            console.error(e);
             return null;
         }
     }
@@ -212,20 +190,18 @@ export class ApiClient implements IApiClient {
            questionTemplateID,
         }
         const variables: CreateGameQuestionsMutationVariables = { input }
-        console.log(variables);
+
         try {
             const gameQuestions = await this.callGraphQL<CreateGameQuestionsMutation>(
                 createGameQuestions,
                 variables
             )
-            console.log('sup');
             if (
                 isNullOrUndefined(gameQuestions.data) ||
                 isNullOrUndefined(gameQuestions.data.createGameQuestions)
             ) {
                 throw new Error(`Failed to create game template.`)
             }
-            console.log(gameQuestions);
         } catch (e) {
             console.log(e);
         } 
@@ -240,7 +216,6 @@ export class ApiClient implements IApiClient {
             return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
         });
         const parsedNextToken = result.data.listGameTemplates.nextToken;
-        
         return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
     }
 
@@ -283,6 +258,20 @@ export class ApiClient implements IApiClient {
             console.log(e)
         }
     return "";
+    }
+
+
+    async createGameSessionFromTemplate(id: string): Promise<string | null> {
+        try {
+            const response = await API.graphql(
+                graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
+            ) as { data: { createGameSessionFromTemplate: string } };
+            const result = response.data.createGameSessionFromTemplate;
+            return result;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
     }
 
     createGameSession(
@@ -525,8 +514,14 @@ export class ApiClient implements IApiClient {
     }
 
     async addTeamAnswer(
-        inputAnswer: NumberAnswer | StringAnswer | ExpressionAnswer
-    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer > {
+        teamMemberId: string,
+        questionId: string,
+        text: string,
+        answerContents: string,
+        isChosen: boolean = false,
+        isTrickAnswer: boolean = false
+    ): Promise<ITeamAnswer> {
+        const awsAnswerContents = JSON.stringify(answerContents)
         const input: CreateTeamAnswerInput = {
             questionId: inputAnswer.questionId,
             isChosen: inputAnswer.isChosen,
@@ -608,7 +603,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update team`)
         }
-        return team.data.updateTeam as ITeam
+        return TeamParser.teamFromAWSTeam(team.data.updateTeam) as ITeam
     }
 
     async updateQuestion(
@@ -626,7 +621,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update question`)
         }
-        return question.data.updateQuestion as IQuestion
+        return QuestionParser.questionFromAWSQuestion(question.data.updateQuestion) as IQuestion
     }
 
     // Private methods
@@ -704,171 +699,56 @@ export class ApiClient implements IApiClient {
     }
 }
 
-type AWSGameTemplate = {
-    id: string,
-    title: string,
-    owner: string,
-    version: number,
-    description: string,
-    domain?: string | null | undefined,
-    cluster?: string | null | undefined,
-    grade?: string | null | undefined,
-    standard?: string | null | undefined,
-    phaseOneTime?: number | null | undefined,
-    phaseTwoTime?: number | null | undefined,
-    imageUrl?: string | null | undefined,
-    questionTemplates?: IModelGameQuestionConnection | null,
-    createdAt?: string | null | undefined,
-    updatedAt?: string | null
-}
-
-type AWSQuestionTemplate = {
-    id: string,
-    title?: string | null,
-    owner?: string | null,
-    version?: number | null,
-    choices?: string | null,
-    instructions?: string | null,
-    answerSettings?: string | null,
-    domain?: string | null | undefined,
-    cluster?: string | null | undefined,
-    grade?: string | null | undefined,
-    standard?: string | null | undefined,
-    imageUrl?: string | null | undefined,
-    gameTemplates?:  IModelGameQuestionConnection | null,
-    createdAt?: string | null | undefined,
-    updatedAt?: string | null
-}
-
-type AWSGameSession = {
-    id: string
-    gameId: number
-    startTime?: string | null
-    phaseOneTime: number
-    phaseTwoTime: number
-    teams?: {
-        items: Array<AWSTeam | null>
-    } | null
-    currentQuestionIndex?: number | null
-    currentState: GameSessionState
-    gameCode: number
-    isAdvancedMode: boolean
-    imageUrl?: string | null
-    description?: string | null
-    title?: string | null
-    currentTimer?: number | null
-    questions?: {
-        items: Array<AWSQuestion | null>
-    } | null
-    createdAt: string
-    updatedAt: string
-}
-
-type AWSTeam = {
-    id: string
-    name: string
-    teamMembers?: {
-        items: Array<AWSTeamMember | null>
-    } | null
-    score: number
-    selectedAvatarIndex: number
-    createdAt: string
-    updatedAt?: string
-    gameSessionTeamsId?: string | null
-    teamQuestionId?: string | null
-    teamQuestionGameSessionId?: string | null
-}
-
-type AWSQuestion = {
-    id: number
-    text: string
-    choices?: string | null
-    answerSettings?: string | null
-    responses?: string | null
-    hints?: string | null
-    imageUrl?: string | null
-    instructions?: string | null
-    standard?: string | null
-    cluster?: string | null
-    domain?: string | null
-    grade?: string | null
-    gameSessionId: string
-    order: number
-    isConfidenceEnabled: boolean
-    isShortAnswerEnabled: boolean
-    isHintEnabled: boolean
-}
-
-type AWSTeamMember = {
-    id: string
-    isFacilitator?: boolean | null
-    answers?: {
-        items: Array<AWSTeamAnswer> | null
-    } | null
-    deviceId?: string | null
-    createdAt?: string | null
-    updatedAt?: string | null
-    teamTeamMembersId?: string | null
-}
-
-type AWSTeamAnswer = {
-    id: string
-    questionId?: number | null
-    isChosen: boolean
-    isTrickAnswer: boolean
-    text?: string | null
-    awsAnswerContent?: string | null
-    awsHint?: string | null
-    createdAt?: string
-    updatedAt?: string
-    teamMemberAnswersId?: string | null
-    confidenceLevel: string
-}
 // ~~~~~~~~~GAMETEMPLATE~~~~~~~~~~~~~~
 class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
         awsGameTemplate: AWSGameTemplate
     ): IGameTemplate {
-       let questionTemplates: IQuestionTemplate[] = [];
-        if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
-            questionTemplates = awsGameTemplate.questionTemplates.items.map((item: any) => {
-                const { questionTemplate } = item;
-                const { gameTemplates, questionTemplates, ...rest } = questionTemplate;
-                return rest as IQuestionTemplate;
-            });
+        // parse the IQuestionTemplate[] from IModelGameQuestionConnection
+        let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
+        if (!isNullOrUndefined(awsGameTemplate) &&
+            !isNullOrUndefined(awsGameTemplate.questionTemplates) &&
+            !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
+            for (const item of awsGameTemplate.questionTemplates.items) {
+                if (item && item.questionTemplate) {
+                    const { gameTemplates, ...rest } = item.questionTemplate;
+                    // Only add to questionTemplates if 'rest' is not empty
+                    if (Object.keys(rest).length > 0) {
+                        const createdAt = new Date(rest.createdAt)
+                        const updatedAt = new Date(rest.updatedAt)
+                        questionTemplates.push({questionTemplate: {...rest, createdAt, updatedAt} as IQuestionTemplate, gameQuestionId: item.id as string});
+                    }
+                }
+            }
+        } else {
+            // assign an empty array if questionTemplates is null
+            questionTemplates = [];
         }
 
+        // destructure AWSGameTemplate and assign default values if null
         const {
             id,
             title,
             owner,
             version,
             description,
-            domain,
-            cluster,
-            grade,
-            standard,
-            phaseOneTime,
-            phaseTwoTime,
-            imageUrl,
-            createdAt,
-            updatedAt
+            domain = awsGameTemplate.domain ?? '', 
+            cluster = awsGameTemplate.cluster ?? '',
+            grade = awsGameTemplate.grade ?? '',
+            standard = awsGameTemplate.standard ?? '',
+            phaseOneTime = awsGameTemplate.phaseOneTime ?? 120,
+            phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 120,
+            imageUrl = awsGameTemplate.imageUrl ?? '',
         } = awsGameTemplate || {}
+
+        const createdAt = new Date(awsGameTemplate.createdAt ?? 0)
+        const updatedAt = new Date(awsGameTemplate.updatedAt ?? 0)
 
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
             isNullOrUndefined(version) ||
-            isNullOrUndefined(description) ||
-            isNullOrUndefined(domain) ||
-            isNullOrUndefined(cluster) ||
-            isNullOrUndefined(grade) ||
-            isNullOrUndefined(standard) ||
-            isNullOrUndefined(phaseOneTime) ||
-            isNullOrUndefined(phaseTwoTime) ||
-            isNullOrUndefined(imageUrl) ||
-            isNullOrUndefined(createdAt) ||
-            isNullOrUndefined(updatedAt)) {
+            isNullOrUndefined(description)) {
             throw new Error(
                 "Game Template has null field for the attributes that are not nullable"
             )
@@ -890,7 +770,7 @@ class GameTemplateParser {
             questionTemplates,
             createdAt,
             updatedAt
-        }
+        } as IGameTemplate;
         return gameTemplate
     }
 }
@@ -899,15 +779,25 @@ class QuestionTemplateParser {
     static questionTemplateFromAWSQuestionTemplate(
         awsQuestionTemplate: AWSQuestionTemplate
     ): IQuestionTemplate {
-        let gameTemplates: IGameTemplate[] = [];
-        if (!isNullOrUndefined(awsQuestionTemplate) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
-            gameTemplates = awsQuestionTemplate.gameTemplates.items.map((item: any) => {
-                const { gameTemplate } = item;
-                const { gameTemplates, questionTemplates, ...rest } = gameTemplate;
-                return rest as IGameTemplate;
-            });
-        } 
-
+        let gameTemplates: Array<{ gameTemplate: IGameTemplate, gameQuestionId: string }> | null = [];
+        if (!isNullOrUndefined(awsQuestionTemplate) &&
+            !isNullOrUndefined(awsQuestionTemplate.gameTemplates) &&
+            !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
+            for (const item of awsQuestionTemplate.gameTemplates.items) {
+              if (item && item.gameTemplate) {
+                  const { questionTemplates, ...rest } = item.gameTemplate;
+                  // Only add to questionTemplates if 'rest' is not empty
+                  if (Object.keys(rest).length > 0) {
+                    const createdAt = new Date(rest.createdAt)
+                    const updatedAt = new Date(rest.updatedAt)
+                    gameTemplates.push({gameTemplate: {...rest, createdAt, updatedAt} as IGameTemplate, gameQuestionId: item.id as string});
+                  }
+              }
+          }
+        } else {
+            // assign an empty array if gameTemplates is null
+            gameTemplates = [];
+        }
 
         const {
             id,
@@ -917,26 +807,24 @@ class QuestionTemplateParser {
             choices,
             instructions,
             answerSettings,
-            domain,
-            cluster,
-            grade,
-            standard,
-            imageUrl,
-            createdAt,
-            updatedAt
+            domain = awsQuestionTemplate.domain ?? '',
+            cluster = awsQuestionTemplate.cluster ?? '',
+            grade = awsQuestionTemplate.grade ?? '',
+            standard = awsQuestionTemplate.standard ?? '',
+            imageUrl = awsQuestionTemplate.imageUrl ?? '',
         } = awsQuestionTemplate || {}
-        console.log(awsQuestionTemplate);
-        console.log(gameTemplates);
+        
+        const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
+        const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
+
+
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
             isNullOrUndefined(version) ||
             isNullOrUndefined(choices) ||
             isNullOrUndefined(instructions) ||
-            isNullOrUndefined(answerSettings) ||
-            isNullOrUndefined(imageUrl) ||
-            isNullOrUndefined(createdAt) ||
-            isNullOrUndefined(updatedAt)) {
+            isNullOrUndefined(answerSettings)) {
             throw new Error(
                 "Question Template has null field for the attributes that are not nullable"
             )
@@ -950,197 +838,16 @@ class QuestionTemplateParser {
             choices,
             instructions,
             answerSettings,
-            domain: domain ?? null,
-            cluster: cluster ?? null,
-            grade: grade ?? null,
-            standard: standard ?? null,
+            domain,
+            cluster,
+            grade,
+            standard,
             imageUrl,
             gameTemplates,
             createdAt,
             updatedAt
-        }
+        } as IQuestionTemplate
         return questionTemplate
-    }
-}
-
-export class GameSessionParser {
-    static gameSessionFromSubscription(
-        subscription: OnUpdateGameSessionSubscription
-    ): IGameSession {
-        const updateGameSession = subscription.onUpdateGameSession
-        if (isNullOrUndefined(updateGameSession)) {
-            throw new Error("subscription.onUpdateGameSession can't be null.")
-        }
-        //@ts-ignore
-        return this.gameSessionFromAWSGameSession(updateGameSession)
-    }
-
-    static gameSessionFromMutation(mutation: UpdateGameSessionMutation) {
-        const updateGameSession = mutation.updateGameSession
-        if (isNullOrUndefined(updateGameSession)) {
-            throw new Error("mutation.updateGameSession can't be null.")
-        }
-        //@ts-ignore
-        return this.gameSessionFromAWSGameSession(updateGameSession)
-    }
-
-    static gameSessionFromAWSGameSession(
-        awsGameSession: AWSGameSession
-    ): IGameSession {
-        const {
-            id,
-            gameId,
-            startTime,
-            phaseOneTime,
-            phaseTwoTime,
-            teams,
-            currentQuestionIndex,
-            currentState,
-            gameCode,
-            questions,
-            currentTimer,
-            updatedAt,
-            createdAt,
-            title,
-            isAdvancedMode,
-        } = awsGameSession || {}
-        if (
-            isNullOrUndefined(id) ||
-            isNullOrUndefined(currentState) ||
-            isNullOrUndefined(gameCode) ||
-            isNullOrUndefined(gameId) ||
-            isNullOrUndefined(phaseOneTime) ||
-            isNullOrUndefined(phaseTwoTime) ||
-            isNullOrUndefined(questions) ||
-            isNullOrUndefined(questions.items) ||
-            isNullOrUndefined(updatedAt) ||
-            isNullOrUndefined(createdAt) ||
-            isNullOrUndefined(isAdvancedMode)
-        ) {
-            throw new Error(
-                "GameSession has null field for the attributes that are not nullable"
-            )
-        }
-        const gameSession: IGameSession = {
-            id,
-            gameId,
-            startTime,
-            phaseOneTime,
-            phaseTwoTime,
-            teams: GameSessionParser.mapTeams(teams),
-            currentQuestionIndex,
-            currentState,
-            gameCode,
-            currentTimer,
-            questions: GameSessionParser.mapQuestions(questions.items),
-            isAdvancedMode,
-            updatedAt,
-            createdAt,
-            title,
-        }
-        return gameSession
-    }
-
-    static gameSessionFromSubscriptionById(
-        subscription: OnGameSessionUpdatedByIdSubscription
-    ): IGameSession {
-        const updateGameSession = subscription.onGameSessionUpdatedById
-        if (isNullOrUndefined(updateGameSession)) {
-            throw new Error("subscription.onUpdateGameSession can't be null.")
-        }
-        //@ts-ignore
-        return this.gameSessionFromAWSGameSession(updateGameSession)
-    }
-
-    static mapTeams(
-        awsTeams: { items: (AWSTeam | null)[] } | null | undefined
-    ): Array<ITeam> {
-        if (isNullOrUndefined(awsTeams) || isNullOrUndefined(awsTeams.items)) {
-            return []
-        }
-        return awsTeams.items.map((awsTeam) => {
-            if (isNullOrUndefined(awsTeam)) {
-                throw new Error("Team can't be null in the backend.")
-            }
-
-            const team: ITeam = {
-                id: awsTeam.id,
-                name: awsTeam.name,
-                teamQuestionId: awsTeam.teamQuestionId,
-                score: awsTeam.score,
-                selectedAvatarIndex: awsTeam.selectedAvatarIndex,
-                createdAt: awsTeam.createdAt,
-                updatedAt: awsTeam.updatedAt,
-                gameSessionTeamsId: awsTeam.gameSessionTeamsId,
-                teamQuestionGameSessionId: awsTeam.teamQuestionGameSessionId,
-                teamMembers: TeamMemberParser.mapTeamMembers(
-                    awsTeam.teamMembers?.items
-                ),
-            }
-            return team
-        })
-    }
-
-    private static parseServerArray<T>(input: any | T[]): Array<T> {
-        if (input instanceof Array) {
-            return input as T[]
-        } else if (typeof input === "string") {
-            return JSON.parse(input as string)
-        }
-        return []
-    }
-
-    private static parseAnswerType<t>(input: any | t): t {
-        if (typeof input === "string") {
-            return JSON.parse(input as string)
-        }
-        return input
-    }
-
-    private static mapQuestions(
-        awsQuestions: Array<AWSQuestion | null>
-    ): Array<IQuestion> {
-        return awsQuestions
-            .map((awsQuestion) => {
-                if (isNullOrUndefined(awsQuestion)) {
-                    throw new Error("Question cannot be null.")
-                }
-                const question: IQuestion = {
-                    id: awsQuestion.id,
-                    text: awsQuestion.text,
-                    choices: isNullOrUndefined(awsQuestion.choices)
-                        ? []
-                        : this.parseServerArray<IChoice>(awsQuestion.choices),
-                    answerSettings: isNullOrUndefined(awsQuestion.answerSettings)
-                        ? null
-                        : this.parseAnswerType<IAnswerSettings>(awsQuestion.answerSettings),
-                    responses: isNullOrUndefined(awsQuestion.responses)
-                         ? []
-                         : this.parseServerArray<IResponse>(awsQuestion.responses),
-                    hints: isNullOrUndefined(awsQuestion.hints)
-                        ? []
-                        : this.parseServerArray<IHints>(awsQuestion.hints),
-                    imageUrl: awsQuestion.imageUrl,
-                    instructions: isNullOrUndefined(awsQuestion.instructions)
-                        ? []
-                        : this.parseServerArray<string>(
-                            awsQuestion.instructions
-                        ),
-                    standard: awsQuestion.standard,
-                    cluster: awsQuestion.cluster,
-                    domain: awsQuestion.domain,
-                    grade: awsQuestion.grade,
-                    gameSessionId: awsQuestion.gameSessionId,
-                    order: awsQuestion.order,
-                    isConfidenceEnabled: awsQuestion.isConfidenceEnabled,
-                    isShortAnswerEnabled: awsQuestion.isShortAnswerEnabled,
-                    isHintEnabled: awsQuestion.isHintEnabled
-                }
-                return question
-            })
-            .sort((lhs, rhs) => {
-                return lhs.order - rhs.order
-            })
     }
 }
 
@@ -1175,6 +882,25 @@ class TeamParser {
         const {
             id,
             name,
+            teamMembers = TeamMemberParser.mapTeamMembers(awsTeam.teamMembers?.items) ?? [],
+            score = awsTeam.score ?? 0,
+            selectedAvatarIndex = awsTeam.selectedAvatarIndex ?? 0,
+            createdAt = awsTeam.createdAt ?? '',
+            updatedAt = awsTeam.updatedAt ?? '',
+            gameSessionTeamsId = awsTeam.gameSessionTeamsId ?? '',
+            teamQuestionId = awsTeam.teamQuestionId ?? '',
+            teamQuestionGameSessionId = awsTeam.teamQuestionGameSessionId ?? '',
+        } = awsTeam || {}
+
+        if (isNullOrUndefined(id)) {
+            throw new Error(
+                "Team has null field for the attributes that are not nullable"
+            )
+        }
+        // using type assertion here because we've already provided default values for all nullable fields above
+        const team: ITeam = {
+            id,
+            name,
             teamMembers,
             score,
             selectedAvatarIndex,
@@ -1183,26 +909,7 @@ class TeamParser {
             gameSessionTeamsId,
             teamQuestionId,
             teamQuestionGameSessionId,
-        } = awsTeam || {}
-
-        if (isNullOrUndefined(id)) {
-            throw new Error(
-                "Team has null field for the attributes that are not nullable"
-            )
-        }
-
-        const team: ITeam = {
-            id,
-            name,
-            teamMembers: TeamMemberParser.mapTeamMembers(teamMembers?.items),
-            score,
-            selectedAvatarIndex,
-            createdAt,
-            updatedAt,
-            gameSessionTeamsId,
-            teamQuestionId,
-            teamQuestionGameSessionId,
-        }
+        } as ITeam;
         return team
     }
 }
@@ -1239,29 +946,29 @@ class TeamMemberParser {
     ): ITeamMember {
         const {
             id,
+            isFacilitator = awsTeamMember.isFacilitator ?? false,
+            answers = TeamAnswerParser.mapTeamAnswers(awsTeamMember.answers?.items) ?? [],
+            deviceId = awsTeamMember.deviceId ?? '',
+            createdAt = awsTeamMember.createdAt ?? '',
+            updatedAt = awsTeamMember.updatedAt ?? '',
+            teamTeamMembersId = awsTeamMember.teamTeamMembersId ?? '',
+        } = awsTeamMember || {}
+
+        if (isNullOrUndefined(id)) {
+            throw new Error(
+                "Team member has null field for the attributes that are not nullable"
+            )
+        }
+        // using type assertion here because we've already provided default values for all nullable fields above
+        const teamMember: ITeamMember = {
+            id,
             isFacilitator,
             answers,
             deviceId,
             createdAt,
             updatedAt,
             teamTeamMembersId,
-        } = awsTeamMember || {}
-
-        if (isNullOrUndefined(id) || isNullOrUndefined(teamTeamMembersId)) {
-            throw new Error(
-                "Team member has null field for the attributes that are not nullable"
-            )
-        }
-
-        const teamMember: ITeamMember = {
-            id,
-            isFacilitator,
-            answers: TeamAnswerParser.mapTeamAnswers(answers?.items),
-            deviceId,
-            createdAt,
-            updatedAt,
-            teamTeamMembersId,
-        }
+        } as ITeamMember;
         return teamMember
     }
 }
@@ -1301,57 +1008,20 @@ class TeamAnswerParser {
             return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
         })
     }
-    static answerContentFromAWSAnswerContent(
-        awsAnswerContent: string
-    ): ITeamAnswerContent {
-        let parsedAnswerContent;
-        try {
-            parsedAnswerContent = JSON.parse(awsAnswerContent);
-            if (isNullOrUndefined(parsedAnswerContent) ||
-            isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
-                throw new Error(
-                    "Team answer content has null field for the attributes that are not nullable"
-                )
-            }
-        } catch (e) {
-            console.log(e)
-            throw new Error("Failed to parse answer content")
-        }
-        return parsedAnswerContent as ITeamAnswerContent;
-    }   
-    static hintFromAWSHint(
-        awsHint: string
-    ): ITeamAnswerHint {
-        let parsedHint;
-        try {
-            parsedHint = JSON.parse(awsHint);
-            if (isNullOrUndefined(awsHint) ||
-            isNullOrUndefined(parsedHint.isHintSubmitted)) {
-                throw new Error(
-                    "Hint has null field for the attributes that are not nullable"
-                )
-            }
-        } catch (e) {
-            console.log(e)
-            throw new Error("Failed to parse hint")
-        }
-        return parsedHint as ITeamAnswerHint;
-    }  
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
     ): NumberAnswer | StringAnswer | ExpressionAnswer {
         const {
             id,
-            questionId,
+            questionId = awsTeamAnswer.questionId ?? '',
             isChosen,
             isTrickAnswer,
-            text,
-            awsAnswerContent,
-            awsHint,
+            text = awsTeamAnswer.text ?? '',
+            awsAnswerContents = awsTeamAnswer.awsAnswerContents ?? '',
             createdAt,
             updatedAt,
-            teamMemberAnswersId,
-            confidenceLevel
+            teamMemberAnswersId = awsTeamAnswer.teamMemberAnswersId ?? '',
+            confidenceLevel = awsTeamAnswer.confidenceLevel ?? ConfidenceLevel.NOT_RATED
         } = awsTeamAnswer || {}
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
@@ -1378,36 +1048,8 @@ class TeamAnswerParser {
             createdAt,
             updatedAt,
             teamMemberAnswersId,
-            confidenceLevel: confidenceLevelEnum
-          };
-        switch (answerContent.answerType) {
-            case(AnswerType.NUMBER):
-            default: {
-                const answerConfig = {
-                    ...answerConfigBase,
-                    value: 0
-                }
-                teamAnswer = new NumberAnswer(answerConfig);
-                break;
-            }
-            case(AnswerType.STRING): {
-                const answerConfig = {
-                    ...answerConfigBase,
-                    value: ''
-                }
-                teamAnswer = new StringAnswer(answerConfig);
-                break;
-            }
-            case(AnswerType.EXPRESSION): {
-                const answerConfig = {
-                    ...answerConfigBase,
-                    value: ''
-                }
-                teamAnswer = new ExpressionAnswer(answerConfig);
-                break;
-            }
-        }
-        
+            confidenceLevel
+        } as ITeamAnswer;
         return teamAnswer
     }
 }

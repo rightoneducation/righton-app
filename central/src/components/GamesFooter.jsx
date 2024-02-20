@@ -3,25 +3,25 @@ import { makeStyles, Box } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 export default function GamesFooter({
-  listGameTemplatePrevTokens,
-  listGameTemplateNextToken,
+  prevTokens,
+  nextToken,
   handlePrevPage,
-  handleNextPage,
+  handleNextPage
 }) {
   const classes = useStyles();
   return (
     <Box className={classes.footer}>
       <Button
-        disabled={listGameTemplatePrevTokens.length === 1}
+        disabled={prevTokens.length === 1}
         className={classes.pageButton}
-        onClick={() => handlePrevPage()}
+        onClick={() => handlePrevPage(prevTokens)}
       >
         Previous Page
       </Button>
       <Button
-        disabled={!listGameTemplateNextToken}
+        disabled={!nextToken}
         className={classes.pageButton}
-        onClick={() => handleNextPage()}
+        onClick={() => handleNextPage(nextToken)}
       >
         Next Page
       </Button>

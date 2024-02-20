@@ -4,8 +4,16 @@ input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
 } # FOR TESTING ONLY!
 
+type Mutation {
+  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String @function(name: "createGame-${env}")
+}
+
+input CreateGameSessionFromTemplateInput {
+  gameTemplateId: ID!
+}
+
 type GameTemplate @model{
-  id: String!
+  id: ID!
   title: String!
   owner: String! @index(
       name: "gameTemplatesByOwner"
@@ -59,7 +67,7 @@ input QuestionTemplateInput {
 
 type GameSession @model {
   id: ID!
-  gameId: Int!
+  gameId: ID!
   startTime: AWSDateTime
   phaseOneTime: Int!
   phaseTwoTime: Int!
@@ -91,7 +99,7 @@ enum GameSessionState {
 }
 
 type Question @model(subscriptions: null, timestamps: null) {
-  id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
+  id: ID! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON
   answerSettings: AWSJSON
@@ -99,6 +107,7 @@ type Question @model(subscriptions: null, timestamps: null) {
   hints: AWSJSON
   imageUrl: String
   instructions: AWSJSON
+  answerSettings: AWSJSON
   standard: String
   cluster: String
   domain: String
@@ -137,7 +146,7 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
-  questionId: Int!
+  questionId: ID!
   isChosen: Boolean!
   text: String!
   awsAnswerContent: AWSJSON!

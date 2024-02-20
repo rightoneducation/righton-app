@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core/styles';
 import { 
   ApiClient,
+  GameSessionAPIClient,
   Environment,
  } from '@righton/networking';
 import { RouteContainer } from './containers/RouteContainer';

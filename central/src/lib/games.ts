@@ -11,7 +11,7 @@ export const fetchGames = async (sortType: SORT_TYPES = SORT_TYPES.UPDATED): Pro
 }
 
 export const sortGames = (games: Array<Game | null>, sortType: SORT_TYPES = SORT_TYPES.UPDATED) => {
-  return sortGamesBySortType(games, sortType);
+  return null; //sortGamesBySortType(games, sortType);
 };
 
 export const createGame = async (game: any, questionIDSet: any) => {

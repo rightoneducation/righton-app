@@ -720,6 +720,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           hints
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -793,6 +794,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
         hints
         imageUrl
         instructions
+        answerSettings
         standard
         cluster
         domain
@@ -841,6 +843,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             hints
             imageUrl
             instructions
+            answerSettings
             standard
             cluster
             domain
@@ -914,6 +917,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
           hints
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -940,7 +944,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
   APITypes.ListGameSessionsQueryVariables,
   APITypes.ListGameSessionsQuery
 >;
-export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: Int!, $gameSessionId: ID!) {
+export const getQuestion = /* GraphQL */ `query GetQuestion($id: ID!, $order: Int!, $gameSessionId: ID!) {
   getQuestion(id: $id, order: $order, gameSessionId: $gameSessionId) {
     id
     text
@@ -950,6 +954,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
     hints
     imageUrl
     instructions
+    answerSettings
     standard
     cluster
     domain
@@ -967,7 +972,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
   APITypes.GetQuestionQuery
 >;
 export const listQuestions = /* GraphQL */ `query ListQuestions(
-  $id: Int
+  $id: ID
   $orderGameSessionId: ModelQuestionPrimaryCompositeKeyConditionInput
   $filter: ModelQuestionFilterInput
   $limit: Int
@@ -991,6 +996,7 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       hints
       imageUrl
       instructions
+      answerSettings
       standard
       cluster
       domain
@@ -1023,6 +1029,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       hints
       imageUrl
       instructions
+      answerSettings
       standard
       cluster
       domain
@@ -1095,6 +1102,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         hints
         imageUrl
         instructions
+        answerSettings
         standard
         cluster
         domain
@@ -2006,6 +2014,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             hints
             imageUrl
             instructions
+            answerSettings
             standard
             cluster
             domain
@@ -2079,6 +2088,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
           hints
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -2138,6 +2148,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             hints
             imageUrl
             instructions
+            answerSettings
             standard
             cluster
             domain
@@ -2211,6 +2222,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
           hints
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain

@@ -1,45 +1,45 @@
-import React from 'react';
-import { Card, CardContent, Grid, Typography, Button, Menu, MenuItem } from '@material-ui/core';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Card, CardContent, Grid, Typography, Button, Menu, MenuItem, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { IQuestionTemplate, IGameTemplate } from '@righton/networking';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 
 type QuestionCardProps = {
-  id: string;
-  title?: string | null;
-  owner?: string | null;
-  version?: number | null;
-  choices?: string | null;
-  instructions?: string | null;
-  domain: string | null;
-  cluster: string | null;
-  grade: string | null;
-  standard: string | null;
-  imageUrl?: string | null;
-  gameTemplates?: IGameTemplate[] | null;
-  createdAt?: string | null;
-  updatedAt?: string | null;
+  gameId: string | null;
+  question: IQuestionTemplate;
+  anchorEl: any;
+  isUserAuth: boolean;
+  match: {} | null;
+  index: number;
+  activeIndex: number | null;
+  handleClick: (event: any) => void;
+  cloneHandler: (question: IQuestionTemplate) => () => void;
+  deleteHandler: (id: string) => () => void;
+  handleClose: () => void;
+  handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
 };
 
 export default function QuestionCard({
-  id,
-  title,
-  owner,
-  version,
-  choices,
-  instructions,
-  domain,
-  cluster,
-  grade,
-  standard,
-  imageUrl,
-  gameTemplates,
-  createdAt,
-  updatedAt,
+  gameId,
+  question,
+  anchorEl,
+  isUserAuth,
+  match,
+  index,
+  activeIndex,
+  handleClick,
+  cloneHandler,
+  deleteHandler,
+  handleClose,
+  handleQuestionSelected
 } : QuestionCardProps) {
   const classes = useStyles();
-  const gameCount = gameTemplates ? gameTemplates.length : 0;
+  const gameCount = question.gameTemplates ? question.gameTemplates.length : 0;
+  const history = useHistory();
+  const [isSelected, setIsSelected] = useState(false);
 return (
   <Card className={classes.game}>
     <CardContent>
@@ -48,7 +48,7 @@ return (
           <div className={classes.cardText}>
             <Grid container>
               <Grid item xs={5}> 
-                <CCSS grade={grade ?? ''} domain={domain ?? ''} cluster={cluster ?? ''} standard={standard ?? ''} />
+                <CCSS grade={question.grade ?? ''} domain={question.domain ?? ''} cluster={question.cluster ?? ''} standard={question.standard ?? ''} />
               </Grid>
               <Grid item md={7}>
                 <Typography className={classes.question}>
@@ -57,19 +57,44 @@ return (
               </Grid>
             </Grid>
             <Typography className={classes.title} >
-              {title}
-            </Typography>
-            <Typography className={classes.textSecondary} color="textSecondary" >
-              {instructions}
+              {question.title}
             </Typography>
           </div>
         </Grid>
         <Grid container item xs={4} md={3}>
           <Grid item xs={10} >
             <div className={classes.imageContainer}>
-              {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
+              {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
             </div>
           </Grid>
+          {
+            gameId &&
+            <Grid item xs={2}>
+              <Checkbox value="isSelected" onChange={() => {
+                handleQuestionSelected(question, !isSelected);
+                setIsSelected(!isSelected);
+              }}/>
+            </Grid>
+          }
+          { isUserAuth && 
+              <Grid item xs={2} className={classes.show}>
+                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
+                  <MoreVertIcon />
+                </Button>
+                <Menu
+                  id={`question-${index}-actions`}
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={activeIndex === index}
+                  onClose={handleClose}
+                  onClick={(event) => { if (!match) event.stopPropagation(); }}
+                >
+                  <MenuItem onClick={(event) => { history.push(`/questionmaker/${question.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                  <MenuItem onClick={cloneHandler(question)}>Clone</MenuItem>
+                  <MenuItem onClick={deleteHandler(question.id)}>Delete</MenuItem>
+                </Menu>             
+              </Grid>
+            }
         </Grid>
       </Grid>
     </CardContent>
@@ -142,5 +167,15 @@ const useStyles = makeStyles(theme => ({
       alignItems:'center',
       paddingTop:'5px',
     },
+    show: {
+      display: 'block'
+    },
+    hide: {
+      display: 'none'
+    },
+    moreButton: {
+      minWidth: '28px',
+      margin: '0',
+    }
   })
 )

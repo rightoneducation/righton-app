@@ -1,17 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid, Button } from '@material-ui/core';
 import GameLaunch from './GameLaunch';
 import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
+import QuestionDashboard from './QuestionDashboard';
+import QuestionMaker from './QuestionMaker';
 import GameMaker from './GameMaker';
-import { getGameById } from '../lib/games';
+import { getGameById, getQuestionTemplateById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 
 
-export default function Games({ loading, games, questions, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
+export default function Games({ 
+  loading,
+  nextToken,  
+  games, 
+  questions, 
+  editGameTemplate, 
+  updateQuestion, 
+  handleDeleteQuestionTemplate, 
+  handleScrollDown, 
+  createNewGameTemplate, 
+  deleteGame, 
+  cloneGameTemplate, 
+  handleCreateQuestionTemplate, 
+  handleUpdateQuestionTemplate, 
+  handleCloneQuestionTemplate,
+  sortType, 
+  setSortType, 
+  cloneQuestion, 
+  isUserAuth, 
+  setSearchInput, 
+  searchInput, 
+  isSearchClick, 
+  handleSearchClick, 
+  isResolutionMobile, 
+  addQuestionTemplateToGameTemplate, 
+  handleQuestionBankClick,
+  handleDeleteGameQuestion,
+  saveGameTemplate
+}) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -19,21 +49,19 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
     setSortType(value);
   };
   const [sortByCheck, setSortByCheck] = React.useState(false);
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const handleQuestionSelected = (question, isSelected) => {
+    if (isSelected) {
+      if (!selectedQuestions.some(existingQuestion => existingQuestion.id === question.id)) 
+        setSelectedQuestions([...selectedQuestions, question]);
+      console.log([...selectedQuestions, question]);
+    } else {
+      setSelectedQuestions(selectedQuestions.filter((existingQuestion) => existingQuestion.id !== question.id));
+    }
+  }
   return (
     <Grid container className={classes.root} spacing={4}>
       <Switch>
-        <Route path="/" exact>
-          <Grid item xs={12} className={classes.sidebar}>
-            <Box className={classes.actions}>
-              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
-              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} />
-            </Box>
-            <Grid container onClick={() => setSortByCheck(false)}>
-
-              <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
-            </Grid>
-          </Grid>
-        </Route>
         {match && getGameById(games, match.params.gameId) && (
           <Grid item xs={12} className={classes.content}>
             <Switch>
@@ -50,7 +78,7 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
                   const { gameId } = match.params;
                   const game = getGameById(games, gameId);
                   handleSearchClick(false);
-                  return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />;
+                  return <GameLaunch loading={loading} saveGame={editGameTemplate} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} game={game} gameId={gameId} deleteGame={deleteGame} handleCloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />;
                 }
               } />
             </Switch>
@@ -62,10 +90,63 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />;
+              return <GameMaker 
+                loading={loading} 
+                questions={questions} 
+                game={newGame ? null : getGameById(games, gameId)} 
+                createNewGameTemplate={createNewGameTemplate} 
+                editGameTemplate={editGameTemplate} 
+                gameId={gameId} 
+                games={games} 
+                cloneQuestion={cloneQuestion} 
+                updateQuestion={updateQuestion} 
+                addQuestionTemplateToGameTemplate={addQuestionTemplateToGameTemplate} 
+                handleQuestionBankClick={handleQuestionBankClick} 
+                handleDeleteGameQuestion={handleDeleteGameQuestion} 
+                selectedQuestions={selectedQuestions} 
+                setSelectedQuestions={setSelectedQuestions} 
+                saveGameTemplate={saveGameTemplate}
+                isUserAuth={isUserAuth}
+                setSearchInput={setSearchInput}
+                searchInput={searchInput}
+                isSearchClick={isSearchClick}
+                handleSearchClick={handleSearchClick}
+                isResolutionMobile={isResolutionMobile} 
+                handleSortChange={handleSortChange} 
+                sortByCheck={sortByCheck}
+                setSortByCheck={setSortByCheck}
+                handleScrollDown={handleScrollDown}
+                handleQuestionSelected={handleQuestionSelected} 
+              />;
             }
           )
         } />
+        <Route path='/questionmaker/:questionId' render={
+          isUserAuth && (
+            ({match}) => {
+              const { questionId } = match.params;
+              const question = getQuestionTemplateById(questions, questionId);
+              handleSearchClick(false);
+              return <QuestionMaker question={question} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
+            } 
+          )
+        }/>
+        <Route path="/">
+          <Grid item xs={12} className={classes.contentGrid}>
+            <Box className={classes.actions}>
+              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
+              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} style={{zIndex: 5}}/>
+            </Box>
+            <Grid container onClick={() => setSortByCheck(false)}>
+              <Route exact path="/questions" render= { () => 
+                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate}/>   
+              }/>
+              <Route exact path="/" render= { () => 
+                <GameDashboard id="GameDashboard" nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />
+              }/>
+            </Grid>
+          </Grid>
+        </Route>
       </Switch>
     </Grid>
   );
@@ -73,28 +154,53 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
+    zIndex: -2,
+    overflowY: 'auto'
   },
-  sidebar: {
-    padding: `0px 0px ${theme.spacing(4)}px ${theme.spacing(4)}px !important`,
+  contentGrid: {
+    padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
-    height: 'calc(100vh - 87px)',
-    overflowY: 'scroll',
+    overflowY: 'hidden',
     overflowX: 'hidden',
   },
   content: {
-    minHeight: 'calc(100vh - 87px)',
     backgroundColor: '#F2F2F2',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
   },
   actions: {
     paddingTop: '10px',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0px 0px  !important`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 10px 0px  !important`,
     marginBottom: '16px',
     display: 'flex',
     justifyContent: 'space-between',
     gap: 10,
     height: '40px',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: 'white',
+    zIndex:3
+  },
+  addQuestionFooter: {
+    width: '100%',
+    height: '50px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    background: '#FFF',
+    zIndex: 4
+  },
+  blueButton: {
+    background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%);',
+    borderRadius: '50px',
+    textTransform: 'none',
+    fontSize: '17px',
+    fontWeight: 500,
+    color: 'white',
   },
 }));

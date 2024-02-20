@@ -19,7 +19,7 @@ interface CardResultsProps {
   answers: IChoice[];
   selectedAnswer: NumberAnswer | StringAnswer | ExpressionAnswer | null;
   currentState: GameSessionState;
-  currentQuestionId: number;
+  currentQuestionId: string;
   gameSession: IGameSession;
 }
 
