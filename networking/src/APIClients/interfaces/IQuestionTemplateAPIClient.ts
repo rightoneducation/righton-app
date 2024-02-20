@@ -21,6 +21,7 @@ export interface IQuestionTemplateAPIClient {
   listQuestionTemplates(
     limit: number | null,
     nextToken: string | null,
+    sortdirection: string | null,
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
@@ -38,7 +39,7 @@ export interface IQuestionTemplateAPIClient {
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null>;
 
-  listQuestionTemplatesByNumGameTemplates(
+  listQuestionTemplatesByGameTemplatesCount(
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,

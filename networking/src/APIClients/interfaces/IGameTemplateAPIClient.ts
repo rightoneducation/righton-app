@@ -21,6 +21,7 @@ export interface IGameTemplateAPIClient {
   listGameTemplates(
     limit: number | null,
     nextToken: string | null,
+    sortDirection: string | null,
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 

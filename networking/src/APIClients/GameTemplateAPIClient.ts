@@ -1,4 +1,3 @@
-import { API, graphqlOperation } from "aws-amplify";
 import { BaseAPIClient } from "./BaseAPIClient";
 import { IGameTemplateAPIClient } from "./interfaces";
 import { IGameTemplate } from "../Models";
@@ -27,7 +26,6 @@ import {
   DeleteGameTemplateMutationVariables
 } from "../AWSMobileApi";
 import { AWSGameTemplate } from "../Models";
-import { IQueryParameters } from "./BaseAPIClient";
 import { isNullOrUndefined } from "../IApiClient";
 
 export class GameTemplateAPIClient
@@ -98,74 +96,19 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.deleteGameTemplate as AWSGameTemplate);
   }
 
-  async listGameTemplates(limit: number | null, nextToken: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    let queryParameters: IQueryParameters = { limit, nextToken, type: "GameTemplate" };
-    if (filterString != null) {
-      queryParameters.filter = { title: { contains: filterString } };
-    }
-    let result = (await API.graphql(
-        graphqlOperation(listGameTemplates, queryParameters)
-    )) as { data: any }
-    const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
-        return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
-    });
-    const parsedNextToken = result.data.listGameTemplates.nextToken;
-    return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+  async listGameTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", listGameTemplates, "listGameTemplates");
   }
 
   async listGameTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    let queryParameters: IQueryParameters = { limit, nextToken, type: "GameTemplate" };
-    if (filterString != null) {
-      queryParameters.filter = { title: { contains: filterString } };
-    }
-    if (sortDirection != null) {
-      queryParameters.sortDirection = sortDirection;
-    }
-    let result = (await API.graphql(
-      graphqlOperation(gameTemplatesByDate, queryParameters)
-    )) as { data: any }
-    const parsedGameTemplates = result.data.gameTemplatesByDate.items.map((gameTemplate: AWSGameTemplate) => {
-      return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
-    });
-    const parsedNextToken = result.data.gameTemplatesByDate.nextToken;
-    return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByDate, "gameTemplatesByDate");
   }
 
   async listGameTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    let queryParameters: IQueryParameters = { limit, nextToken, type: "GameTemplate" };
-    if (filterString != null) {
-      queryParameters.filter = { title: { contains: filterString } };
-    }
-    if (sortDirection != null) {
-      queryParameters.sortDirection = sortDirection;
-    }
-    let result = (await API.graphql(
-      graphqlOperation(gameTemplatesByGrade, queryParameters)
-    )) as { data: any }
-    const parsedGameTemplates = result.data.gameTemplatesByGrade.items.map((gameTemplate: AWSGameTemplate) => {
-      return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
-    });
-    const parsedNextToken = result.data.gameTemplatesByGrade.nextToken;
-    return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByGrade, "gameTemplatesByGrade");
   }
 
   async listGameTemplatesByQuestionTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    let queryParameters: IQueryParameters = { limit, nextToken, type: "GameTemplate" };
-    if (filterString != null) {
-      queryParameters.filter = { title: { contains: filterString } };
-    }
-    if (sortDirection != null) {
-      queryParameters.sortDirection = sortDirection;
-    }
-    console.log(queryParameters);
-    let result = (await API.graphql(
-      graphqlOperation(gameTemplatesByQuestionTemplatesCount, queryParameters)
-    )) as { data: any }
-    console.log(result);
-    const parsedGameTemplates = result.data.gameTemplatesByQuestionTemplatesCount.items.map((gameTemplate: AWSGameTemplate) => {
-      return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
-    });
-    const parsedNextToken = result.data.gameTemplatesByQuestionTemplatesCount.nextToken;
-    return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByQuestionTemplatesCount, "gameTemplatesByQuestionTemplatesCount");
   }
 }
