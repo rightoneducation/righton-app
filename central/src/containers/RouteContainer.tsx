@@ -19,7 +19,22 @@ import {
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game, Questions } from '../API';
-
+import { 
+  createGameTemplate, 
+  updateGameTemplate,
+  deleteGameTemplate, 
+  listGameTemplates
+} from '../lib/API/GameTemplates';
+import { 
+  createQuestionTemplate, 
+  updateQuestionTemplate,
+  deleteQuestionTemplate,
+  listQuestionTemplates
+} from '../lib/API/QuestionTemplates';
+import {
+  createGameQuestions,
+  deleteGameQuestions
+} from '../lib/API/GameQuestions';
 import { IListQuerySettings } from '../lib/API/QueryInputs';
 import { updateQuestion, cloneQuestion } from '../lib/questions';
 import {useMediaQuery} from '../hooks/useMediaQuery';
