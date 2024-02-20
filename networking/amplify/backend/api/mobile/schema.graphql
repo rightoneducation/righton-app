@@ -11,7 +11,7 @@ type Mutation {
 input CreateGameSessionFromTemplateInput {
   gameTemplateId: ID!
 }
-
+# define a GameTemplate in amplify and graphql to list all gametemplates sorted by updatedAt
 type GameTemplate @model{
   id: ID!
   title: String!
@@ -29,9 +29,11 @@ type GameTemplate @model{
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
-  questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
+  questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions") 
+  questionTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
+  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByQuestionTemplatesCount", queryField: "gameTemplatesByQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
 }
 
 input GameTemplateInput {
@@ -55,8 +57,10 @@ type QuestionTemplate @model {
   standard: String
   imageUrl: String
   gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
+  gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
+   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplatesByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "questionTemplatesByGameTemplatesCount", queryField: "questionTemplatesByGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
 }
 
 input QuestionTemplateInput {

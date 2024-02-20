@@ -13,7 +13,8 @@ export interface IQuestionTemplate {
   grade: string;
   standard: string;
   imageUrl?: string | null | undefined,
-  gameTemplates: { gameTemplate: IGameTemplate, gameQuestionId: string }[] | [],
-  createdAt: Date,
-  updatedAt: Date
+  gameTemplates?: { gameTemplate: IGameTemplate, gameQuestionId: string }[] | null,
+  gameTemplatesCount: number,
+  createdAt?: string | null | undefined,
+  updatedAt?: string | null
 }

@@ -13,7 +13,8 @@ export type AWSGameTemplate = {
     phaseOneTime?: number | null | undefined,
     phaseTwoTime?: number | null | undefined,
     imageUrl?: string | null | undefined,
-    questionTemplates?: AWSModelGameQuestionConnection | null,
-    createdAt: string,
-    updatedAt: string
+    questionTemplates?: IModelGameQuestionConnection | null,
+    questionTemplatesCount: number,
+    createdAt?: string | null | undefined,
+    updatedAt?: string | null
 }

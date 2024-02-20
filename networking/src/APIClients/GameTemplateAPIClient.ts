@@ -1,4 +1,3 @@
-import { API, graphqlOperation } from "aws-amplify";
 import { BaseAPIClient } from "./BaseAPIClient";
 import { IGameTemplateAPIClient } from "./interfaces";
 import { IGameTemplate } from "../Models";
@@ -8,7 +7,10 @@ import {
   getGameTemplate,
   updateGameTemplate,
   deleteGameTemplate,
-  listGameTemplates 
+  listGameTemplates,
+  gameTemplatesByDate,
+  gameTemplatesByGrade,
+  gameTemplatesByQuestionTemplatesCount
 } from "../graphql";
 import { 
   CreateGameTemplateInput, 
@@ -108,14 +110,19 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.deleteGameTemplate as AWSGameTemplate);
   }
 
-  async listGameTemplates(limit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    let result = (await API.graphql(
-        graphqlOperation(listGameTemplates, {limit, nextToken})
-    )) as { data: any }
-    const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
-        return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
-    });
-    const parsedNextToken = result.data.listGameTemplates.nextToken;
-    return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+  async listGameTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", listGameTemplates, "listGameTemplates");
+  }
+
+  async listGameTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByDate, "gameTemplatesByDate");
+  }
+
+  async listGameTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByGrade, "gameTemplatesByGrade");
+  }
+
+  async listGameTemplatesByQuestionTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByQuestionTemplatesCount, "gameTemplatesByQuestionTemplatesCount");
   }
 }

@@ -107,7 +107,8 @@ export class ApiClient implements IApiClient {
         standard: string | null,
         phaseOneTime: number,
         phaseTwoTime: number,
-        imageUrl: string
+        imageUrl: string,
+        questionTemplatesCount: number
     ): Promise<IGameTemplate | null> {
         const input: CreateGameTemplateInput = {
            id,
@@ -121,7 +122,8 @@ export class ApiClient implements IApiClient {
            standard,
            phaseOneTime,
            phaseTwoTime,
-           imageUrl
+           imageUrl,
+           questionTemplatesCount
         }
         const variables: CreateGameTemplateMutationVariables = { input }
         const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
@@ -732,13 +734,16 @@ class GameTemplateParser {
             owner,
             version,
             description,
-            domain = awsGameTemplate.domain ?? '', 
-            cluster = awsGameTemplate.cluster ?? '',
-            grade = awsGameTemplate.grade ?? '',
-            standard = awsGameTemplate.standard ?? '',
-            phaseOneTime = awsGameTemplate.phaseOneTime ?? 120,
-            phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 120,
-            imageUrl = awsGameTemplate.imageUrl ?? '',
+            domain,
+            cluster,
+            grade,
+            standard,
+            phaseOneTime,
+            phaseTwoTime,
+            imageUrl,
+            questionTemplatesCount,
+            createdAt,
+            updatedAt
         } = awsGameTemplate || {}
 
         const createdAt = new Date(awsGameTemplate.createdAt ?? 0)
@@ -768,6 +773,7 @@ class GameTemplateParser {
             phaseTwoTime,
             imageUrl,
             questionTemplates,
+            questionTemplatesCount,
             createdAt,
             updatedAt
         } as IGameTemplate;
@@ -807,11 +813,14 @@ class QuestionTemplateParser {
             choices,
             instructions,
             answerSettings,
-            domain = awsQuestionTemplate.domain ?? '',
-            cluster = awsQuestionTemplate.cluster ?? '',
-            grade = awsQuestionTemplate.grade ?? '',
-            standard = awsQuestionTemplate.standard ?? '',
-            imageUrl = awsQuestionTemplate.imageUrl ?? '',
+            domain,
+            cluster,
+            grade,
+            standard,
+            imageUrl,
+            gameTemplatesCount,
+            createdAt,
+            updatedAt
         } = awsQuestionTemplate || {}
         
         const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
@@ -844,6 +853,7 @@ class QuestionTemplateParser {
             standard,
             imageUrl,
             gameTemplates,
+            gameTemplatesCount,
             createdAt,
             updatedAt
         } as IQuestionTemplate

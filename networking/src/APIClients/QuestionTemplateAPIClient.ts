@@ -1,4 +1,3 @@
-import { API, graphqlOperation } from "aws-amplify";
 import { BaseAPIClient } from "./BaseAPIClient";
 import { IQuestionTemplateAPIClient } from "./interfaces";
 import { 
@@ -6,7 +5,10 @@ import {
   getQuestionTemplate,
   updateQuestionTemplate,
   deleteQuestionTemplate,
-  listQuestionTemplates 
+  listQuestionTemplates,
+  questionTemplatesByDate,
+  questionTemplatesByGrade,
+  questionTemplatesByGameTemplatesCount
 } from "../graphql";
 import { 
   CreateQuestionTemplateInput, 
@@ -104,19 +106,20 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.deleteQuestionTemplate as AWSQuestionTemplate);
   }
 
-  async listQuestionTemplates(limit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    try{
-    let result = (await API.graphql(
-        graphqlOperation(listQuestionTemplates, {limit: limit, nextToken })
-    )) as { data: any }
-    const parsedQuestionTemplates = result.data.listQuestionTemplates.items.map((questionTemplate: AWSQuestionTemplate) => {
-        return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
-    });
-    const parsedNextToken = result.data.listQuestionTemplates.nextToken;
-    return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
-    } catch (e) {
-        console.log(e);
-        return null;
-    }
+  
+  async listQuestionTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", listQuestionTemplates, "listQuestionTemplates");
+  }
+
+  async listQuestionTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByDate, "questionTemplatesByDate");
+  }
+
+  async listQuestionTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByGrade, "questionTemplatesByGrade");
+  }
+
+  async listQuestionTemplatesByGameTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByGameTemplatesCount, "questionTemplatesByGameTemplatesCount");
   }
 }

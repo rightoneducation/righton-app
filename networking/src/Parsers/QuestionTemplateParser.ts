@@ -22,54 +22,51 @@ export class QuestionTemplateParser {
             // assign an empty array if gameTemplates is null
             gameTemplates = [];
         }
+      } 
+      const {
+          id,
+          title,
+          owner,
+          version,
+          choices,
+          instructions,
+          answerSettings,
+          domain,
+          cluster,
+          grade,
+          standard,
+          imageUrl,
+          gameTemplatesCount,
+          createdAt,
+          updatedAt
+      } = awsQuestionTemplate || {}
+      if (isNullOrUndefined(id) ||
+          isNullOrUndefined(title) ||
+          isNullOrUndefined(owner) ||
+          isNullOrUndefined(version)) {
+          throw new Error(
+              "Question Template has null field for the attributes that are not nullable"
+          )
+      }
 
-        const {
-            id,
-            title,
-            owner,
-            version,
-            choices,
-            instructions,
-            answerSettings,
-            domain = awsQuestionTemplate.domain ?? '',
-            cluster = awsQuestionTemplate.cluster ?? '',
-            grade = awsQuestionTemplate.grade ?? '',
-            standard = awsQuestionTemplate.standard ?? '',
-            imageUrl = awsQuestionTemplate.imageUrl ?? '',
-        } = awsQuestionTemplate || {}
-
-        const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
-        const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
-
-        if (isNullOrUndefined(id) ||
-            isNullOrUndefined(title) ||
-            isNullOrUndefined(owner) ||
-            isNullOrUndefined(version) ||
-            isNullOrUndefined(choices) ||
-            isNullOrUndefined(instructions) ||
-            isNullOrUndefined(answerSettings)) {
-            throw new Error(
-                "Question Template has null field for the attributes that are not nullable"
-            )
-        }
-
-        const questionTemplate: IQuestionTemplate = {
-            id,
-            title,
-            owner,
-            version,
-            choices,
-            instructions,
-            answerSettings,
-            domain,
-            cluster,
-            grade,
-            standard,
-            imageUrl,
-            gameTemplates,
-            createdAt,
-            updatedAt
-        } as IQuestionTemplate
-        return questionTemplate
-    }
+      const questionTemplate: IQuestionTemplate = {
+          id,
+          title,
+          owner,
+          version,
+          choices,
+          instructions,
+          answerSettings,
+          domain: domain ?? null,
+          cluster: cluster ?? null,
+          grade: grade ?? null,
+          standard: standard ?? null,
+          imageUrl,
+          gameTemplates,
+          gameTemplatesCount,
+          createdAt,
+          updatedAt
+      }
+      return questionTemplate
+  }
 }

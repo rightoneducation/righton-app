@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Route,
   Switch,
   useHistory,
-  useLocation
+  useLocation,
+  useRouteMatch
 } from "react-router-dom";
 import { Auth } from 'aws-amplify';
 import { Box } from '@material-ui/core';
+import {debounce, set} from 'lodash';
 import { 
   ApiClient,
   IGameTemplate,
@@ -19,24 +21,24 @@ import {Alert} from '../context/AlertContext';
 import { Game } from '../API';
 import { 
   createGameTemplate, 
-  getGameTemplate, 
   updateGameTemplate,
   deleteGameTemplate, 
   listGameTemplates
-} from '../lib/APIClients/gameTemplates';
+} from '../lib/API/GameTemplates';
+
+
 import { 
   createQuestionTemplate, 
-  getQuestionTemplate, 
   updateQuestionTemplate,
   deleteQuestionTemplate,
   listQuestionTemplates
-} from '../lib/APIClients/questionTemplates';
+} from '../lib/API/QuestionTemplates';
 import {
   createGameQuestions,
   deleteGameQuestions
-} from '../lib/APIClients/gameQuestions';
-import { updateQuestion } from '../lib/questions';
-import { SORT_TYPES } from '../lib/sorting';
+} from '../lib/API/GameQuestions';
+import { IListQuerySettings } from '../lib/API/QueryInputs';
+import { updateQuestion, cloneQuestion } from '../lib/questions';
 import {useMediaQuery} from '../hooks/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import AlertBar from '../components/AlertBar';
@@ -58,7 +60,6 @@ export const RouteContainer = ({
   }: RouteContainerProps ) => {
   const [startup, setStartup] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [sortType, setSortType] = useState(SORT_TYPES.UPDATED);
   const [searchInput, setSearchInput] = useState('');
   const [games, setGames] = useState<(IGameTemplate[])>([]);
   const [questions, setQuestions] = useState<(IQuestionTemplate[] | null)>([]);
@@ -72,27 +73,49 @@ export const RouteContainer = ({
   const [nextToken, setNextToken] = useState<string | null>(null);
   const location = useLocation();
   const history = useHistory();
-  const queryLimit = 12; // number of games retreiived on main page
+  const queryLimit = 12; // number of games retrieved on main page
+  const [listQuerySettings, setListQuerySettings] = useState<IListQuerySettings>({
+    nextToken: null,
+    queryLimit,
+  });
+  const [sortByCheck, setSortByCheck] = React.useState(false);
+  const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
+    setSortByCheck(false);
+    const updatedListQuerySettings = {
+      nextToken: null,
+      queryLimit,
+      sortDirection: listQuerySettings.sortDirection,
+      sortField: listQuerySettings.sortField
+    }
+    setListQuerySettings(updatedListQuerySettings);
+    if (location.pathname === "/questions")
+      getAllQuestionTemplates(updatedListQuerySettings);
+    else if (location.pathname === "/")
+      getAllGameTemplates(updatedListQuerySettings);
+  }
 
-  const getAllGameTemplates = async (nextToken: string | null) => {
+  const getAllGameTemplates = async (listQuerySettings: IListQuerySettings | null) => {
     try { 
-      const games = await listGameTemplates(queryLimit, nextToken);
+      setLoading(true);
+      const games = await listGameTemplates(listQuerySettings);
       if (games?.gameTemplates){
         setGames(games?.gameTemplates);
         setNextToken(games?.nextToken ?? null);
+        setLoading(false);
       }
     } catch (e) {
       console.log(e);
     }
   }
 
-  const getQuestionTemplates = async (nextToken: string | null) => {
+  const getAllQuestionTemplates = async (listQuerySettings: IListQuerySettings | null) => {
     try {
-      const questions = await listQuestionTemplates(queryLimit, nextToken);
+      setLoading(true);
+      const questions = await listQuestionTemplates(listQuerySettings);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
         setNextToken(questions?.nextToken ?? null);
-        return questions;
+        setLoading(false);
       }
     } catch (e) {
       console.log(e);
@@ -101,8 +124,9 @@ export const RouteContainer = ({
 
   const handleScrollDown = async (nextToken: string | null) => {
     let currentToken = nextToken;
+    listQuerySettings.nextToken = nextToken;
     if (location.pathname === '/'){
-      const games = await listGameTemplates(queryLimit, nextToken);
+      const games = await listGameTemplates(listQuerySettings);
       if (games?.gameTemplates){
         setGames((prev) => [
           ...(prev ?? []),
@@ -111,8 +135,8 @@ export const RouteContainer = ({
         nextToken = games?.nextToken ?? null;
       }
   
-    } else {
-      const questions = await listQuestionTemplates(queryLimit, nextToken);
+    } else if (location.pathname === '/questions'){
+      const questions = await listQuestionTemplates(listQuerySettings);
       if (questions?.questionTemplates){
         setQuestions((prev) => [
           ...(prev ?? []),
@@ -126,21 +150,31 @@ export const RouteContainer = ({
     }  
     setNextToken((prev) => nextToken);
   }
-  
+
+  const debouncedApiCall = useCallback(debounce((updatedListQuerySettings, location) => {
+    if (location.pathname === "/")
+      getAllGameTemplates(updatedListQuerySettings);
+    else 
+      getAllQuestionTemplates(updatedListQuerySettings);
+  }, 500), []);
+
+  const handleSearchChange = (searchValue: string) => {
+    const updatedListQuerySettings = {
+      ...listQuerySettings,
+      filterString: searchValue,
+      nextToken: null,
+      queryLimit: undefined
+    };
+    setListQuerySettings(updatedListQuerySettings);
+    setSearchInput(searchValue);
+    debouncedApiCall(updatedListQuerySettings, location);
+  };
+
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
     try{
     const question = await apiClient.createQuestionTemplate(questionInput);
     } catch (e) {
-      console.log(e);
-    }
-  }
-
-  const addQuestionTemplateToGameTemplate = async (gameId: string, questionId: string) => {
-    try{
-      const game = await apiClient.createGameQuestions(uuidv4(), '5561', 'f98648a9-84e4-48b0-8ffa-5e5dfcb8a752');
-    }
-    catch (e) {
       console.log(e);
     }
   }
@@ -195,7 +229,8 @@ export const RouteContainer = ({
       });
       const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
     }
-    const games = await getAllGameTemplates(null);
+    listQuerySettings.nextToken = null;
+    const games = await getAllGameTemplates(listQuerySettings);
     setLoading(false);
     setAlert({ message: 'Save Completed.', type: 'success' });
   };
@@ -203,15 +238,16 @@ export const RouteContainer = ({
     // update existing game template with changes from game maker
     const editGameTemplate = async (newGame: { id: string, owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string, questionTemplates?: IQuestionTemplate[] }, questionIDSet: number[]) => {
       setLoading(true);
-      try{
-      const {questionTemplates, ...rest} = newGame;
-      const gameTemplateUpdate = rest; 
-      const questionTemplatesUpdate = questionTemplates;
-      const game = await updateGameTemplate(gameTemplateUpdate);
+      try {
+        const {questionTemplates, ...rest} = newGame;
+        const gameTemplateUpdate = rest; 
+        const questionTemplatesUpdate = questionTemplates;
+        const game = await updateGameTemplate(gameTemplateUpdate);
+          
         if (game) {
           // ~~~~ add questions to game ~~~~~~ using , questionIDSet
-  
-          const games = await getAllGameTemplates(nextToken);
+          listQuerySettings.nextToken = nextToken;
+          const games = await getAllGameTemplates(listQuerySettings);
         } else {
           throw new Error ('Game was unable to be created');
         }
@@ -223,7 +259,7 @@ export const RouteContainer = ({
     }
 
   const handleQuestionBankClick = (gameDetails: any) => {
-    getQuestionTemplates(null);
+    getAllQuestionTemplates(null);
     history.push(`/gamemaker/${gameDetails.id}/addquestion`)
   }
 
@@ -234,7 +270,8 @@ export const RouteContainer = ({
     const newGameTemplate = { ...rest, id: uuidv4(), title: `Clone of ${game.title}`};
     const result = await createGameTemplate(newGameTemplate);
     if (result) {
-      getAllGameTemplates(nextToken);
+      listQuerySettings.nextToken = nextToken;
+      getAllGameTemplates(listQuerySettings);
       setAlert({ message: 'Game cloned.', type: 'success' });
     }
     return result
@@ -243,7 +280,8 @@ export const RouteContainer = ({
   const handleDeleteGameTemplate = async (id: string) => {
     const result = await deleteGameTemplate(id);
     if (result) {
-      const games = await getAllGameTemplates(nextToken);
+      listQuerySettings.nextToken = nextToken;
+      const games = await getAllGameTemplates(listQuerySettings);
     }
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
@@ -251,7 +289,8 @@ export const RouteContainer = ({
   const handleDeleteQuestionTemplate = async (id: string, game: Game) => {
     const result = await deleteQuestionTemplate(id);
     if (result) {
-      getQuestionTemplates(nextToken)
+      listQuerySettings.nextToken = nextToken;
+      getAllQuestionTemplates(listQuerySettings)
     }
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
@@ -260,7 +299,7 @@ export const RouteContainer = ({
     try {
       const result = await createQuestionTemplate(question);
       if (result) {
-        getQuestionTemplates(null);
+        getAllQuestionTemplates(null);
       }
       return result;
     } catch (e) {
@@ -281,7 +320,8 @@ export const RouteContainer = ({
       const updatedQuestion = {...questionTemplateUpdate, updatedAt, createdAt};
       const question = await updateQuestionTemplate(updatedQuestion);
         if (question) {  
-          const question = await getQuestionTemplates(nextToken);
+          listQuerySettings.nextToken = nextToken;
+          const question = await getAllQuestionTemplates(listQuerySettings);
         } else {
           throw new Error ('Question was unable to be update');
         }
@@ -301,19 +341,42 @@ export const RouteContainer = ({
     const updatedQuestionTemplate = {...newQuestionTemplate, updatedAt, createdAt};
     const result = await createQuestionTemplate(updatedQuestionTemplate);
     if (result) {
-      getAllGameTemplates(nextToken);
+      listQuerySettings.nextToken = nextToken;
+      getAllGameTemplates(listQuerySettings);
       setAlert({ message: 'Question cloned.', type: 'success' });
     }
     return result
   }
 
   const handleCreateGameQuestion = async (gameId: string, questionId: string) => {
-    const result = await createGameQuestions({gameTemplateID: gameId, questionTemplateID: questionId});
-    return result;
+    try {
+      const result = await createGameQuestions({gameTemplateID: gameId, questionTemplateID: questionId});
+      // when a game and question are linked, we update the respective gameTemplatesCount and questionTemplatesCount
+      if (
+        !isNullOrUndefined(result) &&
+        !isNullOrUndefined(result.gameTemplate) &&
+        !isNullOrUndefined(result.questionTemplate) &&
+        !isNullOrUndefined(result.gameTemplate.questionTemplates) &&
+        !isNullOrUndefined(result.questionTemplate.gameTemplates) &&
+        result.gameTemplate.questionTemplates.length >= 0 &&
+        result.questionTemplate.gameTemplates.length >= 0
+      ) {
+        const {questionTemplates, ...restGame} = result.gameTemplate;
+        const gameTemplateUpdate = {...restGame, questionTemplatesCount: questionTemplates.length}; 
+        const {gameTemplates, ...restQuestion} = result.questionTemplate;
+        const questionTemplateUpdate = {...restQuestion, gameTemplatesCount: gameTemplates.length};
+        await updateQuestionTemplate(gameTemplateUpdate);
+        await updateQuestionTemplate(questionTemplateUpdate);
+      }
+      return result;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleDeleteGameQuestion = async (id: string) => {
     const result = await deleteGameQuestions(id);
+    console.log(result);
   }
 
   const handleUserAuth = (isAuth: boolean) => {
@@ -333,15 +396,10 @@ export const RouteContainer = ({
     }
   });
 
-  const getGames = async () => {
-    setLoading(true);
-    await getAllGameTemplates(nextToken);
-    setLoading(false);
-  };
-
   const isResolutionMobile = useMediaQuery("(max-width: 760px)");
 
   const handleSearchClick = (isClick: boolean) => {
+    setNextToken(null);
     setIsSearchClick(isClick);
   }
 
@@ -363,49 +421,35 @@ export const RouteContainer = ({
       return true;
   };
 
-  const filterGame = (game: IGameTemplate | null, search: string) => {
-    if (!game || !game?.title) {
-      return false;
-    }
-    if (game.title.toLowerCase().indexOf(search) > -1 || (game.description && game.description.toLowerCase().indexOf(search) > -1)) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  };
-
   useEffect(() => {
     persistUserAuth();
-    if (location.pathname === '/questions'){
-      getQuestionTemplates(null);
-    } else {
-      getAllGameTemplates(null);
-    }
-    setStartup(false);
-  }, [sortType]);
-
-  useEffect(() => {
     // get either a list of games or questions when the route changes
+    setSearchInput('');
+    const updatedListQuerySettings = {
+      nextToken: null,
+      queryLimit,
+      sortDirection: listQuerySettings.sortDirection,
+      sortField: null,
+      filterString: ''
+    }
     const fetchData = async () => {
       setNextToken(null);
       setPrevTokens([null]);
       setLoading(true);
-      if (location.pathname === '/questions'){
-        await getQuestionTemplates(null);
-      } else {
-        await getAllGameTemplates(null);
+      if (location.pathname === "/questions"){
+        await getAllQuestionTemplates(updatedListQuerySettings);
+      } else if (location.pathname === "/") {
+        await getAllGameTemplates(updatedListQuerySettings);
       }
       setLoading(false);
     };
 
-    if (location.pathname === '/questions' || location.pathname === '/') 
+    if ((location.pathname === "/questions") || (location.pathname === "/") ) 
       fetchData();
-  }, [location]);
+    setStartup(false);
+  }, [location.pathname]);
 
   if (startup) return null;
-
-  const filteredGames = games?.filter((game: IGameTemplate | null) => filterGame(game, searchInput.toLowerCase())) as IGameTemplate[];
 
   const alertContext = {
     alert,
@@ -436,7 +480,7 @@ export const RouteContainer = ({
         <Games 
           loading={loading} 
           nextToken={nextToken} 
-          games={filteredGames} 
+          games={games} 
           questions={questions} 
           handleScrollDown={handleScrollDown} 
           createNewGameTemplate={createNewGameTemplate} 
@@ -445,8 +489,6 @@ export const RouteContainer = ({
           handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} 
           deleteGame={handleDeleteGameTemplate} 
           cloneGameTemplate={cloneGameTemplate} 
-          sortType={sortType} 
-          setSortType={setSortType} 
           cloneQuestion={cloneQuestion} 
           isUserAuth={isUserAuth}  
           isSearchClick={isSearchClick} 
@@ -454,13 +496,17 @@ export const RouteContainer = ({
           setSearchInput={setSearchInput} 
           searchInput={searchInput} 
           isResolutionMobile={isResolutionMobile} 
-          addQuestionTemplateToGameTemplate={addQuestionTemplateToGameTemplate} 
           handleQuestionBankClick={handleQuestionBankClick}
           handleCreateQuestionTemplate={handleCreateQuestionTemplate}
           handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
           handleCloneQuestionTemplate={handleCloneQuestionTemplate}
           handleDeleteGameQuestion={handleDeleteGameQuestion}
           saveGameTemplate={saveGameTemplate}
+          listQuerySettings={listQuerySettings} 
+          handleUpdateListQuerySettings={handleUpdateListQuerySettings}
+          handleSearchChange={handleSearchChange}
+          sortByCheck={sortByCheck}
+          setSortByCheck={setSortByCheck}
         />
       </Box>
       <AlertBar />

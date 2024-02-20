@@ -28,8 +28,6 @@ export default function Games({
   handleCreateQuestionTemplate, 
   handleUpdateQuestionTemplate, 
   handleCloneQuestionTemplate,
-  sortType, 
-  setSortType, 
   cloneQuestion, 
   isUserAuth, 
   setSearchInput, 
@@ -37,24 +35,23 @@ export default function Games({
   isSearchClick, 
   handleSearchClick, 
   isResolutionMobile, 
-  addQuestionTemplateToGameTemplate, 
   handleQuestionBankClick,
   handleDeleteGameQuestion,
-  saveGameTemplate
+  saveGameTemplate,
+  listQuerySettings,
+  handleUpdateListQuerySettings,
+  handleSearchChange,
+  sortByCheck,
+  setSortByCheck,
 }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
-  const handleSortChange = (value) => {
-    setSortType(value);
-  };
-  const [sortByCheck, setSortByCheck] = React.useState(false);
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const handleQuestionSelected = (question, isSelected) => {
     if (isSelected) {
       if (!selectedQuestions.some(existingQuestion => existingQuestion.id === question.id)) 
         setSelectedQuestions([...selectedQuestions, question]);
-      console.log([...selectedQuestions, question]);
     } else {
       setSelectedQuestions(selectedQuestions.filter((existingQuestion) => existingQuestion.id !== question.id));
     }
@@ -100,7 +97,6 @@ export default function Games({
                 games={games} 
                 cloneQuestion={cloneQuestion} 
                 updateQuestion={updateQuestion} 
-                addQuestionTemplateToGameTemplate={addQuestionTemplateToGameTemplate} 
                 handleQuestionBankClick={handleQuestionBankClick} 
                 handleDeleteGameQuestion={handleDeleteGameQuestion} 
                 selectedQuestions={selectedQuestions} 
@@ -112,7 +108,8 @@ export default function Games({
                 isSearchClick={isSearchClick}
                 handleSearchClick={handleSearchClick}
                 isResolutionMobile={isResolutionMobile} 
-                handleSortChange={handleSortChange} 
+                listQuerySettings={listQuerySettings}
+                handleUpdateListQuerySettings={handleUpdateListQuerySettings} 
                 sortByCheck={sortByCheck}
                 setSortByCheck={setSortByCheck}
                 handleScrollDown={handleScrollDown}
@@ -134,17 +131,17 @@ export default function Games({
         <Route path="/">
           <Grid item xs={12} className={classes.contentGrid}>
             <Box className={classes.actions}>
-              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
-              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} style={{zIndex: 5}}/>
+              <SearchBar isGames={location.pathname === "/"} handleSearchChange={handleSearchChange} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
+              <SortByDropdown isGames={location.pathname === "/"} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} style={{zIndex: 5}}/>
             </Box>
-            <Grid container onClick={() => setSortByCheck(false)}>
+            <Box onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
                 <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate}/>   
               }/>
               <Route exact path="/" render= { () => 
                 <GameDashboard id="GameDashboard" nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />
               }/>
-            </Grid>
+            </Box>
           </Grid>
         </Route>
       </Switch>

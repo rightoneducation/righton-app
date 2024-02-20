@@ -24,52 +24,45 @@ export class GameTemplateParser {
             questionTemplates = [];
         }
 
-        // destructure AWSGameTemplate and assign default values if null
-        const {
-            id,
-            title,
-            owner,
-            version,
-            description,
-            domain = awsGameTemplate.domain ?? '', 
-            cluster = awsGameTemplate.cluster ?? '',
-            grade = awsGameTemplate.grade ?? '',
-            standard = awsGameTemplate.standard ?? '',
-            phaseOneTime = awsGameTemplate.phaseOneTime ?? 120,
-            phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 120,
-            imageUrl = awsGameTemplate.imageUrl ?? '',
-        } = awsGameTemplate || {}
+      const {
+          id,
+          title,
+          owner,
+          version,
+          description,
+          domain,
+          cluster,
+          grade,
+          standard,
+          phaseOneTime,
+          phaseTwoTime,
+          imageUrl,
+          questionTemplatesCount,
+          createdAt,
+          updatedAt
+      } = awsGameTemplate || {}
 
         const createdAt = new Date(awsGameTemplate.createdAt ?? 0)
         const updatedAt = new Date(awsGameTemplate.updatedAt ?? 0)
 
-        if (isNullOrUndefined(id) ||
-            isNullOrUndefined(title) ||
-            isNullOrUndefined(owner) ||
-            isNullOrUndefined(version) ||
-            isNullOrUndefined(description)) {
-            throw new Error(
-                "Game Template has null field for the attributes that are not nullable"
-            )
-        }
-
-        const gameTemplate: IGameTemplate = {
-            id,
-            title,
-            owner,
-            version,
-            description,
-            domain,
-            cluster,
-            grade,
-            standard,
-            phaseOneTime,
-            phaseTwoTime,
-            imageUrl,
-            questionTemplates,
-            createdAt,
-            updatedAt
-        } as IGameTemplate
-        return gameTemplate
-    }
+      const gameTemplate: IGameTemplate = {
+          id,
+          title,
+          owner,
+          version,
+          description,
+          domain,
+          cluster,
+          grade,
+          standard,
+          phaseOneTime,
+          phaseTwoTime,
+          imageUrl,
+          questionTemplates,
+          questionTemplatesCount,
+          createdAt,
+          updatedAt
+      }
+      return gameTemplate
+  }
 }

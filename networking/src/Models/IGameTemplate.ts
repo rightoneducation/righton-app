@@ -6,14 +6,15 @@ export interface IGameTemplate {
   owner: string,
   version: number,
   description: string,
-  domain?: string | null,
-  cluster?: string | null,
-  grade?: string | null,
-  standard?: string | null,
+  domain?: string | null | undefined,
+  cluster?: string | null | undefined,
+  grade?: string | null | undefined,
+  standard?: string | null | undefined,
   phaseOneTime: number,
   phaseTwoTime: number,
-  imageUrl?: string | null,
-  questionTemplates: { questionTemplate: IQuestionTemplate, gameQuestionId: string }[] | [],
-  createdAt: Date,
-  updatedAt: Date
+  imageUrl?: string | null | undefined,
+  questionTemplates?: { questionTemplate: IQuestionTemplate, gameQuestionId: string }[] | null,
+  questionTemplatesCount: number,
+  createdAt?: string | null | undefined,
+  updatedAt?: string | null
 }

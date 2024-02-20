@@ -76,7 +76,6 @@ async function createAndSignRequest(query, variables) {
     body: JSON.stringify({ query, variables }),
     path: endpoint.pathname
   });
-  console.log(requestToBeSigned);
   return new Request(endpoint, await signer.sign(requestToBeSigned));
 }
 /**
@@ -84,7 +83,6 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
-  console.log("Received event:", JSON.stringify(event, null, 2));
   const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     getGameTemplate(id: $id) {
       id

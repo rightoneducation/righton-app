@@ -3,6 +3,9 @@ import awsconfig from "../aws-exports";
 import { Amplify, API, graphqlOperation } from "aws-amplify";
 import { isNullOrUndefined } from "../global";
 import { Environment } from "./interfaces/IBaseAPIClient";
+import { IGameTemplate, IQuestionTemplate} from "../Models";
+import { GameTemplateParser } from "../Parsers/GameTemplateParser";
+import { QuestionTemplateParser } from "../Parsers/QuestionTemplateParser";
 
 Amplify.configure(awsconfig);
 
@@ -21,6 +24,21 @@ export interface SubscriptionValue<T> {
     data: T;
     errors: Array<any> | null;
   };
+}
+
+type QueryResult<T> = T extends "GameTemplate"
+? { gameTemplates: IGameTemplate[]; nextToken: string }
+: T extends "QuestionTemplate"
+? { questionTemplates: IQuestionTemplate[]; nextToken: string }
+: never;
+
+// used in GameTemplateAPIClient and QuestionTemplateAPIClient to store query settings
+export interface IQueryParameters { 
+  limit?: number | null;
+  nextToken: string | null;
+  sortDirection?: string | null;
+  type: string;
+  [key: string]: any; // This line allows for additional properties like 'filter'
 }
 
 export abstract class BaseAPIClient {
@@ -79,6 +97,36 @@ export abstract class BaseAPIClient {
     }
 
     return result.data;
+  }
+
+  protected async executeQuery <T extends "GameTemplate" | "QuestionTemplate">(
+      limit: number | null, 
+      nextToken: string | null, 
+      sortDirection: string | null,
+      filterString: string | null,
+      type: T, 
+      query: any,
+      queryName: string
+    ): Promise<QueryResult<T> | null> {
+      let queryParameters: IQueryParameters = { limit, nextToken, type };
+      if (filterString != null) {
+        queryParameters.filter = { title: { contains: filterString } };
+      }
+      if (sortDirection != null) {
+        queryParameters.sortDirection = sortDirection;
+      }
+      let result = (await API.graphql(
+        graphqlOperation(query, queryParameters)
+      )) as { data: any }
+      const operationResult = result.data[queryName];
+      const parsedNextToken = operationResult.nextToken;
+      if (type === "GameTemplate") {
+        const gameTemplates = operationResult.items.map(GameTemplateParser.gameTemplateFromAWSGameTemplate);
+        return { gameTemplates, nextToken: parsedNextToken } as QueryResult<T>;
+      } else {
+        const questionTemplates = operationResult.items.map(QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate);
+        return { questionTemplates, nextToken: parsedNextToken } as QueryResult<T>;
+      }
   }
 }
 export { Environment };
