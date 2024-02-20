@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto'
 import { ITeamAnswer } from '../../src'
 
 class TeamAnswerHelper {
-    static teamAnswer(teamMemberId: string,
+    static teamAnswer(teamMemberAnswersId: string,
         questionId: number,
         answerText: string,
         isChosen: boolean,
@@ -15,7 +15,7 @@ class TeamAnswerHelper {
             isTrickAnswer: isTrickAnswer,
             createdAt: Date().toString(),
             updatedAt: Date().toString(),
-            teamMemberAnswersId: teamMemberId
+            teamMemberAnswersId: teamMemberAnswersId
         }
     }
 }

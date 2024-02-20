@@ -2,7 +2,7 @@ import React from 'react';
 import {
   IGameSession,
   GameSessionState,
-  AWSGameSession,
+  IAWSGameSession,
   GameSessionParser,
   IChoice,
 } from '@righton/networking';
@@ -41,7 +41,7 @@ const Template: StoryFn<typeof PhaseResults> = function PhaseResultsTemplate(
 };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-  MockGameSession as AWSGameSession
+  MockGameSession as unknown as IAWSGameSession
 ) as IGameSession;
 
 const answerChoices = gameSession.questions[0].choices.map(

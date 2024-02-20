@@ -1,5 +1,5 @@
 import { UpdateGameSessionInput } from './AWSMobileApi'
-import { ITeamMember, ITeam, NumberAnswer, StringAnswer, ExpressionAnswer } from './Models'
+import { ITeamMember, ITeam, BackendAnswer } from './Models'
 import { IGameSession } from './Models/IGameSession'
 
 export interface IApiClient {
@@ -10,5 +10,5 @@ export interface IApiClient {
     getGameSessionByCode(gameCode: number): Promise<IGameSession | null>
     addTeamToGameSessionId(gameSessionId: string, name: string, questionId: string | null): Promise<ITeam>
     addTeamMemberToTeam(teamId: string, isFacilitator: boolean, deviceId: string): Promise<ITeamMember>
-    addTeamAnswer(teamMemberId: string, questionId: string, text: string, awsAnswerContents: string, isChosen: boolean, isTrickAnswer: boolean): Promise<ITeamAnswer>
+    addTeamAnswer(inputAnswer: BackendAnswer): Promise<BackendAnswer>
 }

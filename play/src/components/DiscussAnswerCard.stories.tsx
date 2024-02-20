@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   IGameSession,
-  AWSGameSession,
+  IAWSGameSession,
   GameSessionParser,
   GameSessionState,
   IChoice,
@@ -34,7 +34,7 @@ const Template: StoryFn<typeof DiscussAnswerCard> = function AnswerCardTemplate(
 };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-  MockGameSession as AWSGameSession
+  MockGameSession as unknown as IAWSGameSession
 ) as IGameSession;
 
 const answerChoices = gameSession.questions[0].choices.map(

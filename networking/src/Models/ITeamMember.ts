@@ -1,11 +1,11 @@
-import { TeamAnswerClass } from "./AnswerClasses"
+import { BackendAnswer } from "./AnswerClasses"
 
 export interface ITeamMember {
     id: string
-    isFacilitator: boolean
-    answers: Array<ITeamAnswer>
-    deviceId: string
-    createdAt: string
-    updatedAt: string
-    teamTeamMembersId: string
+    isFacilitator?: boolean | null
+    answers?: Array<BackendAnswer | null> | null
+    deviceId?: string | null
+    createdAt?: string | null
+    updatedAt?: string | null
+    teamTeamMembersId?: string | null
 }

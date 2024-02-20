@@ -63,7 +63,7 @@ export default function GameSessionSwitch({
         <GameInProgress
           {...gameSession}
           apiClient={apiClient}
-          teamMemberId={localModel.teamMemberId}
+          teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
           teamId={localModel.teamId}
@@ -81,7 +81,7 @@ export default function GameSessionSwitch({
         <GameInProgress
           {...gameSession}
           apiClient={apiClient}
-          teamMemberId={localModel.teamMemberId}
+          teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
           teamId={localModel.teamId}

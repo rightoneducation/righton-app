@@ -7,7 +7,7 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionMakerAnswerDropdown from './QuestionMakerAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
-import { AnswerType, AnswerPrecision } from '@righton/networking';
+import { NumericAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision } from '@righton/networking';
 
 export default function QuestionMaker({ 
   updateQuestion, 
@@ -27,11 +27,11 @@ export default function QuestionMaker({
   const history = useHistory();
   const location = useLocation();
   const originalQuestion = location.state || initialState || null;
-  const [answerType, setAnswerType] = useState('number');
-  const [answerPrecision, setAnswerPrecision] = useState('WHOLE');
-  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
-  const [isAnswerTypeInvalid, setIsAnswerTypeInvalid] = useState(false);
-  const [isAnswerDecimalInvalid, setIsAnswerDecimalInvalid] = useState(false);
+  const [answerType, setAnswerType] = useState(AnswerType.NUMBER);
+  const [answerPrecision, setAnswerPrecision] = useState(AnswerPrecision.WHOLE);
+  const [isAnswerTypeValid, setIsAnswerTypeValid] = useState(false);
+  const [isAnswerPrecisionValid, setIsAnswerPrecisionValid] = useState(false);
+
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
       const copyOfOriginal = { ...originalQuestion }
@@ -50,17 +50,6 @@ export default function QuestionMaker({
     }
   });
 
-  const decimalValidator = (inputValue) => {
-    const answerPrecisionDictionary = {
-      ['WHOLE']: 0,
-      ['TENTH']: 1,
-      ['HUNDREDTH']: 2,
-      ['THOUSANDTH']: 3
-    }
-    const precisionValue = answerPrecisionDictionary[answerPrecision];
-    const roundedNumberAsString = Number(inputValue).toFixed(precisionValue);
-    return inputValue.toString() === roundedNumberAsString;
-  }
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if (gameId != null) {
@@ -84,18 +73,30 @@ export default function QuestionMaker({
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
   // When a wrong answer is changed/update this function handles that change
-  const onChoiceTextChangeMaker = (choiceIndex, answerType) => ({ currentTarget }) => {
-    if (choiceIndex === 0 && answerType === 'number') {
-      setIsAnswerTypeInvalid(!numericAnswerRegex.test(currentTarget.value));
-      currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
-      setIsAnswerDecimalInvalid(!decimalValidator(currentTarget.value));
-    } else {
-      setIsAnswerDecimalInvalid(false);
+  const onChoiceTextChangeMaker = (choice, choiceIndex, answerType) => ({ currentTarget }) => {
+    if (choice.isAnswer === true){
+      switch(answerType){
+        case AnswerType.STRING:
+        default:
+          setIsAnswerTypeValid(StringAnswer.isAnswerTypeValid(currentTarget.value));
+          setIsAnswerPrecisionValid(true);
+          break;
+        case AnswerType.NUMBER:
+          setIsAnswerTypeValid(NumericAnswer.isAnswerTypeValid(currentTarget.value));
+          currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
+          setIsAnswerPrecisionValid((prev) => NumericAnswer.isAnswerPrecisionValid(currentTarget.value, answerPrecision));
+          break;
+        case AnswerType.EXPRESSION:
+          setIsAnswerTypeValid(ExpressionAnswer.isAnswerTypeValid(currentTarget.value));
+          setIsAnswerPrecisionValid(true);
+          break;
+      }
     }
     const newChoices = [...question.choices];
     newChoices[choiceIndex].text = handleStringInput(currentTarget.value);
     setQuestion({ ...question, choices: newChoices });
   };
+
   // When the wrong answer reasoning is changed/update this function handles that change
   const onChoiceReasonChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
     const newChoices = [...question.choices];
@@ -233,8 +234,8 @@ export default function QuestionMaker({
                 setAnswerType={setAnswerType}
                 answerPrecision={answerPrecision}
                 setAnswerPrecision={setAnswerPrecision}
-                isAnswerTypeInvalid={isAnswerTypeInvalid}
-                isAnswerDecimalInvalid={isAnswerDecimalInvalid}
+                isAnswerTypeValid={isAnswerTypeValid}
+                isAnswerPrecisionValid={isAnswerPrecisionValid}
               />
             ))}
           </Grid>

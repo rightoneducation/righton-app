@@ -2,10 +2,10 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
-  ITeamAnswerContent,
+  BackendAnswer,
   GameSessionState,
-  INormAnswer,
   IChoice,
+  AnswerFactory,
   AnswerType
 } from '@righton/networking';
 import {
@@ -18,11 +18,13 @@ interface ButtonSubmitAnswerProps {
   isSubmitted: boolean;
   isHint: boolean;
   isShortAnswerEnabled: boolean;
-  selectedAnswer?: number | null;
+  selectedAnswer?: string | null;
   answers?: IChoice[] | undefined;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
+  questionId: string,
+  teamMemberAnswersId: string,
+  handleSubmitAnswer: (answer: BackendAnswer) => void;
 }
 
 export default function ButtonSubmitAnswer({
@@ -34,6 +36,8 @@ export default function ButtonSubmitAnswer({
   answers,
   currentState,
   currentQuestionIndex,
+  questionId,
+  teamMemberAnswersId,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
@@ -48,22 +52,25 @@ export default function ButtonSubmitAnswer({
       {isHint ? hintButtonText : buttonText}
     </Typography>
   );
+
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
       onClick={() => {
-        const answerText = answers?.[selectedAnswer ?? 0]?.text;
-        const answer = {
-          rawAnswer: answerText ?? '',
-          normAnswer: [],
-          multiChoiceAnswerIndex: selectedAnswer,
+        const submitAnswer = new BackendAnswer(
+          AnswerFactory.createAnswer(selectedAnswer ?? '', AnswerType.MULTICHOICE),
+          true,
           isShortAnswerEnabled,
-          isSubmitted: true,
           currentState,
           currentQuestionIndex,
-        } as ITeamAnswerContent;
+          questionId,
+          teamMemberAnswersId,
+          selectedAnswer ?? '',
+          null,
+          null
+        );
 
-        handleSubmitAnswer(answer);
+        handleSubmitAnswer(submitAnswer);
       }}
     >
       {buttonContents}

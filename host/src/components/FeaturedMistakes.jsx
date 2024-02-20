@@ -26,11 +26,14 @@ export default function FeaturedMistakes({
   const sortMistakes = (shortAnswerResponses, totalAnswers) => {
     const extractedMistakes = shortAnswerResponses
       .filter(shortAnswerResponse => !shortAnswerResponse.isCorrect)
-      .reduce((mistakes, shortAnswerResponse) => mistakes.push({ 
-        answer: shortAnswerResponse.rawAnswer, 
-        percent: Math.round((shortAnswerResponse.count/totalAnswers)*100), 
-        isSelected: shortAnswerResponse.isSelectedMistake ?? false
-      }), []);
+      .reduce((mistakes, shortAnswerResponse) => {
+        mistakes.push({ 
+          answer: shortAnswerResponse.rawAnswer, 
+          percent: Math.round((shortAnswerResponse.count/totalAnswers)*100), 
+          isSelected: shortAnswerResponse.isSelectedMistake ?? false
+        })
+        return mistakes;
+      }, []);
     let sortedMistakes = extractedMistakes.sort((a, b) => {
       return b.percent - a.percent;
     });

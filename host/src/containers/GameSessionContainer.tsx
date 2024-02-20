@@ -104,6 +104,7 @@ const GameSessionContainer = () => {
 
   // initial query for gameSessions and teams
   useEffect(() => {
+    try{
     apiClient.getGameSession(gameSessionId).then((response) => {
       setGameSession(response); // set initial gameSession state
       gameSessionId = response.id; // set gameSessionId to the response id (in case it was a new gameSession)
@@ -153,8 +154,7 @@ const GameSessionContainer = () => {
               team.teamMembers && team.teamMembers.forEach((teamMember) => {
                 teamMember.answers && teamMember.answers.forEach((answer) => {
                   if (answer.questionId === response.questions[response.currentQuestionIndex].id
-                    && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS)
-                      && answer.isChosen)
+                    && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS))
                   ) {
                     setShortAnswerResponses((prev) => {
                       return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), response.questions[response.currentQuestionIndex].answerSettings, answer, team.name)
@@ -166,8 +166,11 @@ const GameSessionContainer = () => {
           }
           setTeamsArray(responses);
         })
-        .catch((reason) => console.log(reason));
+        .catch((reason) => console.error(reason));
     });
+   } catch (e) {
+      console.error(e);
+    }
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(
       gameSessionId,

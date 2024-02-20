@@ -47,16 +47,18 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
             answers {
               items {
                 id
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
                 questionId
-                isChosen
+                teamMemberAnswersId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
-                teamMemberAnswersId
                 __typename
               }
               nextToken
@@ -133,16 +135,18 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `subscription OnTeamMemb
     answers {
       items {
         id
+        isSubmitted
+        isShortAnswerEnabled
+        currentState
+        currentQuestionIndex
         questionId
-        isChosen
+        teamMemberAnswersId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
-        teamMemberAnswersId
         __typename
       }
       nextToken
@@ -191,16 +195,18 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
-            isChosen
+            teamMemberAnswersId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -262,16 +268,18 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
-            isChosen
+            teamMemberAnswersId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -1500,16 +1508,18 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
             answers {
               items {
                 id
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
                 questionId
-                isChosen
+                teamMemberAnswersId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
-                teamMemberAnswersId
                 __typename
               }
               nextToken
@@ -1620,16 +1630,18 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
             answers {
               items {
                 id
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
                 questionId
-                isChosen
+                teamMemberAnswersId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
-                teamMemberAnswersId
                 __typename
               }
               nextToken
@@ -1740,16 +1752,18 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
             answers {
               items {
                 id
+                isSubmitted
+                isShortAnswerEnabled
+                currentState
+                currentQuestionIndex
                 questionId
-                isChosen
+                teamMemberAnswersId
                 text
-                awsAnswerContent
-                isTrickAnswer
+                answer
                 confidenceLevel
-                awsHint
+                hint
                 createdAt
                 updatedAt
-                teamMemberAnswersId
                 __typename
               }
               nextToken
@@ -1851,16 +1865,18 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
-            isChosen
+            teamMemberAnswersId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -1922,16 +1938,18 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
-            isChosen
+            teamMemberAnswersId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -1993,16 +2011,18 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
         answers {
           items {
             id
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
             questionId
-            isChosen
+            teamMemberAnswersId
             text
-            awsAnswerContent
-            isTrickAnswer
+            answer
             confidenceLevel
-            awsHint
+            hint
             createdAt
             updatedAt
-            teamMemberAnswersId
             __typename
           }
           nextToken
@@ -2041,16 +2061,18 @@ export const onCreateTeamMember = /* GraphQL */ `subscription OnCreateTeamMember
     answers {
       items {
         id
+        isSubmitted
+        isShortAnswerEnabled
+        currentState
+        currentQuestionIndex
         questionId
-        isChosen
+        teamMemberAnswersId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
-        teamMemberAnswersId
         __typename
       }
       nextToken
@@ -2076,16 +2098,18 @@ export const onUpdateTeamMember = /* GraphQL */ `subscription OnUpdateTeamMember
     answers {
       items {
         id
+        isSubmitted
+        isShortAnswerEnabled
+        currentState
+        currentQuestionIndex
         questionId
-        isChosen
+        teamMemberAnswersId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
-        teamMemberAnswersId
         __typename
       }
       nextToken
@@ -2111,16 +2135,18 @@ export const onDeleteTeamMember = /* GraphQL */ `subscription OnDeleteTeamMember
     answers {
       items {
         id
+        isSubmitted
+        isShortAnswerEnabled
+        currentState
+        currentQuestionIndex
         questionId
-        isChosen
+        teamMemberAnswersId
         text
-        awsAnswerContent
-        isTrickAnswer
+        answer
         confidenceLevel
-        awsHint
+        hint
         createdAt
         updatedAt
-        teamMemberAnswersId
         __typename
       }
       nextToken
@@ -2142,16 +2168,18 @@ export const onCreateTeamAnswer = /* GraphQL */ `subscription OnCreateTeamAnswer
 ) {
   onCreateTeamAnswer(filter: $filter) {
     id
+    isSubmitted
+    isShortAnswerEnabled
+    currentState
+    currentQuestionIndex
     questionId
-    isChosen
+    teamMemberAnswersId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
-    teamMemberAnswersId
     __typename
   }
 }
@@ -2164,16 +2192,18 @@ export const onUpdateTeamAnswer = /* GraphQL */ `subscription OnUpdateTeamAnswer
 ) {
   onUpdateTeamAnswer(filter: $filter) {
     id
+    isSubmitted
+    isShortAnswerEnabled
+    currentState
+    currentQuestionIndex
     questionId
-    isChosen
+    teamMemberAnswersId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
-    teamMemberAnswersId
     __typename
   }
 }
@@ -2186,16 +2216,18 @@ export const onDeleteTeamAnswer = /* GraphQL */ `subscription OnDeleteTeamAnswer
 ) {
   onDeleteTeamAnswer(filter: $filter) {
     id
+    isSubmitted
+    isShortAnswerEnabled
+    currentState
+    currentQuestionIndex
     questionId
-    isChosen
+    teamMemberAnswersId
     text
-    awsAnswerContent
-    isTrickAnswer
+    answer
     confidenceLevel
-    awsHint
+    hint
     createdAt
     updatedAt
-    teamMemberAnswersId
     __typename
   }
 }

@@ -1,4 +1,4 @@
-import { ITeamAnswerContent, ITeamAnswerHint } from '@righton/networking';
+import { BackendAnswer } from '@righton/networking';
 import Icon0 from '../img/MonsterIcon0.svg';
 import Icon1 from '../img/MonsterIcon1.svg';
 import Icon2 from '../img/MonsterIcon2.svg';
@@ -122,15 +122,14 @@ export enum ErrorType {
  * @param {number} selectedAvatar - avatar selected by player
  */
 export interface LocalModel {
-  currentTime: number;
   gameSessionId: string;
   teamId: string;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
+  currentTime: number;
+  currentTimer: number;
   selectedAvatar: number;
   hasRejoined: boolean;
-  currentTimer: number;
-  answer: ITeamAnswerContent | null;
-  hint: ITeamAnswerHint | null;
+  answer: BackendAnswer | null;
 }
 
 interface MonsterMap {

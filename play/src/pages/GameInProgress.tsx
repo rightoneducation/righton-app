@@ -9,15 +9,14 @@ import {
   ModelHelper,
   ConfidenceLevel,
   isNullOrUndefined,
-  ITeamAnswerContent,
+  BackendAnswer,
   IChoice,
-  NumberAnswer,
-  StringAnswer,
-  ExpressionAnswer,
+  IAnswerHint,
+  AnswerFactory,
   AnswerType,
-  ITeamAnswerConfig,
-  ITeamAnswerHint
+  IAnswerSettings
 } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
@@ -41,7 +40,7 @@ interface GameInProgressProps {
   apiClient: ApiClient;
   teams: ITeam[];
   currentState: GameSessionState;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
   teamAvatar: number;
   phaseOneTime: number;
   phaseTwoTime: number;
@@ -60,7 +59,7 @@ export default function GameInProgress({
   apiClient,
   teams,
   currentState,
-  teamMemberId,
+  teamMemberAnswersId,
   teamAvatar,
   questions,
   phaseOneTime,
@@ -74,12 +73,11 @@ export default function GameInProgress({
   localModel,
   isShortAnswerEnabled,
 }: GameInProgressProps) {
+
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
-  const confidenceCardRef = React.useRef<HTMLDivElement>(null);
-  const hintCardRef = React.useRef<HTMLDivElement>(null); 
-  const [answerHint, setAnswerHint] = useState<ITeamAnswerHint>(() => {
+  const [answerHint, setAnswerHint] = useState<IAnswerHint>(() => {
     const rejoinSubmittedHint = checkForSubmittedHintOnRejoin(
       localModel,
       hasRejoined,
@@ -90,8 +88,9 @@ export default function GameInProgress({
   });
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
-  const currentQuestion = questions[currentQuestionIndex];
-  let teamAnswers: ITeamAnswer[] = [];
+  const currentQuestion = questions[currentQuestionIndex ?? 0];
+  const answerSettings: IAnswerSettings | null = currentQuestion.answerSettings ?? null;
+  let teamAnswers: (BackendAnswer | null)[] | null | undefined;
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
       currentTeam,
@@ -143,7 +142,7 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [answerContent, setAnswerContent] = useState<ITeamAnswerContent>(() => {
+  const [backendAnswer, setBackendAnswer] = useState<BackendAnswer>(() => {
     const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
       localModel,
       hasRejoined,
@@ -155,7 +154,7 @@ export default function GameInProgress({
   });
 
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
-    !isNullOrUndefined(answerContent.multiChoiceAnswerIndex)
+    !isNullOrUndefined(backendAnswer?.isSubmitted)
   );
   const currentAnswer = teamAnswers.find(
     (answer) => answer.questionId === currentQuestion.id
@@ -164,7 +163,7 @@ export default function GameInProgress({
     currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
   const handleTimerIsFinished = () => {
-    setAnswerContent((prev) => ({ ...prev, isSubmitted: true }));
+    setBackendAnswer((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
 
@@ -183,74 +182,26 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-  // contents is the quill pad contents
-  const handleSubmitAnswer = async (packagedAnswer: ITeamAnswerContent) => {
-    const answerConfigBase = {
-      questionId: currentQuestion.id,
-      isChosen: currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && !isShortAnswerEnabled,
-      teamMemberAnswersId: teamMemberId,
-      text: '',
-      answerContent: packagedAnswer,
-      isTrickAnswer: currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER,
-      confidenceLevel: ConfidenceLevel.NOT_RATED
-    };
-    let answer;
-    const currentQuestionType = currentQuestion.answerSettings?.answerType;
-    switch (currentQuestionType) {
-      case (AnswerType.STRING): {
-        const answerConfig: ITeamAnswerConfig<string> = {
-          ...answerConfigBase,
-          value: ''
-        }
-        answer = new StringAnswer(answerConfig);
-        break;
-      }
-      case (AnswerType.EXPRESSION): {
-        const answerConfig: ITeamAnswerConfig<string> = {
-          ...answerConfigBase,
-          value: ''
-        }
-        answer = new ExpressionAnswer(answerConfig);
-        break;
-      }
-      case (AnswerType.NUMBER):
-      default: {
-        const answerConfig: ITeamAnswerConfig<number> = {
-          ...answerConfigBase,
-          value: 0
-        }
-        answer = new NumberAnswer(answerConfig);
-        break;
-      }
-    }
+  // creates new team answer when student submits
+  const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
       const response = await apiClient.addTeamAnswer(answer);
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answerContent));
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
-      setAnswerContent(answer?.answerContent as ITeamAnswerContent);
+      setBackendAnswer(answer);
       setDisplaySubmitted(true);
     } catch (e) {
+      console.log(e);
       setIsAnswerError(true);
     }
   };
 
-  const handleSubmitAnswer = async (answerText: string) => {
-    try {
-      const response = await apiClient.addTeamAnswer(
-        teamMemberId,
-        currentQuestion.id,
-        answerText,
-        '{}',
-        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
-        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-      );
-      const responseGame = await apiClient.getGameSession(
-        localModel.gameSessionId
-      );
-      setTeamAnswerId(response.id);
-      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
-      setDisplaySubmitted(true);
-    } catch {
+  const handleSubmitHint = async (normalizedHint: IAnswerHint) => {
+    try{
+      await apiClient.updateTeamAnswerHint(teamAnswerId, normalizedHint);
+      window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
+      setAnswerHint(normalizedHint);
+    } catch (e) {
       setIsAnswerError(true);
     }
   };
@@ -258,7 +209,7 @@ export default function GameInProgress({
   const handleRetry = () => {
     if (isAnswerError) {
       setIsAnswerError(false);
-      setAnswerContent((prev) => ({ ...prev, isSubmitted: false }));
+      setBackendAnswer((prev) => ({ ...prev, isSubmitted: false }));
     }
     if (isConfidenceError) {
       setIsConfidenceError(false);
@@ -270,17 +221,22 @@ export default function GameInProgress({
     }
   };
 
-  const handleSelectAnswer = (index: number) => {
+  const handleSelectAnswer = (answerText: string) => {
+    const answer = new BackendAnswer(
+      AnswerFactory.createAnswer(answerText, AnswerType.MULTICHOICE),
+      false,
+      false,
+      currentState,
+      currentQuestionIndex ?? 0,
+      currentQuestion.id,
+      teamMemberAnswersId,
+      answerText
+    )
     window.localStorage.setItem(
       StorageKeyAnswer,
-      JSON.stringify({
-        multiChoiceAnswerIndex: index,
-        isSubmitted: false,
-        currentState,
-        currentQuestionIndex: currentQuestionIndex ?? 0,
-      } as ITeamAnswerContent)
+      JSON.stringify(answer)
     );
-    setAnswerContent((prev) => ({ ...prev, multiChoiceAnswerIndex: index }));
+    setBackendAnswer((prev) => ({ ...prev, ...answer }));
   };
 
   const setTimeOfLastConfidenceSelect = (time: number) => {
@@ -294,7 +250,7 @@ export default function GameInProgress({
       // that the loading message can display while we wait for apiClient. Then
       // after await, set isSelected to true again
       setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
-      await apiClient.updateTeamAnswerConfidence(teamAnswerId, true, confidence);
+      await apiClient.updateTeamAnswerConfidence(teamAnswerId, confidence);
       setSelectConfidence((prev) => ({
         ...prev,
         selectedConfidenceOption: confidence,
@@ -344,9 +300,10 @@ export default function GameInProgress({
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
-            questionUrl={questionUrl}
+            questionUrl={questionUrl ?? ''}
+            answerSettings = {answerSettings}
             answerChoices={answerChoices}
-            isSubmitted={answerContent.isSubmitted ?? false}
+            isSubmitted={backendAnswer.isSubmitted ?? false}
             displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
@@ -358,15 +315,15 @@ export default function GameInProgress({
             timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
-            answerContent={answerContent}
+            backendAnswer={backendAnswer}
             currentQuestionIndex={currentQuestionIndex ?? 0}
             answerHint={answerHint ?? null}
             isHintEnabled={currentQuestion.isHintEnabled}
             handleSubmitHint={handleSubmitHint}
             isHintSubmitted={answerHint?.isHintSubmitted ?? false}
             currentTeam={currentTeam ?? null}
-            confidenceCardRef={confidenceCardRef}
-            hintCardRef={hintCardRef}
+            questionId={currentQuestion.id ?? ''}
+            teamMemberAnswersId={teamMemberAnswersId}
           />
         ) : (
           <DiscussAnswer

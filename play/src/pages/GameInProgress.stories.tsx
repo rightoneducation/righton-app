@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   IGameSession,
-  AWSGameSession,
+  IAWSGameSession,
   GameSessionState,
   GameSessionParser,
   IChoice,
@@ -40,7 +40,7 @@ const Template: StoryFn<typeof GameInProgress> =
   };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-  MockGameSession as AWSGameSession
+  MockGameSession as unknown as IAWSGameSession
 ) as IGameSession;
 
 const answerChoices = gameSession.questions[0].choices.map(

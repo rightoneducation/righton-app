@@ -16,22 +16,22 @@ export default function QuestionMakerAnswerDropdown({
   setAnswerType,
   answerPrecision,
   setAnswerPrecision,
-  isAnswerTypeInvalid,
-  isAnswerDecimalInvalid
+  isAnswerTypeValid,
+  isAnswerPrecisionValid
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const getAnswerText = (answerType) => {
     switch (answerType) {
-      case ('string'):
+      case (AnswerType.STRING):
         return 'Please ensure that your input is a valid string';
-      case ('number'):
+      case (AnswerType.NUMBER):
         return 'Please ensure that your input is a valid number. Allowable characters are: 0-9, -, .';
-      case ('expression'):
+      case (AnswerType.EXPRESSION):
         return 'Please ensure that your input is a valid expression';
     }
   }
-  const answerText = isAnswerTypeInvalid ? getAnswerText(answerType) : '';
+  const answerText = getAnswerText(answerType);
   // instructio s can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
   // TODO: clean up how we are handling instructions for more consistency
   const instructionsHandler = (instructions) => {
@@ -127,10 +127,10 @@ export default function QuestionMakerAnswerDropdown({
              
               : null}
               <Box>   
-                { isAnswerTypeInvalid &&
+                { !isAnswerTypeValid &&
                   <Typography style={{ fontStyle: 'italic' }}> {answerText} </Typography>
                 }
-                 { isAnswerDecimalInvalid &&
+                 { !isAnswerPrecisionValid &&
                   <Typography style={{ fontStyle: 'italic' }}> Please ensure the answer has the correct number of decimal places. </Typography>
                 }
               </Box>
