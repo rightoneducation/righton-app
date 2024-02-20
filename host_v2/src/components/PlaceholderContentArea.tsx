@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -10,8 +10,6 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
-import QuestionCard from './QuestionCard';
-import AnswerCard from './AnswerCard';
 import ConfidenceCard from './ConfidenceCard';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
@@ -19,16 +17,16 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 // may have to reformat/restructure this later but here is a sample answer object
-interface AnswerOption {
+interface AnswerOption { 
   instructions: string[] | null; // instructions to get the correct answer if this option is the correct option and null otherwise
   reason: string | null; // reason why answer option is incorrect if this option is incorrect and null otherwise
   content: string; // the answer option itself
-}
+} // eslint-disable-line
 
 interface QuestionData {
   text: string; // question text (i.e. the question itself)
   imageUrl: string | undefined; // the url of the image on the question card (if there is one)
-}
+} // eslint-disable-line
 
 interface Player {
   answer: string; // answer chosen by this player
@@ -44,18 +42,12 @@ interface ConfidenceOption {
 }
 
 interface PlaceholderContentAreaProps {
-  // props for Question Card (see QuestionData interface above)
-  questionData: QuestionData;
-  // props for Answer Card (see AnswerOption interface above)
-  answerOptions: AnswerOption[];
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
   confidenceData: ConfidenceOption[];
   confidenceGraphClickIndex: number | null;
   handleConfidenceGraphClick: (selectedIndex: number | null) => void;
 } // eslint-disable-line
 export default function PlaceholderContentArea({
-  questionData,
-  answerOptions,
   confidenceData,
   confidenceGraphClickIndex,
   handleConfidenceGraphClick,

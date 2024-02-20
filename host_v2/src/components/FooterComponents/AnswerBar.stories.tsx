@@ -21,23 +21,23 @@ const Template: StoryFn<typeof AnswerBar> = function AnswerBarTemplate(args) {
     </ThemeProvider>
   );
 };
-export const answerbar = Template.bind({});
+export const Answerbar = Template.bind({});
 
-answerbar.args = {
+Answerbar.args = {
   inputNum: 5,
   totalNum: 12,
 };
 
-export const answerBarNoAnswers = Template.bind({});
+export const AnswerBarNoAnswers = Template.bind({});
 
-answerBarNoAnswers.args = {
+AnswerBarNoAnswers.args = {
   inputNum: 0,
   totalNum: 12,
 };
 
-export const answerBarAllAnswers = Template.bind({});
+export const AnswerBarAllAnswers = Template.bind({});
 
-answerBarAllAnswers.args = {
+AnswerBarAllAnswers.args = {
   inputNum: 12,
   totalNum: 12,
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
@@ -22,7 +21,6 @@ export default function AnswerCard({
   answerReason,
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
-  const { t } = useTranslation();
   const letterCode = 'A'.charCodeAt(0) + answerIndex;
 
   const correctAnswerInstruction = (index: number) => {

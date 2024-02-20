@@ -46,9 +46,9 @@ DarkBarChooseTrickestAnswerState.args = {
   phaseTwoTime: 180,
 };
 
-export const footerBeginQuestion = Template.bind({});
+export const FooterBeginQuestion = Template.bind({});
 
-footerBeginQuestion.args = {
+FooterBeginQuestion.args = {
   inputNum: 3,
   totalNum: 4,
   footerBar: 'NOT_STARTED',
@@ -57,9 +57,9 @@ footerBeginQuestion.args = {
   phaseTwoTime: 180,
 };
 
-export const footerContinue = Template.bind({});
+export const FooterContinue = Template.bind({});
 
-footerContinue.args = {
+FooterContinue.args = {
   inputNum: 2,
   totalNum: 4,
   footerBar: 'NOT_STARTED',
@@ -68,9 +68,9 @@ footerContinue.args = {
   phaseTwoTime: 180,
 };
 
-export const footerGoResults = Template.bind({});
+export const FooterGoResults = Template.bind({});
 
-footerGoResults.args = {
+FooterGoResults.args = {
   inputNum: 4,
   totalNum: 4,
   footerBar: 'NOT_STARTED',
@@ -79,9 +79,9 @@ footerGoResults.args = {
   phaseTwoTime: 180,
 };
 
-export const footerGoPhase2 = Template.bind({});
+export const FooterGoPhase2 = Template.bind({});
 
-footerGoPhase2.args = {
+FooterGoPhase2.args = {
   inputNum: 4,
   totalNum: 4,
   footerBar: 'TEAMS_JOINING',
@@ -89,9 +89,9 @@ footerGoPhase2.args = {
   phaseOneTime: 180,
   phaseTwoTime: 180,
 };
-export const footerStartPhase2Question = Template.bind({});
+export const FooterStartPhase2Question = Template.bind({});
 
-footerStartPhase2Question.args = {
+FooterStartPhase2Question.args = {
   inputNum: 4,
   totalNum: 4,
   footerBar: 'TEAMS_JOINING',
@@ -100,9 +100,9 @@ footerStartPhase2Question.args = {
   phaseTwoTime: 180,
 };
 
-export const footerGoNextQuestion = Template.bind({});
+export const FooterGoNextQuestion = Template.bind({});
 
-footerGoNextQuestion.args = {
+FooterGoNextQuestion.args = {
   inputNum: 4,
   totalNum: 4,
   footerBar: 'PHASE_1_DISCUSS',
@@ -111,9 +111,9 @@ footerGoNextQuestion.args = {
   phaseTwoTime: 180,
 };
 
-export const footerProceedRightOnCentral = Template.bind({});
+export const FooterProceedRightOnCentral = Template.bind({});
 
-footerProceedRightOnCentral.args = {
+FooterProceedRightOnCentral.args = {
   inputNum: 4,
   totalNum: 4,
   footerBar: 'PHASE_1_DISCUSS',
@@ -122,9 +122,9 @@ footerProceedRightOnCentral.args = {
   phaseTwoTime: 180,
 };
 
-export const footerEndAnswering = Template.bind({});
+export const FooterEndAnswering = Template.bind({});
 
-footerEndAnswering.args = {
+FooterEndAnswering.args = {
   inputNum: 3,
   totalNum: 4,
   footerBar: 'FINAL_RESULTS',

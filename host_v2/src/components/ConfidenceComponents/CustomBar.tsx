@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bar } from 'victory';
-import { useTheme, styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 interface BarProps {
   x?: number;

@@ -103,7 +103,7 @@ export default function ConfidenceResponsesGraph({
       barWidth: `${theme.sizing.confidenceBarThickness}`,
     },
   };
-  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
+  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 }); // eslint-disable-line
   const graphRef = useRef<HTMLDivElement>(null);
   // this is req'd to handle the resizing of the graph container so that Victory can render the svgs
   // eslint-disable-next-line consistent-return

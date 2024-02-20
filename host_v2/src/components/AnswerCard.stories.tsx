@@ -22,9 +22,9 @@ const Template: StoryFn<typeof AnswerCard> = function CardTemplate(args) {
   );
 };
 
-export const correctCard = Template.bind({});
+export const CorrectCard = Template.bind({});
 
-correctCard.args = {
+CorrectCard.args = {
   isCorrectAnswer: true,
   answerIndex: 2,
   answerContent: '1080',
@@ -36,9 +36,9 @@ correctCard.args = {
   answerReason: undefined,
 };
 
-export const incorrectCard = Template.bind({});
+export const IncorrectCard = Template.bind({});
 
-incorrectCard.args = {
+IncorrectCard.args = {
   isCorrectAnswer: false,
   answerIndex: 0,
   answerContent: '8',

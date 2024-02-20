@@ -1,7 +1,7 @@
 import React from 'react';
 import { GameSessionState } from '@righton/networking';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Grid, Box, Container } from '@mui/material';
+import { Typography, Grid, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
 import QuestionIndicator from './QuestionIndicator';
@@ -80,7 +80,7 @@ export default function HeaderContent({
   };
 
   const handleTimerAddButtonClick = () => {
-    console.log('TimerAddButton clicked!');
+    console.log('TimerAddButton clicked!'); // eslint-disable-line
   };
 
   return (

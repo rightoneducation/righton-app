@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { GameSessionState, ApiClient } from '@righton/networking';
-import { Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -10,9 +8,7 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import PlaceholderContentArea from '../components/PlaceholderContentArea';
 import HeaderContent from '../components/HeaderContent';
 import { LocalModel } from '../lib/HostModels';
-import AnswerBar from '../components/FooterComponents/AnswerBar';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
-import FooterContent from '../components/FooterComponents/FooterContent';
 import GameInProgress from '../pages/GameInProgress';
 
 interface GameInProgressContainerProps {
@@ -52,7 +48,7 @@ export default function GameSessionContainer({
     text: 'A pair of shoes were 10% off last week. This week, theres an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that youd get if you buy the shoes this week?',
     imageUrl:
       'https://images.unsplash.com/photo-1609188944094-394637c26769?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-  };
+  }; // eslint-disable-line
 
   const sampleAnswerOptionOne: AnswerOption = {
     instructions: [
@@ -63,13 +59,13 @@ export default function GameSessionContainer({
     ],
     reason: null,
     content: 'an answer choice',
-  };
+  }; // eslint-disable-line
 
   const sampleAnswerOptionTwo: AnswerOption = {
     instructions: null,
     reason: 'reasoning',
     content: 'another answer choice',
-  };
+  }; // eslint-disable-line
 
   const samplePlayerOne: Player = {
     answer: 'C',
@@ -118,10 +114,6 @@ export default function GameSessionContainer({
     setConfidenceGraphClickIndex(selectedIndex);
   };
 
-  const inputNum = 23;
-  const totalNum = 24;
-
-  const { t } = useTranslation();
   const totalQuestions = 5;
   const currentQuestionIndex = 3;
   const statePosition = 3;
@@ -141,7 +133,7 @@ export default function GameSessionContainer({
       : phaseTwoTime;
 
   const handleTimerIsFinished = () => {
-    console.log('timer is finished');
+    console.log('timer is finished'); // eslint-disable-line
   };
 
   return (
@@ -165,8 +157,6 @@ export default function GameSessionContainer({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <PlaceholderContentArea
-          questionData={sampleQuestion}
-          answerOptions={[sampleAnswerOptionOne, sampleAnswerOptionTwo]}
           confidenceData={sampleConfidenceData}
           confidenceGraphClickIndex={confidenceGraphClickIndex}
           handleConfidenceGraphClick={handleConfidenceGraphClick}

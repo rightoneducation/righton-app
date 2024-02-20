@@ -19,13 +19,13 @@ export default function QuestionIndicator({
   statePosition,
 }: QuestionIndicatorProps) {
   const indicators = Array.from({ length: totalQuestions ?? 0 }, (_, index) => {
-    if (index < currentQuestionIndex!) {
+    if (index < currentQuestionIndex!) { // eslint-disable-line
       return <PlayedQuestionBox key={index}>{index + 1}</PlayedQuestionBox>;
     }
-    if (index > currentQuestionIndex!) {
+    if (index > currentQuestionIndex!) { // eslint-disable-line
       return <UnplayedQuestionBox key={index}>{index + 1}</UnplayedQuestionBox>;
     }
-    if (statePosition! < 5) {
+    if (statePosition! < 5) { // eslint-disable-line
       return (
         <CurrentQuestionIndicator key={index}>
           {index + 1}

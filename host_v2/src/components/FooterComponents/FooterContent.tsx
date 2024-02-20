@@ -15,7 +15,7 @@ interface FooterContentProps {
   phaseTwoTime: number;
 } // eslint-disable-line
 
-const EndStyled = styled(Button)(({ theme }) => ({
+const EndStyled = styled(Button)(({ theme }) => ({ // eslint-disable-line
   border: '4px solid #159EFA',
   borderRadius: '34px',
   width: '300px',
@@ -42,7 +42,7 @@ const EndStyled = styled(Button)(({ theme }) => ({
   },
 }));
 
-const NextStyled = styled(Button)(({ theme }) => ({
+const NextStyled = styled(Button)(({ theme }) => ({  // eslint-disable-line
   border: '4px solid #159EFA',
   background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
   borderRadius: '34px',
@@ -81,7 +81,7 @@ export default function FooterContent({
   const { t } = useTranslation();
 
   const handleNextStateButtonClick = () => {
-    console.log('NextStateButton clicked!');
+    console.log('NextStateButton clicked!'); // eslint-disable-line
   };
   const isPhaseOneDisabled = phaseOneTime < 0;
   const isPhaseTwoDisabled = phaseTwoTime < 0;
