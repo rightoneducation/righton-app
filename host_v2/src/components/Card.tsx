@@ -1,15 +1,27 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Typography, Box } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
+import { Typography, Box, Paper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface CardProps {
   bottomText?: string;
 }
 
-export default function Card({ bottomText }: CardProps) {
+const BodyCardStyled = styled(Paper)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  borderRadius: '24px',
+  margin: '8px',
+  padding: `${theme.sizing.smallPadding}px`,
+  backgroundColor: theme.palette.primary.main,
+  boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
+}));
+
+export default function Card({
+  bottomText
+}: CardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   return (

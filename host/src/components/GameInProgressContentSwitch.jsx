@@ -84,8 +84,6 @@ export default function GameInProgressContentSwitch({
       case ('confidence'):
         return (
           <div
-            id="confidencecard-scrollbox"
-            ref={confidenceCardRef}
             className={classes.contentContainer}
           >
             <ConfidenceResponseCard
@@ -94,12 +92,15 @@ export default function GameInProgressContentSwitch({
               graphClickInfo={graphClickInfo}
               handleGraphClick={handleGraphClick}
             />
-            <ConfidenceResponseDropdown
-              graphClickInfo={graphClickInfo}
-              selectedConfidenceData={
-                confidenceData[graphClickInfo.selectedIndex]
-              }
-            />
+            <div id="confidencecard-scrollbox"
+              ref={confidenceCardRef}>
+              <ConfidenceResponseDropdown
+                graphClickInfo={graphClickInfo}
+                selectedConfidenceData={
+                  confidenceData[graphClickInfo.selectedIndex]
+                }
+              />
+            </div>
           </div>
         );
       case ('hint'):
