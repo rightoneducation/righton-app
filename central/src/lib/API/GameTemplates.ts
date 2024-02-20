@@ -66,7 +66,7 @@ export const listGameTemplates = async (listQuerySettings: IListQuerySettings | 
       case SortField.COUNT:
         return await gameTemplateAPIClient.listGameTemplatesByQuestionTemplatesCount(queryLimit, nextToken, sortDirection, filterString);
       default:
-        return await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken, filterString);
+        return await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken, sortDirection, filterString);
     }
   } catch (e) {
     console.log(e);

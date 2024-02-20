@@ -61,9 +61,9 @@ export const listQuestionTemplates = async (listQuerySettings: IListQuerySetting
       case SortField.UPDATEDAT:
         return await questionTemplateAPIClient.listQuestionTemplatesByDate(queryLimit, nextToken, sortDirection, filterString);
       case SortField.COUNT:
-        return await questionTemplateAPIClient.listQuestionTemplatesByNumGameTemplates(queryLimit, nextToken, sortDirection, filterString);
+        return await questionTemplateAPIClient.listQuestionTemplatesByGameTemplatesCount(queryLimit, nextToken, sortDirection, filterString);
       default:
-        return await questionTemplateAPIClient.listQuestionTemplates(queryLimit, nextToken, filterString);
+        return await questionTemplateAPIClient.listQuestionTemplates(queryLimit, nextToken, sortDirection, filterString);
     }
   } catch (e) {
     console.log(e);
