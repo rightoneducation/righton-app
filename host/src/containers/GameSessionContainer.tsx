@@ -10,6 +10,7 @@ import {
   IGameSession,
   IHints,
   isNullOrUndefined,
+  TeamParser,
 } from '@righton/networking';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import GameInProgress from '../pages/GameInProgress';
@@ -140,7 +141,9 @@ const GameSessionContainer = () => {
       }
       // the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
       const teamDataRequests = response.teams.map((team) => {
-        return apiClient.getTeam(team.id); // got to call the get the teams from the APi so we can see the answers
+        return apiClient.getTeam(team.id).then((response) => {
+            return TeamParser.teamFromAWSTeam(response);
+        });
       });
 
       Promise.all(teamDataRequests)
@@ -460,8 +463,35 @@ const GameSessionContainer = () => {
         id: question.id,
         order: question.order,
         isConfidenceEnabled: isConfidenceEnabled,
-        isShortAnswerEnabled: isShortAnswerEnabled,
-        isHintEnabled: isHintEnabled,
+      })
+      .then((response) => {
+        let newUpdates = {
+          currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
+        };
+        apiClient
+          .updateGameSession({ id: gameSessionId, ...newUpdates })
+          .then((response) => {
+            localStorage.setItem(
+              'currentGameTimeStore',
+              gameSession.phaseOneTime,
+            );
+            setHeaderGameCurrentTime(gameSession.phaseOneTime);
+            checkGameTimer(response);
+            setGameSession(response);
+            const teamDataRequests = response.teams.map((team) => {
+              return apiClient.getTeam(team.id).then((response) => {
+                return TeamParser.teamFromAWSTeam(response);
+            });
+            });
+
+            Promise.all(teamDataRequests)
+              .then((responses) => {
+               setTeamsArray(responses);
+              })
+              .catch((reason) => console.log(reason));
+          });
+        setIsTimerActive(true);
+        setIsLoadModalOpen(true);
       });
     });
     Promise.all(questionConfigRequests).then((response) => {

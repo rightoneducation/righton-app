@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { SORT_TYPES } from '../lib/sorting';
 import { Collapse, Tooltip } from '@material-ui/core';
 import HelpMenuIcon from '../images/HelpMenuIcon.svg';
 import HelpMenuIconClicked from '../images/HelpMenuIconClicked.svg';
@@ -14,7 +13,6 @@ import HelpMenuAboutIcon from '../images/HelpMenuAboutIcon.svg';
 
 export default function HelpDropdown({isUserAuth, handleModalOpen}) {
   const [isHelpMenuClicked, SetIsHelpMenuClicked] = React.useState(false);
-  const [updatedValue, setUpdatedValue] = React.useState(SORT_TYPES.UPDATED);
   const [qcValue, setQCValue] = React.useState("");
   const [gradeValue, setGradeValue] = React.useState("");
 

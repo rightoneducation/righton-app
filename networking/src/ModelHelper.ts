@@ -28,7 +28,7 @@ export abstract class ModelHelper {
         return teamMember.answers.filter((answer) => {
             return !isNullOrUndefined(answer) &&
                 !isNullOrUndefined(answer.questionId) &&
-                answer.questionId === questionId
+                answer.questionId === questionId 
         })
     }
 

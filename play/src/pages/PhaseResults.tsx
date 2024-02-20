@@ -25,10 +25,10 @@ import 'swiper/css/pagination';
 
 interface PhaseResultsProps {
   apiClient: ApiClient;
-  teams?: ITeam[];
+  teams: ITeam[];
   currentState: GameSessionState;
   teamAvatar: number;
-  currentQuestionIndex?: number | null;
+  currentQuestionIndex: number;
   teamId: string;
   gameSession: IGameSession;
   answerChoices: IChoice[];

@@ -12,7 +12,3 @@ export interface IApiClient {
     addTeamMemberToTeam(teamId: string, isFacilitator: boolean, deviceId: string): Promise<ITeamMember>
     addTeamAnswer(inputAnswer: BackendAnswer): Promise<BackendAnswer>
 }
-
-export function isNullOrUndefined<T>(value: T | null | undefined): value is null | undefined {
-    return value === null || value === undefined
-}

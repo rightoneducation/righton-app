@@ -38,14 +38,14 @@ import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/
 
 interface GameInProgressProps {
   apiClient: ApiClient;
-  teams?: ITeam[];
+  teams: ITeam[];
   currentState: GameSessionState;
   teamMemberAnswersId: string;
   teamAvatar: number;
   phaseOneTime: number;
   phaseTwoTime: number;
   questions: IQuestion[];
-  currentQuestionIndex?: number | null;
+  currentQuestionIndex: number;
   teamId: string;
   score: number;
   answerChoices: IChoice[];
@@ -93,10 +93,9 @@ export default function GameInProgress({
   let teamAnswers: (BackendAnswer | null)[] | null | undefined;
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
-      // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
-    );
+    ) ?? [];
   }
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
@@ -132,7 +131,7 @@ export default function GameInProgress({
     return [introText, questionText];
   };
 
-  const questionText = divideQuestionString(currentQuestion?.text);
+  const questionText = divideQuestionString(currentQuestion.text);
   const totalTime =
     currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
       ? phaseOneTime
@@ -157,8 +156,8 @@ export default function GameInProgress({
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(backendAnswer?.isSubmitted)
   );
-  const currentAnswer = teamAnswers?.find(
-    (answer) => answer?.questionId === currentQuestion.id
+  const currentAnswer = teamAnswers.find(
+    (answer) => answer.questionId === currentQuestion.id
   );
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
     currentAnswer?.id ?? ''
@@ -330,9 +329,9 @@ export default function GameInProgress({
           <DiscussAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
-            questionUrl={questionUrl ?? ''}
+            questionUrl={questionUrl}
             answerChoices={answerChoices}
-            instructions={instructions ?? ['']}
+            instructions={instructions}
             currentState={currentState}
             currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
             currentQuestion={currentQuestion}

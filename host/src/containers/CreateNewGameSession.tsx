@@ -10,10 +10,13 @@ const CreateNewGameSession = () => {
   let { gameId } = useParams<{ gameId: string }>();
 
   useEffect(() => {
-    apiClient.createGameSession(Number(gameId), false).then((response) => {
+    apiClient.createGameSessionFromTemplate(gameId).then((response) => {
+      if (!response) {
+        return;
+      }
       apiClient
         .updateGameSession({
-          id: response.id,
+          id: response,
           currentState: GameSessionState.TEAMS_JOINING,
         })
         .then((response) => {

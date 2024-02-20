@@ -18,7 +18,7 @@
     "stopword": "^2.0.8"
   },
   "scripts": {
-    "build": "cti s -p ./tsconfig.build.json ./src -s false -b -f index.ts && tsc --build tsconfig.json",
+    "build": "cti s -p ./tsconfig.build.json ./src -s true -b -f index.ts && tsc --build tsconfig.json",
     "test": "jest"
   },
   "files": [

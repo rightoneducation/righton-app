@@ -4,10 +4,14 @@
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2023-08-23T00:04:45.159Z",
+              "apiKeyExpirationDate": "2024-12-11T10:29:18.626Z",
               "apiKeyExpirationDays": 365,
               "description": "mobiledev"
             },
@@ -26,6 +30,24 @@
       "providerPlugin": "awscloudformation",
       "service": "Cognito",
       "serviceType": "imported"
+    }
+  },
+  "function": {
+    "createGame": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "mobile"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -58,6 +80,22 @@
         {
           "category": "auth",
           "resourceName": "mobile0a6d6e96"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGame_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGame"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGame_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGame"
         }
       ]
     }
