@@ -17,14 +17,14 @@ import CustomBar from './CustomBar';
 
 interface Player {
   answer: string; // answer chosen by this player
-  isCorrect: boolean; // true iff the chosen answer is the correct answer 
+  isCorrect: boolean; // true iff the chosen answer is the correct answer
   name: string; // this player's name
 }
 
 interface ConfidenceOption {
   confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly 
-  incorrect: number; // number of players who selected tgis option and answered incorrectly 
+  correct: number; // number of teams who selected this option and answered correctly
+  incorrect: number; // number of players who selected tgis option and answered incorrectly
   players: Player[]; // an array of the players that selected this option
 }
 
@@ -44,7 +44,7 @@ const LabelStyled = styled(Typography)(({ theme }) => ({
   fontSize: `${theme.typography.caption.fontSize}`,
   flexDirection: 'column',
   alignItems: 'center',
-  alignSelf: 'stretch'
+  alignSelf: 'stretch',
 }));
 
 const ContainerStyled = styled(Box)({
@@ -57,7 +57,7 @@ const ContainerStyled = styled(Box)({
 
 const CenteredContainer = styled(Box)({
   display: 'flex',
-  justifyContent: 'center'
+  justifyContent: 'center',
 });
 
 export default function ConfidenceResponsesGraph({
@@ -73,7 +73,10 @@ export default function ConfidenceResponsesGraph({
   const customThemeGraph = {
     axis: {
       style: {
-        axis: { stroke: `${theme.palette.primary.graphAccentColor}`, strokeWidth: `${theme.sizing.barStrokeWidth}` },
+        axis: {
+          stroke: `${theme.palette.primary.graphAccentColor}`,
+          strokeWidth: `${theme.sizing.barStrokeWidth}`,
+        },
         grid: { stroke: 'transparent' },
         tickLabels: {
           padding: `${theme.sizing.extraSmallPadding}`,
@@ -100,7 +103,7 @@ export default function ConfidenceResponsesGraph({
       barWidth: `${theme.sizing.confidenceBarThickness}`,
     },
   };
-  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
+  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 }); // eslint-disable-line
   const graphRef = useRef<HTMLDivElement>(null);
   // this is req'd to handle the resizing of the graph container so that Victory can render the svgs
   // eslint-disable-next-line consistent-return
@@ -135,20 +138,25 @@ export default function ConfidenceResponsesGraph({
         data={name === 'incorrect' ? incorrectResponders : correctResponders}
         cornerRadius={({ index }) =>
           (index !== undefined && correctResponders[Number(index)].y === 0) ||
-            name === 'correct' ? 5 : 0
+          name === 'correct'
+            ? 5
+            : 0
         }
         labels={({ index }) =>
           correctResponders[index].y + incorrectResponders[index].y
         }
         dataComponent={
           <CustomBar
-            selectedWidth={theme.sizing.confidenceBarThickness + theme.sizing.smallPadding}
+            selectedWidth={
+              theme.sizing.confidenceBarThickness + theme.sizing.smallPadding
+            }
             selectedHeight={200}
             graphClickIndex={graphClickIndex}
             handleGraphClick={handleGraphClick}
           />
         }
-      />);
+      />
+    );
   }
 
   const ConfidenceLevelDictionary: { [key: number]: string } = {
@@ -180,8 +188,9 @@ export default function ConfidenceResponsesGraph({
           theme={customThemeGraph}
           height={200}
           containerComponent={
-            <VictoryContainer style={{ touchAction: "auto" }} />
-          }>
+            <VictoryContainer style={{ touchAction: 'auto' }} />
+          }
+        >
           <VictoryStack
             standalone={false}
             labelComponent={
@@ -189,7 +198,10 @@ export default function ConfidenceResponsesGraph({
                 style={{
                   fill: `${theme.palette.primary.main}`,
                   fontSize: `${theme.typography.body2.fontSize}`,
-                }} />}>
+                }}
+              />
+            }
+          >
             {customBar('incorrect')}
             {customBar('correct')}
             <VictoryAxis

@@ -39,26 +39,32 @@ export default function Legend() {
           width={40}
           height={15}
           style={{
-            fill: name === 'correct' ? `${theme.palette.primary.main}` : 'transparent',
+            fill:
+              name === 'correct'
+                ? `${theme.palette.primary.main}`
+                : 'transparent',
             stroke: `${theme.palette.primary.main}`,
             strokeWidth: `${theme.sizing.barStrokeWidth}`,
           }}
         />
       </svg>
-    )
+    );
   }
 
   return (
     <LegendContainer>
       <KeyContainer>
         {legendKey('correct')}
-        <LabelStyled>{t('gamesession.confidenceCard.graph.legend.correct')}</LabelStyled>
+        <LabelStyled>
+          {t('gamesession.confidenceCard.graph.legend.correct')}
+        </LabelStyled>
       </KeyContainer>
       <KeyContainer>
         {legendKey('incorrect')}
-        <LabelStyled>{t('gamesession.confidenceCard.graph.legend.incorrect')}</LabelStyled>
+        <LabelStyled>
+          {t('gamesession.confidenceCard.graph.legend.incorrect')}
+        </LabelStyled>
       </KeyContainer>
     </LegendContainer>
   );
 }
-

@@ -40,7 +40,6 @@ export const BodyContentAreaSingleColumnStyled = styled(
   maxWidth: `${theme.breakpoints.values.md})px`,
 }));
 
-
 // content area of body that floats above background layers above - Phase Results Page
 export const BodyContentAreaPhaseResultsStyled = styled(
   BodyContentAreaSingleColumnStyled,

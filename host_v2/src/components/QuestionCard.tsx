@@ -12,30 +12,33 @@ interface QuestionCardProps {
 
 export default function QuestionCard({
   questionText,
-  imageUrl
+  imageUrl,
 }: QuestionCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
-  return <BodyCardStyled elevation={10}>
-    <BodyCardContainerStyled>
-      <Typography
-        variant="subtitle1"
-        sx={{ width: '100%', textAlign: 'left' }}
-      >
-        {t('gamesession.questionCard.title')}
-      </Typography>
-      {imageUrl === undefined ? null :
-        <img
-          style={{
-            width: '75%',
-            height: 'auto',
-            paddingTop: `${theme.sizing.smallPadding}px`,
-            paddingBottom: `${theme.sizing.smallPadding}px`,
-          }}
-          src={imageUrl}
-          alt="Question"
-        />}
-      <Typography variant="body1"> {questionText} </Typography>
-    </BodyCardContainerStyled>
-  </BodyCardStyled>
+  return (
+    <BodyCardStyled elevation={10}>
+      <BodyCardContainerStyled>
+        <Typography
+          variant="subtitle1"
+          sx={{ width: '100%', textAlign: 'left' }}
+        >
+          {t('gamesession.questionCard.title')}
+        </Typography>
+        {imageUrl === undefined ? null : (
+          <img
+            style={{
+              width: '75%',
+              height: 'auto',
+              paddingTop: `${theme.sizing.smallPadding}px`,
+              paddingBottom: `${theme.sizing.smallPadding}px`,
+            }}
+            src={imageUrl}
+            alt="Question"
+          />
+        )}
+        <Typography variant="body1"> {questionText} </Typography>
+      </BodyCardContainerStyled>
+    </BodyCardStyled>
+  );
 }
