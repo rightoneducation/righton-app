@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { LocalModel, StorageKey } from '../lib/HostModels';
@@ -37,7 +37,6 @@ interface TimerProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
-  handleTimerIsFinished: () => void;
   localModel: LocalModel;
 }
 
@@ -46,10 +45,8 @@ export default function Timer({
   currentTimer,
   isPaused,
   isFinished,
-  handleTimerIsFinished,
   localModel,
 }: TimerProps) {
-  const theme = useTheme(); 
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
   const currentTime = Math.trunc(currentTimeMilli / 1000);
   const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
@@ -114,7 +111,11 @@ export default function Timer({
     <TimerContainer maxWidth="md">
       <TimerBar value={progress} variant="determinate" />
       <TimerText maxWidth="sm">
-        <Typography alignSelf="center" variant="h6" style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik' }}>
+        <Typography
+          alignSelf="center"
+          variant="h6"
+          style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik' }}
+        >
           {timerString}
         </Typography>
       </TimerText>

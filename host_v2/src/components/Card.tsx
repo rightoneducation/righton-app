@@ -9,9 +9,7 @@ interface CardProps {
   bottomText?: string;
 }
 
-export default function Card({
-  bottomText
-}: CardProps) {
+export default function Card({ bottomText }: CardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   return (

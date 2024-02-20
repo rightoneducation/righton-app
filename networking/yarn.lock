@@ -3224,7 +3224,7 @@ create-require@^1.1.0:
 
 create-ts-index@^1.14.0:
   version "1.14.0"
-  resolved "https://registry.npmjs.org/create-ts-index/-/create-ts-index-1.14.0.tgz"
+  resolved "https://registry.yarnpkg.com/create-ts-index/-/create-ts-index-1.14.0.tgz#afb32548a420b0ffebb111d0f0329a485d7e9ad6"
   integrity sha512-3VuFF5HeZvkbk9qa8IpSAETYLFxI1n0yiymY2ctr2txJgzYxJP68rw6p9nQ68KlGQLuUBUFfCcBGO/Dk5FdfUQ==
   dependencies:
     chalk "^4.1.2"

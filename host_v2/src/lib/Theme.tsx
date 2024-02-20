@@ -10,8 +10,7 @@ const backgroundGradient =
 // box-shadow: 0px 2.5px 23px 0px rgba(0, 141, 239, 0.30);
 // const radialGradient =
 // 'radial-gradient(circle farthest-side, #7D63C8, #7D63C8 100%)';
-const timerGradient =
-'linear-gradient(90deg, #168CDC 0%, #00A7E8 100%)';
+const timerGradient = 'linear-gradient(90deg, #168CDC 0%, #00A7E8 100%)';
 const radialGradient =
   'radial-gradient(circle 500px at 50% 60%, #7D64C7 13.54%, #514187 51.56%, #3A2D66 77.6%, #352960 88.02%, #312759 100%)';
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
@@ -36,7 +35,7 @@ const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended 
 const playerFeedbackLabelColor = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
 const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
 const graphAccentColor = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
-const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns 
+const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns
 const answerBarBackgroundColor = 'rgba(8, 69, 143, 0.20)';
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
@@ -54,7 +53,6 @@ const borderWidth = 1;
 const solidWhite = `${borderWidth}px solid rgba(255, 255, 255, 1)`;
 const transparent = `${borderWidth}px solid rgba(255, 255, 255, 0)`;
 const semiTransparent = `${borderWidth}px solid rgba(255, 255, 255, 0.2)`;
-
 
 // design tokens - breakpoints:
 const xs = 0;
@@ -220,7 +218,7 @@ export default createTheme({
     extraLargePadding,
     extraExtraLargePadding,
     barStrokeWidth,
-    confidenceBarThickness
+    confidenceBarThickness,
   },
   palette: {
     primary: {
@@ -253,7 +251,7 @@ export default createTheme({
     },
   },
   typography: {
-    fontFamily: 'Karla', 
+    fontFamily: 'Karla',
     h1: {
       // screen titles
       fontWeight: '800',
