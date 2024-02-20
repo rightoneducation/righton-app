@@ -106,7 +106,7 @@ export class ApiClient implements IApiClient {
         phaseOneTime: number,
         phaseTwoTime: number,
         imageUrl: string,
-        numQuestionTemplates: number
+        questionTemplatesCount: number
     ): Promise<IGameTemplate | null> {
         const input: CreateGameTemplateInput = {
            id,
@@ -121,7 +121,7 @@ export class ApiClient implements IApiClient {
            phaseOneTime,
            phaseTwoTime,
            imageUrl,
-           numQuestionTemplates
+           questionTemplatesCount
         }
         const variables: CreateGameTemplateMutationVariables = { input }
         const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
@@ -698,7 +698,7 @@ class GameTemplateParser {
             phaseOneTime,
             phaseTwoTime,
             imageUrl,
-            numQuestionTemplates,
+            questionTemplatesCount,
             createdAt,
             updatedAt
         } = awsGameTemplate || {}
@@ -732,7 +732,7 @@ class GameTemplateParser {
             phaseTwoTime,
             imageUrl,
             questionTemplates,
-            numQuestionTemplates,
+            questionTemplatesCount,
             createdAt,
             updatedAt
         }
@@ -770,7 +770,7 @@ class QuestionTemplateParser {
             grade,
             standard,
             imageUrl,
-            numGameTemplates,
+            gameTemplatesCount,
             createdAt,
             updatedAt
         } = awsQuestionTemplate || {}
@@ -803,7 +803,7 @@ class QuestionTemplateParser {
             standard: standard ?? null,
             imageUrl,
             gameTemplates,
-            numGameTemplates,
+            gameTemplatesCount,
             createdAt,
             updatedAt
         }

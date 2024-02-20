@@ -9,7 +9,7 @@ import {
   listQuestionTemplates,
   questionTemplatesByDate,
   questionTemplatesByGrade,
-  questionTemplatesByNumGameTemplates
+  questionTemplatesByGameTemplatesCount
 } from "../graphql";
 import { 
   CreateQuestionTemplateInput, 
@@ -154,7 +154,7 @@ export class QuestionTemplateAPIClient
       queryParameters.sortDirection = sortDirection;
     }
     let result = (await API.graphql(
-      graphqlOperation(questionTemplatesByNumGameTemplates, queryParameters)
+      graphqlOperation(questionTemplatesByGameTemplatesCount, queryParameters)
     )) as { data: any }
     const parsedQuestionTemplates = result.data.questionTemplatesByNumGameTemplates.items.map((questionTemplate: AWSQuestionTemplate) => {
       return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)

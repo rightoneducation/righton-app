@@ -344,7 +344,7 @@ export const RouteContainer = ({
   const handleCreateGameQuestion = async (gameId: string, questionId: string) => {
     try {
       const result = await createGameQuestions({gameTemplateID: gameId, questionTemplateID: questionId});
-      // when a game and question are linked, we update the respective numGameTemplates and numQuestionTemplates
+      // when a game and question are linked, we update the respective gameTemplatesCount and questionTemplatesCount
       if (
         !isNullOrUndefined(result) &&
         !isNullOrUndefined(result.gameTemplate) &&
@@ -355,9 +355,9 @@ export const RouteContainer = ({
         result.questionTemplate.gameTemplates.length >= 0
       ) {
         const {questionTemplates, ...restGame} = result.gameTemplate;
-        const gameTemplateUpdate = {...restGame, numQuestionTemplates: questionTemplates.length}; 
+        const gameTemplateUpdate = {...restGame, questionTemplatesCount: questionTemplates.length}; 
         const {gameTemplates, ...restQuestion} = result.questionTemplate;
-        const questionTemplateUpdate = {...restQuestion, numGameTemplates: gameTemplates.length};
+        const questionTemplateUpdate = {...restQuestion, gameTemplatesCount: gameTemplates.length};
         await updateQuestionTemplate(gameTemplateUpdate);
         await updateQuestionTemplate(questionTemplateUpdate);
       }

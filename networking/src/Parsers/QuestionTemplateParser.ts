@@ -31,7 +31,7 @@ export class QuestionTemplateParser {
           grade,
           standard,
           imageUrl,
-          numGameTemplates,
+          gameTemplatesCount,
           createdAt,
           updatedAt
       } = awsQuestionTemplate || {}
@@ -57,8 +57,8 @@ export class QuestionTemplateParser {
           grade: grade ?? null,
           standard: standard ?? null,
           imageUrl,
-          numGameTemplates,
           gameTemplates,
+          gameTemplatesCount,
           createdAt,
           updatedAt
       }

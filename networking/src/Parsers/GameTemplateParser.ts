@@ -34,7 +34,7 @@ export class GameTemplateParser {
           phaseOneTime,
           phaseTwoTime,
           imageUrl,
-          numQuestionTemplates,
+          questionTemplatesCount,
           createdAt,
           updatedAt
       } = awsGameTemplate || {}
@@ -68,7 +68,7 @@ export class GameTemplateParser {
           phaseTwoTime,
           imageUrl,
           questionTemplates,
-          numQuestionTemplates,
+          questionTemplatesCount,
           createdAt,
           updatedAt
       }

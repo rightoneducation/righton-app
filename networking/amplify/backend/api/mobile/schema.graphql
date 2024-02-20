@@ -30,10 +30,10 @@ type GameTemplate @model{
   phaseTwoTime: Int!
   imageUrl: String
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions") 
-  numQuestionTemplates: Int! @default(value: "0")
+  questionTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByNumQuestionTemplates", queryField: "gameTemplatesByNumQuestionTemplates", sortKeyFields: ["numQuestionTemplates"])
+  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByQuestionTemplatesCount", queryField: "gameTemplatesByQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
 }
 
 input GameTemplateInput {
@@ -57,10 +57,10 @@ type QuestionTemplate @model {
   standard: String
   imageUrl: String
   gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
-  numGameTemplates: Int! @default(value: "0")
+  gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplatesByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "questionTemplatesByNumGameTemplates", queryField: "questionTemplatesByNumGameTemplates", sortKeyFields: ["numGameTemplates"])
+   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplatesByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "questionTemplatesByGameTemplatesCount", queryField: "questionTemplatesByGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
 }
 
 input QuestionTemplateInput {

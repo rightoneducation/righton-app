@@ -62,7 +62,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                   nextToken
                   __typename
                 }
-                numQuestionTemplates
+                questionTemplatesCount
                 createdAt
                 updatedAt
                 type
@@ -85,7 +85,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                   nextToken
                   __typename
                 }
-                numGameTemplates
+                gameTemplatesCount
                 createdAt
                 updatedAt
                 type
@@ -98,7 +98,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
             nextToken
             __typename
           }
-          numQuestionTemplates
+          questionTemplatesCount
           createdAt
           updatedAt
           type
@@ -139,7 +139,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                   nextToken
                   __typename
                 }
-                numQuestionTemplates
+                questionTemplatesCount
                 createdAt
                 updatedAt
                 type
@@ -162,7 +162,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                   nextToken
                   __typename
                 }
-                numGameTemplates
+                gameTemplatesCount
                 createdAt
                 updatedAt
                 type
@@ -175,7 +175,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
             nextToken
             __typename
           }
-          numGameTemplates
+          gameTemplatesCount
           createdAt
           updatedAt
           type
@@ -188,7 +188,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
       nextToken
       __typename
     }
-    numQuestionTemplates
+    questionTemplatesCount
     createdAt
     updatedAt
     type
@@ -254,7 +254,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -273,7 +273,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -286,7 +286,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -323,7 +323,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -342,7 +342,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -355,7 +355,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -368,7 +368,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
         nextToken
         __typename
       }
-      numQuestionTemplates
+      questionTemplatesCount
       createdAt
       updatedAt
       type
@@ -436,7 +436,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                   nextToken
                   __typename
                 }
-                numQuestionTemplates
+                questionTemplatesCount
                 createdAt
                 updatedAt
                 type
@@ -459,7 +459,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                   nextToken
                   __typename
                 }
-                numGameTemplates
+                gameTemplatesCount
                 createdAt
                 updatedAt
                 type
@@ -472,7 +472,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
             nextToken
             __typename
           }
-          numQuestionTemplates
+          questionTemplatesCount
           createdAt
           updatedAt
           type
@@ -513,7 +513,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                   nextToken
                   __typename
                 }
-                numQuestionTemplates
+                questionTemplatesCount
                 createdAt
                 updatedAt
                 type
@@ -536,7 +536,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                   nextToken
                   __typename
                 }
-                numGameTemplates
+                gameTemplatesCount
                 createdAt
                 updatedAt
                 type
@@ -549,7 +549,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
             nextToken
             __typename
           }
-          numGameTemplates
+          gameTemplatesCount
           createdAt
           updatedAt
           type
@@ -562,7 +562,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
       nextToken
       __typename
     }
-    numGameTemplates
+    gameTemplatesCount
     createdAt
     updatedAt
     type
@@ -628,7 +628,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -647,7 +647,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -660,7 +660,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -697,7 +697,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -716,7 +716,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -729,7 +729,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -742,7 +742,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
         nextToken
         __typename
       }
-      numGameTemplates
+      gameTemplatesCount
       createdAt
       updatedAt
       type
@@ -1368,7 +1368,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1387,7 +1387,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1400,7 +1400,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -1437,7 +1437,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1456,7 +1456,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1469,7 +1469,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -1482,7 +1482,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
         nextToken
         __typename
       }
-      numQuestionTemplates
+      questionTemplatesCount
       createdAt
       updatedAt
       type
@@ -1537,7 +1537,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1556,7 +1556,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1569,7 +1569,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -1606,7 +1606,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1625,7 +1625,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1638,7 +1638,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -1651,7 +1651,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
         nextToken
         __typename
       }
-      numGameTemplates
+      gameTemplatesCount
       createdAt
       updatedAt
       type
@@ -1719,7 +1719,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 nextToken
                 __typename
               }
-              numQuestionTemplates
+              questionTemplatesCount
               createdAt
               updatedAt
               type
@@ -1750,7 +1750,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 nextToken
                 __typename
               }
-              numGameTemplates
+              gameTemplatesCount
               createdAt
               updatedAt
               type
@@ -1763,7 +1763,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
           nextToken
           __typename
         }
-        numQuestionTemplates
+        questionTemplatesCount
         createdAt
         updatedAt
         type
@@ -1812,7 +1812,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 nextToken
                 __typename
               }
-              numQuestionTemplates
+              questionTemplatesCount
               createdAt
               updatedAt
               type
@@ -1843,7 +1843,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 nextToken
                 __typename
               }
-              numGameTemplates
+              gameTemplatesCount
               createdAt
               updatedAt
               type
@@ -1856,7 +1856,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
           nextToken
           __typename
         }
-        numGameTemplates
+        gameTemplatesCount
         createdAt
         updatedAt
         type
@@ -1939,7 +1939,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1958,7 +1958,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -1971,7 +1971,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -2008,7 +2008,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2027,7 +2027,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2040,7 +2040,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -2053,7 +2053,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
         nextToken
         __typename
       }
-      numQuestionTemplates
+      questionTemplatesCount
       createdAt
       updatedAt
       type
@@ -2132,7 +2132,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2151,7 +2151,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2164,7 +2164,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -2201,7 +2201,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2220,7 +2220,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2233,7 +2233,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -2246,7 +2246,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
         nextToken
         __typename
       }
-      numQuestionTemplates
+      questionTemplatesCount
       createdAt
       updatedAt
       type
@@ -2325,7 +2325,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2344,7 +2344,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2357,7 +2357,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -2394,7 +2394,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2413,7 +2413,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2426,7 +2426,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -2439,7 +2439,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
         nextToken
         __typename
       }
-      numQuestionTemplates
+      questionTemplatesCount
       createdAt
       updatedAt
       type
@@ -2453,17 +2453,17 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
   APITypes.GameTemplatesByGradeQueryVariables,
   APITypes.GameTemplatesByGradeQuery
 >;
-export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemplatesByNumQuestionTemplates(
+export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTemplatesByQuestionTemplatesCount(
   $type: String!
-  $numQuestionTemplates: ModelIntKeyConditionInput
+  $questionTemplatesCount: ModelIntKeyConditionInput
   $sortDirection: ModelSortDirection
   $filter: ModelGameTemplateFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  gameTemplatesByNumQuestionTemplates(
+  gameTemplatesByQuestionTemplatesCount(
     type: $type
-    numQuestionTemplates: $numQuestionTemplates
+    questionTemplatesCount: $questionTemplatesCount
     sortDirection: $sortDirection
     filter: $filter
     limit: $limit
@@ -2518,7 +2518,7 @@ export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemp
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2537,7 +2537,7 @@ export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemp
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2550,7 +2550,7 @@ export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemp
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -2587,7 +2587,7 @@ export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemp
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2606,7 +2606,7 @@ export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemp
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2619,7 +2619,7 @@ export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemp
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -2632,7 +2632,7 @@ export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemp
         nextToken
         __typename
       }
-      numQuestionTemplates
+      questionTemplatesCount
       createdAt
       updatedAt
       type
@@ -2643,8 +2643,8 @@ export const gameTemplatesByNumQuestionTemplates = /* GraphQL */ `query GameTemp
   }
 }
 ` as GeneratedQuery<
-  APITypes.GameTemplatesByNumQuestionTemplatesQueryVariables,
-  APITypes.GameTemplatesByNumQuestionTemplatesQuery
+  APITypes.GameTemplatesByQuestionTemplatesCountQueryVariables,
+  APITypes.GameTemplatesByQuestionTemplatesCountQuery
 >;
 export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByDate(
   $type: String!
@@ -2711,7 +2711,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2730,7 +2730,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2743,7 +2743,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -2780,7 +2780,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2799,7 +2799,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2812,7 +2812,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -2825,7 +2825,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
         nextToken
         __typename
       }
-      numGameTemplates
+      gameTemplatesCount
       createdAt
       updatedAt
       type
@@ -2904,7 +2904,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2923,7 +2923,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2936,7 +2936,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -2973,7 +2973,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -2992,7 +2992,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -3005,7 +3005,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -3018,7 +3018,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
         nextToken
         __typename
       }
-      numGameTemplates
+      gameTemplatesCount
       createdAt
       updatedAt
       type
@@ -3032,17 +3032,17 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
   APITypes.QuestionTemplatesByGradeQueryVariables,
   APITypes.QuestionTemplatesByGradeQuery
 >;
-export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query QuestionTemplatesByNumGameTemplates(
+export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query QuestionTemplatesByGameTemplatesCount(
   $type: String!
-  $numGameTemplates: ModelIntKeyConditionInput
+  $gameTemplatesCount: ModelIntKeyConditionInput
   $sortDirection: ModelSortDirection
   $filter: ModelQuestionTemplateFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  questionTemplatesByNumGameTemplates(
+  questionTemplatesByGameTemplatesCount(
     type: $type
-    numGameTemplates: $numGameTemplates
+    gameTemplatesCount: $gameTemplatesCount
     sortDirection: $sortDirection
     filter: $filter
     limit: $limit
@@ -3097,7 +3097,7 @@ export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query Question
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -3116,7 +3116,7 @@ export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query Question
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -3129,7 +3129,7 @@ export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query Question
               nextToken
               __typename
             }
-            numQuestionTemplates
+            questionTemplatesCount
             createdAt
             updatedAt
             type
@@ -3166,7 +3166,7 @@ export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query Question
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
-                  numQuestionTemplates
+                  questionTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -3185,7 +3185,7 @@ export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query Question
                   grade
                   standard
                   imageUrl
-                  numGameTemplates
+                  gameTemplatesCount
                   createdAt
                   updatedAt
                   type
@@ -3198,7 +3198,7 @@ export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query Question
               nextToken
               __typename
             }
-            numGameTemplates
+            gameTemplatesCount
             createdAt
             updatedAt
             type
@@ -3211,7 +3211,7 @@ export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query Question
         nextToken
         __typename
       }
-      numGameTemplates
+      gameTemplatesCount
       createdAt
       updatedAt
       type
@@ -3222,8 +3222,8 @@ export const questionTemplatesByNumGameTemplates = /* GraphQL */ `query Question
   }
 }
 ` as GeneratedQuery<
-  APITypes.QuestionTemplatesByNumGameTemplatesQueryVariables,
-  APITypes.QuestionTemplatesByNumGameTemplatesQuery
+  APITypes.QuestionTemplatesByGameTemplatesCountQueryVariables,
+  APITypes.QuestionTemplatesByGameTemplatesCountQuery
 >;
 export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
   $currentState: GameSessionState!

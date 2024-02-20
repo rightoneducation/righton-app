@@ -38,7 +38,7 @@ export interface IGameTemplateAPIClient {
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
-  listGameTemplatesByNumQuestionTemplates(
+  listGameTemplatesByQuestionTemplatesCount(
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
