@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "api": {
+      "mobile": [
+        "Query",
+        "Mutation"
+      ]
+    },
+    "storage": {
+      "GameTemplate:@model(appsync)": [
+        "read"
+      ],
+      "QuestionTemplate:@model(appsync)": [
+        "read"
+      ],
+      "GameSession:@model(appsync)": [
+        "create"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

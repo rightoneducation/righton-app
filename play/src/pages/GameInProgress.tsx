@@ -39,14 +39,14 @@ import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/
 
 interface GameInProgressProps {
   apiClient: ApiClient;
-  teams?: ITeam[];
+  teams: ITeam[];
   currentState: GameSessionState;
   teamMemberId: string;
   teamAvatar: number;
   phaseOneTime: number;
   phaseTwoTime: number;
   questions: IQuestion[];
-  currentQuestionIndex?: number | null;
+  currentQuestionIndex: number;
   teamId: string;
   score: number;
   answerChoices: IChoice[];
@@ -90,14 +90,13 @@ export default function GameInProgress({
   });
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
-  const currentQuestion = questions[currentQuestionIndex ?? 0];
-  let teamAnswers: (NumberAnswer | StringAnswer | ExpressionAnswer | null)[] | null | undefined;
+  const currentQuestion = questions[currentQuestionIndex];
+  let teamAnswers: ITeamAnswer[] = [];
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
-      // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
-    );
+    ) ?? [];
   }
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
@@ -133,7 +132,7 @@ export default function GameInProgress({
     return [introText, questionText];
   };
 
-  const questionText = divideQuestionString(currentQuestion?.text);
+  const questionText = divideQuestionString(currentQuestion.text);
   const totalTime =
     currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
       ? phaseOneTime
@@ -158,8 +157,8 @@ export default function GameInProgress({
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(answerContent.multiChoiceAnswerIndex)
   );
-  const currentAnswer = teamAnswers?.find(
-    (answer) => answer?.questionId === currentQuestion.id
+  const currentAnswer = teamAnswers.find(
+    (answer) => answer.questionId === currentQuestion.id
   );
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
     currentAnswer?.id ?? ''
@@ -235,12 +234,23 @@ export default function GameInProgress({
     }
   };
 
-  const handleSubmitHint = async (normalizedHint: ITeamAnswerHint) => {
-    try{
-      await apiClient.updateTeamAnswerHint(teamAnswerId, true, normalizedHint);
-      window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
-      setAnswerHint(normalizedHint);
-    } catch (e) {
+  const handleSubmitAnswer = async (answerText: string) => {
+    try {
+      const response = await apiClient.addTeamAnswer(
+        teamMemberId,
+        currentQuestion.id,
+        answerText,
+        '{}',
+        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+      );
+      const responseGame = await apiClient.getGameSession(
+        localModel.gameSessionId
+      );
+      setTeamAnswerId(response.id);
+      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+      setDisplaySubmitted(true);
+    } catch {
       setIsAnswerError(true);
     }
   };
@@ -334,8 +344,7 @@ export default function GameInProgress({
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
-            questionUrl={questionUrl ?? ''}
-            answerSettings = {currentQuestion.answerSettings ?? null}
+            questionUrl={questionUrl}
             answerChoices={answerChoices}
             isSubmitted={answerContent.isSubmitted ?? false}
             displaySubmitted={displaySubmitted}
@@ -363,9 +372,9 @@ export default function GameInProgress({
           <DiscussAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
-            questionUrl={questionUrl ?? ''}
+            questionUrl={questionUrl}
             answerChoices={answerChoices}
-            instructions={instructions ?? ['']}
+            instructions={instructions}
             currentState={currentState}
             currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
             currentQuestion={currentQuestion}

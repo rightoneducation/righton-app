@@ -2,13 +2,23 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
+import { v4 as uuidv4 } from 'uuid';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
-import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
+import QuestionMakerAnswerDropdown from './QuestionMakerAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
 import { AnswerType, AnswerPrecision } from '@righton/networking';
 
-export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion }) {
+export default function QuestionMaker({ 
+  updateQuestion, 
+  question: initialState, 
+  gameId, 
+  gameQuestion, 
+  handleCreateQuestionTemplate, 
+  handleUpdateQuestionTemplate,
+  localQuestionTemplates,
+  setLocalQuestionTemplates 
+}) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -17,12 +27,11 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const history = useHistory();
   const location = useLocation();
   const originalQuestion = location.state || initialState || null;
-  const [answerType, setAnswerType] = useState(AnswerType.NUMBER);
-  const [answerPrecision, setAnswerPrecision] = useState(AnswerPrecision.WHOLE);
+  const [answerType, setAnswerType] = useState('number');
+  const [answerPrecision, setAnswerPrecision] = useState('WHOLE');
   const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const [isAnswerTypeInvalid, setIsAnswerTypeInvalid] = useState(false);
   const [isAnswerDecimalInvalid, setIsAnswerDecimalInvalid] = useState(false);
-
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
       const copyOfOriginal = { ...originalQuestion }
@@ -31,7 +40,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       return copyOfOriginal
     }
     return {
-      text: '',
+      title: '',
       imageUrl: '',
       choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }],
       grade: null,
@@ -42,7 +51,14 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   });
 
   const decimalValidator = (inputValue) => {
-    const roundedNumberAsString = Number(inputValue).toFixed(answerPrecision);
+    const answerPrecisionDictionary = {
+      ['WHOLE']: 0,
+      ['TENTH']: 1,
+      ['HUNDREDTH']: 2,
+      ['THOUSANDTH']: 3
+    }
+    const precisionValue = answerPrecisionDictionary[answerPrecision];
+    const roundedNumberAsString = Number(inputValue).toFixed(precisionValue);
     return inputValue.toString() === roundedNumberAsString;
   }
   // Handles which Url to redirect to when clicking the Back to Game Maker button
@@ -68,8 +84,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
   // When a wrong answer is changed/update this function handles that change
-  const onChoiceTextChangeMaker = (choice, choiceIndex, answerType) => ({ currentTarget }) => {
-    if (choice.isAnswer === true && answerType === AnswerType.NUMBER) {
+  const onChoiceTextChangeMaker = (choiceIndex, answerType) => ({ currentTarget }) => {
+    if (choiceIndex === 0 && answerType === 'number') {
       setIsAnswerTypeInvalid(!numericAnswerRegex.test(currentTarget.value));
       currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
       setIsAnswerDecimalInvalid(!decimalValidator(currentTarget.value));
@@ -111,8 +127,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const onSelectMaker = useCallback((field) => ({ target }) => { setQuestion({ ...question, [field]: target.value }); }, [question, setQuestion]);
 
   // Handles saving a new or updated question. If certain required fields are not met it throws an error popup
-  const handleSaveQuestion = async (question) => {
-    if (isNullOrEmpty(question.text)) {
+  const handleSaveQuestionTemplate = async (question) => {
+    if (isNullOrEmpty(question.title)) {
       window.alert("Please enter a question");
       return;
     }
@@ -142,23 +158,34 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       window.alert("Please enter a cluster to save the game");
       return;
     }
-    const questionToSend = { ...question }
-    questionToSend.choices = JSON.stringify(questionToSend.choices)
-    questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
-    questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
-
-    let newQuestion;
-    if (questionToSend.id) {
-      newQuestion = await updateQuestion(questionToSend);
-    } else {
-      newQuestion = await cloneQuestion(questionToSend);
-      delete newQuestion.updatedAt;
-      delete newQuestion.createdAt;
-      gameQuestion(newQuestion);
+    try{
+      const questionToSend = { ...question };
+      questionToSend.choices = JSON.stringify(questionToSend.choices)
+      questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
+      questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
+      questionToSend.owner = "Owners Name";
+      questionToSend.version = 0;
+      let newQuestion;
+      if (gameId){
+        questionToSend.id = uuidv4();
+        setLocalQuestionTemplates([...localQuestionTemplates, {questionTemplate: questionToSend, gameQuestionId: null}]);
+        history.push(`/gamemaker/${gameId}`);
+        return;
+      }
+      if (questionToSend.id) {
+        newQuestion = await handleUpdateQuestionTemplate(questionToSend);
+      } else {
+        questionToSend.id = uuidv4();
+        newQuestion = await handleCreateQuestionTemplate(questionToSend);
+        delete newQuestion.updatedAt;
+        delete newQuestion.createdAt;
+      }
+      history.push(`/questions/${newQuestion.id}`);
+    } catch (e) {
+      console.log(e);
     }
-    history.push(`/gamemaker/${gameId}`);
+    history.push('/questions');
   }
-
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -177,7 +204,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
           </Grid>
 
           <Grid item container xs={8}>
-            <TextField className={classes.input} id="question-text" value={question.text} onChange={onChangeMaker('text')} label="Question Text" variant="outlined" fullWidth multiline rows={10} required />
+            <TextField className={classes.input} id="question-text" value={question.title} onChange={onChangeMaker('title')} label="Question Text" variant="outlined" fullWidth multiline rows={10} required />
 
             <TextField id="image-url" onChange={onChangeMaker('imageUrl')} fullWidth value={question.imageUrl} label="URL for Photo" variant="outlined" />
           </Grid>
@@ -192,7 +219,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
           <Grid item container xs={9} sm={12}>
             {question.choices.sort((a, b) => Number(b.isAnswer) - Number(a.isAnswer)).map((choice, index) => (
-              <QuestionFormAnswerDropdown
+              <QuestionMakerAnswerDropdown
                 key={`choice${index}`}
                 index={index}
                 choice={choice}
@@ -304,8 +331,13 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
           </Grid>
 
           <Grid style={{ marginTop: 50 }} item container xs={8} sm={12} justifyContent='center'>
-            <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestion(question)}>Add to Game</Button>
-          </Grid>
+            { !gameId 
+              ?
+                <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>Add to Question Bank</Button>
+              :
+                <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>Add to Game</Button>
+            }
+            </Grid>
 
         </Grid>
 

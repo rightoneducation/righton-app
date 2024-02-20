@@ -119,7 +119,7 @@ const useStyles = (sortByCheck, isResolutionMobile) => makeStyles(theme => ({
       fontFamily: 'Poppins',
       width: '75px',
       cursor: 'pointer',
-      position: 'relative',
+      position: 'relative'
     },
     sortByHeader: {
       backgroundColor: sortByCheck ? '#768092' : '#B1BACB',
@@ -149,8 +149,7 @@ const useStyles = (sortByCheck, isResolutionMobile) => makeStyles(theme => ({
       border: '2px solid #768092',
       boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.13)',
       display: 'flex',
-      direction: 'column',
-      zIndex: 1,
+      direction: 'column'
     },
     sortByName: {
       fontSize: '16px',
