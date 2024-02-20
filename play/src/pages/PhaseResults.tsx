@@ -4,6 +4,7 @@ import {
   GameSessionState,
   IGameSession,
   ITeam,
+  IChoice,
   ModelHelper,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
@@ -23,19 +24,16 @@ import 'swiper/css/pagination';
 
 interface PhaseResultsProps {
   apiClient: ApiClient;
-  teams?: ITeam[];
+  teams: ITeam[];
   currentState: GameSessionState;
   teamAvatar: number;
-  currentQuestionIndex?: number | null;
+  currentQuestionIndex: number;
   teamId: string;
   gameSession: IGameSession;
-  answerChoices: {
-    id: string;
-    text: string;
-    isCorrectAnswer: boolean;
-  }[];
+  answerChoices: IChoice[];
   score: number;
   hasRejoined: boolean;
+  isShortAnswerEnabled: boolean;
 }
 
 /**
@@ -66,6 +64,7 @@ export default function PhaseResults({
   answerChoices,
   score,
   hasRejoined,
+  isShortAnswerEnabled,
 }: PhaseResultsProps) {
   // isError consists of two values:
   // error: boolean - whether or not an error has occurred, used to display error modal
@@ -74,8 +73,8 @@ export default function PhaseResults({
     error: boolean;
     withheldPoints: number;
   }>({ error: false, withheldPoints: 0 });
-  const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
-  const currentTeam = teams?.find((team) => team.id === teamId);
+  const currentQuestion = gameSession.questions[currentQuestionIndex];
+  const currentTeam = teams.find((team) => team.id === teamId);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
@@ -101,7 +100,8 @@ export default function PhaseResults({
       calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
         gameSession,
         currentQuestion,
-        currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        isShortAnswerEnabled
       );
     }
     updateTeamScore(teamId, calcNewScore);

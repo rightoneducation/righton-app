@@ -181,7 +181,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, handleDelet
 
   if (loading) return <Skeleton variant="rect" height={500} />;
   const questions = game?.questionTemplates || [];
-  const questionCount = game?.questionTemplates?.length || 0;
+  const questionCount = game?.questionTemplates.length || 0;
 
   const LAUNCH_GAME_URL = `http://localhost:3001/new/${game.id}`;
 

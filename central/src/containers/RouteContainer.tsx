@@ -13,18 +13,20 @@ import {
   ApiClient,
   IGameTemplate,
   IQuestionTemplate,
+  AWSQuestionTemplate,
   CreateQuestionTemplateInput,
-  getQuestion,
   isNullOrUndefined
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
-import { Game, Questions } from '../API';
+import { Game } from '../API';
 import { 
   createGameTemplate, 
   updateGameTemplate,
   deleteGameTemplate, 
   listGameTemplates
 } from '../lib/API/GameTemplates';
+
+
 import { 
   createQuestionTemplate, 
   updateQuestionTemplate,
@@ -200,7 +202,7 @@ export const RouteContainer = ({
     else {
       // update all fields except for the questionTemplates
       const {questionTemplates, ...rest} = updatedGame;
-      const gameTemplateUpdate = rest; 
+      const gameTemplateUpdate = rest as IGameTemplate; 
       const backendGame = await updateGameTemplate(gameTemplateUpdate);
     }
     if (!isNullOrUndefined(updatedGame.questionTemplates) && !isNullOrUndefined(existingGame.questionTemplates)) {
@@ -241,6 +243,7 @@ export const RouteContainer = ({
         const gameTemplateUpdate = rest; 
         const questionTemplatesUpdate = questionTemplates;
         const game = await updateGameTemplate(gameTemplateUpdate);
+          
         if (game) {
           // ~~~~ add questions to game ~~~~~~ using , questionIDSet
           listQuerySettings.nextToken = nextToken;
@@ -312,7 +315,10 @@ export const RouteContainer = ({
       const {gameTemplates, ...rest} = newQuestion;
       const questionTemplateUpdate = rest; 
       const gameTemplatesUpdate = gameTemplates;
-      const question = await updateQuestionTemplate(questionTemplateUpdate);
+      const updatedAt = questionTemplateUpdate.updatedAt?.toString();
+      const createdAt = questionTemplateUpdate.createdAt?.toString();
+      const updatedQuestion = {...questionTemplateUpdate, updatedAt, createdAt};
+      const question = await updateQuestionTemplate(updatedQuestion);
         if (question) {  
           listQuerySettings.nextToken = nextToken;
           const question = await getAllQuestionTemplates(listQuerySettings);
@@ -330,7 +336,10 @@ export const RouteContainer = ({
     const {gameTemplates, ...rest} = question;
     const gameTemplatesUpdate = gameTemplates;
     const newQuestionTemplate = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`};
-    const result = await createQuestionTemplate(newQuestionTemplate);
+    const updatedAt = newQuestionTemplate.updatedAt.toString();
+    const createdAt = newQuestionTemplate.createdAt.toString();
+    const updatedQuestionTemplate = {...newQuestionTemplate, updatedAt, createdAt};
+    const result = await createQuestionTemplate(updatedQuestionTemplate);
     if (result) {
       listQuerySettings.nextToken = nextToken;
       getAllGameTemplates(listQuerySettings);

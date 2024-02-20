@@ -1,7 +1,6 @@
 import { UpdateGameSessionInput } from './AWSMobileApi'
-import { ITeamAnswer, ITeamMember } from './Models'
+import { ITeamMember, ITeam, NumberAnswer, StringAnswer, ExpressionAnswer } from './Models'
 import { IGameSession } from './Models/IGameSession'
-import { ITeam } from './Models/ITeam'
 
 export interface IApiClient {
     createGameSession(gameId: number, isAdvancedMode: Boolean): Promise<IGameSession>
@@ -12,8 +11,4 @@ export interface IApiClient {
     addTeamToGameSessionId(gameSessionId: string, name: string, questionId: string | null): Promise<ITeam>
     addTeamMemberToTeam(teamId: string, isFacilitator: boolean, deviceId: string): Promise<ITeamMember>
     addTeamAnswer(teamMemberId: string, questionId: string, text: string, awsAnswerContents: string, isChosen: boolean, isTrickAnswer: boolean): Promise<ITeamAnswer>
-}
-
-export function isNullOrUndefined<T>(value: T | null | undefined): value is null | undefined {
-    return value === null || value === undefined
 }

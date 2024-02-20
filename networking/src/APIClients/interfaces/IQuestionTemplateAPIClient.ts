@@ -3,20 +3,20 @@ import { CreateQuestionTemplateInput, UpdateQuestionTemplateInput } from "../../
 
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate(
-    input: CreateQuestionTemplateInput
-  ): Promise<IQuestionTemplate | null>;
+    input: CreateQuestionTemplateInput | IQuestionTemplate
+  ): Promise<IQuestionTemplate>;
 
   getQuestionTemplate(
     id: string
-  ): Promise<IQuestionTemplate | null>;
+  ): Promise<IQuestionTemplate>;
 
   updateQuestionTemplate(
-    updateQuestionTemplateInput: UpdateQuestionTemplateInput
-  ): Promise<IQuestionTemplate | null>;
+    updateQuestionTemplateInput: UpdateQuestionTemplateInput | IQuestionTemplate
+  ): Promise<IQuestionTemplate>;
 
   deleteQuestionTemplate(
     id: string
-  ): Promise<IQuestionTemplate | null>;
+  ): Promise<IQuestionTemplate>;
 
   listQuestionTemplates(
     limit: number | null,

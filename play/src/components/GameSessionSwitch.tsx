@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import {
   ApiClient,
   IChoice,
+  IQuestion,
   IGameSession,
+  IResponse,
   GameSessionState,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,8 +36,8 @@ export default function GameSessionSwitch({
   );
   const { currentState } = gameSession;
   const currentQuestion =
-    gameSession.questions[gameSession.currentQuestionIndex!]; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-  const currentTeam = gameSession.teams!.find( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    gameSession.questions[gameSession.currentQuestionIndex] as IQuestion;
+  const currentTeam = gameSession.teams.find( 
     (team) => team.id === localModel.teamId
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
@@ -44,8 +46,9 @@ export default function GameSessionSwitch({
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
+  const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
   const answerChoices =
-    currentQuestion?.choices?.map((choice: IChoice) => ({
+    currentQuestion.choices.map((choice: IChoice) => ({
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
@@ -68,6 +71,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          currentQuestionIndex={gameSession.currentQuestionIndex}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -85,6 +89,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          currentQuestionIndex={gameSession.currentQuestionIndex}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -94,12 +99,13 @@ export default function GameSessionSwitch({
           {...gameSession}
           apiClient={apiClient}
           gameSession={gameSession}
-          currentQuestionIndex={gameSession.currentQuestionIndex ?? 0}
+          currentQuestionIndex={gameSession.currentQuestionIndex}
           teamAvatar={localModel.selectedAvatar}
           teamId={localModel.teamId}
           answerChoices={answerChoices}
           score={score}
           hasRejoined={hasRejoined}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.PHASE_2_START:

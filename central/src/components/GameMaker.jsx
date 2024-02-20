@@ -94,7 +94,6 @@ export default function GameMaker({
   const selectedQuestionTemplates = selectedQuestions.map(question => {
     return {questionTemplate: question, gameQuestionId: null }
   });
-  console.log([...gameDetails.questionTemplates, ...selectedQuestionTemplates]);
   // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
   const [localQuestionTemplates, setLocalQuestionTemplates] = useState([...gameDetails.questionTemplates]);
 
@@ -381,7 +380,6 @@ export default function GameMaker({
         <Route exact path='/gamemaker/:gameId/questionmaker/:questionId' render={
           isUserAuth && (
             ({match}) => {
-              console.log('sup');
               const { questionId, gameId } = match.params;
               const question = getQuestionTemplateById(questions, questionId);
               return <QuestionMaker 

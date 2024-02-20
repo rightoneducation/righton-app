@@ -1,4 +1,4 @@
-import { IModelGameQuestionConnection } from "../IModelGameQuestionConnection";
+import { AWSModelGameQuestionConnection } from "../AWS/AWSModelGameQuestionConnection";
 
 export type AWSGameTemplate = {
     id: string,

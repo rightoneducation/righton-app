@@ -8,10 +8,10 @@ export interface IQuestionTemplate {
   choices?: string | null,
   instructions?: string | null,
   answerSettings?: string | null,
-  domain: string | null;
-  cluster: string | null;
-  grade: string | null;
-  standard: string | null;
+  domain: string;
+  cluster: string;
+  grade: string;
+  standard: string;
   imageUrl?: string | null | undefined,
   gameTemplates?: { gameTemplate: IGameTemplate, gameQuestionId: string }[] | null,
   gameTemplatesCount: number,

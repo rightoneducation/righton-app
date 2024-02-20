@@ -9,7 +9,7 @@ import {
   UpdateTeamAnswerMutation,
   UpdateTeamAnswerMutationVariables,
 } from "../AWSMobileApi";
-import { isNullOrUndefined } from "../IApiClient";
+import { isNullOrUndefined } from "../global";
 import { ITeamAnswer } from "../Models";
 import { TeamAnswerParser } from "../Parsers/TeamAnswerParser";
 import {
