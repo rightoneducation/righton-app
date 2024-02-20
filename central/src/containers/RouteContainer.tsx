@@ -19,24 +19,7 @@ import {
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game, Questions } from '../API';
-import { 
-  createGameTemplate, 
-  getGameTemplate, 
-  updateGameTemplate,
-  deleteGameTemplate, 
-  listGameTemplates
-} from '../lib/API/gametemplates';
-import { 
-  createQuestionTemplate, 
-  getQuestionTemplate, 
-  updateQuestionTemplate,
-  deleteQuestionTemplate,
-  listQuestionTemplates
-} from '../lib/API/questiontemplates';
-import {
-  createGameQuestions,
-  deleteGameQuestions
-} from '../lib/API/gamequestions';
+
 import { IListQuerySettings } from '../lib/API/QueryInputs';
 import { updateQuestion, cloneQuestion } from '../lib/questions';
 import {useMediaQuery} from '../hooks/useMediaQuery';
@@ -443,8 +426,6 @@ export const RouteContainer = ({
   }, [location.pathname]);
 
   if (startup) return null;
-
-  // const filteredGames = games?.filter((game: IGameTemplate | null) => filterGame(game, searchInput.toLowerCase())) as IGameTemplate[];
 
   const alertContext = {
     alert,

@@ -26,7 +26,6 @@ const API_KEY = process.env.API_MOBILE_GRAPHQLAPIKEYOUTPUT;
 
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   let questionTemplates = [];
-  console.log(awsGameTemplate);
   try {
       if (awsGameTemplate && awsGameTemplate.data && awsGameTemplate.data.getGameTemplate) {
           const { getGameTemplate } = awsGameTemplate.data;
@@ -41,7 +40,6 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   } catch (e) {
       console.error('Error processing question templates:', e);
   }
-  console.timeLog(awsGameTemplate);
   const { owner, version, domain, grade, cluster, standard, __typename, createdAt, updatedAt, ...trimmedGameTemplate } = awsGameTemplate.data.getGameTemplate;
   const gameTemplate = {
       ...trimmedGameTemplate, 
@@ -78,7 +76,6 @@ async function createAndSignRequest(query, variables) {
     body: JSON.stringify({ query, variables }),
     path: endpoint.pathname
   });
-  console.log(requestToBeSigned);
   return new Request(endpoint, await signer.sign(requestToBeSigned));
 }
 /**
@@ -86,7 +83,6 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
-  console.log("Received event:", JSON.stringify(event, null, 2));
   const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     getGameTemplate(id: $id) {
       id
@@ -189,13 +185,8 @@ async function createAndSignRequest(query, variables) {
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
     const gameTemplateRequest = await createAndSignRequest(getGameTemplate, { id: gameTemplateId });
-    console.log(gameTemplateId);
-    console.log(gameTemplateRequest);
     const gameTemplateResponse = await fetch(gameTemplateRequest);
-    console.log(gameTemplateResponse);
-    console.log(gameTemplateResponse.json);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json());
-    console.log(gameTemplateParsed);
     const { questionTemplates: questions, ...game } = gameTemplateParsed;
 
     // createGameSession
@@ -206,7 +197,6 @@ async function createAndSignRequest(query, variables) {
 
     // createQuestions
     const promises = questions.map(async (question) => {
-      console.log(question);
       const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
       const questionRequest = await createAndSignRequest(createQuestion, {
         input: {    
