@@ -9,14 +9,12 @@ import {
   ModelHelper,
   ConfidenceLevel,
   isNullOrUndefined,
-  LocalAnswer,
+  BackendAnswer,
   IChoice,
-  NumberAnswer,
-  StringAnswer,
-  ExpressionAnswer,
+  IAnswerHint,
+  AnswerFactory,
   AnswerType,
-  IBaseAnswer,
-  IAnswerHint
+  IAnswerSettings
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
@@ -42,7 +40,7 @@ interface GameInProgressProps {
   apiClient: ApiClient;
   teams?: ITeam[];
   currentState: GameSessionState;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
   teamAvatar: number;
   phaseOneTime: number;
   phaseTwoTime: number;
@@ -61,7 +59,7 @@ export default function GameInProgress({
   apiClient,
   teams,
   currentState,
-  teamMemberId,
+  teamMemberAnswersId,
   teamAvatar,
   questions,
   phaseOneTime,
@@ -75,6 +73,7 @@ export default function GameInProgress({
   localModel,
   isShortAnswerEnabled,
 }: GameInProgressProps) {
+
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
@@ -90,7 +89,8 @@ export default function GameInProgress({
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
-  let teamAnswers: (NumberAnswer | StringAnswer | ExpressionAnswer | null)[] | null | undefined;
+  const answerSettings: IAnswerSettings | null = currentQuestion.answerSettings ?? null;
+  let teamAnswers: (BackendAnswer | null)[] | null | undefined;
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
       // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -144,7 +144,7 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [localAnswer, setLocalAnswer] = useState<LocalAnswer>(() => {
+  const [backendAnswer, setBackendAnswer] = useState<BackendAnswer>(() => {
     const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
       localModel,
       hasRejoined,
@@ -156,7 +156,7 @@ export default function GameInProgress({
   });
 
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
-    !isNullOrUndefined(localAnswer?.isSubmitted)
+    !isNullOrUndefined(backendAnswer?.isSubmitted)
   );
   const currentAnswer = teamAnswers?.find(
     (answer) => answer?.questionId === currentQuestion.id
@@ -165,7 +165,7 @@ export default function GameInProgress({
     currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
   const handleTimerIsFinished = () => {
-    setLocalAnswer((prev) => ({ ...prev, isSubmitted: true }));
+    setBackendAnswer((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
 
@@ -184,52 +184,16 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-  // contents is the quill pad contents
-  const handleSubmitAnswer = async (packagedAnswer: LocalAnswer) => {
-    const answerConfigBase = {
-      id: uuidv4(),
-      questionId: currentQuestion.id,
-      teamMemberId,
-      text: '',
-      answer: packagedAnswer,
-      confidenceLevel: ConfidenceLevel.NOT_RATED
-    };
-    let answer;
-    const currentQuestionType = currentQuestion.answerSettings?.answerType;
-    switch (currentQuestionType) {
-      case (AnswerType.STRING): {
-        const answerConfig: IBaseAnswer<string> = {
-          ...answerConfigBase,
-          value: ''
-        }
-        answer = new StringAnswer(answerConfig);
-        break;
-      }
-      case (AnswerType.EXPRESSION): {
-        const answerConfig: IBaseAnswer<string> = {
-          ...answerConfigBase,
-          value: ''
-        }
-        answer = new ExpressionAnswer(answerConfig);
-        break;
-      }
-      case (AnswerType.NUMBER):
-      default: {
-        const answerConfig: IBaseAnswer<number> = {
-          ...answerConfigBase,
-          value: 0
-        }
-        answer = new NumberAnswer(answerConfig);
-        break;
-      }
-    }
+  // creates new team answer when student submits
+  const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
       const response = await apiClient.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
-      setLocalAnswer(answer?.answer as LocalAnswer);
+      setBackendAnswer(answer);
       setDisplaySubmitted(true);
     } catch (e) {
+      console.log(e);
       setIsAnswerError(true);
     }
   };
@@ -247,7 +211,7 @@ export default function GameInProgress({
   const handleRetry = () => {
     if (isAnswerError) {
       setIsAnswerError(false);
-      setLocalAnswer((prev) => ({ ...prev, isSubmitted: false }));
+      setBackendAnswer((prev) => ({ ...prev, isSubmitted: false }));
     }
     if (isConfidenceError) {
       setIsConfidenceError(false);
@@ -260,18 +224,21 @@ export default function GameInProgress({
   };
 
   const handleSelectAnswer = (answerText: string) => {
+    const answer = new BackendAnswer(
+      AnswerFactory.createAnswer(answerText, AnswerType.MULTICHOICE),
+      false,
+      false,
+      currentState,
+      currentQuestionIndex ?? 0,
+      currentQuestion.id,
+      teamMemberAnswersId,
+      answerText
+    )
     window.localStorage.setItem(
       StorageKeyAnswer,
-      JSON.stringify({
-        answerContent: {
-          rawAnswer: answerText,
-        },
-        isSubmitted: false,
-        currentState,
-        currentQuestionIndex: currentQuestionIndex ?? 0,
-      } as LocalAnswer)
+      JSON.stringify(answer)
     );
-    setLocalAnswer((prev) => ({ ...prev, answerContent: { rawAnswer: answerText } }));
+    setBackendAnswer((prev) => ({ ...prev, ...answer }));
   };
 
   const setTimeOfLastConfidenceSelect = (time: number) => {
@@ -336,9 +303,9 @@ export default function GameInProgress({
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
-            answerSettings = {currentQuestion.answerSettings ?? null}
+            answerSettings = {answerSettings}
             answerChoices={answerChoices}
-            isSubmitted={localAnswer.isSubmitted ?? false}
+            isSubmitted={backendAnswer.isSubmitted ?? false}
             displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
@@ -350,13 +317,15 @@ export default function GameInProgress({
             timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
-            localAnswer={localAnswer}
+            backendAnswer={backendAnswer}
             currentQuestionIndex={currentQuestionIndex ?? 0}
             answerHint={answerHint ?? null}
             isHintEnabled={currentQuestion.isHintEnabled}
             handleSubmitHint={handleSubmitHint}
             isHintSubmitted={answerHint?.isHintSubmitted ?? false}
             currentTeam={currentTeam ?? null}
+            questionId={currentQuestion.id ?? ''}
+            teamMemberAnswersId={teamMemberAnswersId}
           />
         ) : (
           <DiscussAnswer

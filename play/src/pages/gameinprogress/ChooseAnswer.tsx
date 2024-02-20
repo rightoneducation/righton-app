@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   ConfidenceLevel,
   GameSessionState,
-  LocalAnswer,
+  BackendAnswer,
   IChoice,
   ITeam,
   IAnswerHint,
@@ -31,7 +31,7 @@ interface ChooseAnswerProps {
   answerChoices: IChoice[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (answer: LocalAnswer) => void;
+  handleSubmitAnswer: (answer: BackendAnswer) => void;
   currentState: GameSessionState;
   handleSelectAnswer: (answer: string) => void;
   isConfidenceEnabled: boolean;
@@ -41,13 +41,15 @@ interface ChooseAnswerProps {
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
-  localAnswer: LocalAnswer;
+  backendAnswer: BackendAnswer;
   currentQuestionIndex: number;
   answerHint: IAnswerHint | null;
   isHintEnabled: boolean;
   handleSubmitHint: (result: IAnswerHint) => void;
   isHintSubmitted: boolean;
   currentTeam: ITeam | null;
+  questionId: string;
+  teamMemberAnswersId: string;
 }
 
 export default function ChooseAnswer({
@@ -68,13 +70,15 @@ export default function ChooseAnswer({
   timeOfLastConfidenceSelect,
   setTimeOfLastConfidenceSelect,
   isShortAnswerEnabled,
-  localAnswer,
+  backendAnswer,
   currentQuestionIndex,
   answerHint,
   isHintEnabled,
   handleSubmitHint,
   isHintSubmitted,
   currentTeam,
+  questionId,
+  teamMemberAnswersId
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -116,24 +120,28 @@ export default function ChooseAnswer({
       {isShortAnswerEnabled &&
       currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
         <OpenAnswerCard
-          localAnswer={localAnswer}
-          isSubmitted={localAnswer.isSubmitted ?? false}
+          backendAnswer={backendAnswer}
+          isSubmitted={backendAnswer.isSubmitted ?? false}
           isShortAnswerEnabled={isShortAnswerEnabled}
           answerSettings={answerSettings}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
+          questionId={questionId}
+          teamMemberAnswersId={teamMemberAnswersId}
         />
       ) : (
         <AnswerCard
           answers={answerChoices}
-          isSubmitted={localAnswer.isSubmitted ?? false}
+          isSubmitted={backendAnswer.isSubmitted ?? false}
           isShortAnswerEnabled={isShortAnswerEnabled}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
-          selectedAnswer={localAnswer.answerContent.rawAnswer}
+          selectedAnswer={backendAnswer.answer.rawAnswer}
           handleSelectAnswer={handleSelectAnswer}
+          questionId={questionId}
+          teamMemberAnswersId={teamMemberAnswersId}
         />
       )}
      
@@ -165,6 +173,8 @@ export default function ChooseAnswer({
                   isHintSubmitted={isHintSubmitted}
                   handleSubmitHint={handleSubmitHint}
                   currentTeam={currentTeam ?? null}
+                  questionId={questionId}
+                  teamMemberAnswersId={teamMemberAnswersId}
                 />
               </Box>
             </Fade>

@@ -78,7 +78,8 @@ export default function PhaseResults({
   const currentTeam = teams?.find((team) => team.id === teamId);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    currentQuestion
+    currentQuestion,
+    gameSession.currentState
   );
 
   const [newPoints, setNewPoints] = React.useState<number>(0);

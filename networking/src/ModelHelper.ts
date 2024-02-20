@@ -8,9 +8,7 @@ import { GameSessionState } from './AWSMobileApi'
 export abstract class ModelHelper {
     private static correctAnswerScore = 10
     private static isAnswerFromPhaseOne(answer: BackendAnswer | null): boolean {
-        return !isNullOrUndefined(answer) &&
-            (answer.currentState === GameSessionState.PHASE_1_DISCUSS ||
-                answer.currentState === GameSessionState.PHASE_1_RESULTS)
+        return !isNullOrUndefined(answer) && answer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER;
     }
 
     static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: string): Array<BackendAnswer | null> | null {
@@ -39,7 +37,7 @@ export abstract class ModelHelper {
             return !isNullOrUndefined(choice.isAnswer) && choice.isAnswer
         }) ?? null
     }
-    static getSelectedAnswer(team: ITeam, question: IQuestion): BackendAnswer | null {
+    static getSelectedAnswer(team: ITeam, question: IQuestion, currentState: GameSessionState): BackendAnswer | null {
         // step 1: get all answers from player
         let teamAnswers;
         if (team != null) {
@@ -52,8 +50,8 @@ export abstract class ModelHelper {
         const findSelectedAnswer = (answers: (BackendAnswer | null)[]) => {
             const selectedAnswer = answers.find((teamAnswer: BackendAnswer | null) => 
                 this.isAnswerFromPhaseOne(teamAnswer)
-                    ? teamAnswer?.currentState === GameSessionState.PHASE_1_RESULTS || teamAnswer?.currentState === GameSessionState.PHASE_1_DISCUSS
-                    : teamAnswer?.currentState === GameSessionState.PHASE_2_RESULTS || teamAnswer?.currentState === GameSessionState.PHASE_2_DISCUSS
+                    ? currentState === GameSessionState.PHASE_1_RESULTS
+                    : currentState === GameSessionState.PHASE_2_RESULTS
             );
             return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
         };
@@ -162,12 +160,12 @@ export abstract class ModelHelper {
         return gameSession.teams?.find(team => team.id === teamId) ?? null
     }
 
-    static findTeamMemberInTeam(team: ITeam, teamMemberId: string): ITeamMember | null {
+    static findTeamMemberInTeam(team: ITeam, teamMemberAnswersId: string): ITeamMember | null {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length === 0) {
             return null
         }
         return team.teamMembers.find(member =>
-            !isNullOrUndefined(member) && member.id === teamMemberId) ?? null
+            !isNullOrUndefined(member) && member.id === teamMemberAnswersId) ?? null
     }
 }

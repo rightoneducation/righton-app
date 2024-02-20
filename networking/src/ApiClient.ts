@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, IAnswerHint, ITeamMember, IGameSession, ITeam, AnswerType, NumericAnswer, StringAnswer, ExpressionAnswer, Answer, BackendAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, IAnswerHint, ITeamMember, IGameSession, ITeam, AnswerType, AnswerPrecision, NumericAnswer, StringAnswer, ExpressionAnswer, MultiChoiceAnswer, Answer, BackendAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -375,14 +375,13 @@ export class ApiClient implements IApiClient {
             currentState: inputAnswer.currentState,
             currentQuestionIndex: inputAnswer.currentQuestionIndex,
             questionId: inputAnswer.questionId,
-            teamMemberId: inputAnswer.teamMemberId,
+            teamMemberAnswersId: inputAnswer.teamMemberAnswersId,
             text: inputAnswer.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
             answer: JSON.stringify(inputAnswer.answer), 
             confidenceLevel: ConfidenceLevel.NOT_RATED,
             hint: JSON.stringify(inputAnswer.hint)
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
-        
         const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
             createTeamAnswer,
             variables
@@ -623,11 +622,11 @@ type AWSTeamAnswer = {
     currentState: GameSessionState
     currentQuestionIndex: number
     questionId: string
-    teamMemberId: string
+    teamMemberAnswersId: string
     text: string
     answer: string
-    confidenceLevel: ConfidenceLevel
-    hint: string
+    confidenceLevel?: ConfidenceLevel | null
+    hint?: string | null
 }
 
 export class GameSessionParser {
@@ -685,7 +684,7 @@ export class GameSessionParser {
             isNullOrUndefined(isAdvancedMode)
         ) {
             throw new Error(
-                "GameSession has null field for the attributes that are not nullable"
+                `GameSession has null field for the attributes that are not nullable`
             )
         }
         const gameSession: IGameSession = {
@@ -757,9 +756,20 @@ export class GameSessionParser {
         return []
     }
 
-    private static parseAnswerType<t>(input: any | t): t {
+    private static convertProperty<T>(obj: any, propertyName: string, enumType: T) {
+        if (!isNullOrUndefined(obj) && !isNullOrUndefined(obj[propertyName])) {
+            obj[propertyName] = enumType[obj[propertyName] as keyof typeof enumType];
+        }
+    }
+
+    private static parseAnswerSettings<t>(input: any | t): t {
         if (typeof input === "string") {
-            return JSON.parse(input as string)
+            const answerSettingsObject = JSON.parse(input as string);
+            if (!isNullOrUndefined(answerSettingsObject)) {
+                GameSessionParser.convertProperty(answerSettingsObject, 'answerType', AnswerType);
+                GameSessionParser.convertProperty(answerSettingsObject, 'answerPrecision', AnswerPrecision);
+            }
+            return answerSettingsObject as t;
         }
         return input
     }
@@ -780,7 +790,7 @@ export class GameSessionParser {
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
                     answerSettings: isNullOrUndefined(awsQuestion.answerSettings)
                         ? null
-                        : this.parseAnswerType<IAnswerSettings>(awsQuestion.answerSettings),
+                        : this.parseAnswerSettings<IAnswerSettings>(awsQuestion.answerSettings),
                     responses: isNullOrUndefined(awsQuestion.responses)
                          ? []
                          : this.parseServerArray<IResponse>(awsQuestion.responses),
@@ -960,7 +970,6 @@ class TeamAnswerParser {
         if (isNullOrUndefined(awsTeamAnswers)) {
             return []
         }
-
         return awsTeamAnswers.map((awsTeamAnswer) => {
             if (isNullOrUndefined(awsTeamAnswer)) {
                 throw new Error("Team can't be null in the backend.")
@@ -973,7 +982,7 @@ class TeamAnswerParser {
     ): Answer {
         let parsedAnswerContent;
         try {
-            parsedAnswerContent = JSON.parse(awsAnswerContent);
+            parsedAnswerContent = JSON.parse(awsAnswerContent as string);
             if (isNullOrUndefined(parsedAnswerContent) || 
                 (parsedAnswerContent.answerType === AnswerType.NUMBER && isNullOrUndefined(parsedAnswerContent.answerPrecision))) {
                 throw new Error(
@@ -1015,7 +1024,7 @@ class TeamAnswerParser {
             currentState,
             currentQuestionIndex,
             questionId,
-            teamMemberId,
+            teamMemberAnswersId,
             text,
             confidenceLevel,
             hint
@@ -1047,8 +1056,11 @@ class TeamAnswerParser {
                 answerParsed = new ExpressionAnswer(answerContent.rawAnswer, answerContent.answerType);
                 break;
             }
+            case(AnswerType.MULTICHOICE): {
+                answerParsed = new MultiChoiceAnswer(answerContent.rawAnswer, answerContent.answerType);
+                break;
+            }
         }
- 
         const teamAnswer = {
             id,
             isSubmitted,
@@ -1056,7 +1068,7 @@ class TeamAnswerParser {
             currentState,
             currentQuestionIndex,
             questionId,
-            teamMemberId,
+            teamMemberAnswersId,
             text,
             confidenceLevel,
             answer: answerParsed,

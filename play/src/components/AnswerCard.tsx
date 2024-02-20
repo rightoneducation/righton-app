@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   isNullOrUndefined,
   GameSessionState,
-  LocalAnswer,
+  BackendAnswer,
   IChoice,
 } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
@@ -18,10 +18,12 @@ interface AnswerCardProps {
   answers: IChoice[] | undefined;
   isSubmitted: boolean;
   isShortAnswerEnabled: boolean;
-  handleSubmitAnswer: (answerText: LocalAnswer) => void;
+  handleSubmitAnswer: (answerText: BackendAnswer) => void;
   currentState: GameSessionState;
   currentQuestionIndex: number;
   selectedAnswer: string | null;
+  questionId: string;
+  teamMemberAnswersId: string;
   handleSelectAnswer: (answerText: string) => void;
 }
 
@@ -33,6 +35,8 @@ export default function AnswerCard({
   currentState,
   currentQuestionIndex,
   selectedAnswer,
+  questionId,
+  teamMemberAnswersId,
   handleSelectAnswer,
 }: AnswerCardProps) {
   const theme = useTheme();
@@ -112,6 +116,8 @@ export default function AnswerCard({
           currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
+          questionId={questionId}
+          teamMemberAnswersId={teamMemberAnswersId}
         />
       </BodyCardContainerStyled>
     </BodyCardStyled>

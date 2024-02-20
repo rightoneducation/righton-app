@@ -2,6 +2,7 @@ import { parse } from 'mathjs';
 import { removeStopwords, eng } from 'stopword';
 import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
 import { isNullOrUndefined } from '../IApiClient';
+import {v4 as uuidv4} from 'uuid';
 
 export enum AnswerType {
   NUMBER = 0,
@@ -36,7 +37,7 @@ export abstract class BaseAnswer<T> {
       this.answerType = answerType;
   }
 
-  abstract isNormAnswerUnique(otherNormAnswers: T[]): Boolean;
+  abstract isEqualTo(otherNormAnswers: T[]): Boolean;
 }
 
 export class StringAnswer extends BaseAnswer<string>{
@@ -57,10 +58,10 @@ export class StringAnswer extends BaseAnswer<string>{
      return normAnswers;
   }
 
-  isNormAnswerUnique(otherNormAnswers: string[]): Boolean {
+  isEqualTo(otherNormAnswers: string[]): Boolean {
     if (this.normAnswer) {
       return this.normAnswer.some((answer) => {
-        return !otherNormAnswers.includes(answer as string);
+        return otherNormAnswers.includes(answer as string);
       }) 
     }
     return true;
@@ -90,12 +91,12 @@ export class NumericAnswer extends BaseAnswer<Number>{
     const noCommas = rawAnswer.replace(/,/g, '');
     const normItem = noCommas.trim();
     if (!isNullOrUndefined(normItem)) {
-      normAnswers.push(normItem);
+      normAnswers.push(Number(normItem));
     }
     return normAnswers;
   }
   
-  isNormAnswerUnique(otherNormAnswers: number[]): Boolean {
+  isEqualTo(otherNormAnswers: number[]): Boolean {
     const answerPrecisionDictionary = {
       [AnswerPrecision.WHOLE]: 0,
       [AnswerPrecision.TENTH]: 1,
@@ -105,7 +106,7 @@ export class NumericAnswer extends BaseAnswer<Number>{
     if (this.normAnswer){
       return this.normAnswer.some((answer) => {
         if (otherNormAnswers.includes(answer as number)){
-          if ( this.answerPrecision)
+          if (!isNullOrUndefined(this.answerPrecision))
           {
             // we clean up the raw answer again to remove commas and the percent sign
             // we need to use the raw answer because the norm answer could be changed if there is a percentage present
@@ -115,13 +116,13 @@ export class NumericAnswer extends BaseAnswer<Number>{
             // this is going to round the number we found that matches to the precision that the teacher requested
             const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[this.answerPrecision]);
             if (normRawAnswer === roundedNumberAsString)
-              return false;
+              return true;
           }
         }
-        return true;
+        return false;
       }) 
     }
-    return true;
+    return false;
   }
 
   static isAnswerTypeValid(input: string): Boolean {
@@ -155,7 +156,7 @@ export class ExpressionAnswer extends BaseAnswer<string>{
     return normAnswers;
   }
 
-  isNormAnswerUnique(otherNormAnswers: string[]): Boolean {
+  isEqualTo(otherNormAnswers: string[]): Boolean {
     if (this.normAnswer) {
       for (let i =0; i < this.normAnswer.length; i++) {
         for (let y = 0; y < otherNormAnswers.length; y++) {
@@ -163,14 +164,14 @@ export class ExpressionAnswer extends BaseAnswer<string>{
             const exp1 = parse(this.normAnswer[i].toString()).toString();
             const exp2 = parse(otherNormAnswers[y].toString()).toString();
             if (exp1 === exp2)
-              return false;
+              return true;
           } catch (e) {
             console.error(e);
           }
         }
       }
     }
-    return true;
+    return false;
   }
 
   // checks if expression can be parsed via mathjs
@@ -198,19 +199,20 @@ export class MultiChoiceAnswer extends BaseAnswer<string> {
     return normAnswers;
   }
 
-  isNormAnswerUnique(otherNormAnswers: string[]): Boolean {
-    return !otherNormAnswers.includes(this.rawAnswer);
+  isEqualTo(otherNormAnswers: string[]): Boolean {
+    return otherNormAnswers.includes(this.rawAnswer);
   }
 }
 
 export class BackendAnswer {
+  id: string;
   answer: Answer;
   isSubmitted: boolean;
   isShortAnswerEnabled: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
   questionId: string;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
   text: string; // temporary to maintain build compatibility
   confidenceLevel?: ConfidenceLevel | null;
   hint?: IAnswerHint | null;
@@ -222,8 +224,9 @@ export class BackendAnswer {
     currentState: GameSessionState, 
     currentQuestionIndex: number,
     questionId: string,
-    teamMemberId: string,
+    teamMemberAnswersId: string,
     text: string,
+    id?: string | null,
     confidenceLevel?: ConfidenceLevel | null,
     hint?: IAnswerHint | null
   ){
@@ -233,8 +236,9 @@ export class BackendAnswer {
     this.currentState = currentState;
     this.currentQuestionIndex = currentQuestionIndex;
     this.questionId = questionId;
-    this.teamMemberId = teamMemberId;
+    this.teamMemberAnswersId = teamMemberAnswersId;
     this.text = text;
+    this.id = id ?? uuidv4();
     this.confidenceLevel = confidenceLevel;
     this.hint = hint;
   }
@@ -261,7 +265,8 @@ export class BackendAnswer {
         rest.currentState,
         rest.currentQuestionIndex,
         rest.questionId,
-        rest.teamMemberId,
+        rest.teamMemberAnswersId,
+        rest.id,
         rest.confidenceLevel,
         rest.hint);
       return backendAnswer;
@@ -276,14 +281,13 @@ export class AnswerFactory {
     switch (answerType) {
       case AnswerType.NUMBER:
         return new NumericAnswer(rawAnswer, answerType, answerPrecision || AnswerPrecision.WHOLE);
-      case AnswerType.STRING:
-        return new StringAnswer(rawAnswer, answerType);
       case AnswerType.EXPRESSION:
         return new ExpressionAnswer(rawAnswer, answerType);
       case AnswerType.MULTICHOICE:
         return new MultiChoiceAnswer(rawAnswer, answerType);
+      case AnswerType.STRING:
       default:
-        throw new Error('Invalid answer type');
+        return new StringAnswer(rawAnswer, answerType);
     }
   }
 }

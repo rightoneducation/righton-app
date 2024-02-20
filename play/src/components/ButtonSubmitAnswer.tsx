@@ -2,9 +2,10 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
-  LocalAnswer,
+  BackendAnswer,
   GameSessionState,
   IChoice,
+  AnswerFactory,
   AnswerType
 } from '@righton/networking';
 import {
@@ -21,7 +22,9 @@ interface ButtonSubmitAnswerProps {
   answers?: IChoice[] | undefined;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitAnswer: (answer: LocalAnswer) => void;
+  questionId: string,
+  teamMemberAnswersId: string,
+  handleSubmitAnswer: (answer: BackendAnswer) => void;
 }
 
 export default function ButtonSubmitAnswer({
@@ -33,6 +36,8 @@ export default function ButtonSubmitAnswer({
   answers,
   currentState,
   currentQuestionIndex,
+  questionId,
+  teamMemberAnswersId,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
@@ -47,23 +52,25 @@ export default function ButtonSubmitAnswer({
       {isHint ? hintButtonText : buttonText}
     </Typography>
   );
+
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
       onClick={() => {
-        const answerText = selectedAnswer;
-        const answer = new LocalAnswer({
-          answerContent: {
-            rawAnswer: answerText ?? '',
-            normAnswer: [],
-          },
+        const submitAnswer = new BackendAnswer(
+          AnswerFactory.createAnswer(selectedAnswer ?? '', AnswerType.MULTICHOICE),
+          true,
           isShortAnswerEnabled,
-          isSubmitted: true,
           currentState,
           currentQuestionIndex,
-        });
+          questionId,
+          teamMemberAnswersId,
+          selectedAnswer ?? '',
+          null,
+          null
+        );
 
-        handleSubmitAnswer(answer);
+        handleSubmitAnswer(submitAnswer);
       }}
     >
       {buttonContents}

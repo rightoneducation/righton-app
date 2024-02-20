@@ -1,6 +1,6 @@
 import i18n from 'i18next';
+import { v4 as uuidv4 } from 'uuid';
 import {
-  NumberAnswer,
   StringAnswer,
   ExpressionAnswer,
   ITeam,
@@ -8,7 +8,9 @@ import {
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
-  LocalAnswer
+  AnswerFactory,
+  AnswerType,
+  BackendAnswer
 } from '@righton/networking';
 import {
   InputPlaceholder,
@@ -60,16 +62,17 @@ export const checkForSubmittedAnswerOnRejoin = (
   currentState: GameSessionState,
   currentQuestionIndex: number,
   isShortAnswerEnabled: boolean,
-): LocalAnswer => {
-  let returnedAnswer: LocalAnswer = {
-    answerContent: {
-      rawAnswer: '',
-      normAnswer: [],
-    },
+): BackendAnswer => {
+  let returnedAnswer: BackendAnswer = {
+    id: uuidv4(),
+    answer: AnswerFactory.createAnswer('', AnswerType.STRING),
     isSubmitted: false,
-    currentState: null,
-    currentQuestionIndex: null,
+    currentState: GameSessionState.TEAMS_JOINING,
+    currentQuestionIndex: 0,
     isShortAnswerEnabled,
+    questionId: '',
+    teamMemberAnswersId: '',
+    text: ''
   };
   if (hasRejoined) {
     if (
@@ -84,7 +87,7 @@ export const checkForSubmittedAnswerOnRejoin = (
       window.localStorage.setItem(StorageKey, JSON.stringify(localModel));
     }
   }
-  return returnedAnswer as LocalAnswer;
+  return returnedAnswer as BackendAnswer;
 };
 
 /**
@@ -109,12 +112,12 @@ export const checkForSubmittedHintOnRejoin = (
   if (hasRejoined) {
     if (
       localModel.answer !== null &&
-      localModel.hint!== null &&
+      !isNullOrUndefined(localModel.answer.hint) &&
       localModel.answer.currentState === currentState &&
       localModel.answer.currentQuestionIndex === currentQuestionIndex
     ) {
       // set hint to localModel.hint
-      returnedHint = localModel.hint;
+      returnedHint = localModel.answer.hint;
     }
   }
   return returnedHint as IAnswerHint;
@@ -129,7 +132,7 @@ export const checkForSubmittedHintOnRejoin = (
  */
 export const checkForSelectedConfidenceOnRejoin = (
   hasRejoined: boolean,
-  currentAnswer: NumberAnswer | StringAnswer | ExpressionAnswer | null | undefined,
+  currentAnswer: BackendAnswer | null | undefined,
   currentState: GameSessionState
 ): {
   selectedConfidenceOption: string;
@@ -173,7 +176,7 @@ export const validateLocalModel = (
       parsedLocalModel.currentTime,
       parsedLocalModel.gameSessionId,
       parsedLocalModel.teamId,
-      parsedLocalModel.teamMemberId,
+      parsedLocalModel.teamMemberAnswersId,
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
       parsedLocalModel.currentTimer,

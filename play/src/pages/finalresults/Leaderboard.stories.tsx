@@ -30,7 +30,7 @@ const Template: StoryFn<typeof Leaderboard> = function LeaderboardTemplate(
 };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-  MockGameSession as IAWSGameSession
+  MockGameSession as unknown as IAWSGameSession
 ) as IGameSession;
 
 export const Default = Template.bind({});
