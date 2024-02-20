@@ -184,7 +184,7 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-  // contents is the quill pad contents
+  // creates new team answer when student submits
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
       const response = await apiClient.addTeamAnswer(answer);

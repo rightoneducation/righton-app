@@ -61,8 +61,7 @@ const isAnswerStateCurrent = (answerState, currentState) => {
     [GameSessionState.PHASE_2_RESULTS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
   };
   return answerState === currentState || 
-       answerState === stateMappings[currentState] || 
-       false;
+       answerState === stateMappings[currentState];
 }
 
 /*

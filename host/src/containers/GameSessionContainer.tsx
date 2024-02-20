@@ -155,10 +155,10 @@ const GameSessionContainer = () => {
           }
           setTeamsArray(responses);
         })
-        .catch((reason) => console.log(reason));
+        .catch((reason) => console.error(reason));
     });
-   } catch (e){
-    console.log(e);
+   } catch (e) {
+      console.error(e);
     }
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(

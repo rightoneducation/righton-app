@@ -21,7 +21,7 @@ const CreateNewGameSession = () => {
         });
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
   }, []);
 
