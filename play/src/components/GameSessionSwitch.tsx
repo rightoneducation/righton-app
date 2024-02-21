@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
-  ApiClient,
+  TeamAPIClient,
+  TeamAnswerAPIClient,
   IChoice,
   IQuestion,
   IGameSession,
@@ -17,7 +18,8 @@ import StartPhase2 from '../pages/StartPhase2';
 import { LocalModel } from '../lib/PlayModels';
 
 interface GameSessionSwitchProps {
-  apiClient: ApiClient;
+  teamAPIClient: TeamAPIClient,
+  teamAnswerAPIClient: TeamAnswerAPIClient;
   currentTimer: number;
   hasRejoined: boolean;
   gameSession: IGameSession;
@@ -25,7 +27,8 @@ interface GameSessionSwitchProps {
 }
 
 export default function GameSessionSwitch({
-  apiClient,
+  teamAPIClient,
+  teamAnswerAPIClient,
   currentTimer,
   hasRejoined,
   gameSession,
@@ -51,7 +54,7 @@ export default function GameSessionSwitch({
     currentQuestion.choices.map((choice: IChoice) => ({
       id: uuidv4(),
       text: choice.text,
-      isCorrectAnswer: choice.isAnswer,
+      isAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
     })) ?? [];
 
@@ -62,7 +65,7 @@ export default function GameSessionSwitch({
       ) : (
         <GameInProgress
           {...gameSession}
-          apiClient={apiClient}
+          teamAnswerAPIClient={teamAnswerAPIClient}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
@@ -72,6 +75,7 @@ export default function GameSessionSwitch({
           currentTimer={currentTimer}
           localModel={localModel}
           currentQuestionIndex={gameSession.currentQuestionIndex}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -80,7 +84,7 @@ export default function GameSessionSwitch({
       return (
         <GameInProgress
           {...gameSession}
-          apiClient={apiClient}
+          teamAnswerAPIClient={teamAnswerAPIClient}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
@@ -90,6 +94,7 @@ export default function GameSessionSwitch({
           currentTimer={currentTimer}
           localModel={localModel}
           currentQuestionIndex={gameSession.currentQuestionIndex}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -97,7 +102,7 @@ export default function GameSessionSwitch({
       return (
         <PhaseResults
           {...gameSession}
-          apiClient={apiClient}
+          teamAPIClient={teamAPIClient}
           gameSession={gameSession}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           teamAvatar={localModel.selectedAvatar}

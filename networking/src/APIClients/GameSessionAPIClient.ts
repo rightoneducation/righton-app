@@ -81,7 +81,7 @@ export class GameSessionAPIClient
   subscribeUpdateGameSession(
     id: string,
     callback: (result: IGameSession) => void
-  ): Promise<any> {
+  ) {
     return this.subscribeGraphQL<OnGameSessionUpdatedByIdSubscription>(
       {
         query: onGameSessionUpdatedById,

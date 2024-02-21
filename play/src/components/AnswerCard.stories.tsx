@@ -27,10 +27,10 @@ export const CorrectAnswer = Template.bind({});
 CorrectAnswer.args = {
   currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
   answers: [
-    { text: 'Answer 1', isAnswer: true },
-    { text: 'Answer 2', isAnswer: false },
-    { text: 'Answer 3', isAnswer: false },
-    { text: 'Answer 4', isAnswer: false },
+    { text: 'Answer 1', reason: '', isAnswer: true },
+    { text: 'Answer 2', reason: '', isAnswer: false },
+    { text: 'Answer 3', reason: '', isAnswer: false },
+    { text: 'Answer 4', reason: '', isAnswer: false },
   ],
 };
 
@@ -38,9 +38,9 @@ export const TrickAnswer = Template.bind({});
 TrickAnswer.args = {
   currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
   answers: [
-    { text: 'Answer 1', isAnswer: true },
-    { text: 'Answer 2', isAnswer: false },
-    { text: 'Answer 3', isAnswer: false },
-    { text: 'Answer 4', isAnswer: false },
+    { text: 'Answer 1', reason: '', isAnswer: true },
+    { text: 'Answer 2', reason: '', isAnswer: false },
+    { text: 'Answer 3', reason: '', isAnswer: false },
+    { text: 'Answer 4', reason: '', isAnswer: false },
   ],
 };

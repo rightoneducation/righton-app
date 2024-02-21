@@ -3,7 +3,7 @@ import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import {
   IGameSession,
-  IAWSGameSession,
+  AWSGameSession,
   GameSessionParser,
 } from '@righton/networking';
 import { I18nextProvider } from 'react-i18next';
@@ -30,7 +30,7 @@ const Template: StoryFn<typeof Leaderboard> = function LeaderboardTemplate(
 };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-  MockGameSession as unknown as IAWSGameSession
+  MockGameSession as unknown as AWSGameSession
 ) as IGameSession;
 
 export const Default = Template.bind({});

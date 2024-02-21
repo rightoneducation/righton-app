@@ -4,7 +4,9 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  ApiClient,
+  GameSessionAPIClient,
+  TeamAPIClient,
+  TeamMemberAPIClient,
   isNullOrUndefined,
   IGameSession,
   GameSessionState,
@@ -21,10 +23,12 @@ import {
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {
-  apiClient: ApiClient;
+  gameSessionAPIClient: GameSessionAPIClient;
+  teamAPIClient: TeamAPIClient;
+  teamMemberAPIClient: TeamMemberAPIClient;
 }
 
-export function PregameContainer({ apiClient }: PregameFinished) {
+export function PregameContainer({ gameSessionAPIClient, teamAPIClient, teamMemberAPIClient }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -73,7 +77,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       return false;
     }
     try {
-      const gameSessionResponse = await apiClient.getGameSessionByCode(
+      const gameSessionResponse = await gameSessionAPIClient.getGameSessionByCode(
         parseInt(inputGameCodeValue, 10)
       );
       if (isNullOrUndefined(gameSessionResponse)) {
@@ -98,7 +102,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
   const addTeamToGame = async () => {
     const teamName = `${firstName} ${lastName}`;
     try {
-      const team = await apiClient.addTeamToGameSessionId(
+      const team = await teamAPIClient.addTeamToGameSessionId(
         gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         teamName,
         null
@@ -107,7 +111,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
         setIsAPIError(true);
       } else {
         try {
-          const teamMember = await apiClient.addTeamMemberToTeam(
+          const teamMember = await teamMemberAPIClient.addTeamMemberToTeam(
             team.id,
             true,
             uuidv4()

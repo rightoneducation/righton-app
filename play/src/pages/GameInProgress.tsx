@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
-  ApiClient,
+  TeamAnswerAPIClient,
   GameSessionState,
   ITeam,
   IQuestion,
@@ -16,7 +16,6 @@ import {
   AnswerType,
   IAnswerSettings
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
@@ -37,7 +36,7 @@ import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
 
 interface GameInProgressProps {
-  apiClient: ApiClient;
+  teamAnswerAPIClient: TeamAnswerAPIClient;
   teams: ITeam[];
   currentState: GameSessionState;
   teamMemberAnswersId: string;
@@ -56,7 +55,7 @@ interface GameInProgressProps {
 }
 
 export default function GameInProgress({
-  apiClient,
+  teamAnswerAPIClient,
   teams,
   currentState,
   teamMemberAnswersId,
@@ -156,8 +155,8 @@ export default function GameInProgress({
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(backendAnswer?.isSubmitted)
   );
-  const currentAnswer = teamAnswers.find(
-    (answer) => answer.questionId === currentQuestion.id
+  const currentAnswer = teamAnswers?.find(
+    (answer) => answer?.questionId === currentQuestion.id
   );
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
     currentAnswer?.id ?? ''
@@ -185,7 +184,7 @@ export default function GameInProgress({
   // creates new team answer when student submits
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
-      const response = await apiClient.addTeamAnswer(answer);
+      const response = await teamAnswerAPIClient.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
       setBackendAnswer(answer);
@@ -198,7 +197,7 @@ export default function GameInProgress({
 
   const handleSubmitHint = async (normalizedHint: IAnswerHint) => {
     try{
-      await apiClient.updateTeamAnswerHint(teamAnswerId, normalizedHint);
+      await teamAnswerAPIClient.updateTeamAnswerHint(teamAnswerId, normalizedHint);
       window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
       setAnswerHint(normalizedHint);
     } catch (e) {
@@ -250,7 +249,7 @@ export default function GameInProgress({
       // that the loading message can display while we wait for apiClient. Then
       // after await, set isSelected to true again
       setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
-      await apiClient.updateTeamAnswerConfidence(teamAnswerId, confidence);
+      await teamAnswerAPIClient.updateTeamAnswerConfidence(teamAnswerId, confidence);
       setSelectConfidence((prev) => ({
         ...prev,
         selectedConfidenceOption: confidence,

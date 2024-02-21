@@ -5,7 +5,9 @@ export interface IQuestion {
     id: string
     text: string
     choices: Array<IChoice>
+    answerSettings: IAnswerSettings
     responses: Array<IResponse>
+    hints: Array<IHints>
     imageUrl: string
     instructions: Array<string>
     standard: string

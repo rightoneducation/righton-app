@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   isNullOrUndefined,
-  ApiClient,
+  GameSessionAPIClient,
   IGameSession,
 } from '@righton/networking';
 
@@ -15,7 +15,7 @@ import {
  */
 export default function useFetchAndSubscribeGameSession(
   gameSessionId: string,
-  apiClient: ApiClient,
+  gameSessionAPIClient: GameSessionAPIClient,
   retry: number,
   isInitialRejoin: boolean
 ) {
@@ -40,7 +40,7 @@ export default function useFetchAndSubscribeGameSession(
       return;
     }
 
-    apiClient
+    gameSessionAPIClient
       .getGameSession(gameSessionId)
       .then((fetchedGame) => {
         if (!fetchedGame || !fetchedGame.id) {
@@ -49,7 +49,7 @@ export default function useFetchAndSubscribeGameSession(
         }
         if (!ignore) setGameSession(fetchedGame);
         setIsLoading(false);
-        const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
+        const gameSessionSubscription = gameSessionAPIClient.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
             if (!response) {
@@ -71,6 +71,6 @@ export default function useFetchAndSubscribeGameSession(
         if (e instanceof Error) setError(e.message);
         else setError(`${t('error.connect.gamesessionerror')}`);
       });
-  }, [gameSessionId, apiClient, t, retry, hasRejoined]);
+  }, [gameSessionId, GameSessionAPIClient, t, retry, hasRejoined]);
   return { isLoading, error, gameSession, hasRejoined };
 }

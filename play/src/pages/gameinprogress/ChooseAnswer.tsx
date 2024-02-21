@@ -158,7 +158,7 @@ export default function ChooseAnswer({
         { isConfidenceEnabled && 
           (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) ?
             <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="confidencecard-scrollbox" ref={confidenceCardRef}>
+              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="confidencecard-scrollbox">
                 <ConfidenceMeterCard
                   selectedOption={selectedConfidenceOption}
                   handleSelectOption={handleSelectConfidence}
@@ -173,7 +173,7 @@ export default function ChooseAnswer({
           {isHintEnabled &&
             currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
             <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox" ref={hintCardRef}>
+              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox">
                 <HintCard
                   answerHintText={answerHint?.rawHint ?? ''}
                   currentState={currentState}
@@ -273,6 +273,8 @@ export default function ChooseAnswer({
                       isHintSubmitted={isHintSubmitted}
                       handleSubmitHint={handleSubmitHint}
                       currentTeam={currentTeam ?? null}
+                      questionId={questionId}
+                      teamMemberAnswersId={teamMemberAnswersId}
                     />
                    }
                   </ScrollBoxStyled>
