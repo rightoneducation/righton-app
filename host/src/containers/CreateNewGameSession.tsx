@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ApiClient, Environment, GameSessionState } from '@righton/networking';
+import { GameSessionAPIClient, Environment, GameSessionState } from '@righton/networking';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { makeStyles } from '@material-ui/core';
 
 const CreateNewGameSession = () => {
-  const apiClient = new ApiClient(Environment.Developing);
+  const gameSessionAPIClient = new GameSessionAPIClient(Environment.Developing);
   const classes = useStyles();
   let { gameId } = useParams<{ gameId: string }>();
 
   useEffect(() => {
-    apiClient.createGameSessionFromTemplate(gameId).then((response) => {
+    gameSessionAPIClient.createGameSessionFromTemplate(gameId).then((response) => {
       if (!response) {
         return;
       }
-      apiClient
+      gameSessionAPIClient
         .updateGameSession({
           id: response,
           currentState: GameSessionState.TEAMS_JOINING,

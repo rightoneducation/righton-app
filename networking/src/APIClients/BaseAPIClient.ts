@@ -42,12 +42,14 @@ export interface IQueryParameters {
 }
 
 export abstract class BaseAPIClient {
-  protected endpoint: string;
   protected env: Environment;
+  protected endpoint: string;
+  protected hintEndpoint: string
 
   constructor(env: Environment) {
     this.env = env;
     this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
+    this.hintEndpoint = `https://yh5ionr9rg.execute-api.us-east-1.amazonaws.com/groupHints/groupHints`;
   }
 
   protected async callGraphQL<T>(

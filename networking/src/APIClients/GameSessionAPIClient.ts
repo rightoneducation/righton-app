@@ -3,6 +3,7 @@ import { IGameSession } from "../Models";
 import { GameSessionParser } from "../Parsers/GameSessionParser";
 import { BaseAPIClient, HTTPMethod } from "./BaseAPIClient";
 import {
+  createGameSessionFromTemplate,
   gameSessionByCode,
   getGameSession,
   onGameSessionUpdatedById,
@@ -21,6 +22,20 @@ export class GameSessionAPIClient
   extends BaseAPIClient
   implements IGameSessionAPIClient
 {
+
+  async createGameSessionFromTemplate(id: string): Promise<string | null> {
+    try {
+        const response = await API.graphql(
+            graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
+        ) as { data: { createGameSessionFromTemplate: string } };
+        const result = response.data.createGameSessionFromTemplate;
+        return result;
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+  }
+
   createGameSession(
     gameId: number,
     isAdvancedMode: Boolean
@@ -126,5 +141,38 @@ export class GameSessionAPIClient
     subscription: OnGameSessionUpdatedByIdSubscription
   ): IGameSession {
     return GameSessionParser.gameSessionFromSubscriptionById(subscription);
+  }
+
+  async groupHints(
+    hints: string[],
+    questionText: string,
+    correctAnswer: string
+  ):Promise<string> {
+      try { 
+      const attempt = fetch(this.hintEndpoint, {
+          method: HTTPMethod.Post,
+          headers: {
+              "content-type": "application/json",
+              connection: "close",
+              "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({
+              hints: hints,
+              questionText: questionText,
+              correctAnswer: correctAnswer
+          }),
+      })
+      .then((response) => {
+          if (!response.ok) {
+            console.error(response.statusText)
+          }
+          return response.json()
+      })
+      
+      return attempt;
+      } catch (e) {
+          console.log(e)
+      }
+    return "";
   }
 }
