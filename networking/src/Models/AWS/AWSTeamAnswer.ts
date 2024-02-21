@@ -2,14 +2,17 @@ import { ConfidenceLevel } from "../../AWSMobileApi";
 
 export type AWSTeamAnswer = {
   id: string
-  questionId?: string | null
-  isChosen: boolean
-  isTrickAnswer: boolean
+  answer: string
+  isSubmitted: boolean
+  isShortAnswerEnabled: boolean
+  currentState: string
+  currentQuestionIndex: number
+  questionId: string
+  teamMemberAnswersId: string
   text?: string | null
-  awsAnswerContents?: string | null
+  confidenceLevel?: ConfidenceLevel | null
+  hint?: string | null
   createdAt: string
   updatedAt: string
-  teamMemberAnswersId?: string | null
-  confidenceLevel: ConfidenceLevel
   __typename?: string | null
 }

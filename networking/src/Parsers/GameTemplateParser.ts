@@ -34,16 +34,14 @@ export class GameTemplateParser {
           cluster,
           grade,
           standard,
-          phaseOneTime,
-          phaseTwoTime,
           imageUrl,
           questionTemplatesCount,
-          createdAt,
-          updatedAt
       } = awsGameTemplate || {}
 
-        const createdAt = new Date(awsGameTemplate.createdAt ?? 0)
-        const updatedAt = new Date(awsGameTemplate.updatedAt ?? 0)
+        const createdAt = new Date(awsGameTemplate.createdAt ?? 0);
+        const updatedAt = new Date(awsGameTemplate.updatedAt ?? 0);
+        const phaseOneTime = awsGameTemplate.phaseOneTime ?? 0;
+        const phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 0;
 
       const gameTemplate: IGameTemplate = {
           id,

@@ -15,6 +15,6 @@ export interface IGameTemplate {
   imageUrl?: string | null | undefined,
   questionTemplates?: { questionTemplate: IQuestionTemplate, gameQuestionId: string }[] | null,
   questionTemplatesCount: number,
-  createdAt?: string | null | undefined,
-  updatedAt?: string | null
+  createdAt?: Date | null,
+  updatedAt?: Date | null
 }

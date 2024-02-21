@@ -1,14 +1,13 @@
 import {
   Environment,
-  IGameQuestions,
-  IGameQuestionsAPIClient,
+  IGameQuestion,
+  IGameQuestionAPIClient,
   GameQuestionsAPIClient,
-  CreateGameQuestionsInput,
-  UpdateGameQuestionsInput
+  CreateGameQuestionsInput
 } from '@righton/networking';
 
-let gameQuestionsAPIClient: IGameQuestionsAPIClient = new GameQuestionsAPIClient(Environment.Testing);
-export const createGameQuestions = async (createGameQuestionsInput: CreateGameQuestionsInput): Promise<IGameQuestions | null> => {
+let gameQuestionsAPIClient: IGameQuestionAPIClient = new GameQuestionsAPIClient(Environment.Testing);
+export const createGameQuestions = async (createGameQuestionsInput: CreateGameQuestionsInput): Promise<IGameQuestion | null> => {
   try {
     const gameQuestions = await gameQuestionsAPIClient.createGameQuestions(createGameQuestionsInput);
     return gameQuestions;
@@ -18,7 +17,7 @@ export const createGameQuestions = async (createGameQuestionsInput: CreateGameQu
   return null;
 }
 
-export const getGameQuestions = async (id: string): Promise<IGameQuestions | null> => {
+export const getGameQuestions = async (id: string): Promise<IGameQuestion | null> => {
   try {
     const gameQuestions = await gameQuestionsAPIClient.getGameQuestions(id);
     return gameQuestions;
@@ -29,7 +28,7 @@ export const getGameQuestions = async (id: string): Promise<IGameQuestions | nul
   return null;
 }
 
-export const deleteGameQuestions = async (id: string): Promise<IGameQuestions | null> => {
+export const deleteGameQuestions = async (id: string): Promise<IGameQuestion | null> => {
   try {
     const gameQuestions = await gameQuestionsAPIClient.deleteGameQuestions(id);
     return gameQuestions;
@@ -39,7 +38,7 @@ export const deleteGameQuestions = async (id: string): Promise<IGameQuestions | 
   return null;
 };
 
-export const getSortedGameQuestionss = async (queryLimit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestions[], nextToken: string } | null> => {
+export const getSortedGameQuestionss = async (queryLimit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestion[], nextToken: string } | null> => {
   try {
     const gameQuestions = await gameQuestionsAPIClient.listGameQuestions(queryLimit, nextToken);
     return gameQuestions;

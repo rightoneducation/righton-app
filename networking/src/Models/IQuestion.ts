@@ -5,7 +5,7 @@ export interface IQuestion {
     id: string
     text: string
     choices: Array<IChoice>
-    responses: Array<string>
+    responses: Array<IResponse>
     imageUrl: string
     instructions: Array<string>
     standard: string

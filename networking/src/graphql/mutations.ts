@@ -1204,7 +1204,6 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           hints
           imageUrl
           instructions
-          answerSettings
           standard
           cluster
           domain
@@ -1280,7 +1279,6 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
         hints
         imageUrl
         instructions
-        answerSettings
         standard
         cluster
         domain
@@ -1327,7 +1325,6 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           hints
           imageUrl
           instructions
-          answerSettings
           standard
           cluster
           domain
@@ -1403,7 +1400,6 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
         hints
         imageUrl
         instructions
-        answerSettings
         standard
         cluster
         domain
@@ -1450,7 +1446,6 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           hints
           imageUrl
           instructions
-          answerSettings
           standard
           cluster
           domain
@@ -1526,7 +1521,6 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
         hints
         imageUrl
         instructions
-        answerSettings
         standard
         cluster
         domain
@@ -1563,7 +1557,6 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     hints
     imageUrl
     instructions
-    answerSettings
     standard
     cluster
     domain
@@ -1593,7 +1586,6 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     hints
     imageUrl
     instructions
-    answerSettings
     standard
     cluster
     domain
@@ -1623,7 +1615,6 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     hints
     imageUrl
     instructions
-    answerSettings
     standard
     cluster
     domain
@@ -1656,7 +1647,6 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain
@@ -1732,7 +1722,6 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain
@@ -1808,7 +1797,6 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain

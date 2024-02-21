@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "../global";
-import { IQuestion, IChoice } from "../Models";
+import { IQuestion, IChoice, IResponse } from "../Models";
 import { AWSQuestion } from "../Models/AWS";
 
 export class QuestionParser {
@@ -15,10 +15,10 @@ export class QuestionParser {
               console.error(e);
          }
       }
-      let responses: string[] = [];
+      let responses: IResponse[] = [];
       if (!isNullOrUndefined(awsQuestion.responses)) {
          try {
-          responses = JSON.parse(awsQuestion.responses) as string[]
+          responses = JSON.parse(awsQuestion.responses) as IResponse[]
           } catch (e) {
               console.error(e);
          }

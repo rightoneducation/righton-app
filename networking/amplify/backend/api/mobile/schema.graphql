@@ -111,7 +111,6 @@ type Question @model(subscriptions: null, timestamps: null) {
   hints: AWSJSON
   imageUrl: String
   instructions: AWSJSON
-  answerSettings: AWSJSON
   standard: String
   cluster: String
   domain: String

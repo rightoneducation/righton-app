@@ -38,8 +38,8 @@ export class GameTemplateAPIClient
     if (doesObjectHaveDate(createGameTemplateInput) && createGameTemplateInput.createdAt && createGameTemplateInput.updatedAt) {
       createGameTemplateInput = {
         ...createGameTemplateInput,
-        createdAt: createGameTemplateInput.createdAt.toString(),
-        updatedAt: createGameTemplateInput.updatedAt.toString()
+        createdAt: createGameTemplateInput.createdAt,
+        updatedAt: createGameTemplateInput.updatedAt
       }
     }
     const variables: CreateGameTemplateMutationVariables = { input: createGameTemplateInput as CreateGameTemplateInput }
@@ -75,8 +75,8 @@ export class GameTemplateAPIClient
     if (doesObjectHaveDate(updateGameTemplateInput) && updateGameTemplateInput.createdAt && updateGameTemplateInput.updatedAt) {
       updateGameTemplateInput = {
         ...updateGameTemplateInput,
-        createdAt: updateGameTemplateInput.createdAt.toString(),
-        updatedAt: updateGameTemplateInput.updatedAt.toString()
+        createdAt: updateGameTemplateInput.createdAt,
+        updatedAt: updateGameTemplateInput.updatedAt
       }
     }
     const input: UpdateGameTemplateInput = updateGameTemplateInput as UpdateGameTemplateInput;

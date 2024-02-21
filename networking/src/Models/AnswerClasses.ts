@@ -1,7 +1,7 @@
 import { parse } from 'mathjs';
 import { removeStopwords, eng } from 'stopword';
 import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
-import { isNullOrUndefined } from '../IApiClient';
+import { isNullOrUndefined } from '../global';
 import {v4 as uuidv4} from 'uuid';
 
 export enum AnswerType {

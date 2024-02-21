@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "../global";
-import { ITeamMember, ITeamAnswer } from "../Models";
+import { ITeamMember, BackendAnswer } from "../Models";
 import { AWSTeamMember } from "../Models/AWS";
 import { OnUpdateTeamMemberSubscription } from "../AWSMobileApi";
 import { TeamAnswerParser } from "./TeamAnswerParser"
@@ -33,7 +33,7 @@ export class TeamMemberParser {
     static teamMemberFromAWSTeamMember(
         awsTeamMember: AWSTeamMember
     ): ITeamMember {
-        let answers: ITeamAnswer[] = [];
+        let answers: BackendAnswer[] = [];
         if (!isNullOrUndefined(awsTeamMember.answers?.items)) {
             answers = TeamAnswerParser.mapTeamAnswers(awsTeamMember.answers?.items)
         }

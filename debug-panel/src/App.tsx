@@ -1,15 +1,23 @@
 import { Button, TextField } from "@mui/material";
 import {
-  ApiClient,
+  IGameSessionAPIClient,
+  GameSessionAPIClient,
+  ITeamAPIClient,
+  TeamAPIClient,
+  ITeamMemberAPIClient,
+  TeamMemberAPIClient,
+  ITeamAnswerAPIClient,
+  TeamAnswerAPIClient,
   Environment,
   GameSessionState,
-  IApiClient,
   IGameSession,
   ITeam,
-  ITeamAnswer,
+  BackendAnswer,
+  MultiChoiceAnswer,
   ITeamMember,
 } from "@righton/networking";
 import { useEffect, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
@@ -20,11 +28,13 @@ function App() {
   const [teamName, setTeamName] = useState<string>("");
   const [team, setTeam] = useState<ITeam | null>();
   const [teamMember, setTeamMember] = useState<ITeamMember | null>();
-  const [teamAnswer, setTeamAnswer] = useState<ITeamAnswer | null>();
+  const [teamAnswer, setTeamAnswer] = useState<BackendAnswer | null>();
 
-  const [apiClient, _] = useState<IApiClient>(
-    new ApiClient(Environment.Developing)
-  );
+  const gameSessionApiClient = new GameSessionAPIClient(Environment.Developing);
+  const teamApiClient = new TeamAPIClient(Environment.Developing);
+  const teamMemberApiClient = new TeamMemberAPIClient(Environment.Developing);
+  const teamAnswerApiClient = new TeamAnswerAPIClient(Environment.Developing);
+
   const gameSessionSubscription = useRef<any | null>(null);
 
   useEffect(() => {
@@ -47,7 +57,7 @@ function App() {
     setPrevGameSessionId(gameSession.id);
 
     gameSessionSubscription.current?.unsubscribe();
-    gameSessionSubscription.current = apiClient.subscribeUpdateGameSession(
+    gameSessionSubscription.current = gameSessionApiClient.subscribeUpdateGameSession(
       gameSession.id,
       (gameSession) => {
         console.log(gameSession);
@@ -62,7 +72,7 @@ function App() {
 
     let gameSessionId = gameSession.id;
 
-    apiClient
+    gameSessionApiClient
       .updateGameSession({ id: gameSessionId, currentState: gameSessionState })
       .then((response) => {
         updateGameSession(response);
@@ -85,11 +95,11 @@ function App() {
       <Button
         variant="contained"
         onClick={() => {
-          apiClient
+          gameSessionApiClient
             .createGameSession(1262, false)
             .then((gameSession) => {
               updateGameSession(gameSession);
-              apiClient.updateGameSession({
+              gameSessionApiClient.updateGameSession({
                 id: gameSession.id,
                 currentQuestionIndex: 0,
               });
@@ -215,7 +225,7 @@ function App() {
         variant="outlined"
         color="secondary"
         onClick={() => {
-          apiClient
+          gameSessionApiClient
             .getGameSessionByCode(gameCode)
             .then((response) => {
               if (response == null) {
@@ -246,7 +256,7 @@ function App() {
         variant="outlined"
         color="secondary"
         onClick={() => {
-          apiClient
+          gameSessionApiClient
             .getGameSession(gameSessionId)
             .then((response) => {
               if (response == null) {
@@ -281,7 +291,7 @@ function App() {
           if (isNullOrUndefined(gameSession)) {
             return;
           }
-          apiClient
+          teamApiClient
             .addTeamToGameSessionId(gameSession.id, teamName, null)
             .then((team) => {
               if (team == null) {
@@ -308,7 +318,7 @@ function App() {
           if (isNullOrUndefined(team)) {
             return;
           }
-          apiClient
+          teamMemberApiClient
             .addTeamMemberToTeam(team.id, false, "some-device-id")
             .then((teamMember) => {
               if (teamMember == null) {
@@ -357,13 +367,23 @@ function App() {
           if (isNullOrUndefined(choice)) {
             return;
           }
-          apiClient
+          const newAnswer = new MultiChoiceAnswer(choice.text, 3);
+          const answerInput = {
+            id: uuidv4(),
+            answer: newAnswer,
+            isSubmitted: true,
+            isShortAnswerEnabled: false,
+            currentState: gameSession.currentState,
+            currentQuestionIndex: gameSession.currentQuestionIndex,
+            teamMemberAnswersId: teamMember.id,
+            questionId: question.id,
+            text: choice.text,
+            confidenceLevel: "NOT_RATED",
+            hint: {rawHint: ""},
+          } as BackendAnswer;
+          teamAnswerApiClient
             .addTeamAnswer(
-              teamMember.id,
-              gameSession.questions[0].id,
-              choice.text,
-              choice.isAnswer,
-              teamAnswer?.isChosen ?? true
+              answerInput
             )
             .then((teamAnswer) => {
               if (teamAnswer == null) {

@@ -28,7 +28,6 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
           hints
           imageUrl
           instructions
-          answerSettings
           standard
           cluster
           domain
@@ -104,7 +103,6 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
         hints
         imageUrl
         instructions
-        answerSettings
         standard
         cluster
         domain
@@ -176,7 +174,6 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
       hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain
@@ -249,7 +246,6 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
       hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain
@@ -1489,7 +1485,6 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
           hints
           imageUrl
           instructions
-          answerSettings
           standard
           cluster
           domain
@@ -1565,7 +1560,6 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
         hints
         imageUrl
         instructions
-        answerSettings
         standard
         cluster
         domain
@@ -1611,7 +1605,6 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
           hints
           imageUrl
           instructions
-          answerSettings
           standard
           cluster
           domain
@@ -1687,7 +1680,6 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
         hints
         imageUrl
         instructions
-        answerSettings
         standard
         cluster
         domain
@@ -1733,7 +1725,6 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
           hints
           imageUrl
           instructions
-          answerSettings
           standard
           cluster
           domain
@@ -1809,7 +1800,6 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
         hints
         imageUrl
         instructions
-        answerSettings
         standard
         cluster
         domain
@@ -1846,7 +1836,6 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
       hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain
@@ -1919,7 +1908,6 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
       hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain
@@ -1992,7 +1980,6 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
       hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain

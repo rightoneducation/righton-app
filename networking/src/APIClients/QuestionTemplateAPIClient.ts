@@ -35,8 +35,8 @@ export class QuestionTemplateAPIClient
     if (doesObjectHaveDate(createQuestionTemplateInput) && createQuestionTemplateInput.createdAt && createQuestionTemplateInput.updatedAt) {
       createQuestionTemplateInput = {
         ...createQuestionTemplateInput,
-        createdAt: createQuestionTemplateInput.createdAt.toString(),
-        updatedAt: createQuestionTemplateInput.updatedAt.toString()
+        createdAt: createQuestionTemplateInput.createdAt,
+        updatedAt: createQuestionTemplateInput.updatedAt
       }
     }
     const variables: CreateQuestionTemplateMutationVariables = {input: createQuestionTemplateInput as CreateQuestionTemplateInput}
@@ -71,8 +71,8 @@ export class QuestionTemplateAPIClient
     if (doesObjectHaveDate(updateQuestionTemplateInput) && updateQuestionTemplateInput.createdAt && updateQuestionTemplateInput.updatedAt) {
       updateQuestionTemplateInput = {
         ...updateQuestionTemplateInput,
-        createdAt: updateQuestionTemplateInput.createdAt.toString(),
-        updatedAt: updateQuestionTemplateInput.updatedAt.toString()
+        createdAt: updateQuestionTemplateInput.createdAt,
+        updatedAt: updateQuestionTemplateInput.updatedAt
       }
     }
     const input: UpdateQuestionTemplateInput = updateQuestionTemplateInput as UpdateQuestionTemplateInput;

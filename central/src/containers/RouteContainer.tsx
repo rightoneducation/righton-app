@@ -3,17 +3,14 @@ import {
   Route,
   Switch,
   useHistory,
-  useLocation,
-  useRouteMatch
+  useLocation
 } from "react-router-dom";
 import { Auth } from 'aws-amplify';
 import { Box } from '@material-ui/core';
 import {debounce, set} from 'lodash';
 import { 
-  ApiClient,
   IGameTemplate,
   IQuestionTemplate,
-  AWSQuestionTemplate,
   CreateQuestionTemplateInput,
   isNullOrUndefined
  } from '@righton/networking';
@@ -38,7 +35,6 @@ import {
   deleteGameQuestions
 } from '../lib/API/GameQuestions';
 import { IListQuerySettings } from '../lib/API/QueryInputs';
-import { updateQuestion, cloneQuestion } from '../lib/questions';
 import {useMediaQuery} from '../hooks/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import AlertBar from '../components/AlertBar';
@@ -50,12 +46,10 @@ import Confirmation from '../components/auth/Confirmation';
 import OnboardingModal from '../components/OnboardingModal';
 
 type RouteContainerProps = {
-  apiClient: ApiClient;
   setAlert: (alert: Alert) => void;
 };
 
 export const RouteContainer = ({
-   apiClient,
    setAlert
   }: RouteContainerProps ) => {
   const [startup, setStartup] = useState(true);
@@ -173,7 +167,7 @@ export const RouteContainer = ({
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
     try{
-    const question = await apiClient.createQuestionTemplate(questionInput);
+    const question = await createQuestionTemplate(questionInput);
     } catch (e) {
       console.log(e);
     }
@@ -315,8 +309,8 @@ export const RouteContainer = ({
       const {gameTemplates, ...rest} = newQuestion;
       const questionTemplateUpdate = rest; 
       const gameTemplatesUpdate = gameTemplates;
-      const updatedAt = questionTemplateUpdate.updatedAt?.toString();
-      const createdAt = questionTemplateUpdate.createdAt?.toString();
+      const updatedAt = questionTemplateUpdate.updatedAt;
+      const createdAt = questionTemplateUpdate.createdAt;
       const updatedQuestion = {...questionTemplateUpdate, updatedAt, createdAt};
       const question = await updateQuestionTemplate(updatedQuestion);
         if (question) {  
@@ -335,9 +329,9 @@ export const RouteContainer = ({
   const handleCloneQuestionTemplate = async (question : IQuestionTemplate) => {
     const {gameTemplates, ...rest} = question;
     const gameTemplatesUpdate = gameTemplates;
-    const newQuestionTemplate = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`};
-    const updatedAt = newQuestionTemplate.updatedAt.toString();
-    const createdAt = newQuestionTemplate.createdAt.toString();
+    const newQuestionTemplate: IQuestionTemplate = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`};
+    const updatedAt = newQuestionTemplate.updatedAt;
+    const createdAt = newQuestionTemplate.createdAt;
     const updatedQuestionTemplate = {...newQuestionTemplate, updatedAt, createdAt};
     const result = await createQuestionTemplate(updatedQuestionTemplate);
     if (result) {
@@ -485,7 +479,6 @@ export const RouteContainer = ({
           handleScrollDown={handleScrollDown} 
           createNewGameTemplate={createNewGameTemplate} 
           editGameTemplate={editGameTemplate} 
-          updateQuestion={updateQuestion} 
           handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} 
           deleteGame={handleDeleteGameTemplate} 
           cloneGameTemplate={cloneGameTemplate} 

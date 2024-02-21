@@ -19,7 +19,6 @@ export default function Games({
   games, 
   questions, 
   editGameTemplate, 
-  updateQuestion, 
   handleDeleteQuestionTemplate, 
   handleScrollDown, 
   createNewGameTemplate, 
@@ -96,7 +95,6 @@ export default function Games({
                 gameId={gameId} 
                 games={games} 
                 cloneQuestion={cloneQuestion} 
-                updateQuestion={updateQuestion} 
                 handleQuestionBankClick={handleQuestionBankClick} 
                 handleDeleteGameQuestion={handleDeleteGameQuestion} 
                 selectedQuestions={selectedQuestions} 

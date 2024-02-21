@@ -47,17 +47,7 @@ export abstract class BaseAPIClient {
 
   constructor(env: Environment) {
     this.env = env;
-    switch (env) {
-      case Environment.Testing:
-        this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
-        break;
-      case Environment.Developing:
-        this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
-        break;
-      case Environment.Staging:
-        this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
-        break;
-    }
+    this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
   }
 
   protected async callGraphQL<T>(

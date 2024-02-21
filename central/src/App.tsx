@@ -6,11 +6,6 @@ import {
   createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
-import { 
-  ApiClient,
-  GameSessionAPIClient,
-  Environment,
- } from '@righton/networking';
 import { RouteContainer } from './containers/RouteContainer';
 import AlertContext, { Alert } from './context/AlertContext';
 
@@ -29,7 +24,6 @@ const theme = createTheme({
 });
 
 function App() {
-  const apiClient = new ApiClient(Environment.Staging);
   const [alert, setAlert] = useState<Alert | null>(null);
   const alertContext = {
     alert,
@@ -40,7 +34,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <AlertContext.Provider value={alertContext}>
         <Router>
-          <RouteContainer apiClient={apiClient} setAlert={setAlert}/>
+          <RouteContainer setAlert={setAlert}/>
         </Router>
       </AlertContext.Provider>
     </ThemeProvider>

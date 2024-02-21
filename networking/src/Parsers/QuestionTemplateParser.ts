@@ -22,7 +22,7 @@ export class QuestionTemplateParser {
             // assign an empty array if gameTemplates is null
             gameTemplates = [];
         }
-      } 
+       
       const {
           id,
           title,
@@ -36,9 +36,7 @@ export class QuestionTemplateParser {
           grade,
           standard,
           imageUrl,
-          gameTemplatesCount,
-          createdAt,
-          updatedAt
+          gameTemplatesCount
       } = awsQuestionTemplate || {}
       if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
@@ -49,6 +47,9 @@ export class QuestionTemplateParser {
           )
       }
 
+      const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
+      const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
+
       const questionTemplate: IQuestionTemplate = {
           id,
           title,
@@ -57,10 +58,10 @@ export class QuestionTemplateParser {
           choices,
           instructions,
           answerSettings,
-          domain: domain ?? null,
-          cluster: cluster ?? null,
-          grade: grade ?? null,
-          standard: standard ?? null,
+          domain: domain ?? '',
+          cluster: cluster ?? '',
+          grade: grade ?? '',
+          standard: standard ?? '',
           imageUrl,
           gameTemplates,
           gameTemplatesCount,

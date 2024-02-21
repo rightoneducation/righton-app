@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "./IApiClient"
+import { isNullOrUndefined } from "./global"
 import { BackendAnswer } from "./Models"
 import { IGameSession, ITeam } from "./Models"
 import { IChoice, IQuestion, IResponse } from './Models/IQuestion'
