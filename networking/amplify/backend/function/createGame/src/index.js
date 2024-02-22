@@ -136,17 +136,17 @@ async function createAndSignRequest(query, variables) {
   ) {
     createGameSession(input: $input, condition: $condition) {
       id
+      gameId
       startTime
       phaseOneTime
       phaseTwoTime
       currentQuestionIndex
       currentState
+      gameCode
       isAdvancedMode
       imageUrl
       description
       title
-      gameCode
-      gameId
       currentTimer
       createdAt
       updatedAt
@@ -163,10 +163,11 @@ async function createAndSignRequest(query, variables) {
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
-      answerSettings
       standard
       cluster
       domain
@@ -176,6 +177,7 @@ async function createAndSignRequest(query, variables) {
       isShortAnswerEnabled
       isHintEnabled
       gameSessionId
+      __typename
     }
   }
   `
