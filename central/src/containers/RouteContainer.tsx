@@ -179,7 +179,8 @@ export const RouteContainer = ({
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
   const createNewGameTemplate = async (newGame: IGameTemplate) => {
     try{
-    const game = await createGameTemplate(apiClients, newGame);
+    const newGameInput = {...newGame, createdAt: newGame.createdAt?.toString(), updatedAt: newGame.updatedAt?.toString()};
+    const game = await createGameTemplate(apiClients, newGameInput);
       if (!game) {
         throw new Error ('Game was unable to be created');
       }
@@ -200,7 +201,8 @@ export const RouteContainer = ({
       // update all fields except for the questionTemplates
       const {questionTemplates, ...rest} = updatedGame;
       const gameTemplateUpdate = rest as IGameTemplate; 
-      const backendGame = await updateGameTemplate(apiClients, gameTemplateUpdate);
+      const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()}
+      const backendGame = await updateGameTemplate(apiClients, gameTemplateUpdateInput);
     }
     if (!isNullOrUndefined(updatedGame.questionTemplates) && !isNullOrUndefined(existingGame.questionTemplates)) {
       const newQuestionTemplates = updatedGame.questionTemplates.map((updatedQuestion) => {
@@ -294,7 +296,8 @@ export const RouteContainer = ({
 
   const handleCreateQuestionTemplate = async ( question: IQuestionTemplate) => {
     try {
-      const result = await createQuestionTemplate(apiClients, question);
+      const newQuestionInput = {...question, createdAt: question.createdAt?.toString(), updatedAt: question.updatedAt?.toString()};
+      const result = await createQuestionTemplate(apiClients, newQuestionInput);
       if (result) {
         getAllQuestionTemplates(null);
       }
@@ -312,8 +315,8 @@ export const RouteContainer = ({
       const {gameTemplates, ...rest} = newQuestion;
       const questionTemplateUpdate = rest; 
       const gameTemplatesUpdate = gameTemplates;
-      const updatedAt = questionTemplateUpdate.updatedAt;
-      const createdAt = questionTemplateUpdate.createdAt;
+      const updatedAt = questionTemplateUpdate.updatedAt?.toString();
+      const createdAt = questionTemplateUpdate.createdAt?.toString();
       const updatedQuestion = {...questionTemplateUpdate, updatedAt, createdAt};
       const question = await updateQuestionTemplate(apiClients, updatedQuestion);
         if (question) {  
@@ -333,8 +336,8 @@ export const RouteContainer = ({
     const {gameTemplates, ...rest} = question;
     const gameTemplatesUpdate = gameTemplates;
     const newQuestionTemplate: IQuestionTemplate = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`};
-    const updatedAt = newQuestionTemplate.updatedAt;
-    const createdAt = newQuestionTemplate.createdAt;
+    const updatedAt = newQuestionTemplate.updatedAt?.toString();
+    const createdAt = newQuestionTemplate.createdAt?.toString();
     const updatedQuestionTemplate = {...newQuestionTemplate, updatedAt, createdAt};
     const result = await createQuestionTemplate(apiClients, updatedQuestionTemplate);
     if (result) {
@@ -360,10 +363,12 @@ export const RouteContainer = ({
       ) {
         const {questionTemplates, ...restGame} = result.gameTemplate;
         const gameTemplateUpdate = {...restGame, questionTemplatesCount: questionTemplates.length}; 
+        const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()};
         const {gameTemplates, ...restQuestion} = result.questionTemplate;
         const questionTemplateUpdate = {...restQuestion, gameTemplatesCount: gameTemplates.length};
-        await updateQuestionTemplate(apiClients, gameTemplateUpdate);
-        await updateQuestionTemplate(apiClients, questionTemplateUpdate);
+        const questionTemplateUpdateInput = {...questionTemplateUpdate, createdAt: questionTemplateUpdate.createdAt?.toString(), updatedAt: questionTemplateUpdate.updatedAt?.toString()};
+        await updateQuestionTemplate(apiClients, gameTemplateUpdateInput);
+        await updateQuestionTemplate(apiClients, questionTemplateUpdateInput);
       }
       return result;
     } catch (e) {
@@ -373,7 +378,6 @@ export const RouteContainer = ({
 
   const handleDeleteGameQuestion = async (id: string) => {
     const result = await deleteGameQuestions(apiClients, id);
-    console.log(result);
   }
 
   const handleUserAuth = (isAuth: boolean) => {

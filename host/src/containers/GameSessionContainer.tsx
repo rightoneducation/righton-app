@@ -105,7 +105,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
   // initial query for gameSessions and teams
-  useEffect((apiClients: IAPIClients) => {
+  useEffect(() => {
     try{
     apiClients.gameSession.getGameSession(gameSessionId).then((response) => {
       setGameSession(response); // set initial gameSession state
@@ -226,13 +226,12 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
 
     // set up subscription for teams answering
     let createTeamAnswerSubscription: any | null = null;
-    createTeamAnswerSubscription = apiClients.team.subscribeCreateTeamAnswer(
+    createTeamAnswerSubscription = apiClients.teamAnswer.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
         // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
         apiClients.gameSession.getGameSession(gameSessionId).then((gameSession) => {
           let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
-
           // similarly all state values here are stale so we are going to use functional setting to ensure we're grabbing the most recent state
           setTeamsArray((prevState) => {
             const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
@@ -245,7 +244,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
                   }
                 });
               }
-            })
+            });
             if (gameSession.questions[gameSession.currentQuestionIndex].isShortAnswerEnabled && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
               // we are nesting the short answer response in here because we need to use the teamName and teamId to build the shortAnswerResponses object
               // if we did this outside of the setTeamsArray function we would be using stale state values
@@ -434,8 +433,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
 
   // TODO: ensure updatequestion occurs after the updateGameSession
   const handleBeginQuestion = () => {
-    // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state
-    console.log(gameSession.currentState);
     if (isNullOrUndefined(gameSession))
       return;
     const gameSessionId = gameSession.id;
@@ -468,7 +465,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
             checkGameTimer(response);
             setGameSession(response);
             const teamDataRequests = response.teams.map((team) => {
-              return apiClient.getTeam(team.id).then((response) => {
+              return apiClients.team.getTeam(team.id).then((response) => {
                 return TeamParser.teamFromAWSTeam(response);
             });
             });

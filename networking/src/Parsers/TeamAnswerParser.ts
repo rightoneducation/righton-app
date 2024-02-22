@@ -68,9 +68,15 @@ export class TeamAnswerParser {
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
     ): BackendAnswer {
+        let parsedAnswer;
+        try {
+            parsedAnswer = JSON.parse(awsTeamAnswer.answer);
+        } catch (error) {
+            console.error("Error parsing answer:", error);
+            throw new Error("Error parsing the 'answer' field.");
+        }
         const {
             id,
-            answer = JSON.parse(awsTeamAnswer.answer),
             isSubmitted = awsTeamAnswer.isSubmitted,
             isShortAnswerEnabled = awsTeamAnswer.isShortAnswerEnabled,
             currentState = awsTeamAnswer.currentState,
@@ -88,15 +94,14 @@ export class TeamAnswerParser {
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
             isNullOrUndefined(text) ||
-            isNullOrUndefined(answer)) {
+            isNullOrUndefined(parsedAnswer)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
         }
-
         const teamAnswer: BackendAnswer = {
             id,
-            answer,
+            answer: parsedAnswer,
             isSubmitted,
             isShortAnswerEnabled,
             currentState,

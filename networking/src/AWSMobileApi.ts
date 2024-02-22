@@ -20,8 +20,8 @@ export type CreateGameTemplateInput = {
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
   questionTemplatesCount: number,
-  createdAt?: Date | null,
-  updatedAt?: Date | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
   type?: string | null,
 };
 
@@ -171,8 +171,8 @@ export type UpdateGameTemplateInput = {
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
   questionTemplatesCount?: number | null,
-  createdAt?: Date | null,
-  updatedAt?: Date | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
   type?: string | null,
 };
 
@@ -194,8 +194,8 @@ export type CreateQuestionTemplateInput = {
   standard?: string | null,
   imageUrl?: string | null,
   gameTemplatesCount: number,
-  createdAt?: Date | null,
-  updatedAt?: Date | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
   type?: string | null,
 };
 
@@ -234,8 +234,8 @@ export type UpdateQuestionTemplateInput = {
   standard?: string | null,
   imageUrl?: string | null,
   gameTemplatesCount?: number | null,
-  createdAt?: Date | null,
-  updatedAt?: Date | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
   type?: string | null,
 };
 
@@ -9689,7 +9689,7 @@ export type OnCreateTeamAnswerSubscription = {
     teamMemberAnswersId: string,
     text: string,
     answer: string,
-    confidenceLevel: ConfidenceLevel | null,
+    confidenceLevel?: ConfidenceLevel | null,
     hint?: string | null,
     createdAt: string,
     updatedAt: string,

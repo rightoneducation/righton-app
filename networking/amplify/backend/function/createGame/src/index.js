@@ -43,7 +43,7 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   const { owner, version, domain, grade, cluster, standard, __typename, createdAt, updatedAt, ...trimmedGameTemplate } = awsGameTemplate.data.getGameTemplate;
   const gameTemplate = {
       ...trimmedGameTemplate, 
-      currentQuestionIndex: null,
+      currentQuestionIndex: null, 
       currentTimer: 0,
       currentState: 'TEAMS_JOINING',
       isAdvancedMode: false,

@@ -35,7 +35,6 @@ export class TeamAnswerAPIClient
       ) {
           throw new Error(`Missing required answer attributes`);
       }
-
       const input: CreateTeamAnswerInput = {
           answer: JSON.stringify(inputAnswer.answer), 
           isSubmitted: inputAnswer.isSubmitted,

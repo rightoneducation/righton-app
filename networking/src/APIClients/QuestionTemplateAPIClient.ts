@@ -31,7 +31,7 @@ export class QuestionTemplateAPIClient
   extends BaseAPIClient
   implements IQuestionTemplateAPIClient
 {
-  async createQuestionTemplate(createQuestionTemplateInput: CreateQuestionTemplateInput | IQuestionTemplate): Promise<IQuestionTemplate> {
+  async createQuestionTemplate(createQuestionTemplateInput: CreateQuestionTemplateInput): Promise<IQuestionTemplate> {
     if (doesObjectHaveDate(createQuestionTemplateInput) && createQuestionTemplateInput.createdAt && createQuestionTemplateInput.updatedAt) {
       createQuestionTemplateInput = {
         ...createQuestionTemplateInput,
@@ -67,7 +67,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(result.data.getQuestionTemplate as AWSQuestionTemplate);
   }
 
-  async updateQuestionTemplate(updateQuestionTemplateInput: UpdateQuestionTemplateInput | IQuestionTemplate): Promise<IQuestionTemplate> {
+  async updateQuestionTemplate(updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate> {
     if (doesObjectHaveDate(updateQuestionTemplateInput) && updateQuestionTemplateInput.createdAt && updateQuestionTemplateInput.updatedAt) {
       updateQuestionTemplateInput = {
         ...updateQuestionTemplateInput,

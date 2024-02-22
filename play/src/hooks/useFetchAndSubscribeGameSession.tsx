@@ -13,7 +13,7 @@ import {
  * @param apiClient
  * @returns
  */
-export default function useFetchAndSubscribeGameSession(
+ export default function useFetchAndSubscribeGameSession(
   gameSessionId: string,
   apiClients: IAPIClients,
   retry: number,
@@ -26,16 +26,15 @@ export default function useFetchAndSubscribeGameSession(
   const [hasRejoined, setHasRejoined] = useState<boolean>(isInitialRejoin);
 
   useEffect(() => {
-    // prevents runaway condition by ignoring updates to state after component unmounts
     let ignore = false;
     let gameSessionSubscription: any;
-    // if player is retrying after an error, reset state values to 'isLoading' conditions unless the api call fails again
+
     if (retry > 0) {
       setIsLoading(true);
       setError('');
     }
-    // if gameSessionId is null, set error and prevent api calls
-    if (isNullOrUndefined(gameSessionId)) {
+
+    if (!gameSessionId) {
       setError(`${t('error.connect.gamesessionerror')}`);
       setIsLoading(false);
       return;
@@ -46,32 +45,34 @@ export default function useFetchAndSubscribeGameSession(
       .then((fetchedGame) => {
         if (!fetchedGame || !fetchedGame.id) {
           setError(`${t('error.connect.gamesessionerror')}`);
-          return null;
+          setIsLoading(false);
+          return;
         }
         if (!ignore) setGameSession(fetchedGame);
         setIsLoading(false);
-         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
+        gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
             if (!response) {
               setError(`${t('error.connect.subscriptionerror')}`);
               return;
             }
-            // Update the gameSession object and trigger the callback
             if (!ignore) setHasRejoined(false);
             setGameSession((prevGame) => ({ ...prevGame, ...response }));
           }
         );
-     
       })
       .catch((e) => {
         setIsLoading(false);
         if (e instanceof Error) setError(e.message);
         else setError(`${t('error.connect.gamesessionerror')}`);
       });
+    // eslint-disable-next-line consistent-return
     return () => {
       ignore = true;
-      gameSessionSubscription.unsubscribe();
+      if (gameSessionSubscription && gameSessionSubscription.unsubscribe) {
+        gameSessionSubscription.unsubscribe();
+      }
     };
   }, [gameSessionId, apiClients, t, retry, hasRejoined]);
   return { isLoading, error, gameSession, hasRejoined };

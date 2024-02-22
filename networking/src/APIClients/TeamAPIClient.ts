@@ -13,6 +13,7 @@ import {
   UpdateTeamMutationVariables,
 } from "../AWSMobileApi";
 import {
+  getTeam,
   createTeam,
   onCreateTeam,
   onDeleteTeam,
@@ -27,7 +28,7 @@ export class TeamAPIClient
 {
   async getTeam(id: string): Promise<ITeam> {
     let result = (await API.graphql(
-      graphqlOperation(this.getTeam, { id })
+      graphqlOperation(getTeam, { id })
     )) as {
       data: any;
     };

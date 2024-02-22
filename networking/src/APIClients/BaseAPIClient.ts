@@ -87,7 +87,8 @@ export abstract class BaseAPIClient {
 
     return result.data;
   }
-
+  /* given that GameTemplate and QuestionTemplate are structured in the same way, 
+  this function can be used to query both without duplicating a done of code */
   protected async executeQuery <T extends "GameTemplate" | "QuestionTemplate">(
       limit: number | null, 
       nextToken: string | null, 

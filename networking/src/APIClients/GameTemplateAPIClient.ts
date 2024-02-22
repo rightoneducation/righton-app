@@ -33,7 +33,7 @@ export class GameTemplateAPIClient
   implements IGameTemplateAPIClient
 {
   async createGameTemplate( 
-    createGameTemplateInput: CreateGameTemplateInput | IGameTemplate
+    createGameTemplateInput: CreateGameTemplateInput
   ): Promise<IGameTemplate> {
     if (doesObjectHaveDate(createGameTemplateInput) && createGameTemplateInput.createdAt && createGameTemplateInput.updatedAt) {
       createGameTemplateInput = {
@@ -71,7 +71,7 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data.getGameTemplate as AWSGameTemplate);
   }
 
-  async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput | IGameTemplate): Promise<IGameTemplate> {
+  async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate> {
     if (doesObjectHaveDate(updateGameTemplateInput) && updateGameTemplateInput.createdAt && updateGameTemplateInput.updatedAt) {
       updateGameTemplateInput = {
         ...updateGameTemplateInput,
