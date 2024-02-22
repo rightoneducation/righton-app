@@ -1,7 +1,7 @@
 import { IGameQuestion } from "../../Models";
 import { CreateGameQuestionsInput } from "../../AWSMobileApi";
 
-export interface IGameQuestionAPIClient {
+export interface IGameQuestionsAPIClient {
   createGameQuestions(
     createGameQuestionsInput: CreateGameQuestionsInput
   ): Promise<IGameQuestion>;

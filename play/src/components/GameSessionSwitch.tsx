@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
-  TeamAPIClient,
-  TeamAnswerAPIClient,
+  IAPIClients,
   IChoice,
   IQuestion,
   IGameSession,
@@ -18,8 +17,7 @@ import StartPhase2 from '../pages/StartPhase2';
 import { LocalModel } from '../lib/PlayModels';
 
 interface GameSessionSwitchProps {
-  teamAPIClient: TeamAPIClient,
-  teamAnswerAPIClient: TeamAnswerAPIClient;
+  apiClients: IAPIClients;
   currentTimer: number;
   hasRejoined: boolean;
   gameSession: IGameSession;
@@ -27,8 +25,7 @@ interface GameSessionSwitchProps {
 }
 
 export default function GameSessionSwitch({
-  teamAPIClient,
-  teamAnswerAPIClient,
+  apiClients,
   currentTimer,
   hasRejoined,
   gameSession,
@@ -65,7 +62,7 @@ export default function GameSessionSwitch({
       ) : (
         <GameInProgress
           {...gameSession}
-          teamAnswerAPIClient={teamAnswerAPIClient}
+          apiClients={apiClients}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
@@ -84,7 +81,7 @@ export default function GameSessionSwitch({
       return (
         <GameInProgress
           {...gameSession}
-          teamAnswerAPIClient={teamAnswerAPIClient}
+          apiClients={apiClients}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
@@ -102,7 +99,7 @@ export default function GameSessionSwitch({
       return (
         <PhaseResults
           {...gameSession}
-          teamAPIClient={teamAPIClient}
+          apiClients={apiClients}
           gameSession={gameSession}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           teamAvatar={localModel.selectedAvatar}

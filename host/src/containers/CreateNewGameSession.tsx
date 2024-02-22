@@ -1,20 +1,23 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { GameSessionAPIClient, Environment, GameSessionState } from '@righton/networking';
+import { IAPIClients, GameSessionState } from '@righton/networking';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { makeStyles } from '@material-ui/core';
 
-const CreateNewGameSession = () => {
-  const gameSessionAPIClient = new GameSessionAPIClient(Environment.Developing);
+interface CreateNewGameSessionProps {
+  apiClients: IAPIClients;
+}
+
+const CreateNewGameSession = ({apiClients}:CreateNewGameSessionProps) => {
   const classes = useStyles();
   let { gameId } = useParams<{ gameId: string }>();
 
   useEffect(() => {
-    gameSessionAPIClient.createGameSessionFromTemplate(gameId).then((response) => {
+    apiClients.gameSession.createGameSessionFromTemplate(gameId).then((response) => {
       if (!response) {
         return;
       }
-      gameSessionAPIClient
+      apiClients.gameSession
         .updateGameSession({
           id: response,
           currentState: GameSessionState.TEAMS_JOINING,

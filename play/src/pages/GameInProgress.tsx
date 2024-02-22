@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
-  TeamAnswerAPIClient,
+  IAPIClients,
   GameSessionState,
   ITeam,
   IQuestion,
@@ -36,7 +36,7 @@ import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
 
 interface GameInProgressProps {
-  teamAnswerAPIClient: TeamAnswerAPIClient;
+  apiClients: IAPIClients;
   teams: ITeam[];
   currentState: GameSessionState;
   teamMemberAnswersId: string;
@@ -55,7 +55,7 @@ interface GameInProgressProps {
 }
 
 export default function GameInProgress({
-  teamAnswerAPIClient,
+  apiClients,
   teams,
   currentState,
   teamMemberAnswersId,
@@ -184,7 +184,7 @@ export default function GameInProgress({
   // creates new team answer when student submits
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
-      const response = await teamAnswerAPIClient.addTeamAnswer(answer);
+      const response = await apiClients.teamAnswer.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
       setBackendAnswer(answer);
@@ -197,7 +197,7 @@ export default function GameInProgress({
 
   const handleSubmitHint = async (normalizedHint: IAnswerHint) => {
     try{
-      await teamAnswerAPIClient.updateTeamAnswerHint(teamAnswerId, normalizedHint);
+      await apiClients.teamAnswer.updateTeamAnswerHint(teamAnswerId, normalizedHint);
       window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
       setAnswerHint(normalizedHint);
     } catch (e) {
@@ -249,7 +249,7 @@ export default function GameInProgress({
       // that the loading message can display while we wait for apiClient. Then
       // after await, set isSelected to true again
       setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
-      await teamAnswerAPIClient.updateTeamAnswerConfidence(teamAnswerId, confidence);
+      await apiClients.teamAnswer.updateTeamAnswerConfidence(teamAnswerId, confidence);
       setSelectConfidence((prev) => ({
         ...prev,
         selectedConfidenceOption: confidence,

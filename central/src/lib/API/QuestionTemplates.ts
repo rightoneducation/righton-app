@@ -1,17 +1,14 @@
 import {
-  Environment,
+  IAPIClients,
   IQuestionTemplate,
-  IQuestionTemplateAPIClient,
-  QuestionTemplateAPIClient,
   CreateQuestionTemplateInput,
   UpdateQuestionTemplateInput
 } from '@righton/networking';
 import { IListQuerySettings, SortField } from './QueryInputs';
 
-let questionTemplateAPIClient: IQuestionTemplateAPIClient = new QuestionTemplateAPIClient(Environment.Testing);
-export const createQuestionTemplate = async (createQuestionTemplateInput: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
+export const createQuestionTemplate = async (apiClients: IAPIClients, createQuestionTemplateInput: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
   try {
-    const question = await questionTemplateAPIClient.createQuestionTemplate(createQuestionTemplateInput);
+    const question = await apiClients.questionTemplate.createQuestionTemplate(createQuestionTemplateInput);
     return question;
   } catch (e) {
     console.log(e);
@@ -19,9 +16,9 @@ export const createQuestionTemplate = async (createQuestionTemplateInput: Create
   return null;
 }
 
-export const getQuestionTemplate = async (id: string): Promise<IQuestionTemplate | null> => {
+export const getQuestionTemplate = async (apiClients: IAPIClients, id: string): Promise<IQuestionTemplate | null> => {
   try {
-    const question = await questionTemplateAPIClient.getQuestionTemplate(id);
+    const question = await apiClients.questionTemplate.getQuestionTemplate(id);
     return question;
 
   } catch (e) {
@@ -30,25 +27,25 @@ export const getQuestionTemplate = async (id: string): Promise<IQuestionTemplate
   return null;
 }
 
-export const updateQuestionTemplate = async (updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
+export const updateQuestionTemplate = async (apiClients: IAPIClients, updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
   try {
-    return await questionTemplateAPIClient.updateQuestionTemplate(updateQuestionTemplateInput);
+    return await apiClients.questionTemplate.updateQuestionTemplate(updateQuestionTemplateInput);
   } catch (e) {
     console.log(e);
   }
   return null;
 };
 
-export const deleteQuestionTemplate = async (id: string): Promise<IQuestionTemplate | null> => {
+export const deleteQuestionTemplate = async (apiClients: IAPIClients, id: string): Promise<IQuestionTemplate | null> => {
   try {
-    return await questionTemplateAPIClient.deleteQuestionTemplate(id);
+    return await apiClients.questionTemplate.deleteQuestionTemplate(id);
   } catch (e) {
     console.log(e);
   }
   return null;
 };
 
-export const listQuestionTemplates = async (listQuerySettings: IListQuerySettings | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null> => {
+export const listQuestionTemplates = async (apiClients: IAPIClients, listQuerySettings: IListQuerySettings | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null> => {
   try {
     const nextToken = listQuerySettings?.nextToken ?? null;
     const sortDirection = listQuerySettings?.sortDirection ?? null;
@@ -57,13 +54,13 @@ export const listQuestionTemplates = async (listQuerySettings: IListQuerySetting
     const queryLimit = listQuerySettings?.queryLimit ?? null;
     switch (sortField) {
       case SortField.GRADE:
-        return await questionTemplateAPIClient.listQuestionTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);
+        return await apiClients.questionTemplate.listQuestionTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);
       case SortField.UPDATEDAT:
-        return await questionTemplateAPIClient.listQuestionTemplatesByDate(queryLimit, nextToken, sortDirection, filterString);
+        return await apiClients.questionTemplate.listQuestionTemplatesByDate(queryLimit, nextToken, sortDirection, filterString);
       case SortField.COUNT:
-        return await questionTemplateAPIClient.listQuestionTemplatesByGameTemplatesCount(queryLimit, nextToken, sortDirection, filterString);
+        return await apiClients.questionTemplate.listQuestionTemplatesByGameTemplatesCount(queryLimit, nextToken, sortDirection, filterString);
       default:
-        return await questionTemplateAPIClient.listQuestionTemplates(queryLimit, nextToken, sortDirection, filterString);
+        return await apiClients.questionTemplate.listQuestionTemplates(queryLimit, nextToken, sortDirection, filterString);
     }
   } catch (e) {
     console.log(e);

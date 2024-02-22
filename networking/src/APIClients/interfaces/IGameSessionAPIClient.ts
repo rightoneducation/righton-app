@@ -2,6 +2,8 @@ import { UpdateGameSessionInput } from "../../AWSMobileApi";
 import { IGameSession } from "../../Models";
 
 export interface IGameSessionAPIClient {
+  createGameSessionFromTemplate(id: string): Promise<string | null>;
+
   createGameSession(
     gameId: number,
     isAdvancedMode: Boolean

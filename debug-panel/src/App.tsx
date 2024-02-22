@@ -1,13 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import {
-  IGameSessionAPIClient,
-  GameSessionAPIClient,
-  ITeamAPIClient,
-  TeamAPIClient,
-  ITeamMemberAPIClient,
-  TeamMemberAPIClient,
-  ITeamAnswerAPIClient,
-  TeamAnswerAPIClient,
+  APIClients,
   Environment,
   GameSessionState,
   IGameSession,
@@ -30,10 +23,7 @@ function App() {
   const [teamMember, setTeamMember] = useState<ITeamMember | null>();
   const [teamAnswer, setTeamAnswer] = useState<BackendAnswer | null>();
 
-  const gameSessionApiClient = new GameSessionAPIClient(Environment.Developing);
-  const teamApiClient = new TeamAPIClient(Environment.Developing);
-  const teamMemberApiClient = new TeamMemberAPIClient(Environment.Developing);
-  const teamAnswerApiClient = new TeamAnswerAPIClient(Environment.Developing);
+  const apiClients = new APIClients(Environment.Developing);
 
   const gameSessionSubscription = useRef<any | null>(null);
 
@@ -57,7 +47,7 @@ function App() {
     setPrevGameSessionId(gameSession.id);
 
     gameSessionSubscription.current?.unsubscribe();
-    gameSessionSubscription.current = gameSessionApiClient.subscribeUpdateGameSession(
+    gameSessionSubscription.current = apiClients.gameSession.subscribeUpdateGameSession(
       gameSession.id,
       (gameSession) => {
         console.log(gameSession);
@@ -72,7 +62,7 @@ function App() {
 
     let gameSessionId = gameSession.id;
 
-    gameSessionApiClient
+    apiClients.gameSession
       .updateGameSession({ id: gameSessionId, currentState: gameSessionState })
       .then((response) => {
         updateGameSession(response);
@@ -95,11 +85,11 @@ function App() {
       <Button
         variant="contained"
         onClick={() => {
-          gameSessionApiClient
+          apiClients.gameSession
             .createGameSession(1262, false)
             .then((gameSession) => {
               updateGameSession(gameSession);
-              gameSessionApiClient.updateGameSession({
+              apiClients.gameSession.updateGameSession({
                 id: gameSession.id,
                 currentQuestionIndex: 0,
               });
@@ -225,7 +215,7 @@ function App() {
         variant="outlined"
         color="secondary"
         onClick={() => {
-          gameSessionApiClient
+          apiClients.gameSession
             .getGameSessionByCode(gameCode)
             .then((response) => {
               if (response == null) {
@@ -256,7 +246,7 @@ function App() {
         variant="outlined"
         color="secondary"
         onClick={() => {
-          gameSessionApiClient
+          apiClients.gameSession
             .getGameSession(gameSessionId)
             .then((response) => {
               if (response == null) {
@@ -291,7 +281,7 @@ function App() {
           if (isNullOrUndefined(gameSession)) {
             return;
           }
-          teamApiClient
+          apiClients.team
             .addTeamToGameSessionId(gameSession.id, teamName, null)
             .then((team) => {
               if (team == null) {
@@ -318,7 +308,7 @@ function App() {
           if (isNullOrUndefined(team)) {
             return;
           }
-          teamMemberApiClient
+          apiClients.teamMember
             .addTeamMemberToTeam(team.id, false, "some-device-id")
             .then((teamMember) => {
               if (teamMember == null) {
@@ -381,7 +371,7 @@ function App() {
             confidenceLevel: "NOT_RATED",
             hint: {rawHint: ""},
           } as BackendAnswer;
-          teamAnswerApiClient
+          apiClients.teamAnswer
             .addTeamAnswer(
               answerInput
             )

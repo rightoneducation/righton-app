@@ -4,9 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  GameSessionAPIClient,
-  TeamAPIClient,
-  TeamMemberAPIClient,
+  IAPIClients,
   isNullOrUndefined,
   IGameSession,
   GameSessionState,
@@ -23,12 +21,10 @@ import {
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {
-  gameSessionAPIClient: GameSessionAPIClient;
-  teamAPIClient: TeamAPIClient;
-  teamMemberAPIClient: TeamMemberAPIClient;
+  apiClients: IAPIClients;
 }
 
-export function PregameContainer({ gameSessionAPIClient, teamAPIClient, teamMemberAPIClient }: PregameFinished) {
+export function PregameContainer({ apiClients }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -77,7 +73,7 @@ export function PregameContainer({ gameSessionAPIClient, teamAPIClient, teamMemb
       return false;
     }
     try {
-      const gameSessionResponse = await gameSessionAPIClient.getGameSessionByCode(
+      const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
         parseInt(inputGameCodeValue, 10)
       );
       if (isNullOrUndefined(gameSessionResponse)) {
@@ -102,7 +98,7 @@ export function PregameContainer({ gameSessionAPIClient, teamAPIClient, teamMemb
   const addTeamToGame = async () => {
     const teamName = `${firstName} ${lastName}`;
     try {
-      const team = await teamAPIClient.addTeamToGameSessionId(
+      const team = await apiClients.team.addTeamToGameSessionId(
         gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         teamName,
         null
@@ -111,7 +107,7 @@ export function PregameContainer({ gameSessionAPIClient, teamAPIClient, teamMemb
         setIsAPIError(true);
       } else {
         try {
-          const teamMember = await teamMemberAPIClient.addTeamMemberToTeam(
+          const teamMember = await apiClients.teamMember.addTeamMemberToTeam(
             team.id,
             true,
             uuidv4()

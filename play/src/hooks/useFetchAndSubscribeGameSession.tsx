@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   isNullOrUndefined,
-  GameSessionAPIClient,
+  IAPIClients,
   IGameSession,
 } from '@righton/networking';
 
@@ -15,7 +15,7 @@ import {
  */
 export default function useFetchAndSubscribeGameSession(
   gameSessionId: string,
-  gameSessionAPIClient: GameSessionAPIClient,
+  apiClients: IAPIClients,
   retry: number,
   isInitialRejoin: boolean
 ) {
@@ -28,6 +28,7 @@ export default function useFetchAndSubscribeGameSession(
   useEffect(() => {
     // prevents runaway condition by ignoring updates to state after component unmounts
     let ignore = false;
+    let gameSessionSubscription: any;
     // if player is retrying after an error, reset state values to 'isLoading' conditions unless the api call fails again
     if (retry > 0) {
       setIsLoading(true);
@@ -40,7 +41,7 @@ export default function useFetchAndSubscribeGameSession(
       return;
     }
 
-    gameSessionAPIClient
+    apiClients.gameSession
       .getGameSession(gameSessionId)
       .then((fetchedGame) => {
         if (!fetchedGame || !fetchedGame.id) {
@@ -49,7 +50,7 @@ export default function useFetchAndSubscribeGameSession(
         }
         if (!ignore) setGameSession(fetchedGame);
         setIsLoading(false);
-        const gameSessionSubscription = gameSessionAPIClient.subscribeUpdateGameSession(
+         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
             if (!response) {
@@ -61,16 +62,17 @@ export default function useFetchAndSubscribeGameSession(
             setGameSession((prevGame) => ({ ...prevGame, ...response }));
           }
         );
-        return () => {
-          ignore = true;
-          gameSessionSubscription.unsubscribe();
-        };
+     
       })
       .catch((e) => {
         setIsLoading(false);
         if (e instanceof Error) setError(e.message);
         else setError(`${t('error.connect.gamesessionerror')}`);
       });
-  }, [gameSessionId, GameSessionAPIClient, t, retry, hasRejoined]);
+    return () => {
+      ignore = true;
+      gameSessionSubscription.unsubscribe();
+    };
+  }, [gameSessionId, apiClients, t, retry, hasRejoined]);
   return { isLoading, error, gameSession, hasRejoined };
 }

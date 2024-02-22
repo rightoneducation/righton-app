@@ -1,15 +1,12 @@
 import {
-  Environment,
+  IAPIClients,
   IGameQuestion,
-  IGameQuestionAPIClient,
-  GameQuestionsAPIClient,
   CreateGameQuestionsInput
 } from '@righton/networking';
 
-let gameQuestionsAPIClient: IGameQuestionAPIClient = new GameQuestionsAPIClient(Environment.Testing);
-export const createGameQuestions = async (createGameQuestionsInput: CreateGameQuestionsInput): Promise<IGameQuestion | null> => {
+export const createGameQuestions = async (apiClients: IAPIClients, createGameQuestionsInput: CreateGameQuestionsInput): Promise<IGameQuestion | null> => {
   try {
-    const gameQuestions = await gameQuestionsAPIClient.createGameQuestions(createGameQuestionsInput);
+    const gameQuestions = await apiClients.gameQuestions.createGameQuestions(createGameQuestionsInput);
     return gameQuestions;
   } catch (e) {
     console.log(e);
@@ -17,9 +14,9 @@ export const createGameQuestions = async (createGameQuestionsInput: CreateGameQu
   return null;
 }
 
-export const getGameQuestions = async (id: string): Promise<IGameQuestion | null> => {
+export const getGameQuestions = async (apiClients: IAPIClients, id: string): Promise<IGameQuestion | null> => {
   try {
-    const gameQuestions = await gameQuestionsAPIClient.getGameQuestions(id);
+    const gameQuestions = await apiClients.gameQuestions.getGameQuestions(id);
     return gameQuestions;
 
   } catch (e) {
@@ -28,9 +25,9 @@ export const getGameQuestions = async (id: string): Promise<IGameQuestion | null
   return null;
 }
 
-export const deleteGameQuestions = async (id: string): Promise<IGameQuestion | null> => {
+export const deleteGameQuestions = async (apiClients: IAPIClients, id: string): Promise<IGameQuestion | null> => {
   try {
-    const gameQuestions = await gameQuestionsAPIClient.deleteGameQuestions(id);
+    const gameQuestions = await apiClients.gameQuestions.deleteGameQuestions(id);
     return gameQuestions;
   } catch (e) {
     console.log(e);
@@ -38,9 +35,9 @@ export const deleteGameQuestions = async (id: string): Promise<IGameQuestion | n
   return null;
 };
 
-export const getSortedGameQuestionss = async (queryLimit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestion[], nextToken: string } | null> => {
+export const getSortedGameQuestionss = async (apiClients: IAPIClients, queryLimit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestion[], nextToken: string } | null> => {
   try {
-    const gameQuestions = await gameQuestionsAPIClient.listGameQuestions(queryLimit, nextToken);
+    const gameQuestions = await apiClients.gameQuestions.listGameQuestions(queryLimit, nextToken);
     return gameQuestions;
   } catch (e) {
     console.log(e);

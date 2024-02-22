@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from "aws-amplify";
 import { BaseAPIClient } from "./BaseAPIClient";
-import { IGameQuestionAPIClient } from "./interfaces";
+import { IGameQuestionsAPIClient } from "./interfaces";
 import { IGameQuestion, AWSGameQuestion } from "../Models";
 import { 
     createGameQuestions, 
@@ -22,7 +22,7 @@ import { isNullOrUndefined } from "../global";
 
 export class GameQuestionsAPIClient
   extends BaseAPIClient
-  implements IGameQuestionAPIClient
+  implements IGameQuestionsAPIClient
 {
   async createGameQuestions(
     createGameQuestionsInput: CreateGameQuestionsInput

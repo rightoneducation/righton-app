@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import {
-  GameSessionAPIClient,
-  TeamAPIClient,
-  TeamMemberAPIClient,
-  TeamAnswerAPIClient,
+  IAPIClients,
   isNullOrUndefined,
   GameSessionState,
 } from '@righton/networking';
@@ -22,14 +19,11 @@ import {
 } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
-  gameSessionAPIClient: GameSessionAPIClient;
-  teamAPIClient: TeamAPIClient;
-  teamMemberAPIClient: TeamMemberAPIClient;
-  teamAnswerAPIClient: TeamAnswerAPIClient;
+  apiClients: IAPIClients;
 }
 
 export function GameInProgressContainer(props: GameInProgressContainerProps) {
-  const { gameSessionAPIClient, teamAPIClient, teamMemberAPIClient } = props;
+  const { apiClients } = props;
   const [retry, setRetry] = useState<number>(0);
   // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
   const handleRetry = () => {
@@ -42,7 +36,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
     localModel?.gameSessionId,
-    gameSessionAPIClient,
+    apiClients,
     retry,
     localModel?.hasRejoined
   );

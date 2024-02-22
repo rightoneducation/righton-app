@@ -1,13 +1,10 @@
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
-import awsconfig from "../aws-exports";
-import { Amplify, API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { isNullOrUndefined } from "../global";
 import { Environment } from "./interfaces/IBaseAPIClient";
 import { IGameTemplate, IQuestionTemplate} from "../Models";
 import { GameTemplateParser } from "../Parsers/GameTemplateParser";
 import { QuestionTemplateParser } from "../Parsers/QuestionTemplateParser";
-
-Amplify.configure(awsconfig);
 
 export enum HTTPMethod {
   Post = "POST",

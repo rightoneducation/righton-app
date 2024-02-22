@@ -1,4 +1,5 @@
 import { BackendAnswer} from "../../Models";
+import { IAnswerHint } from "../../Models";
 import { ConfidenceLevel } from "../../AWSMobileApi";
 
 export interface ITeamAnswerAPIClient {
@@ -14,5 +15,15 @@ export interface ITeamAnswerAPIClient {
   updateTeamAnswer(
     teamAnswerId: string,
     confidenceLevel: ConfidenceLevel
+  ): Promise<BackendAnswer>;
+
+  updateTeamAnswerConfidence(
+    teamAnswerId: string,
+    confidenceLevel: ConfidenceLevel
+  ): Promise<BackendAnswer>;
+
+  updateTeamAnswerHint(
+    teamAnswerId: string,
+    hint: IAnswerHint
   ): Promise<BackendAnswer>;
 }

@@ -4,11 +4,7 @@ import { useParams, Redirect } from 'react-router-dom';
 import StartGame from '../pages/StartGame';
 import StudentViews from '../pages/StudentViews';
 import {
-  GameSessionAPIClient,
-  TeamAPIClient,
-  TeamAnswerAPIClient,
-  QuestionAPIClient,
-  Environment,
+  IAPIClients,
   GameSessionState,
   IGameSession,
   IHints,
@@ -20,13 +16,11 @@ import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
 import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId, rebuildHints } from '../lib/HelperFunctions';
 
-const GameSessionContainer = () => {
-  // create apiClients for each of the backend objects
-  const gameSessionAPIClient = new GameSessionAPIClient(Environment.Developing);
-  const teamAPIClient = new TeamAPIClient(Environment.Developing);
-  const teamAnswerAPIClient = new TeamAnswerAPIClient(Environment.Developing);
-  const questionAPIClient = new QuestionAPIClient(Environment.Developing);
+interface GameSessionContainerProps {
+  apiClients: IAPIClients;
+};
 
+const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   // refs for scrolling of components via module navigator
   const questionCardRef = React.useRef(null);
   const responsesRef = React.useRef(null);
@@ -111,9 +105,9 @@ const GameSessionContainer = () => {
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
   // initial query for gameSessions and teams
-  useEffect(() => {
+  useEffect((apiClients: IAPIClients) => {
     try{
-    gameSessionAPIClient.getGameSession(gameSessionId).then((response) => {
+    apiClients.gameSession.getGameSession(gameSessionId).then((response) => {
       setGameSession(response); // set initial gameSession state
       gameSessionId = response.id; // set gameSessionId to the response id (in case it was a new gameSession)
       checkGameTimer(response); // checks if the timer needs to start
@@ -149,7 +143,7 @@ const GameSessionContainer = () => {
       }
       // the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
       const teamDataRequests = response.teams.map((team) => {
-        return teamAPIClient.getTeam(team.id).then((response) => {
+        return apiClients.team.getTeam(team.id).then((response) => {
             return TeamParser.teamFromAWSTeam(response);
         });
       });
@@ -180,7 +174,7 @@ const GameSessionContainer = () => {
       console.error(e);
     }
     let gameSessionSubscription: any | null = null;
-    gameSessionSubscription = gameSessionAPIClient.subscribeUpdateGameSession(
+    gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
       gameSessionId,
       (response) => {
         // only run the gametimer check on instances where the currentState changes (new screens)
@@ -199,7 +193,7 @@ const GameSessionContainer = () => {
 
     // set up subscription for new teams joining
     let createTeamSubscription: any | null = null;
-    createTeamSubscription = teamAPIClient.subscribeCreateTeam(
+    createTeamSubscription = apiClients.team.subscribeCreateTeam(
       gameSessionId,
       (teamResponse) => {
         if (teamResponse.gameSessionTeamsId === gameSessionId) {
@@ -214,7 +208,7 @@ const GameSessionContainer = () => {
 
     // set up subscription for teams leaving
     let deleteTeamSubscription: any | null = null;
-    deleteTeamSubscription = teamAPIClient.subscribeDeleteTeam(
+    deleteTeamSubscription = apiClients.team.subscribeDeleteTeam(
       gameSessionId,
       (teamResponse) => {
         if (teamResponse.gameSessionTeamsId === gameSessionId) {
@@ -232,11 +226,11 @@ const GameSessionContainer = () => {
 
     // set up subscription for teams answering
     let createTeamAnswerSubscription: any | null = null;
-    createTeamAnswerSubscription = teamAnswerAPIClient.subscribeCreateTeamAnswer(
+    createTeamAnswerSubscription = apiClients.team.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
         // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
-        gameSessionAPIClient.getGameSession(gameSessionId).then((gameSession) => {
+        apiClients.gameSession.getGameSession(gameSessionId).then((gameSession) => {
           let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
 
           // similarly all state values here are stale so we are going to use functional setting to ensure we're grabbing the most recent state
@@ -257,7 +251,7 @@ const GameSessionContainer = () => {
               // if we did this outside of the setTeamsArray function we would be using stale state values
               setShortAnswerResponses((prevShortAnswerState) => {
                 const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, gameSession.questions[gameSession.currentQuestionIndex].answerSettings, teamAnswerResponse, teamName, teamId);
-                questionAPIClient
+                apiClients.question
                   .updateQuestion({
                     gameSessionId: gameSession.id,
                     id: gameSession.questions[gameSession.currentQuestionIndex].id,
@@ -275,7 +269,7 @@ const GameSessionContainer = () => {
 
     // set up subscription for teams confidence answering (update to created team answer)
     let updateTeamAnswerSubscription: any | null = null;
-    updateTeamAnswerSubscription = teamAnswerAPIClient.subscribeUpdateTeamAnswer(
+    updateTeamAnswerSubscription = apiClients.teamAnswer.subscribeUpdateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
         let teamName = '';
@@ -387,7 +381,7 @@ const GameSessionContainer = () => {
         isSelectedMistake: selectedMistakes.includes(answer.rawAnswer),
       })
       );
-      await questionAPIClient
+      await apiClients.question
         .updateQuestion({
           gameSessionId,
           id: gameSession.questions[gameSession.currentQuestionIndex].id,
@@ -412,7 +406,7 @@ const GameSessionContainer = () => {
       setHints([]);
     }
 
-    const response = await gameSessionAPIClient.updateGameSession({ id: gameSessionId, ...newUpdates })
+    const response = await apiClients.gameSession.updateGameSession({ id: gameSessionId, ...newUpdates })
     if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       setHeaderGameCurrentTime(response.phaseOneTime);
     } else if (
@@ -453,7 +447,7 @@ const GameSessionContainer = () => {
     if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
       return;
     const questionConfigRequests = gameSession.questions.map((question) => {  
-      return questionAPIClient.updateQuestion({
+      return apiClients.question.updateQuestion({
         gameSessionId: gameSessionId,
         id: question.id,
         order: question.order,
@@ -463,7 +457,7 @@ const GameSessionContainer = () => {
         let newUpdates = {
           currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
         };
-        gameSessionAPIClient
+        apiClients.gameSession
           .updateGameSession({ id: gameSessionId, ...newUpdates })
           .then((response) => {
             localStorage.setItem(
@@ -493,7 +487,7 @@ const GameSessionContainer = () => {
       let newUpdates = {
         currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
       };
-      gameSessionAPIClient
+      apiClients.gameSession
         .updateGameSession({ id: gameSessionId, ...newUpdates })
         .then((response) => {
           localStorage.setItem(
@@ -504,7 +498,7 @@ const GameSessionContainer = () => {
           checkGameTimer(response);
           setGameSession(response);
           const teamDataRequests = response.teams.map((team) => {
-            return teamAPIClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
+            return apiClients.team.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
           });
 
           Promise.all(teamDataRequests)
@@ -525,7 +519,7 @@ const GameSessionContainer = () => {
       const correctChoiceIndex =
         currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
       const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
-      gameSessionAPIClient.groupHints(hints, questionText, correctAnswer).then((response) => {
+      apiClients.gameSession.groupHints(hints, questionText, correctAnswer).then((response) => {
         const parsedHints = JSON.parse(response.gptHints.content);
         // adds rawHint text to parsedHints received from GPT
         // (we want to minimize the amount of data we send and receive to/from OpenAI
@@ -546,8 +540,8 @@ const GameSessionContainer = () => {
         setisHintLoading(false);
         if (combinedHints) {
           setHints([]);
-          gameSessionAPIClient.getGameSession(gameSessionId).then((gameSession) => {
-            questionAPIClient
+          apiClients.gameSession.getGameSession(gameSessionId).then((gameSession) => {
+            apiClients.question
               .updateQuestion({
                 gameSessionId: gameSession.id,
                 id: gameSession.questions[gameSession.currentQuestionIndex].id,

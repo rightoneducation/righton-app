@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  TeamAPIClient,
+  IAPIClients,
   GameSessionState,
   IGameSession,
   ITeam,
@@ -24,7 +24,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 interface PhaseResultsProps {
-  teamAPIClient: TeamAPIClient;
+  apiClients: IAPIClients;
   teams: ITeam[];
   currentState: GameSessionState;
   teamAvatar: number;
@@ -55,7 +55,7 @@ interface PhaseResultsProps {
  * - Styling is provided based on the AnswerType that is received from ResultsCard.tsx
  */
 export default function PhaseResults({
-  teamAPIClient,
+  apiClients,
   teams,
   currentState,
   teamAvatar,
@@ -86,7 +86,7 @@ export default function PhaseResults({
   // update teamscore on the backend, if it fails, flag the error to pop the error modal
   const updateTeamScore = async (inputTeamId: string, newScore: number) => {
     try {
-      await teamAPIClient.updateTeam({ id: inputTeamId, score: newScore + score });
+      await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + score });
       setNewPoints(newScore);
     } catch {
       setIsError({ error: true, withheldPoints: newScore });
