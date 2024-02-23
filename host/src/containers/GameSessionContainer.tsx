@@ -449,6 +449,8 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         id: question.id,
         order: question.order,
         isConfidenceEnabled: isConfidenceEnabled,
+        isShortAnswerEnabled: isShortAnswerEnabled,
+        isHintEnabled: isHintEnabled
       })
       .then((response) => {
         let newUpdates = {

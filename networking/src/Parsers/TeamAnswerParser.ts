@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "../global";
-import { BackendAnswer, AnswerPrecision, AnswerType } from "../Models";
+import { BackendAnswer } from "../Models";
 import { AWSTeamAnswer } from "../Models/AWS";
 import { 
   ConfidenceLevel,
@@ -8,24 +8,6 @@ import {
 } from "../AWSMobileApi";
 
 export class TeamAnswerParser {
-
-    static convertProperty<T>(obj: any, propertyName: string, enumType: T) {
-        if (!isNullOrUndefined(obj) && !isNullOrUndefined(obj[propertyName])) {
-            obj[propertyName] = enumType[obj[propertyName] as keyof typeof enumType];
-        }
-    }
-
-    static parseAnswerSettings<t>(input: any | t): t {
-        if (typeof input === "string") {
-            const answerSettingsObject = JSON.parse(input as string);
-            if (!isNullOrUndefined(answerSettingsObject)) {
-                this.convertProperty(answerSettingsObject, 'answerType', AnswerType);
-                this.convertProperty(answerSettingsObject, 'answerPrecision', AnswerPrecision);
-            }
-            return answerSettingsObject as t;
-        }
-        return input
-    }
 
     static teamAnswerFromCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription

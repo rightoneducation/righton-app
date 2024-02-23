@@ -72,7 +72,6 @@ export default function GameInProgress({
   localModel,
   isShortAnswerEnabled,
 }: GameInProgressProps) {
-
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
@@ -88,6 +87,7 @@ export default function GameInProgress({
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
+  console.log(currentQuestion);
   const answerSettings: IAnswerSettings | null = currentQuestion.answerSettings ?? null;
   let teamAnswers: (BackendAnswer | null)[] | null | undefined;
   if (currentTeam != null) {

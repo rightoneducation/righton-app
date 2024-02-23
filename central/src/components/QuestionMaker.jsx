@@ -73,7 +73,7 @@ export default function QuestionMaker({
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
   // When a wrong answer is changed/update this function handles that change
-  const onChoiceTextChangeMaker = (choice, choiceIndex, answerType) => ({ currentTarget }) => {
+  const onChoiceTextChangeMaker = ( choiceIndex, choice, answerType) => ({ currentTarget }) => {
     if (choice.isAnswer === true){
       switch(answerType){
         case AnswerType.STRING:
@@ -166,6 +166,7 @@ export default function QuestionMaker({
       questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
       questionToSend.owner = "Owners Name";
       questionToSend.version = 0;
+      questionToSend.gameTemplatesCount = 0;
       let newQuestion;
       if (gameId){
         questionToSend.id = uuidv4();

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Card, CardContent, Collapse, Button, IconButton, TextField, List, ListItem, Box, RadioGroup, Radio, FormControlLabel } from "@material-ui/core";
 import { ExpandMore, Add } from '@material-ui/icons';
+import { AnswerType, AnswerPrecision } from '@righton/networking';
 
 export default function QuestionMakerAnswerDropdown({
   choice,
@@ -44,9 +45,14 @@ export default function QuestionMakerAnswerDropdown({
   }
   const instructionsArray = instructionsHandler(instructions);
   const handleOnTypeChange = (event) => {
-    setAnswerType(event.target.value);
-    onChoiceTextChangeMaker(index, event.target.value)({ currentTarget: { value: choice.text } });
+    const newAnswerType = Number(event.target.value);
+    setAnswerType(newAnswerType);
+    onChoiceTextChangeMaker(index, newAnswerType, answerType)({ currentTarget: { value: choice.text } });
   };
+  const handleOnPrecisionChange = (event) => {
+    const newAnswerPrecision = Number(event.target.value);
+    setAnswerPrecision(newAnswerPrecision);
+  }
   return (
     <Grid item xs={12}>
       <Card className={choice.isAnswer ? classes.correctCard : classes.wrongCard}>
@@ -73,52 +79,52 @@ export default function QuestionMakerAnswerDropdown({
             <>
               <Box className={classes.answerTypeBox}> 
                 <Typography className={classes.answerType}>{"Answer Type: "}</Typography>
-                <RadioGroup value={answerType} row onChange={(event) =>{ handleOnTypeChange(event)}}>
+                <RadioGroup value={String(answerType)} row onChange={(event) =>{ handleOnTypeChange(event)}}>
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'text'}
-                    control={<Radio className={classes.radioButton} />} 
-                    label={'Text'} 
-                  />
-                  <FormControlLabel 
-                    className={classes.radioLabel} 
-                    value={'number'}
+                    value={String(AnswerType.NUMBER)}
                     control={<Radio className={classes.radioButton} />} 
                     label={'Number'} 
                   />
+                  <FormControlLabel 
+                    className={classes.radioLabel} 
+                    value={String(AnswerType.STRING)}
+                    control={<Radio className={classes.radioButton} />} 
+                    label={'Text'} 
+                  />
                     <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'expresssion'}
+                    value={String(AnswerType.EXPRESSION)}
                     control={<Radio className={classes.radioButton} />} 
                     label={'Mathematical Expression'} 
                   />
                 </RadioGroup>
               </Box>
-              {answerType === 'number' ?
+              {answerType === AnswerType.NUMBER ?
               <Box className={classes.answerTypeBox}> 
                 <Typography className={classes.answerType}>{"Decimal Places: "}</Typography>
-                <RadioGroup value={answerPrecision} row onChange={(event) => setAnswerPrecision(event.target.value)}>
+                <RadioGroup value={String(answerPrecision)} row onChange={(event) => handleOnPrecisionChange(event)}>
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'WHOLE'} 
+                    value={String(AnswerPrecision.WHOLE)} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Ones (0)'} 
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'TENTH'} 
+                    value={String(AnswerPrecision.TENTH)} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Tenths (0.1)'} 
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'HUNDREDTH'} 
+                    value={String(AnswerPrecision.HUNDREDTH)} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Hundredths (0.01)'}
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'THOUSANDTH'}
+                    value={String(AnswerPrecision.THOUSANDTH)}
                     control={<Radio className={classes.radioButton} />} 
                     label={'Thousandths (0.001)'}
                   />

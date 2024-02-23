@@ -1,6 +1,6 @@
 import { BaseAPIClient } from "./BaseAPIClient";
 import { QuestionParser } from "../Parsers/QuestionParser";
-import { IQuestion } from "../Models";
+import { IQuestion, AWSQuestion } from "../Models";
 import {
   UpdateQuestionInput,
   UpdateQuestionMutation,
@@ -33,6 +33,6 @@ export class QuestionAPIClient
       ) {
           throw new Error(`Failed to update question`)
       }
-      return QuestionParser.questionFromAWSQuestion(question.data.updateQuestion) as IQuestion
+      return QuestionParser.questionFromAWSQuestion(question.data.updateQuestion as AWSQuestion) as IQuestion
   }
 }

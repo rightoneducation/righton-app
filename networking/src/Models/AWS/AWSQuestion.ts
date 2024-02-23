@@ -1,6 +1,8 @@
 export type AWSQuestion = {
   id: string
   text: string
+  answerSettings: string
+  hints: string
   choices?: string | null
   responses?: string | null
   imageUrl?: string | null

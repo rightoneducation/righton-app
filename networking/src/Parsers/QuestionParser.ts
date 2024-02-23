@@ -1,12 +1,34 @@
 import { isNullOrUndefined } from "../global";
-import { IQuestion, IChoice, IResponse } from "../Models";
+import { IQuestion, IChoice, IResponse, IHints, IAnswerSettings, AnswerType, AnswerPrecision } from "../Models";
 import { AWSQuestion } from "../Models/AWS";
 
 export class QuestionParser {
+
+  static parseAnswerSettings(input: string): IAnswerSettings {
+    console.log(input);
+    console.log(typeof input);
+    const answerSettingsObject = JSON.parse(input);
+    if (answerSettingsObject) {
+      const answerType = parseInt(answerSettingsObject.answerType, 10);
+      if (answerType in AnswerType) {
+        answerSettingsObject.answerType = answerType;
+      }
+      if (answerSettingsObject.answerPrecision !== undefined) {
+        const answerPrecision = parseInt(answerSettingsObject.answerPrecision, 10);
+        if (answerPrecision in AnswerPrecision) {
+          answerSettingsObject.answerPrecision = answerPrecision;
+        }
+      }
+    }
+    console.log(answerSettingsObject);
+    console.log(typeof answerSettingsObject)
+    return answerSettingsObject as IAnswerSettings;
+  }
+
   static questionFromAWSQuestion(
       awsQuestion: AWSQuestion
   ): IQuestion {
-
+   /*$ add parsing answer settings method in here.*/
       let choices: IChoice[] = [];
       if (!isNullOrUndefined(awsQuestion.choices)) {
          try {
@@ -31,6 +53,15 @@ export class QuestionParser {
               console.error(e);
          }
       }
+      let hints: IHints[] = [];
+      if (!isNullOrUndefined(awsQuestion.hints)) {
+         try {
+          hints = JSON.parse(awsQuestion.hints) as IHints[]
+          } catch (e) {
+              console.error(e);
+         }
+      }
+      let answerSettings = QuestionParser.parseAnswerSettings(awsQuestion.answerSettings) as IAnswerSettings;
       // destructure AWSGameTemplate and assign default values if null
       const {
         id,
@@ -62,6 +93,8 @@ export class QuestionParser {
       const question: IQuestion = {
         id,
         text,
+        answerSettings,
+        hints,
         responses,
         gameSessionId,
         order,

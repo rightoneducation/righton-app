@@ -8,6 +8,7 @@ import { IListQuerySettings, SortField } from './QueryInputs';
 
 export const createQuestionTemplate = async (apiClients: IAPIClients, createQuestionTemplateInput: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
   try {
+    console.log(createQuestionTemplateInput);
     const question = await apiClients.questionTemplate.createQuestionTemplate(createQuestionTemplateInput);
     return question;
   } catch (e) {

@@ -82,10 +82,14 @@ export default function OpenAnswerCard({
   const handleEditorContentsChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
+    console.log('sup');
+    console.log(answerSettings);
+    console.log(answerSettings?.answerType === AnswerType.NUMBER);
     let currentAnswer = event.target.value;
     let isBadInputDetected = false;
     if (answerSettings?.answerType === AnswerType.NUMBER) {
       isBadInputDetected = !numericAnswerRegex.test(currentAnswer);
+      console.log(isBadInputDetected);
       currentAnswer = currentAnswer.replace(/[^0-9.%-]/g, '');
       setIsBadInput(isBadInputDetected);
     }
