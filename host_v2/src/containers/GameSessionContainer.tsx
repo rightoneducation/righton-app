@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import { GameSessionState, ApiClient } from '@righton/networking';
+import React, { useState } from 'react';
+
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -38,6 +39,9 @@ interface ConfidenceOption {
   incorrect: number; // number of players who selected tgis option and answered incorrectly
   players: Player[]; // an array of the players that selected this option
 }
+
+
+
 
 export default function GameSessionContainer({
   apiClient,
@@ -106,6 +110,20 @@ export default function GameSessionContainer({
     { confidence: 'TOTALLY', correct: 0, incorrect: 0, players: [] },
   ];
 
+  const [selectedMistakes, setSelectedMistakes] = useState<any[]>([]);
+  const onSelectMistake = (value: any, isBasedOnPopularity: boolean): void => {
+    console.log("test");
+    console.log(value);
+    setSelectedMistakes((prev: any[]) => {
+      if (prev.includes(value)) {
+        if (isBasedOnPopularity === false)
+          return prev.filter((mistake: any) => mistake !== value);
+        return prev;
+      } 
+      return [...prev, value];
+    });
+  }
+  
   const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<
     number | null
   >(null);
@@ -136,6 +154,33 @@ export default function GameSessionContainer({
     console.log('timer is finished'); // eslint-disable-line
   };
 
+  const shortAnswerResponse = [
+    {
+      rawAnswer: 'y=mx+b',
+      normAnswer: 'y=mx+b',
+      isCorrect: true, // only every one
+      isSelectMistaked: true, 
+      count: 2,
+      teams: ['Name1', 'Name2']
+    },
+    {
+      rawAnswer: 'y=mx+4',
+      normAnswer: 'y=mx+4',
+      isCorrect: false,
+      isSelectMistaked: true, 
+      count: 1,
+      teams: ['Name3']
+    },
+    {
+      rawAnswer: 'y=mx+4',
+      normAnswer: 'y=mx+4',
+      isCorrect: false,
+      isSelectMistaked: true, 
+      count: 5,
+      teams: ['Name4', 'Name5', 'Name6', 'Name7']
+    }
+  ];  
+
   return (
     <StackContainerStyled>
       <HeaderBackgroundStyled />
@@ -156,6 +201,10 @@ export default function GameSessionContainer({
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
+        {/* <GameInProgress
+        onSelectMistake={onSelectMistake}
+        shortAnswerResponses = {shortAnswerResponse}
+       /> */}
         <PlaceholderContentArea
           confidenceData={sampleConfidenceData}
           confidenceGraphClickIndex={confidenceGraphClickIndex}
@@ -163,7 +212,8 @@ export default function GameSessionContainer({
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled />
-      <GameInProgress />
+
     </StackContainerStyled>
   );
 }
+

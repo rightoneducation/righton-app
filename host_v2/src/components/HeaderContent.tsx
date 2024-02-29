@@ -118,7 +118,6 @@ export default function HeaderContent({
                 currentTimer={currentTimer}
                 isFinished={isFinished}
                 isPaused={isPaused}
-                handleTimerIsFinished={handleTimerIsFinished}
                 localModel={localModel}
               />
             ) : null}

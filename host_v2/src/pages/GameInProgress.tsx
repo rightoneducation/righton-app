@@ -1,9 +1,53 @@
 import React from 'react';
 import { GameSessionState } from '@righton/networking';
+import { styled } from '@mui/material/styles';
+import { 
+  Box,
+  Paper
+} from '@mui/material';
+
 import FooterContent from '../components/FooterComponents/FooterContent';
+import GameInProgressContentSwitch from '../components/GameInProgressContentSwitch';
 
+interface GameInProgressProps {
+  onSelectMistake: (value: any, isBasedOnPopularity: boolean) => void;
+  shortAnswerResponses: any[]; // Assuming it's an array of objects
 
-export default function GameInProgress() {
+}
+
+const ContentContainerStyled = styled(Box)({
+    position: 'relative',
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100vw',
+    border: 'none',
+    overflowY: 'auto',
+    touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE and Edge
+    padding: '24px',
+    boxSizing: 'border-box',
+});
+
+const BackgroundStyled = styled(Paper)({
+    position: 'fixed',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    minHeight: '100vh',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+});
+
+export default function GameInProgress({ onSelectMistake, shortAnswerResponses }: GameInProgressProps) {
     type FooterButtonTextDictionary = {
         [key: number]: string;
     };
@@ -40,6 +84,16 @@ export default function GameInProgress() {
       };
 
     return(
+      <BackgroundStyled>
+        <ContentContainerStyled>
+          <GameInProgressContentSwitch
+            totalAnswers={totalNum}
+            numPlayers={numPlayers}
+            shortAnswerResponses={shortAnswerResponses}
+            onSelectMistake={onSelectMistake}
+            
+          />
+        </ContentContainerStyled>
         <FooterContent
         inputNum={numPlayers} // need # for answer bar
         totalNum={totalNum} // number of answers
@@ -53,6 +107,7 @@ export default function GameInProgress() {
         )} // provides index of current state for use in footer dictionary
         // footerButtonText='End Answering'
         />
+      </BackgroundStyled>
     )
 }
     
