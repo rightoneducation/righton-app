@@ -15,7 +15,7 @@ import QuestionDashboard from './QuestionDashboard';
 
 // New "empty" game
 const newGame = {
-  id: 0,
+  id: '0',
   title: '',
   description: '',
   grade: '',
@@ -65,7 +65,8 @@ export default function GameMaker({
   setSearchInput,
   searchInput, 
   isSearchClick, 
-  handleSearchClick, 
+  handleSearchClick,
+  handleSearchChange, 
   isResolutionMobile, 
   listQuerySettings,
   handleUpdateListQuerySettings,
@@ -74,7 +75,8 @@ export default function GameMaker({
   cloneQuestion,
   gameId,
   handleScrollDown,
-  handleQuestionSelected
+  handleQuestionSelected,
+  nextToken
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
@@ -164,7 +166,9 @@ export default function GameMaker({
 
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
+    console.log(localQuestionTemplates);
     gameDetails.questionTemplates = localQuestionTemplates;
+
     saveGameTemplate(game, gameDetails);
     setLocalQuestionTemplates([]);
     event.preventDefault();
@@ -202,7 +206,7 @@ export default function GameMaker({
                       variant='outlined'
                       label='Game Title'
                       value={gameDetails.title}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput(currentTarget.value) }) }}
                       fullWidth
                       required
                       className={classes.gameTitle}
@@ -214,7 +218,7 @@ export default function GameMaker({
                       variant='outlined'
                       label='Game Text'
                       value={gameDetails.description}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }) }}
                       fullWidth
                       multiline
                       rows={3}
@@ -261,7 +265,7 @@ export default function GameMaker({
                         label='Image URL'
                         fullWidth
                         value={gameDetails.imageUrl}
-                        onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }); setDisabled(false && handleDisable()) }}
+                        onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }) }}
                       />
                     </Grid>
                   </Grid>
@@ -406,6 +410,7 @@ export default function GameMaker({
                       isSearchClick={isSearchClick} 
                       handleSearchClick={handleSearchClick} 
                       isResolutionMobile={isResolutionMobile} 
+                      handleSearchChange={handleSearchChange}
                     />
                     <SortByDropdown 
                       isGames={location.pathname === "/"} 
@@ -417,17 +422,9 @@ export default function GameMaker({
                       style={{zIndex: 5}}
                     />
                   </Box>
-                  <Grid container onClick={() => setSortByCheck(false)}>
-                    <QuestionDashboard 
-                      loading={loading} 
-                      questions={questions} 
-                      games={games} 
-                      cloneQuestion={cloneQuestion} 
-                      gameId={gameId} 
-                      handleScrollDown={handleScrollDown}
-                      handleQuestionSelected={handleQuestionSelected}
-                    />
-                  </Grid>
+                  <Box container onClick={() => setSortByCheck(false)}>
+                  <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken}/>   
+                  </Box>
                 </Grid>
                 <Box className={classes.addQuestionFooter}>
                   <Button 

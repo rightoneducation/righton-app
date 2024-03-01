@@ -35,14 +35,15 @@ export class GameTemplateAPIClient
   async createGameTemplate( 
     createGameTemplateInput: CreateGameTemplateInput
   ): Promise<IGameTemplate> {
-    if (doesObjectHaveDate(createGameTemplateInput) && createGameTemplateInput.createdAt && createGameTemplateInput.updatedAt) {
-      createGameTemplateInput = {
-        ...createGameTemplateInput,
-        createdAt: createGameTemplateInput.createdAt,
-        updatedAt: createGameTemplateInput.updatedAt
-      }
-    }
+    // if (doesObjectHaveDate(createGameTemplateInput) && createGameTemplateInput.createdAt && createGameTemplateInput.updatedAt) {
+    //   createGameTemplateInput = {
+    //     ...createGameTemplateInput,
+    //     createdAt: createGameTemplateInput.createdAt,
+    //     updatedAt: createGameTemplateInput.updatedAt
+    //   }
+    // }
     const variables: CreateGameTemplateMutationVariables = { input: createGameTemplateInput as CreateGameTemplateInput }
+    console.log(variables);
     const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
         createGameTemplate,
         variables

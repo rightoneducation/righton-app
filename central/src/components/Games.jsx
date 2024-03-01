@@ -105,6 +105,7 @@ export default function Games({
                 searchInput={searchInput}
                 isSearchClick={isSearchClick}
                 handleSearchClick={handleSearchClick}
+                handleSearchChange={handleSearchChange}
                 isResolutionMobile={isResolutionMobile} 
                 listQuerySettings={listQuerySettings}
                 handleUpdateListQuerySettings={handleUpdateListQuerySettings} 
@@ -112,6 +113,7 @@ export default function Games({
                 setSortByCheck={setSortByCheck}
                 handleScrollDown={handleScrollDown}
                 handleQuestionSelected={handleQuestionSelected} 
+                nextToken={nextToken}
               />;
             }
           )

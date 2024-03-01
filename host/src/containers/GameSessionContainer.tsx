@@ -190,7 +190,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
       },
     );
-
+    console.log(teamsArray);
     // set up subscription for new teams joining
     let createTeamSubscription: any | null = null;
     createTeamSubscription = apiClients.team.subscribeCreateTeam(

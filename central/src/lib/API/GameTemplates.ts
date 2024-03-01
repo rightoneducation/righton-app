@@ -8,6 +8,7 @@ import { IListQuerySettings, SortField } from './QueryInputs';
 
 export const createGameTemplate = async (apiClients: IAPIClients, createGameTemplateInput: CreateGameTemplateInput): Promise<IGameTemplate | null> => {
   try {
+    console.log(createGameTemplateInput);
     const game = await apiClients.gameTemplate.createGameTemplate(createGameTemplateInput);
     return game;
   } catch (e) {

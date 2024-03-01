@@ -12,6 +12,7 @@ import {
   IAPIClients,
   IGameTemplate,
   IQuestionTemplate,
+  CreateGameTemplateInput,
   CreateQuestionTemplateInput,
   isNullOrUndefined
  } from '@righton/networking';
@@ -177,10 +178,12 @@ export const RouteContainer = ({
   }
 
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const createNewGameTemplate = async (newGame: IGameTemplate) => {
+  const createNewGameTemplate = async (newGame: CreateGameTemplateInput) => {
     try{
-    const newGameInput = {...newGame, createdAt: newGame.createdAt?.toString(), updatedAt: newGame.updatedAt?.toString()};
-    const game = await createGameTemplate(apiClients, newGameInput);
+    newGame.owner = "Owner";
+    newGame.version = 0;
+    newGame.id = undefined;
+    const game = await createGameTemplate(apiClients, newGame);
       if (!game) {
         throw new Error ('Game was unable to be created');
       }
@@ -193,19 +196,22 @@ export const RouteContainer = ({
   const saveGameTemplate = async (existingGame: IGameTemplate, updatedGame: IGameTemplate) => {
     // first create the game template
     setLoading(true);
+    let backendGame;
+    // seperate out questionTemplates from gameTemplate object
+    const {questionTemplates, ...rest} = updatedGame;
+    const gameTemplateUpdate = rest as IGameTemplate; 
+    const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()}
+    gameTemplateUpdateInput.questionTemplatesCount = gameTemplateUpdateInput.questionTemplates?.length ?? 0;
     if (updatedGame.id === '0')
     {
-      const backendGame = await createNewGameTemplate(updatedGame);
+      backendGame = await createNewGameTemplate(gameTemplateUpdateInput);
     }
     else {
-      // update all fields except for the questionTemplates
-      const {questionTemplates, ...rest} = updatedGame;
-      const gameTemplateUpdate = rest as IGameTemplate; 
-      const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()}
-      const backendGame = await updateGameTemplate(apiClients, gameTemplateUpdateInput);
+      backendGame = await updateGameTemplate(apiClients, gameTemplateUpdateInput);
     }
-    if (!isNullOrUndefined(updatedGame.questionTemplates) && !isNullOrUndefined(existingGame.questionTemplates)) {
+    if (!isNullOrUndefined(updatedGame.questionTemplates) && updatedGame.questionTemplates.length > 0) {
       const newQuestionTemplates = updatedGame.questionTemplates.map((updatedQuestion) => {
+        console.log(updatedQuestion);
         if (updatedQuestion.gameQuestionId === null)  {
           handleCreateQuestionTemplate(updatedQuestion.questionTemplate);
         }
@@ -218,15 +224,17 @@ export const RouteContainer = ({
         }
       });
       const newGameQuestions = await Promise.all(newGameQuestionRequests);
-      // find question templates that were deleted (if gameQuestionId is present in existing but not in updated)
-      const questionTemplatesToDelete = existingGame.questionTemplates.filter((existingQuestion) => {
-        return updatedGame.questionTemplates && !updatedGame.questionTemplates.some(updatedQuestion => 
-            updatedQuestion.gameQuestionId === existingQuestion.gameQuestionId);
-      });
-      const newDeletedGameQuestionTemplates = questionTemplatesToDelete.map((question) => {
-        handleDeleteGameQuestion(question.gameQuestionId);
-      });
-      const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
+      if (!isNullOrUndefined(existingGame) && !isNullOrUndefined(existingGame.questionTemplates)){
+        // find question templates that were deleted (if gameQuestionId is present in existing but not in updated)
+        const questionTemplatesToDelete = existingGame.questionTemplates.filter((existingQuestion) => {
+          return updatedGame.questionTemplates && !updatedGame.questionTemplates.some(updatedQuestion => 
+              updatedQuestion.gameQuestionId === existingQuestion.gameQuestionId);
+        });
+        const newDeletedGameQuestionTemplates = questionTemplatesToDelete.map((question) => {
+          handleDeleteGameQuestion(question.gameQuestionId);
+        });
+        const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
+      }
     }
     listQuerySettings.nextToken = null;
     const games = await getAllGameTemplates(listQuerySettings);
