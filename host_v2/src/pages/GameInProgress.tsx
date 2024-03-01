@@ -1,19 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { GameSessionState } from '@righton/networking';
 import { styled } from '@mui/material/styles';
 import { 
   Box,
   Paper
 } from '@mui/material';
-
+import { ConfidenceOption, LocalModel } from '../lib/HostModels';
+import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
+import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
+import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
+import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
+import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
+import PlaceholderContentArea from '../components/PlaceholderContentArea';
+import HeaderContent from '../components/HeaderContent';
+import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
 import FooterContent from '../components/FooterComponents/FooterContent';
 import GameInProgressContentSwitch from '../components/GameInProgressContentSwitch';
-
-interface GameInProgressProps {
-  onSelectMistake: (value: any, isBasedOnPopularity: boolean) => void;
-  shortAnswerResponses: any[]; // Assuming it's an array of objects
-
-}
 
 const ContentContainerStyled = styled(Box)({
     position: 'relative',
@@ -47,7 +49,33 @@ const BackgroundStyled = styled(Paper)({
     background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
 });
 
-export default function GameInProgress({ onSelectMistake, shortAnswerResponses }: GameInProgressProps) {
+interface GameInProgressProps {
+  totalQuestions: number,
+  currentQuestionIndex: number,
+  isCorrect: boolean,
+  isIncorrect: boolean,
+  totalTime: number,
+  hasRejoined: boolean,
+  currentTimer: number,
+  sampleConfidenceData: ConfidenceOption[],
+  localModelMock: LocalModel,
+  onSelectMistake: (value: any, isBasedOnPopularity: boolean) => void;
+  shortAnswerResponses: any[]; // Assuming it's an array of objects
+}
+
+export default function GameInProgress({
+  totalQuestions,
+  currentQuestionIndex,
+  isCorrect,
+  isIncorrect,
+  totalTime,
+  hasRejoined,
+  currentTimer,
+  sampleConfidenceData,
+  localModelMock,
+  onSelectMistake, 
+  shortAnswerResponses 
+}: GameInProgressProps) {
     type FooterButtonTextDictionary = {
         [key: number]: string;
     };
@@ -73,6 +101,7 @@ export default function GameInProgress({ onSelectMistake, shortAnswerResponses }
     const gameTimerZero = false
     const teams: number[] = [1, 2, 3]
     const numPlayers = teams ? teams.length : 0;
+    const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
 
     const getFooterText = (players: number, totalAnswers: number, statePositionParam: number) => {
         if (statePositionParam === 2 || statePositionParam === 6) {
@@ -83,31 +112,42 @@ export default function GameInProgress({ onSelectMistake, shortAnswerResponses }
         return footerButtonTextDictionary[statePosition];
       };
 
+      const handleConfidenceGraphClick = (selectedIndex: number | null) => {
+        setConfidenceGraphClickIndex(selectedIndex);
+      };
+
+      const handleTimerIsFinished = () => {
+        console.log('timer is finished'); // eslint-disable-line
+      };
+
     return(
-      <BackgroundStyled>
-        <ContentContainerStyled>
-          <GameInProgressContentSwitch
-            totalAnswers={totalNum}
-            numPlayers={numPlayers}
-            shortAnswerResponses={shortAnswerResponses}
-            onSelectMistake={onSelectMistake}
-            
-          />
-        </ContentContainerStyled>
-        <FooterContent
-        inputNum={numPlayers} // need # for answer bar
-        totalNum={totalNum} // number of answers
-        footerBar = {currentState}
-        phaseOneTime={phaseOneTime}
-        phaseTwoTime={phaseTwoTime}
-        footerButtonText={getFooterText(
-            teams ? teams.length : 0,
-            totalNum,
-            statePosition,
-        )} // provides index of current state for use in footer dictionary
-        // footerButtonText='End Answering'
+      <StackContainerStyled>
+      <HeaderBackgroundStyled />
+      <HeaderContent
+        currentState={currentState}
+        totalQuestions={totalQuestions}
+        currentQuestionIndex={currentQuestionIndex}
+        statePosition={statePosition}
+        isCorrect={isCorrect}
+        isIncorrect={isIncorrect}
+        totalTime={totalTime}
+        currentTimer={hasRejoined ? currentTimer : totalTime}
+        isPaused={false}
+        isFinished={false}
+        handleTimerIsFinished={handleTimerIsFinished}
+        localModel={localModelMock}
+      />
+      <BodyStackContainerStyled>
+        <BodyBoxUpperStyled />
+        <BodyBoxLowerStyled />
+        <PlaceholderContentArea
+          confidenceData={sampleConfidenceData}
+          confidenceGraphClickIndex={confidenceGraphClickIndex}
+          handleConfidenceGraphClick={handleConfidenceGraphClick}
         />
-      </BackgroundStyled>
+      </BodyStackContainerStyled>
+      <FooterBackgroundStyled />
+    </StackContainerStyled>
     )
 }
     

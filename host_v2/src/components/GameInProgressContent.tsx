@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { Player, ConfidenceOption } from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaTripleColumnStyled,
@@ -28,30 +29,17 @@ interface QuestionData {
   imageUrl: string | undefined; // the url of the image on the question card (if there is one)
 } // eslint-disable-line
 
-interface Player {
-  answer: string; // answer chosen by this player
-  isCorrect: boolean; // true iff the chosen answer is the correct answer
-  name: string; // this player's name
-}
-
-interface ConfidenceOption {
-  confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly
-  incorrect: number; // number of players who selected tgis option and answered incorrectly
-  players: Player[]; // an array of the players that selected this option
-}
-
-interface PlaceholderContentAreaProps {
+interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
   confidenceData: ConfidenceOption[];
   confidenceGraphClickIndex: number | null;
   handleConfidenceGraphClick: (selectedIndex: number | null) => void;
 } // eslint-disable-line
-export default function PlaceholderContentArea({
+export default function GameInProgressContent({
   confidenceData,
   confidenceGraphClickIndex,
   handleConfidenceGraphClick,
-}: PlaceholderContentAreaProps) {
+}: GameInProgressContentProps) {
   // eslint-disable-line
 
   const theme = useTheme();
@@ -72,8 +60,9 @@ export default function PlaceholderContentArea({
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <Card />
-          <Card />
+           {/*
+              Let's put the featured mistakes here
+              */}
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
@@ -115,6 +104,9 @@ export default function PlaceholderContentArea({
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
+              {/*
+              Let's put the featured mistakes here
+              */}
               <Card />
               <Card />
             </ScrollBoxStyled>
@@ -162,8 +154,9 @@ export default function PlaceholderContentArea({
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-              <Card />
-              <Card />
+               {/*
+              Let's put the featured mistakes here
+              */}
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>

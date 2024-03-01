@@ -1,16 +1,9 @@
-import { GameSessionState, ApiClient } from '@righton/networking';
 import React, { useState } from 'react';
-
-import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
-import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
-import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
-import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
-import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import PlaceholderContentArea from '../components/PlaceholderContentArea';
-import HeaderContent from '../components/HeaderContent';
-import { LocalModel } from '../lib/HostModels';
-import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
+import { IGameSession, GameSessionState, ApiClient, GameSessionParser } from '@righton/networking';
+import MockGameSession from '../mock/MockGameSession.json';
+import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
+import { LocalModel } from '../lib/HostModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -40,13 +33,14 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-
-
-
 export default function GameSessionContainer({
   apiClient,
 }: GameInProgressContainerProps) {
   console.log(apiClient); // eslint-disable-line
+  const gameSession = GameSessionParser.gameSessionFromAWSGameSession({
+    ...MockGameSession,
+    currentState: MockGameSession.currentState as GameSessionState,
+  });
   // TODO: delete hard coded values later
   const sampleQuestion: QuestionData = {
     text: 'A pair of shoes were 10% off last week. This week, theres an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that youd get if you buy the shoes this week?',
@@ -124,20 +118,18 @@ export default function GameSessionContainer({
     });
   }
   
-  const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<
-    number | null
-  >(null);
+ 
 
-  const handleConfidenceGraphClick = (selectedIndex: number | null) => {
-    setConfidenceGraphClickIndex(selectedIndex);
-  };
+
+  const handleStartGame = ()=>{
+    console.log("test")
+  }
 
   const totalQuestions = 5;
   const currentQuestionIndex = 3;
   const statePosition = 3;
   const isCorrect = false;
   const isIncorrect = false;
-  const currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
 
   const localModelMock: LocalModel = { currentTimer: 200, hasRejoined: false };
   const phaseOneTime = 180;
@@ -146,13 +138,11 @@ export default function GameSessionContainer({
   const currentTimer = 90;
 
   const totalTime =
-    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+    gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
       ? phaseOneTime
       : phaseTwoTime;
 
-  const handleTimerIsFinished = () => {
-    console.log('timer is finished'); // eslint-disable-line
-  };
+
 
   const shortAnswerResponse = [
     {
@@ -181,39 +171,37 @@ export default function GameSessionContainer({
     }
   ];  
 
-  return (
-    <StackContainerStyled>
-      <HeaderBackgroundStyled />
-      <HeaderContent
-        currentState={currentState}
-        totalQuestions={totalQuestions}
-        currentQuestionIndex={currentQuestionIndex}
-        statePosition={statePosition}
-        isCorrect={isCorrect}
-        isIncorrect={isIncorrect}
-        totalTime={totalTime}
-        currentTimer={hasRejoined ? currentTimer : totalTime}
-        isPaused={false}
-        isFinished={false}
-        handleTimerIsFinished={handleTimerIsFinished}
-        localModel={localModelMock}
-      />
-      <BodyStackContainerStyled>
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
-        {/* <GameInProgress
-        onSelectMistake={onSelectMistake}
-        shortAnswerResponses = {shortAnswerResponse}
-       /> */}
-        <PlaceholderContentArea
-          confidenceData={sampleConfidenceData}
-          confidenceGraphClickIndex={confidenceGraphClickIndex}
-          handleConfidenceGraphClick={handleConfidenceGraphClick}
+  switch (gameSession.currentState){
+    case GameSessionState.TEAMS_JOINING:
+      return (
+        <StartGame 
+          teams={gameSession.teams ?? []}
+          currentQuestionIndex={currentQuestionIndex}
+          questions={gameSession.questions}
+          title={gameSession.title ?? ''}
+          gameSessionId={gameSession.id}
+          gameCode={gameSession.gameCode}
+          currentState={gameSession.currentState}
+          handleStartGame={handleStartGame}
         />
-      </BodyStackContainerStyled>
-      <FooterBackgroundStyled />
-
-    </StackContainerStyled>
-  );
+      );
+    case GameSessionState.CHOOSE_CORRECT_ANSWER:
+    default: 
+      return (
+        <GameInProgress 
+          totalQuestions={gameSession.questions.length ?? 0}
+          currentQuestionIndex={currentQuestionIndex}
+          isCorrect={isCorrect}
+          isIncorrect={isIncorrect}
+          totalTime={totalTime}
+          hasRejoined={hasRejoined}
+          currentTimer={currentTimer}
+          sampleConfidenceData={sampleConfidenceData}
+          localModelMock={localModelMock}
+          onSelectMistake={onSelectMistake}
+          shortAnswerResponses={shortAnswerResponse}
+        />
+      );
+  }
 }
 
