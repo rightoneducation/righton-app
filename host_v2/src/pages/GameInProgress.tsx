@@ -11,11 +11,9 @@ import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgro
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import PlaceholderContentArea from '../components/PlaceholderContentArea';
+import GameInProgressContent from '../components/GameInProgressContent';
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
-import FooterContent from '../components/FooterComponents/FooterContent';
-import GameInProgressContentSwitch from '../components/GameInProgressContentSwitch';
 
 const ContentContainerStyled = styled(Box)({
     position: 'relative',
@@ -140,7 +138,7 @@ export default function GameInProgress({
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <PlaceholderContentArea
+        <GameInProgressContent
           confidenceData={sampleConfidenceData}
           confidenceGraphClickIndex={confidenceGraphClickIndex}
           handleConfidenceGraphClick={handleConfidenceGraphClick}
