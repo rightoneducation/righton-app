@@ -24,12 +24,31 @@
     }
   },
   "auth": {
-    "mobile0a6d6e96": {
+    "mobilea9652a6a": {
       "customAuth": false,
       "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [
+          "GOOGLE"
+        ],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
       "providerPlugin": "awscloudformation",
-      "service": "Cognito",
-      "serviceType": "imported"
+      "service": "Cognito"
     }
   },
   "function": {
@@ -51,38 +70,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile0a6d6e96_nativeClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile0a6d6e96"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobile0a6d6e96_userPoolId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile0a6d6e96"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobile0a6d6e96_userPoolName": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile0a6d6e96"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobile0a6d6e96_webClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile0a6d6e96"
-        }
-      ]
-    },
     "AMPLIFY_function_createGame_deploymentBucketName": {
       "usedBy": [
         {
