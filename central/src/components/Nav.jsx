@@ -9,10 +9,12 @@ import betaLogo from '../images/BetaLogo.svg';
 import quizMakerIcon from '../images/GameMakerIcon.svg';
 import helpIcon from '../images/HelpIcon.svg';
 import HelpDropdown from './HelpDropdown';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, handleModalOpen }) {
   const classes = useStyles(isResolutionMobile)();
   const match = useRouteMatch('/gameMaker');
+  const gameId = uuidv4();
 
   return (
     <div className={classes.grow}>
@@ -39,13 +41,13 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
             : null }
             {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
             <>
-            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
+            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={`/gamemaker/${gameId}`}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" >
                 Game Maker
               </Typography> 
             </NavLink>
-              <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={'/questionmaker/0'}>
+              <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={`/questionmaker/${gameId}`}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6" >
                 Question Maker

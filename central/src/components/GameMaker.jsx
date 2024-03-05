@@ -12,10 +12,11 @@ import { getQuestionTemplateById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 import SortByDropdown from './SortByDropdown';
 import QuestionDashboard from './QuestionDashboard';
+import { v4 as uuidv4 } from 'uuid';
 
 // New "empty" game
 const newGame = {
-  id: '0',
+  id: uuidv4(),
   title: '',
   description: '',
   grade: '',
@@ -423,7 +424,7 @@ export default function GameMaker({
                     />
                   </Box>
                   <Box container onClick={() => setSortByCheck(false)}>
-                  <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken}/>   
+                  <QuestionDashboard gameId={gameId} loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleQuestionSelected={handleQuestionSelected} gameDetails={gameDetails} setGameDetails={setGameDetails}/>   
                   </Box>
                 </Grid>
                 <Box className={classes.addQuestionFooter}>

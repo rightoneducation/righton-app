@@ -21,7 +21,6 @@ export const getQuestionTemplate = async (apiClients: IAPIClients, id: string): 
   try {
     const question = await apiClients.questionTemplate.getQuestionTemplate(id);
     return question;
-
   } catch (e) {
     console.log(e);
   }
@@ -49,10 +48,12 @@ export const deleteQuestionTemplate = async (apiClients: IAPIClients, id: string
 export const listQuestionTemplates = async (apiClients: IAPIClients, listQuerySettings: IListQuerySettings | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null> => {
   try {
     const nextToken = listQuerySettings?.nextToken ?? null;
+    console.log(nextToken);
     const sortDirection = listQuerySettings?.sortDirection ?? null;
     const sortField = listQuerySettings?.sortField ?? null;
     const filterString = (listQuerySettings?.filterString && listQuerySettings?.filterString != "") ? listQuerySettings?.filterString : null;
     const queryLimit = listQuerySettings?.queryLimit ?? null;
+    console.log(queryLimit);
     switch (sortField) {
       case SortField.GRADE:
         return await apiClients.questionTemplate.listQuestionTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);

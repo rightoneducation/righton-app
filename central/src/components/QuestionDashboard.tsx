@@ -12,6 +12,8 @@ type QuestionDashboardProps = {
   questions: IQuestionTemplate[];
   loading: boolean;
   isUserAuth: boolean;
+  // gameDetails: ;
+  // setGameDetails: (gameDetails: ) => void;
   handleDeleteQuestionTemplate: (id: string) => void;
   handleCloneQuestionTemplate: (question: IQuestionTemplate) => void;
   nextToken: string | null; 
@@ -24,6 +26,8 @@ export default function QuestionDashboard({
   questions,
   loading,
   isUserAuth,
+  // gameDetails,
+  // setGameDetails,
   handleCloneQuestionTemplate,
   handleDeleteQuestionTemplate,
   nextToken,
@@ -48,7 +52,7 @@ export default function QuestionDashboard({
     handleClose();
   };
   const deleteHandler = (id: string) => () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this questions?');
+    const confirmDelete = window.confirm('Are you sure you want to delete this question?');
     if (confirmDelete) {
       handleDeleteQuestionTemplate(id);
     }

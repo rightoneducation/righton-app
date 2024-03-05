@@ -109,6 +109,7 @@ export const RouteContainer = ({
   const getAllQuestionTemplates = async (listQuerySettings: IListQuerySettings | null) => {
     try {
       setLoading(true);
+      console.log(listQuerySettings);
       const questions = await listQuestionTemplates(apiClients, listQuerySettings);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
@@ -182,7 +183,6 @@ export const RouteContainer = ({
     try{
     newGame.owner = "Owner";
     newGame.version = 0;
-    newGame.id = undefined;
     const game = await createGameTemplate(apiClients, newGame);
       if (!game) {
         throw new Error ('Game was unable to be created');
@@ -194,6 +194,7 @@ export const RouteContainer = ({
   }
 
   const saveGameTemplate = async (existingGame: IGameTemplate, updatedGame: IGameTemplate) => {
+    console.log(existingGame, updatedGame);
     // first create the game template
     setLoading(true);
     let backendGame;
@@ -202,7 +203,7 @@ export const RouteContainer = ({
     const gameTemplateUpdate = rest as IGameTemplate; 
     const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()}
     gameTemplateUpdateInput.questionTemplatesCount = gameTemplateUpdateInput.questionTemplates?.length ?? 0;
-    if (updatedGame.id === '0')
+    if (isNullOrUndefined(existingGame))
     {
       backendGame = await createNewGameTemplate(gameTemplateUpdateInput);
     }
@@ -231,6 +232,7 @@ export const RouteContainer = ({
               updatedQuestion.gameQuestionId === existingQuestion.gameQuestionId);
         });
         const newDeletedGameQuestionTemplates = questionTemplatesToDelete.map((question) => {
+          console.log(question);
           handleDeleteGameQuestion(question.gameQuestionId);
         });
         const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
@@ -306,9 +308,6 @@ export const RouteContainer = ({
     try {
       const newQuestionInput = {...question, createdAt: question.createdAt?.toString(), updatedAt: question.updatedAt?.toString()};
       const result = await createQuestionTemplate(apiClients, newQuestionInput);
-      if (result) {
-        getAllQuestionTemplates(null);
-      }
       return result;
     } catch (e) {
       console.log(e);
@@ -358,7 +357,9 @@ export const RouteContainer = ({
 
   const handleCreateGameQuestion = async (gameId: string, questionId: string) => {
     try {
+      console.log(gameId + " " + questionId);
       const result = await createGameQuestions(apiClients, {gameTemplateID: gameId, questionTemplateID: questionId});
+      console.log(result);
       // when a game and question are linked, we update the respective gameTemplatesCount and questionTemplatesCount
       if (
         !isNullOrUndefined(result) &&
@@ -375,7 +376,9 @@ export const RouteContainer = ({
         const {gameTemplates, ...restQuestion} = result.questionTemplate;
         const questionTemplateUpdate = {...restQuestion, gameTemplatesCount: gameTemplates.length};
         const questionTemplateUpdateInput = {...questionTemplateUpdate, createdAt: questionTemplateUpdate.createdAt?.toString(), updatedAt: questionTemplateUpdate.updatedAt?.toString()};
-        await updateQuestionTemplate(apiClients, gameTemplateUpdateInput);
+        console.log(gameTemplateUpdateInput);
+        console.log(questionTemplateUpdateInput);
+        await updateGameTemplate(apiClients, gameTemplateUpdateInput);
         await updateQuestionTemplate(apiClients, questionTemplateUpdateInput);
       }
       return result;

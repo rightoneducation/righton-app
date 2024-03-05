@@ -26,7 +26,7 @@ import {
   DeleteGameTemplateMutationVariables
 } from "../AWSMobileApi";
 import { AWSGameTemplate } from "../Models";
-import { isNullOrUndefined, doesObjectHaveDate } from "../global";
+import { isNullOrUndefined } from "../global";
 
 export class GameTemplateAPIClient
   extends BaseAPIClient
@@ -38,8 +38,8 @@ export class GameTemplateAPIClient
     // if (doesObjectHaveDate(createGameTemplateInput) && createGameTemplateInput.createdAt && createGameTemplateInput.updatedAt) {
     //   createGameTemplateInput = {
     //     ...createGameTemplateInput,
-    //     createdAt: createGameTemplateInput.createdAt,
-    //     updatedAt: createGameTemplateInput.updatedAt
+    //     createdAt: createGameTemplateInput.createdAt.toString(),
+    //     updatedAt: createGameTemplateInput.updatedAt.toString()
     //   }
     // }
     const variables: CreateGameTemplateMutationVariables = { input: createGameTemplateInput as CreateGameTemplateInput }
@@ -73,14 +73,11 @@ export class GameTemplateAPIClient
   }
 
   async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate> {
-    if (doesObjectHaveDate(updateGameTemplateInput) && updateGameTemplateInput.createdAt && updateGameTemplateInput.updatedAt) {
-      updateGameTemplateInput = {
-        ...updateGameTemplateInput,
-        createdAt: updateGameTemplateInput.createdAt,
-        updatedAt: updateGameTemplateInput.updatedAt
-      }
-    }
+    console.log(updateGameTemplateInput);
+    console.log(updateGameTemplateInput.createdAt);
+    console.log(typeof updateGameTemplateInput.createdAt);
     const input: UpdateGameTemplateInput = updateGameTemplateInput as UpdateGameTemplateInput;
+    console.log(input);
     const variables: UpdateGameTemplateMutationVariables = { input };
     const gameTemplate = await this.callGraphQL<UpdateGameTemplateMutation>(
         updateGameTemplate,

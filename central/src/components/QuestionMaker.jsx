@@ -174,6 +174,7 @@ export default function QuestionMaker({
         history.push(`/gamemaker/${gameId}`);
         return;
       }
+      console.log(questionToSend.id);
       if (questionToSend.id) {
         newQuestion = await handleUpdateQuestionTemplate(questionToSend);
       } else {

@@ -30,6 +30,7 @@ export const getGameTemplate = async (apiClients: IAPIClients, id: string): Prom
 
 export const updateGameTemplate = async (apiClients: IAPIClients, updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate | null> => {
   try {
+    console.log(updateGameTemplateInput);
     const game = await apiClients.gameTemplate.updateGameTemplate(updateGameTemplateInput);
     return game;
   } catch (e) {

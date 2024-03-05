@@ -12,7 +12,6 @@ import GameMaker from './GameMaker';
 import { getGameById, getQuestionTemplateById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 
-
 export default function Games({ 
   loading,
   nextToken,  
