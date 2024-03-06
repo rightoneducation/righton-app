@@ -57,11 +57,9 @@ export default function Games({
     }
   }
   return (
-    <Grid container className={classes.root} spacing={4}>
-      <Switch>
+    <Grid container className={classes.root2} spacing={4}>
         {match && getGameById(games, match.params.gameId) && (
           <Grid item xs={12} className={classes.content}>
-            <Switch>
               <Route exact path="/games/:gameId/questions/:questionIndex" render={
                 ({ match }) => {
                   const { questionIndex, gameId } = match.params;
@@ -78,7 +76,6 @@ export default function Games({
                   return <GameLaunch loading={loading} saveGame={editGameTemplate} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} game={game} gameId={gameId} deleteGame={deleteGame} handleCloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />;
                 }
               } />
-            </Switch>
           </Grid>
         )}
         {isUserAuth &&
@@ -87,7 +84,6 @@ export default function Games({
               if (!isUserAuth) {
                 return null;
               }
-            
               const { gameId } = match.params;
               handleSearchClick(false);
               return <GameMaker 
@@ -123,7 +119,6 @@ export default function Games({
             }
         } />
         }
-       
         <Route path='/questionmaker/:questionId' render={
             ({match}) => {
               if (!isUserAuth) {
@@ -136,7 +131,7 @@ export default function Games({
               return <QuestionMaker question={question} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
         }/>
-        <Route path="/">
+        <Route path="/" exact>
           <Grid item xs={12} className={classes.contentGrid}>
             <Box className={classes.actions}>
               <SearchBar isGames={location.pathname === "/"} handleSearchChange={handleSearchChange} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
@@ -152,17 +147,16 @@ export default function Games({
             </Box>
           </Grid>
         </Route>
-      </Switch>
     </Grid>
   );
 }
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  root2: {
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
     zIndex: -2,
-    overflowY: 'auto'
+    overflow: 'auto',
   },
   contentGrid: {
     padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
@@ -171,10 +165,8 @@ const useStyles = makeStyles(theme => ({
     overflowX: 'hidden',
   },
   content: {
-    backgroundColor: '#F2F2F2',
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
   },
   actions: {
     paddingTop: '10px',

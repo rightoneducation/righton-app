@@ -14,7 +14,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
-    padding: `${theme.spacing(2)}px`,
+    // height: '100vh',
+    // background: '#000'
   },
   actions: {
     display: 'flex',
@@ -24,7 +25,6 @@ const useStyles = makeStyles(theme => ({
     width: '60%'
   },
   question: {
-    psoition: 'absolute',
     padding: theme.spacing(1.5),
     display: 'flex',
     marginRight: theme.spacing(2),
@@ -113,7 +113,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function GameForm({ loading, game, gameId, saveGame, deleteQuestion, handleDeleteGameTemplate, handleCloneGameTemplate, isUserAuth }) {
+function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDeleteGameTemplate, handleCloneGameTemplate, isUserAuth }) {
   useEffect(() => {
     document.title = 'RightOn! | Game launcher';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -192,7 +192,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, handleDelet
           <ArrowBack className={classes.back} />Back to Explore Page
         </Button>
         {isUserAuth && 
-          <Grid>
+          <Grid >
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleGameClick} className={classes.moreButton} data-game-id={gameId}>
               <img src={MoreCircle} alt='More Circular Icon' width={'30px'} />
             </Button>
@@ -289,4 +289,4 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, handleDelet
   );
 }
 
-export default GameForm;
+export default GameLaunch;

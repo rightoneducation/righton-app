@@ -132,8 +132,7 @@ const useStyles = makeStyles(theme => ({
       fontWeight: 700,
       color: '#159EFA',
       textAlign: 'right',
-      marginRight: '15px',
-      width: '90%',
+      marginRight: '15px'
     },
     title: {
       fontWeight: 700,
