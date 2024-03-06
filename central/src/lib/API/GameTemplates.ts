@@ -47,9 +47,14 @@ export const updateGameTemplate = async (apiClients: IAPIClients, updateGameTemp
 export const deleteGameTemplate = async (apiClients: IAPIClients, id: string): Promise<boolean> => {
   const gameTemplate = await apiClients.gameTemplate.getGameTemplate(id);
   if (gameTemplate?.questionTemplates) {
-    gameTemplate.questionTemplates.forEach(async (questionTemplate) => {
-      await apiClients.gameQuestions.deleteGameQuestions(questionTemplate.gameQuestionId);
-    });
+    await Promise.all(gameTemplate.questionTemplates.map(async (questionTemplate) => {
+      try {
+        await apiClients.gameQuestions.deleteGameQuestions(questionTemplate.gameQuestionId);
+      } catch (error) {
+        console.error("Error deleting game question:", error);
+        return false;
+      }
+    }));
   }
   return await apiClients.gameTemplate.deleteGameTemplate(id);
 };
