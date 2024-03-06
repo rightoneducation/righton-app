@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,6 +26,8 @@ export default function QuestionMaker({
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
+  const match = useRouteMatch('/gamemaker/');
+  console.log(match);
   const originalQuestion = location.state || initialState || null;
   const [answerType, setAnswerType] = useState(AnswerType.NUMBER);
   const [answerPrecision, setAnswerPrecision] = useState(AnswerPrecision.WHOLE);
@@ -52,11 +54,11 @@ export default function QuestionMaker({
 
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
-    if (gameId != null) {
+    if (match) {
       history.push(`/gamemaker/${gameId}`);
     }
     else {
-      history.push(`/gamemaker/0`);
+      history.push(`/questions`);
     }
   }, [gameId, history]);
 
@@ -195,7 +197,9 @@ export default function QuestionMaker({
       <Grid container className={classes.root}>
         <Grid container item xs={1} sm={2}>
           <Button type="button" className={classes.back} onClick={handleBack}>
-            <ArrowBack style={{ marginRight: 8 }} />Back to Game Maker
+            <ArrowBack style={{ marginRight: 8 }} />
+              {match ? `Back to Game Maker` : `Back to Questions`}
+              
           </Button>
         </Grid>
 
@@ -336,9 +340,9 @@ export default function QuestionMaker({
           <Grid style={{ marginTop: 50 }} item container xs={8} sm={12} justifyContent='center'>
             { !gameId 
               ?
-                <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>Add to Question Bank</Button>
+                <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>{ match ? `Add to Queston Bank` : `Save Question` }</Button>
               :
-                <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>Add to Game</Button>
+                <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}> { match ? `Add to Game` : `Save Question` } </Button>
             }
             </Grid>
 

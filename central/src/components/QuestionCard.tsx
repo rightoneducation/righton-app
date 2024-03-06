@@ -20,6 +20,7 @@ type QuestionCardProps = {
   deleteHandler: (id: string) => () => void;
   handleClose: () => void;
   handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
+  handleQuestionCardClick: (id: string) => void;
 };
 
 export default function QuestionCard({
@@ -34,14 +35,15 @@ export default function QuestionCard({
   cloneHandler,
   deleteHandler,
   handleClose,
-  handleQuestionSelected
+  handleQuestionSelected,
+  handleQuestionCardClick
 } : QuestionCardProps) {
   const classes = useStyles();
   const gameCount = question.gameTemplates ? question.gameTemplates.length : 0;
   const history = useHistory();
   const [isSelected, setIsSelected] = useState(false);
 return (
-  <Card className={classes.game}>
+  <Card className={classes.game} onClick={() => handleQuestionCardClick(question.id)}>
     <CardContent>
       <Grid container>
         <Grid container item xs={8} md={9} >
