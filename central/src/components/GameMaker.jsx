@@ -16,7 +16,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 // New "empty" game
 const newGame = {
-  id: uuidv4(),
   title: '',
   description: '',
   grade: '',
@@ -77,7 +76,8 @@ export default function GameMaker({
   gameId,
   handleScrollDown,
   handleQuestionSelected,
-  nextToken
+  nextToken,
+  setIsNewGame
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
@@ -90,7 +90,7 @@ export default function GameMaker({
       return { ...game };
     }
     else {
-      return newGame;
+      return {id: gameId, ...newGame};
     }
   });
 
@@ -167,11 +167,11 @@ export default function GameMaker({
 
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
-    console.log(localQuestionTemplates);
-    gameDetails.questionTemplates = localQuestionTemplates;
-
-    saveGameTemplate(game, gameDetails);
+    setIsNewGame(false);
+    setSelectedQuestions([]); 
     setLocalQuestionTemplates([]);
+    gameDetails.questionTemplates = localQuestionTemplates;
+    saveGameTemplate(game, gameDetails);
     event.preventDefault();
     history.push('/');
   };
@@ -369,7 +369,7 @@ export default function GameMaker({
               <Button variant='contained' type='submit' disableElevation className={classes.blueButton}>
                 Save Game
               </Button>
-              <Button variant='contained' disableElevation className={classes.greenButton} onClick={()=> { setSelectedQuestions([]); setLocalQuestionTemplates([]); history.push('/')}}>
+              <Button variant='contained' disableElevation className={classes.greenButton} onClick={()=> { setIsNewGame(false); setSelectedQuestions([]); setLocalQuestionTemplates([]); history.push('/')}}>
                 Cancel
               </Button>
             </Grid>

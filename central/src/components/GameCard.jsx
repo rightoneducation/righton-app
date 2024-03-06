@@ -78,7 +78,7 @@ export default function GameCard({
                   >
                     <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                     <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
-                    <MenuItem onClick={deleteHandler(id)}>Delete</MenuItem>
+                    <MenuItem onClick={deleteHandler(game.id)}>Delete</MenuItem>
                   </Menu>             
                 </Grid>
               }

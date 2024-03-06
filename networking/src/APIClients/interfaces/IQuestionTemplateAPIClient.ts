@@ -16,7 +16,7 @@ export interface IQuestionTemplateAPIClient {
 
   deleteQuestionTemplate(
     id: string
-  ): Promise<IQuestionTemplate>;
+  ): Promise<boolean>;
 
   listQuestionTemplates(
     limit: number | null,

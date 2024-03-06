@@ -69,6 +69,7 @@ export const RouteContainer = ({
   const [showModalGetApp, setShowModalGetApp] = useState(false);
   const [prevTokens, setPrevTokens] = useState<(string | null)[]>([null]);
   const [nextToken, setNextToken] = useState<string | null>(null);
+  const [isNewGame, setIsNewGame] = useState(false);
   const location = useLocation();
   const history = useHistory();
   const queryLimit = 12; // number of games retrieved on main page
@@ -109,7 +110,6 @@ export const RouteContainer = ({
   const getAllQuestionTemplates = async (listQuerySettings: IListQuerySettings | null) => {
     try {
       setLoading(true);
-      console.log(listQuerySettings);
       const questions = await listQuestionTemplates(apiClients, listQuerySettings);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
@@ -212,7 +212,6 @@ export const RouteContainer = ({
     }
     if (!isNullOrUndefined(updatedGame.questionTemplates) && updatedGame.questionTemplates.length > 0) {
       const newQuestionTemplates = updatedGame.questionTemplates.map((updatedQuestion) => {
-        console.log(updatedQuestion);
         if (updatedQuestion.gameQuestionId === null)  {
           handleCreateQuestionTemplate(updatedQuestion.questionTemplate);
         }
@@ -232,7 +231,6 @@ export const RouteContainer = ({
               updatedQuestion.gameQuestionId === existingQuestion.gameQuestionId);
         });
         const newDeletedGameQuestionTemplates = questionTemplatesToDelete.map((question) => {
-          console.log(question);
           handleDeleteGameQuestion(question.gameQuestionId);
         });
         const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
@@ -357,9 +355,7 @@ export const RouteContainer = ({
 
   const handleCreateGameQuestion = async (gameId: string, questionId: string) => {
     try {
-      console.log(gameId + " " + questionId);
       const result = await createGameQuestions(apiClients, {gameTemplateID: gameId, questionTemplateID: questionId});
-      console.log(result);
       // when a game and question are linked, we update the respective gameTemplatesCount and questionTemplatesCount
       if (
         !isNullOrUndefined(result) &&
@@ -376,8 +372,6 @@ export const RouteContainer = ({
         const {gameTemplates, ...restQuestion} = result.questionTemplate;
         const questionTemplateUpdate = {...restQuestion, gameTemplatesCount: gameTemplates.length};
         const questionTemplateUpdateInput = {...questionTemplateUpdate, createdAt: questionTemplateUpdate.createdAt?.toString(), updatedAt: questionTemplateUpdate.updatedAt?.toString()};
-        console.log(gameTemplateUpdateInput);
-        console.log(questionTemplateUpdateInput);
         await updateGameTemplate(apiClients, gameTemplateUpdateInput);
         await updateQuestionTemplate(apiClients, questionTemplateUpdateInput);
       }
@@ -471,24 +465,24 @@ export const RouteContainer = ({
   return (
     <Switch>
     <Route path="/login">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
       <LogIn handleUserAuth={handleUserAuth} />
     </Route>
 
     <Route path="/signup">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
       <SignUp />
     </Route>
 
     <Route path="/confirmation">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
       <Confirmation />
     </Route>
 
     <Route>
       <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
       <Box sx={{ height: '100vh' }}>
-        <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
+        <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
         <Games 
           loading={loading} 
           nextToken={nextToken} 
@@ -518,6 +512,8 @@ export const RouteContainer = ({
           handleSearchChange={handleSearchChange}
           sortByCheck={sortByCheck}
           setSortByCheck={setSortByCheck}
+          isNewGame={isNewGame}
+          setIsNewGame={setIsNewGame}
         />
       </Box>
       <AlertBar />

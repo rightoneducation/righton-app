@@ -41,6 +41,8 @@ export default function Games({
   handleSearchChange,
   sortByCheck,
   setSortByCheck,
+  isNewGame,
+  setIsNewGame
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -79,16 +81,19 @@ export default function Games({
             </Switch>
           </Grid>
         )}
-        <Route path='/gamemaker/:gameId' render={
-          isUserAuth && (
+        {isUserAuth &&
+         <Route path='/gamemaker/:gameId' render={
             ({ match }) => {
+              if (!isUserAuth) {
+                return null;
+              }
+            
               const { gameId } = match.params;
-              const newGame = Number(gameId) === 0;
               handleSearchClick(false);
               return <GameMaker 
                 loading={loading} 
                 questions={questions} 
-                game={newGame ? null : getGameById(games, gameId)} 
+                game={isNewGame ? null : getGameById(games, gameId)} 
                 createNewGameTemplate={createNewGameTemplate} 
                 editGameTemplate={editGameTemplate} 
                 gameId={gameId} 
@@ -113,19 +118,23 @@ export default function Games({
                 handleScrollDown={handleScrollDown}
                 handleQuestionSelected={handleQuestionSelected} 
                 nextToken={nextToken}
+                setIsNewGame={setIsNewGame}
               />;
             }
-          )
         } />
+        }
+       
         <Route path='/questionmaker/:questionId' render={
-          isUserAuth && (
             ({match}) => {
+              if (!isUserAuth) {
+                return null;
+              }
+            
               const { questionId } = match.params;
               const question = getQuestionTemplateById(questions, questionId);
               handleSearchClick(false);
               return <QuestionMaker question={question} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
-          )
         }/>
         <Route path="/">
           <Grid item xs={12} className={classes.contentGrid}>

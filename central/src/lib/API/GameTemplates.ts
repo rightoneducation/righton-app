@@ -2,7 +2,8 @@ import {
   IAPIClients,
   IGameTemplate,
   CreateGameTemplateInput,
-  UpdateGameTemplateInput
+  UpdateGameTemplateInput,
+  isNullOrUndefined
 } from '@righton/networking';
 import { IListQuerySettings, SortField } from './QueryInputs';
 
@@ -30,7 +31,11 @@ export const getGameTemplate = async (apiClients: IAPIClients, id: string): Prom
 
 export const updateGameTemplate = async (apiClients: IAPIClients, updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate | null> => {
   try {
-    console.log(updateGameTemplateInput);
+    // need to ensure that the createdAt and updatedAt fields are in the correct string format for graphql
+    const existingCreatedAt = updateGameTemplateInput.createdAt;
+    const existingUpdatedAt = updateGameTemplateInput.updatedAt;
+    updateGameTemplateInput.createdAt = new Date(existingCreatedAt ?? '').toISOString();
+    updateGameTemplateInput.updatedAt = new Date(existingUpdatedAt ?? '').toISOString();
     const game = await apiClients.gameTemplate.updateGameTemplate(updateGameTemplateInput);
     return game;
   } catch (e) {
@@ -39,14 +44,14 @@ export const updateGameTemplate = async (apiClients: IAPIClients, updateGameTemp
   return null;
 };
 
-export const deleteGameTemplate = async (apiClients: IAPIClients, id: string): Promise<IGameTemplate | null> => {
-  try {
-    const game = await apiClients.gameTemplate.deleteGameTemplate(id);
-    return game;
-  } catch (e) {
-    console.log(e);
+export const deleteGameTemplate = async (apiClients: IAPIClients, id: string): Promise<boolean> => {
+  const gameTemplate = await apiClients.gameTemplate.getGameTemplate(id);
+  if (gameTemplate?.questionTemplates) {
+    gameTemplate.questionTemplates.forEach(async (questionTemplate) => {
+      await apiClients.gameQuestions.deleteGameQuestions(questionTemplate.gameQuestionId);
+    });
   }
-  return null;
+  return await apiClients.gameTemplate.deleteGameTemplate(id);
 };
 
 export const listGameTemplates = async (apiClients: IAPIClients, listQuerySettings: IListQuerySettings | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {

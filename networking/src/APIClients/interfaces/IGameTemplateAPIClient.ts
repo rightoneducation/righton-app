@@ -16,7 +16,7 @@ export interface IGameTemplateAPIClient {
 
   deleteGameTemplate(
     id: string
-  ): Promise<IGameTemplate>;
+  ): Promise<boolean>;
 
   listGameTemplates(
     limit: number | null,
