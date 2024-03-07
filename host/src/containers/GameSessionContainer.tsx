@@ -190,7 +190,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
       },
     );
-    console.log(teamsArray);
     // set up subscription for new teams joining
     let createTeamSubscription: any | null = null;
     createTeamSubscription = apiClients.team.subscribeCreateTeam(
@@ -246,7 +245,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
               }
             });
             if (gameSession.questions[gameSession.currentQuestionIndex].isShortAnswerEnabled && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-              console.log(teamAnswerResponse);
               // we are nesting the short answer response in here because we need to use the teamName and teamId to build the shortAnswerResponses object
               // if we did this outside of the setTeamsArray function we would be using stale state values
               setShortAnswerResponses((prevShortAnswerState) => {

@@ -37,14 +37,16 @@ export abstract class BaseAnswer<T> {
       this.answerType = answerType;
   }
 
+  abstract normalizeAnswer(rawAnswer: string): void;
+
   abstract isEqualTo(otherNormAnswers: T[]): Boolean;
 }
 
 export class StringAnswer extends BaseAnswer<string>{
   normAnswer: NormAnswerType[]
-  constructor (rawAnswer: string, answerType: AnswerType){
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
       super(rawAnswer, answerType)
-      this.normAnswer = this.normalizeStringAnswer(rawAnswer)
+      this.normAnswer = normAnswer ?? []
   }
 
   normalizeStringAnswer(rawAnswer: string): NormAnswerType[] {
@@ -56,6 +58,10 @@ export class StringAnswer extends BaseAnswer<string>{
        normAnswers.push(normNoStopwords);
      }
      return normAnswers;
+  }
+
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeStringAnswer(rawAnswer);
   }
 
   isEqualTo(otherNormAnswers: string[]): Boolean {
@@ -75,7 +81,7 @@ export class NumericAnswer extends BaseAnswer<Number>{
 
   constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision, normAnswer?: number[],){
       super(rawAnswer, answerType)
-      this.normAnswer = normAnswer ?? this.normalizeNumericAnswer(rawAnswer)
+      this.normAnswer = normAnswer ?? []
       this.answerPrecision = answerPrecision
   }
 
@@ -97,6 +103,10 @@ export class NumericAnswer extends BaseAnswer<Number>{
     return normAnswers;
   }
   
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeNumericAnswer(rawAnswer);
+  }
+
   isEqualTo(otherNormAnswers: number[]): Boolean {
     const answerPrecisionDictionary = {
       [AnswerPrecision.WHOLE]: 0,
@@ -142,7 +152,7 @@ export class ExpressionAnswer extends BaseAnswer<string>{
 
   constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
     super(rawAnswer, answerType)
-    this.normAnswer = normAnswer ?? this.normalizeExpressionAnswer(rawAnswer)
+    this.normAnswer = normAnswer ?? []
   }
   
   normalizeExpressionAnswer(rawAnswer: string): NormAnswerType[] {
@@ -155,6 +165,10 @@ export class ExpressionAnswer extends BaseAnswer<string>{
       normAnswers.push(normItemExp);
     }
     return normAnswers;
+  }
+
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeExpressionAnswer(rawAnswer);
   }
 
   isEqualTo(otherNormAnswers: string[]): Boolean {
@@ -191,13 +205,17 @@ export class MultiChoiceAnswer extends BaseAnswer<string> {
 
   constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
     super(rawAnswer, answerType)
-    this.normAnswer = normAnswer ?? this.normalizeMultiChoiceAnswer(rawAnswer)
+    this.normAnswer = normAnswer ?? []
   }
 
   normalizeMultiChoiceAnswer(rawAnswer: string): NormAnswerType[] {
     const normAnswers: NormAnswerType[] = [];
     normAnswers.push(rawAnswer.trim());
     return normAnswers;
+  }
+
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeMultiChoiceAnswer(rawAnswer);
   }
 
   isEqualTo(otherNormAnswers: string[]): Boolean {

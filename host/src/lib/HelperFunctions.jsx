@@ -267,31 +267,6 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   return {teamName, teamId};
 };
 
-
-export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
-  const answerConfigBase = {
-    answer: {
-      rawAnswer: correctAnswerValue,
-      answerType: answerSettings.answerType,
-      answerPrecision: answerSettings.answerPrecision
-    },
-  };
-  let correctAnswer;
-  switch (answerSettings.answerType){
-    case (AnswerType.NUMBER):
-    default:
-      correctAnswer = new NumericAnswer(correctAnswerValue, answerSettings.answerType, answerSettings.answerPrecision);
-      break;
-    case(AnswerType.STRING):
-      correctAnswer = new StringAnswer(correctAnswerValue, answerSettings.answerType);
-      break;
-    case(AnswerType.EXPRESSION):
-      correctAnswer = new ExpressionAnswer(correctAnswerValue, answerSettings.answerType);
-      break;
-  }
-  return correctAnswer;
-};
-
 /**
  * This function creates the short answer responses object that will be stored in the question object, via equality checks
  * @param {IResponse} prevShortAnswer 
@@ -313,13 +288,13 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
     answerSettings.answerPrecision,
     newAnswer.answer.normAnswer
   );
+  if (isNullOrUndefined(answer.normAnswer) || answer.normAnswer.length === 0) 
+    answer.normalizeAnswer(newAnswer.answer.rawAnswer);
   // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
   if (prevShortAnswer.length === 0) { 
-    const correctAnswerValue = choices.find(choice => choice.isAnswer).text;
-    const correctAnswer = createCorrectAnswer(correctAnswerValue, answerSettings);
     prevShortAnswer.push({
-      rawAnswer: correctAnswer.rawAnswer,
-      normAnswer: correctAnswer.normAnswer,
+      rawAnswer: answer.rawAnswer,
+      normAnswer: answer.normAnswer,
       isCorrect: true,
       isSelectedMistake: false,
       count: 0,

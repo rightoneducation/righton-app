@@ -86,11 +86,6 @@ export default function OpenAnswerCard({
     if (answerSettings?.answerType === AnswerType.NUMBER) {
       isBadInputDetected = !numericAnswerRegex.test(currentAnswer);
       currentAnswer = currentAnswer.replace(/[^0-9.%-]/g, '');
-      // todo: confirm that we want this?
-      if (!isBadInputDetected){
-        const roundedNumberAsString = Number(currentAnswer).toFixed(answerPrecision);
-        isBadInputDetected = !(currentAnswer.toString() === roundedNumberAsString);
-      } 
       setIsBadInput(isBadInputDetected);
     }
     
@@ -112,8 +107,10 @@ export default function OpenAnswerCard({
   };
   
   const handlePresubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const answer = AnswerFactory.createAnswer(currentContents, answerType, answerPrecision);
+    answer.normalizeAnswer(currentContents);
     const packagedAnswer = new BackendAnswer(
-      AnswerFactory.createAnswer(currentContents, answerType, answerPrecision),
+      answer,
       true,
       isShortAnswerEnabled,
       currentState,
