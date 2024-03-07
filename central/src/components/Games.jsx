@@ -57,7 +57,7 @@ export default function Games({
     }
   }
   return (
-    <Grid container className={classes.root2} spacing={4}>
+    <Grid container className={classes.root} spacing={4}>
         {match && getGameById(games, match.params.gameId) && (
           <Grid item xs={12} className={classes.content}>
               <Route exact path="/games/:gameId/questions/:questionIndex" render={
@@ -131,7 +131,7 @@ export default function Games({
               return <QuestionMaker question={question} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
         }/>
-        <Route path="/" exact>
+        <Route path="/">
           <Grid item xs={12} className={classes.contentGrid}>
             <Box className={classes.actions}>
               <SearchBar isGames={location.pathname === "/"} handleSearchChange={handleSearchChange} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
@@ -152,11 +152,12 @@ export default function Games({
 }
 
 const useStyles = makeStyles(theme => ({
-  root2: {
+  root: {
+    display: 'flex',
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
-    zIndex: -2,
     overflow: 'auto',
+    zIndex: 0,
   },
   contentGrid: {
     padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
@@ -181,6 +182,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'white',
     zIndex:3
   },
+
+  
+
   addQuestionFooter: {
     width: '100%',
     height: '50px',

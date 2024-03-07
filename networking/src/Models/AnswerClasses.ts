@@ -73,9 +73,9 @@ export class NumericAnswer extends BaseAnswer<Number>{
   normAnswer: NormAnswerType[]
   answerPrecision: AnswerPrecision
 
-  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision){
+  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision, normAnswer?: number[],){
       super(rawAnswer, answerType)
-      this.normAnswer = this.normalizeNumericAnswer(rawAnswer)
+      this.normAnswer = normAnswer ?? this.normalizeNumericAnswer(rawAnswer)
       this.answerPrecision = answerPrecision
   }
 
@@ -84,8 +84,9 @@ export class NumericAnswer extends BaseAnswer<Number>{
     const percentagesRegex = /(\d+(\.\d+)?)%/g;
     const extractPercents = rawAnswer.match(percentagesRegex);
     const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
-    if (!isNullOrUndefined(percentages)){
+    if (!isNullOrUndefined(percentages) && !isNaN(percentages)){
       normAnswers.push(percentages);
+      return normAnswers;
     }
     // then remove commas and spaces and push
     const noCommas = rawAnswer.replace(/,/g, '');
@@ -139,9 +140,9 @@ export class NumericAnswer extends BaseAnswer<Number>{
 export class ExpressionAnswer extends BaseAnswer<string>{
   normAnswer: NormAnswerType[]
 
-  constructor (rawAnswer: string, answerType: AnswerType){
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
     super(rawAnswer, answerType)
-    this.normAnswer = this.normalizeExpressionAnswer(rawAnswer)
+    this.normAnswer = normAnswer ?? this.normalizeExpressionAnswer(rawAnswer)
   }
   
   normalizeExpressionAnswer(rawAnswer: string): NormAnswerType[] {
@@ -188,9 +189,9 @@ export class ExpressionAnswer extends BaseAnswer<string>{
 export class MultiChoiceAnswer extends BaseAnswer<string> {
   normAnswer: NormAnswerType[]
 
-  constructor (rawAnswer: string, answerType: AnswerType){
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
     super(rawAnswer, answerType)
-    this.normAnswer = this.normalizeMultiChoiceAnswer(rawAnswer)
+    this.normAnswer = normAnswer ?? this.normalizeMultiChoiceAnswer(rawAnswer)
   }
 
   normalizeMultiChoiceAnswer(rawAnswer: string): NormAnswerType[] {

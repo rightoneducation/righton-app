@@ -27,6 +27,7 @@ import {
 
 
 import { 
+  getQuestionTemplate,
   createQuestionTemplate, 
   updateQuestionTemplate,
   deleteQuestionTemplate,
@@ -194,7 +195,6 @@ export const RouteContainer = ({
   }
 
   const saveGameTemplate = async (existingGame: IGameTemplate, updatedGame: IGameTemplate) => {
-    console.log(existingGame, updatedGame);
     // first create the game template
     setLoading(true);
     let backendGame;
@@ -352,7 +352,6 @@ export const RouteContainer = ({
     }
     return result
   }
-
   const handleCreateGameQuestion = async (gameId: string, questionId: string) => {
     try {
       const result = await createGameQuestions(apiClients, {gameTemplateID: gameId, questionTemplateID: questionId});
@@ -482,39 +481,43 @@ export const RouteContainer = ({
     <Route>
       <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
       <Box sx={{ height: '100vh' }}>
-        <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
-        <Games 
-          loading={loading} 
-          nextToken={nextToken} 
-          games={games} 
-          questions={questions} 
-          handleScrollDown={handleScrollDown} 
-          createNewGameTemplate={createNewGameTemplate} 
-          editGameTemplate={editGameTemplate} 
-          handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} 
-          deleteGame={handleDeleteGameTemplate} 
-          cloneGameTemplate={cloneGameTemplate} 
-          cloneQuestion={cloneQuestion} 
-          isUserAuth={isUserAuth}  
-          isSearchClick={isSearchClick} 
-          handleSearchClick={handleSearchClick} 
-          setSearchInput={setSearchInput} 
-          searchInput={searchInput} 
-          isResolutionMobile={isResolutionMobile} 
-          handleQuestionBankClick={handleQuestionBankClick}
-          handleCreateQuestionTemplate={handleCreateQuestionTemplate}
-          handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
-          handleCloneQuestionTemplate={handleCloneQuestionTemplate}
-          handleDeleteGameQuestion={handleDeleteGameQuestion}
-          saveGameTemplate={saveGameTemplate}
-          listQuerySettings={listQuerySettings} 
-          handleUpdateListQuerySettings={handleUpdateListQuerySettings}
-          handleSearchChange={handleSearchChange}
-          sortByCheck={sortByCheck}
-          setSortByCheck={setSortByCheck}
-          isNewGame={isNewGame}
-          setIsNewGame={setIsNewGame}
-        />
+        <Box style={{display: 'flex', position: 'relative', width: '100%', zIndex: 1}}>
+          <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
+        </Box>
+        <Box style={{display: 'flex', width: '100%', zIndex: 0}}>
+          <Games 
+            loading={loading} 
+            nextToken={nextToken} 
+            games={games} 
+            questions={questions} 
+            handleScrollDown={handleScrollDown} 
+            createNewGameTemplate={createNewGameTemplate} 
+            editGameTemplate={editGameTemplate} 
+            handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} 
+            deleteGame={handleDeleteGameTemplate} 
+            cloneGameTemplate={cloneGameTemplate} 
+            cloneQuestion={cloneQuestion} 
+            isUserAuth={isUserAuth}  
+            isSearchClick={isSearchClick} 
+            handleSearchClick={handleSearchClick} 
+            setSearchInput={setSearchInput} 
+            searchInput={searchInput} 
+            isResolutionMobile={isResolutionMobile} 
+            handleQuestionBankClick={handleQuestionBankClick}
+            handleCreateQuestionTemplate={handleCreateQuestionTemplate}
+            handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
+            handleCloneQuestionTemplate={handleCloneQuestionTemplate}
+            handleDeleteGameQuestion={handleDeleteGameQuestion}
+            saveGameTemplate={saveGameTemplate}
+            listQuerySettings={listQuerySettings} 
+            handleUpdateListQuerySettings={handleUpdateListQuerySettings}
+            handleSearchChange={handleSearchChange}
+            sortByCheck={sortByCheck}
+            setSortByCheck={setSortByCheck}
+            isNewGame={isNewGame}
+            setIsNewGame={setIsNewGame}
+          />
+        </Box>
       </Box>
       <AlertBar />
     </Route>

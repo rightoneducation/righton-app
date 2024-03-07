@@ -27,7 +27,6 @@ export default function QuestionMaker({
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch('/gamemaker/');
-  console.log(match);
   const originalQuestion = location.state || initialState || null;
   const [answerType, setAnswerType] = useState(AnswerType.NUMBER);
   const [answerPrecision, setAnswerPrecision] = useState(AnswerPrecision.WHOLE);
@@ -176,7 +175,6 @@ export default function QuestionMaker({
         history.push(`/gamemaker/${gameId}`);
         return;
       }
-      console.log(questionToSend.id);
       if (questionToSend.id) {
         newQuestion = await handleUpdateQuestionTemplate(questionToSend);
       } else {

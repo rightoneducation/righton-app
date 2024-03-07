@@ -74,7 +74,6 @@ export default function OpenAnswerCard({
           }
     }
   }
-
   const answerText = getAnswerText(answerSettings);
   const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
     backendAnswer.answer?.rawAnswer ?? ''
@@ -82,15 +81,16 @@ export default function OpenAnswerCard({
   const handleEditorContentsChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    console.log('sup');
-    console.log(answerSettings);
-    console.log(answerSettings?.answerType === AnswerType.NUMBER);
     let currentAnswer = event.target.value;
     let isBadInputDetected = false;
     if (answerSettings?.answerType === AnswerType.NUMBER) {
       isBadInputDetected = !numericAnswerRegex.test(currentAnswer);
-      console.log(isBadInputDetected);
       currentAnswer = currentAnswer.replace(/[^0-9.%-]/g, '');
+      // todo: confirm that we want this?
+      if (!isBadInputDetected){
+        const roundedNumberAsString = Number(currentAnswer).toFixed(answerPrecision);
+        isBadInputDetected = !(currentAnswer.toString() === roundedNumberAsString);
+      } 
       setIsBadInput(isBadInputDetected);
     }
     

@@ -72,7 +72,8 @@ return (
           {
             gameId &&
             <Grid item xs={2}>
-              <Checkbox value="isSelected" onChange={() => {
+              <Checkbox value="isSelected" onClick={(event) => {
+                event.stopPropagation();
                 handleQuestionSelected(question, !isSelected);
                 setIsSelected(!isSelected);
               }}/>

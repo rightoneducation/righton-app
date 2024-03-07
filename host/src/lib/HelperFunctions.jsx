@@ -2,6 +2,7 @@ import {
   isNullOrUndefined,
   GameSessionState,
   ConfidenceLevel,
+  AnswerFactory,
   NumericAnswer,
   StringAnswer,
   ExpressionAnswer,
@@ -306,6 +307,12 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
   if (newAnswer.answer.normAnswer.length === 0) {
     return prevShortAnswer;
   }
+  const answer = AnswerFactory.createAnswer(
+    newAnswer.answer.rawAnswer,
+    answerSettings.answerType,
+    answerSettings.answerPrecision,
+    newAnswer.answer.normAnswer
+  );
   // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
   if (prevShortAnswer.length === 0) { 
     const correctAnswerValue = choices.find(choice => choice.isAnswer).text;
@@ -320,9 +327,9 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
     });
   }
   let isExistingAnswer = false;  
-  // check the new answer against the previously submitted answers and the correct answer
   prevShortAnswer.forEach((prevAnswer) => {
-    if(newAnswer.answer.isEqualTo(prevAnswer.normAnswer)){
+    if(
+      answer.isEqualTo(prevAnswer.normAnswer)){
       isExistingAnswer = true;
       prevAnswer.count += 1;
       prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});

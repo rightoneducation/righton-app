@@ -80,7 +80,8 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
 
 const useStyles = (isResolutionMobile) => makeStyles(theme => ({  
   grow: {
-    zIndex: 2,
+    width: '100%',
+    zIndex: 1,
   },
   bar: {
     position: 'sticky',

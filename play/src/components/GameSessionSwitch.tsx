@@ -54,7 +54,6 @@ export default function GameSessionSwitch({
       isAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
     })) ?? [];
-
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isGameFirstStarting ? (
