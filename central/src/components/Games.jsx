@@ -58,6 +58,7 @@ export default function Games({
   }
   return (
     <Grid container className={classes.root} spacing={4}>
+      <Switch>
         {match && getGameById(games, match.params.gameId) && (
           <Grid item xs={12} className={classes.content}>
               <Route exact path="/games/:gameId/questions/:questionIndex" render={
@@ -147,6 +148,7 @@ export default function Games({
             </Box>
           </Grid>
         </Route>
+      </Switch>
     </Grid>
   );
 }

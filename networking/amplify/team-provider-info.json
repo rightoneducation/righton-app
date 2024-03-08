@@ -114,8 +114,7 @@
           "userPoolName": "RightOn Central",
           "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
           "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
-        },
-        "mobilea9652a6a": {}
+        }
       },
       "function": {
         "createGame": {

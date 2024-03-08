@@ -15,6 +15,7 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
   const classes = useStyles(isResolutionMobile)();
   const history = useHistory();
   const match = useRouteMatch('/gameMaker');
+  const matchQuestionMaker = useRouteMatch('/questionmaker');
   const gameId = uuidv4();
   const handleGameMakerNavigate = () => {
     setIsNewGame(true);
@@ -33,26 +34,28 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
               <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
                 <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6">
-                  Games
+                  { isUserAuth ? `Games` : `Explore`} 
                 </Typography>
               </NavLink>
+              </>
+            : null }
+             {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
+            <>
               <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/questions'}>
                 <img src={questionBankIcon} alt="Explore Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6">
                   Questions
                 </Typography>
               </NavLink>
-            </>
-            : null }
-            {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
-            <>
-            <Box className={classes.link} id='GameMaker' onClick={handleGameMakerNavigate}>
+         
+           
+            <Box className={classes.link} id='GameMaker' onClick={handleGameMakerNavigate} style={{opacity: match ? 1 : 0.5}}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" >
                 Game Maker
               </Typography> 
             </Box>
-              <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={`/questionmaker/${gameId}`}>
+              <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={`/questionmaker/${gameId}`}  style={{opacity: matchQuestionMaker ? 1 : 0.5}}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6" >
                 Question Maker
