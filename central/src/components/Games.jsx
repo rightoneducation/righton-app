@@ -89,8 +89,12 @@ export default function Games({
               }
               const { gameId, questionId } = match.params;
               const game = getGameById(games, gameId);
-              const questions = game.questionTemplates.map(({ questionTemplate }) => questionTemplate);
-              const question = getQuestionTemplateById(questions, questionId);
+              let questions = null;
+              let question = null;
+              if (game && game.questionTemplates.length > 0){
+                questions = game.questionTemplates.map(({ questionTemplate }) => questionTemplate) ?? null;
+                question = getQuestionTemplateById(questions, questionId) ?? null;
+              }
               handleSearchClick(false);
               return <QuestionMaker gameId={gameId} question={question} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
