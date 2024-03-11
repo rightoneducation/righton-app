@@ -40,13 +40,12 @@ export default function Games({
   handleUpdateListQuerySettings,
   handleSearchChange,
   sortByCheck,
-  setSortByCheck,
-  isNewGame,
-  setIsNewGame
+  setSortByCheck
 }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
+  const questionMatch = useRouteMatch('/games/:gameId/questions/:questionId');
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const handleQuestionSelected = (question, isSelected) => {
     if (isSelected) {
@@ -61,12 +60,15 @@ export default function Games({
       <Switch>
         {match && getGameById(games, match.params.gameId) && (
           <Grid item xs={12} className={classes.content}>
-              <Route exact path="/games/:gameId/questions/:questionIndex" render={
+              <Route exact path="/games/:gameId/questions/:questionId" render={
                 ({ match }) => {
-                  const { questionIndex, gameId } = match.params;
+                  const { gameId } = match.params;
+                  const { questionId } = questionMatch.params;
                   const game = getGameById(games, gameId);
+                  const questions = game.questionTemplates.map(({ questionTemplate }) => questionTemplate);
+                  const question = getQuestionTemplateById(questions, questionId);
                   handleSearchClick(false);
-                  return <QuestionDetails backUrl={`/games/${gameId}`} gameTitle={game.title} questionIndex={questionIndex} question={game.questions[questionIndex]} />
+                  return <QuestionDetails backUrl={`/games/${gameId}`} gameTitle={game.title} question={question} />
                 }
               } />
               <Route exact path="/games/:gameId" render={
@@ -79,6 +81,21 @@ export default function Games({
               } />
           </Grid>
         )}
+         {isUserAuth &&
+          <Route path='/gamemaker/:gameId/questionmaker/:questionId' render={
+            ({match}) => {
+              if (!isUserAuth) {
+                return null;
+              }
+              const { gameId, questionId } = match.params;
+              const game = getGameById(games, gameId);
+              const questions = game.questionTemplates.map(({ questionTemplate }) => questionTemplate);
+              const question = getQuestionTemplateById(questions, questionId);
+              handleSearchClick(false);
+              return <QuestionMaker gameId={gameId} question={question} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
+            } 
+          }/>
+        }
         {isUserAuth &&
          <Route path='/gamemaker/:gameId' render={
             ({ match }) => {
@@ -90,7 +107,7 @@ export default function Games({
               return <GameMaker 
                 loading={loading} 
                 questions={questions} 
-                game={isNewGame ? null : getGameById(games, gameId)} 
+                game={getGameById(games, gameId) ?? null} 
                 createNewGameTemplate={createNewGameTemplate} 
                 editGameTemplate={editGameTemplate} 
                 gameId={gameId} 
@@ -115,7 +132,6 @@ export default function Games({
                 handleScrollDown={handleScrollDown}
                 handleQuestionSelected={handleQuestionSelected} 
                 nextToken={nextToken}
-                setIsNewGame={setIsNewGame}
               />;
             }
         } />

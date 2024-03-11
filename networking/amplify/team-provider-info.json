@@ -1,133 +1,4 @@
 {
-  "devtmptwo": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-devtmptwo-112836-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtmptwo-112836-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtmptwo-112836-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-devtmptwo-112836-deployment",
-      "UnauthRoleName": "amplify-mobile-devtmptwo-112836-unauthRole",
-      "StackName": "amplify-mobile-devtmptwo-112836",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtmptwo-112836/53b0ae00-c411-11ee-895f-0e4a38902653",
-      "AmplifyAppId": "d2z6928w5qibze"
-    },
-    "categories": {
-      "auth": {
-        "mobile0a6d6e96": {
-          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
-          "userPoolId": "us-east-1_cC3q3fBKW",
-          "userPoolName": "RightOn Central",
-          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
-        }
-      },
-      "function": {
-        "createGame": {
-          "deploymentBucketName": "amplify-mobile-ttempfive-140948-deployment",
-          "s3Key": "amplify-builds/createGame-766a45653559757a4a55-build.zip"
-        },
-        "mobile": {}
-      }
-    }
-  },
-  "ttempsev": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-ttempsev-113253-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ttempsev-113253-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ttempsev-113253-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-ttempsev-113253-deployment",
-      "UnauthRoleName": "amplify-mobile-ttempsev-113253-unauthRole",
-      "StackName": "amplify-mobile-ttempsev-113253",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-ttempsev-113253/425f8af0-c992-11ee-b0e5-129e227ff8d3",
-      "AmplifyAppId": "d2z6928w5qibze"
-    },
-    "categories": {
-      "auth": {
-        "mobile0a6d6e96": {
-          "userPoolId": "us-east-1_cC3q3fBKW",
-          "userPoolName": "RightOn Central",
-          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
-          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
-        }
-      },
-      "function": {
-        "createGame": {
-          "deploymentBucketName": "amplify-mobile-ttempsev-113253-deployment",
-          "s3Key": "amplify-builds/createGame-766a45653559757a4a55-build.zip"
-        },
-        "mobile": {}
-      },
-      "api": {
-        "mobile": {}
-      }
-    }
-  },
-  "ttestnine": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-ttestnine-93502-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ttestnine-93502-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ttestnine-93502-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-ttestnine-93502-deployment",
-      "UnauthRoleName": "amplify-mobile-ttestnine-93502-unauthRole",
-      "StackName": "amplify-mobile-ttestnine-93502",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-ttestnine-93502/f2b4c260-cfca-11ee-bf64-12eb3d1b4f69",
-      "AmplifyAppId": "d2z6928w5qibze"
-    },
-    "categories": {
-      "auth": {
-        "mobile0a6d6e96": {
-          "userPoolId": "us-east-1_cC3q3fBKW",
-          "userPoolName": "RightOn Central",
-          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
-          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
-        }
-      },
-      "function": {
-        "createGame": {
-          "deploymentBucketName": "amplify-mobile-ttestnine-93502-deployment",
-          "s3Key": "amplify-builds/createGame-6c733168375a67462b61-build.zip"
-        },
-        "mobile": {}
-      },
-      "api": {
-        "mobile": {}
-      }
-    }
-  },
-  "ttempten": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-ttempten-105940-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ttempten-105940-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ttempten-105940-authRole",
-      "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-ttempten-105940-deployment",
-      "UnauthRoleName": "amplify-mobile-ttempten-105940-unauthRole",
-      "StackName": "amplify-mobile-ttempten-105940",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-ttempten-105940/1ab784b0-d169-11ee-a24e-0a57f4415057",
-      "AmplifyAppId": "d2z6928w5qibze"
-    },
-    "categories": {
-      "auth": {
-        "mobile0a6d6e96": {
-          "userPoolId": "us-east-1_cC3q3fBKW",
-          "userPoolName": "RightOn Central",
-          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
-          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
-        }
-      },
-      "function": {
-        "createGame": {
-          "deploymentBucketName": "amplify-mobile-ttempten-105940-deployment",
-          "s3Key": "amplify-builds/createGame-38452b30503633476870-build.zip"
-        },
-        "mobile": {}
-      },
-      "api": {
-        "mobile": {}
-      }
-    }
-  },
   "ttempele": {
     "awscloudformation": {
       "AuthRoleName": "amplify-mobile-ttempele-105547-authRole",
@@ -142,22 +13,18 @@
     },
     "categories": {
       "auth": {
-        "mobile0a6d6e96": {
+        "mobile392850f3": {
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
           "userPoolId": "us-east-1_cC3q3fBKW",
           "userPoolName": "RightOn Central",
-          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
-          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
         }
       },
       "function": {
         "createGame": {
           "deploymentBucketName": "amplify-mobile-ttempele-105547-deployment",
           "s3Key": "amplify-builds/createGame-775a4e367971334e4e46-build.zip"
-        },
-        "mobile": {}
-      },
-      "api": {
-        "mobile": {}
+        }
       }
     }
   }

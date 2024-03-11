@@ -79,7 +79,7 @@ return (
               }}/>
             </Grid>
           }
-          { isUserAuth && 
+          { isUserAuth && !gameId && 
               <Grid item xs={2} className={classes.show}>
                 <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
                   <MoreVertIcon />
@@ -136,18 +136,17 @@ const useStyles = makeStyles(theme => ({
       marginRight: '15px'
     },
     title: {
-      fontWeight: 700,
-      height: '80%',
       color: '#384466',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
-      WebkitLineClamp: 2,
+      WebkitLineClamp: 3,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       maxWidth: '95%',
     },
     textSecondary: {
       height: '90%',
+      width: '50%',
       maxWidth: '90%',
       paddingRight: '5px',
       display: '-webkit-box',

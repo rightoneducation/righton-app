@@ -76,8 +76,7 @@ export default function GameMaker({
   gameId,
   handleScrollDown,
   handleQuestionSelected,
-  nextToken,
-  setIsNewGame
+  nextToken
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
@@ -167,7 +166,6 @@ export default function GameMaker({
 
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
-    setIsNewGame(false);
     setSelectedQuestions([]); 
     setLocalQuestionTemplates([]);
     gameDetails.questionTemplates = localQuestionTemplates;
@@ -369,7 +367,7 @@ export default function GameMaker({
               <Button variant='contained' type='submit' disableElevation className={classes.blueButton}>
                 Save Game
               </Button>
-              <Button variant='contained' disableElevation className={classes.greenButton} onClick={()=> { setIsNewGame(false); setSelectedQuestions([]); setLocalQuestionTemplates([]); history.push('/')}}>
+              <Button variant='contained' disableElevation className={classes.greenButton} onClick={()=> { setSelectedQuestions([]); setLocalQuestionTemplates([]); history.push('/')}}>
                 Cancel
               </Button>
             </Grid>

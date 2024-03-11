@@ -129,16 +129,6 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
     setAnchorEl(null);
     setActiveIndex(null);
   };
-  //not sure if this should stay
-  const changeQuestionIndex = (currentIndex, newIndex) => {
-    const newGame = { ...game };
-    const copy = { ...newGame[`q${newIndex}`] };
-    newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
-    newGame[`q${currentIndex}`] = copy;
-    saveGame(newGame).then(() => history.push('/games/1'));
-    setAnchorEl(null);
-    setActiveIndex(null);
-  };
   const addQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}/edit`);
 
   if (loading) return <Skeleton variant="rect" height={500} />;
@@ -185,7 +175,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
             const { text, answer, imageUrl } = question;
             return (
               <Grid item xs={6}>
-              <Paper key={index} className={classes.question} onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>
+              <Paper key={index} className={classes.question} onClick={() => history.push(`/games/${gameIndex}/questions/${question.id}`)}>
                 <Box>
                   <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
                   <Box className={classes.questionIndex}>

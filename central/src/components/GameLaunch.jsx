@@ -120,7 +120,7 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
   }, []);
   const classes = useStyles();
   const history = useHistory();
-  const match = useRouteMatch('/games/:gameId/question/:questionIndex');
+  const match = useRouteMatch('/games/:gameId/question/:questionId');
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const handleClick = (event) => {
@@ -165,17 +165,6 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
       handleDeleteGameTemplate(id);
     }
     history.push(`/`)
-  };
-
-  //not sure if this should stay
-  const changeQuestionIndex = (currentIndex, newIndex) => {
-    const newGame = { ...game };
-    const copy = { ...newGame[`q${newIndex}`] };
-    newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
-    newGame[`q${currentIndex}`] = copy;
-    saveGame(newGame).then(() => history.push(`/games/${game.id}`));
-    setAnchorEl(null);
-    setActiveIndex(null);
   };
   const addQuestion = () => history.push(`/gamemaker/${game.id}/questionmaker/${questions.length + 1}`);
 
@@ -240,7 +229,7 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
               const { title, imageUrl } = question;
               return (
                 <Grid key={index} item xs={12} md={6} >
-                  <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
+                  <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${question.id}`)}>
                     <Grid container item xs={8}  className={classes.textContainer}>
                         <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
 
@@ -273,7 +262,7 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
                             onClose={handleClose}
                             onClick={(event) => { if (!match) event.stopPropagation(); }}
                           >
-                            <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/questionmaker/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                            <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/questionmaker/${question.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                             <MenuItem onClick={() => { deleteQuestion(question.id, game).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
                           </Menu>
                         </Grid>

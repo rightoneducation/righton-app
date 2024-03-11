@@ -70,7 +70,6 @@ export const RouteContainer = ({
   const [showModalGetApp, setShowModalGetApp] = useState(false);
   const [prevTokens, setPrevTokens] = useState<(string | null)[]>([null]);
   const [nextToken, setNextToken] = useState<string | null>(null);
-  const [isNewGame, setIsNewGame] = useState(false);
   const location = useLocation();
   const history = useHistory();
   const queryLimit = 12; // number of games retrieved on main page
@@ -340,13 +339,10 @@ export const RouteContainer = ({
   const handleCloneQuestionTemplate = async (question : IQuestionTemplate) => {
     const {gameTemplates, ...rest} = question;
     const gameTemplatesUpdate = gameTemplates;
-    const newQuestionTemplate: IQuestionTemplate = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`};
-    const updatedAt = newQuestionTemplate.updatedAt?.toString();
-    const createdAt = newQuestionTemplate.createdAt?.toString();
-    const updatedQuestionTemplate = {...newQuestionTemplate, updatedAt, createdAt};
+    const updatedQuestionTemplate: CreateQuestionTemplateInput = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`, createdAt: question.createdAt?.toISOString(), updatedAt: question.updatedAt?.toISOString()};
     const result = await createQuestionTemplate(apiClients, updatedQuestionTemplate);
     if (result) {
-      listQuerySettings.nextToken = nextToken;
+      listQuerySettings.nextToken = null;
       getAllGameTemplates(listQuerySettings);
       setAlert({ message: 'Question cloned.', type: 'success' });
     }
@@ -464,17 +460,17 @@ export const RouteContainer = ({
   return (
     <Switch>
     <Route path="/login">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
       <LogIn handleUserAuth={handleUserAuth} />
     </Route>
 
     <Route path="/signup">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
       <SignUp />
     </Route>
 
     <Route path="/confirmation">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
       <Confirmation />
     </Route>
 
@@ -482,7 +478,7 @@ export const RouteContainer = ({
       <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
       <Box sx={{ height: '100vh' }}>
         <Box style={{display: 'flex', position: 'relative', width: '100%', zIndex: 1}}>
-          <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} setIsNewGame={setIsNewGame}/>
+          <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
         </Box>
         <Box style={{display: 'flex', width: '100%', zIndex: 0}}>
           <Games 
@@ -514,8 +510,6 @@ export const RouteContainer = ({
             handleSearchChange={handleSearchChange}
             sortByCheck={sortByCheck}
             setSortByCheck={setSortByCheck}
-            isNewGame={isNewGame}
-            setIsNewGame={setIsNewGame}
           />
         </Box>
       </Box>

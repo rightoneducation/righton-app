@@ -11,14 +11,13 @@ import helpIcon from '../images/HelpIcon.svg';
 import HelpDropdown from './HelpDropdown';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, handleModalOpen, setIsNewGame }) {
+export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, handleModalOpen }) {
   const classes = useStyles(isResolutionMobile)();
   const history = useHistory();
   const match = useRouteMatch('/gameMaker');
   const matchQuestionMaker = useRouteMatch('/questionmaker');
   const gameId = uuidv4();
   const handleGameMakerNavigate = () => {
-    setIsNewGame(true);
     history.push(`/gamemaker/${gameId}`);
   }
 
