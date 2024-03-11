@@ -6,6 +6,7 @@ import {
   createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { APIClients, Environment } from '@righton/networking';
 import { RouteContainer } from './containers/RouteContainer';
 import AlertContext, { Alert } from './context/AlertContext';
@@ -33,13 +34,15 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <AlertContext.Provider value={alertContext}>
-        <Router>
-          <RouteContainer setAlert={setAlert} apiClients={apiClients}/>
-        </Router>
-      </AlertContext.Provider>
-    </ThemeProvider>
+    <GoogleOAuthProvider clientId="23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com">
+      <ThemeProvider theme={theme}>
+        <AlertContext.Provider value={alertContext}>
+          <Router>
+            <RouteContainer setAlert={setAlert} apiClients={apiClients}/>
+          </Router>
+        </AlertContext.Provider>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 

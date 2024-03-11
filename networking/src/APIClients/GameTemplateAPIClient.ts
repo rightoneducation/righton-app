@@ -99,7 +99,7 @@ export class GameTemplateAPIClient
     const variables: DeleteGameTemplateMutationVariables = { input };
     const gameTemplate = await this.callGraphQL<DeleteGameTemplateMutation>(
         deleteGameTemplate,
-        variables
+        variables,
     );
     if (
         isNullOrUndefined(gameTemplate.data) ||

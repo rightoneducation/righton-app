@@ -5,6 +5,8 @@ import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
 import { Grid, Typography } from "@material-ui/core";
 import RightOnLogo from "./RightOnLogo.png";
+import { GoogleLogin } from '@react-oauth/google';
+import { handleGoogleSignIn } from "@righton/networking";
 
 const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUserAuth}) => {
   const [loading, setLoading] = React.useState(false);
@@ -37,6 +39,13 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     }
     setLoading(false);
   };
+
+  const handleGoogleLogin = async(googleToken: string) => {
+    if (await handleGoogleSignIn(googleToken)){
+      handleUserAuth(true);
+      window.location.href = "/";
+    }
+  }
 
   return (
     <Grid
@@ -96,6 +105,14 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
             </LogInLink>
             <SignUpLink to="/signup">Sign Up</SignUpLink>
           </ButtonGrid>
+        <GoogleLogin
+          onSuccess={googleToken => {
+            handleGoogleLogin(googleToken.credential ?? '')
+          }}
+          onError={() => {
+            setAdminError(true);
+          }}
+        />
         </form>
       </Grid>
       {adminError ? <ErrorType> There has been an error. Please verify your username/password and contact the administrator for account verification. </ErrorType> : null}
