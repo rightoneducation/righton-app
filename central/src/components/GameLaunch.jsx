@@ -172,7 +172,7 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
   const questions = game?.questionTemplates || [];
   const questionCount = game?.questionTemplates.length || 0;
 
-  const LAUNCH_GAME_URL = `http://localhost:3001/new/${game.id}`;
+  const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.id}`;
 
   return (
     <Box className={classes.root}>

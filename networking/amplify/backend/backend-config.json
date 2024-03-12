@@ -24,7 +24,7 @@
     }
   },
   "auth": {
-    "mobile392850f3": {
+    "mobilee1238193": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -51,35 +51,35 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile392850f3_nativeClientId": {
+    "AMPLIFY_auth_mobilee1238193_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile392850f3"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
-    "AMPLIFY_auth_mobile392850f3_userPoolId": {
+    "AMPLIFY_auth_mobilee1238193_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile392850f3"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
-    "AMPLIFY_auth_mobile392850f3_userPoolName": {
+    "AMPLIFY_auth_mobilee1238193_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile392850f3"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
-    "AMPLIFY_auth_mobile392850f3_webClientId": {
+    "AMPLIFY_auth_mobilee1238193_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile392850f3"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
