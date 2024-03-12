@@ -1,19 +1,19 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
-import { AnswerPrecision, AnswerType } from "./AnswerClasses";
+import { AnswerType, AnswerPrecision } from "./AnswerClasses";
 
 export interface IQuestion {
-    id: number
+    id: string
     text: string
-    choices?: Array<IChoice> | null
-    answerSettings?: IAnswerSettings | null
-    responses?: Array<IResponse> | null
-    hints?: IHints[] | null
-    imageUrl?: string | null
-    instructions?: Array<string> | null
-    standard?: string | null
-    cluster?: string | null
-    domain?: string | null
-    grade?: string | null
+    choices: Array<IChoice>
+    answerSettings: IAnswerSettings
+    responses: Array<IResponse>
+    hints: Array<IHints>
+    imageUrl: string
+    instructions: Array<string>
+    standard: string
+    cluster: string
+    domain: string
+    grade: string
     gameSessionId: string
     order: number
     isConfidenceEnabled: boolean
@@ -24,13 +24,13 @@ export interface IQuestion {
 export interface IChoice {
     id?: string
     text: string
-    reason?: string
+    reason: string
     isAnswer: boolean
 }
 
 export interface IAnswerSettings {
     answerType: AnswerType
-    answerPrecision: AnswerPrecision
+    answerPrecision?: AnswerPrecision
 }
 
 export interface IResponse {

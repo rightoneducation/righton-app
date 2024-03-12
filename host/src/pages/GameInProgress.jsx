@@ -70,7 +70,7 @@ export default function GameInProgress({
     8: 'Go to Next Question',
     9: 'Proceed to RightOn Central',
   };
-  const numPlayers = teams ? teams.length : 0;
+  const numPlayers = teams.length;
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
@@ -244,7 +244,7 @@ export default function GameInProgress({
         }}
       >
         <HeaderGame
-          totalQuestions={questions ? questions.length : 0}
+          totalQuestions={questions.length}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
           statePosition={statePosition}
@@ -305,7 +305,7 @@ export default function GameInProgress({
           phaseTwoTime={phaseTwoTime}
           gameTimer={gameTimer} //flag GameInProgress vs StudentView
           footerButtonText={getFooterText(
-            teams ? teams.length : 0,
+            teams.length,
             totalAnswers,
             statePosition,
           )} // provides index of current state for use in footer dictionary

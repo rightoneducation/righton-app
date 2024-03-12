@@ -4,9 +4,7 @@ import { Stack } from '@mui/material';
 import {
   GameSessionState,
   IGameSession,
-  NumberAnswer,
-  StringAnswer,
-  ExpressionAnswer,
+  BackendAnswer,
   IChoice,
   ModelHelper,
 } from '@righton/networking';
@@ -17,9 +15,9 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 
 interface CardResultsProps {
   answers: IChoice[];
-  selectedAnswer: NumberAnswer | StringAnswer | ExpressionAnswer | null;
+  selectedAnswer: BackendAnswer | null;
   currentState: GameSessionState;
-  currentQuestionId: number;
+  currentQuestionId: string;
   gameSession: IGameSession;
 }
 

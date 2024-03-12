@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import {
   ConfidenceLevel,
   GameSessionState,
-  ITeamAnswerContent,
+  BackendAnswer,
   IChoice,
   ITeam,
-  ITeamAnswerHint,
+  IAnswerHint,
   IAnswerSettings
 } from '@righton/networking';
 import { Pagination } from 'swiper';
@@ -31,9 +31,9 @@ interface ChooseAnswerProps {
   answerChoices: IChoice[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
+  handleSubmitAnswer: (answer: BackendAnswer) => void;
   currentState: GameSessionState;
-  handleSelectAnswer: (answer: number) => void;
+  handleSelectAnswer: (answer: string) => void;
   isConfidenceEnabled: boolean;
   selectedConfidenceOption: string;
   handleSelectConfidence: (confidence: ConfidenceLevel) => void;
@@ -41,15 +41,15 @@ interface ChooseAnswerProps {
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
-  answerContent: ITeamAnswerContent;
+  backendAnswer: BackendAnswer;
   currentQuestionIndex: number;
-  answerHint: ITeamAnswerHint | null;
+  answerHint: IAnswerHint | null;
   isHintEnabled: boolean;
-  handleSubmitHint: (result: ITeamAnswerHint) => void;
+  handleSubmitHint: (result: IAnswerHint) => void;
   isHintSubmitted: boolean;
   currentTeam: ITeam | null;
-  confidenceCardRef: React.RefObject<HTMLDivElement>;
-  hintCardRef: React.RefObject<HTMLDivElement>;
+  questionId: string;
+  teamMemberAnswersId: string;
 }
 
 export default function ChooseAnswer({
@@ -70,15 +70,15 @@ export default function ChooseAnswer({
   timeOfLastConfidenceSelect,
   setTimeOfLastConfidenceSelect,
   isShortAnswerEnabled,
-  answerContent,
+  backendAnswer,
   currentQuestionIndex,
   answerHint,
   isHintEnabled,
   handleSubmitHint,
   isHintSubmitted,
   currentTeam,
-  confidenceCardRef,
-  hintCardRef
+  questionId,
+  teamMemberAnswersId
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -128,33 +128,37 @@ export default function ChooseAnswer({
     <ScrollBoxStyled>
       {isShortAnswerEnabled &&
       currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
-          <OpenAnswerCard
-            answerContent={answerContent}
-            isSubmitted={answerContent.isSubmitted ?? false}
-            isShortAnswerEnabled={isShortAnswerEnabled}
-            answerSettings={answerSettings}
-            currentState={currentState}
-            currentQuestionIndex={currentQuestionIndex}
-            handleSubmitAnswer={handleSubmitAnswer}
-          />
+        <OpenAnswerCard
+          backendAnswer={backendAnswer}
+          isSubmitted={backendAnswer.isSubmitted ?? false}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          answerSettings={answerSettings}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
+          handleSubmitAnswer={handleSubmitAnswer}
+          questionId={questionId}
+          teamMemberAnswersId={teamMemberAnswersId}
+        />
       ) : (
-          <AnswerCard
-            answers={answerChoices}
-            isSubmitted={answerContent.isSubmitted ?? false}
-            isShortAnswerEnabled={isShortAnswerEnabled}
-            handleSubmitAnswer={handleSubmitAnswer}
-            currentState={currentState}
-            currentQuestionIndex={currentQuestionIndex}
-            selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
-            handleSelectAnswer={handleSelectAnswer}
-          />
+        <AnswerCard
+          answers={answerChoices}
+          isSubmitted={backendAnswer.isSubmitted ?? false}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          handleSubmitAnswer={handleSubmitAnswer}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
+          selectedAnswer={backendAnswer.answer.rawAnswer}
+          handleSelectAnswer={handleSelectAnswer}
+          questionId={questionId}
+          teamMemberAnswersId={teamMemberAnswersId}
+        />
       )}
       {isSubmitted && !isSmallDevice ? (
         <>
         { isConfidenceEnabled && 
           (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) ?
             <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="confidencecard-scrollbox" ref={confidenceCardRef}>
+              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="confidencecard-scrollbox">
                 <ConfidenceMeterCard
                   selectedOption={selectedConfidenceOption}
                   handleSelectOption={handleSelectConfidence}
@@ -169,7 +173,7 @@ export default function ChooseAnswer({
           {isHintEnabled &&
             currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
             <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox" ref={hintCardRef}>
+              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox">
                 <HintCard
                   answerHintText={answerHint?.rawHint ?? ''}
                   currentState={currentState}
@@ -177,6 +181,8 @@ export default function ChooseAnswer({
                   isHintSubmitted={isHintSubmitted}
                   handleSubmitHint={handleSubmitHint}
                   currentTeam={currentTeam ?? null}
+                  questionId={questionId}
+                  teamMemberAnswersId={teamMemberAnswersId}
                 />
               </Box>
             </Fade>
@@ -267,6 +273,8 @@ export default function ChooseAnswer({
                       isHintSubmitted={isHintSubmitted}
                       handleSubmitHint={handleSubmitHint}
                       currentTeam={currentTeam ?? null}
+                      questionId={questionId}
+                      teamMemberAnswersId={teamMemberAnswersId}
                     />
                    }
                   </ScrollBoxStyled>

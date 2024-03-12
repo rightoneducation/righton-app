@@ -1,13 +1,17 @@
 import { parse } from 'mathjs';
 import { removeStopwords, eng } from 'stopword';
 import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
-import { isNullOrUndefined } from '../IApiClient';
+import { isNullOrUndefined } from '../global';
+import {v4 as uuidv4} from 'uuid';
 
 export enum AnswerType {
   NUMBER = 0,
   STRING = 1,
-  EXPRESSION = 2
+  EXPRESSION = 2,
+  MULTICHOICE = 3
 }
+
+export type NormAnswerType = string | number;
 
 export enum AnswerPrecision {
   WHOLE = 0,
@@ -16,215 +20,114 @@ export enum AnswerPrecision {
   THOUSANDTH = 3,
 }
 
-export interface ITeamAnswerHint {
+export type Answer = NumericAnswer | StringAnswer | ExpressionAnswer | MultiChoiceAnswer
+
+export interface IAnswerHint {
   rawHint: string;
   teamName: string;
   isHintSubmitted: boolean;
 }
 
-export interface ITeamAnswerContent {
-  rawAnswer: string; 
-  normAnswer?: (string | number)[] | null;
-  answerType?: AnswerType;
-  answerPrecision?: string;
-  percent?: number;
-  multiChoiceAnswerIndex?: number | null;
-  isSubmitted?: boolean;
-  isShortAnswerEnabled: boolean;
-  currentState: GameSessionState | null;
-  currentQuestionIndex: number | null;
-}
+export abstract class BaseAnswer<T> {
+  rawAnswer: string
+  answerType: AnswerType
 
-export interface ICorrectAnswerContent {
-  rawAnswer: string;
-  normAnswer?: (string | number)[];
-  answerType: AnswerType;
-  answerPrecision?: AnswerPrecision;
-}
-
-export interface IBaseAnswerConfig<T> {
-  id?: string;
-  answerContent: ITeamAnswerContent | ICorrectAnswerContent;
-  value: T;
-}
-
-export interface ITeamAnswerConfig<T> {
-  id?: string;
-  questionId: number;
-  isChosen: boolean;
-  teamMemberAnswersId: string;
-  text: string;
-  answerContent: ITeamAnswerContent;
-  isTrickAnswer: boolean;
-  confidenceLevel: ConfidenceLevel;
-  hint?: ITeamAnswerHint;
-  createdAt?: string;
-  updatedAt?: string;
-  value: T;
-}
-
-abstract class BaseAnswer<T> {
-  id?: string;
-  answerContent: ITeamAnswerContent | ICorrectAnswerContent;
-  value: T;
-  constructor(config: IBaseAnswerConfig<T>) 
-  {
-    this.id = config.id,
-    this.answerContent = config.answerContent,
-    this.value = config.value
-  }
-}
-
-export abstract class TeamAnswerClass<T> extends BaseAnswer<T> {
-  id?: string;
-  questionId: number;
-  teamMemberAnswersId: string;
-  isChosen: boolean;
-  isTrickAnswer: boolean;
-  text: string;
-  answerContent: ITeamAnswerContent;
-  confidenceLevel: ConfidenceLevel;
-  hint?: ITeamAnswerHint;
-  createdAt?: string;
-  updatedAt?: string;
-  value: T;
-  constructor(config: ITeamAnswerConfig<T>) 
-    {
-      super(config);
-      this.id = config.id,
-      this.questionId = config.questionId,
-      this.teamMemberAnswersId = config.teamMemberAnswersId,
-      this.isChosen = config.isChosen,
-      this.text = config.text,
-      this.answerContent = config.answerContent,
-      this.isTrickAnswer = config.isTrickAnswer,
-      this.confidenceLevel = config.confidenceLevel,
-      this.hint = config.hint,
-      this.createdAt = config.createdAt,
-      this.updatedAt = config.updatedAt,
-      this.value = config.value
+  constructor (rawAnswer: string, answerType: AnswerType){
+      this.rawAnswer = rawAnswer;
+      this.answerType = answerType;
   }
 
-  abstract isEqualTo(otherAnswers: T[]): Boolean;
+  abstract normalizeAnswer(rawAnswer: string): void;
+
+  abstract isEqualTo(otherNormAnswers: T[]): Boolean;
 }
 
-function normalizeAnswers(currentItem: string, answerType: AnswerType) {
-  const normAnswers = [];
-  if (!isNullOrUndefined(currentItem)) {
-    switch (answerType) {
-      case AnswerType.NUMBER:
-        // if it's a number, check for percentages and convert to decimal
-        const percentagesRegex = /(\d+(\.\d+)?)%/g;
-        const extractPercents = currentItem.match(percentagesRegex);
-        const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
-        if (!isNullOrUndefined(percentages)){
-          normAnswers.push(percentages);
-        }
-        // then remove commas and spaces and push
-        const noCommas = currentItem.replace(/,/g, '');
-        const normItem = noCommas.trim();
-        if (!isNullOrUndefined(normItem)) {
-          normAnswers.push(normItem);
-        }
-        break;
-      case AnswerType.STRING:
-        // if it's a string, pull out any numbers and remove spaces, and remove stopwords
-        const normArray = currentItem.toLowerCase().replace(/[\d\r\n]+/g, '').trim().split(' ');
-        const normNoStopwords = removeStopwords(normArray, eng).join(' ');
-        if (!isNullOrUndefined(normNoStopwords)) {
-          normAnswers.push(normNoStopwords);
-        }
-        break;
-      case AnswerType.EXPRESSION:
-        // if it's an expression, use parse and toString to extract expression trees and compare
-        // anything more complex than this will require a custom parser (and is probably not worth it)
-        // https://mathjs.org/docs/expressions/parsing.html
-        const normItemExp = parse(currentItem.toString()).toString();
-        if (!isNullOrUndefined(normItemExp)) {
-          normAnswers.push(normItemExp);
-        }
-        break;
+export class StringAnswer extends BaseAnswer<string>{
+  normAnswer: NormAnswerType[]
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
+      super(rawAnswer, answerType)
+      this.normAnswer = normAnswer ?? []
+  }
+
+  normalizeStringAnswer(rawAnswer: string): NormAnswerType[] {
+    const normAnswers: NormAnswerType[] = [];
+     // if it's a string, pull out any numbers and remove spaces, and remove stopwords
+     const normArray = rawAnswer.toLowerCase().replace(/[\d\r\n]+/g, '').trim().split(' ');
+     const normNoStopwords = removeStopwords(normArray, eng).join(' ');
+     if (!isNullOrUndefined(normNoStopwords)) {
+       normAnswers.push(normNoStopwords);
+     }
+     return normAnswers;
+  }
+
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeStringAnswer(rawAnswer);
+  }
+
+  isEqualTo(otherNormAnswers: string[]): Boolean {
+    if (this.normAnswer) {
+      return this.normAnswer.some((answer) => {
+        return otherNormAnswers.includes(answer as string);
+      }) 
     }
+    return true;
   }
-  return normAnswers;
-};
 
-export class CorrectNumberAnswer extends BaseAnswer<number> {
-  constructor(config: IBaseAnswerConfig<number>) {
-    super(config); // Pass the config to the BaseAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
-
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.NUMBER
-    };
-    return this;
-  }
 }
 
-export class CorrectStringAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
-    super(config); // Pass the config to the BaseAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.STRING);
+export class NumericAnswer extends BaseAnswer<Number>{
+  normAnswer: NormAnswerType[]
+  answerPrecision: AnswerPrecision
 
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.STRING
-    };
-    return this;
-  }
-}
-
-export class CorrectExpressionAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
-    super(config); // Pass the config to the BaseAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.EXPRESSION);
-
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.EXPRESSION
-    };
-    return this;
-  }
-}
-
-export class NumberAnswer extends TeamAnswerClass<number> {
-  constructor(config: ITeamAnswerConfig<number>) {
-    super(config); // Pass the config to the TeamAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
-    
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.NUMBER
-    };
-    return this;
+  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision, normAnswer?: number[],){
+      super(rawAnswer, answerType)
+      this.normAnswer = normAnswer ?? []
+      this.answerPrecision = answerPrecision
   }
 
-  isEqualTo(otherAnswers: number[]): Boolean {
+  normalizeNumericAnswer(rawAnswer: string): NormAnswerType[] {
+    const normAnswers: NormAnswerType[] = [];
+    const percentagesRegex = /(\d+(\.\d+)?)%/g;
+    const extractPercents = rawAnswer.match(percentagesRegex);
+    const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
+    if (!isNullOrUndefined(percentages) && !isNaN(percentages)){
+      normAnswers.push(percentages);
+      return normAnswers;
+    }
+    // then remove commas and spaces and push
+    const noCommas = rawAnswer.replace(/,/g, '');
+    const normItem = noCommas.trim();
+    if (!isNullOrUndefined(normItem)) {
+      normAnswers.push(Number(normItem));
+    }
+    return normAnswers;
+  }
+  
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeNumericAnswer(rawAnswer);
+  }
+
+  isEqualTo(otherNormAnswers: number[]): Boolean {
     const answerPrecisionDictionary = {
       [AnswerPrecision.WHOLE]: 0,
       [AnswerPrecision.TENTH]: 1,
       [AnswerPrecision.HUNDREDTH]: 2,
       [AnswerPrecision.THOUSANDTH]: 3
     }
-    if (this.answerContent.normAnswer){
-      return this.answerContent.normAnswer.some((answer) => {
-        if (otherAnswers.includes(answer as number)){
-          if (this.answerContent && this.answerContent.answerPrecision)
+    if (this.normAnswer){
+      return this.normAnswer.some((answer) => {
+        if (otherNormAnswers.includes(answer as number)){
+          if (!isNullOrUndefined(this.answerPrecision))
           {
             // we clean up the raw answer again to remove commas and the percent sign
             // we need to use the raw answer because the norm answer could be changed if there is a percentage present
             // so it's not a reliable way to check decimal places
-            const normRawAnswer = this.answerContent.rawAnswer.replace(/[,%]/g, '').trim();
-            const precisionEnum = AnswerPrecision[this.answerContent.answerPrecision as keyof typeof AnswerPrecision];
+            const normRawAnswer = this.rawAnswer.replace(/[,%]/g, '').trim();
 
             // this is going to round the number we found that matches to the precision that the teacher requested
-            const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[precisionEnum]);
-            return normRawAnswer === roundedNumberAsString;
+            const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[this.answerPrecision]);
+            if (normRawAnswer === roundedNumberAsString)
+              return true;
           }
         }
         return false;
@@ -232,50 +135,49 @@ export class NumberAnswer extends TeamAnswerClass<number> {
     }
     return false;
   }
-}
 
-export class StringAnswer extends TeamAnswerClass<string> {
-  constructor(config: ITeamAnswerConfig<string>) {
-    super(config); // Pass the config to the TeamAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.STRING);
-
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.STRING
-    };
-    return this;
+  static isAnswerTypeValid(input: string): Boolean {
+    const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; // matches any number, with or without a decimal, with or without a percent sign
+    return numericAnswerRegex.test(input);
   }
 
-  isEqualTo(otherAnswers: string[]): Boolean {
-    const otherAnswersSet = new Set(otherAnswers);
-    if (this.answerContent.normAnswer && this.answerContent.normAnswer.some((answer) => otherAnswersSet.has(answer as string))) {
-      return true;
+  static isAnswerPrecisionValid(input: string, precision: AnswerPrecision): Boolean {
+    const roundedNumberAsString = Number(input).toFixed(precision);
+    return input.toString() === roundedNumberAsString;
+  }
+}
+
+export class ExpressionAnswer extends BaseAnswer<string>{
+  normAnswer: NormAnswerType[]
+
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
+    super(rawAnswer, answerType)
+    this.normAnswer = normAnswer ?? []
+  }
+  
+  normalizeExpressionAnswer(rawAnswer: string): NormAnswerType[] {
+    const normAnswers: NormAnswerType[] = [];
+    // if it's an expression, use parse and toString to extract expression trees and compare
+    // anything more complex than this will require a custom parser (and is probably not worth it)
+    // https://mathjs.org/docs/expressions/parsing.html
+    const normItemExp = parse(rawAnswer).toString();
+    if (!isNullOrUndefined(normItemExp)) {
+      normAnswers.push(normItemExp);
     }
-    return false;
-  }
-}
-
-export class ExpressionAnswer extends TeamAnswerClass<string> {
-  constructor(config: ITeamAnswerConfig<string>) {
-    super(config); // Pass the config to the TeamAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.EXPRESSION);
-
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.EXPRESSION
-    };
-    return this;
+    return normAnswers;
   }
 
-  isEqualTo(otherAnswers: string[]): Boolean {
-    if (this.answerContent.normAnswer) {
-      for (let i =0; i < this.answerContent.normAnswer.length; i++) {
-        for (let y = 0; y < otherAnswers.length; y++) {
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeExpressionAnswer(rawAnswer);
+  }
+
+  isEqualTo(otherNormAnswers: string[]): Boolean {
+    if (this.normAnswer) {
+      for (let i =0; i < this.normAnswer.length; i++) {
+        for (let y = 0; y < otherNormAnswers.length; y++) {
           try {
-            const exp1 = parse(this.answerContent.normAnswer[i].toString()).toString();
-            const exp2 = parse(otherAnswers[y].toString()).toString();
+            const exp1 = parse(this.normAnswer[i].toString()).toString();
+            const exp2 = parse(otherNormAnswers[y].toString()).toString();
             if (exp1 === exp2)
               return true;
           } catch (e) {
@@ -284,6 +186,127 @@ export class ExpressionAnswer extends TeamAnswerClass<string> {
         }
       }
     }
-   return false;
+    return false;
+  }
+
+  // checks if expression can be parsed via mathjs
+  static isAnswerTypeValid(input: string): Boolean {
+    try {
+      parse(input);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}
+
+export class MultiChoiceAnswer extends BaseAnswer<string> {
+  normAnswer: NormAnswerType[]
+
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
+    super(rawAnswer, answerType)
+    this.normAnswer = normAnswer ?? []
+  }
+
+  normalizeMultiChoiceAnswer(rawAnswer: string): NormAnswerType[] {
+    const normAnswers: NormAnswerType[] = [];
+    normAnswers.push(rawAnswer.trim());
+    return normAnswers;
+  }
+
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeMultiChoiceAnswer(rawAnswer);
+  }
+
+  isEqualTo(otherNormAnswers: string[]): Boolean {
+    return otherNormAnswers.includes(this.rawAnswer);
+  }
+}
+
+export class BackendAnswer {
+  id: string;
+  answer: Answer;
+  isSubmitted: boolean;
+  isShortAnswerEnabled: boolean;
+  currentState: GameSessionState;
+  currentQuestionIndex: number;
+  questionId: string;
+  teamMemberAnswersId: string;
+  text: string; // temporary to maintain build compatibility
+  confidenceLevel?: ConfidenceLevel | null;
+  hint?: IAnswerHint | null;
+
+  constructor (
+    answer: Answer, 
+    isSubmitted: boolean, 
+    isShortAnswerEnabled: boolean, 
+    currentState: GameSessionState, 
+    currentQuestionIndex: number,
+    questionId: string,
+    teamMemberAnswersId: string,
+    text: string,
+    id?: string | null,
+    confidenceLevel?: ConfidenceLevel | null,
+    hint?: IAnswerHint | null
+  ){
+    this.answer = answer;
+    this.isSubmitted = isSubmitted;
+    this.isShortAnswerEnabled = isShortAnswerEnabled;
+    this.currentState = currentState;
+    this.currentQuestionIndex = currentQuestionIndex;
+    this.questionId = questionId;
+    this.teamMemberAnswersId = teamMemberAnswersId;
+    this.text = text;
+    this.id = id ?? uuidv4();
+    this.confidenceLevel = confidenceLevel;
+    this.hint = hint;
+  }
+
+  static toFlattenedJSONString(backendAnswer: BackendAnswer): string {
+    try{
+      const { answer, ...rest } = backendAnswer;
+      const jsonObject = { ...answer, ...rest };
+      return JSON.stringify(jsonObject);
+    } catch (e) {
+      throw new Error('Invalid answer object');
+    }
+  }
+
+  static fromFlattenedJSONString(json: string): BackendAnswer {
+    try{
+      const flatBackendAnswer = JSON.parse(json);
+      const { rawAnswer, answerType, answerPrecision, ...rest } = flatBackendAnswer;
+      const answer = AnswerFactory.createAnswer(rawAnswer, answerType, answerPrecision);
+      const backendAnswer = new BackendAnswer(
+        answer,
+        rest.isSubmitted,
+        rest.isShortAnswerEnabled,
+        rest.currentState,
+        rest.currentQuestionIndex,
+        rest.questionId,
+        rest.teamMemberAnswersId,
+        rest.id,
+        rest.confidenceLevel,
+        rest.hint);
+      return backendAnswer;
+    } catch (e) {
+      throw new Error('Invalid JSON string');
+    }
+  }
+}
+
+export class AnswerFactory {
+  static createAnswer(rawAnswer: string, answerType: AnswerType, answerPrecision?: AnswerPrecision): Answer {
+    switch (answerType) {
+      case AnswerType.NUMBER:
+        return new NumericAnswer(rawAnswer, answerType, answerPrecision || AnswerPrecision.WHOLE);
+      case AnswerType.EXPRESSION:
+        return new ExpressionAnswer(rawAnswer, answerType);
+      case AnswerType.MULTICHOICE:
+        return new MultiChoiceAnswer(rawAnswer, answerType);
+      case AnswerType.STRING:
+      default:
+        return new StringAnswer(rawAnswer, answerType);
+    }
   }
 }

@@ -2,7 +2,8 @@ import {
   isNullOrUndefined,
   GameSessionState,
   ConfidenceLevel,
-  NumberAnswer,
+  AnswerFactory,
+  NumericAnswer,
   StringAnswer,
   ExpressionAnswer,
   AnswerType
@@ -46,6 +47,24 @@ export const getNoResponseTeams = (teams, answers) => {
   return teamsWithoutResponses;
 };
 
+/* 
+* checks that the gamesessionstate that the answer was created in matches the current state of the game
+* done to prevent students from being able to answer repeatedly etc
+* @param {GameSessionState} answerState - state of the game when answer was created
+* @param {GameSessionState} currentState - current state of the game
+* @returns {boolean} - true if the answer state matches the current state, false if not
+*/
+const isAnswerStateCurrent = (answerState, currentState) => {
+  const stateMappings = {
+    [GameSessionState.PHASE_1_DISCUSS]: GameSessionState.CHOOSE_CORRECT_ANSWER,
+    [GameSessionState.PHASE_1_RESULTS]: GameSessionState.CHOOSE_CORRECT_ANSWER,
+    [GameSessionState.PHASE_2_DISCUSS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+    [GameSessionState.PHASE_2_RESULTS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+  };
+  return answerState === currentState || 
+       answerState === stateMappings[currentState];
+}
+
 /*
 * returns team and answer data for each answer
 * for use in getTeamByQuestion and getAnswersByQuestion, below
@@ -59,18 +78,8 @@ export const extractAnswers =  (teamsArray, currentState, currentQuestionId) => 
   teamsArray.forEach(team => {
     team.teamMembers && team.teamMembers.forEach(teamMember => {
       teamMember.answers && teamMember.answers.forEach(answer => {
-        if (answer.questionId === currentQuestionId) {
-          const isGameInPhaseOne = (
-            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-            currentState === GameSessionState.PHASE_1_DISCUSS
-          ) && answer.isChosen;
-          const isGameInPhaseTwo = (
-            currentState === GameSessionState.PHASE_2_DISCUSS ||
-            currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-          ) && answer.isTrickAnswer;
-          if (isGameInPhaseOne || isGameInPhaseTwo) {
-            results.push({team, answer});
-          }
+        if (answer.questionId === currentQuestionId && isAnswerStateCurrent(answer.currentState, currentState)) {
+          results.push({team, answer});
         }
       });
     });
@@ -130,7 +139,7 @@ export const getMultiChoiceAnswers = (
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
     answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
-        if (answer.answerContent.rawAnswer === choice.text) {
+        if (answer.answer.rawAnswer === choice.text) {
           const index = confidenceLevelsArray.indexOf(
             answer.confidenceLevel,
           );
@@ -225,7 +234,7 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
     let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
     answers.forEach(({team, answer}) => {
       for (let i = 0; i < choices.length; i++){ 
-        if (answer.answerContent.rawAnswer === choices[i].rawAnswer) {
+        if (answer.answer.rawAnswer === choices[i].rawAnswer) {
           answersArray[i].count += 1;
           answersArray[i].teams.push({name: team.name});
           break;
@@ -258,31 +267,6 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   return {teamName, teamId};
 };
 
-
-export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
-  const answerConfigBase = {
-    answerContent: {
-      rawAnswer:  correctAnswerValue,
-      answerType: answerSettings.answerType,
-      answerPrecision: answerSettings.answerPrecision
-    },
-  };
-  let correctAnswer;
-  switch (answerSettings.answerType){
-    case (AnswerType.NUMBER):
-    default:
-      correctAnswer = new NumberAnswer(answerConfigBase);
-      break;
-    case(AnswerType.STRING):
-      correctAnswer = new StringAnswer(answerConfigBase);
-      break;
-    case(AnswerType.EXPRESSION):
-      correctAnswer = new ExpressionAnswer(answerConfigBase);
-      break;
-  }
-  return correctAnswer;
-};
-
 /**
  * This function creates the short answer responses object that will be stored in the question object, via equality checks
  * @param {IResponse} prevShortAnswer 
@@ -295,16 +279,22 @@ export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
 export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettings, newAnswer, newAnswerTeamName, teamId) => {
   // if the answer is empty, skip and return the previous answer
   // an empty answer could mean that a user was able to submit an answer of the wrong type
-  if (newAnswer.answerContent.normAnswer.length === 0) {
+  if (newAnswer.answer.normAnswer.length === 0) {
     return prevShortAnswer;
   }
+  const answer = AnswerFactory.createAnswer(
+    newAnswer.answer.rawAnswer,
+    answerSettings.answerType,
+    answerSettings.answerPrecision,
+    newAnswer.answer.normAnswer
+  );
+  if (isNullOrUndefined(answer.normAnswer) || answer.normAnswer.length === 0) 
+    answer.normalizeAnswer(newAnswer.answer.rawAnswer);
   // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
   if (prevShortAnswer.length === 0) { 
-    const correctAnswerValue = choices.find(choice => choice.isAnswer).text;
-    const correctAnswer = createCorrectAnswer(correctAnswerValue, answerSettings);
     prevShortAnswer.push({
-      rawAnswer: correctAnswer.answerContent.rawAnswer,
-      normAnswer: correctAnswer.answerContent.normAnswer,
+      rawAnswer: answer.rawAnswer,
+      normAnswer: answer.normAnswer,
       isCorrect: true,
       isSelectedMistake: false,
       count: 0,
@@ -312,9 +302,9 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
     });
   }
   let isExistingAnswer = false;  
-  // check the new answer against the previously submitted answers and the correct answer
   prevShortAnswer.forEach((prevAnswer) => {
-    if(newAnswer.isEqualTo(prevAnswer.normAnswer)){
+    if(
+      answer.isEqualTo(prevAnswer.normAnswer)){
       isExistingAnswer = true;
       prevAnswer.count += 1;
       prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
@@ -323,8 +313,8 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
   // if there was no match above, add the new answer to the array of previous answers
   if (!isExistingAnswer){
     prevShortAnswer.push({
-      rawAnswer: newAnswer.answerContent.rawAnswer,
-      normAnswer: newAnswer.answerContent.normAnswer,
+      rawAnswer: newAnswer.answer.rawAnswer,
+      normAnswer: newAnswer.answer.normAnswer,
       isCorrect: false,
       isSelectedMistake: false,
       count: 1,
