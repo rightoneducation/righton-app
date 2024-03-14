@@ -76,7 +76,9 @@ export default function GameMaker({
   gameId,
   handleScrollDown,
   handleQuestionSelected,
-  nextToken
+  nextToken,
+  localQuestionTemplates,
+  setLocalQuestionTemplates,
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
@@ -96,8 +98,6 @@ export default function GameMaker({
   const selectedQuestionTemplates = selectedQuestions.map(question => {
     return {questionTemplate: question, gameQuestionId: null }
   });
-  // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
-  const [localQuestionTemplates, setLocalQuestionTemplates] = useState([...gameDetails.questionTemplates]);
 
   const [phaseOne, setPhaseOne] = useState(() => {
     if (gameDetails.phaseOneTime === null) {
@@ -115,7 +115,6 @@ export default function GameMaker({
       return gameDetails.phaseTwoTime;
     }
   });
-
   // Handles changing and storing of new values for both Phase Timers
   const handlePhaseOne = (event) => {
     setPhaseOne(event.target.value);

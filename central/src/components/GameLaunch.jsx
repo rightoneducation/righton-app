@@ -113,7 +113,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDeleteGameTemplate, handleCloneGameTemplate, isUserAuth }) {
+function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDeleteGameTemplate, handleCloneGameTemplate, isUserAuth, handleDeleteGameQuestion }) {
   useEffect(() => {
     document.title = 'RightOn! | Game launcher';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -171,7 +171,6 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
   if (loading) return <Skeleton variant="rect" height={500} />;
   const questions = game?.questionTemplates || [];
   const questionCount = game?.questionTemplates.length || 0;
-
   const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.id}`;
 
   return (
@@ -201,7 +200,6 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
         }
       </Box>
      
-
       <Grid container>
         <Grid item xs={12} md={4} className={classes.leftComponent}>
           <h3 style={{ color: '#0075FF' }}>{game.title}</h3>
@@ -263,7 +261,7 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
                             onClick={(event) => { if (!match) event.stopPropagation(); }}
                           >
                             <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/questionmaker/${question.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
-                            <MenuItem onClick={() => { deleteQuestion(question.id, game).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                            <MenuItem onClick={() => {handleDeleteGameQuestion(questionData.gameQuestionId, gameId); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
                           </Menu>
                         </Grid>
                       }

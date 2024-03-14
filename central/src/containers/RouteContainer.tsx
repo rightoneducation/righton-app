@@ -19,13 +19,12 @@ import {
 import {Alert} from '../context/AlertContext';
 import { Game } from '../API';
 import { 
+  getGameTemplate,
   createGameTemplate, 
   updateGameTemplate,
   deleteGameTemplate, 
   listGameTemplates
 } from '../lib/API/GameTemplates';
-
-
 import { 
   getQuestionTemplate,
   createQuestionTemplate, 
@@ -35,6 +34,7 @@ import {
 } from '../lib/API/QuestionTemplates';
 import {
   createGameQuestions,
+  getGameQuestions,
   deleteGameQuestions
 } from '../lib/API/GameQuestions';
 import { IListQuerySettings } from '../lib/API/QueryInputs';
@@ -77,6 +77,7 @@ export const RouteContainer = ({
     nextToken: null,
     queryLimit,
   });
+
   const [sortByCheck, setSortByCheck] = React.useState(false);
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
     setSortByCheck(false);
@@ -375,9 +376,14 @@ export const RouteContainer = ({
       console.log(e);
     }
   };
-
-  const handleDeleteGameQuestion = async (id: string) => {
+  
+  const handleDeleteGameQuestion = async (id: string, gameId?: string) => {
     const result = await deleteGameQuestions(apiClients, id);
+    if (gameId && gameId !== ''){
+      const updatedGame = await getGameTemplate(apiClients, gameId ?? '');
+      if (updatedGame) 
+        setGames((prevGames) => prevGames.map(game => game.id === updatedGame.id ? updatedGame : game));
+    }  
   }
 
   const handleUserAuth = (isAuth: boolean) => {
@@ -433,7 +439,8 @@ export const RouteContainer = ({
       sortField: null,
       filterString: ''
     }
-    const fetchData = async () => {
+    const gameIdPattern = /^\/games\/([^\/]+)$/;
+    const fetchData = async (gameIdPattern: RegExp) => {
       setNextToken(null);
       setPrevTokens([null]);
       setLoading(true);
@@ -441,12 +448,14 @@ export const RouteContainer = ({
         await getAllQuestionTemplates(updatedListQuerySettings);
       } else if (location.pathname === "/") {
         await getAllGameTemplates(updatedListQuerySettings);
-      }
+      } else if (gameIdPattern.test(location.pathname) && games.length === 0) {
+        const games = await getAllGameTemplates(updatedListQuerySettings);
+        localStorage.setItem('games', JSON.stringify(games));
+      } 
       setLoading(false);
     };
-
-    if ((location.pathname === "/questions") || (location.pathname === "/") ) 
-      fetchData();
+    if ((location.pathname === "/questions") || (location.pathname === "/") || (gameIdPattern.test(location.pathname))) 
+      fetchData(gameIdPattern);
     setStartup(false);
   }, [location.pathname]);
 

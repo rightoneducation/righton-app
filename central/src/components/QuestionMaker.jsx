@@ -50,7 +50,6 @@ export default function QuestionMaker({
       standard: null,
     }
   });
-
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if (match) {
