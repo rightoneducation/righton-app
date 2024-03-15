@@ -22,3 +22,18 @@ export interface ConfidenceOption {
   incorrect: number; // number of players who selected tgis option and answered incorrectly
   players: Player[]; // an array of the players that selected this option
 }
+
+export interface ShortAnswerResponse {
+  rawAnswer: string;
+  normAnswer: string;
+  count: number;
+  isCorrect: boolean;
+  isSelectedMistake?: boolean;
+  teams?: string[];
+}
+
+export interface Mistake {
+  answer: string;
+  percent: number;
+  isSelected: boolean;
+}

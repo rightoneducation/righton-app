@@ -9,28 +9,21 @@ import {
   Box,
   withStyles
 } from '@mui/material';
+import { ShortAnswerResponse, Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
+import { sortMistakes } from "../lib/HelperFunctions";
 
-interface ShortAnswerResponse {
-  rawAnswer: string;
-  count: number;
-  isCorrect: boolean;
-  isSelectedMistake?: boolean;
-}
+
 
 interface FeaturedMistakesProps {
-  // numPlayers: number;
-  shortAnswerResponses: ShortAnswerResponse[];
-  totalAnswers: number;
   onSelectMistake: (answer: string, isSelected: boolean) => void;
+  sortedMistakes: Mistake[];
+  setSortedMistakes: (value: Mistake[]) => void;
+  isPopularMode: boolean;
+  setIsPopularMode: (value: boolean) => void;
 }
 
-interface Mistake {
-  answer: string;
-  percent: number;
-  isSelected: boolean;
-}
 
 const BackgroundStyled = styled(Paper)({
   display: 'flex',
@@ -80,18 +73,17 @@ const RadioButtonStyled = styled(FormControlLabel)({
 
 
 export default function FeaturedMistakes({
-  shortAnswerResponses,
-  totalAnswers,
   onSelectMistake,
+  sortedMistakes,
+  setSortedMistakes,
+  isPopularMode,
+  setIsPopularMode
 }: FeaturedMistakesProps) {
-  // const classes = useStyles();
   const title = "Featured Mistakes";
   const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
   const radioButtonText1 = "Use the top 3 answers by popularity";
   const radioButtonText2 = "Manually pick the options";
   const numOfPopularMistakes = 3;
-  const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
-  const [sortedMistakes, setSortedMistakes] = useState<Mistake[]>([]);
 
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
@@ -115,43 +107,11 @@ export default function FeaturedMistakes({
 
   const handleSelectMistake = (index: number) => {
     onSelectMistake(sortedMistakes[index].answer, false);
-    setSortedMistakes(prev => {
-      const newMistakes = [...prev];
-      newMistakes[index].isSelected = !newMistakes[index].isSelected;
-      return newMistakes;
-    });
+    const newMistakes = [...sortedMistakes];
+    newMistakes[index].isSelected = !newMistakes[index].isSelected;
+    setSortedMistakes([...newMistakes]);
   };
 
-  // TODO: Review use of useEffect implementation.
-
-  useEffect(() => {
-    // const sortedMistake = sortMistakes(shortAnswerResponses, totalAnswers);
-    console.log("Useffect shortanswer responses")
-    console.log(shortAnswerResponses)
-    const extractedMistakes: Mistake[] = shortAnswerResponses
-      .filter(shortAnswerResponse => !shortAnswerResponse.isCorrect)
-      .map(shortAnswerResponse => ({ 
-        answer: shortAnswerResponse.rawAnswer, 
-        percent: Math.round((shortAnswerResponse.count / totalAnswers) * 100), 
-        isSelected: shortAnswerResponse.isSelectedMistake ?? false
-      }));
-    console.log("useeffect has run");
-    // const orderedMistakes = extractedMistakes.sort((a, b) => b.percent - a.percent);
-    // if (isPopularMode) {
-    //   orderedMistakes.slice(0, numOfPopularMistakes).forEach(mistake => {
-    //     // eslint-disable-next-line no-param-reassign
-    //     mistake.isSelected = true;
-    //     onSelectMistake(mistake.answer, true);
-    //   });
-    // }
-    setSortedMistakes(extractedMistakes);
-    console.log("extracted below")
-    console.log(extractedMistakes);
-    console.log("total below")
-    console.log(totalAnswers)
-  }, [shortAnswerResponses, totalAnswers]); // eslint-disable-line react-hooks/exhaustive-deps
-  console.log("Shortanswerresponnses")
-  console.log(shortAnswerResponses)
   return(
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>

@@ -5,7 +5,7 @@ import {
   Box,
   Paper
 } from '@mui/material';
-import { ConfidenceOption, LocalModel } from '../lib/HostModels';
+import { ConfidenceOption, LocalModel, Mistake, ShortAnswerResponse } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -58,7 +58,11 @@ interface GameInProgressProps {
   sampleConfidenceData: ConfidenceOption[],
   localModelMock: LocalModel,
   onSelectMistake: (value: any, isBasedOnPopularity: boolean) => void;
-  shortAnswerResponses: any[]; // Assuming it's an array of objects
+  shortAnswerResponses: ShortAnswerResponse[]; 
+  sortedMistakes: Mistake[]; 
+  setSortedMistakes: (value: Mistake[]) => void;
+  isPopularMode: boolean;
+  setIsPopularMode: (value: boolean) => void;
 }
 
 export default function GameInProgress({
@@ -72,7 +76,11 @@ export default function GameInProgress({
   sampleConfidenceData,
   localModelMock,
   onSelectMistake, 
-  shortAnswerResponses 
+  shortAnswerResponses,
+  sortedMistakes,
+  setSortedMistakes,
+  isPopularMode,
+  setIsPopularMode 
 }: GameInProgressProps) {
     type FooterButtonTextDictionary = {
         [key: number]: string;
@@ -142,9 +150,11 @@ export default function GameInProgress({
           confidenceData={sampleConfidenceData}
           confidenceGraphClickIndex={confidenceGraphClickIndex}
           handleConfidenceGraphClick={handleConfidenceGraphClick}
-          shortAnswerResponses={shortAnswerResponses}
-          totalAnswers={totalNum}
           onSelectMistake={onSelectMistake}
+          sortedMistakes={sortedMistakes}
+          setSortedMistakes={setSortedMistakes}
+          isPopularMode={isPopularMode}
+          setIsPopularMode={setIsPopularMode}
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled />

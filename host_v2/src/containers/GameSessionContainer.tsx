@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { IGameSession, GameSessionState, ApiClient, GameSessionParser } from '@righton/networking';
+import { ApiClient, IGameSession, GameSessionState,GameSessionParser } from '@righton/networking';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
-import { LocalModel } from '../lib/HostModels';
+import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
+import { sortMistakes } from '../lib/HelperFunctions';
 
-interface GameInProgressContainerProps {
-  apiClient: ApiClient;
-}
 // may have to reformat/restructure this later but here is a sample answer object
 interface AnswerOption {
   instructions: string[] | null;
@@ -33,10 +31,13 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
+interface GameInProgressContainerProps {
+  apiClient: ApiClient;
+}
+
 export default function GameSessionContainer({
   apiClient,
 }: GameInProgressContainerProps) {
-  console.log(apiClient); // eslint-disable-line
   const gameSession = GameSessionParser.gameSessionFromAWSGameSession({
     ...MockGameSession,
     currentState: MockGameSession.currentState as GameSessionState,
@@ -118,9 +119,6 @@ export default function GameSessionContainer({
     });
   }
   
- 
-
-
   const handleStartGame = ()=>{
     console.log("test")
   }
@@ -142,14 +140,12 @@ export default function GameSessionContainer({
       ? phaseOneTime
       : phaseTwoTime;
 
-
-
-  const shortAnswerResponses = [
+  const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([
     {
       rawAnswer: 'y=x^2',
       normAnswer: 'y=x^2',
       isCorrect: true, // only every one
-      isSelectMistaked: true, 
+      isSelectedMistake: true, 
       count: 13,
       teams: ['Name1', 'Name2']
     },
@@ -157,7 +153,7 @@ export default function GameSessionContainer({
       rawAnswer: 'No Idea',
       normAnswer: 'No Idea',
       isCorrect: false,
-      isSelectMistaked: true, 
+      isSelectedMistake: true, 
       count: 2,
       teams: ['Name3', 'Name13']
     },
@@ -165,7 +161,7 @@ export default function GameSessionContainer({
       rawAnswer: '2x^4 + 6x^2 - 3x',
       normAnswer: '2x^4 + 6x^2 - 3x',
       isCorrect: false,
-      isSelectMistaked: true, 
+      isSelectedMistake: true, 
       count: 4,
       teams: ['Name4', 'Name5', 'Name6', 'Name7']
     },
@@ -173,7 +169,7 @@ export default function GameSessionContainer({
       rawAnswer: '4x^4 - x^3 + 7x^2 - 6x',
       normAnswer: '4x^4 - x^3 + 7x^2 - 6x',
       isCorrect: false,
-      isSelectMistaked: true, 
+      isSelectedMistake: true, 
       count: 5,
       teams: ['Name8', 'Name9', 'Name10', 'Name11', 'Name12']
     }, 
@@ -181,11 +177,16 @@ export default function GameSessionContainer({
       rawAnswer: 'x^2 - 4x - 12',
       normAnswer: 'x^2 - 4x - 12',
       isCorrect: false,
-      isSelectMistaked: true, 
+      isSelectedMistake: true, 
       count: 1,
       teams: ['Name14']
     },
-  ];  
+  ]);  
+  const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
+  const [sortedMistakes, setSortedMistakes] = useState(React.useMemo(() => 
+     sortMistakes(shortAnswerResponses, shortAnswerResponses.length, isPopularMode, 3),
+     [shortAnswerResponses, isPopularMode]
+  ));
 
   switch (gameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
@@ -216,6 +217,10 @@ export default function GameSessionContainer({
           localModelMock={localModelMock}
           onSelectMistake={onSelectMistake}
           shortAnswerResponses={shortAnswerResponses}
+          sortedMistakes={sortedMistakes}
+          setSortedMistakes={setSortedMistakes}
+          isPopularMode={isPopularMode}
+          setIsPopularMode={setIsPopularMode}
         />
       );
   }
