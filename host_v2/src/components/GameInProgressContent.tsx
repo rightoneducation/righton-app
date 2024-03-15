@@ -16,6 +16,7 @@ import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import FeaturedMistakes from './FeaturedMistakes';
 
 // may have to reformat/restructure this later but here is a sample answer object
 interface AnswerOption { 
@@ -29,16 +30,30 @@ interface QuestionData {
   imageUrl: string | undefined; // the url of the image on the question card (if there is one)
 } // eslint-disable-line
 
+interface ShortAnswerResponse {
+  rawAnswer: string;
+  count: number;
+  isCorrect: boolean;
+  isSelectedMistake?: boolean;
+}
+
 interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
   confidenceData: ConfidenceOption[];
   confidenceGraphClickIndex: number | null;
   handleConfidenceGraphClick: (selectedIndex: number | null) => void;
+  shortAnswerResponses: ShortAnswerResponse[];
+  totalAnswers: number;
+  onSelectMistake: (answer: string, isSelected: boolean) => void;
+
 } // eslint-disable-line
 export default function GameInProgressContent({
   confidenceData,
   confidenceGraphClickIndex,
   handleConfidenceGraphClick,
+  shortAnswerResponses,
+  totalAnswers,
+  onSelectMistake
 }: GameInProgressContentProps) {
   // eslint-disable-line
 
@@ -60,9 +75,12 @@ export default function GameInProgressContent({
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-           {/*
-              Let's put the featured mistakes here
-              */}
+          <FeaturedMistakes 
+            shortAnswerResponses={shortAnswerResponses}
+            totalAnswers={totalAnswers}
+            onSelectMistake={onSelectMistake}
+          />
+          <Card />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
@@ -104,10 +122,11 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
-              {/*
-              Let's put the featured mistakes here
-              */}
-              <Card />
+              <FeaturedMistakes 
+                shortAnswerResponses={shortAnswerResponses}
+                totalAnswers={totalAnswers}
+                onSelectMistake={onSelectMistake}
+              />
               <Card />
             </ScrollBoxStyled>
           </Grid>
@@ -154,9 +173,11 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-               {/*
-              Let's put the featured mistakes here
-              */}
+               <FeaturedMistakes 
+               shortAnswerResponses = {shortAnswerResponses}
+               totalAnswers={totalAnswers}
+               onSelectMistake={onSelectMistake}
+               />
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>

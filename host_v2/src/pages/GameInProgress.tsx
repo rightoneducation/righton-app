@@ -142,6 +142,9 @@ export default function GameInProgress({
           confidenceData={sampleConfidenceData}
           confidenceGraphClickIndex={confidenceGraphClickIndex}
           handleConfidenceGraphClick={handleConfidenceGraphClick}
+          shortAnswerResponses={shortAnswerResponses}
+          totalAnswers={totalNum}
+          onSelectMistake={onSelectMistake}
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled />

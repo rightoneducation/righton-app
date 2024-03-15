@@ -144,31 +144,47 @@ export default function GameSessionContainer({
 
 
 
-  const shortAnswerResponse = [
+  const shortAnswerResponses = [
     {
-      rawAnswer: 'y=mx+b',
-      normAnswer: 'y=mx+b',
+      rawAnswer: 'y=x^2',
+      normAnswer: 'y=x^2',
       isCorrect: true, // only every one
       isSelectMistaked: true, 
-      count: 2,
+      count: 13,
       teams: ['Name1', 'Name2']
     },
     {
-      rawAnswer: 'y=mx+4',
-      normAnswer: 'y=mx+4',
+      rawAnswer: 'No Idea',
+      normAnswer: 'No Idea',
       isCorrect: false,
       isSelectMistaked: true, 
-      count: 1,
-      teams: ['Name3']
+      count: 2,
+      teams: ['Name3', 'Name13']
     },
     {
-      rawAnswer: 'y=mx+4',
-      normAnswer: 'y=mx+4',
+      rawAnswer: '2x^4 + 6x^2 - 3x',
+      normAnswer: '2x^4 + 6x^2 - 3x',
+      isCorrect: false,
+      isSelectMistaked: true, 
+      count: 4,
+      teams: ['Name4', 'Name5', 'Name6', 'Name7']
+    },
+    {
+      rawAnswer: '4x^4 - x^3 + 7x^2 - 6x',
+      normAnswer: '4x^4 - x^3 + 7x^2 - 6x',
       isCorrect: false,
       isSelectMistaked: true, 
       count: 5,
-      teams: ['Name4', 'Name5', 'Name6', 'Name7']
-    }
+      teams: ['Name8', 'Name9', 'Name10', 'Name11', 'Name12']
+    }, 
+    {
+      rawAnswer: 'x^2 - 4x - 12',
+      normAnswer: 'x^2 - 4x - 12',
+      isCorrect: false,
+      isSelectMistaked: true, 
+      count: 1,
+      teams: ['Name14']
+    },
   ];  
 
   switch (gameSession.currentState){
@@ -199,7 +215,7 @@ export default function GameSessionContainer({
           sampleConfidenceData={sampleConfidenceData}
           localModelMock={localModelMock}
           onSelectMistake={onSelectMistake}
-          shortAnswerResponses={shortAnswerResponse}
+          shortAnswerResponses={shortAnswerResponses}
         />
       );
   }

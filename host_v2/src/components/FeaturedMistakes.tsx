@@ -6,9 +6,11 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Box
+  Box,
+  withStyles
 } from '@mui/material';
 import MistakeSelector from "./MistakeSelector";
+import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 
 interface ShortAnswerResponse {
   rawAnswer: string;
@@ -38,6 +40,7 @@ const BackgroundStyled = styled(Paper)({
   padding: `16px`,
   backgroundColor: 'rgba(0,0,0,0)', 
   gap:16,
+  border: '2px solid #333'
 });
 
 const TitleStyled = styled(Typography)({
@@ -46,7 +49,8 @@ const TitleStyled = styled(Typography)({
   textAlign: 'left',
   fontSize: '24px',
   fontWeight: 700,
-  width: '100%'
+  width: '100%', 
+  border: '2px solid #333'
 });
 
 const SubtitleStyled = styled(Typography)({
@@ -55,10 +59,15 @@ const SubtitleStyled = styled(Typography)({
   textAlign: 'center',
   fontSize: '14px',
   fontWeight: 400,
+  border: '2px solid #333'
 });
 
 const RadioLabelStyled = styled(FormControlLabel)({
   color: '#FFFFFF',
+  '& .MuiTypography-root': {
+    color: '#FFFFFF',
+  },
+  border: '2px solid #333'
 });
 
 const RadioButtonStyled = styled(FormControlLabel)({
@@ -83,26 +92,6 @@ export default function FeaturedMistakes({
   const numOfPopularMistakes = 3;
   const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
   const [sortedMistakes, setSortedMistakes] = useState<Mistake[]>([]);
-
-  const sortMistakes = (shortAnswerResponse: ShortAnswerResponse[], totalAnswer: number): Mistake[] => {
-    const extractedMistakes: Mistake[] = shortAnswerResponse
-      .filter(shortanswerResponse => !shortanswerResponse.isCorrect)
-      .map(shortAnsweResponse => ({ 
-        answer: shortAnsweResponse.rawAnswer, 
-        percent: Math.round((shortAnsweResponse.count / totalAnswer) * 100), 
-        isSelected: shortAnsweResponse.isSelectedMistake ?? false
-      }));
-
-    const sortedMistake = extractedMistakes.sort((a, b) => b.percent - a.percent);
-    if (isPopularMode) {
-      sortedMistake.slice(0, numOfPopularMistakes).forEach(mistake => {
-        // eslint-disable-next-line no-param-reassign
-        mistake.isSelected = true;
-        onSelectMistake(mistake.answer, true);
-      });
-    }
-    return sortedMistakes;
-  };
 
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
@@ -137,61 +126,71 @@ export default function FeaturedMistakes({
 
   useEffect(() => {
     // const sortedMistake = sortMistakes(shortAnswerResponses, totalAnswers);
+    console.log("Useffect shortanswer responses")
+    console.log(shortAnswerResponses)
     const extractedMistakes: Mistake[] = shortAnswerResponses
-      .filter(shortanswerResponse => !shortanswerResponse.isCorrect)
-      .map(shortAnsweResponse => ({ 
-        answer: shortAnsweResponse.rawAnswer, 
-        percent: Math.round((shortAnsweResponse.count / totalAnswers) * 100), 
-        isSelected: shortAnsweResponse.isSelectedMistake ?? false
+      .filter(shortAnswerResponse => !shortAnswerResponse.isCorrect)
+      .map(shortAnswerResponse => ({ 
+        answer: shortAnswerResponse.rawAnswer, 
+        percent: Math.round((shortAnswerResponse.count / totalAnswers) * 100), 
+        isSelected: shortAnswerResponse.isSelectedMistake ?? false
       }));
-    const orderedMistakes = extractedMistakes.sort((a, b) => b.percent - a.percent);
-    if (isPopularMode) {
-      orderedMistakes.slice(0, numOfPopularMistakes).forEach(mistake => {
-        // eslint-disable-next-line no-param-reassign
-        mistake.isSelected = true;
-        onSelectMistake(mistake.answer, true);
-      });
-    }
-    setSortedMistakes(orderedMistakes);
+    console.log("useeffect has run");
+    // const orderedMistakes = extractedMistakes.sort((a, b) => b.percent - a.percent);
+    // if (isPopularMode) {
+    //   orderedMistakes.slice(0, numOfPopularMistakes).forEach(mistake => {
+    //     // eslint-disable-next-line no-param-reassign
+    //     mistake.isSelected = true;
+    //     onSelectMistake(mistake.answer, true);
+    //   });
+    // }
+    setSortedMistakes(extractedMistakes);
+    console.log("extracted below")
+    console.log(extractedMistakes);
+    console.log("total below")
+    console.log(totalAnswers)
   }, [shortAnswerResponses, totalAnswers]); // eslint-disable-line react-hooks/exhaustive-deps
-
+  console.log("Shortanswerresponnses")
+  console.log(shortAnswerResponses)
   return(
-    <BackgroundStyled elevation={0}>
-      <TitleStyled>{title}</TitleStyled>
-      <SubtitleStyled>{subtitle}</SubtitleStyled>
-      <RadioGroup defaultValue="A" onChange={handleModeChange}>
-        <RadioLabelStyled 
-          value="A" 
-          control={<Radio />} 
-          label={radioButtonText1} 
-        />
-        <RadioLabelStyled 
-          value="B" 
-          control={<Radio />} 
-          label={radioButtonText2} 
-        />
-      </RadioGroup>
-      {sortedMistakes.length > 0 
-        ? <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
-            {sortedMistakes.map((mistake, index) => (
-              <MistakeSelector 
-                key={mistake.answer} 
-                mistakeText={mistake.answer} 
-                mistakePercent={mistake.percent} 
-                isPopularMode={isPopularMode} 
-                isSelected={mistake.isSelected} 
-                mistakeIndex={index}
-                handleSelectMistake={handleSelectMistake} 
-                // style={{width:'100%'}}  
-              />
-            ))}
-          </Box>
-        : <Box sx={{width: '100%'}}>
-            <SubtitleStyled style={{fontStyle: 'italic', textAlign: 'center'}}>
-              Student responses will appear here
-            </SubtitleStyled>
-          </Box>
-      }
-    </BackgroundStyled>
+    <HostDefaultCardStyled elevation={10}>
+      <BackgroundStyled elevation={0}>
+        <TitleStyled>{title}</TitleStyled>
+        <SubtitleStyled>{subtitle}</SubtitleStyled>
+        <RadioGroup defaultValue="A" onChange={handleModeChange}>
+          <RadioLabelStyled 
+            value="A" 
+            control={<Radio />} 
+            label={radioButtonText1} 
+          />
+          <RadioLabelStyled 
+            value="B" 
+            control={<Radio />} 
+            label={radioButtonText2} 
+          />
+        </RadioGroup>
+        {sortedMistakes.length > 0 
+          ? <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: "8px", width: '100%', border: '2px solid #333'}}>
+              {sortedMistakes.map((mistake, index) => (
+                <MistakeSelector 
+                  key={mistake.answer} 
+                  mistakeText={mistake.answer} 
+                  mistakePercent={mistake.percent} 
+                  isPopularMode={isPopularMode} 
+                  isSelected={mistake.isSelected} 
+                  mistakeIndex={index}
+                  handleSelectMistake={handleSelectMistake} 
+                  // style={{width:'100%'}}  
+                />
+              ))}
+            </Box>
+          : <Box sx={{width: '100%'}}>
+              <SubtitleStyled style={{fontStyle: 'italic', textAlign: 'center'}}>
+                Student responses will appear here
+              </SubtitleStyled>
+            </Box>
+        }
+      </BackgroundStyled>
+    </HostDefaultCardStyled>
   );
 }
