@@ -37,7 +37,7 @@ import {
   getGameQuestions,
   deleteGameQuestions
 } from '../lib/API/GameQuestions';
-import { IListQuerySettings } from '../lib/API/QueryInputs';
+import { IListQuerySettings, SortDirection, SortField } from '../lib/API/QueryInputs';
 import {useMediaQuery} from '../hooks/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import AlertBar from '../components/AlertBar';
@@ -75,7 +75,7 @@ export const RouteContainer = ({
   const queryLimit = 12; // number of games retrieved on main page
   const [listQuerySettings, setListQuerySettings] = useState<IListQuerySettings>({
     nextToken: null,
-    queryLimit,
+    queryLimit
   });
 
   const [sortByCheck, setSortByCheck] = React.useState(false);
@@ -152,6 +152,7 @@ export const RouteContainer = ({
   }
 
   const debouncedApiCall = useCallback(debounce((updatedListQuerySettings, location) => {
+    console.log(updatedListQuerySettings);
     if (location.pathname === "/")
       getAllGameTemplates(updatedListQuerySettings);
     else 
@@ -435,8 +436,8 @@ export const RouteContainer = ({
     const updatedListQuerySettings = {
       nextToken: null,
       queryLimit,
-      sortDirection: listQuerySettings.sortDirection,
-      sortField: null,
+      sortDirection: SortDirection.DESC,
+      sortField: SortField.UPDATEDAT,
       filterString: ''
     }
     const gameIdPattern = /^\/games\/([^\/]+)$/;

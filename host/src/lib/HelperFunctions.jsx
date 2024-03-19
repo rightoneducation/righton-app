@@ -255,9 +255,13 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
 export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   let teamName = '';
   let teamId = '';
+  console.log("getTeamInfoFromAnswerId");
+  console.log(teamsArray);
+  console.log(teamMemberAnswersId);
   teamsArray.forEach((team) => {
     team.teamMembers &&
       team.teamMembers.forEach((teamMember) => {
+        console.log(teamMember.id);
         if (teamMember.id === teamMemberAnswersId){
           teamName=team.name;
           teamId=team.id;

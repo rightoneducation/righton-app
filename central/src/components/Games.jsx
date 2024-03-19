@@ -114,6 +114,11 @@ export default function Games({
                 return null;
               }
               const { gameId } = match.params;
+              const game = getGameById(games, gameId);
+              console.log(localQuestionTemplates);
+              if (game && game.questionTemplates.length > 0 && localQuestionTemplates.length === 0){
+                setLocalQuestionTemplates(game.questionTemplates);
+              }
               handleSearchClick(false);
               return <GameMaker 
                 loading={loading} 
@@ -154,7 +159,6 @@ export default function Games({
               if (!isUserAuth) {
                 return null;
               }
-            
               const { questionId } = match.params;
               const question = getQuestionTemplateById(questions, questionId);
               handleSearchClick(false);

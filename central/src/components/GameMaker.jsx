@@ -132,35 +132,8 @@ export default function GameMaker({
 
   const handleDelete = (index) => {
     const newQuestions = [...localQuestionTemplates];
-    newQuestions.splice(index, 1);
+    const newQuestionsDeleted = newQuestions.splice(index, 1);
     setLocalQuestionTemplates(newQuestions);
-  }
-
-  const handleAdd = (questionTemplate) => {
-    setLocalQuestionTemplates((prev) => [...prev, questionTemplate]);
-    setQuestionTemplatesToAdd((prev) => [...prev, questionTemplate.id]);
-  }
-
-  // Handles any new questions added to the game, either through Add Question or Create Question
-  const handleGameQuestion = (newQuestion) => {
-    setDisabled(isButtonDisabled());
-    for (let i = 0; i < questions.length; i++) {
-      if (newQuestion.id === questions[i].id) {
-        questions[i] = newQuestion
-        return null;
-      }
-    }
-    setQuestions([...questions, newQuestion])
-  };
-
-  // Handles if the Save Game button is disabled. The button become enabled when all required fields have values in it. The required fields/values are the game's title, description, and 4+ questions.
-  const isButtonDisabled = () => {
-    if (gameDetails.title.length > 0 && gameDetails.description.length > 0 && gameDetails.imageUrl.length > 0) {
-      return false;
-    }
-    else {
-      return true;
-    }
   }
 
   // Save New or Existing Game (preliminary submit)
@@ -299,7 +272,7 @@ export default function GameMaker({
                   localQuestionTemplates.map((questionData, index) => {
                     const question = questionData.questionTemplate;
                     return (
-                      <Grid key={index} container item xs={12}>
+                      <Grid key={uuidv4()} container item xs={12}>
                         <Card className={classes.question}>
                           <CardContent>
                             <Grid container item>
@@ -431,6 +404,7 @@ export default function GameMaker({
                     className={classes.blueButton} 
                     onClick={(event) => {
                     setLocalQuestionTemplates([...localQuestionTemplates, ...selectedQuestionTemplates]);
+                    setSelectedQuestions([]); 
                     history.push(`/gamemaker/${gameId}`)
                   }}>
                     Add to Game

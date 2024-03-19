@@ -166,6 +166,8 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
               });
             });
           }
+          console.log("initialization");
+          console.log(responses);
           setTeamsArray(responses);
         })
         .catch((reason) => console.error(reason));
@@ -228,16 +230,27 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     createTeamAnswerSubscription = apiClients.teamAnswer.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
+        console.log("Sup");
+        console.log(teamAnswerResponse);
         // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
         apiClients.gameSession.getGameSession(gameSessionId).then((gameSession) => {
+          console.log("GameSession");
+          console.log(gameSession);
           let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
           // similarly all state values here are stale so we are going to use functional setting to ensure we're grabbing the most recent state
           setTeamsArray((prevState) => {
             const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
             const newState = JSON.parse(JSON.stringify(prevState));
             newState.map((team) => {
+              console.log("Team");
+              console.log(team);
+              console.log(team.id);
+              console.log(teamId);
               if (team.id === teamId) {
                 team.teamMembers.map((teamMember) => {
+                  console.log("teamMember ids");
+                  console.log(teamMember.id);
+                  console.log(teamAnswerResponse.teamMemberAnswersId);
                   if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
                     teamMember.answers.push(teamAnswerResponse);
                   }
@@ -259,6 +272,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
                 return newShortAnswerState;
               });
             }
+            console.log(newState);
             return newState;
           });
         });
@@ -509,6 +523,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
       setIsLoadModalOpen(true);
     });
   };
+  console.log(teamsArray);
   const handleProcessHints = async (hints) => {
     setHintsError(false);
     try {
@@ -518,6 +533,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
       const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
       apiClients.gameSession.groupHints(hints, questionText, correctAnswer).then((response) => {
+        console.log(response.gptHints.content);
         const parsedHints = JSON.parse(response.gptHints.content);
         // adds rawHint text to parsedHints received from GPT
         // (we want to minimize the amount of data we send and receive to/from OpenAI

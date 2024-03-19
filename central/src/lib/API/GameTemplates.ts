@@ -65,6 +65,7 @@ export const listGameTemplates = async (apiClients: IAPIClients, listQuerySettin
     const sortField = listQuerySettings?.sortField ?? null;
     const filterString = (listQuerySettings?.filterString && listQuerySettings?.filterString != "") ? listQuerySettings?.filterString : null;
     const queryLimit = listQuerySettings?.queryLimit ?? null;
+    console.log(sortField);
     switch (sortField) {
       case SortField.GRADE:
         return await apiClients.gameTemplate.listGameTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);
