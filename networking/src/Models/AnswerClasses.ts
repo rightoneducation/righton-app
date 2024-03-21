@@ -51,8 +51,8 @@ export class StringAnswer extends BaseAnswer<string>{
 
   normalizeStringAnswer(rawAnswer: string): NormAnswerType[] {
     const normAnswers: NormAnswerType[] = [];
-     // if it's a string, pull out any numbers and remove spaces, and remove stopwords
-     const normArray = rawAnswer.toLowerCase().replace(/[\d\r\n]+/g, '').trim().split(' ');
+     // if it's a string, remove spaces and stopwords
+     const normArray = rawAnswer.toLowerCase().replace(/[\r\n]+/g, '').trim().split(' ');
      const normNoStopwords = removeStopwords(normArray, eng).join(' ');
      if (!isNullOrUndefined(normNoStopwords)) {
        normAnswers.push(normNoStopwords);
@@ -157,10 +157,18 @@ export class ExpressionAnswer extends BaseAnswer<string>{
   
   normalizeExpressionAnswer(rawAnswer: string): NormAnswerType[] {
     const normAnswers: NormAnswerType[] = [];
+    //convert / / notation to abs for use with math.js absolute value
+    const parseForAbs = rawAnswer.replace(/\/([^\/]+)\//g, 'abs($1)');
     // if it's an expression, use parse and toString to extract expression trees and compare
     // anything more complex than this will require a custom parser (and is probably not worth it)
     // https://mathjs.org/docs/expressions/parsing.html
-    const normItemExp = parse(rawAnswer).toString();
+    let normItemExp;
+    try {
+      normItemExp = parse(parseForAbs).toString();
+    } catch (e) {
+      console.error(e);
+      normItemExp = parseForAbs.toLowerCase().replace(/\s/g,'');
+    }
     if (!isNullOrUndefined(normItemExp)) {
       normAnswers.push(normItemExp);
     }
@@ -175,6 +183,8 @@ export class ExpressionAnswer extends BaseAnswer<string>{
     if (this.normAnswer) {
       for (let i =0; i < this.normAnswer.length; i++) {
         for (let y = 0; y < otherNormAnswers.length; y++) {
+          if (this.normAnswer[i].toString().toLowerCase().replace(/\s/g,'') === otherNormAnswers[y].toString().toLowerCase().replace(/\s/g,''))
+            return true;
           try {
             const exp1 = parse(this.normAnswer[i].toString()).toString();
             const exp2 = parse(otherNormAnswers[y].toString()).toString();

@@ -152,7 +152,6 @@ export const RouteContainer = ({
   }
 
   const debouncedApiCall = useCallback(debounce((updatedListQuerySettings, location) => {
-    console.log(updatedListQuerySettings);
     if (location.pathname === "/")
       getAllGameTemplates(updatedListQuerySettings);
     else 

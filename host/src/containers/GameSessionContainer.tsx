@@ -9,6 +9,7 @@ import {
   IGameSession,
   IHints,
   isNullOrUndefined,
+  ModelHelper,
   TeamParser,
 } from '@righton/networking';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -142,12 +143,10 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         );
       }
       // the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
-      const teamDataRequests = response.teams.map((team) => {
-        return apiClients.team.getTeam(team.id).then((response) => {
-            return TeamParser.teamFromAWSTeam(response);
-        });
+      const teamDataRequests = response.teams.map(async (team) => {
+        return apiClients.team.getTeam(team.id);
       });
-
+      
       Promise.all(teamDataRequests)
         .then((responses) => {
           // if shortAnswer is enabled we need to rebuild the shortAnswerResponses object on refresh
@@ -159,15 +158,13 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
                     && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS))
                   ) {
                     setShortAnswerResponses((prev) => {
-                      return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), response.questions[response.currentQuestionIndex].answerSettings, answer, team.name)
+                      return buildShortAnswerResponses(prev, ModelHelper.getCorrectAnswer(response.questions[response.currentQuestionIndex]), response.questions[response.currentQuestionIndex].answerSettings, answer, team.name)
                     });
                   }
                 });
               });
             });
           }
-          console.log("initialization");
-          console.log(responses);
           setTeamsArray(responses);
         })
         .catch((reason) => console.error(reason));
@@ -230,27 +227,16 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     createTeamAnswerSubscription = apiClients.teamAnswer.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
-        console.log("Sup");
-        console.log(teamAnswerResponse);
         // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
         apiClients.gameSession.getGameSession(gameSessionId).then((gameSession) => {
-          console.log("GameSession");
-          console.log(gameSession);
           let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
           // similarly all state values here are stale so we are going to use functional setting to ensure we're grabbing the most recent state
           setTeamsArray((prevState) => {
             const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
             const newState = JSON.parse(JSON.stringify(prevState));
             newState.map((team) => {
-              console.log("Team");
-              console.log(team);
-              console.log(team.id);
-              console.log(teamId);
               if (team.id === teamId) {
                 team.teamMembers.map((teamMember) => {
-                  console.log("teamMember ids");
-                  console.log(teamMember.id);
-                  console.log(teamAnswerResponse.teamMemberAnswersId);
                   if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
                     teamMember.answers.push(teamAnswerResponse);
                   }
@@ -261,7 +247,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
               // we are nesting the short answer response in here because we need to use the teamName and teamId to build the shortAnswerResponses object
               // if we did this outside of the setTeamsArray function we would be using stale state values
               setShortAnswerResponses((prevShortAnswerState) => {
-                const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, gameSession.questions[gameSession.currentQuestionIndex].answerSettings, teamAnswerResponse, teamName, teamId);
+                const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState,  ModelHelper.getCorrectAnswer(gameSession.questions[gameSession.currentQuestionIndex]), gameSession.questions[gameSession.currentQuestionIndex].answerSettings, teamAnswerResponse, teamName, teamId);
                 apiClients.question
                   .updateQuestion({
                     gameSessionId: gameSession.id,
@@ -272,7 +258,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
                 return newShortAnswerState;
               });
             }
-            console.log(newState);
             return newState;
           });
         });
@@ -453,7 +438,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     const questionId = currentQuestion.id;
     const order = currentQuestion.order;
     
-
     if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
       return;
     const questionConfigRequests = gameSession.questions.map((question) => {  
@@ -479,10 +463,8 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
             setHeaderGameCurrentTime(gameSession.phaseOneTime);
             checkGameTimer(response);
             setGameSession(response);
-            const teamDataRequests = response.teams.map((team) => {
-              return apiClients.team.getTeam(team.id).then((response) => {
-                return TeamParser.teamFromAWSTeam(response);
-            });
+            const teamDataRequests = response.teams.map(async (team) => {
+              return apiClients.team.getTeam(team.id);
             });
 
             Promise.all(teamDataRequests)
@@ -523,7 +505,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
       setIsLoadModalOpen(true);
     });
   };
-  console.log(teamsArray);
   const handleProcessHints = async (hints) => {
     setHintsError(false);
     try {
@@ -533,7 +514,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
       const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
       apiClients.gameSession.groupHints(hints, questionText, correctAnswer).then((response) => {
-        console.log(response.gptHints.content);
         const parsedHints = JSON.parse(response.gptHints.content);
         // adds rawHint text to parsedHints received from GPT
         // (we want to minimize the amount of data we send and receive to/from OpenAI
@@ -569,12 +549,10 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           console.log(e);
           setHintsError(true);
         })
-        ;
     } catch {
       setHintsError(true);
     }
   };
-
   if (!gameSession) {
     return null;
   }
