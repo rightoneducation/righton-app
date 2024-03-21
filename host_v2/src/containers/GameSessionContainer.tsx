@@ -104,21 +104,24 @@ export default function GameSessionContainer({
     },
     { confidence: 'TOTALLY', correct: 0, incorrect: 0, players: [] },
   ];
+  // ['4x^4 - x^3 + 7x^2 - 6x', '2x^4 + 6x^2 - 3x', 'No Idea']
+  const [selectedMistakes, setSelectedMistakes] = useState<string[]>(['4x^4 - x^3 + 7x^2 - 6x', '2x^4 + 6x^2 - 3x', 'No Idea']);
+  console.log("Gamesession initial selectedmitsakes below")
+  console.log(selectedMistakes)
 
-  const [selectedMistakes, setSelectedMistakes] = useState<any[]>([]);
   const onSelectMistake = (value: any, isBasedOnPopularity: boolean): void => {
-    console.log("test");
-    console.log(value);
     setSelectedMistakes((prev: any[]) => {
+      // console.log("prev")
+      // console.log(prev)
       if (prev.includes(value)) {
         if (isBasedOnPopularity === false)
           return prev.filter((mistake: any) => mistake !== value);
         return prev;
       } 
+
       return [...prev, value];
     });
   }
-  
   const handleStartGame = ()=>{
     console.log("test")
   }
@@ -146,7 +149,7 @@ export default function GameSessionContainer({
       normAnswer: 'y=x^2',
       isCorrect: true, // only every one
       isSelectedMistake: true, 
-      count: 13,
+      count: 2,
       teams: ['Name1', 'Name2']
     },
     {
@@ -187,7 +190,8 @@ export default function GameSessionContainer({
      sortMistakes(shortAnswerResponses, shortAnswerResponses.length, isPopularMode, 3),
      [shortAnswerResponses, isPopularMode]
   ));
-
+  console.log("GameSession sortedbelow")
+  console.log(sortedMistakes)
   switch (gameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
       return (

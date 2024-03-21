@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { Player, ConfidenceOption, ShortAnswerResponse, Mistake } from '../lib/HostModels';
+import { Player, ConfidenceOption, ShortAnswerResponse, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaTripleColumnStyled,
@@ -17,7 +17,6 @@ import PaginationContainerStyled from '../lib/styledcomponents/PaginationContain
 import 'swiper/css';
 import 'swiper/css/pagination';
 import FeaturedMistakes from './FeaturedMistakes';
-
 // may have to reformat/restructure this later but here is a sample answer object
 interface AnswerOption { 
   instructions: string[] | null; // instructions to get the correct answer if this option is the correct option and null otherwise
@@ -79,6 +78,7 @@ export default function GameInProgressContent({
             setSortedMistakes={setSortedMistakes}
             isPopularMode={isPopularMode}
             setIsPopularMode={setIsPopularMode}
+            featuredMistakesSelectionValue={featuredMistakesSelectionValue}
           />
           <Card />
         </ScrollBoxStyled>
@@ -128,6 +128,7 @@ export default function GameInProgressContent({
                 setSortedMistakes={setSortedMistakes}
                 isPopularMode={isPopularMode}
                 setIsPopularMode={setIsPopularMode}
+                featuredMistakesSelectionValue={featuredMistakesSelectionValue}
               />
               <Card />
             </ScrollBoxStyled>
@@ -181,6 +182,7 @@ export default function GameInProgressContent({
                 setSortedMistakes={setSortedMistakes}
                 isPopularMode={isPopularMode}
                 setIsPopularMode={setIsPopularMode}
+                featuredMistakesSelectionValue={featuredMistakesSelectionValue}
                />
             </ScrollBoxStyled>
           </Grid>

@@ -2,6 +2,8 @@
  *  string key for storage of game data in users local storage
  */
 export const StorageKey = 'rightOn';
+export const featuredMistakesSelectionValue = 'A';
+
 
 export interface LocalModel {
   hasRejoined: boolean;

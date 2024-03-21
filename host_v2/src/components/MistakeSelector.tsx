@@ -10,15 +10,11 @@ interface MistakeSelectorProps {
   isSelected: boolean;
   handleSelectMistake: (index: number) => void;
 }
-
-
   const SelectIndicatorContainerStyled = styled(Box)({
     position: 'relative',
     width: `16px`,
     height: `16px`,
     paddingTop: '2px',
-    // minWidth: '16px',
-    // minHeight: '16px',
   });
   
   const MistakeSelectorBase = styled(Button)({
@@ -26,16 +22,14 @@ interface MistakeSelectorProps {
     width: '100%',
     minHeight: '42px',
     paddingLeft: '16px',
-    paddingRight: "16px",  // added by Muhammad
-    paddingTop: "10px",  // added by Muhammad
-    paddingBottom: "10px",  // added by Muhammad
+    paddingRight: "16px",  
+    paddingTop: "10px",  
+    paddingBottom: "10px",  
     borderRadius: '22px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    // alignSelf: "start",
     textTransform: 'none',
-    border: '2px solid #333',
     color: 'white',
     "&:disabled": {
       color: 'white',
@@ -79,7 +73,6 @@ export default function MistakeSelector({
   isSelected,
   handleSelectMistake,
 }: MistakeSelectorProps) {
-
   const circleIndicator = (
     ((isPopularMode && isSelected) || !isPopularMode) &&
       <svg 
@@ -98,7 +91,7 @@ export default function MistakeSelector({
 
   const buttonContents = (
       <>
-        <Box style={{ display: 'flex',  justifyContent: 'flex-start', width: "100%", gap: 8, border: '1px solid #333',}}>
+        <Box style={{ display: 'flex',  justifyContent: 'flex-start', width: "100%", gap: 8}}>
           <Typography
             variant="body2"
             style={{
@@ -107,7 +100,6 @@ export default function MistakeSelector({
               fontWeight: 800,
               opacity: 0.5,
               textAlign: 'center',
-              border: '0.5px solid #333',
               width: "11px",
               height: "21px",
             }}
@@ -118,37 +110,31 @@ export default function MistakeSelector({
           <Typography
             variant="body2"
             style={{
-              // paddingLeft: '8px',
-              // paddingRight: '32px',
               color: '#FFFFFF',
               opacity: isSelected ? 1 : 0.5,
               textAlign: 'left',
-              border: '1px solid #333',
               width: "100%"
             }}
           >
             {mistakeText}
           </Typography>
         </Box>
-          <Box style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, border: '1px solid #333',}}>
+          <Box style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, }}>
             <Typography
               variant="body2"
               style={{
                 color: '#FFFFFF',
                 opacity: 0.6,
-                border: '1px solid #333',
               }}
             >
               {mistakePercent}%
             </Typography>
-            <SelectIndicatorContainerStyled style = {{border: '1px solid #333',}}>
+            <SelectIndicatorContainerStyled >
               {circleIndicator} 
             </SelectIndicatorContainerStyled>
           </Box>
       </>
   );
-  console.log("BELOW ISSELECTED");
-  console.log(isSelected);
   return isPopularMode   // eslint-disable-line 
     ? isSelected ? (
       <Top3MistakeSelectorSelectedStyled

@@ -12,16 +12,17 @@ import {
 import { ShortAnswerResponse, Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
+
 import { sortMistakes } from "../lib/HelperFunctions";
 
-
-
+// Need to remove featuredMistakesSelectionValue. Duplicate of isPopularMode.
 interface FeaturedMistakesProps {
   onSelectMistake: (answer: string, isSelected: boolean) => void;
   sortedMistakes: Mistake[];
   setSortedMistakes: (value: Mistake[]) => void;
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
+  featuredMistakesSelectionValue: string;
 }
 
 
@@ -33,7 +34,6 @@ const BackgroundStyled = styled(Paper)({
   padding: `16px`,
   backgroundColor: 'rgba(0,0,0,0)', 
   gap:16,
-  border: '2px solid #333'
 });
 
 const TitleStyled = styled(Typography)({
@@ -43,7 +43,6 @@ const TitleStyled = styled(Typography)({
   fontSize: '24px',
   fontWeight: 700,
   width: '100%', 
-  border: '2px solid #333'
 });
 
 const SubtitleStyled = styled(Typography)({
@@ -52,7 +51,6 @@ const SubtitleStyled = styled(Typography)({
   textAlign: 'center',
   fontSize: '14px',
   fontWeight: 400,
-  border: '2px solid #333'
 });
 
 const RadioLabelStyled = styled(FormControlLabel)({
@@ -60,7 +58,6 @@ const RadioLabelStyled = styled(FormControlLabel)({
   '& .MuiTypography-root': {
     color: '#FFFFFF',
   },
-  border: '2px solid #333'
 });
 
 const RadioButtonStyled = styled(FormControlLabel)({
@@ -70,21 +67,21 @@ const RadioButtonStyled = styled(FormControlLabel)({
   },
 });
 
-
-
 export default function FeaturedMistakes({
   onSelectMistake,
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
-  setIsPopularMode
+  setIsPopularMode,
+  featuredMistakesSelectionValue
 }: FeaturedMistakesProps) {
   const title = "Featured Mistakes";
   const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
   const radioButtonText1 = "Use the top 3 answers by popularity";
   const radioButtonText2 = "Manually pick the options";
   const numOfPopularMistakes = 3;
-
+  console.log("Featured sorted mistakes below")
+  console.log(sortedMistakes)
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < numOfPopularMistakes) {
@@ -95,7 +92,6 @@ export default function FeaturedMistakes({
     });
     setSortedMistakes(resetMistakes);
   };
-
   const handleModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === 'A') {
       resetMistakesToPopular();
@@ -104,6 +100,12 @@ export default function FeaturedMistakes({
       setIsPopularMode(false);
     }
   };
+    // Initialize the state and call the resetMistakesToPopular function when the component mounts
+
+  // useState(() => {
+  // resetMistakesToPopular();
+  //   setIsPopularMode(true);
+  // });
 
   const handleSelectMistake = (index: number) => {
     onSelectMistake(sortedMistakes[index].answer, false);
@@ -117,7 +119,7 @@ export default function FeaturedMistakes({
       <BackgroundStyled elevation={0}>
         <TitleStyled>{title}</TitleStyled>
         <SubtitleStyled>{subtitle}</SubtitleStyled>
-        <RadioGroup defaultValue="A" onChange={handleModeChange}>
+        <RadioGroup defaultValue={featuredMistakesSelectionValue} onChange={handleModeChange}>
           <RadioLabelStyled 
             value="A" 
             control={<Radio />} 
@@ -130,7 +132,7 @@ export default function FeaturedMistakes({
           />
         </RadioGroup>
         {sortedMistakes.length > 0 
-          ? <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: "8px", width: '100%', border: '2px solid #333'}}>
+          ? <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: "8px", width: '100%'}}>
               {sortedMistakes.map((mistake, index) => (
                 <MistakeSelector 
                   key={mistake.answer} 
