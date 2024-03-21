@@ -4,7 +4,13 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { Player, ConfidenceOption, ShortAnswerResponse, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
+import {
+  Player,
+  ConfidenceOption,
+  ShortAnswerResponse,
+  Mistake,
+  featuredMistakesSelectionValue,
+} from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaTripleColumnStyled,
@@ -18,7 +24,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import FeaturedMistakes from './FeaturedMistakes';
 // may have to reformat/restructure this later but here is a sample answer object
-interface AnswerOption { 
+interface AnswerOption {
   instructions: string[] | null; // instructions to get the correct answer if this option is the correct option and null otherwise
   reason: string | null; // reason why answer option is incorrect if this option is incorrect and null otherwise
   content: string; // the answer option itself
@@ -28,7 +34,6 @@ interface QuestionData {
   text: string; // question text (i.e. the question itself)
   imageUrl: string | undefined; // the url of the image on the question card (if there is one)
 } // eslint-disable-line
-
 
 interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
@@ -40,7 +45,6 @@ interface GameInProgressContentProps {
   setSortedMistakes: (value: Mistake[]) => void;
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
-
 } // eslint-disable-line
 export default function GameInProgressContent({
   confidenceData,
@@ -50,7 +54,7 @@ export default function GameInProgressContent({
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
-  setIsPopularMode 
+  setIsPopularMode,
 }: GameInProgressContentProps) {
   // eslint-disable-line
 
@@ -72,7 +76,7 @@ export default function GameInProgressContent({
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <FeaturedMistakes 
+          <FeaturedMistakes
             onSelectMistake={onSelectMistake}
             sortedMistakes={sortedMistakes}
             setSortedMistakes={setSortedMistakes}
@@ -122,7 +126,7 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
-              <FeaturedMistakes 
+              <FeaturedMistakes
                 onSelectMistake={onSelectMistake}
                 sortedMistakes={sortedMistakes}
                 setSortedMistakes={setSortedMistakes}
@@ -176,14 +180,14 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-               <FeaturedMistakes 
+              <FeaturedMistakes
                 onSelectMistake={onSelectMistake}
                 sortedMistakes={sortedMistakes}
                 setSortedMistakes={setSortedMistakes}
                 isPopularMode={isPopularMode}
                 setIsPopularMode={setIsPopularMode}
                 featuredMistakesSelectionValue={featuredMistakesSelectionValue}
-               />
+              />
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>

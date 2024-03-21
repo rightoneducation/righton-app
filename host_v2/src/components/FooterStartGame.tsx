@@ -1,17 +1,15 @@
 import React from 'react';
-import {Button, BottomNavigation, Box, Typography} from '@mui/material';
+import { Button, BottomNavigation, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-
-interface FootStartGameProps{
-    handleStateGame: () => void
-    gameSessionId: string
-    teamsLength: number;
-    currentQuestionIndex: number
+interface FootStartGameProps {
+  handleStateGame: () => void;
+  gameSessionId: string;
+  teamsLength: number;
+  currentQuestionIndex: number;
 }
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
-
   border: '4px solid #159EFA',
   background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
   borderRadius: '34px',
@@ -37,11 +35,9 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
     opacity: '25%',
     cursor: 'not-allowed',
   },
-
-}))
+}));
 
 const BottomNavigationStyled = styled(Box)(({ theme }) => ({
-
   position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
@@ -53,24 +49,25 @@ const BottomNavigationStyled = styled(Box)(({ theme }) => ({
   paddingTop: '80px',
   paddingBottom: '50px',
   background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
+}));
 
-}))
+function FooterStartGame({
+  handleStateGame,
+  teamsLength,
+  currentQuestionIndex,
+  gameSessionId,
+}: FootStartGameProps) {
+  // const classes = useStyles();
 
-function FooterStartGame ({ handleStateGame, teamsLength, currentQuestionIndex, gameSessionId}: FootStartGameProps){
-    // const classes = useStyles();
-    
-    return (
-        <BottomNavigationStyled>
-            <Box>
-                <ButtonStyled 
-                    disabled={teamsLength <= 0}
-                    onClick = {handleStateGame}
-                >
-                    Start Game    
-                </ButtonStyled>
-            </Box>
-        </BottomNavigationStyled>
-    );
+  return (
+    <BottomNavigationStyled>
+      <Box>
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleStateGame}>
+          Start Game
+        </ButtonStyled>
+      </Box>
+    </BottomNavigationStyled>
+  );
 }
 
 // const useStyles = makeStyles((theme : Theme) => ({
@@ -97,7 +94,7 @@ function FooterStartGame ({ handleStateGame, teamsLength, currentQuestionIndex, 
 //       color: 'rgba(0, 117, 255, 1)',
 //       textDecoration: 'underline',
 //     },
-  
+
 //     startGameButton: {
 //       border: '4px solid #159EFA',
 //       background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
@@ -126,5 +123,5 @@ function FooterStartGame ({ handleStateGame, teamsLength, currentQuestionIndex, 
 //       },
 //     },
 //   }));
-  
-  export default FooterStartGame;
+
+export default FooterStartGame;

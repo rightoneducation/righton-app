@@ -22,15 +22,13 @@ const Template: StoryFn<typeof MistakeSelector> = function CardTemplate(args) {
   );
 };
 
-
 export const PopularMode = Template.bind({});
 PopularMode.args = {
   mistakeText: '4x^4 - x^3 + 7x^2 - 6x',
   mistakePercent: 100,
   mistakeIndex: 0,
   isPopularMode: true,
-  isSelected: true
-
+  isSelected: true,
 };
 
 // need to display circle
@@ -40,7 +38,7 @@ PopularMode1.args = {
   mistakePercent: 80,
   mistakeIndex: 1,
   isPopularMode: true,
-  isSelected: true
+  isSelected: true,
 };
 
 export const PopularMode2 = Template.bind({});
@@ -49,7 +47,7 @@ PopularMode2.args = {
   mistakePercent: 40,
   mistakeIndex: 2,
   isPopularMode: true,
-  isSelected: true
+  isSelected: true,
 };
 
 export const ManualSelected = Template.bind({});
@@ -58,5 +56,5 @@ ManualSelected.args = {
   mistakePercent: 20,
   mistakeIndex: 3,
   isPopularMode: true,
-  isSelected: true
+  isSelected: true,
 };

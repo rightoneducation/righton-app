@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import {Box, Paper, Typography} from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import {
-  ITeam,
-  IQuestion,
-  GameSessionState
-} from '@righton/networking';
+import { ITeam, IQuestion, GameSessionState } from '@righton/networking';
 import HostHeader from '../components/HostHeader';
 import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 
-
 interface StartGameProps {
-  teams: ITeam[]
-  currentQuestionIndex: number
-  questions:IQuestion[]
-  title: string
-  gameSessionId: string
-  gameCode: number
-  currentState: GameSessionState
-  handleStartGame: () => void
-}  
+  teams: ITeam[];
+  currentQuestionIndex: number;
+  questions: IQuestion[];
+  title: string;
+  gameSessionId: string;
+  gameCode: number;
+  currentState: GameSessionState;
+  handleStartGame: () => void;
+}
 
 const BackgroundStyled = styled(Paper)(({ theme }) => ({
   display: 'flex',
@@ -29,8 +24,8 @@ const BackgroundStyled = styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
-  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)'
-}))
+  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+}));
 
 const UpperStyled = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -38,8 +33,7 @@ const UpperStyled = styled(Box)(({ theme }) => ({
   justifyContent: 'flex-start',
   alignItems: 'center',
   gap: '24px',
-    
-}))
+}));
 
 const GameStyled = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
@@ -48,36 +42,37 @@ const GameStyled = styled(Typography)(({ theme }) => ({
   fontSize: '18px',
   color: 'rgba(255, 255, 255, 0.46)',
   paddingTop: '10%',
-}))
+}));
 
-function StartGame({teams,
+function StartGame({
+  teams,
   currentQuestionIndex,
   questions,
   title,
   gameSessionId,
   gameCode,
   currentState,
-  handleStartGame}: StartGameProps) {
-    return (
-      <BackgroundStyled>
-        <UpperStyled>
-          <HostHeader 
-          gameCode = {gameCode}
+  handleStartGame,
+}: StartGameProps) {
+  return (
+    <BackgroundStyled>
+      <UpperStyled>
+        <HostHeader
+          gameCode={gameCode}
           currentQuestionIndex={currentQuestionIndex}
-          />
-          <GameCard questions = {questions} title={title} />
-          <GameStyled>Basic Mode</GameStyled>
-          <CurrentStudents teams={teams}/>
-        </UpperStyled>
-        <FooterStartGame 
+        />
+        <GameCard questions={questions} title={title} />
+        <GameStyled>Basic Mode</GameStyled>
+        <CurrentStudents teams={teams} />
+      </UpperStyled>
+      <FooterStartGame
         teamsLength={teams ? teams.length : 0}
-        gameSessionId = {gameSessionId}
+        gameSessionId={gameSessionId}
         currentQuestionIndex={currentQuestionIndex}
         handleStateGame={handleStartGame}
-        />
-      </BackgroundStyled>
-    )
+      />
+    </BackgroundStyled>
+  );
+}
 
-  }
-  
-  export default StartGame;
+export default StartGame;

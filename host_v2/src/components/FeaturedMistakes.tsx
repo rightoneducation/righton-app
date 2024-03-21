@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { 
+import {
   Paper,
   Typography,
   RadioGroup,
   FormControlLabel,
   Radio,
   Box,
-  withStyles
+  withStyles,
 } from '@mui/material';
-import { ShortAnswerResponse, Mistake } from "../lib/HostModels";
-import MistakeSelector from "./MistakeSelector";
+import { ShortAnswerResponse, Mistake } from '../lib/HostModels';
+import MistakeSelector from './MistakeSelector';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 
-import { sortMistakes } from "../lib/HelperFunctions";
+import { sortMistakes } from '../lib/HelperFunctions';
 
 // Need to remove featuredMistakesSelectionValue. Duplicate of isPopularMode.
 interface FeaturedMistakesProps {
@@ -25,15 +25,14 @@ interface FeaturedMistakesProps {
   featuredMistakesSelectionValue: string;
 }
 
-
 const BackgroundStyled = styled(Paper)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '24px',
   padding: `16px`,
-  backgroundColor: 'rgba(0,0,0,0)', 
-  gap:16,
+  backgroundColor: 'rgba(0,0,0,0)',
+  gap: 16,
 });
 
 const TitleStyled = styled(Typography)({
@@ -42,7 +41,7 @@ const TitleStyled = styled(Typography)({
   textAlign: 'left',
   fontSize: '24px',
   fontWeight: 700,
-  width: '100%', 
+  width: '100%',
 });
 
 const SubtitleStyled = styled(Typography)({
@@ -73,15 +72,16 @@ export default function FeaturedMistakes({
   setSortedMistakes,
   isPopularMode,
   setIsPopularMode,
-  featuredMistakesSelectionValue
+  featuredMistakesSelectionValue,
 }: FeaturedMistakesProps) {
-  const title = "Featured Mistakes";
-  const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
-  const radioButtonText1 = "Use the top 3 answers by popularity";
-  const radioButtonText2 = "Manually pick the options";
+  const title = 'Featured Mistakes';
+  const subtitle =
+    'Selected responses will be presented to players as options for popular incorrect answers.';
+  const radioButtonText1 = 'Use the top 3 answers by popularity';
+  const radioButtonText2 = 'Manually pick the options';
   const numOfPopularMistakes = 3;
-  console.log("Featured sorted mistakes below")
-  console.log(sortedMistakes)
+  console.log('Featured sorted mistakes below');
+  console.log(sortedMistakes);
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < numOfPopularMistakes) {
@@ -100,7 +100,7 @@ export default function FeaturedMistakes({
       setIsPopularMode(false);
     }
   };
-    // Initialize the state and call the resetMistakesToPopular function when the component mounts
+  // Initialize the state and call the resetMistakesToPopular function when the component mounts
 
   // useState(() => {
   // resetMistakesToPopular();
@@ -114,44 +114,59 @@ export default function FeaturedMistakes({
     setSortedMistakes([...newMistakes]);
   };
 
-  return(
+  return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
         <TitleStyled>{title}</TitleStyled>
         <SubtitleStyled>{subtitle}</SubtitleStyled>
-        <RadioGroup defaultValue={featuredMistakesSelectionValue} onChange={handleModeChange}>
-          <RadioLabelStyled 
-            value="A" 
-            control={<Radio />} 
-            label={radioButtonText1} 
+        <RadioGroup
+          defaultValue={featuredMistakesSelectionValue}
+          onChange={handleModeChange}
+        >
+          <RadioLabelStyled
+            value="A"
+            control={<Radio />}
+            label={radioButtonText1}
           />
-          <RadioLabelStyled 
-            value="B" 
-            control={<Radio />} 
-            label={radioButtonText2} 
+          <RadioLabelStyled
+            value="B"
+            control={<Radio />}
+            label={radioButtonText2}
           />
         </RadioGroup>
-        {sortedMistakes.length > 0 
-          ? <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: "8px", width: '100%'}}>
-              {sortedMistakes.map((mistake, index) => (
-                <MistakeSelector 
-                  key={mistake.answer} 
-                  mistakeText={mistake.answer} 
-                  mistakePercent={mistake.percent} 
-                  isPopularMode={isPopularMode} 
-                  isSelected={mistake.isSelected} 
-                  mistakeIndex={index}
-                  handleSelectMistake={handleSelectMistake} 
-                  // style={{width:'100%'}}  
-                />
-              ))}
-            </Box>
-          : <Box sx={{width: '100%'}}>
-              <SubtitleStyled style={{fontStyle: 'italic', textAlign: 'center'}}>
-                Student responses will appear here
-              </SubtitleStyled>
-            </Box>
-        }
+        {sortedMistakes.length > 0 ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+              gap: '8px',
+              width: '100%',
+            }}
+          >
+            {sortedMistakes.map((mistake, index) => (
+              <MistakeSelector
+                key={mistake.answer}
+                mistakeText={mistake.answer}
+                mistakePercent={mistake.percent}
+                isPopularMode={isPopularMode}
+                isSelected={mistake.isSelected}
+                mistakeIndex={index}
+                handleSelectMistake={handleSelectMistake}
+                // style={{width:'100%'}}
+              />
+            ))}
+          </Box>
+        ) : (
+          <Box sx={{ width: '100%' }}>
+            <SubtitleStyled
+              style={{ fontStyle: 'italic', textAlign: 'center' }}
+            >
+              Student responses will appear here
+            </SubtitleStyled>
+          </Box>
+        )}
       </BackgroundStyled>
     </HostDefaultCardStyled>
   );

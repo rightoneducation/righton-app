@@ -4,7 +4,6 @@
 export const StorageKey = 'rightOn';
 export const featuredMistakesSelectionValue = 'A';
 
-
 export interface LocalModel {
   hasRejoined: boolean;
   currentTimer: number;
