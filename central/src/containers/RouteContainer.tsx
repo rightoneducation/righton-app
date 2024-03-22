@@ -324,14 +324,15 @@ export const RouteContainer = ({
       const createdAt = questionTemplateUpdate.createdAt?.toString();
       const updatedQuestion = {...questionTemplateUpdate, updatedAt, createdAt};
       const question = await updateQuestionTemplate(apiClients, updatedQuestion);
-        if (question) {  
-          listQuerySettings.nextToken = nextToken;
-          const question = await getAllQuestionTemplates(listQuerySettings);
-        } else {
-          throw new Error ('Question was unable to be update');
-        }
-        setLoading(false);
-        setAlert({ message: 'Question updated.', type: 'success' });
+      if (question) {  
+        listQuerySettings.nextToken = nextToken;
+        const question = await getAllQuestionTemplates(listQuerySettings);
+      } else {
+        throw new Error ('Question was unable to be update');
+      }
+      setLoading(false);
+      setAlert({ message: 'Question updated.', type: 'success' });
+      return question;
       } catch (e) {
         console.log(e);
       }
