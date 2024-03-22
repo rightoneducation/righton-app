@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { APIClients, Environment } from '@righton/networking';
 import GameSessionContainer from './containers/GameSessionContainer';
 import CreateNewGameSession from './containers/CreateNewGameSession';
 
@@ -19,9 +20,11 @@ const theme = createTheme({
 });
 
 const RedirectToCentralIfMissing = () => {
-  window.location.href = 'http://central.rightoneducation.com/';
+  window.location.href = 'http://dev-central.rightoneducation.com/';
   return null;
 };
+
+const apiClients = new APIClients(Environment.Developing);
 
 function App() {
   return (
@@ -29,10 +32,10 @@ function App() {
       <Router>
         <Switch>
           <Route path="/host/:gameSessionId">
-            <GameSessionContainer />
+            <GameSessionContainer apiClients={apiClients} />
           </Route>
           <Route path="/new/:gameId">
-            <CreateNewGameSession />
+            <CreateNewGameSession apiClients={apiClients} />
           </Route>
           <Route>
             <RedirectToCentralIfMissing />

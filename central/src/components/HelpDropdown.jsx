@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { SORT_TYPES } from '../lib/sorting';
 import { Collapse, Tooltip } from '@material-ui/core';
 import HelpMenuIcon from '../images/HelpMenuIcon.svg';
 import HelpMenuIconClicked from '../images/HelpMenuIconClicked.svg';
@@ -14,7 +13,6 @@ import HelpMenuAboutIcon from '../images/HelpMenuAboutIcon.svg';
 
 export default function HelpDropdown({isUserAuth, handleModalOpen}) {
   const [isHelpMenuClicked, SetIsHelpMenuClicked] = React.useState(false);
-  const [updatedValue, setUpdatedValue] = React.useState(SORT_TYPES.UPDATED);
   const [qcValue, setQCValue] = React.useState("");
   const [gradeValue, setGradeValue] = React.useState("");
 
@@ -102,6 +100,7 @@ const useStyles = (isHelpMenuClicked) => makeStyles(theme => ({
       width: '45px',
       cursor: 'pointer',
       position: 'relative',
+      zIndex: 5
     },
     helpHeader: {
       backgroundColor: isHelpMenuClicked ? 'white' : null,
@@ -128,7 +127,7 @@ const useStyles = (isHelpMenuClicked) => makeStyles(theme => ({
       boxShadow: '0px 10px 10px rgba(15, 27, 40, 0.13)',
       display: 'flex',
       direction: 'column',
-      zIndex: 2,
+      zIndex: 5,
     },
     helpTableRow: {
       display: 'flex',

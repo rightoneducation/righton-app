@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
+import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent, Box } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
+import { isNullOrUndefined } from '@righton/networking';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
-import AddQuestionForm from './AddQuestionSidebar';
-import QuestionForm from './CreateQuestion';
 import CCSS from './CCSS';
 import GameCCSS from './GameMakerCCSS';
-import { getGameById } from '../lib/games';
-
+import QuestionMaker from './QuestionMaker';
+import { getQuestionTemplateById } from '../lib/HelperFunctions';
+import SearchBar from './SearchBar.jsx';
+import SortByDropdown from './SortByDropdown';
+import QuestionDashboard from './QuestionDashboard';
+import { v4 as uuidv4 } from 'uuid';
 
 // New "empty" game
 const newGame = {
-  id: 0,
   title: '',
   description: '',
   grade: '',
@@ -21,7 +23,7 @@ const newGame = {
   phaseOneTime: 180,
   phaseTwoTime: 180,
   imageUrl: '',
-  questions: [],
+  questionTemplates: [],
 }
 
 // Preset times
@@ -48,24 +50,55 @@ const times = [
   },
 ]
 
-export default function GameMaker({ loading, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion }) {
+export default function GameMaker({ 
+  loading,
+  questions, 
+  game,
+  games, 
+  handleQuestionBankClick, 
+  selectedQuestions, 
+  setSelectedQuestions, 
+  saveGameTemplate, 
+  isUserAuth,
+  handleCreateQuestionTemplate,
+  handleUpdateQuestionTemplate,
+  setSearchInput,
+  searchInput, 
+  isSearchClick, 
+  handleSearchClick,
+  handleSearchChange, 
+  isResolutionMobile, 
+  listQuerySettings,
+  handleUpdateListQuerySettings,
+  sortByCheck, 
+  setSortByCheck, 
+  cloneQuestion,
+  gameId,
+  handleScrollDown,
+  handleQuestionSelected,
+  nextToken,
+  localQuestionTemplates,
+  setLocalQuestionTemplates,
+}) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
-
   const classes = useStyles();
   const history = useHistory();
-  const [disabled, setDisabled] = useState(true);
-
   const [gameDetails, setGameDetails] = useState(() => {
     if (game) {
       return { ...game };
     }
     else {
-      return newGame;
+      return {id: gameId, ...newGame};
     }
   });
+
+  const selectedQuestionTemplates = selectedQuestions.map(question => {
+    return {questionTemplate: question, gameQuestionId: null }
+  });
+
   const [phaseOne, setPhaseOne] = useState(() => {
     if (gameDetails.phaseOneTime === null) {
       return 180;
@@ -82,8 +115,6 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
       return gameDetails.phaseTwoTime;
     }
   });
-  const [questions, setQuestions] = useState([...gameDetails.questions]);
-
   // Handles changing and storing of new values for both Phase Timers
   const handlePhaseOne = (event) => {
     setPhaseOne(event.target.value);
@@ -99,51 +130,18 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     setGameDetails({ ...gameDetails, grade: grade, domain: domain, cluster: cluster, standard: standard });
   }
 
-  // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
   const handleDelete = (index) => {
-    const newQuestions = [...questions];
-    newQuestions.splice(index, 1);
-    setQuestions(newQuestions);
-  }
-
-  // Handles any new questions added to the game, either through Add Question or Create Question
-  const handleGameQuestion = (newQuestion) => {
-    setDisabled(isButtonDisabled());
-    for (let i = 0; i < questions.length; i++) {
-      if (newQuestion.id === questions[i].id) {
-        questions[i] = newQuestion
-        return null;
-      }
-    }
-    setQuestions([...questions, newQuestion])
-  };
-
-  // Handles if the Save Game button is disabled. The button become enabled when all required fields have values in it. The required fields/values are the game's title, description, and 4+ questions.
-  const isButtonDisabled = () => {
-    if (gameDetails.title.length > 0 && gameDetails.description.length > 0 && gameDetails.imageUrl.length > 0) {
-      return false;
-    }
-    else {
-      return true;
-    }
+    const newQuestions = [...localQuestionTemplates];
+    const newQuestionsDeleted = newQuestions.splice(index, 1);
+    setLocalQuestionTemplates(newQuestions);
   }
 
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
-    if (gameDetails.id !== 0) {
-      questions && questions.map(question => {
-        delete question.updatedAt;
-        delete question.createdAt;
-      })
-      editSave(gameDetails, questions);
-    }
-    else {
-      let questionIDs = questions.map(question => (question.id))
-      delete gameDetails.questions;
-      delete gameDetails.id;
-      newSave(gameDetails, questionIDs);
-
-    }
+    setSelectedQuestions([]); 
+    setLocalQuestionTemplates([]);
+    gameDetails.questionTemplates = localQuestionTemplates;
+    saveGameTemplate(game, gameDetails);
     event.preventDefault();
     history.push('/');
   };
@@ -152,7 +150,6 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     let newString = value.replace(/\'/g, '\u2019');
     return newString;
   }
-
   let content = (
     <div>
       <form onSubmit={handleSubmit}>
@@ -180,7 +177,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Title'
                       value={gameDetails.title}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput(currentTarget.value) }) }}
                       fullWidth
                       required
                       className={classes.gameTitle}
@@ -192,7 +189,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Text'
                       value={gameDetails.description}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }) }}
                       fullWidth
                       multiline
                       rows={3}
@@ -239,7 +236,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                         label='Image URL'
                         fullWidth
                         value={gameDetails.imageUrl}
-                        onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }); setDisabled(false && handleDisable()) }}
+                        onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }) }}
                       />
                     </Grid>
                   </Grid>
@@ -269,59 +266,66 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
               </Grid>
 
               <Grid container item xs={12} className={classes.questionHolder}>
-                {questions.map((question, index) => {
-                  return (
-                    <Grid key={index} container item xs={12}>
-                      <Card className={classes.question}>
-                        <CardContent>
-                          <Grid container item>
-                            <Grid container item xs={10}>
-                              <Grid item xs={12}>
-                                <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
+                {
+                !isNullOrUndefined(localQuestionTemplates) 
+                  ? 
+                  localQuestionTemplates.map((questionData, index) => {
+                    const question = questionData.questionTemplate;
+                    return (
+                      <Grid key={uuidv4()} container item xs={12}>
+                        <Card className={classes.question}>
+                          <CardContent>
+                            <Grid container item>
+                              <Grid container item xs={10}>
+                                <Grid item xs={12}>
+                                  <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                  <Typography className={classes.title}>
+                                    Question {index + 1}
+                                  </Typography>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                  <Typography color="textSecondary" gutterBottom>
+                                    {question.title}
+                                  </Typography>
+                                </Grid>
                               </Grid>
 
-                              <Grid item xs={12}>
-                                <Typography className={classes.title}>
-                                  Question {index + 1}
-                                </Typography>
-                              </Grid>
+                              <Grid container item xs={2}>
+                                <Grid container item xs={10} justifyContent='center'>
+                                  {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'} />}
+                                </Grid>
 
-                              <Grid item xs={12}>
-                                <Typography color="textSecondary" gutterBottom>
-                                  {question.text}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-
-                            <Grid container item xs={2}>
-                              <Grid container item xs={10} justifyContent='center'>
-                                {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'} />}
-                              </Grid>
-
-                              <Grid container direction='column' item xs={2}>
-                                <Grid container item xs={2}>
-                                  <IconButton size='small' onClick={() => handleDelete(index)}>
-                                    <Cancel />
-                                  </IconButton>
+                                <Grid container direction='column' item xs={2}>
+                                  <Grid container item xs={2}>
+                                    <IconButton size='small' onClick={() => handleDelete(index)}>
+                                      <Cancel />
+                                    </IconButton>
+                                  </Grid>
                                 </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  );
-                })}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    );
+                  })
+                : 
+                null
+                }
 
                 <Grid container item xs={12} className={classes.questionAddition}>
                   <Grid container item xs={6} justifyContent='center'>
-                    <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/addquestion`)}>
-                      Add Question
+                    <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => handleQuestionBankClick(gameDetails)}>
+                      Question Bank
                     </Button>
                   </Grid>
 
                   <Grid container item xs={6} justifyContent='center'>
-                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/createquestion/0`)}>
+                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/questionmaker/${uuidv4()}`)}>
                       Create Question
                     </Button>
                   </Grid>
@@ -331,9 +335,12 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
             {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS} currentGameGrade={gameDetails.grade} /> : <Grid container item xs={12}></Grid>}
 
-            <Grid container item xs={12} justifyContent='center'>
-              <Button variant='contained' type='submit' disabled={disabled} disableElevation className={classes.greenButton}>
+            <Grid container item xs={12} style={{display: 'flex', justifyContent: 'center', gap: 16}}>
+              <Button variant='contained' type='submit' disableElevation className={classes.blueButton}>
                 Save Game
+              </Button>
+              <Button variant='contained' disableElevation className={classes.greenButton} onClick={()=> { setSelectedQuestions([]); setLocalQuestionTemplates([]); history.push('/')}}>
+                Cancel
               </Button>
             </Grid>
           </Grid>
@@ -343,38 +350,108 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
       </form>
     </div>
   );
-
   return (
-    <div>
       <Switch>
-        <Route path="/gamemaker/:gameId/addquestion" render=
+        <Route exact path='/gamemaker/:gameId/questionmaker/:questionId' render={
+          isUserAuth && (
+            ({match}) => {
+              const { questionId, gameId } = match.params;
+              const question = getQuestionTemplateById(questions, questionId);
+              return <QuestionMaker 
+                question={question} 
+                gameId={gameId} 
+                handleCreateQuestionTemplate={handleCreateQuestionTemplate} 
+                handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
+                localQuestionTemplates={localQuestionTemplates}
+                setLocalQuestionTemplates={setLocalQuestionTemplates}
+              />
+            }
+          )
+        } />
+        <Route exact path="/gamemaker/:gameId/addquestion" render=
           {({ match }) => {
-            const { gameId } = match.params
-            return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId} />
-          }} />
-
-        <Route path="/gamemaker/:gameId/createquestion/:createQuestionIndex" render=
-          {({ match }) => {
-            const { gameId, createQuestionIndex } = match.params
-            const gameNumber = Number(gameId) === 0;
-            return <QuestionForm
-              onChange={setDisabled(isButtonDisabled())}
-              question={gameNumber ? null : getGameById(games, gameId)?.questions[Number(createQuestionIndex) - 1]}
-              updateQuestion={updateQuestion}
-              cloneQuestion={cloneQuestion}
-              gameId={gameId}
-              gameQuestion={handleGameQuestion} />;
-          }} />
-
+            const { gameId } = match.params;
+            return (
+              <>
+                <Grid item xs={12} className={classes.contentGrid}>
+                  <Box className={classes.actions}>
+                    <SearchBar 
+                      setSearchInput={setSearchInput} 
+                      searchInput={searchInput} 
+                      isSearchClick={isSearchClick} 
+                      handleSearchClick={handleSearchClick} 
+                      isResolutionMobile={isResolutionMobile} 
+                      handleSearchChange={handleSearchChange}
+                    />
+                    <SortByDropdown 
+                      isGames={location.pathname === "/"} 
+                      listQuerySettings={listQuerySettings} 
+                      handleUpdateListQuerySettings={handleUpdateListQuerySettings} 
+                      sortByCheck={sortByCheck} 
+                      setSortByCheck={setSortByCheck} 
+                      isResolutionMobile={isResolutionMobile} 
+                      style={{zIndex: 5}}
+                    />
+                  </Box>
+                  <Box container onClick={() => setSortByCheck(false)}>
+                  <QuestionDashboard gameId={gameId} loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleQuestionSelected={handleQuestionSelected} gameDetails={gameDetails} setGameDetails={setGameDetails}/>   
+                  </Box>
+                </Grid>
+                <Box className={classes.addQuestionFooter}>
+                  <Button 
+                    variant='contained' 
+                    disableElevation 
+                    className={classes.blueButton} 
+                    onClick={(event) => {
+                    setLocalQuestionTemplates([...localQuestionTemplates, ...selectedQuestionTemplates]);
+                    setSelectedQuestions([]); 
+                    history.push(`/gamemaker/${gameId}`)
+                  }}>
+                    Add to Game
+                  </Button>
+                </Box>
+              </>
+            );
+          }} 
+        />
         <Route path="/gamemaker/:gameId">
           {content}
         </Route>
       </Switch>
-    </div>
   );
 }
 
 const useStyles = makeStyles(theme => ({
+  contentGrid: {
+    padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
+    borderRight: '1px #0000003b solid',
+    overflowY: 'hidden',
+    overflowX: 'hidden',
+  },
+  actions: {
+    paddingTop: '10px',
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 10px 0px  !important`,
+    marginBottom: '16px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 10,
+    height: '40px',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: 'white',
+    zIndex:3
+  },
+  addQuestionFooter: {
+    width: '100%',
+    height: '50px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    background: '#FFF',
+    zIndex: 4
+  },
   page: {
     marginTop: '1%',
     paddingBottom: '10px',

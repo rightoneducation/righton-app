@@ -5,17 +5,17 @@ import { ITeam } from "./ITeam"
 export interface IGameSession {
     id: string
     gameId: number
-    startTime?: string | null
+    startTime: string
     phaseOneTime: number
     phaseTwoTime: number
-    teams?: Array<ITeam>
-    currentQuestionIndex?: number | null
+    teams: Array<ITeam>
+    currentQuestionIndex: number
     currentState: GameSessionState
     gameCode: number
     isAdvancedMode: boolean
-    currentTimer?: number | null
+    currentTimer: number
     questions: Array<IQuestion>
-    title?: string | null
+    title: string
     updatedAt: string
     createdAt: string
 }

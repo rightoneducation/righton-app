@@ -8,7 +8,6 @@ const useStyles = makeStyles(() => ({
   div: {
     top: 0,
     padding: '16px',
-    height: '175px',
     boxSizing: 'border-box',
     width: '100%',
     maxWidth: '700px',
@@ -50,7 +49,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const label = {
-  1: 'Preparing Question',
+  1: 'Preparing Questions',
   2: 'Phase 1 of 2 - Choose Correct Answer',
   3: 'Phase 1 of 2 - Answer Explanation',
   4: 'Phase 1 of 2 - Results',
@@ -71,15 +70,21 @@ export default function HeaderGame({
 }) {
   const classes = useStyles();
 
+  const divStyle = {
+    height: statePosition === 1 ? 'auto' : '175px'
+  };
+  
   return (
-    <div className={classes.div}>
-      <Pagination
-        totalQuestions={totalQuestions}
-        currentQuestionIndex={currentQuestionIndex}
-        statePosition={statePosition}
-      />
+    <div style={divStyle} className={classes.div}>
+      {statePosition !== 1 && ( 
+        <Pagination
+          totalQuestions={totalQuestions}
+          currentQuestionIndex={currentQuestionIndex}
+          statePosition={statePosition}
+        />
+      )}
       <Typography className={classes.title}>
-        Question {currentQuestionIndex + 1} of {totalQuestions}
+        {statePosition === 1 ? 'Game Configurations' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
       </Typography>
       <Typography className={classes.phases}>{label[statePosition]}</Typography>
       <div style={{ opacity: gameTimer ? '1' : '0.4' }}>

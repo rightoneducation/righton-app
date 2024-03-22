@@ -2,7 +2,12 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined, GameSessionState } from '@righton/networking';
+import {
+  isNullOrUndefined,
+  GameSessionState,
+  BackendAnswer,
+  IChoice,
+} from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import { AnswerState } from '../lib/PlayModels';
@@ -10,26 +15,37 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface AnswerCardProps {
-  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  answers: IChoice[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: (answerText: string) => void;
+  isShortAnswerEnabled: boolean;
+  handleSubmitAnswer: (answerText: BackendAnswer) => void;
   currentState: GameSessionState;
-  selectedAnswer: number | null;
-  handleSelectAnswer: (index: number) => void;
+  currentQuestionIndex: number;
+  selectedAnswer: string | null;
+  questionId: string;
+  teamMemberAnswersId: string;
+  handleSelectAnswer: (answerText: string) => void;
 }
 
 export default function AnswerCard({
   answers,
   isSubmitted,
+  isShortAnswerEnabled,
   handleSubmitAnswer,
   currentState,
+  currentQuestionIndex,
   selectedAnswer,
+  questionId,
+  teamMemberAnswersId,
   handleSelectAnswer,
 }: AnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const correctText = (
-    <Box display="inline" sx={{ textAlign: 'center' }}>
+    <Box display="inline" style={{ width: '100%' }}>
+      <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'left' }}>
+        {t('gameinprogress.chooseanswer.answercard')}
+      </Typography>
       <Typography variant="h4" display="inline">
         {t('gameinprogress.chooseanswer.correcttext1')}
       </Typography>
@@ -60,12 +76,12 @@ export default function AnswerCard({
     </Box>
   );
   const getAnswerStatus = (
-    answer: { text: string; isCorrectAnswer: boolean },
+    answer: { text: string; isAnswer: boolean },
     index: number
   ) => {
-    if (selectedAnswer === index) return AnswerState.SELECTED;
+    if (selectedAnswer === answer.text) return AnswerState.SELECTED;
     if (
-      answer.isCorrectAnswer &&
+      answer.isAnswer &&
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
     )
       return AnswerState.CORRECT;
@@ -92,10 +108,16 @@ export default function AnswerCard({
         </Stack>
         <ButtonSubmitAnswer
           isSubmitted={isSubmitted}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          isHint={false}
           selectedAnswer={selectedAnswer}
           answers={answers}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
+          questionId={questionId}
+          teamMemberAnswersId={teamMemberAnswersId}
         />
       </BodyCardContainerStyled>
     </BodyCardStyled>

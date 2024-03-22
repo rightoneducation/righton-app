@@ -3,9 +3,75 @@
 input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
 } # FOR TESTING ONLY!
+
+type Mutation {
+  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String @function(name: "createGame-${env}")
+}
+
+input CreateGameSessionFromTemplateInput {
+  gameTemplateId: ID!
+}
+# define a GameTemplate in amplify and graphql to list all gametemplates sorted by updatedAt
+type GameTemplate @model{
+  id: ID!
+  title: String!
+  owner: String! @index(
+      name: "gameTemplatesByOwner"
+      queryField: "gameTemplatesByOwner"
+      sortKeyFields: ["createdAt"]
+    )
+  version: Int!
+  description: String!
+  domain: String
+  cluster: String
+  grade: String
+  standard: String
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  imageUrl: String
+  questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions") 
+  questionTemplatesCount: Int! @default(value: "0")
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByQuestionTemplatesCount", queryField: "gameTemplatesByQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
+}
+
+input GameTemplateInput {
+  title: String
+  owner: String
+  version: Int
+  description: String
+}
+
+type QuestionTemplate @model {
+  id: ID!
+  title: String!
+  owner: String!
+  version: Int!
+  choices: AWSJSON
+  instructions: AWSJSON
+  answerSettings: AWSJSON
+  domain: String
+  cluster: String
+  grade: String
+  standard: String
+  imageUrl: String
+  gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
+  gameTemplatesCount: Int! @default(value: "0")
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplatesByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "questionTemplatesByGameTemplatesCount", queryField: "questionTemplatesByGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
+}
+
+input QuestionTemplateInput {
+  title: String
+  owner: String
+  version: Int
+}
+
 type GameSession @model {
   id: ID!
-  gameId: Int!
+  gameId: ID!
   startTime: AWSDateTime
   phaseOneTime: Int!
   phaseTwoTime: Int!
@@ -37,10 +103,12 @@ enum GameSessionState {
 }
 
 type Question @model(subscriptions: null, timestamps: null) {
-  id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
+  id: ID! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON
   answerSettings: AWSJSON
+  responses: AWSJSON
+  hints: AWSJSON
   imageUrl: String
   instructions: AWSJSON
   standard: String
@@ -81,12 +149,16 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
-  questionId: Int!
-  isChosen: Boolean!
+  isSubmitted: Boolean! @default(value: "false")
+  isShortAnswerEnabled: Boolean! @default(value: "false")
+  currentState: GameSessionState!
+  currentQuestionIndex: Int!
+  questionId: ID!
+  teamMemberAnswersId: ID!
   text: String!
-  awsAnswerContents: AWSJSON!
-  isTrickAnswer: Boolean!
-  confidenceLevel: ConfidenceLevel! @default(value: "NOT_RATED")
+  answer: AWSJSON!
+  confidenceLevel: ConfidenceLevel
+  hint: AWSJSON
 }
 
 type Subscription {

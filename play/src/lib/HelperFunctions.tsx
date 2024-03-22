@@ -1,12 +1,23 @@
 import i18n from 'i18next';
+import { v4 as uuidv4 } from 'uuid';
 import {
-  ITeamAnswer,
+  StringAnswer,
+  ExpressionAnswer,
   ITeam,
+  IAnswerHint,
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
+  AnswerFactory,
+  AnswerType,
+  BackendAnswer
 } from '@righton/networking';
-import { InputPlaceholder, StorageKey } from './PlayModels';
+import {
+  InputPlaceholder,
+  StorageKey,
+  LocalModel,
+  StorageKeyAnswer,
+} from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -38,6 +49,7 @@ export const isGameCodeValid = (gameCode: string) => {
 
 /**
  * on rejoining game, this checks if the player has already submitted an answer
+ * @param localModel - the localModel retrieved from local storage
  * @param hasRejoined - if a player is rejoining
  * @param answers - the answers submitted by the player previously
  * @param answerChoices - the answer choices for the question on the backend
@@ -45,45 +57,70 @@ export const isGameCodeValid = (gameCode: string) => {
  * @returns - the index of the answer the player has submitted, null if they haven't submitted an answer and boolean to track submission
  */
 export const checkForSubmittedAnswerOnRejoin = (
+  localModel: LocalModel,
   hasRejoined: boolean,
-  answers: (ITeamAnswer | null)[] | null | undefined,
-  answerChoices: {
-    id: string;
-    text: string;
-    isCorrectAnswer: boolean;
-    reason: string;
-  }[],
-  currentState: GameSessionState
-): { selectedAnswerIndex: number | null; isSubmitted: boolean } => {
-  let selectedAnswerIndex = null;
-  let isSubmitted = false;
-
-  if (
-    hasRejoined &&
-    (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-      currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
-  ) {
-    if (!isNullOrUndefined(answers)) {
-      answers.forEach((answer) => {
-        if (answer) {
-          answerChoices.forEach((answerChoice, index) => {
-            if (answerChoice.text === answer.text) {
-              if (
-                (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
-                  answer.isChosen) ||
-                (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
-                  answer.isTrickAnswer)
-              ) {
-                selectedAnswerIndex = index;
-                isSubmitted = true;
-              }
-            }
-          });
-        }
-      });
+  currentState: GameSessionState,
+  currentQuestionIndex: number,
+  isShortAnswerEnabled: boolean,
+): BackendAnswer => {
+  let returnedAnswer: BackendAnswer = {
+    id: uuidv4(),
+    answer: AnswerFactory.createAnswer('', AnswerType.STRING),
+    isSubmitted: false,
+    currentState: GameSessionState.TEAMS_JOINING,
+    currentQuestionIndex: 0,
+    isShortAnswerEnabled,
+    questionId: '',
+    teamMemberAnswersId: '',
+    text: ''
+  };
+  if (hasRejoined) {
+    if (
+      localModel.answer !== null &&
+      localModel.answer.currentState === currentState &&
+      localModel.answer.currentQuestionIndex === currentQuestionIndex
+    ) {
+      // set answer to localAnswer
+      returnedAnswer = localModel.answer;
+      // remove localAnswer from local storage
+      localModel.answer = null; // eslint-disable-line no-param-reassign
+      window.localStorage.setItem(StorageKey, JSON.stringify(localModel));
     }
   }
-  return { selectedAnswerIndex, isSubmitted };
+  return returnedAnswer as BackendAnswer;
+};
+
+/**
+ * on rejoining game, this checks if the player has already submitted a hint
+ * @param localModel - the localModel retrieved from local storage
+ * @param hasRejoined - if a player is rejoining
+ * @param currentState - the current state of the game session
+ * @param currentQuestionIndex - the current question index of the game session
+ * @returns - the hint that the player was working on, null if they haven't submitted a hint 
+ */
+export const checkForSubmittedHintOnRejoin = (
+  localModel: LocalModel,
+  hasRejoined: boolean,
+  currentState: GameSessionState,
+  currentQuestionIndex: number
+): IAnswerHint => {
+  let returnedHint: IAnswerHint = {
+    rawHint: '',
+    teamName: '',
+    isHintSubmitted: false,
+  };
+  if (hasRejoined) {
+    if (
+      localModel.answer !== null &&
+      !isNullOrUndefined(localModel.answer.hint) &&
+      localModel.answer.currentState === currentState &&
+      localModel.answer.currentQuestionIndex === currentQuestionIndex
+    ) {
+      // set hint to localModel.hint
+      returnedHint = localModel.answer.hint;
+    }
+  }
+  return returnedHint as IAnswerHint;
 };
 
 /**
@@ -95,7 +132,7 @@ export const checkForSubmittedAnswerOnRejoin = (
  */
 export const checkForSelectedConfidenceOnRejoin = (
   hasRejoined: boolean,
-  currentAnswer: ITeamAnswer | null | undefined,
+  currentAnswer: BackendAnswer | null | undefined,
   currentState: GameSessionState
 ): {
   selectedConfidenceOption: string;
@@ -112,10 +149,10 @@ export const checkForSelectedConfidenceOnRejoin = (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
-    !isNullOrUndefined(currentAnswer)
+    !isNullOrUndefined(currentAnswer) && !isNullOrUndefined(currentAnswer.confidenceLevel)
   ) {
-      isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
-      selectedConfidenceOption = currentAnswer.confidenceLevel;
+    isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
+    selectedConfidenceOption = currentAnswer.confidenceLevel;
   }
   return { selectedConfidenceOption, isSelected, timeOfLastSelect };
 };
@@ -123,12 +160,15 @@ export const checkForSelectedConfidenceOnRejoin = (
 /**
  * validates localModel retrieved from local storage
  * separate function to allow for ease of testing
- * @param localModel - the localModel retrieved from local storage
+ * @param localModelBase - the localModel retrieved from local storage
  * @returns - the localModel if valid, null otherwise
  */
-export const validateLocalModel = (localModel: string | null) => {
-  if (isNullOrUndefined(localModel) || localModel === '') return null;
-  const parsedLocalModel = JSON.parse(localModel);
+export const validateLocalModel = (
+  localModelBase: string | null,
+  localModelAnswer: string | null
+) => {
+  if (isNullOrUndefined(localModelBase) || localModelBase === '') return null;
+  const parsedLocalModel = JSON.parse(localModelBase);
 
   // checks for invalid data in localModel, returns null if found
   if (
@@ -136,7 +176,7 @@ export const validateLocalModel = (localModel: string | null) => {
       parsedLocalModel.currentTime,
       parsedLocalModel.gameSessionId,
       parsedLocalModel.teamId,
-      parsedLocalModel.teamMemberId,
+      parsedLocalModel.teamMemberAnswersId,
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
       parsedLocalModel.currentTimer,
@@ -152,6 +192,10 @@ export const validateLocalModel = (localModel: string | null) => {
   if (elapsedTime > 120) {
     return null;
   }
+  if (!isNullOrUndefined(localModelAnswer) && localModelAnswer !== '') {
+    const parsedLocalModelAnswer = JSON.parse(localModelAnswer);
+    parsedLocalModel.localAnswer = parsedLocalModelAnswer;
+  }
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;
 };
@@ -162,9 +206,13 @@ export const validateLocalModel = (localModel: string | null) => {
  */
 export const fetchLocalData = () => {
   const localModel = validateLocalModel(
-    window.localStorage.getItem(StorageKey)
+    window.localStorage.getItem(StorageKey),
+    window.localStorage.getItem(StorageKeyAnswer)
   );
-  if (!localModel) window.localStorage.removeItem(StorageKey);
+  if (!localModel) {
+    window.localStorage.removeItem(StorageKey);
+    window.localStorage.removeItem(StorageKeyAnswer);
+  }
   return localModel;
 };
 

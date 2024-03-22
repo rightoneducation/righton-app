@@ -5,7 +5,6 @@ projects:
       - src/graphql/**/*.ts
     excludes:
       - ./amplify/**
-      # https://github.com/aws-amplify/amplify-codegen/issues/734#issuecomment-1772945645
       - src/AWSMobileApi.ts
       - src/graphql/index.ts
     extensions:
@@ -14,6 +13,17 @@ projects:
         generatedFileName: src/AWSMobileApi.ts
         docsFilePath: src/graphql
         maxDepth: 8
+  dev:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
 extensions:
   amplify:
     version: 3

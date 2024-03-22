@@ -20,10 +20,11 @@ export default function StudentViews({
   showFooterButtonOnly,
   setIsConfidenceEnabled,
   assembleNavDictionary,
+  isHintEnabled
 }) {
   let statePosition;
   let isLastQuestion =
-    currentQuestionIndex + 1 === (questions ? questions.length : 0);
+    (currentQuestionIndex + 1) === questions.length;
 
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -65,7 +66,7 @@ export default function StudentViews({
   // determines next state for use by footer
   const nextStateFunc = (currentState) => {
     if (currentState === GameSessionState.PHASE_2_RESULTS && !isLastQuestion) {
-      return GameSessionState.TEAMS_JOINING;
+      return GameSessionState.CHOOSE_CORRECT_ANSWER;
     } else {
       let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
       return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
@@ -73,15 +74,14 @@ export default function StudentViews({
   };
 
   let isLastGameScreen =
-    currentQuestionIndex + 1 === (questions ? questions.length : 0) &&
+    ((currentQuestionIndex + 1) === questions.length) &&
     currentState === GameSessionState.PHASE_2_RESULTS; // if last screen of last question, head to view final results
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = () => {
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS) {
       // if they are on the last page a\nd need to advance to the next question
-      setIsConfidenceEnabled(false);
-      assembleNavDictionary(false, GameSessionState.TEAMS_JOINING);
+      assembleNavDictionary(false, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
       handleUpdateGameSession({
         currentState: nextStateFunc(currentState),
         currentQuestionIndex: currentQuestionIndex + 1,
@@ -89,7 +89,7 @@ export default function StudentViews({
       return;
     }
     if (currentState === GameSessionState.PHASE_1_RESULTS)
-      assembleNavDictionary(false, currentState);
+      assembleNavDictionary(false, isHintEnabled, currentState);
     handleUpdateGameSession({ currentState: nextStateFunc(currentState) });
   };
 

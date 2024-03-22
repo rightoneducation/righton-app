@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import {
-  ApiClient,
+  IAPIClients,
   isNullOrUndefined,
   GameSessionState,
 } from '@righton/networking';
 import { Navigate, useLoaderData } from 'react-router-dom';
-import { fetchLocalData } from '../lib/HelperFunctions';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import Lobby from '../pages/pregame/Lobby';
@@ -14,15 +13,17 @@ import {
   LobbyMode,
   LocalModel,
   StorageKey,
+  StorageKeyAnswer,
+  StorageKeyHint,
   ErrorType,
 } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
-  apiClient: ApiClient;
+  apiClients: IAPIClients;
 }
 
 export function GameInProgressContainer(props: GameInProgressContainerProps) {
-  const { apiClient } = props;
+  const { apiClients } = props;
   const [retry, setRetry] = useState<number>(0);
   // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
   const handleRetry = () => {
@@ -35,7 +36,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
     localModel?.gameSessionId,
-    apiClient,
+    apiClients,
     retry,
     localModel?.hasRejoined
   );
@@ -71,14 +72,19 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     }
     // if loading, display loading message on bottom of How to Play page
     if (subscription.isLoading) return <Lobby mode={LobbyMode.LOADING} />;
-    if (subscription.gameSession?.currentQuestionIndex != null && subscription.gameSession?.currentQuestionIndex > 0) 
-      return <Lobby 
-        mode={LobbyMode.PREQUESTION} 
-        teams={subscription.gameSession.teams} 
-        currentState={subscription.gameSession.currentState}  
-        teamAvatar={localModel.selectedAvatar}
-        teamId={localModel.teamId}
-      />;
+    if (
+      subscription.gameSession?.currentQuestionIndex != null &&
+      subscription.gameSession?.currentQuestionIndex > 0
+    )
+      return (
+        <Lobby
+          mode={LobbyMode.PREQUESTION}
+          teams={subscription.gameSession.teams}
+          currentState={subscription.gameSession.currentState}
+          teamAvatar={localModel.selectedAvatar}
+          teamId={localModel.teamId}
+        />
+      );
     // if waiting for teacher, display waiting message on How to Play page
     return <Lobby mode={LobbyMode.READY} />;
   }
@@ -95,7 +101,18 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
 }
 
 export function LocalModelLoader(): LocalModel {
-  const localModel = fetchLocalData();
+  // localModelBase and localModelAnswer are stored separately so that
+  // changes to the timer and changes to the short answer response pad don't conflict
+  const localModelBase = JSON.parse(
+    window.localStorage.getItem(StorageKey) ?? '{}'
+  );
+  const localModelAnswer = JSON.parse(
+    window.localStorage.getItem(StorageKeyAnswer) ?? '{}'
+  );
+  const localModelHint = JSON.parse(
+    window.localStorage.getItem(StorageKeyHint) ?? '{}'
+  );
+  const localModel = { ...localModelBase, answer: localModelAnswer, hint: localModelHint };
   if (localModel && !localModel.hasRejoined) {
     const updatedModelForNextReload = { ...localModel, hasRejoined: true };
     window.localStorage.setItem(

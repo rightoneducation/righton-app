@@ -7,11 +7,11 @@ import {
   IQuestion,
 } from '@righton/networking';
 
-const apiClient = new ApiClient(Environment.Staging);
+const apiClient = new ApiClient(Environment.Developing);
 
 const createQuestion = () => {
   return {
-    id: Math.abs(randomInt(2**31)),
+    id: Math.abs(randomInt(2 ** 31)),
     gameSessionId: randomUUID(),
     text: 'Question text',
     instructions: ['hint 1', 'hint 2', 'hint 3'],
@@ -48,7 +48,7 @@ const createQuestion = () => {
 const mockCreateGameSession = (): IGameSession => {
   return {
     id: randomUUID(),
-    gameId: Math.abs(randomInt(2**31)),
+    gameId: Math.abs(randomInt(2 ** 31)),
     startTime: null,
     phaseOneTime: 300,
     phaseTwoTime: 300,

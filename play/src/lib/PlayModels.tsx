@@ -1,3 +1,4 @@
+import { BackendAnswer } from '@righton/networking';
 import Icon0 from '../img/MonsterIcon0.svg';
 import Icon1 from '../img/MonsterIcon1.svg';
 import Icon2 from '../img/MonsterIcon2.svg';
@@ -87,7 +88,7 @@ export enum LobbyMode {
   LOADING,
   READY,
   REJOIN,
-  PREQUESTION
+  PREQUESTION,
 }
 
 export enum TimerMode {
@@ -121,13 +122,14 @@ export enum ErrorType {
  * @param {number} selectedAvatar - avatar selected by player
  */
 export interface LocalModel {
-  currentTime: number;
   gameSessionId: string;
   teamId: string;
-  teamMemberId: string;
+  teamMemberAnswersId: string;
+  currentTime: number;
+  currentTimer: number;
   selectedAvatar: number;
   hasRejoined: boolean;
-  currentTimer: number;
+  answer: BackendAnswer | null;
 }
 
 interface MonsterMap {
@@ -186,3 +188,16 @@ export enum InputPlaceholder {
  *  string key for storage of game data in users local storage
  */
 export const StorageKey = 'rightOn';
+
+/**
+ * string for storage of answer data in users local storage
+ * kept separate from StorageKey so that timer and answer updates don't conflict
+ */
+export const StorageKeyAnswer = 'rightOnAnswer';
+
+/**
+ * string for storage of hint data in users local storage
+ * kept separate from StorageKeyAnswer as hint is on ITeamAnswer not ITeamAnswerContent
+ */
+
+export const StorageKeyHint = 'rightOnHint';

@@ -9,8 +9,8 @@ export default function Responses({
   totalAnswers,
   questionChoices,
   statePosition,
-  teamsPickedChoices,
   graphClickInfo,
+  isShortAnswerEnabled,
   handleGraphClick,
 }) {
   const classes = useStyles();
@@ -18,7 +18,7 @@ export default function Responses({
   return (
     <Box className={classes.centerContent}>
       <Typography className={classes.titleStyle}>
-        Real-time Responses
+        Responses
       </Typography>
       <ResponsesGraph
         data={data}
@@ -26,8 +26,8 @@ export default function Responses({
         totalAnswers={totalAnswers}
         questionChoices={questionChoices}
         statePosition={statePosition}
-        teamsPickedChoices={teamsPickedChoices}
         graphClickInfo={graphClickInfo}
+        isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
         handleGraphClick={handleGraphClick}
       />
     </Box>
