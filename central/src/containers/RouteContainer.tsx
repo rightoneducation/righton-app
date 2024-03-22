@@ -452,6 +452,7 @@ export const RouteContainer = ({
         const games = await getAllGameTemplates(updatedListQuerySettings);
         localStorage.setItem('games', JSON.stringify(games));
       } 
+      setListQuerySettings(updatedListQuerySettings);
       setLoading(false);
     };
     if ((location.pathname === "/questions") || (location.pathname === "/") || (gameIdPattern.test(location.pathname))) 

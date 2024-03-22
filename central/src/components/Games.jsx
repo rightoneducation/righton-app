@@ -103,7 +103,7 @@ export default function Games({
                 question = getQuestionTemplateById(questions, questionId) ?? null;
               }
               handleSearchClick(false);
-              return <QuestionMaker gameId={gameId} question={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
+              return <QuestionMaker gameId={gameId} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
           }/>
         }
@@ -115,8 +115,7 @@ export default function Games({
               }
               const { gameId } = match.params;
               const game = getGameById(games, gameId);
-              console.log(localQuestionTemplates);
-              if (game && game.questionTemplates.length > 0 && localQuestionTemplates.length === 0){
+              if (game && game.questionTemplates.length > 0){
                 setLocalQuestionTemplates(game.questionTemplates);
               }
               handleSearchClick(false);
@@ -162,7 +161,7 @@ export default function Games({
               const { questionId } = match.params;
               const question = getQuestionTemplateById(questions, questionId);
               handleSearchClick(false);
-              return <QuestionMaker question={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
+              return <QuestionMaker originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
         }/>
         <Route path="/">
