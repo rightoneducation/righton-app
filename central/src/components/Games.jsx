@@ -103,7 +103,7 @@ export default function Games({
                 question = getQuestionTemplateById(questions, questionId) ?? null;
               }
               handleSearchClick(false);
-              return <QuestionMaker gameId={gameId} question={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
+              return <QuestionMaker gameId={gameId} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
           }/>
         }
@@ -114,6 +114,10 @@ export default function Games({
                 return null;
               }
               const { gameId } = match.params;
+              const game = getGameById(games, gameId);
+              if (game && game.questionTemplates.length > 0){
+                setLocalQuestionTemplates(game.questionTemplates);
+              }
               handleSearchClick(false);
               return <GameMaker 
                 loading={loading} 
@@ -154,11 +158,10 @@ export default function Games({
               if (!isUserAuth) {
                 return null;
               }
-            
               const { questionId } = match.params;
               const question = getQuestionTemplateById(questions, questionId);
               handleSearchClick(false);
-              return <QuestionMaker question={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
+              return <QuestionMaker originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
         }/>
         <Route path="/">

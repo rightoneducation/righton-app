@@ -10,14 +10,12 @@ import QuestionHelper from './QuestionHelper';
 import { NumericAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision } from '@righton/networking';
 
 export default function QuestionMaker({ 
-  updateQuestion, 
-  question: initialState, 
   gameId, 
-  gameQuestion, 
+  originalQuestion, 
+  localQuestionTemplates,
+  setLocalQuestionTemplates,
   handleCreateQuestionTemplate, 
   handleUpdateQuestionTemplate,
-  localQuestionTemplates,
-  setLocalQuestionTemplates 
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
@@ -27,17 +25,15 @@ export default function QuestionMaker({
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch('/gamemaker/');
-  const originalQuestion = location.state || initialState || null;
-  const [answerType, setAnswerType] = useState(AnswerType.NUMBER);
-  const [answerPrecision, setAnswerPrecision] = useState(AnswerPrecision.WHOLE);
   const [isAnswerTypeValid, setIsAnswerTypeValid] = useState(false);
   const [isAnswerPrecisionValid, setIsAnswerPrecisionValid] = useState(false);
-
+  const initialState = useMemo(() => originalQuestion != null, [originalQuestion]);
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
       const copyOfOriginal = { ...originalQuestion }
       copyOfOriginal.choices = JSON.parse(copyOfOriginal.choices)
       copyOfOriginal.instructions = JSON.parse(copyOfOriginal.instructions);
+      copyOfOriginal.answerSettings = JSON.parse(copyOfOriginal.answerSettings);
       return copyOfOriginal
     }
     return {
@@ -50,6 +46,8 @@ export default function QuestionMaker({
       standard: null,
     }
   });
+  const [answerType, setAnswerType] = useState(question.answerSettings.answerType ?? AnswerType.NUMBER);
+  const [answerPrecision, setAnswerPrecision] = useState(question.answerSettings.answerPrecision ?? AnswerPrecision.WHOLE);
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if (match) {

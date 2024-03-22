@@ -2,11 +2,7 @@ import {
   isNullOrUndefined,
   GameSessionState,
   ConfidenceLevel,
-  AnswerFactory,
-  NumericAnswer,
-  StringAnswer,
-  ExpressionAnswer,
-  AnswerType
+  AnswerFactory
 } from '@righton/networking';
 
 /*
@@ -258,6 +254,7 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   teamsArray.forEach((team) => {
     team.teamMembers &&
       team.teamMembers.forEach((teamMember) => {
+        console.log(teamMember.id);
         if (teamMember.id === teamMemberAnswersId){
           teamName=team.name;
           teamId=team.id;
@@ -270,13 +267,13 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
 /**
  * This function creates the short answer responses object that will be stored in the question object, via equality checks
  * @param {IResponse} prevShortAnswer 
- * @param {IChoice[]} choices 
- * @param {any}} newAnswer 
+ * @param {IChoice} correctAnswer
+ * @param {any} newAnswer 
  * @param {any} newAnswerTeamName 
  * @param {string} teamId 
  * @returns {IResponse[]}
  */
-export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettings, newAnswer, newAnswerTeamName, teamId) => {
+export const buildShortAnswerResponses = (prevShortAnswer, correctAnswer, answerSettings, newAnswer, newAnswerTeamName, teamId) => {
   // if the answer is empty, skip and return the previous answer
   // an empty answer could mean that a user was able to submit an answer of the wrong type
   if (newAnswer.answer.normAnswer.length === 0) {
@@ -292,9 +289,17 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
     answer.normalizeAnswer(newAnswer.answer.rawAnswer);
   // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
   if (prevShortAnswer.length === 0) { 
+    const correctAnswerObj = AnswerFactory.createAnswer(
+      correctAnswer.text,
+      answerSettings.answerType,
+      answerSettings.answerPrecision,
+      correctAnswer.text
+    );
+    if (isNullOrUndefined(correctAnswerObj.normAnswer) || correctAnswerObj.normAnswer.length === 0)
+      correctAnswerObj.normalizeAnswer(correctAnswer.text);
     prevShortAnswer.push({
-      rawAnswer: answer.rawAnswer,
-      normAnswer: answer.normAnswer,
+      rawAnswer: correctAnswerObj.rawAnswer,
+      normAnswer: correctAnswerObj.normAnswer,
       isCorrect: true,
       isSelectedMistake: false,
       count: 0,
@@ -321,6 +326,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettin
       teams: [{name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
     });
   }
+  console.log(prevShortAnswer);
   return prevShortAnswer;
 };
 
