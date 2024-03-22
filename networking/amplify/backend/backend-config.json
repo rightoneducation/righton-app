@@ -4,10 +4,14 @@
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2023-08-23T00:04:45.159Z",
+              "apiKeyExpirationDate": "2024-12-11T10:29:18.626Z",
               "apiKeyExpirationDays": 365,
               "description": "mobiledev"
             },
@@ -20,7 +24,7 @@
     }
   },
   "auth": {
-    "mobile0a6d6e96": {
+    "mobilee1238193": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -28,36 +32,70 @@
       "serviceType": "imported"
     }
   },
+  "function": {
+    "createGame": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "mobile"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "parameters": {
-    "AMPLIFY_auth_mobile0a6d6e96_nativeClientId": {
+    "AMPLIFY_auth_mobilee1238193_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile0a6d6e96"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
-    "AMPLIFY_auth_mobile0a6d6e96_userPoolId": {
+    "AMPLIFY_auth_mobilee1238193_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile0a6d6e96"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
-    "AMPLIFY_auth_mobile0a6d6e96_userPoolName": {
+    "AMPLIFY_auth_mobilee1238193_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile0a6d6e96"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
-    "AMPLIFY_auth_mobile0a6d6e96_webClientId": {
+    "AMPLIFY_auth_mobilee1238193_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile0a6d6e96"
+          "resourceName": "mobilee1238193"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGame_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGame"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGame_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGame"
         }
       ]
     }

@@ -15,6 +15,7 @@ export default function CustomBar(props) {
     index,
     graphClickInfo,
     handleGraphClick,
+    isShortAnswerEnabled
   } = props;
   const classes = useStyles();
   return (
@@ -23,7 +24,7 @@ export default function CustomBar(props) {
       {datum.answerCount > 0 && (
         <rect
           className={classes.highlight}
-          x={defaultVictoryPadding - xSmallPadding}
+          x={isShortAnswerEnabled ? 0 : defaultVictoryPadding - xSmallPadding}
           y={y - mediumPadding}
           width={selectedWidth + defaultVictoryPadding}
           height={selectedHeight + mediumPadding - xSmallPadding / 2}

@@ -2,6 +2,13 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
+  BackendAnswer,
+  GameSessionState,
+  IChoice,
+  AnswerFactory,
+  AnswerType
+} from '@righton/networking';
+import {
   GamePlayButtonStyled,
   GamePlayButtonStyledDisabled,
 } from '../lib/styledcomponents/GamePlayButtonStyled';
@@ -9,26 +16,40 @@ import {
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
-  selectedAnswer: number | null;
-  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
-  handleSubmitAnswer: (answer: string) => void;
+  isHint: boolean;
+  isShortAnswerEnabled: boolean;
+  selectedAnswer?: string | null;
+  answers?: IChoice[] | undefined;
+  currentState: GameSessionState;
+  currentQuestionIndex: number;
+  questionId: string,
+  teamMemberAnswersId: string,
+  handleSubmitAnswer: (answer: BackendAnswer) => void;
 }
 
 export default function ButtonSubmitAnswer({
   isSelected,
   isSubmitted,
+  isHint,
+  isShortAnswerEnabled,
   selectedAnswer,
   answers,
+  currentState,
+  currentQuestionIndex,
+  questionId,
+  teamMemberAnswersId,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
   const buttonText = isSubmitted
     ? t('gameinprogress.button.submitted')
     : t('gameinprogress.button.submit');
+  const hintButtonText = isSubmitted
+    ? t('gameinprogress.button.submitted')
+    : t('gameinprogress.button.hint');
   const buttonContents = (
     <Typography sx={{ textTransform: 'none' }} variant="button">
-      {' '}
-      {buttonText}{' '}
+      {isHint ? hintButtonText : buttonText}
     </Typography>
   );
 
@@ -36,8 +57,20 @@ export default function ButtonSubmitAnswer({
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
       onClick={() => {
-        const answerText = answers?.[selectedAnswer ?? 0]?.text;
-        handleSubmitAnswer(answerText ?? '');
+        const submitAnswer = new BackendAnswer(
+          AnswerFactory.createAnswer(selectedAnswer ?? '', AnswerType.MULTICHOICE),
+          true,
+          isShortAnswerEnabled,
+          currentState,
+          currentQuestionIndex,
+          questionId,
+          teamMemberAnswersId,
+          selectedAnswer ?? '',
+          null,
+          null
+        );
+
+        handleSubmitAnswer(submitAnswer);
       }}
     >
       {buttonContents}

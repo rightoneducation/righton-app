@@ -19,6 +19,7 @@ input CreateGameQuestionInput {
 input CreateQuestionInput {
 	text: String!
 	choices: AWSJSON!
+	answerSettings: AWSJSON
 	gameId: ID
 	imageUrl: String
 	instructions: AWSJSON
@@ -74,6 +75,7 @@ type Question {
 	id: Int!
 	text: String!
 	choices: AWSJSON!
+	answerSettings: AWSJSON!
 	imageUrl: String
 	instructions: AWSJSON
 	updatedAt: AWSDateTime!
@@ -158,6 +160,7 @@ input UpdateQuestionInput {
 	id: Int!
 	text: String
 	choices: AWSJSON
+	answerSettings: AWSJSON
 	imageUrl: String
 	instructions: AWSJSON
 	cluster: String

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  ApiClient,
+  IAPIClients,
+  APIClients,
   isNullOrUndefined,
   IGameSession,
   GameSessionState,
@@ -13,18 +14,21 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, LocalModel, StorageKey } from '../lib/PlayModels';
+import {
+  PregameState,
+  LocalModel,
+  StorageKey,
+} from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {
-  apiClient: ApiClient;
+  apiClients: IAPIClients;
 }
 
-export function PregameContainer({ apiClient }: PregameFinished) {
+export function PregameContainer({ apiClients }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
   );
@@ -69,7 +73,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       return false;
     }
     try {
-      const gameSessionResponse = await apiClient.getGameSessionByCode(
+      const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
         parseInt(inputGameCodeValue, 10)
       );
       if (isNullOrUndefined(gameSessionResponse)) {
@@ -85,6 +89,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       setPregameState(PregameState.ENTER_NAME);
       return true;
     } catch (error) {
+      console.log(error);
       return false;
     }
   };
@@ -93,7 +98,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
   const addTeamToGame = async () => {
     const teamName = `${firstName} ${lastName}`;
     try {
-      const team = await apiClient.addTeamToGameSessionId(
+      const team = await apiClients.team.addTeamToGameSessionId(
         gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         teamName,
         null
@@ -102,7 +107,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
         setIsAPIError(true);
       } else {
         try {
-          const teamMember = await apiClient.addTeamMemberToTeam(
+          const teamMember = await apiClients.teamMember.addTeamMemberToTeam(
             team.id,
             true,
             uuidv4()
@@ -110,12 +115,14 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           if (!teamMember) {
             setIsAPIError(true);
           }
-          return { teamId: team.id, teamMemberId: teamMember.id };
+          return { teamId: team.id, teamMemberAnswersId: teamMember.id };
         } catch (error) {
+          console.log(error);
           setIsAPIError(true);
         }
       }
     } catch (error) {
+      console.log(error);
       setIsAPIError(true);
     }
     return undefined;
@@ -133,12 +140,12 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           currentTime: new Date().getTime() / 60000,
           gameSessionId: gameSession.id,
           teamId: teamInfo.teamId,
-          teamMemberId: teamInfo.teamMemberId,
+          teamMemberAnswersId: teamInfo.teamMemberAnswersId,
           selectedAvatar,
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,
+          answer: null,
         };
-
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
         navigate(`/game`);
       }
@@ -146,7 +153,6 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       setIsAPIError(true);
     }
   };
-
   switch (pregameState) {
     case PregameState.SELECT_AVATAR:
       return (

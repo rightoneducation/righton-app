@@ -1,0 +1,52 @@
+{
+  "gamesession": {
+    "card": {
+      "title": "Card Title",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    "confidenceCard": {
+      "title": "Confidence",
+      "description": "Players are asked how sure they are of their answer for this question.",
+      "instructions": "Tap on a response to see more details.",
+      "graph": {
+        "title": "Number of Players",
+        "legend": {
+          "correct": "correct",
+          "incorrect": "incorrect"
+        },
+        "dropdown": {
+          "header": {
+            "noResponses": "No players picked this option",
+            "containsResponses": "Showing players who answered"
+          },
+          "answerLabel": "Answer"
+        }
+      }
+    },
+    "placeholder": "This is some placeholder text.",
+    "player": "Player",
+    "addtime": "+30s",
+    "answerbar": "Players who have answered",
+    "nextStateButton": "End Answering"
+  },
+  "gameinprogress": {
+    "header": {
+      "notstarted": "Answer the Question",
+      "teamsjoining": "Answer the Question",
+      "choosecorrectanswer": "Answer the Question",
+      "choosetrickiestanswer": "Pick the Trickiest!",
+      "phase1discuss": "Answer Explanations",
+      "phase2discuss": "Answer Explanations",
+      "phase2start": "Answer Explanations",
+      "phase1results": "Phase 1 Results",
+      "phase2results": "Phase 2 Results",
+      "finalresults": "Leaderboard",
+      "finished": "Answer the Question",
+      "correct": "Correct!",
+      "incorrect": "Nice Try!"
+    },
+    "questionCard": {
+      "title": "Question"
+    }
+  }
+}

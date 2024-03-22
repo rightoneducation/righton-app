@@ -2,7 +2,9 @@ import {
   isNullOrUndefined,
   GameSessionState,
   ConfidenceLevel,
+  AnswerFactory
 } from '@righton/networking';
+
 /*
  * counts all answers for current question using isChosen, for use in footer progress bar
  * @param {array} answerArray - array of answers for current question
@@ -10,9 +12,10 @@ import {
  */
 export const getTotalAnswers = (answerArray) => {
   return answerArray 
-    ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+    ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0)
     : 0;
 };
+
 /*
  * returns the choices object for an individual question
  * @param {array} questions - array of questions
@@ -30,6 +33,34 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
   return questions[currentQuestionIndex].choices;
 };
 
+export const getNoResponseTeams = (teams, answers) => {
+  const allTeamNames = teams.map(team => team.name);
+  const answeredTeamNames = answers.reduce((acc, item) => {
+    const teams =item.teams.map(t => t.name);
+    return acc.concat(teams);
+  }, []);
+  const teamsWithoutResponses = allTeamNames.filter(teamName => !answeredTeamNames.includes(teamName)).map(teamName => ({name: teamName}));
+  return teamsWithoutResponses;
+};
+
+/* 
+* checks that the gamesessionstate that the answer was created in matches the current state of the game
+* done to prevent students from being able to answer repeatedly etc
+* @param {GameSessionState} answerState - state of the game when answer was created
+* @param {GameSessionState} currentState - current state of the game
+* @returns {boolean} - true if the answer state matches the current state, false if not
+*/
+const isAnswerStateCurrent = (answerState, currentState) => {
+  const stateMappings = {
+    [GameSessionState.PHASE_1_DISCUSS]: GameSessionState.CHOOSE_CORRECT_ANSWER,
+    [GameSessionState.PHASE_1_RESULTS]: GameSessionState.CHOOSE_CORRECT_ANSWER,
+    [GameSessionState.PHASE_2_DISCUSS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+    [GameSessionState.PHASE_2_RESULTS]: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+  };
+  return answerState === currentState || 
+       answerState === stateMappings[currentState];
+}
+
 /*
 * returns team and answer data for each answer
 * for use in getTeamByQuestion and getAnswersByQuestion, below
@@ -38,71 +69,30 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
 * @param {number} currentQuestionId - id of current question
 * @returns {array} results - array of objects containing corresponding team and answer data
 */
-export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
+export const extractAnswers =  (teamsArray, currentState, currentQuestionId) => {
   let results = [];
-
   teamsArray.forEach(team => {
     team.teamMembers && team.teamMembers.forEach(teamMember => {
       teamMember.answers && teamMember.answers.forEach(answer => {
-        if (answer.questionId === currentQuestionId) {
-          const isGameInPhaseOne = (
-            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-            currentState === GameSessionState.PHASE_1_DISCUSS
-          ) && answer.isChosen;
-          const isGameInPhaseTwo = (
-            currentState === GameSessionState.PHASE_2_DISCUSS ||
-            currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-          ) && answer.isTrickAnswer;
-          if (isGameInPhaseOne || isGameInPhaseTwo) {
-            results.push({team, answer});
-          }
+        if (answer.questionId === currentQuestionId && isAnswerStateCurrent(answer.currentState, currentState)) {
+          results.push({team, answer});
         }
       });
     });
   });
-
   return results;
 };
 
-/*
- * returns an array of which team names picked which question choices
- * @param {array} teamsArray - array of teams
- * @param {number} currentQuestionIndex - index of current question
- * @param {array} choices - array of choices for current question
- * @returns {array} teamsPickedChoices - array of objects containing corresponding team names and choice texts
- */
-export const getTeamByQuestion = (
-  teamsArray,
-  currentQuestionIndex,
-  choices,
-  questions,
-  currentState,
-) => {
-  const teamsPickedChoices = [];
-  const currentQuestionId = questions[currentQuestionIndex].id;
-  const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
-  answers.forEach(({team, answer}) => {
-    let isNoResponse = true;
-    choices && choices.forEach(choice => {
-      if (answer.text === choice.text){
-        isNoResponse = false;
-        teamsPickedChoices.push({
-          teamName: team.name,
-          choiceText: choice.text
-        });
-      }
-    });
-
-    if (isNoResponse) {
-      teamsPickedChoices.push({
-        teamName: team.name,
-        choiceText: 'No response'
-      });
-    }
+const createBlankConfidenceArray = () => { 
+  return Object.keys(ConfidenceLevel).map((key) => {
+    return {
+      confidence: ConfidenceLevel[key],
+      correct: 0,
+      incorrect: 0,
+      players: [],
+    };
   });
-  return teamsPickedChoices;
 };
-
 /*
  * returns an array ordered to match the order of answer choices, containing the total number of each answer
  * @param {array} choices - array of choices for current question
@@ -121,23 +111,17 @@ export const getTeamByQuestion = (
  *   }]
  * }
  */
-export const getAnswersByQuestion = (
+export const getMultiChoiceAnswers = (
   choices,
   teamsArray,
   currentQuestionIndex,
   questions,
   currentState,
+  correctChoiceIndex
 ) => {
   // create this to use as an index reference for the confidence levels to avoid find/findIndex
   const confidenceLevelsArray = Object.values(ConfidenceLevel);
-  let confidenceArray = Object.keys(ConfidenceLevel).map((key) => {
-    return {
-      confidence: ConfidenceLevel[key],
-      correct: 0,
-      incorrect: 0,
-      players: [],
-    };
-  });
+  let confidenceArray = createBlankConfidenceArray();
   if (
     teamsArray.length !== 0 &&
     questions &&
@@ -146,16 +130,12 @@ export const getAnswersByQuestion = (
     Object.getPrototypeOf(teamsArray[0]) === Object.prototype
   ) {
     let choicesTextArray = choices.map(choice => choice.text);
-    let answersArray = new Array(choices.length).fill(0);
+    let answersArray = Array.from({length: choices.length}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex-1 ? true : false }));
     let currentQuestionId = questions[currentQuestionIndex].id;
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
-
     answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
-        if (answer.text === choice.text) {
-          answersArray[
-            choicesTextArray.indexOf(choice.text)
-          ] += 1;
+        if (answer.answer.rawAnswer === choice.text) {
           const index = confidenceLevelsArray.indexOf(
             answer.confidenceLevel,
           );
@@ -166,6 +146,9 @@ export const getAnswersByQuestion = (
               answer: choice.text,
               isCorrect: true,
             });
+            answersArray[
+              choicesTextArray.indexOf(choice.text)
+            ].isCorrect = true;
           } else {
             confidenceArray[index].incorrect += 1;
             confidenceArray[index].players.push({
@@ -174,6 +157,10 @@ export const getAnswersByQuestion = (
               isCorrect: false,
             });
           }
+          answersArray[
+            choicesTextArray.indexOf(choice.text)
+          ].count += 1;
+          answersArray[choicesTextArray.indexOf(choice.text)].teams.push({name: team.name});
         }
       });
     });
@@ -181,3 +168,252 @@ export const getAnswersByQuestion = (
   }
   return { answersArray: [], confidenceArray };
 };
+
+/**
+ * function to get short answer responses for use in victory charts
+ * @param {IResponse []} shortAnswerResponses 
+ * @returns {answersArray: IResponse[], confidenceArray: IConfidenceLevel[]}
+ */
+export const getShortAnswers = (shortAnswerResponses) => {
+  // create this to use as an index reference for the confidence levels to avoid find/findIndex
+  const confidenceLevelsArray = Object.values(ConfidenceLevel);
+  let confidenceArray = createBlankConfidenceArray();
+  if (shortAnswerResponses && shortAnswerResponses.length > 0) {
+    shortAnswerResponses.forEach((answer) => {
+      if (answer.teams){
+        answer.teams.forEach((team) => {
+          const index = confidenceLevelsArray.indexOf(team.confidence);
+          if (answer.isCorrect) {
+            confidenceArray[index].correct += 1;
+            confidenceArray[index].players.push({
+              name: team.name,
+              answer: answer.value,
+              isCorrect: true,
+            });
+          } else {
+            confidenceArray[index].incorrect += 1;
+            confidenceArray[index].players.push({
+              name: team.name,
+              answer: answer.value,
+              isCorrect: false,
+            });
+          }
+        });
+      }
+    });
+    return { answersArray: shortAnswerResponses, confidenceArray};
+  };
+  return { answersArray: [], confidenceArray };
+};
+
+/**
+ * the answers object in phase 2 needs to be different than in phase 1 (As it represents only answers selected via featured mistakes)
+ * this functions creates a similar object to above with that consideration made
+ * @param {IResponse []} shortAnswerResponses
+ * @param {ITeam []} teamsArray
+ * @param {GameSessionState} currentState
+ * @param {IQuestion []} questions
+ * @param {number} currentQuestionIndex
+ * @returns {answersArray: IResponse[]}
+ */
+export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, currentState, questions, currentQuestionIndex) => {
+  if (shortAnswerResponses && shortAnswerResponses.length > 0) {
+    let currentQuestionId = questions[currentQuestionIndex].id;
+    const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
+    const choices = shortAnswerResponses.reduce((acc, answer) => {
+      if (answer.isSelectedMistake || answer.isCorrect) {
+        acc.push(answer);
+      }
+      return acc; 
+    }, []);
+    const correctChoiceIndex = choices.findIndex(choice => choice.isCorrect);
+    let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
+    answers.forEach(({team, answer}) => {
+      for (let i = 0; i < choices.length; i++){ 
+        if (answer.answer.rawAnswer === choices[i].rawAnswer) {
+          answersArray[i].count += 1;
+          answersArray[i].teams.push({name: team.name});
+          break;
+        }
+      }; 
+    });
+    return { answersArray };
+  };
+  return { answersArray: [] };
+};
+
+/**
+ * returns team info to be used when receiving team answers from createteamanswers
+ * @param {ITeam[]} teamsArray 
+ * @param {string} teamMemberAnswersId 
+ * @returns {teamName: string, teamId: string}
+ */
+export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
+  let teamName = '';
+  let teamId = '';
+  teamsArray.forEach((team) => {
+    team.teamMembers &&
+      team.teamMembers.forEach((teamMember) => {
+        console.log(teamMember.id);
+        if (teamMember.id === teamMemberAnswersId){
+          teamName=team.name;
+          teamId=team.id;
+        }
+      });
+  });
+  return {teamName, teamId};
+};
+
+/**
+ * This function creates the short answer responses object that will be stored in the question object, via equality checks
+ * @param {IResponse} prevShortAnswer 
+ * @param {IChoice} correctAnswer
+ * @param {any} newAnswer 
+ * @param {any} newAnswerTeamName 
+ * @param {string} teamId 
+ * @returns {IResponse[]}
+ */
+export const buildShortAnswerResponses = (prevShortAnswer, correctAnswer, answerSettings, newAnswer, newAnswerTeamName, teamId) => {
+  // if the answer is empty, skip and return the previous answer
+  // an empty answer could mean that a user was able to submit an answer of the wrong type
+  if (newAnswer.answer.normAnswer.length === 0) {
+    return prevShortAnswer;
+  }
+  const answer = AnswerFactory.createAnswer(
+    newAnswer.answer.rawAnswer,
+    answerSettings.answerType,
+    answerSettings.answerPrecision,
+    newAnswer.answer.normAnswer
+  );
+  if (isNullOrUndefined(answer.normAnswer) || answer.normAnswer.length === 0) 
+    answer.normalizeAnswer(newAnswer.answer.rawAnswer);
+  // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
+  if (prevShortAnswer.length === 0) { 
+    const correctAnswerObj = AnswerFactory.createAnswer(
+      correctAnswer.text,
+      answerSettings.answerType,
+      answerSettings.answerPrecision,
+      correctAnswer.text
+    );
+    if (isNullOrUndefined(correctAnswerObj.normAnswer) || correctAnswerObj.normAnswer.length === 0)
+      correctAnswerObj.normalizeAnswer(correctAnswer.text);
+    prevShortAnswer.push({
+      rawAnswer: correctAnswerObj.rawAnswer,
+      normAnswer: correctAnswerObj.normAnswer,
+      isCorrect: true,
+      isSelectedMistake: false,
+      count: 0,
+      teams: [],
+    });
+  }
+  let isExistingAnswer = false;  
+  prevShortAnswer.forEach((prevAnswer) => {
+    if(
+      answer.isEqualTo(prevAnswer.normAnswer)){
+      isExistingAnswer = true;
+      prevAnswer.count += 1;
+      prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
+    }
+  });
+  // if there was no match above, add the new answer to the array of previous answers
+  if (!isExistingAnswer){
+    prevShortAnswer.push({
+      rawAnswer: newAnswer.answer.rawAnswer,
+      normAnswer: newAnswer.answer.normAnswer,
+      isCorrect: false,
+      isSelectedMistake: false,
+      count: 1,
+      teams: [{name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
+    });
+  }
+  console.log(prevShortAnswer);
+  return prevShortAnswer;
+};
+
+/**
+ * The below functions build out data objects for the Victory charts. There are three types each category require different data objects
+ * Multiple choice charts require just the multiple choice answers for the axis and the data received
+ * Short answer phase one charts require no information until answers are added to it, building out the axis and the data as answers are received
+ * Short answer phase two charts require previous, selected short answers as the axis and then build out the data as the answers are received
+ */
+export const buildVictoryDataObject = ( 
+  answers, 
+  questionChoices,
+  noResponseObject
+  ) => {
+  if (!isNullOrUndefined(answers.answersArray)){
+    return [
+      noResponseObject,
+      ...Object.keys(answers.answersArray).map((key, index) => (
+        {
+        answerCount: answers.answersArray[index].count,
+        answerChoice: String.fromCharCode(65 + index),
+        answerText:  isNullOrUndefined(questionChoices[index]) ? '' : questionChoices[index].text,
+        answerTeams: answers.answersArray[index].teams,
+        answerCorrect: answers.answersArray[index].isCorrect
+      })).reverse(),
+    ];
+  }
+  return [];
+}
+
+export const buildVictoryDataObjectShortAnswer = (
+  shortAnswerResponses, 
+  noResponseObject
+) => {
+  return [
+    noResponseObject,
+    ...shortAnswerResponses
+      .filter(answer => answer.count > 0)
+      .map((answer, index) => ({ 
+        answerChoice: String.fromCharCode(65 + index),
+        answerCount: answer.count,
+        answerText: answer.rawAnswer.toString(),
+        answerTeams: answer.teams,
+        answerCorrect: answer.isCorrect
+    }))
+  ]
+};
+
+export const buildVictoryDataObjectShortAnswerPhaseTwo = ( 
+  shortAnswerResponses, 
+  answers,
+  noResponseObject
+  ) => {
+  if (!isNullOrUndefined(answers.answersArray && shortAnswerResponses)){
+    return [
+      noResponseObject,
+      ...Object.keys(answers.answersArray).map((key, index) => ({
+        answerCount: answers.answersArray[index].count,
+        answerChoice: String.fromCharCode(65 + index),
+        answerText: shortAnswerResponses[index].rawAnswer.toString(),
+        answerTeams: shortAnswerResponses[index].teams,
+        answerCorrect: shortAnswerResponses[index].isCorrect
+      })).reverse(),
+    ];
+  }
+  return [];
+}
+
+/**
+ * rebuilds the hints array from each of the team answers. This is only done if a teacher refreshes the page 
+ * before they have a chance to move to the next phase of the game where we process them through GPT
+ * @param {*} gameSession 
+ * @returns array of hints 
+ */
+export const rebuildHints = (gameSession) => {
+  const currentQuestionId = gameSession.questions[gameSession.currentQuestionIndex].id;
+  let hints = [];
+  gameSession.teams.forEach(team => {
+    team.teamMembers && team.teamMembers.forEach(teamMember => {
+      teamMember.answers && teamMember.answers.forEach(answer => {
+        if (answer.questionId === currentQuestionId) {
+          if (answer.hint) {
+              hints.push(answer.hint);
+          }
+        }
+      });
+    });
+  });
+  return hints;
+}

@@ -4,6 +4,7 @@ import {
   ITeam,
   ITeamMember,
   ITeamAnswer,
+  ConfidenceLevel
 } from '@righton/networking';
 import apiClient from './ApiClient.mock';
 import { LocalModel } from '../../../src/lib/PlayModels';
@@ -49,12 +50,27 @@ export const createTeamAnswerMock = (
     id: randomUUID(),
     isChosen,
     text,
-    questionId,
+    questionId: '',
     isTrickAnswer,
     createdAt: Date().toString(),
     updatedAt: Date().toString(),
     teamMemberAnswersId: randomUUID(),
+    answerContents: '',
+    confidenceLevel: ConfidenceLevel.NOT_RATED,
   } as ITeamAnswer;
+};
+
+export const localModelAnswerMock = () => {
+  return {
+    answerTexts: [],
+    answerTypes: [],
+    multiChoiceAnswerIndex: null,
+    isSubmitted: true,
+    currentState: null,
+    currentQuestionIndex: null,
+    rawAnswer: '',
+    isShortAnswerEnabled: false,
+  };
 };
 
 export const localModelLoaderMock = () => {
@@ -67,6 +83,8 @@ export const localModelLoaderMock = () => {
     selectedAvatar: 0,
     hasRejoined: false,
     currentTimer: currentTime - 100,
+    answer: localModelAnswerMock(),
+    hint: {rawHint: '', teamName: '', isHintSubmitted: false},
   } as LocalModel;
 };
 
@@ -85,10 +103,10 @@ export const createValidGameSession = async (numberOfTeams: number) => {
   expect(gameSession.teams).toBeDefined();
   expect(gameSession.currentQuestionIndex).toBeDefined();
   expect(
-    gameSession.questions[gameSession.currentQuestionIndex!] // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    gameSession.questions[gameSession.currentQuestionIndex]
   ).toBeDefined();
   for (let i = 0; i < numberOfTeams; i += 1) {
-    gameSession.teams!.push( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    gameSession.teams.push(
       createTeamMock(gameSession, defaultTeamName, defaultScore)
     );
   }
@@ -96,7 +114,7 @@ export const createValidGameSession = async (numberOfTeams: number) => {
     expect(gameSession).toHaveProperty('teams');
     gameSession.teams.forEach((team) => {
       expect(team).toHaveProperty('teamMembers');
-      team.teamMembers!.forEach((teamMember) => { // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      team.teamMembers.forEach((teamMember) => {
         expect(teamMember).toHaveProperty('answers');
       });
     });

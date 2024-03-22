@@ -50,7 +50,7 @@ interface AnswerSelectorComponentProps {
   index: number;
   answerText: string;
   isSubmitted: boolean;
-  handleSelectAnswer: (index: number) => void;
+  handleSelectAnswer: (answerText: string) => void;
 }
 
 export default function AnswerSelector({
@@ -122,7 +122,7 @@ export default function AnswerSelector({
     case AnswerState.CORRECT:
       return (
         <AnswerSelectorCorrect
-          onClick={() => handleSelectAnswer(index)}
+          onClick={() => handleSelectAnswer(answerText)}
           disabled
           variant="text"
           isSubmitted={isSubmitted}
@@ -133,7 +133,7 @@ export default function AnswerSelector({
     case AnswerState.SELECTED:
       return (
         <AnswerSelectorSelected
-          onClick={() => handleSelectAnswer(index)}
+          onClick={() => handleSelectAnswer(answerText)}
           disabled={isSubmitted}
           variant="text"
           isSubmitted={isSubmitted}
@@ -145,7 +145,7 @@ export default function AnswerSelector({
     default:
       return (
         <AnswerSelectorDefault
-          onClick={() => handleSelectAnswer(index)}
+          onClick={() => handleSelectAnswer(answerText)}
           variant="text"
           disabled={isSubmitted}
           isSubmitted={isSubmitted}

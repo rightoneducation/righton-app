@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
-  ApiClient,
+  IAPIClients,
   GameSessionState,
   IGameSession,
   ITeam,
+  IChoice,
+  IQuestion,
   ModelHelper,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
@@ -22,20 +24,17 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 interface PhaseResultsProps {
-  apiClient: ApiClient;
-  teams?: ITeam[];
+  apiClients: IAPIClients;
+  teams: ITeam[];
   currentState: GameSessionState;
   teamAvatar: number;
-  currentQuestionIndex?: number | null;
+  currentQuestionIndex: number;
   teamId: string;
   gameSession: IGameSession;
-  answerChoices: {
-    id: string;
-    text: string;
-    isCorrectAnswer: boolean;
-  }[];
+  answerChoices: IChoice[];
   score: number;
   hasRejoined: boolean;
+  isShortAnswerEnabled: boolean;
 }
 
 /**
@@ -56,7 +55,7 @@ interface PhaseResultsProps {
  * - Styling is provided based on the AnswerType that is received from ResultsCard.tsx
  */
 export default function PhaseResults({
-  apiClient,
+  apiClients,
   teams,
   currentState,
   teamAvatar,
@@ -66,6 +65,7 @@ export default function PhaseResults({
   answerChoices,
   score,
   hasRejoined,
+  isShortAnswerEnabled,
 }: PhaseResultsProps) {
   // isError consists of two values:
   // error: boolean - whether or not an error has occurred, used to display error modal
@@ -74,19 +74,19 @@ export default function PhaseResults({
     error: boolean;
     withheldPoints: number;
   }>({ error: false, withheldPoints: 0 });
-  const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
+  const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0] as IQuestion;
   const currentTeam = teams?.find((team) => team.id === teamId);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
-    currentState
+    gameSession.currentState
   );
 
   const [newPoints, setNewPoints] = React.useState<number>(0);
   // update teamscore on the backend, if it fails, flag the error to pop the error modal
   const updateTeamScore = async (inputTeamId: string, newScore: number) => {
     try {
-      await apiClient.updateTeam({ id: inputTeamId, score: newScore + score });
+      await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + score });
       setNewPoints(newScore);
     } catch {
       setIsError({ error: true, withheldPoints: newScore });
@@ -101,7 +101,8 @@ export default function PhaseResults({
       calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
         gameSession,
         currentQuestion,
-        currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        isShortAnswerEnabled
       );
     }
     updateTeamScore(teamId, calcNewScore);

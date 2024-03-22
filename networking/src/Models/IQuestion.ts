@@ -1,14 +1,19 @@
+import { ConfidenceLevel } from "../AWSMobileApi";
+import { AnswerType, AnswerPrecision } from "./AnswerClasses";
+
 export interface IQuestion {
-    id: number
+    id: string
     text: string
-    choices?: Array<IChoice> | null
-    responses?: Array<string> | null
-    imageUrl?: string | null
-    instructions?: Array<string> | null
-    standard?: string | null
-    cluster?: string | null
-    domain?: string | null
-    grade?: string | null
+    choices: Array<IChoice>
+    answerSettings: IAnswerSettings
+    responses: Array<IResponse>
+    hints: Array<IHints>
+    imageUrl: string
+    instructions: Array<string>
+    standard: string
+    cluster: string
+    domain: string
+    grade: string
     gameSessionId: string
     order: number
     isConfidenceEnabled: boolean
@@ -17,7 +22,37 @@ export interface IQuestion {
 }
 
 export interface IChoice {
+    id?: string
     text: string
-    reason?: string
+    reason: string
     isAnswer: boolean
+}
+
+export interface IAnswerSettings {
+    answerType: AnswerType
+    answerPrecision?: AnswerPrecision
+}
+
+export interface IResponse {
+    rawAnswer: string
+    normAnswer: string[]
+    isCorrect: boolean
+    isSelectedMistake: boolean
+    count: number
+    teams: Array<IResponseTeam>
+}
+
+export interface IResponseTeam {
+    team: string
+    id: string
+    confidence: ConfidenceLevel
+}
+
+export interface IHints {
+    themeText: string;
+    teams: {
+        name: string;
+        rawHint: string;
+    }[];
+    teamCount: number;
 }
