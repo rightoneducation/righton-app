@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import {Paper, Button, Box, Typography } from '@mui/material';
+import {Button, Box, Typography } from '@mui/material';
 
 interface MistakeSelectorProps {
   mistakeText: string;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled } from '@mui/material/styles';
 import { 
   Paper,
@@ -6,14 +6,11 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Box,
-  withStyles
+  Box
 } from '@mui/material';
-import { ShortAnswerResponse, Mistake } from "../lib/HostModels";
+import {Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
-
-import { sortMistakes } from "../lib/HelperFunctions";
 
 // Need to remove featuredMistakesSelectionValue. Duplicate of isPopularMode.
 interface FeaturedMistakesProps {
@@ -60,13 +57,6 @@ const RadioLabelStyled = styled(FormControlLabel)({
   },
 });
 
-const RadioButtonStyled = styled(FormControlLabel)({
-  color: 'rgba(255, 255, 255, 0.60)',
-  '&.Mui-checked': {
-    color: '#2196F3',
-  },
-});
-
 export default function FeaturedMistakes({
   onSelectMistake,
   sortedMistakes,
@@ -80,8 +70,6 @@ export default function FeaturedMistakes({
   const radioButtonText1 = "Use the top 3 answers by popularity";
   const radioButtonText2 = "Manually pick the options";
   const numOfPopularMistakes = 3;
-  console.log("Featured sorted mistakes below")
-  console.log(sortedMistakes)
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < numOfPopularMistakes) {
@@ -100,12 +88,6 @@ export default function FeaturedMistakes({
       setIsPopularMode(false);
     }
   };
-    // Initialize the state and call the resetMistakesToPopular function when the component mounts
-
-  // useState(() => {
-  // resetMistakesToPopular();
-  //   setIsPopularMode(true);
-  // });
 
   const handleSelectMistake = (index: number) => {
     onSelectMistake(sortedMistakes[index].answer, false);

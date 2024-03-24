@@ -11,7 +11,7 @@ interface CurrentStudentProps{
     teams: Team[] | null;
 }
 
-const GridStyled = styled(Grid)(({ theme }) => ({
+const GridStyled = styled(Grid)({
 
   color: 'rgba(255, 255, 255, 1)',
   fontWeight: 'bold',
@@ -19,9 +19,9 @@ const GridStyled = styled(Grid)(({ theme }) => ({
   textAlign: 'center',
   marginTop: '4%',
 
-}))
+})
 
-const HrStyled = styled(Divider)(({ theme }) => ({
+const HrStyled = styled(Divider)({
   
   marginTop: '30px',
   marginBottom: '25px',
@@ -31,18 +31,17 @@ const HrStyled = styled(Divider)(({ theme }) => ({
   border: '0',
   borderTop: '1px solid rgba(255, 255, 255, 0.25)',
 
-}))
+})
 
-const PStyled = styled(Typography)(({ theme }) => ({
+const PStyled = styled(Typography)({
 
   color: 'rgba(255, 255, 255, 1)',
   textAlign: 'center',
   margin: 'auto',
   fontSize: '16px',
+})
 
-}))
-
-const MenuItemStyled = styled(MenuItem)(({ theme }) => ({
+const MenuItemStyled = styled(MenuItem)({
 
   margin: 'auto',
   marginBottom: '15px',
@@ -53,21 +52,17 @@ const MenuItemStyled = styled(MenuItem)(({ theme }) => ({
   color: 'rgba(255, 255, 255, 1)',
   fontSize: '24px',
 
-}))
+})
 
-const GridNameStyled = styled(Grid)(({ theme }) => ({
-
+const GridNameStyled = styled(Grid)({
   fontWeight: 'bold',
+})
 
-}))
-
-const BoxStyled = styled(Box)(({ theme }) => ({
-
+const BoxStyled = styled(Box)({
   width: '80px',
   height: '40px',
   margin: 'auto',
-
-}))
+})
 
 function CurrentStudents ({ teams }: CurrentStudentProps) {
     // const classes = useStyles();
@@ -79,7 +74,7 @@ function CurrentStudents ({ teams }: CurrentStudentProps) {
                 <PStyled>Students in Session</PStyled>
             </BoxStyled>
             <HrStyled/>
-            {teams && teams.map((team, id) => (
+            {teams && teams.map((team) => (
                 <MenuItemStyled key = {uuidv4()}>
                     <GridNameStyled>{team.name}</GridNameStyled>
                 </MenuItemStyled>

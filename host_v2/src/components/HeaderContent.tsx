@@ -22,7 +22,6 @@ interface HeaderContentProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
-  handleTimerIsFinished: () => void;
   localModel?: LocalModel;
 } // eslint-disable-line
 
@@ -38,7 +37,6 @@ export default function HeaderContent({
   isPaused,
   isFinished,
   localModel,
-  handleTimerIsFinished,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();

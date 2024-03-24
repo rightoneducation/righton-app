@@ -1,22 +1,10 @@
 import React, { useState } from 'react';
-import { ApiClient, IGameSession, GameSessionState,GameSessionParser } from '@righton/networking';
+import { GameSessionState,GameSessionParser } from '@righton/networking';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
 import { sortMistakes } from '../lib/HelperFunctions';
-
-// may have to reformat/restructure this later but here is a sample answer object
-interface AnswerOption {
-  instructions: string[] | null;
-  reason: string | null;
-  content: string;
-}
-
-interface QuestionData {
-  text: string;
-  imageUrl: string | undefined;
-}
 
 interface Player {
   answer: string; // answer chosen by this player
@@ -31,40 +19,11 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-interface GameInProgressContainerProps {
-  apiClient: ApiClient;
-}
-
-export default function GameSessionContainer({
-  apiClient,
-}: GameInProgressContainerProps) {
+export default function GameSessionContainer() {
   const gameSession = GameSessionParser.gameSessionFromAWSGameSession({
     ...MockGameSession,
     currentState: MockGameSession.currentState as GameSessionState,
   });
-  // TODO: delete hard coded values later
-  const sampleQuestion: QuestionData = {
-    text: 'A pair of shoes were 10% off last week. This week, theres an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that youd get if you buy the shoes this week?',
-    imageUrl:
-      'https://images.unsplash.com/photo-1609188944094-394637c26769?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-  }; // eslint-disable-line
-
-  const sampleAnswerOptionOne: AnswerOption = {
-    instructions: [
-      'step 1 step 1 step 1 step 1 step 1 step 1  step 1 step 1 step 1 step 1 step 1 step 1 ',
-      'step 2',
-      'step 3',
-      'step 4',
-    ],
-    reason: null,
-    content: 'an answer choice',
-  }; // eslint-disable-line
-
-  const sampleAnswerOptionTwo: AnswerOption = {
-    instructions: null,
-    reason: 'reasoning',
-    content: 'another answer choice',
-  }; // eslint-disable-line
 
   const samplePlayerOne: Player = {
     answer: 'C',
@@ -104,31 +63,21 @@ export default function GameSessionContainer({
     },
     { confidence: 'TOTALLY', correct: 0, incorrect: 0, players: [] },
   ];
-  // ['4x^4 - x^3 + 7x^2 - 6x', '2x^4 + 6x^2 - 3x', 'No Idea']
-  const [selectedMistakes, setSelectedMistakes] = useState<string[]>(['4x^4 - x^3 + 7x^2 - 6x', '2x^4 + 6x^2 - 3x', 'No Idea']);
-  console.log("Gamesession initial selectedmitsakes below")
-  console.log(selectedMistakes)
+  const [selectedMistakes, setSelectedMistakes] = useState<string[]>(['4x^4 - x^3 + 7x^2 - 6x', '2x^4 + 6x^2 - 3x', 'No Idea']); // eslint-disable-line
 
-  const onSelectMistake = (value: any, isBasedOnPopularity: boolean): void => {
-    setSelectedMistakes((prev: any[]) => {
-      // console.log("prev")
-      // console.log(prev)
+
+  const onSelectMistake = (value: string, isBasedOnPopularity: boolean): void => {
+    setSelectedMistakes((prev: string[]) => {
       if (prev.includes(value)) {
         if (isBasedOnPopularity === false)
-          return prev.filter((mistake: any) => mistake !== value);
+          return prev.filter((mistake: string) => mistake !== value);
         return prev;
       } 
 
       return [...prev, value];
     });
   }
-  const handleStartGame = ()=>{
-    console.log("test")
-  }
-
-  const totalQuestions = 5;
   const currentQuestionIndex = 3;
-  const statePosition = 3;
   const isCorrect = false;
   const isIncorrect = false;
 
@@ -143,7 +92,7 @@ export default function GameSessionContainer({
       ? phaseOneTime
       : phaseTwoTime;
 
-  const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([
+  const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([ // eslint-disable-line
     {
       rawAnswer: 'y=x^2',
       normAnswer: 'y=x^2',
@@ -190,20 +139,15 @@ export default function GameSessionContainer({
      sortMistakes(shortAnswerResponses, shortAnswerResponses.length, isPopularMode, 3),
      [shortAnswerResponses, isPopularMode]
   ));
-  console.log("GameSession sortedbelow")
-  console.log(sortedMistakes)
+
   switch (gameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
       return (
         <StartGame 
           teams={gameSession.teams ?? []}
-          currentQuestionIndex={currentQuestionIndex}
           questions={gameSession.questions}
           title={gameSession.title ?? ''}
-          gameSessionId={gameSession.id}
           gameCode={gameSession.gameCode}
-          currentState={gameSession.currentState}
-          handleStartGame={handleStartGame}
         />
       );
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
@@ -220,7 +164,6 @@ export default function GameSessionContainer({
           sampleConfidenceData={sampleConfidenceData}
           localModelMock={localModelMock}
           onSelectMistake={onSelectMistake}
-          shortAnswerResponses={shortAnswerResponses}
           sortedMistakes={sortedMistakes}
           setSortedMistakes={setSortedMistakes}
           isPopularMode={isPopularMode}

@@ -6,7 +6,7 @@ interface GameCodeProps{
     gameCode: number;
 }
 
-const GameCodeCard = styled(Grid)(({ theme }) => ({
+const GameCodeCard = styled(Grid)({
   paddingLeft: '10px',
   paddingRight: '10px',
   border: '1px solid rgba(255, 255, 255, 0.25)',
@@ -17,21 +17,21 @@ const GameCodeCard = styled(Grid)(({ theme }) => ({
   marginTop: '-1%',
   marginBottom: '4%',
   justifyContent: 'center',
-}))
+})
 
-const GameCodeText = styled(Grid)(({ theme }) => ({
+const GameCodeText = styled(Grid)({
   margin: 'auto',
   justifyContent: 'center',
   fontSize: '28px',
   fontWeight: 'bold',
   color: 'rgba(255, 255, 255, 1)',
-}))
+})
 
-const GameCodeParagraph = styled(Typography)(({ theme }) => ({
+const GameCodeParagraph = styled(Typography)({
   fontSize: '16px',
   color: 'rgba(255, 255, 255, 1)',
   margin: 'auto',
-}))
+})
 
 function GameCode({ gameCode }: GameCodeProps){
     return (
@@ -41,33 +41,5 @@ function GameCode({ gameCode }: GameCodeProps){
         </GameCodeCard>
     )
 }
-// const useStyles = makeStyles((theme : Theme) => ({
-//     gameCodeText: {
-//       margin: 'auto',
-//       justifyContent: 'center',
-//       fontSize: '28px',
-//       fontWeight: 'bold',
-//       color: 'rgba(255, 255, 255, 1)',
-//     },
-  
-//     p: {
-//       fontSize: '16px',
-//       color: 'rgba(255, 255, 255, 1)',
-//       margin: 'auto',
-//     },
-  
-//     gameCodeCard: {
-//       paddingLeft: '10px',
-//       paddingRight: '10px',
-//       border: '1px solid rgba(255, 255, 255, 0.25)',
-//       borderRadius: '8px',
-//       width: '212px',
-//       height: '48px',
-//       margin: 'auto',
-//       marginTop: '-1%',
-//       marginBottom: '4%',
-//       justifyContent: 'center',
-//     },
-//   }));
   
   export default GameCode;

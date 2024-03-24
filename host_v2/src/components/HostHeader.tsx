@@ -7,7 +7,6 @@ import GameCode from './GameCode';
 
 interface HostHeaderProps{
     gameCode: number;
-    currentQuestionIndex: number;
 }
 
 
@@ -17,7 +16,7 @@ const ClearIconGameCodeStyled = styled(Box)(({ theme }) => ({
     padding: `${theme.spacing(4)}`,
 }))
 
-function HostHeader({ gameCode, currentQuestionIndex }: HostHeaderProps) {
+function HostHeader({ gameCode }: HostHeaderProps) {
     return (
       <ClearIconGameCodeStyled>
         <GameCode gameCode = {gameCode} 

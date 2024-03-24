@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { Player, ConfidenceOption, ShortAnswerResponse, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
+import { ConfidenceOption, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaTripleColumnStyled,
@@ -17,18 +17,6 @@ import PaginationContainerStyled from '../lib/styledcomponents/PaginationContain
 import 'swiper/css';
 import 'swiper/css/pagination';
 import FeaturedMistakes from './FeaturedMistakes';
-// may have to reformat/restructure this later but here is a sample answer object
-interface AnswerOption { 
-  instructions: string[] | null; // instructions to get the correct answer if this option is the correct option and null otherwise
-  reason: string | null; // reason why answer option is incorrect if this option is incorrect and null otherwise
-  content: string; // the answer option itself
-} // eslint-disable-line
-
-interface QuestionData {
-  text: string; // question text (i.e. the question itself)
-  imageUrl: string | undefined; // the url of the image on the question card (if there is one)
-} // eslint-disable-line
-
 
 interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)

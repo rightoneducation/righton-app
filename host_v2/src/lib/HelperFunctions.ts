@@ -8,11 +8,8 @@ export const sortMistakes = (shortAnswerResponses: ShortAnswerResponse[], totalA
      percent: Math.round((shortAnswerResponse.count / totalAnswers) * 100), 
      isSelected: shortAnswerResponse.isSelectedMistake ?? false
    }));
-  // console.log("helper function extractedmistakes below")
-  // console.log(extractedMistakes)
   const orderedMistakes = extractedMistakes.sort((a, b) => b.percent - a.percent);
   if (isPopularMode) {
-    console.log(extractedMistakes)
     orderedMistakes.forEach((mistake, index) => {
       if (index < numOfPopularMistakes)
         mistake.isSelected = true; // eslint-disable-line

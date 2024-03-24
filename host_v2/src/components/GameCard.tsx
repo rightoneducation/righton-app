@@ -9,50 +9,46 @@ interface GameCardProps {
     title: string;
 }
 
-const CardStyled = styled(Card)(({ theme }) => ({
+const CardStyled = styled(Card)({
     height: '95px',
     width: '311px',
     borderRadius: '18px',
     margin: 'auto',
-}))
+})
 
-const TypographyCCSS = styled(Typography)(({ theme }) => ({
+const TypographyCCSS = styled(Typography)({
     fontWeight: '700',
     color: 'rgba(155, 169, 208, 1)',
-    // textAlign: 'right',
     fontFamily: 'Poppins',
     fontStyle: 'Bold',
     fontSize: '12px',
     lineHeight: '18px',
-   // lineHeight: '100%',
     textAlign: 'left',
     marginTop: '7px',
-}))
+})
 
-const TypographyQuestion = styled(Typography)(({ theme }) => ({
+const TypographyQuestion = styled(Typography)({
     fontWeight: 'bold',
     color: 'rgba(155, 169, 208, 1)',
     textAlign: 'right',
     fontFamily: 'Poppins',
     fontStyle: 'Bold',
     fontSize: '12px',
-    // lineHeight: '18px',
     lineHeight: '100%',
     marginTop: '7px',
     marginRight: '-120%',
-}))
+})
 
-const TypographyGameTitle = styled(Typography)(({ theme }) => ({
+const TypographyGameTitle = styled(Typography)({
   color: 'rgba(56, 68, 102, 1)',
   fontFamily: 'Poppins',
   fontSize: '14px',
   fontWeight: 'bold',
   lineHeight: '21px',
-//  lineHeight: '100%',
   verticalAlign: 'Top',
   marginTop: '7px',
   fontStyle: 'normal',
-}))
+})
 
 const gameCCSS = '7. RP. A. 3';
 

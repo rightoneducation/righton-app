@@ -6,7 +6,7 @@ import FeaturedMistakes from './FeaturedMistakes';
 import Theme from '../lib/Theme';
 import i18n from '../i18n.mock';
 import { sortMistakes } from '../lib/HelperFunctions';
-import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
+import { ShortAnswerResponse } from '../lib/HostModels';
 
 export default {
   // structuring our stories per: https://atomicdesign.bradfrost.com/chapter-2/#the-atomic-design-methodology
@@ -16,7 +16,7 @@ export default {
 
 const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
     const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
-    const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([
+    const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([ // eslint-disable-line
         {
           rawAnswer: 'y=x^2',
           normAnswer: 'y=x^2',
@@ -59,17 +59,17 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
         },
       ]);  
 
-      const [sortedMistakes, setSortedMistakes] = useState(React.useMemo(() => 
+      const [sortedMistakes, setSortedMistakes] = useState(React.useMemo(() => // eslint-disable-line
       sortMistakes(shortAnswerResponses, shortAnswerResponses.length, isPopularMode, 3),
       [shortAnswerResponses, isPopularMode]
    ));
 
-    const [selectedMistakes, setSelectedMistakes] = useState<any[]>([]);
-    const onSelectMistake = (value: any, isBasedOnPopularity: boolean): void => {
-      setSelectedMistakes((prev: any[]) => {
+    const [selectedMistakes, setSelectedMistakes] = useState<any[]>([]); // eslint-disable-line
+    const onSelectMistake = (value: string, isBasedOnPopularity: boolean): void => {
+      setSelectedMistakes((prev: string[]) => {
         if (prev.includes(value)) {
           if (isBasedOnPopularity === false)
-            return prev.filter((mistake: any) => mistake !== value);
+            return prev.filter((mistake: string) => mistake !== value);
           return prev;
         } 
         return [...prev, value];
