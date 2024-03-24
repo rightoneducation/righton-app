@@ -19,9 +19,7 @@ const BodyCardStyled = styled(Paper)(({ theme }) => ({
   boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
 }));
 
-export default function Card({
-  bottomText
-}: CardProps) {
+export default function Card({ bottomText }: CardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   return (

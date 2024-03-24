@@ -2,8 +2,8 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Grid, Typography } from '@mui/material';
 
-interface GameCodeProps{
-    gameCode: number;
+interface GameCodeProps {
+  gameCode: number;
 }
 
 const GameCodeCard = styled(Grid)({
@@ -33,13 +33,13 @@ const GameCodeParagraph = styled(Typography)({
   margin: 'auto',
 })
 
-function GameCode({ gameCode }: GameCodeProps){
-    return (
-        <GameCodeCard container>
-            <GameCodeParagraph>Game Code: </GameCodeParagraph>
-            <GameCodeText>{gameCode}</GameCodeText>
-        </GameCodeCard>
-    )
+function GameCode({ gameCode }: GameCodeProps) {
+  return (
+    <GameCodeCard container>
+      <GameCodeParagraph>Game Code: </GameCodeParagraph>
+      <GameCodeText>{gameCode}</GameCodeText>
+    </GameCodeCard>
+  );
 }
   
   export default GameCode;

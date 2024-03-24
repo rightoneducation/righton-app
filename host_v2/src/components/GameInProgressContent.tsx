@@ -28,7 +28,6 @@ interface GameInProgressContentProps {
   setSortedMistakes: (value: Mistake[]) => void;
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
-
 } // eslint-disable-line
 export default function GameInProgressContent({
   confidenceData,
@@ -38,7 +37,7 @@ export default function GameInProgressContent({
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
-  setIsPopularMode 
+  setIsPopularMode,
 }: GameInProgressContentProps) {
   // eslint-disable-line
 
@@ -60,7 +59,7 @@ export default function GameInProgressContent({
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <FeaturedMistakes 
+          <FeaturedMistakes
             onSelectMistake={onSelectMistake}
             sortedMistakes={sortedMistakes}
             setSortedMistakes={setSortedMistakes}
@@ -110,7 +109,7 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
-              <FeaturedMistakes 
+              <FeaturedMistakes
                 onSelectMistake={onSelectMistake}
                 sortedMistakes={sortedMistakes}
                 setSortedMistakes={setSortedMistakes}
@@ -164,14 +163,14 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-               <FeaturedMistakes 
+              <FeaturedMistakes
                 onSelectMistake={onSelectMistake}
                 sortedMistakes={sortedMistakes}
                 setSortedMistakes={setSortedMistakes}
                 isPopularMode={isPopularMode}
                 setIsPopularMode={setIsPopularMode}
                 featuredMistakesSelectionValue={featuredMistakesSelectionValue}
-               />
+              />
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>

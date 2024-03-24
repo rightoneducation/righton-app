@@ -1,14 +1,14 @@
 import React from 'react';
-import {Grid, MenuItem, Divider, Typography, Box} from '@mui/material';
+import { Grid, MenuItem, Divider, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Team {
-    name: string;
+  name: string;
 }
 
-interface CurrentStudentProps{
-    teams: Team[] | null;
+interface CurrentStudentProps {
+  teams: Team[] | null;
 }
 
 const GridStyled = styled(Grid)({
@@ -91,20 +91,20 @@ function CurrentStudents ({ teams }: CurrentStudentProps) {
 //       textAlign: 'center',
 //       marginTop: '4%',
 //     },
-  
+
 //     inSessionDiv: {
 //       width: '80px',
 //       height: '40px',
 //       margin: 'auto',
 //     },
-  
+
 //     inSession: {
 //       color: 'rgba(255, 255, 255, 1)',
 //       textAlign: 'center',
 //       margin: 'auto',
 //       fontSize: '16px',
 //     },
-  
+
 //     studentCards: {
 //       margin: 'auto',
 //       marginBottom: '15px',
@@ -134,5 +134,5 @@ function CurrentStudents ({ teams }: CurrentStudentProps) {
 //       borderTop: '1px solid rgba(255, 255, 255, 0.25)',
 //     },
 //   }));
-  
-  export default CurrentStudents;
+
+export default CurrentStudents;

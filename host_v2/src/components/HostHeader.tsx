@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Box} from '@mui/material';
+import { Box } from '@mui/material';
 import GameCode from './GameCode';
 
 
@@ -9,12 +9,11 @@ interface HostHeaderProps{
     gameCode: number;
 }
 
-
 const ClearIconGameCodeStyled = styled(Box)(({ theme }) => ({
-    color: 'white',
-    display: 'block',
-    padding: `${theme.spacing(4)}`,
-}))
+  color: 'white',
+  display: 'block',
+  padding: `${theme.spacing(4)}`,
+}));
 
 function HostHeader({ gameCode }: HostHeaderProps) {
     return (

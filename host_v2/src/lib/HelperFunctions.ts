@@ -1,6 +1,12 @@
-import { ShortAnswerResponse, Mistake } from "./HostModels";
+import { ShortAnswerResponse, Mistake } from './HostModels';
 
-export const sortMistakes = (shortAnswerResponses: ShortAnswerResponse[], totalAnswers: number, isPopularMode: boolean, numOfPopularMistakes: number): Mistake[] => { // eslint-disable-line
+export const sortMistakes = (
+  shortAnswerResponses: ShortAnswerResponse[],
+  totalAnswers: number,
+  isPopularMode: boolean,
+  numOfPopularMistakes: number,
+): Mistake[] => {
+  // eslint-disable-line
   const extractedMistakes: Mistake[] = shortAnswerResponses
    .filter(shortAnswerResponse => !shortAnswerResponse.isCorrect)
    .map(shortAnswerResponse => ({ 
@@ -13,9 +19,8 @@ export const sortMistakes = (shortAnswerResponses: ShortAnswerResponse[], totalA
     orderedMistakes.forEach((mistake, index) => {
       if (index < numOfPopularMistakes)
         mistake.isSelected = true; // eslint-disable-line
-      else
-        mistake.isSelected = false; // eslint-disable-line
+      else mistake.isSelected = false; // eslint-disable-line
     });
   }
-  return(orderedMistakes);
-}
+  return orderedMistakes;
+};

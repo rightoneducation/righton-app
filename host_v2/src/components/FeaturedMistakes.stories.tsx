@@ -79,29 +79,37 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
   return (
     <ThemeProvider theme={Theme}>
       <I18nextProvider i18n={i18n}>
-        <FeaturedMistakes {...args} setIsPopularMode={setIsPopularMode} setSortedMistakes={setSortedMistakes} onSelectMistake={onSelectMistake}/> 
+        <FeaturedMistakes
+          {...args}
+          setIsPopularMode={setIsPopularMode}
+          setSortedMistakes={setSortedMistakes}
+          onSelectMistake={onSelectMistake}
+        />
       </I18nextProvider>
     </ThemeProvider>
   );
 };
 
-
 export const Top3Answers = Template.bind({});
 Top3Answers.args = {
-    sortedMistakes: [{answer: '4x^4 - x^3 + 7x^2 - 6x', percent: 100, isSelected: true},
-    {answer: '2x^4 + 6x^2 - 3x', percent: 80, isSelected: true},
-    {answer: 'No Idea', percent: 40, isSelected: true},
-    {answer: 'x^2 - 4x - 12', percent: 20, isSelected: false}],
-    isPopularMode: true,
-    featuredMistakesSelectionValue: 'A'
+  sortedMistakes: [
+    { answer: '4x^4 - x^3 + 7x^2 - 6x', percent: 100, isSelected: true },
+    { answer: '2x^4 + 6x^2 - 3x', percent: 80, isSelected: true },
+    { answer: 'No Idea', percent: 40, isSelected: true },
+    { answer: 'x^2 - 4x - 12', percent: 20, isSelected: false },
+  ],
+  isPopularMode: true,
+  featuredMistakesSelectionValue: 'A',
 };
 
 export const Manual = Template.bind({});
 Manual.args = {
-    sortedMistakes: [{answer: '4x^4 - x^3 + 7x^2 - 6x', percent: 100, isSelected: true},
-    {answer: '2x^4 + 6x^2 - 3x', percent: 80, isSelected: true},
-    {answer: 'No Idea', percent: 40, isSelected: true},
-    {answer: 'x^2 - 4x - 12', percent: 20, isSelected: false}],
-    isPopularMode: false,
-    featuredMistakesSelectionValue: 'B'
+  sortedMistakes: [
+    { answer: '4x^4 - x^3 + 7x^2 - 6x', percent: 100, isSelected: true },
+    { answer: '2x^4 + 6x^2 - 3x', percent: 80, isSelected: true },
+    { answer: 'No Idea', percent: 40, isSelected: true },
+    { answer: 'x^2 - 4x - 12', percent: 20, isSelected: false },
+  ],
+  isPopularMode: false,
+  featuredMistakesSelectionValue: 'B',
 };

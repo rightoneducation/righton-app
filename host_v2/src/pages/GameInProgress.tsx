@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { GameSessionState } from '@righton/networking';
 
 import { ConfidenceOption, LocalModel, Mistake } from '../lib/HostModels';
@@ -42,7 +42,7 @@ export default function GameInProgress({
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
-  setIsPopularMode 
+  setIsPopularMode,
 }: GameInProgressProps) {
 
     const currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
@@ -52,9 +52,9 @@ export default function GameInProgress({
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
 
 
-      const handleConfidenceGraphClick = (selectedIndex: number | null) => {
-        setConfidenceGraphClickIndex(selectedIndex);
-      };
+  const handleConfidenceGraphClick = (selectedIndex: number | null) => {
+    setConfidenceGraphClickIndex(selectedIndex);
+  };
 
     return(
       <StackContainerStyled>
@@ -88,6 +88,5 @@ export default function GameInProgress({
       </BodyStackContainerStyled>
       <FooterBackgroundStyled />
     </StackContainerStyled>
-    )
+  );
 }
-    

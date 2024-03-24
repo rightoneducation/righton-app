@@ -3,10 +3,9 @@ import { styled } from '@mui/material/styles';
 import { Grid, Card, CardContent, Typography } from '@mui/material';
 import { IQuestion } from '@righton/networking';
 
-
 interface GameCardProps {
-    questions: IQuestion[];
-    title: string;
+  questions: IQuestion[];
+  title: string;
 }
 
 const CardStyled = styled(Card)({
@@ -52,33 +51,30 @@ const TypographyGameTitle = styled(Typography)({
 
 const gameCCSS = '7. RP. A. 3';
 
-function GameCard ({questions, title }: GameCardProps) {
-    return (
-        <Grid container item xs = {12}>
-            <CardStyled>
-                <CardContent>
-                    <Grid container>
-                        <Grid container item xs = {8}>
-                            <Grid item xs={7}>
-                                <TypographyCCSS>{gameCCSS}</TypographyCCSS>                                
-                            </Grid>
-                            <Grid item xs={5}>
-                                <TypographyQuestion>
-                                    {`${questions ? questions.length :0} question`}
-                                </TypographyQuestion>
-                            </Grid>
-                            <Grid item xs = {12}>
-                                <TypographyGameTitle gutterBottom>
-                                    {title}
-                                </TypographyGameTitle>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </CardStyled>
-        </Grid>
-    )
+function GameCard({ questions, title }: GameCardProps) {
+  return (
+    <Grid container item xs={12}>
+      <CardStyled>
+        <CardContent>
+          <Grid container>
+            <Grid container item xs={8}>
+              <Grid item xs={7}>
+                <TypographyCCSS>{gameCCSS}</TypographyCCSS>
+              </Grid>
+              <Grid item xs={5}>
+                <TypographyQuestion>
+                  {`${questions ? questions.length : 0} question`}
+                </TypographyQuestion>
+              </Grid>
+              <Grid item xs={12}>
+                <TypographyGameTitle gutterBottom>{title}</TypographyGameTitle>
+              </Grid>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </CardStyled>
+    </Grid>
+  );
 }
-
 
 export default GameCard;

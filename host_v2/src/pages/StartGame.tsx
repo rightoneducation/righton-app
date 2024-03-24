@@ -10,7 +10,6 @@ import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 
-
 interface StartGameProps {
   teams: ITeam[]
   questions:IQuestion[]

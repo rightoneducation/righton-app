@@ -72,7 +72,7 @@ export default function GameSessionContainer() {
         if (isBasedOnPopularity === false)
           return prev.filter((mistake: string) => mistake !== value);
         return prev;
-      } 
+      }
 
       return [...prev, value];
     });
@@ -97,43 +97,43 @@ export default function GameSessionContainer() {
       rawAnswer: 'y=x^2',
       normAnswer: 'y=x^2',
       isCorrect: true, // only every one
-      isSelectedMistake: true, 
+      isSelectedMistake: true,
       count: 2,
-      teams: ['Name1', 'Name2']
+      teams: ['Name1', 'Name2'],
     },
     {
       rawAnswer: 'No Idea',
       normAnswer: 'No Idea',
       isCorrect: false,
-      isSelectedMistake: true, 
+      isSelectedMistake: true,
       count: 2,
-      teams: ['Name3', 'Name13']
+      teams: ['Name3', 'Name13'],
     },
     {
       rawAnswer: '2x^4 + 6x^2 - 3x',
       normAnswer: '2x^4 + 6x^2 - 3x',
       isCorrect: false,
-      isSelectedMistake: true, 
+      isSelectedMistake: true,
       count: 4,
-      teams: ['Name4', 'Name5', 'Name6', 'Name7']
+      teams: ['Name4', 'Name5', 'Name6', 'Name7'],
     },
     {
       rawAnswer: '4x^4 - x^3 + 7x^2 - 6x',
       normAnswer: '4x^4 - x^3 + 7x^2 - 6x',
       isCorrect: false,
-      isSelectedMistake: true, 
+      isSelectedMistake: true,
       count: 5,
-      teams: ['Name8', 'Name9', 'Name10', 'Name11', 'Name12']
-    }, 
+      teams: ['Name8', 'Name9', 'Name10', 'Name11', 'Name12'],
+    },
     {
       rawAnswer: 'x^2 - 4x - 12',
       normAnswer: 'x^2 - 4x - 12',
       isCorrect: false,
-      isSelectedMistake: true, 
+      isSelectedMistake: true,
       count: 1,
-      teams: ['Name14']
+      teams: ['Name14'],
     },
-  ]);  
+  ]);
   const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
   const [sortedMistakes, setSortedMistakes] = useState(React.useMemo(() => 
      sortMistakes(shortAnswerResponses, shortAnswerResponses.length, isPopularMode, 3),
@@ -143,7 +143,7 @@ export default function GameSessionContainer() {
   switch (gameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
       return (
-        <StartGame 
+        <StartGame
           teams={gameSession.teams ?? []}
           questions={gameSession.questions}
           title={gameSession.title ?? ''}
@@ -151,9 +151,9 @@ export default function GameSessionContainer() {
         />
       );
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
-    default: 
+    default:
       return (
-        <GameInProgress 
+        <GameInProgress
           totalQuestions={gameSession.questions.length ?? 0}
           currentQuestionIndex={currentQuestionIndex}
           isCorrect={isCorrect}
@@ -172,4 +172,3 @@ export default function GameSessionContainer() {
       );
   }
 }
-
