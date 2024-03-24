@@ -4,7 +4,7 @@ import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
-import { sortMistakes } from '../lib/HelperFunctions';
+import sortMistakes from "../lib/HelperFunctions"
 
 interface Player {
   answer: string; // answer chosen by this player

@@ -1,6 +1,6 @@
 import { ShortAnswerResponse, Mistake } from './HostModels';
 
-export const sortMistakes = (
+const sortMistakes = (
   shortAnswerResponses: ShortAnswerResponse[],
   totalAnswers: number,
   isPopularMode: boolean,
@@ -24,3 +24,5 @@ export const sortMistakes = (
   }
   return orderedMistakes;
 };
+
+export default sortMistakes;
