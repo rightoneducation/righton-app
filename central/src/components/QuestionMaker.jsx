@@ -46,8 +46,8 @@ export default function QuestionMaker({
       standard: null,
     }
   });
-  const [answerType, setAnswerType] = useState(question.answerSettings.answerType ?? AnswerType.NUMBER);
-  const [answerPrecision, setAnswerPrecision] = useState(question.answerSettings.answerPrecision ?? AnswerPrecision.WHOLE);
+  const [answerType, setAnswerType] = useState(question.answerSettings?.answerType ?? AnswerType.NUMBER);
+  const [answerPrecision, setAnswerPrecision] = useState(question.answerSettings?.answerPrecision ?? AnswerPrecision.WHOLE);
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if (match) {
