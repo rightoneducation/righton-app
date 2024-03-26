@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { ConfidenceOption, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaTripleColumnStyled,
@@ -15,43 +16,29 @@ import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import FeaturedMistakes from './FeaturedMistakes';
 
-// may have to reformat/restructure this later but here is a sample answer object
-interface AnswerOption { 
-  instructions: string[] | null; // instructions to get the correct answer if this option is the correct option and null otherwise
-  reason: string | null; // reason why answer option is incorrect if this option is incorrect and null otherwise
-  content: string; // the answer option itself
-} // eslint-disable-line
-
-interface QuestionData {
-  text: string; // question text (i.e. the question itself)
-  imageUrl: string | undefined; // the url of the image on the question card (if there is one)
-} // eslint-disable-line
-
-interface Player {
-  answer: string; // answer chosen by this player
-  isCorrect: boolean; // true iff the chosen answer is the correct answer
-  name: string; // this player's name
-}
-
-interface ConfidenceOption {
-  confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly
-  incorrect: number; // number of players who selected tgis option and answered incorrectly
-  players: Player[]; // an array of the players that selected this option
-}
-
-interface PlaceholderContentAreaProps {
+interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
   confidenceData: ConfidenceOption[];
   confidenceGraphClickIndex: number | null;
   handleConfidenceGraphClick: (selectedIndex: number | null) => void;
+  onSelectMistake: (answer: string, isSelected: boolean) => void;
+  sortedMistakes: Mistake[];
+  setSortedMistakes: (value: Mistake[]) => void;
+  isPopularMode: boolean;
+  setIsPopularMode: (value: boolean) => void;
 } // eslint-disable-line
-export default function PlaceholderContentArea({
+export default function GameInProgressContent({
   confidenceData,
   confidenceGraphClickIndex,
   handleConfidenceGraphClick,
-}: PlaceholderContentAreaProps) {
+  onSelectMistake,
+  sortedMistakes,
+  setSortedMistakes,
+  isPopularMode,
+  setIsPopularMode,
+}: GameInProgressContentProps) {
   // eslint-disable-line
 
   const theme = useTheme();
@@ -72,7 +59,14 @@ export default function PlaceholderContentArea({
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <Card />
+          <FeaturedMistakes
+            onSelectMistake={onSelectMistake}
+            sortedMistakes={sortedMistakes}
+            setSortedMistakes={setSortedMistakes}
+            isPopularMode={isPopularMode}
+            setIsPopularMode={setIsPopularMode}
+            featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+          />
           <Card />
         </ScrollBoxStyled>
       </Grid>
@@ -115,7 +109,14 @@ export default function PlaceholderContentArea({
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
-              <Card />
+              <FeaturedMistakes
+                onSelectMistake={onSelectMistake}
+                sortedMistakes={sortedMistakes}
+                setSortedMistakes={setSortedMistakes}
+                isPopularMode={isPopularMode}
+                setIsPopularMode={setIsPopularMode}
+                featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+              />
               <Card />
             </ScrollBoxStyled>
           </Grid>
@@ -162,8 +163,14 @@ export default function PlaceholderContentArea({
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-              <Card />
-              <Card />
+              <FeaturedMistakes
+                onSelectMistake={onSelectMistake}
+                sortedMistakes={sortedMistakes}
+                setSortedMistakes={setSortedMistakes}
+                isPopularMode={isPopularMode}
+                setIsPopularMode={setIsPopularMode}
+                featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+              />
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>

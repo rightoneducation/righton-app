@@ -1,30 +1,10 @@
 import React, { useState } from 'react';
-import { GameSessionState, ApiClient } from '@righton/networking';
-import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
-import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
-import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
-import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
-import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import PlaceholderContentArea from '../components/PlaceholderContentArea';
-import HeaderContent from '../components/HeaderContent';
-import { LocalModel } from '../lib/HostModels';
-import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
+import { GameSessionState,GameSessionParser } from '@righton/networking';
+import MockGameSession from '../mock/MockGameSession.json';
+import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
-
-interface GameInProgressContainerProps {
-  apiClient: ApiClient;
-}
-// may have to reformat/restructure this later but here is a sample answer object
-interface AnswerOption {
-  instructions: string[] | null;
-  reason: string | null;
-  content: string;
-}
-
-interface QuestionData {
-  text: string;
-  imageUrl: string | undefined;
-}
+import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
+import sortMistakes from "../lib/HelperFunctions"
 
 interface Player {
   answer: string; // answer chosen by this player
@@ -39,33 +19,11 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-export default function GameSessionContainer({
-  apiClient,
-}: GameInProgressContainerProps) {
-  console.log(apiClient); // eslint-disable-line
-  // TODO: delete hard coded values later
-  const sampleQuestion: QuestionData = {
-    text: 'A pair of shoes were 10% off last week. This week, theres an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that youd get if you buy the shoes this week?',
-    imageUrl:
-      'https://images.unsplash.com/photo-1609188944094-394637c26769?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-  }; // eslint-disable-line
-
-  const sampleAnswerOptionOne: AnswerOption = {
-    instructions: [
-      'step 1 step 1 step 1 step 1 step 1 step 1  step 1 step 1 step 1 step 1 step 1 step 1 ',
-      'step 2',
-      'step 3',
-      'step 4',
-    ],
-    reason: null,
-    content: 'an answer choice',
-  }; // eslint-disable-line
-
-  const sampleAnswerOptionTwo: AnswerOption = {
-    instructions: null,
-    reason: 'reasoning',
-    content: 'another answer choice',
-  }; // eslint-disable-line
+export default function GameSessionContainer() {
+  const gameSession = GameSessionParser.gameSessionFromAWSGameSession({
+    ...MockGameSession,
+    currentState: MockGameSession.currentState as GameSessionState,
+  });
 
   const samplePlayerOne: Player = {
     answer: 'C',
@@ -105,21 +63,23 @@ export default function GameSessionContainer({
     },
     { confidence: 'TOTALLY', correct: 0, incorrect: 0, players: [] },
   ];
+  const [selectedMistakes, setSelectedMistakes] = useState<string[]>(['4x^4 - x^3 + 7x^2 - 6x', '2x^4 + 6x^2 - 3x', 'No Idea']); // eslint-disable-line
 
-  const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<
-    number | null
-  >(null);
 
-  const handleConfidenceGraphClick = (selectedIndex: number | null) => {
-    setConfidenceGraphClickIndex(selectedIndex);
-  };
+  const onSelectMistake = (value: string, isBasedOnPopularity: boolean): void => {
+    setSelectedMistakes((prev: string[]) => {
+      if (prev.includes(value)) {
+        if (isBasedOnPopularity === false)
+          return prev.filter((mistake: string) => mistake !== value);
+        return prev;
+      }
 
-  const totalQuestions = 5;
+      return [...prev, value];
+    });
+  }
   const currentQuestionIndex = 3;
-  const statePosition = 3;
   const isCorrect = false;
   const isIncorrect = false;
-  const currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
 
   const localModelMock: LocalModel = { currentTimer: 200, hasRejoined: false };
   const phaseOneTime = 180;
@@ -128,42 +88,87 @@ export default function GameSessionContainer({
   const currentTimer = 90;
 
   const totalTime =
-    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+    gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
       ? phaseOneTime
       : phaseTwoTime;
 
-  const handleTimerIsFinished = () => {
-    console.log('timer is finished'); // eslint-disable-line
-  };
+  const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([ // eslint-disable-line
+    {
+      rawAnswer: 'y=x^2',
+      normAnswer: 'y=x^2',
+      isCorrect: true, // only every one
+      isSelectedMistake: true,
+      count: 2,
+      teams: ['Name1', 'Name2'],
+    },
+    {
+      rawAnswer: 'No Idea',
+      normAnswer: 'No Idea',
+      isCorrect: false,
+      isSelectedMistake: true,
+      count: 2,
+      teams: ['Name3', 'Name13'],
+    },
+    {
+      rawAnswer: '2x^4 + 6x^2 - 3x',
+      normAnswer: '2x^4 + 6x^2 - 3x',
+      isCorrect: false,
+      isSelectedMistake: true,
+      count: 4,
+      teams: ['Name4', 'Name5', 'Name6', 'Name7'],
+    },
+    {
+      rawAnswer: '4x^4 - x^3 + 7x^2 - 6x',
+      normAnswer: '4x^4 - x^3 + 7x^2 - 6x',
+      isCorrect: false,
+      isSelectedMistake: true,
+      count: 5,
+      teams: ['Name8', 'Name9', 'Name10', 'Name11', 'Name12'],
+    },
+    {
+      rawAnswer: 'x^2 - 4x - 12',
+      normAnswer: 'x^2 - 4x - 12',
+      isCorrect: false,
+      isSelectedMistake: true,
+      count: 1,
+      teams: ['Name14'],
+    },
+  ]);
+  const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
+  const [sortedMistakes, setSortedMistakes] = useState(React.useMemo(() => 
+     sortMistakes(shortAnswerResponses, shortAnswerResponses.length, isPopularMode, 3),
+     [shortAnswerResponses, isPopularMode]
+  ));
 
-  return (
-    <StackContainerStyled>
-      <HeaderBackgroundStyled />
-      <HeaderContent
-        currentState={currentState}
-        totalQuestions={totalQuestions}
-        currentQuestionIndex={currentQuestionIndex}
-        statePosition={statePosition}
-        isCorrect={isCorrect}
-        isIncorrect={isIncorrect}
-        totalTime={totalTime}
-        currentTimer={hasRejoined ? currentTimer : totalTime}
-        isPaused={false}
-        isFinished={false}
-        handleTimerIsFinished={handleTimerIsFinished}
-        localModel={localModelMock}
-      />
-      <BodyStackContainerStyled>
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
-        <PlaceholderContentArea
-          confidenceData={sampleConfidenceData}
-          confidenceGraphClickIndex={confidenceGraphClickIndex}
-          handleConfidenceGraphClick={handleConfidenceGraphClick}
+  switch (gameSession.currentState){
+    case GameSessionState.TEAMS_JOINING:
+      return (
+        <StartGame
+          teams={gameSession.teams ?? []}
+          questions={gameSession.questions}
+          title={gameSession.title ?? ''}
+          gameCode={gameSession.gameCode}
         />
-      </BodyStackContainerStyled>
-      <FooterBackgroundStyled />
-      <GameInProgress />
-    </StackContainerStyled>
-  );
+      );
+    case GameSessionState.CHOOSE_CORRECT_ANSWER:
+    default:
+      return (
+        <GameInProgress
+          totalQuestions={gameSession.questions.length ?? 0}
+          currentQuestionIndex={currentQuestionIndex}
+          isCorrect={isCorrect}
+          isIncorrect={isIncorrect}
+          totalTime={totalTime}
+          hasRejoined={hasRejoined}
+          currentTimer={currentTimer}
+          sampleConfidenceData={sampleConfidenceData}
+          localModelMock={localModelMock}
+          onSelectMistake={onSelectMistake}
+          sortedMistakes={sortedMistakes}
+          setSortedMistakes={setSortedMistakes}
+          isPopularMode={isPopularMode}
+          setIsPopularMode={setIsPopularMode}
+        />
+      );
+  }
 }
