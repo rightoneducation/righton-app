@@ -3,7 +3,7 @@ import { GameSessionState } from '@righton/networking';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Box, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { motion, useAnimate } from "framer-motion";
+import { motion, easeOut } from "framer-motion";
 import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
 import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
@@ -89,7 +89,7 @@ export default function HeaderContent({
 
     return (
         <HeaderStackContainerStyled>
-            <motion.div ref={scope4} initial={{translateX: "50vw"}}>
+            
                 <Container maxWidth="md">
                     <Grid container justifyContent="space-between" alignItems="center">
                         <Grid item>
@@ -135,7 +135,7 @@ export default function HeaderContent({
                         </Grid>
                     </Grid>
                 </Container>
-            </motion.div>
+            
         </HeaderStackContainerStyled>
     );
 }

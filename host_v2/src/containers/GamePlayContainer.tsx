@@ -120,7 +120,18 @@ export default function GameSessionContainer({
     <StackContainerStyled
     >
       <HeaderBackgroundStyled />
-        <motion.div ref={scope5} initial={{translateX: "50vw"}} style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column', zIndex: 2 }}>
+      <motion.div
+      initial={{ x: '100vw' }} // Start offscreen to the right
+      animate={{ x: '50vw', translateX: '-50%' }} // Move to the middle of the screen
+      transition={{
+        x: {
+          type: 'spring',
+          stiffness: 100,
+          damping: 10
+        },
+        ease: [0.6, -0.05, 0.01, 0.99]
+      }}
+     style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column', zIndex: 2 }}>
           <HeaderContent
             currentState={currentState}
             totalQuestions={totalQuestions}
