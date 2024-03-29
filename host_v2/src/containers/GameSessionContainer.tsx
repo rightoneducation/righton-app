@@ -28,8 +28,8 @@ export default function GameSessionContainer({
     const exitAnimation = () => {
       // Start all animations concurrently and return a promise that resolves when all animations are complete
       return Promise.all([
-        animate(scope.current, { y: 'calc(-100vh + 252px)', zIndex: -1, position: 'relative'}, { duration: 1 }),
-        animate2(scope2.current, { opacity: 0, position: 'relative'}, { duration: 1 }),
+        animate(scope.current, { y: 'calc(-100vh + 250px)', zIndex: -1, position: 'relative'}, { duration: 1 }),
+        animate2(scope2.current, { y: '-100vh', opacity: 0, position: 'relative'}, { duration: 1 }),
         animate3(scope3.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
         animate4(scope4.current, { opacity: 0, position: 'relative'}, { duration: 0.1 }),
       ]);

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, useAnimate } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import { GameSessionState, ApiClient } from '@righton/networking';
+import { Box } from '@mui/material';
+import styled from '@mui/material/styles/styled';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -10,6 +12,16 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import PlaceholderContentArea from '../components/PlaceholderContentArea';
 import HeaderContent from '../components/HeaderContent';
 import { LocalModel } from '../lib/HostModels';
+
+const BackgroundStyled = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '250px', 
+  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  zIndex: -1,
+}))
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -117,21 +129,25 @@ export default function GameSessionContainer({
   };
 
   return (
-    <StackContainerStyled
-    >
-      <HeaderBackgroundStyled />
-      <motion.div
-      initial={{ x: '100vw' }} // Start offscreen to the right
-      animate={{ x: '50vw', translateX: '-50%' }} // Move to the middle of the screen
-      transition={{
-        x: {
-          type: 'spring',
-          stiffness: 100,
-          damping: 10
-        },
-        ease: [0.6, -0.05, 0.01, 0.99]
-      }}
-     style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column', zIndex: 2 }}>
+    <StackContainerStyled>
+     
+      {/* <motion.div  
+        initial={{ height: `500px`}}
+        animate={{ height: `250px`}}
+        style={{ width: '100%', position: 'absolute', top: 0 }}
+      > */}
+         <BackgroundStyled 
+         /> 
+      {/* </motion.div> */}
+        <motion.div
+          initial={{ x: '100vw' }}
+          animate={{ x: '50vw', translateX: '-50%' }}
+          transition={{
+            ease: [0.6, -0.05, 0.01, 0.99],
+            duration: 1.5
+          }}
+          style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column', zIndex: 2 }}
+        >
           <HeaderContent
             currentState={currentState}
             totalQuestions={totalQuestions}

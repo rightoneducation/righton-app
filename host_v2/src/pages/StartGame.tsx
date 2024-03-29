@@ -90,11 +90,11 @@ function StartGame({teams,
 
     return (
       <StartGameContainer>
-        <motion.div ref={scope} exit={{ y: `calc(100vh -  ${theme.sizing.fullHeaderHeight}px`}}>
+        <motion.div ref={scope} exit={{ y: `calc(100vh - 500px)`}}> 
           <BackgroundStyled /> 
         </motion.div>
         <ContentContainer>
-            <motion.div ref={scope2} exit={{y: 0, opacity: 0}} style={{height: 'calc(100vh - 80px)'}}>
+            <motion.div ref={scope2} exit={{opacity: 0}} style={{height: 'calc(100vh - 80px)'}}>
               <UpperStyled>
                 <HostHeader 
                   gameCode = {gameCode}
