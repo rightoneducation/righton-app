@@ -1,9 +1,3 @@
-# This "input" configures a global authorization rule to enable public access to
-# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY {
-  globalAuthRule: AuthRule = { allow: public }
-} # FOR TESTING ONLY!
-
 type Mutation {
   createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String @function(name: "createGame-${env}")
 }
@@ -12,28 +6,30 @@ input CreateGameSessionFromTemplateInput {
   gameTemplateId: ID!
 }
 # define a GameTemplate in amplify and graphql to list all gametemplates sorted by updatedAt
-type GameTemplate @model{
-  id: ID!
-  title: String!
-  owner: String! @index(
-      name: "gameTemplatesByOwner"
-      queryField: "gameTemplatesByOwner"
-      sortKeyFields: ["createdAt"]
-    )
-  version: Int!
-  description: String!
-  domain: String
-  cluster: String
-  grade: String
-  standard: String
-  phaseOneTime: Int
-  phaseTwoTime: Int
-  imageUrl: String
-  questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions") 
-  questionTemplatesCount: Int! @default(value: "0")
-  createdAt: AWSDateTime
-  updatedAt: AWSDateTime
-  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByQuestionTemplatesCount", queryField: "gameTemplatesByQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
+type GameTemplate 
+  @model
+  @auth(rules: [{ allow: private }, { allow: public, operations: [read] }]) {
+    id: ID!
+    title: String!
+    owner: String! @index(
+        name: "gameTemplatesByOwner"
+        queryField: "gameTemplatesByOwner"
+        sortKeyFields: ["createdAt"]
+      )
+    version: Int!
+    description: String!
+    domain: String
+    cluster: String
+    grade: String
+    standard: String
+    phaseOneTime: Int
+    phaseTwoTime: Int
+    imageUrl: String
+    questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions") 
+    questionTemplatesCount: Int! @default(value: "0")
+    createdAt: AWSDateTime
+    updatedAt: AWSDateTime
+    type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByQuestionTemplatesCount", queryField: "gameTemplatesByQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
 }
 
 input GameTemplateInput {
@@ -43,24 +39,26 @@ input GameTemplateInput {
   description: String
 }
 
-type QuestionTemplate @model {
-  id: ID!
-  title: String!
-  owner: String!
-  version: Int!
-  choices: AWSJSON
-  instructions: AWSJSON
-  answerSettings: AWSJSON
-  domain: String
-  cluster: String
-  grade: String
-  standard: String
-  imageUrl: String
-  gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
-  gameTemplatesCount: Int! @default(value: "0")
-  createdAt: AWSDateTime
-  updatedAt: AWSDateTime
-   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplatesByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "questionTemplatesByGameTemplatesCount", queryField: "questionTemplatesByGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
+type QuestionTemplate 
+  @model
+  @auth(rules: [{ allow: private }, { allow: public, operations: [read] }]) {
+    id: ID!
+    title: String!
+    owner: String!
+    version: Int!
+    choices: AWSJSON
+    instructions: AWSJSON
+    answerSettings: AWSJSON
+    domain: String
+    cluster: String
+    grade: String
+    standard: String
+    imageUrl: String
+    gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
+    gameTemplatesCount: Int! @default(value: "0")
+    createdAt: AWSDateTime
+    updatedAt: AWSDateTime
+    type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplatesByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "questionTemplatesByGameTemplatesCount", queryField: "questionTemplatesByGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
 }
 
 input QuestionTemplateInput {
@@ -69,23 +67,25 @@ input QuestionTemplateInput {
   version: Int
 }
 
-type GameSession @model {
-  id: ID!
-  gameId: ID!
-  startTime: AWSDateTime
-  phaseOneTime: Int!
-  phaseTwoTime: Int!
-  teams: [Team] @hasMany
-  currentQuestionIndex: Int
-  currentState: GameSessionState!
-    @index(name: "byState", queryField: "gameSessionByState")
-  gameCode: Int! @index(name: "byCode", queryField: "gameSessionByCode")
-  isAdvancedMode: Boolean!
-  imageUrl: String
-  description: String
-  title: String
-  currentTimer: Int
-  questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
+type GameSession 
+  @model 
+  @auth(rules: [{ allow: public }]) {
+    id: ID!
+    gameId: ID!
+    startTime: AWSDateTime
+    phaseOneTime: Int!
+    phaseTwoTime: Int!
+    teams: [Team] @hasMany
+    currentQuestionIndex: Int
+    currentState: GameSessionState!
+      @index(name: "byState", queryField: "gameSessionByState")
+    gameCode: Int! @index(name: "byCode", queryField: "gameSessionByCode")
+    isAdvancedMode: Boolean!
+    imageUrl: String
+    description: String
+    title: String
+    currentTimer: Int
+    questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
 }
 
 enum GameSessionState {
@@ -102,40 +102,46 @@ enum GameSessionState {
   FINISHED
 }
 
-type Question @model(subscriptions: null, timestamps: null) {
-  id: ID! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
-  text: String!
-  choices: AWSJSON
-  answerSettings: AWSJSON
-  responses: AWSJSON
-  hints: AWSJSON
-  imageUrl: String
-  instructions: AWSJSON
-  standard: String
-  cluster: String
-  domain: String
-  grade: String
-  order: Int!
-  isConfidenceEnabled: Boolean! @default(value: "false")
-  isShortAnswerEnabled: Boolean! @default(value: "false")
-  isHintEnabled: Boolean! @default(value: "true")
-  gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
+type Question 
+  @model(subscriptions: null, timestamps: null) 
+  @auth(rules: [{ allow: public }]) {
+    id: ID! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
+    text: String!
+    choices: AWSJSON
+    answerSettings: AWSJSON
+    responses: AWSJSON
+    hints: AWSJSON
+    imageUrl: String
+    instructions: AWSJSON
+    standard: String
+    cluster: String
+    domain: String
+    grade: String
+    order: Int!
+    isConfidenceEnabled: Boolean! @default(value: "false")
+    isShortAnswerEnabled: Boolean! @default(value: "false")
+    isHintEnabled: Boolean! @default(value: "true")
+    gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
 }
 
-type Team @model {
-  id: ID!
-  name: String!
-  question: Question @hasOne
-  teamMembers: [TeamMember] @hasMany
-  score: Int! @default(value: "0")
-  selectedAvatarIndex: Int! @default(value: "0")
+type Team 
+  @model 
+  @auth(rules: [{ allow: public }]){
+    id: ID!
+    name: String!
+    question: Question @hasOne
+    teamMembers: [TeamMember] @hasMany
+    score: Int! @default(value: "0")
+    selectedAvatarIndex: Int! @default(value: "0")
 }
 
-type TeamMember @model {
-  id: ID!
-  isFacilitator: Boolean
-  answers: [TeamAnswer] @hasMany
-  deviceId: ID!
+type TeamMember
+  @model 
+  @auth(rules: [{ allow: public }]){
+    id: ID!
+    isFacilitator: Boolean
+    answers: [TeamAnswer] @hasMany
+    deviceId: ID!
 }
 
 enum ConfidenceLevel {
@@ -147,18 +153,20 @@ enum ConfidenceLevel {
   TOTALLY
 }
 
-type TeamAnswer @model {
-  id: ID!
-  isSubmitted: Boolean! @default(value: "false")
-  isShortAnswerEnabled: Boolean! @default(value: "false")
-  currentState: GameSessionState!
-  currentQuestionIndex: Int!
-  questionId: ID!
-  teamMemberAnswersId: ID!
-  text: String!
-  answer: AWSJSON!
-  confidenceLevel: ConfidenceLevel
-  hint: AWSJSON
+type TeamAnswer
+  @model 
+  @auth(rules: [{ allow: public }]){
+    id: ID!
+    isSubmitted: Boolean! @default(value: "false")
+    isShortAnswerEnabled: Boolean! @default(value: "false")
+    currentState: GameSessionState!
+    currentQuestionIndex: Int!
+    questionId: ID!
+    teamMemberAnswersId: ID!
+    text: String!
+    answer: AWSJSON!
+    confidenceLevel: ConfidenceLevel
+    hint: AWSJSON
 }
 
 type Subscription {

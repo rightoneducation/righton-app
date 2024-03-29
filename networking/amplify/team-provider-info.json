@@ -92,6 +92,18 @@
       },
       "api": {
         "mobile": {}
+      },
+      "auth": {
+        "mobile55bc52ab": {},
+        "userPoolGroups": {}
+      }
+    }
+  },
+  "ttempele": {
+    "categories": {
+      "function": {
+        "createGame": {},
+        "mobile": {}
       }
     }
   }
