@@ -56,19 +56,15 @@ async getGameQuestions(id: string): Promise<IGameQuestion> {
     return GameQuestionParser.gameQuestionFromAWSGameQuestion(result.data.getGameQuestions as AWSGameQuestion) as IGameQuestion;
 }
 
-async deleteGameQuestions(id: string): Promise<IGameQuestion> {
+async deleteGameQuestions(id: string): Promise<boolean> {
     const variables: DeleteGameQuestionsMutationVariables = { input: { id } }
-    const gameQuestions = await this.callGraphQL<DeleteGameQuestionsMutation>(
-        deleteGameQuestions,
-        variables
-    );
-    if (
-        isNullOrUndefined(gameQuestions?.data) ||
-        isNullOrUndefined(gameQuestions?.data.deleteGameQuestions)
-    ) {
-        throw new Error(`Failed to create gameQuestions.`)
-    }
-    return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions.data.deleteGameQuestions as AWSGameQuestion) as IGameQuestion;
+    const result = 
+        await this.callGraphQL<DeleteGameQuestionsMutation>(
+            deleteGameQuestions,
+            variables
+        );
+    // if return is true, the delete was successful
+    return (!isNullOrUndefined(result));
 }
 
 async listGameQuestions(limit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestion[], nextToken: string }> {

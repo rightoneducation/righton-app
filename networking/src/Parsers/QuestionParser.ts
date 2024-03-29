@@ -5,8 +5,6 @@ import { AWSQuestion } from "../Models/AWS";
 export class QuestionParser {
 
   static parseAnswerSettings(input: string): IAnswerSettings {
-    console.log(input);
-    console.log(typeof input);
     const answerSettingsObject = JSON.parse(input);
     if (answerSettingsObject) {
       const answerType = parseInt(answerSettingsObject.answerType, 10);
@@ -20,8 +18,6 @@ export class QuestionParser {
         }
       }
     }
-    console.log(answerSettingsObject);
-    console.log(typeof answerSettingsObject)
     return answerSettingsObject as IAnswerSettings;
   }
 

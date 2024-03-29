@@ -58,11 +58,11 @@ export default function QuestionMakerAnswerDropdown({
       <Card className={choice.isAnswer ? classes.correctCard : classes.wrongCard}>
         <Box className={classes.correctCardBox}>
           <CardContent style={{ display: 'flex', justifyContent: 'space-between', padding: 0 }}>
-            <Box style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 16 }}>
+            <Box style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 16, flexGrow: 1 }}>
               <Typography className={classes.answer}>{index === 0 ? 'Correct Answer:' : `Wrong Answer ${index}:`}</Typography>
               <TextField
                 size="small"
-                style={{ width: 600, margin: 0, position: 'relative', left: 16 }}
+                style={{ width: '100%', margin: 0, position: 'relative', left: 16, paddingRight: 16 }}
                 id={`choice${index + 1}`}
                 value={choice.text}
                 onChange={onChoiceTextChangeMaker(index, answerType)}

@@ -20,6 +20,7 @@ type QuestionCardProps = {
   deleteHandler: (id: string) => () => void;
   handleClose: () => void;
   handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
+  handleQuestionCardClick: (id: string) => void;
 };
 
 export default function QuestionCard({
@@ -34,14 +35,15 @@ export default function QuestionCard({
   cloneHandler,
   deleteHandler,
   handleClose,
-  handleQuestionSelected
+  handleQuestionSelected,
+  handleQuestionCardClick
 } : QuestionCardProps) {
   const classes = useStyles();
   const gameCount = question.gameTemplates ? question.gameTemplates.length : 0;
   const history = useHistory();
   const [isSelected, setIsSelected] = useState(false);
 return (
-  <Card className={classes.game}>
+  <Card className={classes.game} onClick={() => handleQuestionCardClick(question.id)}>
     <CardContent>
       <Grid container>
         <Grid container item xs={8} md={9} >
@@ -70,13 +72,14 @@ return (
           {
             gameId &&
             <Grid item xs={2}>
-              <Checkbox value="isSelected" onChange={() => {
+              <Checkbox value="isSelected" onClick={(event) => {
+                event.stopPropagation();
                 handleQuestionSelected(question, !isSelected);
                 setIsSelected(!isSelected);
               }}/>
             </Grid>
           }
-          { isUserAuth && 
+          { isUserAuth && !gameId && 
               <Grid item xs={2} className={classes.show}>
                 <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
                   <MoreVertIcon />
@@ -130,22 +133,20 @@ const useStyles = makeStyles(theme => ({
       fontWeight: 700,
       color: '#159EFA',
       textAlign: 'right',
-      marginRight: '15px',
-      width: '90%',
+      marginRight: '15px'
     },
     title: {
-      fontWeight: 700,
-      height: '80%',
       color: '#384466',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
-      WebkitLineClamp: 2,
+      WebkitLineClamp: 3,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       maxWidth: '95%',
     },
     textSecondary: {
       height: '90%',
+      width: '50%',
       maxWidth: '90%',
       paddingRight: '5px',
       display: '-webkit-box',

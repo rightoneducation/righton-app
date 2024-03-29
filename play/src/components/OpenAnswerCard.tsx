@@ -74,7 +74,6 @@ export default function OpenAnswerCard({
           }
     }
   }
-
   const answerText = getAnswerText(answerSettings);
   const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
     backendAnswer.answer?.rawAnswer ?? ''
@@ -82,14 +81,10 @@ export default function OpenAnswerCard({
   const handleEditorContentsChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    console.log('sup');
-    console.log(answerSettings);
-    console.log(answerSettings?.answerType === AnswerType.NUMBER);
     let currentAnswer = event.target.value;
     let isBadInputDetected = false;
     if (answerSettings?.answerType === AnswerType.NUMBER) {
       isBadInputDetected = !numericAnswerRegex.test(currentAnswer);
-      console.log(isBadInputDetected);
       currentAnswer = currentAnswer.replace(/[^0-9.%-]/g, '');
       setIsBadInput(isBadInputDetected);
     }
@@ -112,8 +107,10 @@ export default function OpenAnswerCard({
   };
   
   const handlePresubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const answer = AnswerFactory.createAnswer(currentContents, answerType, answerPrecision);
+    answer.normalizeAnswer(currentContents);
     const packagedAnswer = new BackendAnswer(
-      AnswerFactory.createAnswer(currentContents, answerType, answerPrecision),
+      answer,
       true,
       isShortAnswerEnabled,
       currentState,

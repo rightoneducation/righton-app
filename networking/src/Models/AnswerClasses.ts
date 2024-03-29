@@ -37,25 +37,31 @@ export abstract class BaseAnswer<T> {
       this.answerType = answerType;
   }
 
+  abstract normalizeAnswer(rawAnswer: string): void;
+
   abstract isEqualTo(otherNormAnswers: T[]): Boolean;
 }
 
 export class StringAnswer extends BaseAnswer<string>{
   normAnswer: NormAnswerType[]
-  constructor (rawAnswer: string, answerType: AnswerType){
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
       super(rawAnswer, answerType)
-      this.normAnswer = this.normalizeStringAnswer(rawAnswer)
+      this.normAnswer = normAnswer ?? []
   }
 
   normalizeStringAnswer(rawAnswer: string): NormAnswerType[] {
     const normAnswers: NormAnswerType[] = [];
-     // if it's a string, pull out any numbers and remove spaces, and remove stopwords
-     const normArray = rawAnswer.toLowerCase().replace(/[\d\r\n]+/g, '').trim().split(' ');
+     // if it's a string, remove spaces and stopwords
+     const normArray = rawAnswer.toLowerCase().replace(/[\r\n]+/g, '').trim().split(' ');
      const normNoStopwords = removeStopwords(normArray, eng).join(' ');
      if (!isNullOrUndefined(normNoStopwords)) {
        normAnswers.push(normNoStopwords);
      }
      return normAnswers;
+  }
+
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeStringAnswer(rawAnswer);
   }
 
   isEqualTo(otherNormAnswers: string[]): Boolean {
@@ -73,9 +79,9 @@ export class NumericAnswer extends BaseAnswer<Number>{
   normAnswer: NormAnswerType[]
   answerPrecision: AnswerPrecision
 
-  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision){
+  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision, normAnswer?: number[],){
       super(rawAnswer, answerType)
-      this.normAnswer = this.normalizeNumericAnswer(rawAnswer)
+      this.normAnswer = normAnswer ?? []
       this.answerPrecision = answerPrecision
   }
 
@@ -84,8 +90,9 @@ export class NumericAnswer extends BaseAnswer<Number>{
     const percentagesRegex = /(\d+(\.\d+)?)%/g;
     const extractPercents = rawAnswer.match(percentagesRegex);
     const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
-    if (!isNullOrUndefined(percentages)){
+    if (!isNullOrUndefined(percentages) && !isNaN(percentages)){
       normAnswers.push(percentages);
+      return normAnswers;
     }
     // then remove commas and spaces and push
     const noCommas = rawAnswer.replace(/,/g, '');
@@ -96,6 +103,10 @@ export class NumericAnswer extends BaseAnswer<Number>{
     return normAnswers;
   }
   
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeNumericAnswer(rawAnswer);
+  }
+
   isEqualTo(otherNormAnswers: number[]): Boolean {
     const answerPrecisionDictionary = {
       [AnswerPrecision.WHOLE]: 0,
@@ -139,27 +150,41 @@ export class NumericAnswer extends BaseAnswer<Number>{
 export class ExpressionAnswer extends BaseAnswer<string>{
   normAnswer: NormAnswerType[]
 
-  constructor (rawAnswer: string, answerType: AnswerType){
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
     super(rawAnswer, answerType)
-    this.normAnswer = this.normalizeExpressionAnswer(rawAnswer)
+    this.normAnswer = normAnswer ?? []
   }
   
   normalizeExpressionAnswer(rawAnswer: string): NormAnswerType[] {
     const normAnswers: NormAnswerType[] = [];
+    //convert / / notation to abs for use with math.js absolute value
+    const parseForAbs = rawAnswer.replace(/\/([^\/]+)\//g, 'abs($1)');
     // if it's an expression, use parse and toString to extract expression trees and compare
     // anything more complex than this will require a custom parser (and is probably not worth it)
     // https://mathjs.org/docs/expressions/parsing.html
-    const normItemExp = parse(rawAnswer).toString();
+    let normItemExp;
+    try {
+      normItemExp = parse(parseForAbs).toString();
+    } catch (e) {
+      console.error(e);
+      normItemExp = parseForAbs.toLowerCase().replace(/\s/g,'');
+    }
     if (!isNullOrUndefined(normItemExp)) {
       normAnswers.push(normItemExp);
     }
     return normAnswers;
   }
 
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeExpressionAnswer(rawAnswer);
+  }
+
   isEqualTo(otherNormAnswers: string[]): Boolean {
     if (this.normAnswer) {
       for (let i =0; i < this.normAnswer.length; i++) {
         for (let y = 0; y < otherNormAnswers.length; y++) {
+          if (this.normAnswer[i].toString().toLowerCase().replace(/\s/g,'') === otherNormAnswers[y].toString().toLowerCase().replace(/\s/g,''))
+            return true;
           try {
             const exp1 = parse(this.normAnswer[i].toString()).toString();
             const exp2 = parse(otherNormAnswers[y].toString()).toString();
@@ -188,15 +213,19 @@ export class ExpressionAnswer extends BaseAnswer<string>{
 export class MultiChoiceAnswer extends BaseAnswer<string> {
   normAnswer: NormAnswerType[]
 
-  constructor (rawAnswer: string, answerType: AnswerType){
+  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
     super(rawAnswer, answerType)
-    this.normAnswer = this.normalizeMultiChoiceAnswer(rawAnswer)
+    this.normAnswer = normAnswer ?? []
   }
 
   normalizeMultiChoiceAnswer(rawAnswer: string): NormAnswerType[] {
     const normAnswers: NormAnswerType[] = [];
     normAnswers.push(rawAnswer.trim());
     return normAnswers;
+  }
+
+  normalizeAnswer(rawAnswer: string): void {
+    this.normAnswer = this.normalizeMultiChoiceAnswer(rawAnswer);
   }
 
   isEqualTo(otherNormAnswers: string[]): Boolean {

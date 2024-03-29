@@ -205,7 +205,7 @@ async function createAndSignRequest(query, variables) {
           ...trimmedQuestion,
           id: uuidv4(),
           text: title,
-          answerSettings: JSON.stringify(question.answerSettings),
+          answerSettings: question.answerSettings,
           gameSessionId: gameSessionParsed.id,
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,

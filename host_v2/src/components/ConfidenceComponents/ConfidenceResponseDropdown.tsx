@@ -6,14 +6,14 @@ import check from '../../images/correctAnswerCheck.png';
 
 interface Player {
   answer: string; // answer chosen by this player
-  isCorrect: boolean; // true iff the chosen answer is the correct answer 
+  isCorrect: boolean; // true iff the chosen answer is the correct answer
   name: string; // this player's name
 }
 
 interface ConfidenceOption {
   confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly 
-  incorrect: number; // number of players who selected tgis option and answered incorrectly 
+  correct: number; // number of teams who selected this option and answered correctly
+  incorrect: number; // number of players who selected tgis option and answered incorrectly
   players: Player[]; // an array of the players that selected this option
 }
 
@@ -30,7 +30,7 @@ const Container = styled(Box)(({ theme }) => ({
 const HeaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.extraSmallPadding}px`
+  gap: `${theme.sizing.extraSmallPadding}px`,
 }));
 
 const DropDownContainer = styled(Box)(({ theme }) => ({
@@ -78,7 +78,6 @@ const AnswerLabelText = styled(Typography)(({ theme }) => ({
   textAlign: 'right',
   fontSize: `${theme.typography.caption.fontSize}`,
   fontWeight: `${theme.typography.body1.fontWeight}`,
-
 }));
 
 const NameText = styled(Typography)(({ theme }) => ({
@@ -100,8 +99,8 @@ const AnswerText = styled(Typography)(({ theme }) => ({
 
 export default function ConfidenceResponseDropdown({
   graphClickIndex,
-  selectedConfidenceData }: DropdownProps
-) {
+  selectedConfidenceData,
+}: DropdownProps) {
   const { t } = useTranslation();
   const ConfidenceLevelDictionary: { [key: number]: string } = {
     0: 'Not Rated',
@@ -111,7 +110,11 @@ export default function ConfidenceResponseDropdown({
     4: 'Very Confident',
     5: 'Totally Confident',
   };
-  const playerResponse = ({ name, answer, isCorrect }: Player): React.ReactNode => {
+  const playerResponse = ({
+    name,
+    answer,
+    isCorrect,
+  }: Player): React.ReactNode => {
     return (
       <PlayerCard>
         <NameText>{name}</NameText>
@@ -124,13 +127,15 @@ export default function ConfidenceResponseDropdown({
   };
 
   /**
-   * Sorts players based on the Figma criteria: 
+   * Sorts players based on the Figma criteria:
    * (1) correct players sorted alphabetically
    * (2) incorrect players sorted first by answer frequency, then alphabetically
    * @param selectedData confidence data passed in from parent
    * @returns sorted array of input
    */
-  const sortPlayers = (selectedData: { players: Player[] }): {
+  const sortPlayers = (selectedData: {
+    players: Player[];
+  }): {
     correct: Player[];
     incorrect: Player[];
   } => {
@@ -172,12 +177,17 @@ export default function ConfidenceResponseDropdown({
         <>
           <HeaderContainer>
             <HeaderText>
-              {t('gamesession.confidenceCard.graph.dropdown.header.containsResponses')}
+              {t(
+                'gamesession.confidenceCard.graph.dropdown.header.containsResponses',
+              )}
             </HeaderText>
             <ConfidenceLevelText>
-              {graphClickIndex !== null && ConfidenceLevelDictionary[graphClickIndex]}
+              {graphClickIndex !== null &&
+                ConfidenceLevelDictionary[graphClickIndex]}
             </ConfidenceLevelText>
-            <AnswerLabelText>{t('gamesession.confidenceCard.graph.dropdown.answerLabel')}</AnswerLabelText>
+            <AnswerLabelText>
+              {t('gamesession.confidenceCard.graph.dropdown.answerLabel')}
+            </AnswerLabelText>
           </HeaderContainer>
           <DropDownContainer>
             {sortedPlayers.correct.map((playerData) =>
@@ -192,4 +202,3 @@ export default function ConfidenceResponseDropdown({
     </Container>
   );
 }
-

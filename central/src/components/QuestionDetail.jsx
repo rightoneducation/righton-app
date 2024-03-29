@@ -6,10 +6,9 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import AnswerDropdown from './AnswerDropdown';
 
-export default function QuestionDetails({ gameTitle, questionIndex, question }) {
+export default function QuestionDetails({ gameTitle, question }) {
   const classes = useStyles();
   const history = useHistory();
-
   const choices = JSON.parse(question.choices);
   const answer = choices.find(({ isAnswer }) => isAnswer);
   let wrongAnswerSet = choices.filter(({ isAnswer }) => !isAnswer);
@@ -33,7 +32,7 @@ export default function QuestionDetails({ gameTitle, questionIndex, question }) 
       <Grid container item xs={6}>
         <Grid item xs={12}>
           <Typography className={classes.title}>
-            Question {Number(questionIndex) + 1}
+            Question
           </Typography>
         </Grid>
 

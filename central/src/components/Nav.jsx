@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useRouteMatch } from "react-router-dom";
+import { NavLink, useRouteMatch, useHistory } from "react-router-dom";
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -9,10 +9,17 @@ import betaLogo from '../images/BetaLogo.svg';
 import quizMakerIcon from '../images/GameMakerIcon.svg';
 import helpIcon from '../images/HelpIcon.svg';
 import HelpDropdown from './HelpDropdown';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, handleModalOpen }) {
   const classes = useStyles(isResolutionMobile)();
+  const history = useHistory();
   const match = useRouteMatch('/gameMaker');
+  const matchQuestionMaker = useRouteMatch('/questionmaker');
+  const gameId = uuidv4();
+  const handleGameMakerNavigate = () => {
+    history.push(`/gamemaker/${gameId}`);
+  }
 
   return (
     <div className={classes.grow}>
@@ -26,26 +33,28 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
               <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
                 <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6">
-                  Games
+                  { isUserAuth ? `Games` : `Explore`} 
                 </Typography>
               </NavLink>
+              </>
+            : null }
+             {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
+            <>
               <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/questions'}>
                 <img src={questionBankIcon} alt="Explore Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6">
                   Questions
                 </Typography>
               </NavLink>
-            </>
-            : null }
-            {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
-            <>
-            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
+         
+           
+            <Box className={classes.link} id='GameMaker' onClick={handleGameMakerNavigate} style={{opacity: match ? 1 : 0.5}}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" >
                 Game Maker
               </Typography> 
-            </NavLink>
-              <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={'/questionmaker/0'}>
+            </Box>
+              <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={`/questionmaker/${gameId}`}  style={{opacity: matchQuestionMaker ? 1 : 0.5}}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6" >
                 Question Maker
@@ -73,7 +82,8 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
 
 const useStyles = (isResolutionMobile) => makeStyles(theme => ({  
   grow: {
-    zIndex: 2,
+    width: '100%',
+    zIndex: 1,
   },
   bar: {
     position: 'sticky',
@@ -98,7 +108,8 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
     display: 'flex',
     opacity: '0.5',
     alignItems: 'center',
-    paddingLeft: '10px'
+    paddingLeft: '10px',
+    cursor: 'pointer'
   },
   logoContainer: {
     display: 'flex',

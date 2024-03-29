@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -12,6 +12,8 @@ type QuestionDashboardProps = {
   questions: IQuestionTemplate[];
   loading: boolean;
   isUserAuth: boolean;
+  // gameDetails: ;
+  // setGameDetails: (gameDetails: ) => void;
   handleDeleteQuestionTemplate: (id: string) => void;
   handleCloneQuestionTemplate: (question: IQuestionTemplate) => void;
   nextToken: string | null; 
@@ -24,6 +26,8 @@ export default function QuestionDashboard({
   questions,
   loading,
   isUserAuth,
+  // gameDetails,
+  // setGameDetails,
   handleCloneQuestionTemplate,
   handleDeleteQuestionTemplate,
   nextToken,
@@ -31,9 +35,13 @@ export default function QuestionDashboard({
   handleQuestionSelected
 }: QuestionDashboardProps) {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const match = useRouteMatch('/questions/:questionIndex');
+  const handleQuestionCardClick = (id: string) => {
+    history.push(`/questionmaker/${id}`);
+  };
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
     setActiveIndex(Number(event.currentTarget.dataset.questionIndex));
@@ -48,7 +56,7 @@ export default function QuestionDashboard({
     handleClose();
   };
   const deleteHandler = (id: string) => () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this questions?');
+    const confirmDelete = window.confirm('Are you sure you want to delete this question?');
     if (confirmDelete) {
       handleDeleteQuestionTemplate(id);
     }
@@ -111,6 +119,7 @@ export default function QuestionDashboard({
                   deleteHandler={deleteHandler}
                   handleClose={handleClose}
                   handleQuestionSelected={handleQuestionSelected}
+                  handleQuestionCardClick={handleQuestionCardClick}
                 />
               </Grid>
             )}

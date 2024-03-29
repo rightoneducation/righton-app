@@ -21,7 +21,6 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     try {
       await Auth.signIn(email, password);
       const user = await Auth.currentAuthenticatedUser();
-      console.log(user);
       if (user.signInUserSession.accessToken.payload["cognito:groups"].includes('admin')){
         handleUserAuth(true);
         window.location.href = "/";

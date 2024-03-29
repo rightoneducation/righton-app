@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import {
   IAPIClients,
+  APIClients,
   isNullOrUndefined,
   IGameSession,
   GameSessionState,
@@ -28,7 +29,6 @@ export function PregameContainer({ apiClients }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
   );

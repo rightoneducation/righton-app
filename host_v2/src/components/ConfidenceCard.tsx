@@ -9,14 +9,14 @@ import ConfidenceResponseDropdown from './ConfidenceComponents/ConfidenceRespons
 
 interface Player {
   answer: string; // answer chosen by this player
-  isCorrect: boolean; // true iff the chosen answer is the correct answer 
+  isCorrect: boolean; // true iff the chosen answer is the correct answer
   name: string; // this player's name
 }
 
 interface ConfidenceOption {
   confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly 
-  incorrect: number; // number of players who selected tgis option and answered incorrectly 
+  correct: number; // number of teams who selected this option and answered correctly
+  incorrect: number; // number of players who selected tgis option and answered incorrectly
   players: Player[]; // an array of the players that selected this option
 }
 
@@ -28,7 +28,7 @@ interface CardProps {
 
 const CardContentContainer = styled(Box)({
   width: '100%',
-  display: 'inline'
+  display: 'inline',
 });
 
 const SmallTextContainer = styled(Box)(({ theme }) => ({
@@ -37,7 +37,7 @@ const SmallTextContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   alignSelf: 'stretch',
-  marginTop: `${theme.sizing.extraSmallPadding}px`
+  marginTop: `${theme.sizing.extraSmallPadding}px`,
 }));
 
 const InstructionsText = styled(Typography)(({ theme }) => ({
@@ -56,22 +56,20 @@ const TitleText = styled(Typography)(({ theme }) => ({
 const DescriptionText = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
   color: `${theme.typography.h2.color}`,
-  fontWeight: `${theme.typography.body1.fontWeight}`
+  fontWeight: `${theme.typography.body1.fontWeight}`,
 }));
 
 export default function ConfidenceCard({
   confidenceData,
   graphClickIndex,
-  handleGraphClick
+  handleGraphClick,
 }: CardProps) {
   const { t } = useTranslation();
   return (
     <HostDefaultCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
         <CardContentContainer>
-          <TitleText>
-            {t('gamesession.confidenceCard.title')}
-          </TitleText>
+          <TitleText>{t('gamesession.confidenceCard.title')}</TitleText>
           <SmallTextContainer>
             <DescriptionText>
               {t('gamesession.confidenceCard.description')}
@@ -80,21 +78,22 @@ export default function ConfidenceCard({
           <ConfidenceResponsesGraph
             confidenceData={confidenceData}
             graphClickIndex={graphClickIndex}
-            handleGraphClick={handleGraphClick} />
-          {graphClickIndex !== null ?
+            handleGraphClick={handleGraphClick}
+          />
+          {graphClickIndex !== null ? (
             <ConfidenceResponseDropdown
               graphClickIndex={graphClickIndex}
-              selectedConfidenceData={
-                confidenceData[graphClickIndex]
-              } /> :
+              selectedConfidenceData={confidenceData[graphClickIndex]}
+            />
+          ) : (
             <SmallTextContainer>
               <InstructionsText>
                 {t('gamesession.confidenceCard.instructions')}
               </InstructionsText>
             </SmallTextContainer>
-          }
+          )}
         </CardContentContainer>
       </BodyCardContainerStyled>
-    </HostDefaultCardStyled >
+    </HostDefaultCardStyled>
   );
 }

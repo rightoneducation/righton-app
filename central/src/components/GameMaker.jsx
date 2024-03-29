@@ -12,10 +12,10 @@ import { getQuestionTemplateById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 import SortByDropdown from './SortByDropdown';
 import QuestionDashboard from './QuestionDashboard';
+import { v4 as uuidv4 } from 'uuid';
 
 // New "empty" game
 const newGame = {
-  id: 0,
   title: '',
   description: '',
   grade: '',
@@ -65,7 +65,8 @@ export default function GameMaker({
   setSearchInput,
   searchInput, 
   isSearchClick, 
-  handleSearchClick, 
+  handleSearchClick,
+  handleSearchChange, 
   isResolutionMobile, 
   listQuerySettings,
   handleUpdateListQuerySettings,
@@ -74,7 +75,10 @@ export default function GameMaker({
   cloneQuestion,
   gameId,
   handleScrollDown,
-  handleQuestionSelected
+  handleQuestionSelected,
+  nextToken,
+  localQuestionTemplates,
+  setLocalQuestionTemplates,
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
@@ -87,15 +91,13 @@ export default function GameMaker({
       return { ...game };
     }
     else {
-      return newGame;
+      return {id: gameId, ...newGame};
     }
   });
 
   const selectedQuestionTemplates = selectedQuestions.map(question => {
     return {questionTemplate: question, gameQuestionId: null }
   });
-  // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
-  const [localQuestionTemplates, setLocalQuestionTemplates] = useState([...gameDetails.questionTemplates]);
 
   const [phaseOne, setPhaseOne] = useState(() => {
     if (gameDetails.phaseOneTime === null) {
@@ -113,7 +115,6 @@ export default function GameMaker({
       return gameDetails.phaseTwoTime;
     }
   });
-
   // Handles changing and storing of new values for both Phase Timers
   const handlePhaseOne = (event) => {
     setPhaseOne(event.target.value);
@@ -131,42 +132,16 @@ export default function GameMaker({
 
   const handleDelete = (index) => {
     const newQuestions = [...localQuestionTemplates];
-    newQuestions.splice(index, 1);
+    const newQuestionsDeleted = newQuestions.splice(index, 1);
     setLocalQuestionTemplates(newQuestions);
-  }
-
-  const handleAdd = (questionTemplate) => {
-    setLocalQuestionTemplates((prev) => [...prev, questionTemplate]);
-    setQuestionTemplatesToAdd((prev) => [...prev, questionTemplate.id]);
-  }
-
-  // Handles any new questions added to the game, either through Add Question or Create Question
-  const handleGameQuestion = (newQuestion) => {
-    setDisabled(isButtonDisabled());
-    for (let i = 0; i < questions.length; i++) {
-      if (newQuestion.id === questions[i].id) {
-        questions[i] = newQuestion
-        return null;
-      }
-    }
-    setQuestions([...questions, newQuestion])
-  };
-
-  // Handles if the Save Game button is disabled. The button become enabled when all required fields have values in it. The required fields/values are the game's title, description, and 4+ questions.
-  const isButtonDisabled = () => {
-    if (gameDetails.title.length > 0 && gameDetails.description.length > 0 && gameDetails.imageUrl.length > 0) {
-      return false;
-    }
-    else {
-      return true;
-    }
   }
 
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
+    setSelectedQuestions([]); 
+    setLocalQuestionTemplates([]);
     gameDetails.questionTemplates = localQuestionTemplates;
     saveGameTemplate(game, gameDetails);
-    setLocalQuestionTemplates([]);
     event.preventDefault();
     history.push('/');
   };
@@ -202,7 +177,7 @@ export default function GameMaker({
                       variant='outlined'
                       label='Game Title'
                       value={gameDetails.title}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput(currentTarget.value) }) }}
                       fullWidth
                       required
                       className={classes.gameTitle}
@@ -214,7 +189,7 @@ export default function GameMaker({
                       variant='outlined'
                       label='Game Text'
                       value={gameDetails.description}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }) }}
                       fullWidth
                       multiline
                       rows={3}
@@ -261,7 +236,7 @@ export default function GameMaker({
                         label='Image URL'
                         fullWidth
                         value={gameDetails.imageUrl}
-                        onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }); setDisabled(false && handleDisable()) }}
+                        onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }) }}
                       />
                     </Grid>
                   </Grid>
@@ -297,7 +272,7 @@ export default function GameMaker({
                   localQuestionTemplates.map((questionData, index) => {
                     const question = questionData.questionTemplate;
                     return (
-                      <Grid key={index} container item xs={12}>
+                      <Grid key={uuidv4()} container item xs={12}>
                         <Card className={classes.question}>
                           <CardContent>
                             <Grid container item>
@@ -350,7 +325,7 @@ export default function GameMaker({
                   </Grid>
 
                   <Grid container item xs={6} justifyContent='center'>
-                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/questionmaker/0`)}>
+                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/questionmaker/${uuidv4()}`)}>
                       Create Question
                     </Button>
                   </Grid>
@@ -406,6 +381,7 @@ export default function GameMaker({
                       isSearchClick={isSearchClick} 
                       handleSearchClick={handleSearchClick} 
                       isResolutionMobile={isResolutionMobile} 
+                      handleSearchChange={handleSearchChange}
                     />
                     <SortByDropdown 
                       isGames={location.pathname === "/"} 
@@ -417,17 +393,9 @@ export default function GameMaker({
                       style={{zIndex: 5}}
                     />
                   </Box>
-                  <Grid container onClick={() => setSortByCheck(false)}>
-                    <QuestionDashboard 
-                      loading={loading} 
-                      questions={questions} 
-                      games={games} 
-                      cloneQuestion={cloneQuestion} 
-                      gameId={gameId} 
-                      handleScrollDown={handleScrollDown}
-                      handleQuestionSelected={handleQuestionSelected}
-                    />
-                  </Grid>
+                  <Box container onClick={() => setSortByCheck(false)}>
+                  <QuestionDashboard gameId={gameId} loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleQuestionSelected={handleQuestionSelected} gameDetails={gameDetails} setGameDetails={setGameDetails}/>   
+                  </Box>
                 </Grid>
                 <Box className={classes.addQuestionFooter}>
                   <Button 
@@ -436,6 +404,7 @@ export default function GameMaker({
                     className={classes.blueButton} 
                     onClick={(event) => {
                     setLocalQuestionTemplates([...localQuestionTemplates, ...selectedQuestionTemplates]);
+                    setSelectedQuestions([]); 
                     history.push(`/gamemaker/${gameId}`)
                   }}>
                     Add to Game

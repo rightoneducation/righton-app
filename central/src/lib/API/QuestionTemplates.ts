@@ -8,7 +8,6 @@ import { IListQuerySettings, SortField } from './QueryInputs';
 
 export const createQuestionTemplate = async (apiClients: IAPIClients, createQuestionTemplateInput: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
   try {
-    console.log(createQuestionTemplateInput);
     const question = await apiClients.questionTemplate.createQuestionTemplate(createQuestionTemplateInput);
     return question;
   } catch (e) {
@@ -21,7 +20,6 @@ export const getQuestionTemplate = async (apiClients: IAPIClients, id: string): 
   try {
     const question = await apiClients.questionTemplate.getQuestionTemplate(id);
     return question;
-
   } catch (e) {
     console.log(e);
   }
@@ -30,6 +28,11 @@ export const getQuestionTemplate = async (apiClients: IAPIClients, id: string): 
 
 export const updateQuestionTemplate = async (apiClients: IAPIClients, updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
   try {
+    // need to ensure that the createdAt and updatedAt fields are in the correct string format for graphql
+    const existingCreatedAt = updateQuestionTemplateInput.createdAt;
+    const existingUpdatedAt = updateQuestionTemplateInput.updatedAt;
+    updateQuestionTemplateInput.createdAt = new Date(existingCreatedAt ?? '').toISOString();
+    updateQuestionTemplateInput.updatedAt = new Date(existingUpdatedAt ?? '').toISOString();
     return await apiClients.questionTemplate.updateQuestionTemplate(updateQuestionTemplateInput);
   } catch (e) {
     console.log(e);
@@ -37,13 +40,19 @@ export const updateQuestionTemplate = async (apiClients: IAPIClients, updateQues
   return null;
 };
 
-export const deleteQuestionTemplate = async (apiClients: IAPIClients, id: string): Promise<IQuestionTemplate | null> => {
-  try {
-    return await apiClients.questionTemplate.deleteQuestionTemplate(id);
-  } catch (e) {
-    console.log(e);
+export const deleteQuestionTemplate = async (apiClients: IAPIClients, id: string): Promise<boolean> => {
+  const questionTemplate = await apiClients.questionTemplate.getQuestionTemplate(id);
+  if (questionTemplate?.gameTemplates) {
+    await Promise.all(questionTemplate.gameTemplates.map(async (gameTemplate) => {
+      try {
+        await apiClients.gameQuestions.deleteGameQuestions(gameTemplate.gameQuestionId);
+      } catch (error) {
+        console.error("Error deleting game question:", error);
+        return false;
+      }
+    }));
   }
-  return null;
+  return await apiClients.questionTemplate.deleteQuestionTemplate(id);
 };
 
 export const listQuestionTemplates = async (apiClients: IAPIClients, listQuerySettings: IListQuerySettings | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null> => {

@@ -100,6 +100,7 @@ const useStyles = (isHelpMenuClicked) => makeStyles(theme => ({
       width: '45px',
       cursor: 'pointer',
       position: 'relative',
+      zIndex: 5
     },
     helpHeader: {
       backgroundColor: isHelpMenuClicked ? 'white' : null,
@@ -126,7 +127,7 @@ const useStyles = (isHelpMenuClicked) => makeStyles(theme => ({
       boxShadow: '0px 10px 10px rgba(15, 27, 40, 0.13)',
       display: 'flex',
       direction: 'column',
-      zIndex: 2,
+      zIndex: 5,
     },
     helpTableRow: {
       display: 'flex',

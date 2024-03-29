@@ -17,7 +17,6 @@ import {
   CreateGameTemplateMutation, 
   CreateGameTemplateMutationVariables, 
   GetGameTemplateQuery,
-  GetGameTemplateQueryVariables,
   UpdateGameTemplateInput, 
   UpdateGameTemplateMutation, 
   UpdateGameTemplateMutationVariables,
@@ -26,7 +25,8 @@ import {
   DeleteGameTemplateMutationVariables
 } from "../AWSMobileApi";
 import { AWSGameTemplate } from "../Models";
-import { isNullOrUndefined, doesObjectHaveDate } from "../global";
+import { isNullOrUndefined } from "../global";
+import { GraphQLOptions } from "./BaseAPIClient";
 
 export class GameTemplateAPIClient
   extends BaseAPIClient
@@ -35,17 +35,10 @@ export class GameTemplateAPIClient
   async createGameTemplate( 
     createGameTemplateInput: CreateGameTemplateInput
   ): Promise<IGameTemplate> {
-    if (doesObjectHaveDate(createGameTemplateInput) && createGameTemplateInput.createdAt && createGameTemplateInput.updatedAt) {
-      createGameTemplateInput = {
-        ...createGameTemplateInput,
-        createdAt: createGameTemplateInput.createdAt,
-        updatedAt: createGameTemplateInput.updatedAt
-      }
-    }
     const variables: CreateGameTemplateMutationVariables = { input: createGameTemplateInput as CreateGameTemplateInput }
     const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
         createGameTemplate,
-        variables
+        variables as unknown as GraphQLOptions
     ) 
     if (
         isNullOrUndefined(gameTemplate.data) ||
@@ -57,33 +50,30 @@ export class GameTemplateAPIClient
   } 
 
   async getGameTemplate(id: string): Promise<IGameTemplate> {
-    const variables: GetGameTemplateQueryVariables = { id }
-    const result = await this.callGraphQL<GetGameTemplateQuery>(
-      getGameTemplate,
-      { variables }
-    )
-    if (
-      isNullOrUndefined(result.data) ||
-      isNullOrUndefined(result.data.getGameTemplate)
-    ) {
-      throw new Error(`Failed to get game template`)
-    }  
-    return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data.getGameTemplate as AWSGameTemplate);
+    try{
+      const result = await this.callGraphQL<GetGameTemplateQuery>(
+        getGameTemplate,
+        { id } as unknown as GraphQLOptions
+      )
+      if (
+        isNullOrUndefined(result.data) ||
+        isNullOrUndefined(result.data.getGameTemplate)
+      ) {
+        throw new Error(`Failed to get game template`)
+      }
+      return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data.getGameTemplate as AWSGameTemplate);
+    } catch (e) {
+      console.log(e);
+    }
+    return GameTemplateParser.gameTemplateFromAWSGameTemplate({} as AWSGameTemplate);
   }
 
   async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate> {
-    if (doesObjectHaveDate(updateGameTemplateInput) && updateGameTemplateInput.createdAt && updateGameTemplateInput.updatedAt) {
-      updateGameTemplateInput = {
-        ...updateGameTemplateInput,
-        createdAt: updateGameTemplateInput.createdAt,
-        updatedAt: updateGameTemplateInput.updatedAt
-      }
-    }
     const input: UpdateGameTemplateInput = updateGameTemplateInput as UpdateGameTemplateInput;
     const variables: UpdateGameTemplateMutationVariables = { input };
     const gameTemplate = await this.callGraphQL<UpdateGameTemplateMutation>(
         updateGameTemplate,
-        variables
+        variables as unknown as GraphQLOptions
     );
     if (
         isNullOrUndefined(gameTemplate.data) ||
@@ -94,20 +84,15 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.updateGameTemplate as AWSGameTemplate);
   }
 
-  async deleteGameTemplate(id: string): Promise<IGameTemplate> {
+  async deleteGameTemplate(id: string): Promise<boolean> {
     const input: DeleteGameTemplateInput = {id};
     const variables: DeleteGameTemplateMutationVariables = { input };
-    const gameTemplate = await this.callGraphQL<DeleteGameTemplateMutation>(
+    const result = await this.callGraphQL<DeleteGameTemplateMutation>(
         deleteGameTemplate,
-        variables,
+        variables as unknown as GraphQLOptions
     );
-    if (
-        isNullOrUndefined(gameTemplate.data) ||
-        isNullOrUndefined(gameTemplate.data.deleteGameTemplate)
-    ) {
-        throw new Error(`Failed to delete game template`);
-    }
-    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.deleteGameTemplate as AWSGameTemplate);
+    // if return is true, the delete was successful
+    return (!isNullOrUndefined(result));
   }
 
   async listGameTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {

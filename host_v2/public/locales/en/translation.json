@@ -25,7 +25,9 @@
     },
     "placeholder": "This is some placeholder text.",
     "player": "Player",
-    "addtime": "+30s"
+    "addtime": "+30s",
+    "answerbar": "Players who have answered",
+    "nextStateButton": "End Answering"
   },
   "gameinprogress": {
     "header": {

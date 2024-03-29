@@ -12,7 +12,7 @@ export interface IGameQuestionsAPIClient {
 
   deleteGameQuestions(
     id: string
-  ): Promise<IGameQuestion>;
+  ): Promise<boolean>;
 
   listGameQuestions(
     limit: number,
