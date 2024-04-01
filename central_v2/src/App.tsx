@@ -1,25 +1,15 @@
 import React from 'react';
-import logo from './logo.svg';
+import Login from './pages/Login';
+import { AuthAPIClient } from '@righton/networking';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
 
 function App() {
+  const authAPIClient = new AuthAPIClient();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GoogleOAuthProvider clientId="23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com">
+      <Login authAPIClient={authAPIClient} />
+    </GoogleOAuthProvider>
   );
 }
 
