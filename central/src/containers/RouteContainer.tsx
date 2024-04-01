@@ -395,11 +395,11 @@ export const RouteContainer = ({
     let user = null;
     try {
       user = await Auth.currentAuthenticatedUser();
-      console.log(user);
       if (user) {
         setIsUserAuth(true);
       }
     } catch (e) {
+      console.log(e);
       setIsUserAuth(false);
     }
   });
@@ -431,7 +431,6 @@ export const RouteContainer = ({
 
   useEffect(() => {
     persistUserAuth();
-    console.log("sup");
     // get either a list of games or questions when the route changes
     setSearchInput('');
     const updatedListQuerySettings = {
