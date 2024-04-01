@@ -11,6 +11,7 @@ export const handleGoogleSignIn = async (googleCredential: string): Promise<Bool
   console.log('sup');
   console.log(user);
   console.log(token);
+  console.log(googleCredential);
   await Auth.federatedSignIn(
     'google',
     { token: googleCredential, expires_at: token.exp },

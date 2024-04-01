@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "mobileb8692c04_identitypool_b8692c04",
+    "identityPoolName": "mobile6060603c_identitypool_6060603c",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "mobileb8692c04",
-    "userPoolName": "mobileb8692c04_userpool_b8692c04",
+    "resourceNameTruncated": "mobile6060603c",
+    "userPoolName": "mobile6060603c_userpool_6060603c",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,14 +31,14 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "mobileb8692c04_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "mobile6060603c_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "b8692c04",
-    "resourceName": "mobileb8692c04",
+    "sharedId": "6060603c",
+    "resourceName": "mobile6060603c",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "defaultSocial",
     "hostedUI": true,
-    "hostedUIDomainName": "mobileb8692c04-b8692c04",
+    "hostedUIDomainName": "mobile6060603c-6060603c",
     "authProvidersUserPool": [
       "Google"
     ],
