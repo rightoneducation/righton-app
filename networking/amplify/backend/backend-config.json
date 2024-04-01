@@ -1,26 +1,12 @@
 {
   "api": {
     "mobile": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "mobile55bc52ab"
-        }
-      ],
+      "dependsOn": [],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
               "authenticationType": "AWS_IAM"
-            },
-            {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authmobile55bc52ab"
-              }
             }
           ],
           "defaultAuthentication": {
@@ -38,7 +24,7 @@
     }
   },
   "auth": {
-    "mobilee1238193": {
+    "mobileb8692c04": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -63,22 +49,6 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
-    },
-    "userPoolGroups": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId",
-            "AppClientIDWeb",
-            "AppClientID",
-            "IdentityPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "mobile55bc52ab"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito-UserPool-Groups"
     }
   },
   "function": {
@@ -100,38 +70,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobilee1238193_nativeClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee1238193_userPoolId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee1238193_userPoolName": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee1238193_webClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
     "AMPLIFY_function_createGame_deploymentBucketName": {
       "usedBy": [
         {
