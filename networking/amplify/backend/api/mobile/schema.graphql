@@ -12,7 +12,9 @@ input CreateGameSessionFromTemplateInput {
   gameTemplateId: ID!
 }
 # define a GameTemplate in amplify and graphql to list all gametemplates sorted by updatedAt
-type GameTemplate @model{
+type GameTemplate 
+  @model
+  {
   id: ID!
   title: String!
   owner: String! @index(
@@ -43,7 +45,9 @@ input GameTemplateInput {
   description: String
 }
 
-type QuestionTemplate @model {
+type QuestionTemplate 
+  @model 
+  {
   id: ID!
   title: String!
   owner: String!
@@ -69,7 +73,9 @@ input QuestionTemplateInput {
   version: Int
 }
 
-type GameSession @model {
+type GameSession 
+  @model 
+  {
   id: ID!
   gameId: ID!
   startTime: AWSDateTime
@@ -102,7 +108,9 @@ enum GameSessionState {
   FINISHED
 }
 
-type Question @model(subscriptions: null, timestamps: null) {
+type Question 
+  @model(subscriptions: null, timestamps: null) 
+  {
   id: ID! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON
@@ -122,7 +130,9 @@ type Question @model(subscriptions: null, timestamps: null) {
   gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
 }
 
-type Team @model {
+type Team
+  @model 
+  {
   id: ID!
   name: String!
   question: Question @hasOne
@@ -131,7 +141,9 @@ type Team @model {
   selectedAvatarIndex: Int! @default(value: "0")
 }
 
-type TeamMember @model {
+type TeamMember 
+  @model 
+  {
   id: ID!
   isFacilitator: Boolean
   answers: [TeamAnswer] @hasMany
@@ -147,7 +159,9 @@ enum ConfidenceLevel {
   TOTALLY
 }
 
-type TeamAnswer @model {
+type TeamAnswer 
+  @model 
+  {
   id: ID!
   isSubmitted: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")

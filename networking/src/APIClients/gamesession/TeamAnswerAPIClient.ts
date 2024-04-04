@@ -8,17 +8,17 @@ import {
   UpdateTeamAnswerInput,
   UpdateTeamAnswerMutation,
   UpdateTeamAnswerMutationVariables,
-} from "../AWSMobileApi";
-import { isNullOrUndefined } from "../global";
-import { BackendAnswer, IAnswerHint } from "../Models";
-import { TeamAnswerParser } from "../Parsers/TeamAnswerParser";
+} from "../../AWSMobileApi";
+import { isNullOrUndefined } from "../../global";
+import { BackendAnswer, IAnswerHint } from "../../Models";
+import { TeamAnswerParser } from "../../Parsers/TeamAnswerParser";
 import {
   createTeamAnswer,
   onCreateTeamAnswer,
   onUpdateTeamAnswer,
   updateTeamAnswer,
-} from "../graphql";
-import { BaseAPIClient } from "./BaseAPIClient";
+} from "../../graphql";
+import { BaseAPIClient } from "../BaseAPIClient";
 import { ITeamAnswerAPIClient } from "./interfaces/ITeamAnswerAPIClient";
 
 export class TeamAnswerAPIClient

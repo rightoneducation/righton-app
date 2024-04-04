@@ -1,5 +1,5 @@
-import { ITeam } from "../../Models";
-import { UpdateTeamInput } from "../../AWSMobileApi";
+import { ITeam } from "../../../Models";
+import { UpdateTeamInput } from "../../../AWSMobileApi";
 
 export interface ITeamAPIClient {
   getTeam(id: string): Promise<ITeam>;

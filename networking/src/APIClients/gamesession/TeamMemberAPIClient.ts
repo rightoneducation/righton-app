@@ -3,12 +3,12 @@ import {
   CreateTeamMemberMutation,
   CreateTeamMemberMutationVariables,
   OnUpdateTeamMemberSubscription,
-} from "../AWSMobileApi";
-import { isNullOrUndefined } from "../global";
-import { AWSTeamMember, ITeamMember } from "../Models";
-import { TeamMemberParser } from "../Parsers/TeamMemberParser";
-import { createTeamMember, onUpdateTeamMember } from "../graphql";
-import { BaseAPIClient } from "./BaseAPIClient";
+} from "../../AWSMobileApi";
+import { isNullOrUndefined } from "../../global";
+import { AWSTeamMember, ITeamMember } from "../../Models";
+import { TeamMemberParser } from "../../Parsers/TeamMemberParser";
+import { createTeamMember, onUpdateTeamMember } from "../../graphql";
+import { BaseAPIClient } from "../BaseAPIClient";
 
 export class TeamMemberAPIClient extends BaseAPIClient {
   async addTeamMemberToTeam(

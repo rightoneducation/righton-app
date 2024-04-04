@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from "aws-amplify";
-import { BaseAPIClient } from "./BaseAPIClient";
-import { TeamParser } from "../Parsers/TeamParser";
-import { AWSTeam, ITeam } from "../Models";
+import { BaseAPIClient } from "../BaseAPIClient";
+import { TeamParser } from "../../Parsers/TeamParser";
+import { AWSTeam, ITeam } from "../../Models";
 import {
   CreateTeamInput,
   CreateTeamMutation,
@@ -11,15 +11,15 @@ import {
   UpdateTeamInput,
   UpdateTeamMutation,
   UpdateTeamMutationVariables,
-} from "../AWSMobileApi";
+} from "../../AWSMobileApi";
 import {
   getTeam,
   createTeam,
   onCreateTeam,
   onDeleteTeam,
   updateTeam,
-} from "../graphql";
-import { isNullOrUndefined } from "../global";
+} from "../../graphql";
+import { isNullOrUndefined } from "../../global";
 import { ITeamAPIClient } from "./interfaces/ITeamAPIClient";
 
 export class TeamAPIClient

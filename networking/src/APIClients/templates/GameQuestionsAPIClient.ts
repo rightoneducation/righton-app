@@ -1,13 +1,13 @@
 import { API, graphqlOperation } from "aws-amplify";
-import { BaseAPIClient } from "./BaseAPIClient";
+import { BaseAPIClient } from "../BaseAPIClient";
 import { IGameQuestionsAPIClient } from "./interfaces";
-import { IGameQuestion, AWSGameQuestion } from "../Models";
+import { IGameQuestion, AWSGameQuestion } from "../../Models";
 import { 
     createGameQuestions, 
     listGameQuestions,
     getGameQuestions,
     deleteGameQuestions,
- } from "../graphql";
+ } from "../../graphql";
 import { 
     CreateGameQuestionsInput, 
     CreateGameQuestionsMutation, 
@@ -16,9 +16,9 @@ import {
     GetGameQuestionsQueryVariables,
     DeleteGameQuestionsMutation,
     DeleteGameQuestionsMutationVariables,
-} from "../AWSMobileApi";
-import { GameQuestionParser } from "../Parsers/GameQuestionParser";
-import { isNullOrUndefined } from "../global";
+} from "../../AWSMobileApi";
+import { GameQuestionParser } from "../../Parsers/GameQuestionParser";
+import { isNullOrUndefined } from "../../global";
 
 export class GameQuestionsAPIClient
   extends BaseAPIClient

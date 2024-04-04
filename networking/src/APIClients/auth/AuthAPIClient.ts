@@ -1,14 +1,10 @@
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { Auth } from "aws-amplify";
 import { jwtDecode } from 'jwt-decode';   
-import awsconfig from "../aws-exports";
 
 export class AuthAPIClient
   implements IAuthAPIClient
 {
-  constructor () {
-    this.configAmplify(awsconfig);
-  }
   async handleGoogleSignIn(googleCredential: string): Promise<Boolean> {
     const token = jwtDecode(googleCredential) as any;
     const user = {
@@ -25,9 +21,5 @@ export class AuthAPIClient
     if (currentUser)
       return true;
     return false;
-  }
-
-  configAmplify(awsconfig: any) {
-    Auth.configure(awsconfig);
   }
 }

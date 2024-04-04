@@ -19,6 +19,10 @@ export const handleGoogleSignIn = async (googleCredential: string): Promise<Bool
     user
   );
   const currentUser = await Auth.currentAuthenticatedUser();
+  console.log(currentUser);
+  const currentSession = await Auth.currentSession();
+
+  console.log(currentSession);
   if (currentUser)
     return true;
   return false;

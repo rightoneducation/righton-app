@@ -1,5 +1,5 @@
-import { IGameTemplate } from "../../Models";
-import { CreateGameTemplateInput, UpdateGameTemplateInput } from "../../AWSMobileApi";
+import { IGameTemplate } from "../../../Models";
+import { CreateGameTemplateInput, UpdateGameTemplateInput } from "../../../AWSMobileApi";
 
 export interface IGameTemplateAPIClient {
   createGameTemplate(

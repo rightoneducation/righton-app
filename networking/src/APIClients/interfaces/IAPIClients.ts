@@ -1,10 +1,10 @@
-import { IGameTemplateAPIClient } from './IGameTemplateAPIClient';
-import { IQuestionTemplateAPIClient } from './IQuestionTemplateAPIClient';
-import { IGameQuestionsAPIClient } from './IGameQuestionsAPIClient';
-import { IGameSessionAPIClient } from './IGameSessionAPIClient';
-import { ITeamAPIClient } from './ITeamAPIClient';
-import { ITeamMemberAPIClient } from './ITeamMemberAPIClient';
-import { ITeamAnswerAPIClient } from './ITeamAnswerAPIClient';
+import { IGameTemplateAPIClient } from '../templates/interfaces/IGameTemplateAPIClient';
+import { IQuestionTemplateAPIClient } from '../templates/interfaces/IQuestionTemplateAPIClient';
+import { IGameQuestionsAPIClient } from '../templates/interfaces/IGameQuestionsAPIClient';
+import { IGameSessionAPIClient } from '../gamesession/interfaces/IGameSessionAPIClient';
+import { ITeamAPIClient } from '../gamesession/interfaces/ITeamAPIClient';
+import { ITeamMemberAPIClient } from '../gamesession/interfaces/ITeamMemberAPIClient';
+import { ITeamAnswerAPIClient } from '../gamesession/interfaces/ITeamAnswerAPIClient';
 
 export interface IAPIClients {
   gameTemplate: IGameTemplateAPIClient;

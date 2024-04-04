@@ -1,16 +1,16 @@
-import { BaseAPIClient } from "./BaseAPIClient";
-import { QuestionParser } from "../Parsers/QuestionParser";
-import { IQuestion, AWSQuestion } from "../Models";
+import { BaseAPIClient } from "../BaseAPIClient";
+import { QuestionParser } from "../../Parsers/QuestionParser";
+import { IQuestion, AWSQuestion } from "../../Models";
 import {
   UpdateQuestionInput,
   UpdateQuestionMutation,
   UpdateQuestionMutationVariables,
-} from "../AWSMobileApi";
+} from "../../AWSMobileApi";
 import {
   updateQuestion
-} from "../graphql";
+} from "../../graphql";
 
-import { isNullOrUndefined } from "../global";
+import { isNullOrUndefined } from "../../global";
 import { IQuestionAPIClient } from "./interfaces/IQuestionAPIClient";
 
 export class QuestionAPIClient

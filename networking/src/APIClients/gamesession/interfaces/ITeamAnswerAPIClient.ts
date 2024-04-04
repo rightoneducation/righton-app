@@ -1,6 +1,6 @@
-import { BackendAnswer} from "../../Models";
-import { IAnswerHint } from "../../Models";
-import { ConfidenceLevel } from "../../AWSMobileApi";
+import { BackendAnswer} from "../../../Models";
+import { IAnswerHint } from "../../../Models";
+import { ConfidenceLevel } from "../../../AWSMobileApi";
 
 export interface ITeamAnswerAPIClient {
   subscribeCreateTeamAnswer(

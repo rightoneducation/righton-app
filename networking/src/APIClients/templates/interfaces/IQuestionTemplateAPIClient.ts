@@ -1,5 +1,5 @@
-import { IQuestionTemplate } from "../../Models";
-import { CreateQuestionTemplateInput, UpdateQuestionTemplateInput } from "../../AWSMobileApi";
+import { IQuestionTemplate } from "../../../Models";
+import { CreateQuestionTemplateInput, UpdateQuestionTemplateInput } from "../../../AWSMobileApi";
 
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate(

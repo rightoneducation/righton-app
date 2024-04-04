@@ -1,7 +1,7 @@
-import { BaseAPIClient } from "./BaseAPIClient";
+import { BaseAPIClient } from "../BaseAPIClient";
 import { IGameTemplateAPIClient } from "./interfaces";
-import { IGameTemplate } from "../Models";
-import { GameTemplateParser } from "../Parsers/GameTemplateParser";
+import { IGameTemplate } from "../../Models";
+import { GameTemplateParser } from "../../Parsers/GameTemplateParser";
 import { 
   createGameTemplate,
   getGameTemplate,
@@ -11,7 +11,7 @@ import {
   gameTemplatesByDate,
   gameTemplatesByGrade,
   gameTemplatesByQuestionTemplatesCount
-} from "../graphql";
+} from "../../graphql";
 import { 
   CreateGameTemplateInput, 
   CreateGameTemplateMutation, 
@@ -23,10 +23,10 @@ import {
   DeleteGameTemplateInput,
   DeleteGameTemplateMutation,
   DeleteGameTemplateMutationVariables
-} from "../AWSMobileApi";
-import { AWSGameTemplate } from "../Models";
-import { isNullOrUndefined } from "../global";
-import { GraphQLOptions } from "./BaseAPIClient";
+} from "../../AWSMobileApi";
+import { AWSGameTemplate } from "../../Models";
+import { isNullOrUndefined } from "../../global";
+import { GraphQLOptions } from "../BaseAPIClient";
 
 export class GameTemplateAPIClient
   extends BaseAPIClient

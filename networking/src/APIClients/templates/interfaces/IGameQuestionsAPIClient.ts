@@ -1,5 +1,5 @@
-import { IGameQuestion } from "../../Models";
-import { CreateGameQuestionsInput } from "../../AWSMobileApi";
+import { IGameQuestion } from "../../../Models";
+import { CreateGameQuestionsInput } from "../../../AWSMobileApi";
 
 export interface IGameQuestionsAPIClient {
   createGameQuestions(

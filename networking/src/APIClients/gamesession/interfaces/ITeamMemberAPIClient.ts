@@ -1,4 +1,4 @@
-import { ITeamMember } from "../../Models";
+import { ITeamMember } from "../../../Models";
 
 export interface ITeamMemberAPIClient {
   addTeamMemberToTeam(

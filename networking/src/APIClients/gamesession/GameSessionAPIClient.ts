@@ -1,21 +1,21 @@
 import { API, graphqlOperation } from "aws-amplify";
-import { IGameSession } from "../Models";
-import { GameSessionParser } from "../Parsers/GameSessionParser";
-import { BaseAPIClient, HTTPMethod } from "./BaseAPIClient";
+import { IGameSession } from "../../Models";
+import { GameSessionParser } from "../../Parsers/GameSessionParser";
+import { BaseAPIClient, HTTPMethod } from "../BaseAPIClient";
 import {
   createGameSessionFromTemplate,
   gameSessionByCode,
   getGameSession,
   onGameSessionUpdatedById,
   updateGameSession,
-} from "../graphql";
+} from "../../graphql";
 import {
   OnGameSessionUpdatedByIdSubscription,
   UpdateGameSessionInput,
   UpdateGameSessionMutation,
   UpdateGameSessionMutationVariables,
-} from "../AWSMobileApi";
-import { isNullOrUndefined } from "../global";
+} from "../../AWSMobileApi";
+import { isNullOrUndefined } from "../../global";
 import { IGameSessionAPIClient } from "./interfaces/IGameSessionAPIClient";
 
 export class GameSessionAPIClient

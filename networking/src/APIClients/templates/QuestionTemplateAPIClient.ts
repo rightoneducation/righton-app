@@ -1,4 +1,4 @@
-import { BaseAPIClient } from "./BaseAPIClient";
+import { BaseAPIClient } from "../BaseAPIClient";
 import { IQuestionTemplateAPIClient } from "./interfaces";
 import { 
   createQuestionTemplate, 
@@ -9,7 +9,7 @@ import {
   questionTemplatesByDate,
   questionTemplatesByGrade,
   questionTemplatesByGameTemplatesCount
-} from "../graphql";
+} from "../../graphql";
 import { 
   CreateQuestionTemplateInput, 
   CreateQuestionTemplateMutation, 
@@ -21,11 +21,11 @@ import {
   DeleteQuestionTemplateInput,
   DeleteQuestionTemplateMutation,
   DeleteQuestionTemplateMutationVariables
-} from "../AWSMobileApi";
-import { QuestionTemplateParser } from '../Parsers/QuestionTemplateParser';
-import { IQuestionTemplate, AWSQuestionTemplate } from "../Models";
-import { GraphQLOptions } from "./BaseAPIClient";
-import { isNullOrUndefined } from "../global";
+} from "../../AWSMobileApi";
+import { QuestionTemplateParser } from '../../Parsers/QuestionTemplateParser';
+import { IQuestionTemplate, AWSQuestionTemplate } from "../../Models";
+import { GraphQLOptions } from "../BaseAPIClient";
+import { isNullOrUndefined } from "../../global";
 
 export class QuestionTemplateAPIClient
   extends BaseAPIClient
