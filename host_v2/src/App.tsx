@@ -13,7 +13,7 @@ import Theme from './lib/Theme';
 import MockGameSession from './mock/MockGameSession.json';
 
 function RedirectToPlayIfMissing() {
-  window.location.href = 'http://dev-central.rightoneducation.com/';
+  window.location.href = 'http://central.rightoneducation.com/';
   return null;
 }
 const mockGameSession = GameSessionParser.gameSessionFromAWSGameSession({
