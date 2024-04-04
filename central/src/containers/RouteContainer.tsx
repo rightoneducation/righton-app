@@ -395,6 +395,7 @@ export const RouteContainer = ({
     let user = null;
     try {
       user = await Auth.currentAuthenticatedUser();
+      console.log(user);
       if (user) {
         setIsUserAuth(true);
       }

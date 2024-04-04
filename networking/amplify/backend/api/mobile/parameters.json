@@ -2,5 +2,11 @@
   "AppSyncApiName": "mobile",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2023-12-12T10:29:24.966Z"
+  "AuthModeLastUpdated": "2024-04-04T14:25:33.527Z",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authmobile6060603c",
+      "Outputs.UserPoolId"
+    ]
+  }
 }
