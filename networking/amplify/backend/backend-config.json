@@ -58,6 +58,17 @@
   "function": {
     "createGame": {
       "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "mobile"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
