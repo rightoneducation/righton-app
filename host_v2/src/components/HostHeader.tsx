@@ -15,7 +15,8 @@ const ClearIconGameCodeStyled = styled(Box)(({ theme }) => ({
   color: 'white',
   display: 'block',
   padding: `${theme.spacing(4)}`,
-}));
+  gap: '16px',  /* this is for Header / Lobby */
+  }));
 
 const UpperStyled = styled(Box)({
   gap: '16px', /* this is for Header / Lobby */
@@ -54,7 +55,7 @@ const CloseSvg = styled(CloseIcon)({
 function HostHeader({ gameCode }: HostHeaderProps) {
     return (
       <ClearIconGameCodeStyled>
-        <GameLobbyStyled>Game Lobby</GameLobbyStyled>
+        <GameLobbyStyled>Game Lobby <HelpSvg/> <CloseSvg/></GameLobbyStyled>
         <GameCode gameCode = {gameCode} 
         />
       </ClearIconGameCodeStyled>
