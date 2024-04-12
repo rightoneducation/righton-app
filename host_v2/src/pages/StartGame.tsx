@@ -109,16 +109,7 @@ function StartGame({teams,
     return (
       <BackgroundStyled>
         <SafeAreaStyled>
-        <UpperStyled>
-          <TopLineStyled>
-          <GameLobbyStyled>Game Lobby <HelpSvg /> <CloseSvg />
-          </GameLobbyStyled>
-          </TopLineStyled>
-          <HostHeader 
-          gameCode = {gameCode}
-          />
-          {/* <CurrentStudents teams={teams}/> */}
-        </UpperStyled>
+        <HostHeader gameCode = {gameCode} />
         <FooterStartGame 
         teamsLength={teams ? teams.length : 0}
         />
