@@ -19,9 +19,13 @@ const ClearIconGameCodeStyled = styled(Box)(({ theme }) => ({
   }));
 
 const UpperStyled = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between', // Align items with space between
   gap: '16px', /* this is for Header / Lobby */
-  width: '375px', 
-  height: '170px', /*  padding: '0px 16px 0px 16px', WHY IS IT WEIRD */
+  height: '170px', 
+  padding: '0px 16px 0px 16px', /* WHY IS IT WEIRD */
+  boxSizing: 'border-box',
 });
 
 const TopLineStyled = styled(Box)({
@@ -30,7 +34,7 @@ const TopLineStyled = styled(Box)({
   padding: '0px 0px 0px 8px', 
   gap: '8px', 
 });
-const GameLobbyStyled = styled(Typography)({
+const GameLobbyTypographyStyled = styled(Typography)({
   width: '255px', /* this si for the phase description */
   height: '36px',
   fontSize: '24px',
@@ -54,11 +58,13 @@ const CloseSvg = styled(CloseIcon)({
 
 function HostHeader({ gameCode }: HostHeaderProps) {
     return (
-      <ClearIconGameCodeStyled>
-        <GameLobbyStyled>Game Lobby <HelpSvg/> <CloseSvg/></GameLobbyStyled>
-        <GameCode gameCode = {gameCode} 
-        />
-      </ClearIconGameCodeStyled>
+        <UpperStyled>
+          <TopLineStyled>
+            <GameLobbyTypographyStyled>Game Lobby <HelpSvg/> <CloseSvg/></GameLobbyTypographyStyled>
+          </TopLineStyled>
+          <GameCode gameCode = {gameCode} 
+          />  
+        </UpperStyled>
     )
 }
 

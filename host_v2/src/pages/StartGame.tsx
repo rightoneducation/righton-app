@@ -31,7 +31,9 @@ const BackgroundStyled = styled(Paper)({
   background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)'
 })
 
-const SafeAreaStyled = styled(Typography)({
+const SafeAreaStyled = styled(Box)({
+  marginTop: '47px',
+  marginBottom: '34px',
   width: '375px',
   height: '731px',
   top: '47px',
