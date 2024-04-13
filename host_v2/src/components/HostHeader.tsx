@@ -28,11 +28,19 @@ const UpperStyled = styled(Box)({
   boxSizing: 'border-box',
 });
 
+// const TopLineStyled = styled(Box)({
+//   width: '343px', /* this is for the frame 2410 */
+//   height: '36px', 
+//   padding: '0px 0px 0px 8px', 
+//   gap: '8px', 
+// });
 const TopLineStyled = styled(Box)({
-  width: '343px', /* this is for the frame 2410 */
-  height: '36px', 
-  padding: '0px 0px 0px 8px', 
-  gap: '8px', 
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center', // Align items vertically in the center
+  width: '100%', // Take up the full width of the container
+  padding: '0px 0px 0px 8px', // Adjust padding as needed
+  gap: '8px',
 });
 const GameLobbyTypographyStyled = styled(Typography)({
   width: '255px', /* this si for the phase description */
@@ -49,18 +57,25 @@ const IconStyled = styled(Box)({
 });
 
 const HelpSvg = styled(HelpIcon)({
-  marginLeft: 'auto', 
+});
+
+const IconsContainer = styled(Box)({
+  display: 'flex',
+  gap: '8px', // Adjust the gap between icons if needed
 });
 
 const CloseSvg = styled(CloseIcon)({
-  marginLeft: 'auto', 
+  marginRight: '8px',
 });
 
 function HostHeader({ gameCode }: HostHeaderProps) {
     return (
         <UpperStyled>
           <TopLineStyled>
-            <GameLobbyTypographyStyled>Game Lobby <HelpSvg/> <CloseSvg/></GameLobbyTypographyStyled>
+            <GameLobbyTypographyStyled>Game Lobby </GameLobbyTypographyStyled>
+            <IconsContainer>
+              <HelpSvg/> <CloseSvg/>
+            </IconsContainer>
           </TopLineStyled>
           <GameCode gameCode = {gameCode} 
           />  

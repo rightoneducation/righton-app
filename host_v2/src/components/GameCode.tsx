@@ -22,14 +22,14 @@ const GameCodeText = styled(Typography)({
   fontSize: '72px', /* for 2409 > title */
   fontWeight: '700',
   color: 'rgba(255, 255, 255, 1)',
-  margin: '0', /* Remove margin to decrease space between Game Code and the number */
-  marginTop: '26px', /* Adjust negative margin to decrease space */
+  marginTop: '29px',
 });
 
 const GameCodeParagraph = styled(Typography)({
+  fontFamily: 'Rubik',
   fontSize: '14px', /* for frame 2409 > description */
   color: 'rgba(255, 255, 255, 1)',
-  margin: '0', /* Remove margin to decrease space between Game Code and the number */
+  /* margin: '0',  Remove margin to decrease space between Game Code and the number */
 });
 
 function GameCode({ gameCode }: GameCodeProps) {
