@@ -1,6 +1,7 @@
 import { ShortAnswerResponse, Mistake } from './HostModels';
+import { ConfidenceLevel, IQuestion, isNullOrUndefined} from '@righton/networking';
 
-const sortMistakes = (
+export const sortMistakes = (
   shortAnswerResponses: ShortAnswerResponse[],
   totalAnswers: number,
   isPopularMode: boolean,
@@ -25,4 +26,27 @@ const sortMistakes = (
   return orderedMistakes;
 };
 
-export default sortMistakes;
+export const getQuestionChoices = (
+  questions: IQuestion[] | null | undefined,
+  currentQuestionIndex: number
+): any[] | null => {
+  if (
+    isNullOrUndefined(questions) ||
+    questions.length <= currentQuestionIndex ||
+    isNullOrUndefined(questions[currentQuestionIndex]?.choices)
+  ) {
+    return null;
+  }
+  return questions[currentQuestionIndex]?.choices ?? [];
+};
+
+const createBlankConfidenceArray = (): { confidence: ConfidenceLevel; correct: number; incorrect: number; players: { name: string; answer: string; isCorrect: boolean; }[] }[] => {
+  return Object.keys(ConfidenceLevel).map((key) => {
+    return {
+      confidence: ConfidenceLevel[key as keyof typeof ConfidenceLevel],
+      correct: 0,
+      incorrect: 0,
+      players: [],
+    };
+  });
+};

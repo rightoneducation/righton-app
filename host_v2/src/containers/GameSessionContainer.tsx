@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { GameSessionState,GameSessionParser } from '@righton/networking';
+import { GameSessionState,GameSessionParser, ConfidenceLevel } from '@righton/networking';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
-import sortMistakes from "../lib/HelperFunctions"
+import {sortMistakes} from "../lib/HelperFunctions"
 
 interface Player {
   answer: string; // answer chosen by this player
@@ -91,6 +91,12 @@ export default function GameSessionContainer() {
     gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
       ? phaseOneTime
       : phaseTwoTime;
+  
+  let myConfidenceLevel1: ConfidenceLevel;
+  myConfidenceLevel1 = ConfidenceLevel.VERY;
+
+  let anotherConfidenceLevel2 = ConfidenceLevel.KINDA;
+  anotherConfidenceLevel2 = ConfidenceLevel.KINDA;
 
   const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([ // eslint-disable-line
     {
@@ -99,7 +105,8 @@ export default function GameSessionContainer() {
       isCorrect: true, // only every one
       isSelectedMistake: true,
       count: 2,
-      teams: ['Name1', 'Name2'],
+      teams: [{name: 'Name1', id: "1", confidence:  myConfidenceLevel1}, 
+      {name: 'Name2', id: "2", confidence:  anotherConfidenceLevel2}],
     },
     {
       rawAnswer: 'No Idea',
@@ -107,7 +114,8 @@ export default function GameSessionContainer() {
       isCorrect: false,
       isSelectedMistake: true,
       count: 2,
-      teams: ['Name3', 'Name13'],
+      teams: [{name: 'Name3', id: "3", confidence:  myConfidenceLevel1}, 
+      {name: 'Name4', id: "4", confidence:  anotherConfidenceLevel2}],
     },
     {
       rawAnswer: '2x^4 + 6x^2 - 3x',
@@ -115,7 +123,10 @@ export default function GameSessionContainer() {
       isCorrect: false,
       isSelectedMistake: true,
       count: 4,
-      teams: ['Name4', 'Name5', 'Name6', 'Name7'],
+      teams: [{name: 'Name5', id: "5", confidence:  anotherConfidenceLevel2}, 
+      {name: 'Name6', id: "6", confidence:  anotherConfidenceLevel2}, 
+      {name: 'Name7', id: "7", confidence:  anotherConfidenceLevel2},
+      {name: 'Name8', id: "8", confidence:  anotherConfidenceLevel2}],
     },
     {
       rawAnswer: '4x^4 - x^3 + 7x^2 - 6x',
@@ -123,7 +134,11 @@ export default function GameSessionContainer() {
       isCorrect: false,
       isSelectedMistake: true,
       count: 5,
-      teams: ['Name8', 'Name9', 'Name10', 'Name11', 'Name12'],
+      teams: [{name: 'Name9', id: "9", confidence:  anotherConfidenceLevel2},
+      {name: 'Name10', id: "10", confidence:  myConfidenceLevel1},
+      {name: 'Name11', id: "11", confidence:  myConfidenceLevel1},
+      {name: 'Name12', id: "12", confidence:  myConfidenceLevel1},
+      {name: 'Name13', id: "13", confidence:  anotherConfidenceLevel2}],
     },
     {
       rawAnswer: 'x^2 - 4x - 12',
@@ -131,14 +146,68 @@ export default function GameSessionContainer() {
       isCorrect: false,
       isSelectedMistake: true,
       count: 1,
-      teams: ['Name14'],
+      teams: [{name: 'Name14', id: "14", confidence:  myConfidenceLevel1}],
     },
   ]);
   const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
   const [sortedMistakes, setSortedMistakes] = useState(React.useMemo(() => 
      sortMistakes(shortAnswerResponses, shortAnswerResponses.length, isPopularMode, 3),
      [shortAnswerResponses, isPopularMode]
-  ));
+  ))
+
+  // Mock Data for PlayerThinking component
+  const [hints, setHints] = useState(['1', '2', '3', '4', '5', '6' , '7', '8', '9', '10', '11', '12', '13', '14']);
+  const [gptHints, setGptHints] = useState([ { themeText: 'No Response', teams: ['1', '2', '3'], teamCount: 3}, 
+  { themeText: 'circle, multiply', teams: ['4', '5', '6', '7'], teamCount: 4}, 
+  { themeText: 'interior angles', teams: ['8', '9'], teamCount: 2},
+  { themeText: 'No common words/phrases', teams: ['10', '11', '12', '13', '14'], teamCount: 5}]);
+  
+  const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
+  const responsesRef = React.useRef(null);
+  const confidenceCardRef = React.useRef(null);
+  const hintCardRef = React.useRef(null);
+  const [hintsError, setHintsError] = React.useState(false);
+  const [isHintLoading, setisHintLoading] = React.useState(false);
+
+  const handleProcessHints = async (hints) => {
+    setHintsError(false);
+    try {
+      const parsedIncomingHints = hints.map((hint) => {
+        return JSON.parse(hint);
+      });
+      const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
+      const questionText = currentQuestion.text;
+      const correctChoiceIndex =
+        currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
+      const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
+        // adds rawHint text to parsedHints received from GPT
+        // (we want to minimize the amount of data we send and receive to/from OpenAI
+        // so we do this ourselves instead of asking GPT to return data we already have)
+        const hintsLookup = new Map(parsedIncomingHints.map(hint => [hint.teamName, hint.rawHint]));
+        const combinedHints = parsedHints.map(parsedHint => {
+          const updatedTeams = parsedHint.teams.map(team => {
+            if (hintsLookup.has(team)) {
+              return { name: team, rawHint: hintsLookup.get(team) };
+            } else {
+              return team;
+            }
+          });
+
+          return { ...parsedHint, teams: updatedTeams };
+        });
+        console.log(combinedHints);
+        setGptHints(combinedHints);
+        setisHintLoading(false);
+      })
+        .catch(e => {
+          console.log(e);
+          setHintsError(true);
+        })
+    } catch {
+      setHintsError(true);
+    }
+  };
+
 
   switch (gameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
@@ -154,6 +223,9 @@ export default function GameSessionContainer() {
     default:
       return (
         <GameInProgress
+          hints={hints}
+          gptHints={gptHints}
+          questions={gameSession.questions}
           totalQuestions={gameSession.questions.length ?? 0}
           currentQuestionIndex={currentQuestionIndex}
           isCorrect={isCorrect}
@@ -168,6 +240,12 @@ export default function GameSessionContainer() {
           setSortedMistakes={setSortedMistakes}
           isPopularMode={isPopularMode}
           setIsPopularMode={setIsPopularMode}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          responsesRef={responsesRef}
+          confidenceCardRef={confidenceCardRef}
+          hintCardRef={hintCardRef}
+          hintsError={hintsError}
+          isHintLoading={isHintLoading}
         />
       );
   }
