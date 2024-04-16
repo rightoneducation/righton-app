@@ -14,7 +14,6 @@ import { ReactComponent as HelpIcon } from './images/Help.svg';
 import { ReactComponent as CloseIcon } from './images/Close.svg';
 
 
-
 interface StartGameProps {
   teams: ITeam[]
   questions:IQuestion[]
@@ -36,7 +35,6 @@ const SafeAreaStyled = styled(Box)({
   marginBottom: '34px',
   width: '375px',
   height: '731px',
-  top: '47px',
   gap: '16px',
 });
 
