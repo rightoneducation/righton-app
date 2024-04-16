@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, Box} from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import ProgressBar from './ProgressBar'
 
 interface FootStartGameProps{
     teamsLength: number;
@@ -50,19 +51,18 @@ const BottomNavigationStyled = styled(Box)({
   paddingTop: '80px',
   paddingBottom: '50px',
   background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
-
+  gap: '12px',
 })
 
 function FooterStartGame ({ teamsLength}: FootStartGameProps){    
-    return (
+  return (
         <BottomNavigationStyled>
-            <Box>
+              <ProgressBar teamsLength={teamsLength}/>
                 <ButtonStyled 
                     disabled={teamsLength <= 0}
                 >
                     Start Game    
                 </ButtonStyled>
-            </Box>
         </BottomNavigationStyled>
     );
 }

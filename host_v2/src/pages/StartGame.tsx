@@ -47,6 +47,7 @@ function StartGame({teams,
       <BackgroundStyled>
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
+          <CurrentStudents teams={teams}/>
           <FooterStartGame 
           teamsLength={teams ? teams.length : 0}
           />

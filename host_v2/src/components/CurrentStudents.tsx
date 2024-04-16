@@ -69,10 +69,6 @@ function CurrentStudents ({ teams }: CurrentStudentProps) {
 
     return (
         <Box>
-            <GridStyled>{teams ? teams.length : 0}</GridStyled>
-            <BoxStyled>
-                <PStyled>Students in Session</PStyled>
-            </BoxStyled>
             <HrStyled/>
             {teams && teams.map((team) => (
                 <MenuItemStyled key = {uuidv4()}>
