@@ -180,6 +180,8 @@ export default function GameSessionContainer() {
       const correctChoiceIndex =
         currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
       const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
+      gameSession.groupHints(parsedIncomingHints, questionText, correctAnswer).then((response) => {
+        const parsedHints = JSON.parse(response.gptHints.content);
         // adds rawHint text to parsedHints received from GPT
         // (we want to minimize the amount of data we send and receive to/from OpenAI
         // so we do this ourselves instead of asking GPT to return data we already have)
@@ -198,6 +200,18 @@ export default function GameSessionContainer() {
         console.log(combinedHints);
         setGptHints(combinedHints);
         setisHintLoading(false);
+        if (combinedHints) {
+          setHints([]);
+          apiClients.gameSession.getGameSession(gameSessionId).then((gameSession) => {
+            apiClients.question
+              .updateQuestion({
+                gameSessionId: gameSession.id,
+                id: gameSession.questions[gameSession.currentQuestionIndex].id,
+                order: gameSession.questions[gameSession.currentQuestionIndex].order,
+                hints: JSON.stringify(combinedHints as IHints[]),
+              });
+          });
+        }
       })
         .catch(e => {
           console.log(e);
