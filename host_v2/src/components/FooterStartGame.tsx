@@ -39,7 +39,6 @@ const ButtonStyled = styled(Button)({
 })
 
 const BottomNavigationStyled = styled(Box)({
-
   position: 'sticky',
   display: 'flex',
   flexDirection: 'column',

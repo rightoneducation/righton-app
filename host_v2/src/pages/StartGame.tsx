@@ -9,7 +9,7 @@ import HostHeader from '../components/HostHeader';
 import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
-
+import HostBody from '../components/HostBody';
 
 interface StartGameProps {
   teams: ITeam[]
@@ -35,6 +35,7 @@ const SafeAreaStyled = styled(Box)({
   gap: '16px',
 });
 
+
 const BodyStyled = styled(Box)({
   height: '437px',
 });
@@ -48,9 +49,8 @@ function StartGame({teams,
       <BackgroundStyled>
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
-          <BodyStyled>
-            <CurrentStudents teams={teams}/>
-          </BodyStyled>
+          <HostBody teams={teams}/>
+            {/* <CurrentStudents teams={teams}/> */ }
           <FooterStartGame 
           teamsLength={teams ? teams.length : 0}
           />

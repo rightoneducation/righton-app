@@ -23,7 +23,7 @@ const GridStyled = styled(Grid)({
 
 const HrStyled = styled(Divider)({
   
-  marginTop: '30px',
+  // marginTop: '30px',
   marginBottom: '25px',
   width: '266px',
   height: '1px',
