@@ -6,14 +6,11 @@
     "defaultAuthType": {
       "mode": "API_KEY",
       "expirationTime": 365,
-      "apiKeyExpirationDate": "2024-12-11T10:29:18.626Z",
-      "keyDescription": "mobiledev"
+      "apiKeyExpirationDate": "2025-04-04T19:50:54.710Z",
+      "keyDescription": "apikey"
     },
     "conflictResolution": {},
     "additionalAuthTypes": [
-      {
-        "mode": "AWS_IAM"
-      },
       {
         "mode": "AMAZON_COGNITO_USER_POOLS",
         "cognitoUserPoolId": "authmobile6060603c"

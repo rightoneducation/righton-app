@@ -14,9 +14,6 @@
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AWS_IAM"
-            },
-            {
               "authenticationType": "AMAZON_COGNITO_USER_POOLS",
               "userPoolConfig": {
                 "userPoolId": "authmobile6060603c"
@@ -25,9 +22,9 @@
           ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-12-11T10:29:18.626Z",
+              "apiKeyExpirationDate": "2025-04-04T19:50:54.710Z",
               "apiKeyExpirationDays": 365,
-              "description": "mobiledev"
+              "description": "apikey"
             },
             "authenticationType": "API_KEY"
           }
@@ -40,7 +37,17 @@
   "auth": {
     "mobile6060603c": {
       "customAuth": false,
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation",
+          "triggerProvider": "Cognito"
+        }
+      ],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
@@ -53,9 +60,7 @@
         "signupAttributes": [
           "EMAIL"
         ],
-        "socialProviders": [
-          "GOOGLE"
-        ],
+        "socialProviders": [],
         "usernameAttributes": [],
         "verificationMechanisms": [
           "EMAIL"
@@ -81,9 +86,22 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "mobile6060603cPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
+    "AMPLIFY_auth_mobile6060603c_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ]
+    },
     "AMPLIFY_function_createGame_deploymentBucketName": {
       "usedBy": [
         {
@@ -97,6 +115,30 @@
         {
           "category": "function",
           "resourceName": "createGame"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
         }
       ]
     }

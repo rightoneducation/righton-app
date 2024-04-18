@@ -2,31 +2,47 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.1.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
-    "CloudWatchRule": {
+    "GROUP": {
       "Type": "String",
-      "Default": "NONE",
-      "Description": " Schedule Expression"
+      "Default": ""
     },
-    "deploymentBucketName": {
-      "Type": "String"
+    "modules": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Comma-delimited list of modules to be executed by a lambda trigger. Sent to resource as an env variable."
+    },
+    "resourceName": {
+      "Type": "String",
+      "Default": ""
+    },
+    "trigger": {
+      "Type": "String",
+      "Default": "true"
+    },
+    "functionName": {
+      "Type": "String",
+      "Default": ""
+    },
+    "roleName": {
+      "Type": "String",
+      "Default": ""
+    },
+    "parentResource": {
+      "Type": "String",
+      "Default": ""
+    },
+    "parentStack": {
+      "Type": "String",
+      "Default": ""
     },
     "env": {
       "Type": "String"
     },
-    "s3Key": {
+    "deploymentBucketName": {
       "Type": "String"
     },
-    "apimobileGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apimobileGraphQLAPIIdOutput"
-    },
-    "apimobileGraphQLAPIEndpointOutput": {
-      "Type": "String",
-      "Default": "apimobileGraphQLAPIEndpointOutput"
-    },
-    "apimobileGraphQLAPIKeyOutput": {
-      "Type": "String",
-      "Default": "apimobileGraphQLAPIKeyOutput"
+    "s3Key": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -47,24 +63,16 @@
         "aws:asset:property": "Code"
       },
       "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
-        },
         "Handler": "index.handler",
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "createGame",
+            "mobile6060603cPostConfirmation",
             {
               "Fn::Join": [
                 "",
                 [
-                  "createGame",
+                  "mobile6060603cPostConfirmation",
                   "-",
                   {
                     "Ref": "env"
@@ -79,17 +87,14 @@
             "ENV": {
               "Ref": "env"
             },
+            "MODULES": {
+              "Ref": "modules"
+            },
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "API_MOBILE_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apimobileGraphQLAPIIdOutput"
-            },
-            "API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apimobileGraphQLAPIEndpointOutput"
-            },
-            "API_MOBILE_GRAPHQLAPIKEYOUTPUT": {
-              "Ref": "apimobileGraphQLAPIKeyOutput"
+            "GROUP": {
+              "Ref": "GROUP"
             }
           }
         },
@@ -100,8 +105,15 @@
           ]
         },
         "Runtime": "nodejs18.x",
-        "Layers": [],
-        "Timeout": 25
+        "Timeout": 25,
+        "Code": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
+        }
       }
     },
     "LambdaExecutionRole": {
@@ -110,12 +122,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "mobileLambdaRoleb39ff59c",
+            "mobile6060603cPostConfirmation",
             {
               "Fn::Join": [
                 "",
                 [
-                  "mobileLambdaRoleb39ff59c",
+                  "mobile6060603cPostConfirmation",
                   "-",
                   {
                     "Ref": "env"
@@ -185,93 +197,6 @@
           ]
         }
       }
-    },
-    "AmplifyResourcesPolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-lambda-execution-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "appsync:GraphQL"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:appsync:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":apis/",
-                      {
-                        "Ref": "apimobileGraphQLAPIIdOutput"
-                      },
-                      "/types/Query/*"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:appsync:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":apis/",
-                      {
-                        "Ref": "apimobileGraphQLAPIIdOutput"
-                      },
-                      "/types/Mutation/*"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:appsync:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":apis/",
-                      {
-                        "Ref": "apimobileGraphQLAPIIdOutput"
-                      },
-                      "/types/Subscription/*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      }
     }
   },
   "Outputs": {
@@ -288,11 +213,6 @@
         ]
       }
     },
-    "Region": {
-      "Value": {
-        "Ref": "AWS::Region"
-      }
-    },
     "LambdaExecutionRole": {
       "Value": {
         "Ref": "LambdaExecutionRole"
@@ -304,6 +224,11 @@
           "LambdaExecutionRole",
           "Arn"
         ]
+      }
+    },
+    "Region": {
+      "Value": {
+        "Ref": "AWS::Region"
       }
     }
   }
