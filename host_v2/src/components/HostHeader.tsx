@@ -10,15 +10,11 @@ interface HostHeaderProps {
   gameCode: number;
 }
 
-const ClearIconGameCodeStyled = styled(Box)(({ theme }) => ({
-  color: 'white',
-  display: 'block',
-  padding: `${theme.spacing(4)}`,
-  gap: '16px',  /* this is for Header / Lobby */
-}));
 
 const UpperStyled = styled(Box)({
   display: 'flex',
+  position: 'sticky',
+  top: '47px',
   flexDirection: 'column',
   justifyContent: 'space-between', // Align items with space between
   gap: '16px', /* this is for Header / Lobby */

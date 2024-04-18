@@ -10,9 +10,6 @@ import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 
-import { ReactComponent as HelpIcon } from './images/Help.svg';
-import { ReactComponent as CloseIcon } from './images/Close.svg';
-
 
 interface StartGameProps {
   teams: ITeam[]
@@ -38,6 +35,10 @@ const SafeAreaStyled = styled(Box)({
   gap: '16px',
 });
 
+const BodyStyled = styled(Box)({
+  height: '437px',
+});
+
 function StartGame({teams,
   questions,
   title,
@@ -47,7 +48,9 @@ function StartGame({teams,
       <BackgroundStyled>
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
-          <CurrentStudents teams={teams}/>
+          <BodyStyled>
+            <CurrentStudents teams={teams}/>
+          </BodyStyled>
           <FooterStartGame 
           teamsLength={teams ? teams.length : 0}
           />

@@ -48,10 +48,14 @@ const BottomNavigationStyled = styled(Box)({
   bottom: '0',
   width: '100%',
   height: '80px',
-  paddingTop: '80px',
-  paddingBottom: '50px',
+  paddingTop: '40px',
+  paddingBottom: '40px',
   background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   gap: '12px',
+})
+const FooterContainer = styled(Box)({
+  height: '92px',
+  gap: '8px',
 })
 
 function FooterStartGame ({ teamsLength}: FootStartGameProps){    
