@@ -199,7 +199,8 @@ async function createAndSignRequest(query, variables) {
 
     // createQuestions
     const promises = questions.map(async (question) => {
-      const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
+      const {owner, version, createdAt, title, updatedAt, gameId, choices, __typename, ...trimmedQuestion} = question;
+      const shuffledChoices = JSON.parse(choices).sort(() => Math.random() - 0.5);
       const questionRequest = await createAndSignRequest(createQuestion, {
         input: {    
           ...trimmedQuestion,
@@ -211,6 +212,7 @@ async function createAndSignRequest(query, variables) {
           isShortAnswerEnabled: false,
           isHintEnabled: true,
           responses: '[]',
+          choices: JSON.stringify(shuffledChoices),
           order: 0
         }
       });
