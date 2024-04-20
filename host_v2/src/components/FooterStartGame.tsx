@@ -10,9 +10,9 @@ interface FootStartGameProps{
 
 const ButtonStyled = styled(Button)({
 
-  border: '4px solid #159EFA',
+  border: '2px solid #159EFA',
   background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
-  borderRadius: '34px',
+  borderRadius: '22px',
   width: '300px',
   height: '48px',
   color: 'white',
@@ -21,7 +21,7 @@ const ButtonStyled = styled(Button)({
   fontWeight: '700',
   lineHeight: '30px',
   textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px #47D9FF4D',
+  boxShadow: '0px 5px 22px 0px #47D9SFF, 0.3',
   '&:disabled': {
     background: 'transparent',
     border: '4px solid #159EFA',
@@ -32,7 +32,7 @@ const ButtonStyled = styled(Button)({
     fontSize: '20px',
     fontWeight: '700',
     lineHeight: '30px',
-    opacity: '25%',
+    opacity: '100%',
     cursor: 'not-allowed',
   },
 
@@ -51,6 +51,8 @@ const BottomNavigationStyled = styled(Box)({
   paddingBottom: '40px',
   background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   gap: '12px',
+  left: '0',
+
 })
 const FooterContainer = styled(Box)({
   height: '92px',

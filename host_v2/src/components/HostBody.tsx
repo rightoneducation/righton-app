@@ -49,7 +49,7 @@ import { ITeam } from '@righton/networking';
 import CurrentStudents from './CurrentStudents';
 
 const windowHeight = window.innerHeight - 160 - 170 - 47; // Subtracting 160 pixels for the footer
-
+// THIS IS NOT!!!! DYNAMIC!!!!!
 const BodyStyled = styled(Box)({
   height: `${windowHeight}px`, // Set height dynamically
   overflowY: 'auto', // Enable vertical scrolling if needed
