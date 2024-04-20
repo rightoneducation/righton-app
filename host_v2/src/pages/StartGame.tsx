@@ -30,7 +30,8 @@ const BackgroundStyled = styled(Paper)({
 const SafeAreaStyled = styled(Box)({
   marginTop: '47px',
   marginBottom: '34px',
-  width: '375px',
+  // width: '375px',
+  width: '100%',
   height: '731px',
   gap: '16px',
 });
