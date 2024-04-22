@@ -7,25 +7,26 @@ import 'swiper/css/pagination';
 import { ITeam } from '@righton/networking';
 import CurrentStudents from './CurrentStudents';
 
-// const windowHeight = window.innerHeight - 160 - 170 - 47; // Subtracting 160 pixels for the footer
+const windowHeight = window.innerHeight - 170 - 47; // Subtracting 160 pixels for the footer
 // THIS IS NOT!!!! DYNAMIC!!!!!
 const BodyStyled = styled(Box)({
     // height: `${windowHeight}px`, // Set height dynamically
-    height: '400px',
+    // height: '400px',
     margin: 'auto',
-    overflowY: 'auto', // Enable vertical scrolling if needed
+    overflowY: 'scroll', // Enable vertical scrolling if needed
     // scrollMarginTop: '610px',
     // scrollPaddingTop: '500px',
-    backgroundAttachment: 'fixed',
-    scrollSnapMarginTop: '300px',
+    // backgroundAttachment: 'fixed',
+    flexGrow: 1,
 
 });
 
 export default function HostBody({ teams }: { teams: ITeam[] }) {
   return (
     <BodyStyled>
+        <CurrentStudents teams={teams} />
+        { /*
       <Swiper spaceBetween={4} slidesPerView="auto" style={{ height: '100%' }}>
-        {/* <SwiperSlide style={{ height: `${windowHeight}px` }}> */}
         <SwiperSlide style={{ height: '500px' }}>
           <CurrentStudents teams={teams} />
         </SwiperSlide>
@@ -34,7 +35,7 @@ export default function HostBody({ teams }: { teams: ITeam[] }) {
             Page 2
           </Typography>
         </SwiperSlide>
-      </Swiper>
+      </Swiper> */ }
     </BodyStyled>
   );
 }

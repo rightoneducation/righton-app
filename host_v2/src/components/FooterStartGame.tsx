@@ -48,7 +48,7 @@ const FooterContainer = styled(Box)({
   padding: '20px 0',
   background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   gap: '8px',
-  zIndex: 9999, // Ensure footer is positioned above other content
+  // zIndex: 9999, // Ensure footer is positioned above other content
   // opacity: 1, // Make footer completely opaque
 });
 

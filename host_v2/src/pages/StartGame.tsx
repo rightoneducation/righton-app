@@ -33,8 +33,10 @@ const SafeAreaStyled = styled(Box)({
   marginBottom: '34px',
   // width: '375px',
   width: '100%',
-  height: '731px',
+  height: '100vh',
   gap: '16px',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 
