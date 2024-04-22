@@ -29,7 +29,7 @@ const HrStyled = styled(Divider)({
   height: '1px',
   borderRadius: '1.54px',
   border: '0',
-  borderTop: '1px solid rgba(255, 255, 255, 0.25)',
+  // borderTop: '1px solid rgba(255, 255, 255, 0.25)',
 
 })
 
@@ -61,7 +61,8 @@ const GridNameStyled = styled(Grid)({
 const BoxStyled = styled(Box)({
   width: '80px',
   height: '40px',
-  margin: 'auto',
+  // margin: 'auto',
+  marginTop: '170px',
 })
 
 function CurrentStudents ({ teams }: CurrentStudentProps) {
