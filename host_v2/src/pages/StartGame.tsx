@@ -19,24 +19,27 @@ interface StartGameProps {
 }  
 
 const BackgroundStyled = styled(Paper)({
-  display: 'flex',
+  // display: 'flex',
   minHeight: '100vh',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  // flexDirection: 'column',
+  // justifyContent: 'space-between',
+  // alignItems: 'center',
   background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   backgroundAttachment: 'fixed',
 })
 
 const SafeAreaStyled = styled(Box)({
-  marginTop: '47px',
-  marginBottom: '34px',
+  paddingTop: '47px',
+  paddingBottom: '34px',
   // width: '375px',
   width: '100%',
   height: '100vh',
-  gap: '16px',
+  // gap: '16px',
   display: 'flex',
   flexDirection: 'column',
+  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  backgroundAttachment: 'fixed',
+  boxSizing: 'border-box',
 });
 
 
@@ -50,7 +53,7 @@ function StartGame({teams,
   gameCode,
   }: StartGameProps) {
     return (
-      <BackgroundStyled>
+      
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
           <HostBody teams={teams}/>
@@ -59,7 +62,6 @@ function StartGame({teams,
           teamsLength={teams ? teams.length : 0}
           />
         </SafeAreaStyled>
-      </BackgroundStyled>
     )
 
   }
