@@ -17,7 +17,7 @@ const UpperStyled = styled(Box)({
   // top: '47px',
   flexDirection: 'column',
   justifyContent: 'space-between', // Align items with space between
-  // gap: '16px', /* this is for Header / Lobby */
+  gap: '16px', /* this is for Header / Lobby */
   height: '170px', 
   padding: '0px 16px 0px 16px', /* WHY IS IT WEIRD */
   boxSizing: 'border-box', /* got rid of width, added the display, flexdir, justify content */
