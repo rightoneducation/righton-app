@@ -14,28 +14,23 @@ const BodyStyled = styled(Box)({
     // height: '400px',
     margin: 'auto',
     overflowY: 'scroll', // Enable vertical scrolling if needed
-    // scrollMarginTop: '610px',
-    // scrollPaddingTop: '500px',
-    // backgroundAttachment: 'fixed',
     flexGrow: 1,
-
+    scrollbarWidth: 'none',
 });
 
 export default function HostBody({ teams }: { teams: ITeam[] }) {
   return (
     <BodyStyled>
-        <CurrentStudents teams={teams} />
-        { /*
-      <Swiper spaceBetween={4} slidesPerView="auto" style={{ height: '100%' }}>
-        <SwiperSlide style={{ height: '500px' }}>
+      <Swiper spaceBetween={4} slidesPerView="auto" style={{ height: 'auto' }}>
+        <SwiperSlide style={{ height: '100%' }}>
           <CurrentStudents teams={teams} />
         </SwiperSlide>
         <SwiperSlide>
-          <Typography variant="h6" align="center" style={{ marginTop: '48px' }}>
+          <Typography style={{ marginTop: '48px' }}>
             Page 2
           </Typography>
         </SwiperSlide>
-      </Swiper> */ }
+      </Swiper>
     </BodyStyled>
   );
 }
