@@ -8,13 +8,16 @@ import 'swiper/css/pagination';
 import { ITeam } from '@righton/networking';
 // import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import CurrentStudents from './CurrentStudents';
+import NoPlayersLobby from './NoPlayersLobby';
 
 const BodyStyled = styled(Box)({
     margin: 'auto',
     overflowY: 'scroll', // Enable vertical scrolling if needed
     flexGrow: 1,
     scrollbarWidth: 'none',
+    justifyContent: 'center',
 });
+
 
 export default function HostBody({ teams }: { teams: ITeam[] }) {
     const swiperRef = useRef<SwiperRef>(null);
@@ -32,14 +35,15 @@ export default function HostBody({ teams }: { teams: ITeam[] }) {
               bulletActiveClass: 'swiper-pagination-bullet-active',
               clickable: true,
               renderBullet(index: number, className: string) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:0" ></span>`;
               },
             }}
-            style={{ }}
+            style={{display: 'flex', justifyContent: 'center'}}
             ref={swiperRef}
           > 
         <SwiperSlide style={{ height: '100%' }}>
-          <CurrentStudents teams={teams} />
+          {/* <CurrentStudents teams={teams} /> */}
+          {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} />}
         </SwiperSlide>
         <SwiperSlide>
           <Typography style={{ marginTop: '48px' }}>
