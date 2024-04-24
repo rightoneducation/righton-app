@@ -80,18 +80,16 @@ export abstract class BaseAPIClient {
   protected async callGraphQLThrowOnError<T>(
     query: any,
     options?: GraphQLOptions
-  ): Promise<string> {
+  ): Promise<T> {
     let result = await this.callGraphQL<T>(query, options);
-    console.log(result);
-    // if (result.errors != null) {
-    //   throw new Error(`${typeof query}: ${result.errors} ${result.extensions}`);
-    // }
+    if (result.errors != null) {
+      throw new Error(`${typeof query}: ${result.errors} ${result.extensions}`);
+    }
 
-    // if (isNullOrUndefined(result.data)) {
-    //   throw new Error(`${typeof query}: Failed to get data`);
-    // }
-
-    return 'a'; // .data;
+    if (isNullOrUndefined(result.data)) {
+      throw new Error(`${typeof query}: Failed to get data`);
+    }
+    return result.data;
   }
   /* given that GameTemplate and QuestionTemplate are structured in the same way, 
   this function can be used to query both without duplicating a done of code */
