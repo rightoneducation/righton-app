@@ -1,7 +1,7 @@
-import { API, graphqlOperation } from "aws-amplify";
+import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
 import { IGameSession } from "../../Models";
 import { GameSessionParser } from "../../Parsers/GameSessionParser";
-import { BaseAPIClient, HTTPMethod } from "../BaseAPIClient";
+import { BaseAPIClient, HTTPMethod, client } from "../BaseAPIClient";
 import {
   createGameSessionFromTemplate,
   gameSessionByCode,
@@ -25,9 +25,7 @@ export class GameSessionAPIClient
 
   async createGameSessionFromTemplate(id: string): Promise<string | null> {
     try {
-        const response = await API.graphql(
-            graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
-        ) as { data: { createGameSessionFromTemplate: string } };
+        const response = await client.graphql({ query: createGameSessionFromTemplate, variables: {input: { gameTemplateId: id }}, authMode: "userPool" as GraphQLAuthMode}) as {data: { createGameSessionFromTemplate: string }};
         const result = response.data.createGameSessionFromTemplate;
         return result;
     } catch (e) {
@@ -64,9 +62,7 @@ export class GameSessionAPIClient
   }
 
   async getGameSession(id: string): Promise<IGameSession> {
-    let result = (await API.graphql(
-      graphqlOperation(getGameSession, { id })
-    )) as { data: any };
+    let result = (await client.graphql({ query: getGameSession, variables: {id}, authMode: "userPool" as GraphQLAuthMode}) as { data: any });
     return GameSessionParser.gameSessionFromAWSGameSession(
       result.data.getGameSession
     );
@@ -112,9 +108,7 @@ export class GameSessionAPIClient
   }
 
   async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
-    let result = (await API.graphql(
-      graphqlOperation(gameSessionByCode, { gameCode })
-    )) as { data: any };
+    let result = (await client.graphql({ query: gameSessionByCode, variables: {gameCode}, authMode: "userPool" as GraphQLAuthMode})) as { data: any };
     if (
       isNullOrUndefined(result.data) ||
       isNullOrUndefined(result.data.gameSessionByCode) ||

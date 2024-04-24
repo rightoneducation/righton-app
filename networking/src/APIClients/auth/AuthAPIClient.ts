@@ -1,6 +1,6 @@
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
-import { Auth } from "aws-amplify";
-import { jwtDecode } from 'jwt-decode';   
+// import { client } from '../BaseAPIClient';
+import { jwtDecode } from 'jwt-decode';
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -11,13 +11,15 @@ export class AuthAPIClient
       email: token.email,
       name: token.name
     };
-    await Auth.federatedSignIn(
-      'google',
-      { token: googleCredential, expires_at: token.exp },
-      user
-    );
-    const currentUser = await Auth.currentAuthenticatedUser();
-    console.log(currentUser);
+    console.log(user);
+    const currentUser = true;
+    // await client.federatedSignIn(
+    //   'google',
+    //   { token: googleCredential, expires_at: token.exp },
+    //   user
+    // );
+    // const currentUser = await client.currentAuthenticatedUser();
+    // console.log(currentUser);
     if (currentUser)
       return true;
     return false;

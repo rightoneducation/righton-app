@@ -1,5 +1,6 @@
-import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
-import { API } from "aws-amplify";
+import { GraphQLResult, generateClient } from "@aws-amplify/api";
+import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
+import { GraphQLResponseV6 } from '@aws-amplify/api-graphql';
 import { isNullOrUndefined } from "../global";
 import { Environment } from "./interfaces/IBaseAPIClient";
 import { IGameTemplate, IQuestionTemplate} from "../Models";
@@ -14,7 +15,7 @@ export enum HTTPMethod {
 export interface GraphQLOptions {
   input?: object;
   variables?: object;
-  authMode?: GRAPHQL_AUTH_MODE;
+  authMode?: GraphQLAuthMode;
 }
 
 export interface SubscriptionValue<T> {
@@ -23,6 +24,8 @@ export interface SubscriptionValue<T> {
     errors: Array<any> | null;
   };
 }
+
+export const client = generateClient({});
 
 type QueryResult<T> = T extends "GameTemplate"
 ? { gameTemplates: IGameTemplate[]; nextToken: string }
@@ -46,15 +49,16 @@ export abstract class BaseAPIClient {
 
   constructor(env: Environment) {
     this.env = env;
-    this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
-    this.hintEndpoint = `https://yh5ionr9rg.execute-api.us-east-1.amazonaws.com/groupHints/groupHints`;
+    this.endpoint = `https://1y2kkd6x3e.execute-client.us-east-1.amazonaws.com/${env}/createGameSession`;
+    this.hintEndpoint = `https://yh5ionr9rg.execute-client.us-east-1.amazonaws.com/groupHints/groupHints`;
   }
 
   protected async callGraphQL<T>(
     query: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    return API.graphql({query: query, variables: options, authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS}) as GraphQLResult<T>;
+    const response = client.graphql({query: query, variables: options, authMode: "userPool" as GraphQLAuthMode}) as unknown;
+    return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
   protected subscribeGraphQL<T>(
@@ -62,7 +66,7 @@ export abstract class BaseAPIClient {
     callback: (value: T) => void
   ) {
     //@ts-ignore
-    return API.graphql(subscription).subscribe({
+    return client.graphql(subscription).subscribe({
       next: (response: SubscriptionValue<T>) => {
         if (!isNullOrUndefined(response.value.errors)) {
           console.error(response.value.errors);
@@ -76,17 +80,18 @@ export abstract class BaseAPIClient {
   protected async callGraphQLThrowOnError<T>(
     query: any,
     options?: GraphQLOptions
-  ): Promise<T> {
+  ): Promise<string> {
     let result = await this.callGraphQL<T>(query, options);
-    if (result.errors != null) {
-      throw new Error(`${typeof query}: ${result.errors} ${result.extensions}`);
-    }
+    console.log(result);
+    // if (result.errors != null) {
+    //   throw new Error(`${typeof query}: ${result.errors} ${result.extensions}`);
+    // }
 
-    if (isNullOrUndefined(result.data)) {
-      throw new Error(`${typeof query}: Failed to get data`);
-    }
+    // if (isNullOrUndefined(result.data)) {
+    //   throw new Error(`${typeof query}: Failed to get data`);
+    // }
 
-    return result.data;
+    return 'a'; // .data;
   }
   /* given that GameTemplate and QuestionTemplate are structured in the same way, 
   this function can be used to query both without duplicating a done of code */
@@ -109,7 +114,7 @@ export abstract class BaseAPIClient {
       console.log("here");
       // const user = await Auth.currentAuthenticatedUser();
       // console.log("Current user: ", user);
-      let result = (await API.graphql({query: query, variables: queryParameters, authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS})) as { data: any };
+      let result = (await client.graphql({query: query, variables: queryParameters, authMode: 'userPool' as GraphQLAuthMode})) as { data: any };
       console.log(result);
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;

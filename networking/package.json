@@ -12,7 +12,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "aws-amplify": "^5.3.1",
+    "aws-amplify": "^6.0.30",
     "jwt-decode": "^4.0.0",
     "mathjs": "^11.11.2",
     "openai": "^4.38.3",
