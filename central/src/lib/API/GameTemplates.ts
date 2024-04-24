@@ -5,6 +5,7 @@ import {
   UpdateGameTemplateInput,
   isNullOrUndefined
 } from '@righton/networking';
+// import { Auth } from 'aws-amplify';
 import { IListQuerySettings, SortField } from './QueryInputs';
 
 export const createGameTemplate = async (apiClients: IAPIClients, createGameTemplateInput: CreateGameTemplateInput): Promise<IGameTemplate | null> => {
@@ -60,6 +61,8 @@ export const deleteGameTemplate = async (apiClients: IAPIClients, id: string): P
 
 export const listGameTemplates = async (apiClients: IAPIClients, listQuerySettings: IListQuerySettings | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
   try {
+    // const user = await Auth.currentAuthenticatedUser();
+    // console.log("Current user: ", user);
     const nextToken = listQuerySettings?.nextToken ?? null;
     const sortDirection = listQuerySettings?.sortDirection ?? null;
     const sortField = listQuerySettings?.sortField ?? null;

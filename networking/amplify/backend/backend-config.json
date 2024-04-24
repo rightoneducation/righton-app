@@ -21,12 +21,7 @@
             }
           ],
           "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDate": "2025-04-04T19:50:54.710Z",
-              "apiKeyExpirationDays": 365,
-              "description": "apikey"
-            },
-            "authenticationType": "API_KEY"
+            "authenticationType": "AWS_IAM"
           }
         }
       },
@@ -73,17 +68,6 @@
   "function": {
     "createGame": {
       "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ],
-          "category": "api",
-          "resourceName": "mobile"
-        }
-      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },

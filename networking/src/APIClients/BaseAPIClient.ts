@@ -1,10 +1,11 @@
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
-import { API, graphqlOperation } from "aws-amplify";
+import { API } from "aws-amplify";
 import { isNullOrUndefined } from "../global";
 import { Environment } from "./interfaces/IBaseAPIClient";
 import { IGameTemplate, IQuestionTemplate} from "../Models";
 import { GameTemplateParser } from "../Parsers/GameTemplateParser";
 import { QuestionTemplateParser } from "../Parsers/QuestionTemplateParser";
+// import { Auth } from "aws-amplify";
 
 export enum HTTPMethod {
   Post = "POST",
@@ -53,7 +54,7 @@ export abstract class BaseAPIClient {
     query: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    return API.graphql(graphqlOperation(query, options)) as GraphQLResult<T>;
+    return API.graphql({query: query, variables: options, authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS}) as GraphQLResult<T>;
   }
 
   protected subscribeGraphQL<T>(
@@ -105,9 +106,11 @@ export abstract class BaseAPIClient {
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
-      let result = (await API.graphql(
-        graphqlOperation(query, queryParameters)
-      )) as { data: any }
+      console.log("here");
+      // const user = await Auth.currentAuthenticatedUser();
+      // console.log("Current user: ", user);
+      let result = (await API.graphql({query: query, variables: queryParameters, authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS})) as { data: any };
+      console.log(result);
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
       if (type === "GameTemplate") {
