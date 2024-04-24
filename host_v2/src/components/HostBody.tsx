@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { ITeam } from '@righton/networking';
+// import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import CurrentStudents from './CurrentStudents';
 
-const windowHeight = window.innerHeight - 170 - 47; // Subtracting 160 pixels for the footer
-// THIS IS NOT!!!! DYNAMIC!!!!!
 const BodyStyled = styled(Box)({
-    // height: `${windowHeight}px`, // Set height dynamically
-    // height: '400px',
     margin: 'auto',
     overflowY: 'scroll', // Enable vertical scrolling if needed
     flexGrow: 1,
@@ -19,9 +17,27 @@ const BodyStyled = styled(Box)({
 });
 
 export default function HostBody({ teams }: { teams: ITeam[] }) {
-  return (
+    const swiperRef = useRef<SwiperRef>(null);
+    return (
     <BodyStyled>
-      <Swiper spaceBetween={4} slidesPerView="auto" style={{ height: 'auto' }}>
+      {/* <Swiper spaceBetween={4} slidesPerView="auto" style={{ height: 'auto' }}> */}
+      <Swiper
+            modules={[Pagination]}
+            spaceBetween={4}
+            centeredSlides
+            slidesPerView="auto"
+            pagination={{
+              el: '.swiper-pagination-container',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              clickable: true,
+              renderBullet(index: number, className: string) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+              },
+            }}
+            style={{ }}
+            ref={swiperRef}
+          > 
         <SwiperSlide style={{ height: '100%' }}>
           <CurrentStudents teams={teams} />
         </SwiperSlide>

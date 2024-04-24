@@ -19,11 +19,7 @@ interface StartGameProps {
 }  
 
 const BackgroundStyled = styled(Paper)({
-  // display: 'flex',
   minHeight: '100vh',
-  // flexDirection: 'column',
-  // justifyContent: 'space-between',
-  // alignItems: 'center',
   background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   backgroundAttachment: 'fixed',
 })
@@ -31,15 +27,14 @@ const BackgroundStyled = styled(Paper)({
 const SafeAreaStyled = styled(Box)({
   paddingTop: '47px',
   paddingBottom: '34px',
-  // width: '375px',
   width: '100%',
   height: '100vh',
-  // gap: '16px',
   display: 'flex',
   flexDirection: 'column',
   background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
+  gap: '16px',
 });
 
 
