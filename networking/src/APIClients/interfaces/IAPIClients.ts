@@ -14,5 +14,8 @@ export interface IAPIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
+  isUserAuth: boolean;
   configAmplify(awsconfig: any): void;
+  authEvents(payload: any): void;
+  authListener(): void;
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { Hub } from 'aws-amplify/utils';
 import { fetchAuthSession } from "@aws-amplify/auth";
 import {
   Route,
@@ -65,7 +66,7 @@ export const RouteContainer = ({
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
   const [isSearchClick, setIsSearchClick] = useState(false);
-  const [isUserAuth, setIsUserAuth] = useState(false);
+  const [isUserAuth, setIsUserAuth] = useState(apiClients.isUserAuth);
   const [modalOpen, setModalOpen] = useState(checkUserPlayed()); 
   const [showModalGetApp, setShowModalGetApp] = useState(false);
   const [prevTokens, setPrevTokens] = useState<(string | null)[]>([null]);
@@ -431,8 +432,12 @@ export const RouteContainer = ({
       return true;
   };
 
+  // this useEffect establishes the Hub.listener to subscribe to changes in user auth
   useEffect(() => {
     persistUserAuth();
+  }, [apiClients.isUserAuth]);
+
+  useEffect(() => {
     // get either a list of games or questions when the route changes
     setSearchInput('');
     const updatedListQuerySettings = {
