@@ -533,6 +533,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
 
           return { ...parsedHint, teams: updatedTeams };
         });
+        console.log("combinedhintsbelow");
         console.log(combinedHints);
         setGptHints(combinedHints);
         setisHintLoading(false);

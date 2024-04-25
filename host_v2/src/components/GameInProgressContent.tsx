@@ -17,6 +17,25 @@ import PaginationContainerStyled from '../lib/styledcomponents/PaginationContain
 import 'swiper/css';
 import 'swiper/css/pagination';
 import FeaturedMistakes from './FeaturedMistakes';
+import { GameSessionState, IQuestion} from '@righton/networking';
+
+interface GptHint {
+  themeText: string;
+  teams: { name: string; rawHint: string }[];
+  teamCount: number;
+}
+
+// interface GetQuestionChoicesFunction {
+//   (questions: IQuestion[] | null | undefined, currentQuestionIndex: number): string[] | null;
+// }
+interface GraphClickInfo {
+  graph: string | null;
+  selectedIndex: any;
+}
+
+interface ProcessHintsFunction {
+  (): void;
+}
 
 interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
@@ -28,7 +47,23 @@ interface GameInProgressContentProps {
   setSortedMistakes: (value: Mistake[]) => void;
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
+
+  hints: string[],
+  gptHints: GptHint[],
+  numPlayers: number,
+  totalAnswers: number,
+  // questionChoices: GetQuestionChoicesFunction,
+  statePosition: number,
+  graphClickInfo: GraphClickInfo,
+  isShortAnswerEnabled: boolean,
+  handleGraphClick: (info: GraphClickInfo) => void;
+  hintsError: boolean;
+  currentState: GameSessionState;
+  isHintLoading: boolean;
+  handleProcessHints: ProcessHintsFunction;
 } // eslint-disable-line
+
+
 export default function GameInProgressContent({
   confidenceData,
   confidenceGraphClickIndex,
@@ -38,6 +73,21 @@ export default function GameInProgressContent({
   setSortedMistakes,
   isPopularMode,
   setIsPopularMode,
+
+
+  // playerthinkning mock data
+  hints,
+  gptHints,
+  numPlayers,
+  totalAnswers,
+  statePosition,
+  graphClickInfo,
+  isShortAnswerEnabled,
+  handleGraphClick,
+  hintsError,
+  currentState,
+  isHintLoading,
+  handleProcessHints
 }: GameInProgressContentProps) {
   // eslint-disable-line
 

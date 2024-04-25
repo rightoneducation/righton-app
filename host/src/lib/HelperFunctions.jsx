@@ -180,21 +180,26 @@ export const getShortAnswers = (shortAnswerResponses) => {
   let confidenceArray = createBlankConfidenceArray();
   if (shortAnswerResponses && shortAnswerResponses.length > 0) {
     shortAnswerResponses.forEach((answer) => {
+      console.log("answer below")
+      console.log(answer)
+      console.log("answer.value below")
+      console.log(answer.value)
       if (answer.teams){
+
         answer.teams.forEach((team) => {
           const index = confidenceLevelsArray.indexOf(team.confidence);
           if (answer.isCorrect) {
             confidenceArray[index].correct += 1;
             confidenceArray[index].players.push({
               name: team.name,
-              answer: answer.value,
+              answer: answer.rawAnswer,
               isCorrect: true,
             });
           } else {
             confidenceArray[index].incorrect += 1;
             confidenceArray[index].players.push({
               name: team.name,
-              answer: answer.value,
+              answer: answer.rawAnswer,
               isCorrect: false,
             });
           }

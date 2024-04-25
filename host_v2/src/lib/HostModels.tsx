@@ -1,6 +1,7 @@
 /**
  *  string key for storage of game data in users local storage
  */
+import { ConfidenceLevel} from '@righton/networking';
 export const StorageKey = 'rightOn';
 export const featuredMistakesSelectionValue = 'A';
 
@@ -23,6 +24,11 @@ export interface ConfidenceOption {
   incorrect: number; // number of players who selected tgis option and answered incorrectly
   players: Player[]; // an array of the players that selected this option
 }
+export interface Team {
+  name: string;
+  id: string;
+  confidence: ConfidenceLevel;
+}
 
 export interface ShortAnswerResponse {
   rawAnswer: string;
@@ -30,8 +36,9 @@ export interface ShortAnswerResponse {
   count: number;
   isCorrect: boolean;
   isSelectedMistake?: boolean;
-  teams?: string[];
+  teams?: Team[];
 }
+
 
 export interface Mistake {
   answer: string;

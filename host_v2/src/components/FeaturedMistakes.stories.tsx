@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
+import {ConfidenceLevel } from '@righton/networking';
+
 import FeaturedMistakes from './FeaturedMistakes';
 import Theme from '../lib/Theme';
 import i18n from '../i18n.mock';
-import sortMistakes from "../lib/HelperFunctions"
+import {sortMistakes} from "../lib/HelperFunctions"
+
 import { ShortAnswerResponse } from '../lib/HostModels';
 
 export default {
@@ -13,6 +16,10 @@ export default {
   title: 'Design System/3_Organisms/FeaturedMistakes',
   component: FeaturedMistakes,
 } as Meta<typeof FeaturedMistakes>;
+
+const myConfidenceLevel1: ConfidenceLevel = ConfidenceLevel.VERY;
+
+const anotherConfidenceLevel2: ConfidenceLevel = ConfidenceLevel.KINDA;
 
 const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
     const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
@@ -23,7 +30,8 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
           isCorrect: true, // only every one
           isSelectedMistake: true, 
           count: 13,
-          teams: ['Name1', 'Name2']
+          teams: [{name: 'Name1', id: "1", confidence:  myConfidenceLevel1}, 
+      {name: 'Name2', id: "2", confidence:  anotherConfidenceLevel2}]
         },
         {
           rawAnswer: 'No Idea',
@@ -31,7 +39,8 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
           isCorrect: false,
           isSelectedMistake: true, 
           count: 2,
-          teams: ['Name3', 'Name13']
+          teams: [{name: 'Name3', id: "3", confidence:  myConfidenceLevel1}, 
+          {name: 'Name4', id: "4", confidence:  anotherConfidenceLevel2}]
         },
         {
           rawAnswer: '2x^4 + 6x^2 - 3x',
@@ -39,7 +48,10 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
           isCorrect: false,
           isSelectedMistake: true, 
           count: 4,
-          teams: ['Name4', 'Name5', 'Name6', 'Name7']
+          teams: [{name: 'Name5', id: "5", confidence:  anotherConfidenceLevel2}, 
+          {name: 'Name6', id: "6", confidence:  anotherConfidenceLevel2}, 
+          {name: 'Name7', id: "7", confidence:  anotherConfidenceLevel2},
+          {name: 'Name8', id: "8", confidence:  anotherConfidenceLevel2}]
         },
         {
           rawAnswer: '4x^4 - x^3 + 7x^2 - 6x',
@@ -47,7 +59,11 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
           isCorrect: false,
           isSelectedMistake: true, 
           count: 5,
-          teams: ['Name8', 'Name9', 'Name10', 'Name11', 'Name12']
+          teams: [{name: 'Name9', id: "9", confidence:  anotherConfidenceLevel2},
+          {name: 'Name10', id: "10", confidence:  myConfidenceLevel1},
+          {name: 'Name11', id: "11", confidence:  myConfidenceLevel1},
+          {name: 'Name12', id: "12", confidence:  myConfidenceLevel1},
+          {name: 'Name13', id: "13", confidence:  anotherConfidenceLevel2}]
         }, 
         {
           rawAnswer: 'x^2 - 4x - 12',
@@ -55,7 +71,7 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
           isCorrect: false,
           isSelectedMistake: true, 
           count: 1,
-          teams: ['Name14']
+          teams: [{name: 'Name14', id: "14", confidence:  myConfidenceLevel1}],
         },
       ]);  
 
