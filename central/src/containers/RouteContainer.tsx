@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { fetchAuthSession } from "@aws-amplify/auth";
 import {
   Route,
   Switch,
   useHistory,
   useLocation
 } from "react-router-dom";
-import { Auth } from 'aws-amplify';
 import { Box } from '@material-ui/core';
 import {debounce, set} from 'lodash';
 import { 
@@ -394,13 +394,10 @@ export const RouteContainer = ({
   }
 
   const persistUserAuth = (async () => {
-    let user = null;
+    let session = null;
     try {
-      Auth.currentCredentials()
-      .then(data => console.log(data))
-      .catch(err => console.error(err));
-      user = await Auth.currentAuthenticatedUser();
-      if (user) {
+      session = await fetchAuthSession();
+      if (session.tokens) {
         setIsUserAuth(true);
       }
     } catch (e) {
