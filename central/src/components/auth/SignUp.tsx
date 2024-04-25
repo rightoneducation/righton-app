@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { signUp } from "@aws-amplify/auth";
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
-import { Auth } from "aws-amplify";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
@@ -26,13 +26,15 @@ const Signup: React.FC = () => {
       return;
     }
     try {
-      await Auth.signUp({
+      await signUp({
         username: email,
         password: confirmPassword,
-        attributes: {
-          email,
-          name,
-        },
+        options: {
+          userAttributes: {
+            email,
+            name,
+          },
+        }
       });
       history.push("/confirmation");
     } catch (error) {
