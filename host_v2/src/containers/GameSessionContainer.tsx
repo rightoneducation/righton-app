@@ -5,6 +5,7 @@ import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
 import {sortMistakes} from "../lib/HelperFunctions"
+import { ThemeContext } from 'styled-components';
 
 interface Player {
   answer: string; // answer chosen by this player
@@ -157,10 +158,9 @@ export default function GameSessionContainer() {
 
   // Mock Data for PlayerThinking component
   const [hints, setHints] = useState(['1', '2', '3', '4', '5', '6' , '7', '8', '9', '10', '11', '12', '13', '14']);
-  const [gptHints, setGptHints] = useState([ { themeText: 'No Response', teams: ['1', '2', '3'], teamCount: 3}, 
-  { themeText: 'circle, multiply', teams: ['4', '5', '6', '7'], teamCount: 4}, 
-  { themeText: 'interior angles', teams: ['8', '9'], teamCount: 2},
-  { themeText: 'No common words/phrases', teams: ['10', '11', '12', '13', '14'], teamCount: 5}]);
+  const [gptHints, setGptHints] = useState([{themeText: 'Incorrect Answer', teamCount: 2, teams: [
+    {name: 'player3 3', rawHint: 'it is 62'}, 
+  {name: 'player4 4', rawHint: 'might be 62'}]}]);
   
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
   const responsesRef = React.useRef(null);
@@ -169,58 +169,26 @@ export default function GameSessionContainer() {
   const [hintsError, setHintsError] = React.useState(false);
   const [isHintLoading, setisHintLoading] = React.useState(false);
 
-  const handleProcessHints = async (hints) => {
+/*
+  
+*/
+  const handleProcessHints = () => {
     setHintsError(false);
-    try {
-      const parsedIncomingHints = hints.map((hint) => {
-        return JSON.parse(hint);
-      });
-      const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
-      const questionText = currentQuestion.text;
-      const correctChoiceIndex =
-        currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
-      const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
-      gameSession.groupHints(parsedIncomingHints, questionText, correctAnswer).then((response) => {
-        const parsedHints = JSON.parse(response.gptHints.content);
-        // adds rawHint text to parsedHints received from GPT
-        // (we want to minimize the amount of data we send and receive to/from OpenAI
-        // so we do this ourselves instead of asking GPT to return data we already have)
-        const hintsLookup = new Map(parsedIncomingHints.map(hint => [hint.teamName, hint.rawHint]));
-        const combinedHints = parsedHints.map(parsedHint => {
-          const updatedTeams = parsedHint.teams.map(team => {
-            if (hintsLookup.has(team)) {
-              return { name: team, rawHint: hintsLookup.get(team) };
-            } else {
-              return team;
-            }
-          });
-
-          return { ...parsedHint, teams: updatedTeams };
-        });
-        console.log(combinedHints);
-        setGptHints(combinedHints);
-        setisHintLoading(false);
-        if (combinedHints) {
-          setHints([]);
-          apiClients.gameSession.getGameSession(gameSessionId).then((gameSession) => {
-            apiClients.question
-              .updateQuestion({
-                gameSessionId: gameSession.id,
-                id: gameSession.questions[gameSession.currentQuestionIndex].id,
-                order: gameSession.questions[gameSession.currentQuestionIndex].order,
-                hints: JSON.stringify(combinedHints as IHints[]),
-              });
-          });
-        }
-      })
-        .catch(e => {
-          console.log(e);
-          setHintsError(true);
-        })
-    } catch {
-      setHintsError(true);
-    }
-  };
+    const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
+    const questionText = currentQuestion.text;
+    const correctChoiceIndex =
+      currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
+    const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
+      // adds rawHint text to parsedHints received from GPT
+      // (we want to minimize the amount of data we send and receive to/from OpenAI
+      // so we do this ourselves instead of asking GPT to return data we already have)
+    const combinedHints = [{themeText: 'Incorrect Answer', teamCount: 2, teams: [
+      {name: 'player3 3', rawHint: 'it is 62'}, 
+    {name: 'player4 4', rawHint: 'might be 62'}]}]
+    console.log(combinedHints);
+    setGptHints(combinedHints);
+    setisHintLoading(false);
+};
 
 
   switch (gameSession.currentState){
@@ -260,6 +228,7 @@ export default function GameSessionContainer() {
           hintCardRef={hintCardRef}
           hintsError={hintsError}
           isHintLoading={isHintLoading}
+          handleProcessHints={handleProcessHints}
         />
       );
   }

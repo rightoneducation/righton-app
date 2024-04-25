@@ -1,5 +1,5 @@
-import { ShortAnswerResponse, Mistake } from './HostModels';
 import { ConfidenceLevel, IQuestion, isNullOrUndefined} from '@righton/networking';
+import { ShortAnswerResponse, Mistake } from './HostModels';
 
 export const sortMistakes = (
   shortAnswerResponses: ShortAnswerResponse[],

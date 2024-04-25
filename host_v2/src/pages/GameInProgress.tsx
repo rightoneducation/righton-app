@@ -16,8 +16,12 @@ import {
 
 interface GptHint {
   themeText: string;
-  teams: string[];
+  teams: { name: string; rawHint: string }[];
   teamCount: number;
+}
+
+interface ProcessHintsFunction {
+  (): void;
 }
 
 interface GameInProgressProps {
@@ -43,7 +47,8 @@ interface GameInProgressProps {
   confidenceCardRef: RefObject<any>;
   hintCardRef: RefObject<any>;
   hintsError: boolean;
-  isHintLoading: boolean
+  isHintLoading: boolean;
+  handleProcessHints: ProcessHintsFunction;
 }
 
 export default function GameInProgress({
@@ -70,6 +75,7 @@ export default function GameInProgress({
   hintCardRef,
   hintsError,
   isHintLoading,
+  handleProcessHints
 }: GameInProgressProps) {
 
     const currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
@@ -104,44 +110,7 @@ export default function GameInProgress({
           hintCardRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 0);
     };
-    
-
-    
-
-    // const answers = useMemo(
-    //   () =>
-    //   (isShortAnswerEnabled
-    //     ? (statePosition < 6
-    //       ? getShortAnswers(
-    //         shortAnswerResponses
-    //       )
-    //       : getShortAnswersPhaseTwo(
-    //         shortAnswerResponses,
-    //         teamsArray,
-    //         currentState,
-    //         questions,
-    //         currentQuestionIndex
-    //       )
-    //     )
-    //     : getMultiChoiceAnswers(
-    //       questionChoices,
-    //       teamsArray,
-    //       currentQuestionIndex,
-    //       questions,
-    //       currentState,
-    //       correctChoiceIndex,
-    //     )
-    //   ),
-    //   [
-    //     shortAnswerResponses,
-    //     questionChoices,
-    //     teamsArray,
-    //     currentQuestionIndex,
-    //     questions,
-    //     currentState,
-    //     correctChoiceIndex
-    //   ],
-    // );
+  
 
   const handleConfidenceGraphClick = (selectedIndex: number | null) => {
     setConfidenceGraphClickIndex(selectedIndex);
@@ -175,6 +144,20 @@ export default function GameInProgress({
           setSortedMistakes={setSortedMistakes}
           isPopularMode={isPopularMode}
           setIsPopularMode={setIsPopularMode}
+
+          // playerthinking mock data.
+          hints={hints}
+          gptHints={gptHints}
+          numPlayers={inputNum}
+          totalAnswers={totalAnswers}
+          statePosition={statePosition}
+          graphClickInfo={graphClickInfo}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          handleGraphClick={handleGraphClick}
+          hintsError={hintsError}
+          currentState={currentState}
+          isHintLoading={isHintLoading}
+          handleProcessHints={handleProcessHints}
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled />
