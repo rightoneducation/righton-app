@@ -77,6 +77,7 @@ export const RouteContainer = ({
     nextToken: null,
     queryLimit
   });
+  const [currentAuthenticatedUser, setCurrentAuthenticatedUser] = useState(null);
 
   const [sortByCheck, setSortByCheck] = React.useState(false);
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
@@ -388,6 +389,7 @@ export const RouteContainer = ({
   }
 
   const handleUserAuth = (isAuth: boolean) => {
+    console.log('handleUserAuth', isAuth);
     setIsUserAuth(isAuth);
   }
 

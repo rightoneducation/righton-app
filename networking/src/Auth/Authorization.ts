@@ -1,4 +1,4 @@
-import { signInWithRedirect, fetchUserAttributes } from "aws-amplify/auth";
+import { signInWithRedirect, fetchAuthSession } from "aws-amplify/auth";
 import { jwtDecode } from 'jwt-decode';   
 
 // per amplify advanced workflow docs: https://docs.amplify.aws/javascript/prev/build-a-backend/auth/advanced-workflows/
@@ -8,9 +8,10 @@ export const handleGoogleSignIn = async (googleCredential: string): Promise<Bool
   await signInWithRedirect(
     {provider: 'Google'}
   );
-  const currentUser = await fetchUserAttributes();
+  console.log('Authenticated with Google:');
+  const currentUser = await fetchAuthSession();
   console.log(currentUser);
   if (currentUser)
     return true;
-  return false;
+  return true;
 }
