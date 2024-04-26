@@ -37,22 +37,15 @@ const SafeAreaStyled = styled(Box)({
   gap: '16px',
 });
 
-
-const BodyStyled = styled(Box)({
-  height: '437px',
-});
-
 function StartGame({teams,
   questions,
   title,
   gameCode,
   }: StartGameProps) {
     return (
-      
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
           <HostBody teams={teams}/>
-            {/* <CurrentStudents teams={teams}/> */ }
           <FooterStartGame 
           teamsLength={teams ? teams.length : 0}
           />

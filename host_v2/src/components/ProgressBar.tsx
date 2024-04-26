@@ -17,7 +17,7 @@ const PBContainer = styled(Box)({
   alignItems: 'center',
 })
 const PBTotalTypography = styled(Typography)({
-    width: '16px',
+    width: '16px', // 30?? but that looks so bad
     height: '36px',
     color: 'white',
     fontWeight: '700',
@@ -25,7 +25,7 @@ const PBTotalTypography = styled(Typography)({
     lineHeight: '36px',
 });
 const PBDescriptionTypography = styled(Typography)({
-  width: '160px',
+  width: '160px', // 144 but bad
   height: '19px',
   font: 'Rubik',
   fontWeight: '400',

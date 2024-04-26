@@ -14,22 +14,20 @@ interface HostHeaderProps {
 const UpperStyled = styled(Box)({
   display: 'flex',
   position: 'sticky',
-  // top: '47px',
   flexDirection: 'column',
-  justifyContent: 'space-between', // Align items with space between
+  justifyContent: 'space-between', 
   gap: '16px', /* this is for Header / Lobby */
   height: '170px', 
-  padding: '0px 16px 0px 16px', /* WHY IS IT WEIRD */
+  padding: '0px 16px 0px 16px', 
   boxSizing: 'border-box', /* got rid of width, added the display, flexdir, justify content */
   zIndex: 9999,
-  // opacity: 1,
 });
 
 const TopLineStyled = styled(Box)({
   display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center', // Align items vertically in the center
-  width: '100%', // Take up the full width of the container
+  justifyContent: 'space-between', // send the "game lobby" and the icons to opp sides
+  alignItems: 'center', // align items vertically in the center
+  width: '100%', // fixed on the figma, but that would look goofy on bigger screens
   padding: '0px 0px 0px 8px', // Adjust padding as needed
   gap: '8px', /* changed the width to 100%, added the display, justify, and align */
   height: '36px',

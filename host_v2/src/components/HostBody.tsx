@@ -26,22 +26,22 @@ export default function HostBody({ teams }: { teams: ITeam[] }) {
       {/* <Swiper spaceBetween={4} slidesPerView="auto" style={{ height: 'auto' }}> */}
       <Swiper
             modules={[Pagination]}
-            spaceBetween={4}
-            centeredSlides
+            // spaceBetween={4}
+            // centeredSlides
             slidesPerView="auto"
             pagination={{
               el: '.swiper-pagination-container',
               bulletClass: 'swiper-pagination-bullet',
               bulletActiveClass: 'swiper-pagination-bullet-active',
               clickable: true,
-              renderBullet(index: number, className: string) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0" ></span>`;
+              renderBullet(index: number, className: string,) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
               },
             }}
-            style={{display: 'flex', justifyContent: 'center'}}
+            style={{display: 'flex', alignItems:'center', justifyContent: 'center', marginRight: '0px',boxSizing: 'border-box',}}
             ref={swiperRef}
           > 
-        <SwiperSlide style={{ height: '100%' }}>
+        <SwiperSlide style={{ height: '100%', marginRight: '0px', boxSizing: 'border-box',}}>
           {/* <CurrentStudents teams={teams} /> */}
           {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} />}
         </SwiperSlide>

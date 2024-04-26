@@ -19,9 +19,9 @@ const ButtonStyled = styled(Button)({
   fontWeight: '700',
   lineHeight: '30px',
   textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
+  boxShadow: '0px 5px 22px 0px #47D9FF 30%',
   '&:disabled': {
-    background: 'transparent',
+    background: '#032563',
     border: '2px solid #159EFA',
     borderRadius: '22px',
     width: '300px',
@@ -32,6 +32,8 @@ const ButtonStyled = styled(Button)({
     lineHeight: '30px',
     opacity: '100%',
     cursor: 'not-allowed',
+    boxShadow: '0px 5px 22px 0px #47D9FF 30%',
+
   },
 });
 
@@ -43,19 +45,30 @@ const FooterContainer = styled(Box)({
   alignItems: 'center',
   bottom: '0',
   width: '100%',
-  height: '80px',
-  padding: '20px 0',
-  background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
-  gap: '8px',
+  gap: '16px',
 
 });
 
+const InnerFooterContainer = styled(Box)({
+  position: 'sticky',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '92px',
+  gap: '8px',
+
+});
+// need 16px between pagination and words
 function FooterStartGame({ teamsLength }: FootStartGameProps) {
   return (
     <FooterContainer>
       <PaginationContainerStyled className="swiper-pagination-container" />
-      <ProgressBar teamsLength={teamsLength} />
-      <ButtonStyled disabled={teamsLength <= 0}>Start Game</ButtonStyled>
+      <InnerFooterContainer>
+        <ProgressBar teamsLength={teamsLength} />
+        <ButtonStyled disabled={teamsLength <= 0}>Start Game</ButtonStyled>
+      </InnerFooterContainer>
     </FooterContainer>
   );
 }
