@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
-import {confirmSignUp} from "@aws-amplify/auth";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
 import { Grid, Typography } from '@material-ui/core';
-import RightOnLogo from "./RightOnLogo.png";
+import RightOnLogo from "../../images/RightOnLogo.png";
 
-const Confirmation: React.FC = () => {
+const Confirmation: React.FC  <{apiClients: any}> = ({apiClients}) => {
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -20,7 +17,7 @@ const Confirmation: React.FC = () => {
     setLoading(true);
 
     try {
-      await confirmSignUp({username: email, confirmationCode: String(code)});
+      await apiClients.awsConfirmSignUp(email, code);
       setDisplayText(true);
     } catch (error) {
       console.log(error);

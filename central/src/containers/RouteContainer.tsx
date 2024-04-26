@@ -479,17 +479,17 @@ export const RouteContainer = ({
     <Switch>
     <Route path="/login">
       <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <LogIn handleUserAuth={handleUserAuth} />
+      <LogIn apiClients={apiClients} handleUserAuth={handleUserAuth} />
     </Route>
 
     <Route path="/signup">
       <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <SignUp />
+      <SignUp apiClients={apiClients}/>
     </Route>
 
     <Route path="/confirmation">
       <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <Confirmation />
+      <Confirmation apiClients={apiClients}/>
     </Route>
 
     <Route>

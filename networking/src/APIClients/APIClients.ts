@@ -1,5 +1,6 @@
 import { Amplify } from "aws-amplify";
 import { Hub } from 'aws-amplify/utils';
+import { signUp, confirmSignUp, signIn, signInWithRedirect, signOut } from 'aws-amplify/auth';
 import { 
   IGameTemplateAPIClient, 
   IQuestionTemplateAPIClient, 
@@ -75,5 +76,35 @@ export class APIClients {
       this.authEvents(payload);
       }
     );
+  }
+
+  async awsSignUp(email: string, password: string) {
+    await signUp({
+      username: email,
+      password: password,
+      options: {
+        userAttributes: {
+          email
+        },
+      }
+    });
+  }
+
+  async awsConfirmSignUp(email: string, code: string) {
+    await confirmSignUp({username: email, confirmationCode: code});
+  }
+
+  async awsSignIn(email: string, password: string) {
+    await signIn({username: email, password: password});
+  }
+
+  async awsSignInFederated () {
+    await signInWithRedirect(
+      {provider: 'Google'}
+    );
+  }
+
+  async awsSignOut() {
+    await signOut();
   }
 }
