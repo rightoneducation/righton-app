@@ -1,3 +1,4 @@
+import { IAuthAPIClient } from '../auth/interfaces/IAuthAPIClient';
 import { IGameTemplateAPIClient } from '../templates/interfaces/IGameTemplateAPIClient';
 import { IQuestionTemplateAPIClient } from '../templates/interfaces/IQuestionTemplateAPIClient';
 import { IGameQuestionsAPIClient } from '../templates/interfaces/IGameQuestionsAPIClient';
@@ -7,6 +8,7 @@ import { ITeamMemberAPIClient } from '../gamesession/interfaces/ITeamMemberAPICl
 import { ITeamAnswerAPIClient } from '../gamesession/interfaces/ITeamAnswerAPIClient';
 
 export interface IAPIClients {
+  auth: IAuthAPIClient
   gameTemplate: IGameTemplateAPIClient;
   questionTemplate: IQuestionTemplateAPIClient;
   gameQuestions: IGameQuestionsAPIClient;
@@ -14,8 +16,4 @@ export interface IAPIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
-  isUserAuth: boolean;
-  configAmplify(awsconfig: any): void;
-  authEvents(payload: any): void;
-  authListener(): void;
 }

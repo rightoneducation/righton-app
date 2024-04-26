@@ -23,7 +23,7 @@ const Signup: React.FC <{apiClients: any}> = ({apiClients}) =>{
       return;
     }
     try {
-      await apiClients.awsSignUp(email, password);
+      await apiClients.auth.awsSignUp(email, password);
       history.push("/confirmation");
     } catch (error) {
       console.error(error);

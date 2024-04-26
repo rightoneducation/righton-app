@@ -19,7 +19,7 @@ const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>voi
 
     try {
       try{
-        await apiClients.awsSignIn(email, password);
+        await apiClients.auth.awsSignIn(email, password);
       } catch (e) {
         console.log(e);
       }
@@ -32,7 +32,7 @@ const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>voi
         }
       }
       else {
-        await apiClients.awsSignOut();
+        await apiClients.auth.awsSignOut();
         setAdminError(true);
       }
 
@@ -46,7 +46,7 @@ const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>voi
   };
 
   const handleGoogleLogin = async() => {
-    await apiClients.awsSignInFederated();
+    await apiClients.auth.awsSignInFederated();
   }
 
   return (

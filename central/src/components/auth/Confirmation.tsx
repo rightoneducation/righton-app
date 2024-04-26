@@ -17,7 +17,7 @@ const Confirmation: React.FC  <{apiClients: any}> = ({apiClients}) => {
     setLoading(true);
 
     try {
-      await apiClients.awsConfirmSignUp(email, code);
+      await apiClients.auth.awsConfirmSignUp(email, code);
       setDisplayText(true);
     } catch (error) {
       console.log(error);
