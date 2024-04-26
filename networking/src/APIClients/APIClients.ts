@@ -48,7 +48,6 @@ export class APIClients {
     this.configAmplify(awsconfig);
     this.authEvents(null);
     this.authListener();
-    
   }
 
   configAmplify(awsconfig: any) {
