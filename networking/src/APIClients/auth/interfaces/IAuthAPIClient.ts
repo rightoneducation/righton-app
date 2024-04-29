@@ -9,4 +9,5 @@ export interface IAuthAPIClient {
   awsSignIn(email: string, password: string): void;
   awsSignInFederated(): void;
   awsSignOut(): void;
+  verifyAuth(): Promise<boolean>;
 }

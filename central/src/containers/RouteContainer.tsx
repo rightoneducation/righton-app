@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Hub } from 'aws-amplify/utils';
-import { fetchAuthSession } from "@aws-amplify/auth";
 import {
   Route,
   Switch,
@@ -395,10 +393,8 @@ export const RouteContainer = ({
   }
 
   const persistUserAuth = (async () => {
-    let session = null;
     try {
-      session = await fetchAuthSession();
-      if (session.tokens) {
+      if (await apiClients.auth.verifyAuth()) {
         setIsUserAuth(true);
       }
     } catch (e) {

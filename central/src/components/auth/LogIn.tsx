@@ -1,5 +1,4 @@
 import React from "react";
-import { fetchAuthSession } from "@aws-amplify/auth";
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
@@ -23,13 +22,9 @@ const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>voi
       } catch (e) {
         console.log(e);
       }
-      const session = await fetchAuthSession();
-      if (session && session.tokens && session.tokens.accessToken) {
-        const groups = session.tokens.accessToken.payload["cognito:groups"];
-        if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
+      if (await apiClients.auth.verifyAuth()) {
             handleUserAuth(true);
             window.location.href = "/";
-        }
       }
       else {
         await apiClients.auth.awsSignOut();

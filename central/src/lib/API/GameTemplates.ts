@@ -5,7 +5,6 @@ import {
   UpdateGameTemplateInput,
   isNullOrUndefined
 } from '@righton/networking';
-import { fetchAuthSession } from "@aws-amplify/auth";
 import { IListQuerySettings, SortField } from './QueryInputs';
 
 export const createGameTemplate = async (apiClients: IAPIClients, createGameTemplateInput: CreateGameTemplateInput): Promise<IGameTemplate | null> => {

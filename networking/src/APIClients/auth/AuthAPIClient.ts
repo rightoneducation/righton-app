@@ -1,7 +1,14 @@
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { Amplify } from "aws-amplify";
 import { Hub } from 'aws-amplify/utils';
-import { signUp, confirmSignUp, signIn, signInWithRedirect, signOut } from 'aws-amplify/auth';
+import { 
+  signUp, 
+  confirmSignUp, 
+  signIn, 
+  signInWithRedirect, 
+  signOut, 
+  fetchAuthSession 
+} from 'aws-amplify/auth';
 import awsconfig from "../../aws-exports";
 
 export class AuthAPIClient
@@ -14,11 +21,11 @@ export class AuthAPIClient
     this.authEvents(null);
     this.authListener();
   }
-  configAmplify(awsconfig: any) {
+  configAmplify(awsconfig: any): void {
     Amplify.configure(awsconfig);
   }
 
-  authEvents (payload: any) {
+  authEvents (payload: any): void {
     if (!payload) {
       this.isUserAuth = false;
       return;
@@ -53,21 +60,32 @@ export class AuthAPIClient
     });
   }
 
-  async awsConfirmSignUp(email: string, code: string) {
+  async awsConfirmSignUp(email: string, code: string): Promise<void> {
     await confirmSignUp({username: email, confirmationCode: code});
   }
 
-  async awsSignIn(email: string, password: string) {
+  async awsSignIn(email: string, password: string): Promise<void> {
     await signIn({username: email, password: password});
   }
 
-  async awsSignInFederated () {
+  async awsSignInFederated (): Promise<void> {
     await signInWithRedirect(
       {provider: 'Google'}
     );
   }
 
-  async awsSignOut() {
+  async awsSignOut(): Promise<void> {
     await signOut();
+  }
+
+  async verifyAuth(): Promise<boolean> {
+    const session = await fetchAuthSession();
+    if (session && session.tokens && session.tokens.accessToken) {
+      const groups = session.tokens.accessToken.payload["cognito:groups"];
+      if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
+        return true;
+      }
+    };
+    return false;
   }
 }
