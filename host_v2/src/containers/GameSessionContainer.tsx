@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { GameSessionState,GameSessionParser, ConfidenceLevel } from '@righton/networking';
+import { ThemeContext } from 'styled-components';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
+import GameEnded from '../pages/GameEnded';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
 import {sortMistakes} from "../lib/HelperFunctions"
-import { ThemeContext } from 'styled-components';
 
 interface Player {
   answer: string; // answer chosen by this player
@@ -93,11 +94,10 @@ export default function GameSessionContainer() {
       ? phaseOneTime
       : phaseTwoTime;
   
-  let myConfidenceLevel1: ConfidenceLevel;
-  myConfidenceLevel1 = ConfidenceLevel.VERY;
+  const myConfidenceLevel1: ConfidenceLevel = ConfidenceLevel.VERY;
 
-  let anotherConfidenceLevel2 = ConfidenceLevel.KINDA;
-  anotherConfidenceLevel2 = ConfidenceLevel.KINDA;
+  const anotherConfidenceLevel2: ConfidenceLevel = ConfidenceLevel.KINDA;
+    
 
   const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([ // eslint-disable-line
     {
@@ -200,6 +200,12 @@ export default function GameSessionContainer() {
           title={gameSession.title ?? ''}
           gameCode={gameSession.gameCode}
         />
+        // <GameEnded
+        //   teams={gameSession.teams ?? []}
+        //   questions={gameSession.questions}
+        //   title={gameSession.title ?? ''}
+        //   gameCode={gameSession.gameCode}
+        // />
       );
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     default:
