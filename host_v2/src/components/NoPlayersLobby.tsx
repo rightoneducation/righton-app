@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ITeam } from '@righton/networking';
 
+
 const EmptyLobbyBodyStyled = styled(Box)({
     // margin: 'auto',
     overflowY: 'scroll', // Enable vertical scrolling if needed
@@ -21,7 +22,7 @@ const EmptyLobbyBodyStyled = styled(Box)({
 const WaitingForPlayersTypographyStyled = styled(Typography)({
     width: '290px', /* this si for the phase description */
     height: '17px',
-    font: 'Rubik',
+    fontFamily: 'Rubik',
     fontWeight: '400',
     fontSize: '14px',
     color: 'rgba(255, 255, 255, 1)',
@@ -41,7 +42,7 @@ const SwipeTypographyStyled = styled(Typography)({
     width: '220px',
     height: '32px',
     opacity: '50%',
-    font: 'Karla',
+    fontFamily: 'Karla',
     fontWeight: '700',
     fontSize: '14px',
     letterSpacing: '-.04em',
