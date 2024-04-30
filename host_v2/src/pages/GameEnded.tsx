@@ -7,7 +7,8 @@ import {
 } from '@righton/networking';
 import HostHeader from '../components/HostHeader';
 import GameCard from '../components/GameCard';
-// import CurrentStudents from '../components/CurrentStudents';
+import FooterEndGame from '../components/FooterEndGame';
+import SuggestedGames from '../components/SuggestedGames';
 // import FooterStartGame from '../components/FooterStartGame';
 
 interface GameEndedProps {
@@ -32,7 +33,7 @@ const UpperStyled = styled(Box)({
   justifyContent: 'flex-start',
   alignItems: 'center',
   gap: '24px',
-    
+  border: '1px solid black',
 })
 
 const GameStyled = styled(Typography)({
@@ -57,11 +58,11 @@ function GameEnded({teams,
           />
           <GameCard questions = {questions} title={title} />
           <GameStyled>Basic Mode</GameStyled>
-          {/* <CurrentStudents teams={teams}/> */}
+          <SuggestedGames teams={teams}/>
         </UpperStyled>
-        {/* <FooterStartGame 
+        <FooterEndGame 
         teamsLength={teams ? teams.length : 0}
-        /> */}
+        />
       </BackgroundStyled>
     )
 

@@ -194,18 +194,18 @@ export default function GameSessionContainer() {
   switch (gameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
       return (
-        <StartGame
-          teams={gameSession.teams ?? []}
-          questions={gameSession.questions}
-          title={gameSession.title ?? ''}
-          gameCode={gameSession.gameCode}
-        />
-        // <GameEnded
+        // <StartGame
         //   teams={gameSession.teams ?? []}
         //   questions={gameSession.questions}
         //   title={gameSession.title ?? ''}
         //   gameCode={gameSession.gameCode}
         // />
+        <GameEnded
+          teams={gameSession.teams ?? []}
+          questions={gameSession.questions}
+          title={gameSession.title ?? ''}
+          gameCode={gameSession.gameCode}
+        />
       );
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     default:
