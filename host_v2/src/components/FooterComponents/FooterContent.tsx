@@ -15,7 +15,8 @@ interface FooterContentProps {
   phaseTwoTime: number;
 } // eslint-disable-line
 
-const EndStyled = styled(Button)(({ theme }) => ({ // eslint-disable-line
+const EndStyled = styled(Button)({
+  // eslint-disable-line
   border: '4px solid #159EFA',
   borderRadius: '34px',
   width: '300px',
@@ -40,9 +41,10 @@ const EndStyled = styled(Button)(({ theme }) => ({ // eslint-disable-line
     opacity: '25%',
     cursor: 'not-allowed',
   },
-}));
+})
 
-const NextStyled = styled(Button)(({ theme }) => ({  // eslint-disable-line
+const NextStyled = styled(Button)({
+  // eslint-disable-line
   border: '4px solid #159EFA',
   background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
   borderRadius: '34px',
@@ -68,7 +70,7 @@ const NextStyled = styled(Button)(({ theme }) => ({  // eslint-disable-line
     opacity: '25%',
     cursor: 'not-allowed',
   },
-}));
+})
 
 export default function FooterContent({
   inputNum,

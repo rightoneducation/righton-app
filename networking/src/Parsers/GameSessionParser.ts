@@ -34,17 +34,17 @@ export class GameSessionParser {
       awsGameSession: AWSGameSession
   ): IGameSession {
       let teams: ITeam[] = [];
-      if (!isNullOrUndefined(awsGameSession.teams) && !isNullOrUndefined(awsGameSession.teams.items)) {
+      if (!isNullOrUndefined(awsGameSession?.teams) && !isNullOrUndefined(awsGameSession?.teams.items)) {
         teams = GameSessionParser.mapTeams(awsGameSession.teams.items);    
       }
       let questions: IQuestion[] = [];
-        if (!isNullOrUndefined(awsGameSession.questions) && !isNullOrUndefined(awsGameSession.questions.items)) {
+        if (!isNullOrUndefined(awsGameSession?.questions) && !isNullOrUndefined(awsGameSession?.questions.items)) {
             questions = GameSessionParser.mapQuestions(awsGameSession.questions.items);    
         }
       const {
           id,
           gameId,
-          startTime = awsGameSession.startTime ?? '',
+          startTime = awsGameSession?.startTime ?? '',
           phaseOneTime,
           phaseTwoTime,
           currentQuestionIndex = awsGameSession.currentQuestionIndex ?? 0,
