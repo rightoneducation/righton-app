@@ -29,11 +29,12 @@ const GridStyled = styled(Grid)({
 const HrStyled = styled(Divider)({
   
   // marginTop: '30px',
-  marginBottom: '25px',
+  // marginBottom: '25px',
   width: '266px',
   height: '1px',
   borderRadius: '1.54px',
   border: '0',
+  padding: '16px 12px 16px 12px',
   // borderTop: '1px solid rgba(255, 255, 255, 0.25)',
 
 })
@@ -62,7 +63,7 @@ const handleCloseClick = () => {
   console.log("Close Icon clicked");
 };
 
-const MenuItemStyled = styled(MenuItem)({
+const MenuItemStyled = styled(Box)({
   display: 'flex',
   alignItems: 'center', // Align items vertically
   justifyContent: 'space-between', // Distribute items evenly along the main axis
@@ -71,12 +72,10 @@ const MenuItemStyled = styled(MenuItem)({
   borderRadius: '8px',
   // width: '311px', ????
   height: '40px',
+  width: '290px',
   background: '#063772',  // 'rgba(255, 255, 255, 0.25)',
   padding: '4px',
   gap: '4px',
-  // color: 'rgba(255, 255, 255, 1)',
-  // fontSize: '24px',
-
 })
 
 const GridNameStyled = styled(Grid)({
@@ -88,20 +87,17 @@ const GridNameStyled = styled(Grid)({
   fontSize: '14px',
 })
 
-// const BoxStyled = styled(Box)({
-//   width: '80px',
-//   height: '100px',
-//   // margin: 'auto',
-//   marginTop: '170px',
-//   gap: '12px',
-// })
+const BoxStyled = styled(Box)({
+  padding: '16px 12px 16px 12px',
+  // width: '316px',
+})
 
 function CurrentStudents ({ teams }: CurrentStudentProps) {
     // const classes = useStyles();
 
     return (
-        <Box>
-            <HrStyled/>
+        <BoxStyled>
+            {/* <HrStyled/> */}
             {teams && teams.map((team) => (
                 <MenuItemStyled key = {uuidv4()}>
                     <MonsterContainer/>
@@ -109,7 +105,7 @@ function CurrentStudents ({ teams }: CurrentStudentProps) {
                     <CloseSvg onClick={handleCloseClick}/>
                 </MenuItemStyled>
             ))}
-        </Box>
+        </BoxStyled>
     )
 }
 
