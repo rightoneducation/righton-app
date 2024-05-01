@@ -40,7 +40,7 @@ export class TeamMemberAPIClient extends BaseAPIClient {
   subscribeUpdateTeamMember(
     id: string,
     callback: (result: ITeamMember) => void
-  ): Promise<any> {
+  ) {
     return this.subscribeGraphQL<OnUpdateTeamMemberSubscription>(
       {
         query: onUpdateTeamMember,

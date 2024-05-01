@@ -1,5 +1,4 @@
-import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
-import { BaseAPIClient, client } from "../BaseAPIClient";
+import { BaseAPIClient } from "../BaseAPIClient";
 import { IGameQuestionsAPIClient } from "./interfaces";
 import { IGameQuestion, AWSGameQuestion } from "../../Models";
 import { 
@@ -69,7 +68,7 @@ async deleteGameQuestions(id: string): Promise<boolean> {
 }
 
 async listGameQuestions(limit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestion[], nextToken: string }> {
-    let result = (await client.graphql({ query: listGameQuestions, variables: {limit, nextToken}, authMode: "userPool" as GraphQLAuthMode})) as { data: any };
+    let result = (await this.callGraphQL({ query: listGameQuestions, variables: {limit, nextToken}})) as { data: any };
     const parsedGameQuestions = result.data.listGameQuestions.items.map((gameQuestions: AWSGameQuestion) => {
         return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions) as IGameQuestion;
     });

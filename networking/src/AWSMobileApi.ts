@@ -2,10 +2,6 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateGameSessionFromTemplateInput = {
-  gameTemplateId: string,
-};
-
 export type CreateGameTemplateInput = {
   id?: string | null,
   title: string,
@@ -679,6 +675,10 @@ export type DeleteGameQuestionsInput = {
   id: string,
 };
 
+export type CreateGameSessionFromTemplateInput = {
+  gameTemplateId: string,
+};
+
 export type ModelGameTemplateFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -1045,14 +1045,6 @@ export type ModelSubscriptionGameQuestionsFilterInput = {
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionGameQuestionsFilterInput | null > | null,
-};
-
-export type CreateGameSessionFromTemplateMutationVariables = {
-  input: CreateGameSessionFromTemplateInput,
-};
-
-export type CreateGameSessionFromTemplateMutation = {
-  createGameSessionFromTemplate?: string | null,
 };
 
 export type CreateGameTemplateMutationVariables = {
@@ -4122,6 +4114,14 @@ export type DeleteGameQuestionsMutation = {
     createdAt: string,
     updatedAt: string,
   } | null,
+};
+
+export type CreateGameSessionFromTemplateMutationVariables = {
+  input: CreateGameSessionFromTemplateInput,
+};
+
+export type CreateGameSessionFromTemplateMutation = {
+  createGameSessionFromTemplate?: string | null,
 };
 
 export type GetGameTemplateQueryVariables = {

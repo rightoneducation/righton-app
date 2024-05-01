@@ -8,15 +8,6 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
-export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameSessionFromTemplate(
-  $input: CreateGameSessionFromTemplateInput!
-) {
-  createGameSessionFromTemplate(input: $input)
-}
-` as GeneratedMutation<
-  APITypes.CreateGameSessionFromTemplateMutationVariables,
-  APITypes.CreateGameSessionFromTemplateMutation
->;
 export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
   $input: CreateGameTemplateInput!
   $condition: ModelGameTemplateConditionInput
@@ -3109,4 +3100,13 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
 ` as GeneratedMutation<
   APITypes.DeleteGameQuestionsMutationVariables,
   APITypes.DeleteGameQuestionsMutation
+>;
+export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameSessionFromTemplate(
+  $input: CreateGameSessionFromTemplateInput!
+) {
+  createGameSessionFromTemplate(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.CreateGameSessionFromTemplateMutationVariables,
+  APITypes.CreateGameSessionFromTemplateMutation
 >;

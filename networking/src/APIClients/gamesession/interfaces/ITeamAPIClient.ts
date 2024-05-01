@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs'; // this is used in aws-amplify to handle subscriptions
 import { ITeam } from "../../../Models";
 import { UpdateTeamInput } from "../../../AWSMobileApi";
 
@@ -7,14 +8,14 @@ export interface ITeamAPIClient {
   subscribeCreateTeam(
     id: string,
     callback: (result: ITeam) => void
-  ): Promise<any>;
+  ): Subscription;
 
   updateTeam(teamInput: UpdateTeamInput): Promise<ITeam>;
 
   subscribeDeleteTeam(
     id: string,
     callback: (result: ITeam) => void
-  ): Promise<any>;
+  ): Subscription;
 
   addTeamToGameSessionId(
     gameSessionId: string,

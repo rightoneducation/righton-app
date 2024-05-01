@@ -1,7 +1,6 @@
-import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
 import { IGameSession } from "../../Models";
 import { GameSessionParser } from "../../Parsers/GameSessionParser";
-import { BaseAPIClient, HTTPMethod, client } from "../BaseAPIClient";
+import { BaseAPIClient, HTTPMethod, GraphQLOptions } from "../BaseAPIClient";
 import {
   createGameSessionFromTemplate,
   gameSessionByCode,
@@ -11,6 +10,7 @@ import {
 } from "../../graphql";
 import {
   OnGameSessionUpdatedByIdSubscription,
+  CreateGameSessionFromTemplateMutationVariables,
   UpdateGameSessionInput,
   UpdateGameSessionMutation,
   UpdateGameSessionMutationVariables,
@@ -24,8 +24,11 @@ export class GameSessionAPIClient
 {
 
   async createGameSessionFromTemplate(id: string): Promise<string | null> {
-    try {
-        const response = await client.graphql({ query: createGameSessionFromTemplate, variables: {input: { gameTemplateId: id }}, authMode: "userPool" as GraphQLAuthMode}) as {data: { createGameSessionFromTemplate: string }};
+    let variables: CreateGameSessionFromTemplateMutationVariables = {
+      input: { gameTemplateId: id },
+    };
+    try {      
+        const response = await this.mutateGraphQL(createGameSessionFromTemplate, variables) as {data: { createGameSessionFromTemplate: string }};
         const result = response.data.createGameSessionFromTemplate;
         return result;
     } catch (e) {
@@ -62,7 +65,7 @@ export class GameSessionAPIClient
   }
 
   async getGameSession(id: string): Promise<IGameSession> {
-    let result = (await client.graphql({ query: getGameSession, variables: {id}, authMode: "userPool" as GraphQLAuthMode}) as { data: any });
+    let result = (await this.callGraphQL(getGameSession, { id } as unknown as GraphQLOptions) as { data: any });
     return GameSessionParser.gameSessionFromAWSGameSession(
       result.data.getGameSession
     );
@@ -108,7 +111,7 @@ export class GameSessionAPIClient
   }
 
   async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
-    let result = (await client.graphql({ query: gameSessionByCode, variables: {gameCode}, authMode: "userPool" as GraphQLAuthMode})) as { data: any };
+    let result = (await this.callGraphQL({ query: gameSessionByCode, variables: {gameCode}})) as { data: any };
     if (
       isNullOrUndefined(result.data) ||
       isNullOrUndefined(result.data.gameSessionByCode) ||

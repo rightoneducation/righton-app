@@ -8,6 +8,8 @@
     "@types/aws-lambda": "^8.10.92"
   },
   "dependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
+    "@aws-sdk/client-appsync": "^3.565.0",
     "node-fetch": "^3.3.2",
     "uuid": "^9.0.1"
   }

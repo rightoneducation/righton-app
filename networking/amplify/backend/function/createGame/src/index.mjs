@@ -10,6 +10,8 @@ const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const { Sha256 } = crypto;
 
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
+  console.log('awsGameTemplate:', awsGameTemplate);
+  console.log(awsGameTemplate);
   let questionTemplates = [];
   try {
       if (awsGameTemplate && awsGameTemplate.data && awsGameTemplate.data.getGameTemplate) {
@@ -39,9 +41,10 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   };
   return gameTemplate;
 };
- 
 
 async function createAndSignRequest(query, variables) {
+  const credentials = await defaultProvider()();
+  console.log('Resolved credentials:', credentials);
   const endpoint = new URL(GRAPHQL_ENDPOINT ?? '');
   const signer = new SignatureV4({
     credentials: defaultProvider(),
@@ -49,28 +52,18 @@ async function createAndSignRequest(query, variables) {
     service: 'appsync',
     sha256: crypto.Sha256
   });
-  const credentials = await Auth.currentCredentials();
-  const accessKeyId = credentials.accessKeyId;
-  const secretAccessKey = credentials.secretAccessKey;
-  const sessionToken = credentials.sessionToken;
-
   const requestToBeSigned = new HttpRequest({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Amz-Security-Token': sessionToken,
       host: endpoint.host,
     },
     hostname: endpoint.host,
     body: JSON.stringify({ query, variables }),
     path: endpoint.pathname
   });
-
-  return new Request(endpoint, await signer.sign(requestToBeSigned, {
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
-    sessionToken: sessionToken
-  }));
+  
+  return new Request(GRAPHQL_ENDPOINT, await signer.sign(requestToBeSigned));
 }
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}

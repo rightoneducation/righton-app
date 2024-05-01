@@ -1,11 +1,12 @@
 import { GraphQLResult, generateClient } from "@aws-amplify/api";
 import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
-import { GraphQLResponseV6 } from '@aws-amplify/api-graphql';
+import { GraphQLResponseV6, UnknownGraphQLResponse, GraphqlSubscriptionResult } from '@aws-amplify/api-graphql';
 import { isNullOrUndefined } from "../global";
 import { Environment } from "./interfaces/IBaseAPIClient";
 import { IGameTemplate, IQuestionTemplate} from "../Models";
 import { GameTemplateParser } from "../Parsers/GameTemplateParser";
 import { QuestionTemplateParser } from "../Parsers/QuestionTemplateParser";
+import { IAuthAPIClient } from "./auth";
 // import { Auth } from "aws-amplify";
 
 export enum HTTPMethod {
@@ -44,11 +45,13 @@ export interface IQueryParameters {
 
 export abstract class BaseAPIClient {
   protected env: Environment;
+  protected auth: IAuthAPIClient;
   protected endpoint: string;
-  protected hintEndpoint: string
+  protected hintEndpoint: string;
 
-  constructor(env: Environment) {
+  constructor(env: Environment, auth: IAuthAPIClient) {
     this.env = env;
+    this.auth = auth;
     this.endpoint = `https://1y2kkd6x3e.execute-client.us-east-1.amazonaws.com/${env}/createGameSession`;
     this.hintEndpoint = `https://yh5ionr9rg.execute-client.us-east-1.amazonaws.com/groupHints/groupHints`;
   }
@@ -57,7 +60,24 @@ export abstract class BaseAPIClient {
     query: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const response = client.graphql({query: query, variables: options, authMode: "userPool" as GraphQLAuthMode}) as unknown;
+    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+    const response = client.graphql({query: query, variables: options?.variables, authMode: authMode as GraphQLAuthMode}) as unknown;
+    return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
+  }
+
+  protected isSubscription<T>(result: UnknownGraphQLResponse): result is GraphqlSubscriptionResult<T> {
+    return (result as GraphqlSubscriptionResult<T>).subscribe !== undefined;
+  }
+
+  protected mutateGraphQL<T>(
+    mutation: any,
+    options?: GraphQLOptions
+  ): Promise<GraphQLResult<T>> {
+    console.log(options);
+    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+    console.log(authMode);
+    console.log(mutation);
+    const response = client.graphql({query: mutation, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
@@ -66,15 +86,20 @@ export abstract class BaseAPIClient {
     callback: (value: T) => void
   ) {
     //@ts-ignore
-    return client.graphql(subscription).subscribe({
-      next: (response: SubscriptionValue<T>) => {
-        if (!isNullOrUndefined(response.value.errors)) {
-          console.error(response.value.errors);
-        }
-        callback(response.value.data);
-      },
-      error: (error: any) => console.error(error),
+    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+    const result = client.graphql({
+      query: subscription.query,
+      authMode: authMode as GraphQLAuthMode
     });
+    
+    if (this.isSubscription<T>(result)) {
+      return result.subscribe({
+        next: ({data}) => callback(data),
+        error: (error: any) => console.error(error),
+      });
+    } else {
+      throw new Error("Expected a GraphQL subscription but got a different operation type.");
+    }
   }
 
   protected async callGraphQLThrowOnError<T>(
@@ -109,11 +134,11 @@ export abstract class BaseAPIClient {
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
-      console.log("here");
-      // const user = await Auth.currentAuthenticatedUser();
-      // console.log("Current user: ", user);
-      let result = (await client.graphql({query: query, variables: queryParameters, authMode: 'userPool' as GraphQLAuthMode})) as { data: any };
-      console.log(result);
+      console.log('Auth Mode');
+      console.log(this.auth);
+      const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+      console.log(authMode);
+      let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
       if (type === "GameTemplate") {

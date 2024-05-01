@@ -1,5 +1,4 @@
-import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils';
-import { BaseAPIClient, client } from "../BaseAPIClient";
+import { BaseAPIClient } from "../BaseAPIClient";
 import { TeamParser } from "../../Parsers/TeamParser";
 import { AWSTeam, ITeam } from "../../Models";
 import {
@@ -27,7 +26,7 @@ export class TeamAPIClient
   implements ITeamAPIClient
 {
   async getTeam(id: string): Promise<ITeam> {
-    let result = (await client.graphql({ query: getTeam, variables: { id }, authMode: "userPool" as GraphQLAuthMode})) as { data: any };
+    let result = (await this.callGraphQL({ query: getTeam, variables: { id }})) as { data: any };
     return TeamParser.teamFromAWSTeam(result.data.getTeam);
   }
 

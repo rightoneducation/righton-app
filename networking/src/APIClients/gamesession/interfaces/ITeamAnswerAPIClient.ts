@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs'; // this is used in aws-amplify to handle subscriptions
 import { BackendAnswer} from "../../../Models";
 import { IAnswerHint } from "../../../Models";
 import { ConfidenceLevel } from "../../../AWSMobileApi";
@@ -6,7 +7,7 @@ export interface ITeamAnswerAPIClient {
   subscribeCreateTeamAnswer(
     id: string,
     callback: (result: BackendAnswer) => void
-  ): Promise<any>;
+  ): Subscription;
 
   addTeamAnswer(
     inputAnswer: BackendAnswer

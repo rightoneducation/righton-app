@@ -1,5 +1,11 @@
-type Mutation {
-  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String @function(name: "createGame-${env}")
+type Mutation 
+{
+  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String @function(name: "createGame-${env}") @auth(
+  rules: [
+    { allow: public, provider: iam  },
+    { allow: private, provider: userPools }
+  ]
+)
 }
 
 input CreateGameSessionFromTemplateInput {
