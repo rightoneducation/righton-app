@@ -24,6 +24,13 @@
     }
   },
   "auth": {
+    "mobilee3bf6c04": {
+      "customAuth": false,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
+    },
     "mobilee8b7b3a0": {
       "customAuth": false,
       "dependsOn": [],
@@ -51,6 +58,54 @@
     }
   },
   "parameters": {
+    "AMPLIFY_api_createGame_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "api",
+          "resourceName": "createGame"
+        }
+      ]
+    },
+    "AMPLIFY_api_createGame_s3Key": {
+      "usedBy": [
+        {
+          "category": "api",
+          "resourceName": "createGame"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee3bf6c04_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee3bf6c04"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee3bf6c04_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee3bf6c04"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee3bf6c04_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee3bf6c04"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee3bf6c04_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee3bf6c04"
+        }
+      ]
+    },
     "AMPLIFY_auth_mobilee8b7b3a0_nativeClientId": {
       "usedBy": [
         {
