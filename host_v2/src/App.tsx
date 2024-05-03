@@ -10,7 +10,7 @@ import GameSessionContainer from './containers/GameSessionContainer';
 import Theme from './lib/Theme';
 
 function RedirectToPlayIfMissing() {
-  window.location.href = 'http://dev-central.rightoneducation.com/';
+  window.location.href = 'http://central.rightoneducation.com/';
   return null;
 }
 const router = createBrowserRouter(
