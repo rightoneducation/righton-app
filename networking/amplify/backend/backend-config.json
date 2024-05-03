@@ -4,12 +4,16 @@
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2025-04-04T19:50:54.710Z",
+              "apiKeyExpirationDate": "2024-12-11T10:29:18.626Z",
               "apiKeyExpirationDays": 365,
-              "description": "apikey"
+              "description": "mobiledev"
             },
             "authenticationType": "API_KEY"
           }
@@ -20,39 +24,12 @@
     }
   },
   "auth": {
-    "mobile6060603c": {
+    "mobilee8b7b3a0": {
       "customAuth": false,
-      "dependsOn": [
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation",
-          "triggerProvider": "Cognito"
-        }
-      ],
-      "frontendAuthConfig": {
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
-          "passwordPolicyMinLength": 8
-        },
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "socialProviders": [],
-        "usernameAttributes": [],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      },
+      "dependsOn": [],
       "providerPlugin": "awscloudformation",
-      "service": "Cognito"
+      "service": "Cognito",
+      "serviceType": "imported"
     }
   },
   "function": {
@@ -71,51 +48,38 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    },
-    "mobile6060603cPostConfirmation": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile6060603c_googleClientId": {
+    "AMPLIFY_auth_mobilee8b7b3a0_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile6060603c"
+          "resourceName": "mobilee8b7b3a0"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee1238193_nativeClientId": {
+    "AMPLIFY_auth_mobilee8b7b3a0_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee1238193"
+          "resourceName": "mobilee8b7b3a0"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee1238193_userPoolId": {
+    "AMPLIFY_auth_mobilee8b7b3a0_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee1238193"
+          "resourceName": "mobilee8b7b3a0"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee1238193_userPoolName": {
+    "AMPLIFY_auth_mobilee8b7b3a0_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee1238193_webClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
+          "resourceName": "mobilee8b7b3a0"
         }
       ]
     },
@@ -132,30 +96,6 @@
         {
           "category": "function",
           "resourceName": "createGame"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
         }
       ]
     }

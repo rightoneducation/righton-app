@@ -171,4 +171,3 @@ type Subscription {
   onTeamDeleteByGameSessionId(gameSessionTeamsId: ID!): Team
     @aws_subscribe(mutations: ["deleteTeam"])
 }
-
