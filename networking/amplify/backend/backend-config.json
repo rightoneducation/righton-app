@@ -24,7 +24,14 @@
     }
   },
   "auth": {
-    "mobilee1238193": {
+    "mobilee3bf6c04": {
+      "customAuth": false,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
+    },
+    "mobilee8b7b3a0": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -51,35 +58,83 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobilee1238193_nativeClientId": {
+    "AMPLIFY_api_createGame_deploymentBucketName": {
       "usedBy": [
         {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
+          "category": "api",
+          "resourceName": "createGame"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee1238193_userPoolId": {
+    "AMPLIFY_api_createGame_s3Key": {
       "usedBy": [
         {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
+          "category": "api",
+          "resourceName": "createGame"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee1238193_userPoolName": {
+    "AMPLIFY_auth_mobilee3bf6c04_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee1238193"
+          "resourceName": "mobilee3bf6c04"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee1238193_webClientId": {
+    "AMPLIFY_auth_mobilee3bf6c04_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee1238193"
+          "resourceName": "mobilee3bf6c04"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee3bf6c04_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee3bf6c04"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee3bf6c04_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee3bf6c04"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee8b7b3a0_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee8b7b3a0"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee8b7b3a0_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee8b7b3a0"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee8b7b3a0_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee8b7b3a0"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee8b7b3a0_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee8b7b3a0"
         }
       ]
     },

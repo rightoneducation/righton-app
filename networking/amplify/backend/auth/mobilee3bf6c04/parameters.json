@@ -1,0 +1,18 @@
+{
+  "authSelections": "userPoolOnly",
+  "resourceName": "mobilee3bf6c04",
+  "serviceType": "imported",
+  "region": "us-east-1",
+  "requiredAttributes": [
+    "email"
+  ],
+  "passwordPolicyMinLength": 8,
+  "passwordPolicyCharacters": [
+    "Requires Numbers"
+  ],
+  "mfaConfiguration": "OFF",
+  "autoVerifiedAttributes": [
+    "email"
+  ],
+  "mfaTypes": []
+}
