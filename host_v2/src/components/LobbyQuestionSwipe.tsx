@@ -70,10 +70,10 @@ interface QuestionListProps {
 }
 
 const BoxStyled = styled(Box)({
-  maxWidth: '375px', // Limit the maximum width
-  // margin: 'auto', // Center the box horizontally
-  width: '100%',
+  width: '90%',
+  // alignItems: 'center',
   boxSizing: 'border-box',
+  margin: 'auto',
 });
 
 export default function QuestionList({ questions }: QuestionListProps) {
@@ -92,12 +92,10 @@ export default function QuestionList({ questions }: QuestionListProps) {
               width: '100%',
             }}
           >
-            <Typography variant="h2" sx={{ textAlign: 'center', marginBottom: theme.spacing(1) }}>
-              {t('gameinprogress.discussanswer.question')} {index + 1}
-            </Typography>
             <QuestionCard
               questionText={question.text}
               imageUrl={question.imageUrl}
+              index = {index}
                           />
           </Box>
         </BoxStyled>

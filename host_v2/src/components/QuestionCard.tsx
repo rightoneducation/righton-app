@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled} from '@mui/material/styles';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
@@ -8,23 +8,32 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 interface QuestionCardProps {
   questionText: string;
   imageUrl: string | undefined;
+  index: number;
 }
-
+const TitleTypography = styled(Typography)({
+  width: '100%', 
+  textAlign: 'left', 
+  fontWeight: '700', 
+  fontSize: '24px'
+})
+const BodyTypography = styled(Typography)({
+  fontFamily: 'Rubik',
+  fontWeight: '400',
+  fontSize: '16px',
+})
 export default function QuestionCard({
   questionText,
   imageUrl,
+  index,
 }: QuestionCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
-        <Typography
-          variant="subtitle1"
-          sx={{ width: '100%', textAlign: 'left' }}
-        >
-          {t('gamesession.questionCard.title')}
-        </Typography>
+        <TitleTypography>
+          {t('Question ')} {index + 1}        
+        </TitleTypography>
         {imageUrl === undefined ? null : (
           <img
             style={{
@@ -37,7 +46,9 @@ export default function QuestionCard({
             alt="Question"
           />
         )}
-        <Typography variant="body1"> {questionText} </Typography>
+        <BodyTypography> 
+          {questionText} 
+        </BodyTypography>
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

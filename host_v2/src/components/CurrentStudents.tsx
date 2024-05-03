@@ -27,15 +27,11 @@ const GridStyled = styled(Grid)({
 })
 
 const HrStyled = styled(Divider)({
-  
-  // marginTop: '30px',
-  // marginBottom: '25px',
   width: '266px',
   height: '1px',
   borderRadius: '1.54px',
   border: '0',
   padding: '16px 12px 16px 12px',
-  // borderTop: '1px solid rgba(255, 255, 255, 0.25)',
 
 })
 
@@ -48,10 +44,7 @@ const PStyled = styled(Typography)({
 })
 const MonsterContainer = styled(Monster0Icon)({
   display: 'flex',
-  // width: '25.96px',
-  // height: '32px',
-  // borderRadius: '4px',
-  // background: '#9E1107',
+
 });
 
 const CloseSvg = styled(CloseIcon)({
