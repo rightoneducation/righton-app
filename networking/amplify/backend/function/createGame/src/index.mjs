@@ -11,7 +11,10 @@ const { Sha256 } = crypto;
 
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   console.log('awsGameTemplate:', awsGameTemplate);
-  console.log(awsGameTemplate);
+  console.log('awsGameTemplate.data.getGameTemplate.questionTemplates:');
+  console.log(awsGameTemplate.data.getGameTemplate.questionTemplates);
+  console.log('awsGameTemplate.data.getGameTemplate.questionTemplates.items:');
+  console.log(awsGameTemplate.data.getGameTemplate.questionTemplates.items);
   let questionTemplates = [];
   try {
       if (awsGameTemplate && awsGameTemplate.data && awsGameTemplate.data.getGameTemplate) {
@@ -70,7 +73,8 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
-  const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
+  const getGameTemplate = /* GraphQL */ `
+  query GetGameTemplate($id: ID!) {
     getGameTemplate(id: $id) {
       id
       title
@@ -117,57 +121,67 @@ async function createAndSignRequest(query, variables) {
   }
   ` 
 
-  const createGameSession = /* GraphQL */ `mutation CreateGameSession(
-    $input: CreateGameSessionInput!
-    $condition: ModelGameSessionConditionInput
-  ) {
-    createGameSession(input: $input, condition: $condition) {
-      id
-      gameId
-      startTime
-      phaseOneTime
-      phaseTwoTime
-      currentQuestionIndex
-      currentState
-      gameCode
-      isAdvancedMode
-      imageUrl
-      description
-      title
-      currentTimer
-      createdAt
-      updatedAt
+const createGameSession = /* GraphQL */ `
+mutation CreateGameSession(
+  $input: CreateGameSessionInput!
+  $condition: ModelGameSessionConditionInput
+) {
+  createGameSession(input: $input, condition: $condition) {
+    id
+    gameId
+    startTime
+    phaseOneTime
+    phaseTwoTime
+    teams {
+      nextToken
       __typename
     }
+    currentQuestionIndex
+    currentState
+    gameCode
+    isAdvancedMode
+    imageUrl
+    description
+    title
+    currentTimer
+    questions {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
   }
-  `
+}
+`;
 
-  const createQuestion = /* GraphQL */ `mutation CreateQuestion(
-    $input: CreateQuestionInput!
-    $condition: ModelQuestionConditionInput
-  ) {
-    createQuestion(input: $input, condition: $condition) {
-      id
-      text
-      choices
-      answerSettings
-      responses
-      hints
-      imageUrl
-      instructions
-      standard
-      cluster
-      domain
-      grade
-      order
-      isConfidenceEnabled
-      isShortAnswerEnabled
-      isHintEnabled
-      gameSessionId
-      __typename
-    }
+const createQuestion = /* GraphQL */ `
+mutation CreateQuestion(
+  $input: CreateQuestionInput!
+  $condition: ModelQuestionConditionInput
+) {
+  createQuestion(input: $input, condition: $condition) {
+    id
+    text
+    choices
+    answerSettings
+    responses
+    hints
+    imageUrl
+    instructions
+    standard
+    cluster
+    domain
+    grade
+    order
+    isConfidenceEnabled
+    isShortAnswerEnabled
+    isHintEnabled
+    gameSessionId
+    __typename
   }
-  `
+}
+`;
   let statusCode = 200;
   let responseBody ={};
   try {

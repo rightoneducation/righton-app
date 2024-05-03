@@ -1,13 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createGameSessionFromTemplate = /* GraphQL */ `
-  mutation CreateGameSessionFromTemplate(
-    $input: CreateGameSessionFromTemplateInput!
-  ) {
-    createGameSessionFromTemplate(input: $input)
-  }
-`;
 export const createGameTemplate = /* GraphQL */ `
   mutation CreateGameTemplate(
     $input: CreateGameTemplateInput!
@@ -786,5 +779,12 @@ export const deleteGameQuestions = /* GraphQL */ `
       updatedAt
       __typename
     }
+  }
+`;
+export const createGameSessionFromTemplate = /* GraphQL */ `
+  mutation CreateGameSessionFromTemplate(
+    $input: CreateGameSessionFromTemplateInput!
+  ) {
+    createGameSessionFromTemplate(input: $input)
   }
 `;

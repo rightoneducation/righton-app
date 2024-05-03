@@ -61,7 +61,10 @@ export abstract class BaseAPIClient {
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
     const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-    const response = client.graphql({query: query, variables: options?.variables, authMode: authMode as GraphQLAuthMode}) as unknown;
+    console.log(query);
+    console.log(options);
+    console.log(options?.variables);
+    const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
@@ -73,10 +76,7 @@ export abstract class BaseAPIClient {
     mutation: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    console.log(options);
     const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-    console.log(authMode);
-    console.log(mutation);
     const response = client.graphql({query: mutation, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
@@ -134,10 +134,7 @@ export abstract class BaseAPIClient {
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
-      console.log('Auth Mode');
-      console.log(this.auth);
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-      console.log(authMode);
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
