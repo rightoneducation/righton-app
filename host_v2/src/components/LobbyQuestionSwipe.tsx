@@ -63,6 +63,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { IQuestion } from '@righton/networking';
 import QuestionCard from './QuestionCard';
+import TitleQuestionCard from './TitleQuestionCard';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 
 interface QuestionListProps {
@@ -82,6 +83,19 @@ export default function QuestionList({ questions }: QuestionListProps) {
 
   return (
     <ScrollBoxStyled>
+        <BoxStyled key={uuidv4()}>
+          <Box
+            sx={{
+              marginBottom: theme.spacing(2),
+              borderBottom: `1px solid ${theme.palette.divider}`,
+              paddingBottom: theme.spacing(2),
+              width: '100%',
+            }}
+          >
+        <TitleQuestionCard
+        />          
+    </Box>
+        </BoxStyled>
       {questions.map((question, index) => (
         <BoxStyled key={uuidv4()}>
           <Box
