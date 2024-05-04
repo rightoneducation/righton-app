@@ -7,8 +7,10 @@ interface Team {
   name: string;
 }
 
-interface CurrentStudentProps {
+interface SuggestedGamesProps {
   teams: Team[] | null;
+  setIsGameSelected: (value: boolean) => void; 
+  isGameSelected: boolean
 }
 
 const GridStyled = styled(Grid)({
@@ -18,7 +20,7 @@ const GridStyled = styled(Grid)({
   fontSize: '72px',
   textAlign: 'center',
   marginTop: '4%',
-  border: '1px solid black',
+  // border: '1px solid black',
 
 })
 
@@ -30,7 +32,7 @@ const HrStyled = styled(Divider)({
   height: '1px',
   borderRadius: '1.54px',
   border: '0',
-  borderTop: '1px solid rgba(255, 255, 255, 0.25)',
+  // borderTop: '1px solid rgba(255, 255, 255, 0.25)',
 
 })
 
@@ -63,13 +65,12 @@ const GridNameStyled = styled(Grid)({
 
 const BoxStyled = styled(Box)({
   margin: 'auto',
-  border: '1px solid black',
+  // border: '1px solid black',
 
 })
 
-function SuggestedGames ({ teams }: CurrentStudentProps) {
+function SuggestedGames ({ teams, setIsGameSelected, isGameSelected }: SuggestedGamesProps) {
     // const classes = useStyles();
-
     return (
         <Box>
             <GridStyled>{teams ? teams.length : 0}</GridStyled>
@@ -78,8 +79,8 @@ function SuggestedGames ({ teams }: CurrentStudentProps) {
             </BoxStyled>
             <HrStyled/>
             {teams && teams.map((team) => (
-                <MenuItemStyled key = {uuidv4()}>
-                    <GridNameStyled>{team.name}</GridNameStyled>
+                <MenuItemStyled key = {uuidv4()} onClick={()=> setIsGameSelected(!isGameSelected)}>
+                    <GridNameStyled >{team.name}</GridNameStyled>
                 </MenuItemStyled>
             ))}
         </Box>

@@ -170,8 +170,8 @@ export default function GameSessionContainer() {
   const [isHintLoading, setisHintLoading] = React.useState(false);
 
 /*
-  
 */
+  const mockTeam = [{name: "Muhammad"}, {name: "kevin"}];
   const handleProcessHints = () => {
     setHintsError(false);
     const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
@@ -195,13 +195,15 @@ export default function GameSessionContainer() {
     case GameSessionState.TEAMS_JOINING:
       return (
         // <StartGame
-        //   teams={gameSession.teams ?? []}
+        //   // teams={gameSession.teams ?? []}
+        //   teams={mockTeam}
         //   questions={gameSession.questions}
         //   title={gameSession.title ?? ''}
         //   gameCode={gameSession.gameCode}
         // />
         <GameEnded
-          teams={gameSession.teams ?? []}
+          // teams={gameSession.teams ?? []}
+          teams={mockTeam}
           questions={gameSession.questions}
           title={gameSession.title ?? ''}
           gameCode={gameSession.gameCode}

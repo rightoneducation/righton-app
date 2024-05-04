@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { ITeam } from '@righton/networking';
 // import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
-import CurrentStudents from './CurrentStudents';
+import SuggestedGames from './SuggestedGames';
 import NoPlayersLobby from './NoPlayersLobby';
 // TEST
 interface TestTeamProp{
@@ -21,9 +21,15 @@ const BodyStyled = styled(Box)({
     justifyContent: 'center',
 });
 
+interface GameEndedHostBodyProps{
+  setIsGameSelected: (value: boolean) => void; 
+  teams: TestTeamProp[]
+  isGameSelected: boolean
+}
 
-export default function HostBody({ teams }: { teams: TestTeamProp[] }) {
+export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSelected }: GameEndedHostBodyProps ) {
     const swiperRef = useRef<SwiperRef>(null);
+    console.log(isGameSelected)
     return (
     <BodyStyled>
       {/* <Swiper spaceBetween={4} slidesPerView="auto" style={{ height: 'auto' }}> */}
@@ -46,7 +52,7 @@ export default function HostBody({ teams }: { teams: TestTeamProp[] }) {
           > 
         <SwiperSlide style={{ height: '100%', marginRight: '0px', boxSizing: 'border-box',}}>
           {/* <CurrentStudents teams={teams} /> */}
-          {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} />}
+          {teams.length === 0 ? <NoPlayersLobby /> : <SuggestedGames teams={teams} isGameSelected = {isGameSelected} setIsGameSelected={setIsGameSelected}/>}
         </SwiperSlide>
         <SwiperSlide>
           <Typography style={{ marginTop: '48px' }}>
