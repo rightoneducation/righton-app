@@ -46,7 +46,7 @@ export default function GameSessionSwitch({
   // this condition is used to display the pregamecountdown only on initial game start
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
   // placed into a separate variable for readability in the switch statement
-  const isGameFirstStarting = isPregameCountdown && !hasRejoined;
+  const isGameFirstStarting = isPregameCountdown && !hasRejoined && gameSession.currentQuestionIndex === 0;
   const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
   const answerChoices =
   (isShortAnswerEnabled

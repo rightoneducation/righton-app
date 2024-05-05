@@ -381,12 +381,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         isSelectedMistake: answer.normAnswer.some(normAnswer => selectedMistakesSet.has(normAnswer))
       })
       );
-      console.log('shortAnswerResponses');
-      console.log(shortAnswerResponses);
-      console.log('selectedMistakes');
-      console.log(selectedMistakes);
-      console.log('finalResultsContainer');
-      console.log(finalResultsContainer);
       const test = await apiClients.question
         .updateQuestion({
           gameSessionId,
@@ -591,7 +585,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           gameTimerZero={gameTimerZero}
           isLoadModalOpen={isLoadModalOpen}
           setIsLoadModalOpen={setIsLoadModalOpen}
-          showFooterButtonOnly={false}
+          showFooterButtonOnly={gameSession.currentQuestionIndex > 0 ? true : false}
           isConfidenceEnabled={isConfidenceEnabled}
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
           isShortAnswerEnabled={isShortAnswerEnabled}
