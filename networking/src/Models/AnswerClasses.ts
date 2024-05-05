@@ -76,18 +76,18 @@ export class StringAnswer extends BaseAnswer<string>{
 }
 
 export class NumericAnswer extends BaseAnswer<string>{
-  normAnswer: NormAnswerType[]
+  normAnswer: string[]
   answerPrecision: AnswerPrecision
 
-  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision, normAnswer?: number[],){
+  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision, normAnswer?: string[],){
       super(rawAnswer, answerType)
       this.normAnswer = normAnswer ?? []
       this.answerPrecision = answerPrecision
   }
 
-  normalizeNumericAnswer(rawAnswer: string): NormAnswerType[] {
+  normalizeNumericAnswer(rawAnswer: string): string[] {
     let raw = rawAnswer;
-    const normAnswers: NormAnswerType[] = [];
+    const normAnswers: string[] = [];
     const percentagesRegex = /(\d+(\.\d+)?)%/g;
     const extractPercents = rawAnswer.match(percentagesRegex);
     const percentages = extractPercents ? parseFloat(extractPercents[0]) : null
@@ -107,6 +107,7 @@ export class NumericAnswer extends BaseAnswer<string>{
   
   normalizeAnswer(rawAnswer: string): void {
     this.normAnswer = this.normalizeNumericAnswer(rawAnswer);
+    console.log(this.normAnswer);
   }
 
   isEqualTo(otherNormAnswers: string[]): Boolean {
