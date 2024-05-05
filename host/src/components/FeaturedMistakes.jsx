@@ -34,18 +34,21 @@ export default function FeaturedMistakes({
         })
         return mistakes;
       }, []);
+    console.log(extractedMistakes);
     let sortedMistakes = extractedMistakes.sort((a, b) => {
       if (a.percent === b.percent) {
         return a.answer.localeCompare(b.answer);
       }
       return b.percent - a.percent;
     });
+    console.log(sortedMistakes);
     if (isPopularMode) {
       for (let i = 0; i < Math.min(sortedMistakes.length, numOfPopularMistakes); i++){
         sortedMistakes[i].isSelected = true;
         onSelectMistake(sortedMistakes[i].answer, true);
       }
     }
+    console.log(sortedMistakes);
     return sortedMistakes;
   };
   const [sortedMistakes, setSortedMistakes] = useState([]);
@@ -70,6 +73,7 @@ export default function FeaturedMistakes({
   };
 
   const handleSelectMistake = (index) => {
+    console.log(sortedMistakes);
     onSelectMistake(sortedMistakes[index].answer, false);
     setSortedMistakes((prev) => {
       const newMistakes = [...prev];

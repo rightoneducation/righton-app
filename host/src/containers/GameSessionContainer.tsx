@@ -186,6 +186,8 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
+        console.log('updated responses');
+        console.log(response.questions[response.currentQuestionIndex].responses);
         setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
       },
     );
@@ -373,18 +375,21 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         || isConfidenceEnabled)
       && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
     ) {
+      const selectedMistakesSet = new Set(selectedMistakes);
       const finalResultsContainer = shortAnswerResponses.map((answer) => ({
         ...answer,
-        isSelectedMistake: selectedMistakes.includes(answer.rawAnswer),
+        isSelectedMistake: answer.normAnswer.some(normAnswer => selectedMistakesSet.has(normAnswer))
       })
       );
-      await apiClients.question
+      const test = await apiClients.question
         .updateQuestion({
           gameSessionId,
           id: gameSession.questions[gameSession.currentQuestionIndex].id,
           order: gameSession.questions[gameSession.currentQuestionIndex].order,
           responses: JSON.stringify(finalResultsContainer),
         });
+      console.log('question update');
+      console.log(test);
     }
 
     // if game is moving to PHASE_2_DISCUSS, hints are enabled, there are hints to process that have yet to be processed
@@ -580,7 +585,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           gameTimerZero={gameTimerZero}
           isLoadModalOpen={isLoadModalOpen}
           setIsLoadModalOpen={setIsLoadModalOpen}
-          showFooterButtonOnly={false}
+          showFooterButtonOnly={gameSession.currentQuestionIndex > 0 ? true : false}
           isConfidenceEnabled={isConfidenceEnabled}
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
           isShortAnswerEnabled={isShortAnswerEnabled}
