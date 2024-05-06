@@ -11,11 +11,8 @@ import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
 
-interface TestTeamProp{
-  name: string
-}
 interface StartGameProps {
-  teams: TestTeamProp[]
+  teams: ITeam[]
   questions:IQuestion[]
   title: string
   gameCode: number
@@ -45,8 +42,6 @@ function StartGame({teams,
   title,
   gameCode,
   }: StartGameProps) {
-    console.log("teamsbelow")
-    console.log(teams)
     return (
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
