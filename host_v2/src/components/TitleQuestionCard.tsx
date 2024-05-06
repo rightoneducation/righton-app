@@ -60,7 +60,7 @@ export default function TitleQuestionCard({
                 7.RP.A.3
             </TopLineTypography>
             <TopLineTypography>
-                5 Questions
+                {questions.length} Questions
             </TopLineTypography>
         </TitleBoxTopStyled>
         <TitleTypography>{title}</TitleTypography>

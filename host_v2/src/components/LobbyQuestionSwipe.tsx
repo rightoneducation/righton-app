@@ -99,6 +99,7 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
         </BoxStyled>
       {questions.map((question, index) => (
         <BoxStyled key={uuidv4()}>
+            <Typography> {question.grade} </Typography>
           <Box
             sx={{
               // marginBottom: theme.spacing(2),
