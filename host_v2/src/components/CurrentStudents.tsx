@@ -26,14 +26,6 @@ const GridStyled = styled(Grid)({
 
 })
 
-const HrStyled = styled(Divider)({
-  width: '266px',
-  height: '1px',
-  borderRadius: '1.54px',
-  border: '0',
-  padding: '16px 12px 16px 12px',
-
-})
 
 const PStyled = styled(Typography)({
 
@@ -65,7 +57,7 @@ const MenuItemStyled = styled(Box)({
   borderRadius: '8px',
   // width: '311px', ????
   height: '40px',
-  width: '290px',
+  width: '82.6%',
   background: '#063772',  // 'rgba(255, 255, 255, 0.25)',
   padding: '4px',
   gap: '4px',
@@ -86,11 +78,8 @@ const BoxStyled = styled(Box)({
 })
 
 function CurrentStudents ({ teams }: CurrentStudentProps) {
-    // const classes = useStyles();
-
     return (
         <BoxStyled>
-            {/* <HrStyled/> */}
             {teams && teams.map((team) => (
                 <MenuItemStyled key = {uuidv4()}>
                     <MonsterContainer/>
