@@ -41,6 +41,7 @@ export default function QuestionCard({
               height: 'auto',
               paddingTop: `${theme.sizing.smallPadding}px`,
               paddingBottom: `${theme.sizing.smallPadding}px`,
+
             }}
             src={imageUrl}
             alt="Question"

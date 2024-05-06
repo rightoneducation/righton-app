@@ -87,13 +87,13 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
         <BoxStyled key={uuidv4()}>
           <Box
             sx={{
-              marginBottom: theme.spacing(2),
+              // marginBottom: theme.spacing(2),
               borderBottom: `1px solid ${theme.palette.divider}`,
-              paddingBottom: theme.spacing(2),
+              // paddingBottom: theme.spacing(2),
               width: '100%',
             }}
           >
-        <TitleQuestionCard title ={title}
+        <TitleQuestionCard title ={title} questions={questions}
         />          
     </Box>
         </BoxStyled>
@@ -101,9 +101,9 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
         <BoxStyled key={uuidv4()}>
           <Box
             sx={{
-              marginBottom: theme.spacing(2),
+              // marginBottom: theme.spacing(2),
               borderBottom: `1px solid ${theme.palette.divider}`,
-              paddingBottom: theme.spacing(2),
+              // paddingBottom: theme.spacing(2),
               width: '100%',
             }}
           >
