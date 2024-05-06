@@ -7,8 +7,7 @@ import {
   signIn, 
   signInWithRedirect, 
   signOut, 
-  fetchAuthSession,
-  fetchUserAttributes
+  fetchAuthSession
 } from 'aws-amplify/auth';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
@@ -25,7 +24,6 @@ export class AuthAPIClient
   async init(): Promise<void> {
     this.authEvents(null); 
     this.isUserAuth = await this.verifyAuth();
-    console.log(this.isUserAuth);
   }
 
   configAmplify(awsconfig: any): void {
@@ -89,17 +87,6 @@ export class AuthAPIClient
 
   async verifyAuth(): Promise<boolean> {
     const session = await fetchAuthSession();
-    console.log("session");
-    console.log(session);
-    console.log("user attributes");
-    try{
-    console.log(await fetchUserAttributes());
-    } catch (e) {
-      console.log(e);
-    }
-    // const user = await getCurrentUser();
-    // console.log("user");
-    // console.log(user);
     if (session && session.tokens && session.tokens.accessToken) {
       const groups = session.tokens.accessToken.payload["cognito:groups"];
       if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
