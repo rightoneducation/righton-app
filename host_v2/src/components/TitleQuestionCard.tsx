@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
-// interface TitleQuestionCardProps {
-//   questionID: string;
+interface TitleQuestionCardProps {
+  title: string;
 
-// }
+}
 const TitleTypography = styled(Typography)({
   width: '100%', 
   textAlign: 'left', 
@@ -20,13 +20,15 @@ const BodyTypography = styled(Typography)({
   fontWeight: '400',
   fontSize: '16px',
 })
-export default function TitleQuestionCard() {
+export default function TitleQuestionCard({
+    title
+}: TitleQuestionCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
-        <BodyTypography>hello</BodyTypography>
+        <BodyTypography>{title}</BodyTypography>
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

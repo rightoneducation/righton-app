@@ -68,6 +68,7 @@ import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 
 interface QuestionListProps {
   questions: IQuestion[];
+  title: string;
 }
 
 const BoxStyled = styled(Box)({
@@ -77,7 +78,7 @@ const BoxStyled = styled(Box)({
   margin: 'auto',
 });
 
-export default function QuestionList({ questions }: QuestionListProps) {
+export default function QuestionList({ questions, title }: QuestionListProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -92,7 +93,7 @@ export default function QuestionList({ questions }: QuestionListProps) {
               width: '100%',
             }}
           >
-        <TitleQuestionCard
+        <TitleQuestionCard title ={title}
         />          
     </Box>
         </BoxStyled>

@@ -75,7 +75,7 @@ const BodyStyled = styled(Box)({
     justifyContent: 'center',
 });
 
-export default function HostBody({ teams, questions }: { teams: ITeam[], questions: IQuestion[] }) {
+export default function HostBody({ teams, questions, title }: { teams: ITeam[], questions: IQuestion[], title: string}) {
     const swiperRef = useRef<SwiperRef>(null);
     return (
     <BodyStyled>
@@ -98,7 +98,7 @@ export default function HostBody({ teams, questions }: { teams: ITeam[], questio
           {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} />}
         </SwiperSlide>
         <SwiperSlide>
-          <QuestionList questions={questions} /> 
+          <QuestionList questions={questions} title ={title}/> 
           {/* <Typography style={{ marginTop: '48px' }}>
              Page 2
            </Typography> */}

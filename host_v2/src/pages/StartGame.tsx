@@ -45,7 +45,7 @@ function StartGame({teams,
     return (
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
-          <HostBody teams={teams} questions={questions} />
+          <HostBody teams={teams} questions={questions} title={title}/>
           <FooterStartGame 
           teamsLength={teams ? teams.length : 0}
           />
