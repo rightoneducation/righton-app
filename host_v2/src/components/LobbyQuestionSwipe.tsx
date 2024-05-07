@@ -93,13 +93,11 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
               width: '100%',
             }}
           >
-        <TitleQuestionCard title ={title} questions={questions}
-        />          
+        <TitleQuestionCard title ={title} questions={questions}/>          
     </Box>
         </BoxStyled>
       {questions.map((question, index) => (
         <BoxStyled key={uuidv4()}>
-            <Typography> {question.grade} </Typography>
           <Box
             sx={{
               // marginBottom: theme.spacing(2),

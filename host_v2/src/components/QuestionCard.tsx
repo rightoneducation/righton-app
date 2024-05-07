@@ -32,7 +32,7 @@ export default function QuestionCard({
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
         <TitleTypography>
-          {t('Question ')} {index + 1}        
+          {t('Question ')} {index + 1}         
         </TitleTypography>
         {imageUrl === undefined ? null : (
           <img
