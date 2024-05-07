@@ -55,7 +55,8 @@ export default function GameInProgress({
   gptHints,
   hintsError,
   isHintLoading,
-  handleProcessHints
+  handleProcessHints,
+  setSelectedMistakes
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -292,6 +293,7 @@ export default function GameInProgress({
             isHintLoading={isHintLoading}
             handleProcessHints={handleProcessHints}
             teams={teams}
+            setSelectedMistakes={setSelectedMistakes}
           />
         </div>
         <GameModal
