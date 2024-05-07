@@ -73,7 +73,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Paper, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IQuestion } from '@righton/networking';
-import CCSS from './CCSS';
+import TitleCCSS from './TitleCCSS';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
@@ -165,7 +165,7 @@ export default function TitleQuestionCard({
     return (
       <TitleBoxStyled>
         <TitleBoxTopStyled>
-            <CCSS
+            <TitleCCSS
             key={`${grade}-${domain}-${cluster}-${standard}`}
             grade={grade}
             domain={domain}

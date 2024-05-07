@@ -34,7 +34,7 @@ import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles'; // Import styled from MUI
 
 // Styled component using the same typography style as TitleTypography
-const CCSSTypography = styled(Typography)({
+const TitleCCSSTypography = styled(Typography)({
   fontFamily: 'Poppins',
   // width: '100%', 
   textAlign: 'left', 
@@ -45,30 +45,30 @@ const CCSSTypography = styled(Typography)({
   color: '#9BA9D0', // Match the color from the TitleTypography
 });
 
-interface CCSSProps {
+interface TitleCCSSProps {
   grade: string;
   domain: string;
   cluster: string;
   standard: string;
 }
 
-export default function CCSS({
+export default function TitleCCSS({
   grade,
   domain,
   cluster,
   standard
-}: CCSSProps) {
-  if (grade === 'Mashup') return <CCSSTypography>Mashup</CCSSTypography>; // Use CCSSTypography component
-  if (grade === 'Misc' && domain === 'Misc') return <CCSSTypography>Misc.</CCSSTypography>; // Use CCSSTypography component
-  if (grade === 'Misc') return <CCSSTypography>{domain}</CCSSTypography>; // Use CCSSTypography component
+}: TitleCCSSProps) {
+  if (grade === 'Mashup') return <TitleCCSSTypography>Mashup</TitleCCSSTypography>; // Use CCSSTypography component
+  if (grade === 'Misc' && domain === 'Misc') return <TitleCCSSTypography>Misc.</TitleCCSSTypography>; // Use CCSSTypography component
+  if (grade === 'Misc') return <TitleCCSSTypography>{domain}</TitleCCSSTypography>; // Use CCSSTypography component
   if (grade && domain) {
     const clusterCombined: string = cluster ? `.${cluster}` : '';
     const standardCombined: string = standard ? `.${standard}` : '';
     const domainCombined: string = domain ? `.${domain}` : '';
     return (
-      <CCSSTypography>
+      <TitleCCSSTypography>
         {`${grade}${domainCombined}${clusterCombined}${standardCombined}`}
-      </CCSSTypography>
+      </TitleCCSSTypography>
     );
   }
   return null;
