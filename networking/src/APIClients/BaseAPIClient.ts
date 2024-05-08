@@ -61,10 +61,7 @@ export abstract class BaseAPIClient {
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
     const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-    console.log(query);
-    console.log(options);
     const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
-    console.log(response);
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
@@ -85,8 +82,6 @@ export abstract class BaseAPIClient {
     subscription: any,
     callback: (value: T) => void
   ) {
-    console.log(subscription);
-    console.log(this.auth.isUserAuth);
     //@ts-ignore
     const authMode = this.auth.isUserAuth ? "userPool" : "iam";
     const result = client.graphql({
@@ -113,7 +108,6 @@ export abstract class BaseAPIClient {
     if (result.errors != null) {
       throw new Error(`${typeof query}: ${result.errors} ${result.extensions}`);
     }
-
     if (isNullOrUndefined(result.data)) {
       throw new Error(`${typeof query}: Failed to get data`);
     }

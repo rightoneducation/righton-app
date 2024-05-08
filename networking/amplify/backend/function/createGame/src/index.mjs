@@ -10,11 +10,6 @@ const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const { Sha256 } = crypto;
 
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
-  console.log('awsGameTemplate:', awsGameTemplate);
-  console.log('awsGameTemplate.data.getGameTemplate.questionTemplates:');
-  console.log(awsGameTemplate.data.getGameTemplate.questionTemplates);
-  console.log('awsGameTemplate.data.getGameTemplate.questionTemplates.items:');
-  console.log(awsGameTemplate.data.getGameTemplate.questionTemplates.items);
   let questionTemplates = [];
   try {
       if (awsGameTemplate && awsGameTemplate.data && awsGameTemplate.data.getGameTemplate) {
@@ -47,7 +42,6 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
 
 async function createAndSignRequest(query, variables) {
   const credentials = await defaultProvider()();
-  console.log('Resolved credentials:', credentials);
   const endpoint = new URL(GRAPHQL_ENDPOINT ?? '');
   const signer = new SignatureV4({
     credentials: defaultProvider(),

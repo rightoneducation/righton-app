@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  isNullOrUndefined,
   IAPIClients,
   IGameSession,
 } from '@righton/networking';
@@ -53,8 +52,6 @@ import {
         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
-            console.log('Update GameSesssion Subscription');
-            console.log(response);
             if (!response) {
               setError(`${t('error.connect.subscriptionerror')}`);
               return;
@@ -65,8 +62,6 @@ import {
         );
       })
       .catch((e) => {
-        console.log('Subscription error:');
-        console.log(e);
         setIsLoading(false);
         if (e instanceof Error) setError(e.message);
         else setError(`${t('error.connect.gamesessionerror')}`);
