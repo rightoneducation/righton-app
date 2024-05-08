@@ -114,7 +114,7 @@ export class GameSessionAPIClient
   }
 
   async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
-    let result = (await this.callGraphQL({ query: gameSessionByCode, variables: {gameCode}})) as { data: any };
+    let result = (await this.callGraphQL(gameSessionByCode,  { gameCode } as unknown as GraphQLOptions)) as { data: any };
     if (
       isNullOrUndefined(result.data) ||
       isNullOrUndefined(result.data.gameSessionByCode) ||

@@ -63,8 +63,8 @@ export abstract class BaseAPIClient {
     const authMode = this.auth.isUserAuth ? "userPool" : "iam";
     console.log(query);
     console.log(options);
-    console.log(options?.variables);
     const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
+    console.log(response);
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
@@ -85,10 +85,13 @@ export abstract class BaseAPIClient {
     subscription: any,
     callback: (value: T) => void
   ) {
+    console.log(subscription);
+    console.log(this.auth.isUserAuth);
     //@ts-ignore
     const authMode = this.auth.isUserAuth ? "userPool" : "iam";
     const result = client.graphql({
       query: subscription.query,
+      variables: subscription.variables,
       authMode: authMode as GraphQLAuthMode
     });
     
