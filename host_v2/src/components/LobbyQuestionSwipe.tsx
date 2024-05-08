@@ -87,14 +87,14 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
         <BoxStyled key={uuidv4()}>
           <Box
             sx={{
-              // marginBottom: theme.spacing(2),
+              marginBottom: '0',
               borderBottom: `1px solid ${theme.palette.divider}`,
               // paddingBottom: theme.spacing(2),
               width: '100%',
             }}
           >
         <TitleQuestionCard title ={title} questions={questions}/>          
-    </Box>
+        </Box>
         </BoxStyled>
       {questions.map((question, index) => (
         <BoxStyled key={uuidv4()}>

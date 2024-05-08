@@ -24,11 +24,11 @@ const TitleBoxStyled = styled(Paper)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  margin: '8px',
+  margin: '6px', // added this to look like the rest
   borderRadius: '18px',
   padding: '16px 18px 20px 18px',
   gap: '2px',
-  boxShadow: '0px 4px 10px 0px #0F1B28 30%',
+  boxShadow: '0px 4px 10px 0px rgba(15, 27, 40, 0.3)',
 });
 
 const TitleBoxTopStyled = styled(Box)({
