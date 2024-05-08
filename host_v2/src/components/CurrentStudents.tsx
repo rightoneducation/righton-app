@@ -77,18 +77,20 @@ const BoxStyled = styled(Box)({
   // width: '316px',
 })
 
+
 function CurrentStudents ({ teams }: CurrentStudentProps) {
-    return (
-        <BoxStyled>
-            {teams && teams.map((team) => (
-                <MenuItemStyled key = {uuidv4()}>
-                    <MonsterContainer/>
-                    <GridNameStyled>{team.name}</GridNameStyled>
-                    <CloseSvg onClick={handleCloseClick}/>
-                </MenuItemStyled>
-            ))}
-        </BoxStyled>
-    )
+  const sortedTeams = teams ? [...teams].sort((a, b) => a.name.localeCompare(b.name)) : [];
+  return (
+      <BoxStyled>
+          {sortedTeams.map((team) => (
+              <MenuItemStyled key={uuidv4()}>
+                  <MonsterContainer/>
+                  <GridNameStyled>{team.name}</GridNameStyled>
+                  <CloseSvg onClick={handleCloseClick}/>
+              </MenuItemStyled>
+          ))}
+      </BoxStyled>
+  )
 }
 
 export default CurrentStudents;
