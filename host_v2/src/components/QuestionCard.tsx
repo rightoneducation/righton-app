@@ -13,13 +13,17 @@ interface QuestionCardProps {
 const TitleTypography = styled(Typography)({
   width: '100%', 
   textAlign: 'left', 
+  fontFamily: 'Poppins',
   fontWeight: '700', 
-  fontSize: '24px'
+  fontSize: '24px',
+  lineHeight: '36px',
 })
 const BodyTypography = styled(Typography)({
   fontFamily: 'Rubik',
   fontWeight: '400',
   fontSize: '16px',
+  lineHeight: '19px',
+  color: '#384466',
 })
 export default function QuestionCard({
   questionText,
@@ -37,10 +41,10 @@ export default function QuestionCard({
         {imageUrl === undefined ? null : (
           <img
             style={{
-              width: '75%',
+              width: '75%', // NOT on figma!! just there before
               height: 'auto',
-              paddingTop: `${theme.sizing.smallPadding}px`,
-              paddingBottom: `${theme.sizing.smallPadding}px`,
+              // paddingTop: `${theme.sizing.smallPadding}px`,
+              // paddingBottom: `${theme.sizing.smallPadding}px`,
 
             }}
             src={imageUrl}
