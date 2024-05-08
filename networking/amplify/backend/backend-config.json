@@ -24,14 +24,7 @@
     }
   },
   "auth": {
-    "mobilee3bf6c04": {
-      "customAuth": false,
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito",
-      "serviceType": "imported"
-    },
-    "mobilee8b7b3a0": {
+    "mobile96b14818": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -74,67 +67,35 @@
         }
       ]
     },
-    "AMPLIFY_auth_mobilee3bf6c04_nativeClientId": {
+    "AMPLIFY_auth_mobile96b14818_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee3bf6c04"
+          "resourceName": "mobile96b14818"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee3bf6c04_userPoolId": {
+    "AMPLIFY_auth_mobile96b14818_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee3bf6c04"
+          "resourceName": "mobile96b14818"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee3bf6c04_userPoolName": {
+    "AMPLIFY_auth_mobile96b14818_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee3bf6c04"
+          "resourceName": "mobile96b14818"
         }
       ]
     },
-    "AMPLIFY_auth_mobilee3bf6c04_webClientId": {
+    "AMPLIFY_auth_mobile96b14818_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobilee3bf6c04"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee8b7b3a0_nativeClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee8b7b3a0"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee8b7b3a0_userPoolId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee8b7b3a0"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee8b7b3a0_userPoolName": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee8b7b3a0"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee8b7b3a0_webClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee8b7b3a0"
+          "resourceName": "mobile96b14818"
         }
       ]
     },

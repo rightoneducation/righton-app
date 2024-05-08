@@ -186,8 +186,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
-        console.log('updated responses');
-        console.log(response.questions[response.currentQuestionIndex].responses);
         setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
       },
     );
@@ -378,18 +376,22 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
       const selectedMistakesSet = new Set(selectedMistakes);
       const finalResultsContainer = shortAnswerResponses.map((answer) => ({
         ...answer,
-        isSelectedMistake: answer.normAnswer.some(normAnswer => selectedMistakesSet.has(normAnswer))
+        isSelectedMistake: answer.normAnswer.some(normAnswer => {
+          const isInSet = selectedMistakesSet.has(normAnswer);
+          return isInSet;
+        })
       })
       );
+      const sortedResults = finalResultsContainer.sort((a, b) => {
+        return a.rawAnswer.localeCompare(b.rawAnswer);
+      });
       const test = await apiClients.question
         .updateQuestion({
           gameSessionId,
           id: gameSession.questions[gameSession.currentQuestionIndex].id,
           order: gameSession.questions[gameSession.currentQuestionIndex].order,
-          responses: JSON.stringify(finalResultsContainer),
+          responses: JSON.stringify(sortedResults),
         });
-      console.log('question update');
-      console.log(test);
     }
 
     // if game is moving to PHASE_2_DISCUSS, hints are enabled, there are hints to process that have yet to be processed
@@ -538,7 +540,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
 
           return { ...parsedHint, teams: updatedTeams };
         });
-        console.log(combinedHints);
         setGptHints(combinedHints);
         setisHintLoading(false);
         if (combinedHints) {
@@ -645,6 +646,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           hintsError={hintsError}
           isHintLoading={isHintLoading}
           handleProcessHints={handleProcessHints}
+          setSelectedMistakes={setSelectedMistakes}
         />
       );
 

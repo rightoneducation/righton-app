@@ -49,7 +49,8 @@ export default function GameInProgressContentSwitch({
   hintsError,
   isHintLoading,
   handleProcessHints,
-  teams
+  teams,
+  setSelectedMistakes
 }) {
   const classes = useStyles();
   const graphClickRenderSwitch = (graphClickInfo) => {
@@ -185,6 +186,7 @@ export default function GameInProgressContentSwitch({
                 shortAnswerResponses={shortAnswerResponses}
                 totalAnswers={totalAnswers}
                 onSelectMistake={onSelectMistake}
+                setSelectedMistakes={setSelectedMistakes}
                 numPlayers={numPlayers}
               />
             </div>

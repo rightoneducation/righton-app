@@ -12,18 +12,10 @@
       "AmplifyAppId": "d2z6928w5qibze"
     },
     "categories": {
-      "auth": {
-        "mobilee8b7b3a0": {
-          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
-          "userPoolId": "us-east-1_cC3q3fBKW",
-          "userPoolName": "RightOn Central",
-          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
-        },
-        "mobilee3bf6c04": {
-          "userPoolId": "us-east-1_cC3q3fBKW",
-          "userPoolName": "RightOn Central",
-          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
-          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
+      "api": {
+        "createGame": {
+          "deploymentBucketName": "amplify-mobile-main-165909-deployment",
+          "s3Key": "amplify-builds/createGame-775a4e367971334e4e46-build.zip"
         }
       },
       "function": {
@@ -32,11 +24,12 @@
           "s3Key": "amplify-builds/createGame-6931574f316a74336668-build.zip"
         }
       },
-      "api": {
-        "mobile": {},
-        "createGame": {
-          "deploymentBucketName": "amplify-mobile-main-165909-deployment",
-          "s3Key": "amplify-builds/createGame-775a4e367971334e4e46-build.zip"
+      "auth": {
+        "mobile96b14818": {
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
         }
       }
     }
