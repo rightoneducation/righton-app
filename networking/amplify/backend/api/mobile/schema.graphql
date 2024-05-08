@@ -1,11 +1,12 @@
-type Mutation 
-{
-  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String @function(name: "createGame-${env}") @auth(
-  rules: [
-    { allow: public, provider: iam  },
-    { allow: private, provider: userPools }
-  ]
-)
+type Mutation {
+  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String 
+  @function(name: "createGame-${env}") 
+  @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
 }
 
 input CreateGameSessionFromTemplateInput {
@@ -217,32 +218,35 @@ type TeamAnswer @model
 
 type Subscription {
   onGameSessionUpdatedById(id: ID!): GameSession
-    @aws_subscribe(mutations: ["updateGameSession"]) @auth(
-  rules: [
-    { allow: public, provider: iam  },
-    { allow: private, provider: userPools }
-  ]
-)
+    @aws_subscribe(mutations: ["updateGameSession"])
+    @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
   onTeamMemberUpdateByTeamId(teamTeamMembersId: ID!): TeamMember
-    @aws_subscribe(mutations: ["updateTeamMember"])@auth(
-  rules: [
-    { allow: public, provider: iam  },
-    { allow: private, provider: userPools }
-  ]
-)
+    @aws_subscribe(mutations: ["updateTeamMember"])
+    @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
   onTeamCreateByGameSessionId(gameSessionTeamsId: ID!): Team
-    @aws_subscribe(mutations: ["createTeam"])@auth(
-  rules: [
-    { allow: public, provider: iam  },
-    { allow: private, provider: userPools }
-  ]
-)
+    @aws_subscribe(mutations: ["createTeam"])
+    @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
   onTeamDeleteByGameSessionId(gameSessionTeamsId: ID!): Team
-    @aws_subscribe(mutations: ["deleteTeam"])@auth(
-  rules: [
-    { allow: public, provider: iam  },
-    { allow: private, provider: userPools }
-  ]
-)
+    @aws_subscribe(mutations: ["deleteTeam"]) 
+    @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
 }
-
