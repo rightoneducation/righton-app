@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Collapse, Fade, MenuItem, Select, Tooltip } from '@material-ui/core';
+import { Collapse, Fade, MenuItem, Select, Tooltip, Checkbox } from '@material-ui/core';
 import { SortDirection, SortField } from '../lib/API/QueryInputs';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 import SortbyIcon from '../images/SortByIcon.svg';
 import SortAscendingIcon from '../images/SortAscendingIcon.svg';
 import SortDescendingIcon from '../images/SortDescendingIcon.svg';
 
-export default function SortByDropdown({ isGames, listQuerySettings, handleUpdateListQuerySettings, sortByCheck, setSortByCheck }) {
+export default function SortByDropdown({ isGames, listQuerySettings, handleUpdateListQuerySettings, sortByCheck, setSortByCheck, isUserAuth }) {
   const classes = useStyles(sortByCheck)();
   const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
   let sortDirection = listQuerySettings.sortDirection;
   const [sortField, setSortField] = useState(null);
+  const [filterPublic, setFilterPublic] = useState(true);
+  const [filterPrivate, setFilterPrivate] = useState(true);
   
   const handleUpdateValue = (sortField) => {
     sortDirection = listQuerySettings.sortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC;
@@ -36,6 +38,57 @@ export default function SortByDropdown({ isGames, listQuerySettings, handleUpdat
           <div className={classes.sortByBody}>
             <table width='100%'>
             <tbody>
+              { isUserAuth && 
+                <>
+                  <tr>
+                    <td>
+                        <div className={classes.sortByTitle}>Filter </div>
+                    </td>
+                  </tr>
+                  <tr className={classes.sortByTableRow}>
+                    <td>
+                      <div className={classes.sortByName}>Public {isGames ? 'Games' : 'Questions' }</div>
+                    </td>
+                    <td >
+                      <Checkbox 
+                        defaultChecked 
+                        onClick={
+                          () => setFilterPublic(!filterPublic)
+                        } 
+                        style={
+                          {
+                            color: '#159EFA',
+                            '&.Mui-checked': {
+                              color: '#159EFA',
+                            }
+                          }
+                        }
+                      />
+                    </td>
+                  </tr>
+                  <tr className={classes.sortByTableRow}>
+                    <td>
+                      <div className={classes.sortByName} onClick={()=>handleUpdateValue(SortField.UPDATEDAT)}>Private {isGames ? 'Games' : 'Questions' }</div>
+                    </td>
+                    <td >
+                    <Checkbox 
+                      defaultChecked 
+                      onClick={
+                        () => setFilterPrivate(!filterPrivate)
+                      } 
+                      style={
+                        {
+                          color: '#159EFA',
+                          '&.Mui-checked': {
+                            color: '#159EFA',
+                          }
+                        }
+                      }
+                      />
+                    </td>
+                  </tr>
+                </>
+              }
               <tr>
                 <td>
                     <div className={classes.sortByTitle}>Sort By</div>

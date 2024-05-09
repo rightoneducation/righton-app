@@ -168,7 +168,7 @@ export default function Games({
           <Grid item xs={12} className={classes.contentGrid}>
             <Box className={classes.actions}>
               <SearchBar isGames={location.pathname === "/"} handleSearchChange={handleSearchChange} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
-              <SortByDropdown isGames={location.pathname === "/"} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} style={{zIndex: 5}}/>
+              <SortByDropdown isGames={location.pathname === "/"} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} style={{zIndex: 5}} isUserAuth={isUserAuth}/>
             </Box>
             <Box onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
