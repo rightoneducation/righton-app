@@ -20,7 +20,6 @@ import {
 import { GameQuestionParser } from "../../Parsers/GameQuestionParser";
 import { isNullOrUndefined } from "../../global";
 
-
 export class GameQuestionsAPIClient
   extends BaseAPIClient
   implements IGameQuestionsAPIClient

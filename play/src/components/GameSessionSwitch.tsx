@@ -37,6 +37,7 @@ export default function GameSessionSwitch({
   const { currentState } = gameSession;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex] as IQuestion;
+  
   const currentTeam = gameSession.teams.find( 
     (team) => team.id === localModel.teamId
   );
@@ -51,13 +52,7 @@ export default function GameSessionSwitch({
   (isShortAnswerEnabled
     ? currentQuestion?.responses?.reduce(
         (acc: IChoice[], response: IResponse) => {
-          const shouldAddResponse = 
-            (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
-            currentState !== GameSessionState.PHASE_1_DISCUSS && 
-            currentState !== GameSessionState.PHASE_1_RESULTS) 
-              ? (response.isSelectedMistake || response.isCorrect) 
-              : true;
-        
+          const shouldAddResponse = (response.isSelectedMistake || response.isCorrect);
           if (shouldAddResponse) {
             acc.push({
               id: uuidv4(),
