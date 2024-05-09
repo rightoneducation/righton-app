@@ -6,23 +6,15 @@ export const getGameTemplate = /* GraphQL */ `
   query GetGameTemplate($id: ID!) {
     getGameTemplate(id: $id) {
       id
-      title
-      owner
-      version
-      description
-      domain
-      cluster
-      grade
-      standard
+      gameId
+      startTime
       phaseOneTime
       phaseTwoTime
-      imageUrl
-      questionTemplates {
+      teams {
         items {
           id
-          gameTemplateID
-          questionTemplateID
-          gameTemplate {
+          name
+          question {
             id
             title
             owner
@@ -105,12 +97,9 @@ export const getGameTemplate = /* GraphQL */ `
             owner
             version
             choices
-            instructions
             answerSettings
-            domain
-            cluster
-            grade
-            standard
+            responses
+            hints
             imageUrl
             gameTemplates {
               items {
@@ -176,8 +165,47 @@ export const getGameTemplate = /* GraphQL */ `
             type
             __typename
           }
+          teamMembers {
+            items {
+              id
+              isFacilitator
+              answers {
+                items {
+                  id
+                  isSubmitted
+                  isShortAnswerEnabled
+                  currentState
+                  currentQuestionIndex
+                  questionId
+                  teamMemberAnswersId
+                  text
+                  answer
+                  confidenceLevel
+                  hint
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              deviceId
+              createdAt
+              updatedAt
+              teamTeamMembersId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          score
+          selectedAvatarIndex
           createdAt
           updatedAt
+          gameSessionTeamsId
+          teamQuestionId
+          teamQuestionOrder
+          teamQuestionGameSessionId
           __typename
         }
         nextToken
@@ -376,18 +404,94 @@ export const getQuestionTemplate = /* GraphQL */ `
   query GetQuestionTemplate($id: ID!) {
     getQuestionTemplate(id: $id) {
       id
-      title
-      owner
-      version
+      text
       choices
-      instructions
       answerSettings
-      domain
-      cluster
-      grade
-      standard
+      responses
+      hints
       imageUrl
-      gameTemplates {
+      instructions
+      standard
+      cluster
+      domain
+      grade
+      order
+      isConfidenceEnabled
+      isShortAnswerEnabled
+      isHintEnabled
+      gameSessionId
+      __typename
+    }
+  }
+`;
+export const listQuestions = /* GraphQL */ `
+  query ListQuestions(
+    $id: ID
+    $orderGameSessionId: ModelQuestionPrimaryCompositeKeyConditionInput
+    $filter: ModelQuestionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listQuestions(
+      id: $id
+      orderGameSessionId: $orderGameSessionId
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        text
+        choices
+        answerSettings
+        responses
+        hints
+        imageUrl
+        instructions
+        standard
+        cluster
+        domain
+        grade
+        order
+        isConfidenceEnabled
+        isShortAnswerEnabled
+        isHintEnabled
+        gameSessionId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getTeam = /* GraphQL */ `
+  query GetTeam($id: ID!) {
+    getTeam(id: $id) {
+      id
+      name
+      question {
+        id
+        text
+        choices
+        answerSettings
+        responses
+        hints
+        imageUrl
+        instructions
+        standard
+        cluster
+        domain
+        grade
+        order
+        isConfidenceEnabled
+        isShortAnswerEnabled
+        isHintEnabled
+        gameSessionId
+        __typename
+      }
+      teamMembers {
         items {
           id
           gameTemplateID
@@ -546,17 +650,23 @@ export const getQuestionTemplate = /* GraphQL */ `
             type
             __typename
           }
+          deviceId
           createdAt
           updatedAt
+          teamTeamMembersId
           __typename
         }
         nextToken
         __typename
       }
-      gameTemplatesCount
+      score
+      selectedAvatarIndex
       createdAt
       updatedAt
-      type
+      gameSessionTeamsId
+      teamQuestionId
+      teamQuestionOrder
+      teamQuestionGameSessionId
       __typename
     }
   }

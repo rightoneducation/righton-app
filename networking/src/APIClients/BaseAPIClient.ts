@@ -105,9 +105,9 @@ export abstract class BaseAPIClient {
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
-      let result = (await API.graphql(
-        graphqlOperation(query, queryParameters)
-      )) as { data: any }
+      console.log('sup');
+      let result = (await API.graphql({query: query, variables: queryParameters, authMode: 'AWS_IAM'})) as { data: any };
+      console.log(result);
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
       if (type === "GameTemplate") {
