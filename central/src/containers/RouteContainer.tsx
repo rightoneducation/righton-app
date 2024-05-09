@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { fetchAuthSession } from "@aws-amplify/auth";
 import {
   Route,
   Switch,
@@ -65,7 +64,7 @@ export const RouteContainer = ({
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
   const [isSearchClick, setIsSearchClick] = useState(false);
-  const [isUserAuth, setIsUserAuth] = useState(false);
+  const [isUserAuth, setIsUserAuth] = useState(apiClients.auth.isUserAuth);
   const [modalOpen, setModalOpen] = useState(checkUserPlayed()); 
   const [showModalGetApp, setShowModalGetApp] = useState(false);
   const [prevTokens, setPrevTokens] = useState<(string | null)[]>([null]);
@@ -77,6 +76,7 @@ export const RouteContainer = ({
     nextToken: null,
     queryLimit
   });
+  const [currentAuthenticatedUser, setCurrentAuthenticatedUser] = useState(null);
 
   const [sortByCheck, setSortByCheck] = React.useState(false);
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
@@ -392,10 +392,8 @@ export const RouteContainer = ({
   }
 
   const persistUserAuth = (async () => {
-    let session = null;
     try {
-      session = await fetchAuthSession();
-      if (session.tokens) {
+      if (await apiClients.auth.verifyAuth()) {
         setIsUserAuth(true);
       }
     } catch (e) {
@@ -429,8 +427,12 @@ export const RouteContainer = ({
       return true;
   };
 
+  // this useEffect establishes the Hub.listener to subscribe to changes in user auth
   useEffect(() => {
     persistUserAuth();
+  }, [apiClients.auth.isUserAuth]);
+
+  useEffect(() => {
     // get either a list of games or questions when the route changes
     setSearchInput('');
     const updatedListQuerySettings = {
@@ -472,17 +474,17 @@ export const RouteContainer = ({
     <Switch>
     <Route path="/login">
       <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <LogIn handleUserAuth={handleUserAuth} />
+      <LogIn apiClients={apiClients} handleUserAuth={handleUserAuth} />
     </Route>
 
     <Route path="/signup">
       <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <SignUp />
+      <SignUp apiClients={apiClients}/>
     </Route>
 
     <Route path="/confirmation">
       <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <Confirmation />
+      <Confirmation apiClients={apiClients}/>
     </Route>
 
     <Route>

@@ -1,14 +1,12 @@
 import React from "react";
-import { signIn, signOut, fetchAuthSession } from "@aws-amplify/auth";
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import { Grid, Typography } from "@material-ui/core";
-import RightOnLogo from "./RightOnLogo.png";
+import RightOnLogo from "../../images/RightOnLogo.png";
 import { GoogleLogin } from '@react-oauth/google';
-import { handleGoogleSignIn } from "@righton/networking";
 
-const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUserAuth}) => {
+const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>void }> = ({apiClients, handleUserAuth}) => {
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -19,20 +17,15 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     setLoading(true);
 
     try {
-      await signIn({username: email, password: password});
-      const user = await fetchAuthSession();
-      if (user && user.tokens && user.tokens.accessToken) {
-        const groups = user.tokens.accessToken.payload["cognito:groups"];
-        if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
-            handleUserAuth(true);
-            window.location.href = "/";
-        }
+      await apiClients.auth.awsSignIn(email, password);
+      if (await apiClients.auth.verifyAuth()) {
+        handleUserAuth(true);
+        window.location.href = "/";
       }
       else {
-        await signOut();
+        await apiClients.auth.awsSignOut();
         setAdminError(true);
       }
-
     } catch (e) {
       console.log(e);
       if (e instanceof Error){
@@ -42,11 +35,8 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     setLoading(false);
   };
 
-  const handleGoogleLogin = async(googleToken: string) => {
-    if (await handleGoogleSignIn(googleToken)){
-      handleUserAuth(true);
-      //window.location.href = "/";
-    }
+  const handleGoogleLogin = async() => {
+    await apiClients.auth.awsSignInFederated();
   }
 
   return (
@@ -108,9 +98,7 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
             <SignUpLink to="/signup">Sign Up</SignUpLink>
           </ButtonGrid>
         <GoogleLogin
-          onSuccess={googleToken => {
-            handleGoogleLogin(googleToken.credential ?? '')
-          }}
+          onSuccess={() => handleGoogleLogin()}
           onError={() => {
             setAdminError(true);
           }}

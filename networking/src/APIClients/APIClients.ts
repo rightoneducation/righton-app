@@ -1,3 +1,6 @@
+import {
+  IAuthAPIClient
+} from './auth/interfaces';
 import { 
   IGameTemplateAPIClient, 
   IQuestionTemplateAPIClient, 
@@ -10,6 +13,7 @@ import {
   ITeamMemberAPIClient,
   ITeamAnswerAPIClient
 } from './gamesession/interfaces';
+import { AuthAPIClient } from './auth/AuthAPIClient';
 import { GameTemplateAPIClient } from './templates/GameTemplateAPIClient';
 import { QuestionTemplateAPIClient } from './templates/QuestionTemplateAPIClient';
 import { GameQuestionsAPIClient } from './templates/GameQuestionsAPIClient';
@@ -19,10 +23,9 @@ import { TeamAPIClient } from './gamesession/TeamAPIClient';
 import { TeamMemberAPIClient } from './gamesession/TeamMemberAPIClient';
 import { TeamAnswerAPIClient } from './gamesession/TeamAnswerAPIClient';
 import { Environment } from './BaseAPIClient';
-import { Amplify } from "aws-amplify";
-import awsconfig from "../aws-exports";
 
 export class APIClients {
+  auth: IAuthAPIClient;
   gameTemplate: IGameTemplateAPIClient;
   questionTemplate: IQuestionTemplateAPIClient;
   gameQuestions: IGameQuestionsAPIClient;
@@ -32,7 +35,9 @@ export class APIClients {
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
 
+
   constructor(env: Environment) {
+    this.auth = new AuthAPIClient();
     this.gameTemplate = new GameTemplateAPIClient(env);
     this.questionTemplate = new QuestionTemplateAPIClient(env);
     this.gameQuestions = new GameQuestionsAPIClient(env);
@@ -41,10 +46,8 @@ export class APIClients {
     this.team = new TeamAPIClient(env);
     this.teamMember = new TeamMemberAPIClient(env);
     this.teamAnswer = new TeamAnswerAPIClient(env);
-    this.configAmplify(awsconfig);
+ 
   }
 
-  configAmplify(awsconfig: any) {
-    Amplify.configure(awsconfig);
-  }
+  
 }

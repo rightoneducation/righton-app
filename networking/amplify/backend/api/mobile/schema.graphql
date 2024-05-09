@@ -85,7 +85,7 @@ input QuestionTemplateInput {
 type GameSession @model 
 @auth(
   rules: [
-    { allow: public, operations: [read], provider: iam  },
+    { allow: public, operations: [read, create, update], provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -125,7 +125,7 @@ enum GameSessionState {
 type Question @model(subscriptions: null, timestamps: null)
 @auth(
   rules: [
-    { allow: public, operations: [read], provider: iam  },
+    { allow: public, operations: [read, create, update], provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -152,7 +152,7 @@ type Question @model(subscriptions: null, timestamps: null)
 type Team @model 
 @auth(
   rules: [
-    { allow: public, operations: [read], provider: iam  },
+    { allow: public, operations: [read, create, update], provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -168,7 +168,7 @@ type Team @model
 type TeamMember @model 
 @auth(
   rules: [
-    { allow: public, operations: [read], provider: iam  },
+    { allow: public, operations: [read, create, update], provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -191,7 +191,7 @@ enum ConfidenceLevel {
 type TeamAnswer @model 
 @auth(
   rules: [
-    { allow: public, operations: [read], provider: iam },
+    { allow: public, operations: [read, create, update], provider: iam },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
