@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { GameSessionState,GameSessionParser, ConfidenceLevel } from '@righton/networking';
+import { GameSessionState,GameSessionParser, ConfidenceLevel, APIClients, Environment } from '@righton/networking';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
-import sortMistakes from "../lib/HelperFunctions"
+import sortMistakes from "../lib/HelperFunctions";
 
 interface Player {
   answer: string; // answer chosen by this player
@@ -20,7 +20,8 @@ interface ConfidenceOption {
 }
 
 export default function GameSessionContainer() {
-  
+  const apiClients = new APIClients(Environment.Developing);
+
   const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
     currentState: MockGameSession.currentState as GameSessionState}); 
 
@@ -139,6 +140,20 @@ export default function GameSessionContainer() {
      [shortAnswerResponses, isPopularMode]
   ));
 
+  const handleDeleteTeam = (id: string) => {
+    console.log("made it in");
+    console.log(id);
+    try {
+      apiClients.team.deleteTeam(id).then((response)=>{
+        console.log(response);
+      })
+    }
+    catch (error){
+      console.log(error);
+    }
+  }
+
+
   switch (gameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
       return (
@@ -147,6 +162,7 @@ export default function GameSessionContainer() {
           questions={gameSession.questions}
           title={gameSession.title ?? ''}
           gameCode={gameSession.gameCode}
+          handleDeleteTeam={handleDeleteTeam}
         />
       );
     case GameSessionState.CHOOSE_CORRECT_ANSWER:

@@ -10,10 +10,12 @@ import { ReactComponent as Monster0Icon } from '../images/Monsters00.svg';
 
 interface Team {
   name: string;
+  id: string;
 }
 
 interface CurrentStudentProps {
   teams: Team[] | null;
+  handleDeleteTeam: (id: string) => void;
 }
 
 const GridStyled = styled(Grid)({
@@ -78,7 +80,7 @@ const BoxStyled = styled(Box)({
 })
 
 
-function CurrentStudents ({ teams }: CurrentStudentProps) {
+function CurrentStudents ({ teams, handleDeleteTeam }: CurrentStudentProps) {
   const sortedTeams = teams ? [...teams].sort((a, b) => a.name.localeCompare(b.name)) : [];
   return (
       <BoxStyled>
@@ -86,7 +88,7 @@ function CurrentStudents ({ teams }: CurrentStudentProps) {
               <MenuItemStyled key={uuidv4()}>
                   <MonsterContainer/>
                   <GridNameStyled>{team.name}</GridNameStyled>
-                  <CloseSvg onClick={handleCloseClick}/>
+                  <CloseSvg onClick={()=>handleDeleteTeam(team.id)}/>
               </MenuItemStyled>
           ))}
       </BoxStyled>
