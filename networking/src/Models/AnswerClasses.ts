@@ -75,7 +75,7 @@ export class StringAnswer extends BaseAnswer<string>{
 
 }
 
-export class NumericAnswer extends BaseAnswer<Number>{
+export class NumericAnswer extends BaseAnswer<string>{
   normAnswer: NormAnswerType[]
   answerPrecision: AnswerPrecision
 
@@ -86,19 +86,21 @@ export class NumericAnswer extends BaseAnswer<Number>{
   }
 
   normalizeNumericAnswer(rawAnswer: string): NormAnswerType[] {
+    let raw = rawAnswer;
     const normAnswers: NormAnswerType[] = [];
     const percentagesRegex = /(\d+(\.\d+)?)%/g;
     const extractPercents = rawAnswer.match(percentagesRegex);
-    const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
+    const percentages = extractPercents ? parseFloat(extractPercents[0]) : null
     if (!isNullOrUndefined(percentages) && !isNaN(percentages)){
-      normAnswers.push(percentages);
-      return normAnswers;
+      raw = String(percentages);
     }
-    // then remove commas and spaces and push
-    const noCommas = rawAnswer.replace(/,/g, '');
+
+    const noCommas = raw.replace(/,/g, '');
     const normItem = noCommas.trim();
     if (!isNullOrUndefined(normItem)) {
-      normAnswers.push(Number(normItem));
+      const decimalPlaces = normItem.includes('.') ? normItem.split('.')[1].length : 0;
+      const numDecimal = parseFloat(normItem).toFixed(decimalPlaces);
+      normAnswers.push(numDecimal);
     }
     return normAnswers;
   }
@@ -107,33 +109,13 @@ export class NumericAnswer extends BaseAnswer<Number>{
     this.normAnswer = this.normalizeNumericAnswer(rawAnswer);
   }
 
-  isEqualTo(otherNormAnswers: number[]): Boolean {
-    const answerPrecisionDictionary = {
-      [AnswerPrecision.WHOLE]: 0,
-      [AnswerPrecision.TENTH]: 1,
-      [AnswerPrecision.HUNDREDTH]: 2,
-      [AnswerPrecision.THOUSANDTH]: 3
-    }
-    if (this.normAnswer){
+  isEqualTo(otherNormAnswers: string[]): Boolean {
+    if (this.normAnswer) {
       return this.normAnswer.some((answer) => {
-        if (otherNormAnswers.includes(answer as number)){
-          if (!isNullOrUndefined(this.answerPrecision))
-          {
-            // we clean up the raw answer again to remove commas and the percent sign
-            // we need to use the raw answer because the norm answer could be changed if there is a percentage present
-            // so it's not a reliable way to check decimal places
-            const normRawAnswer = this.rawAnswer.replace(/[,%]/g, '').trim();
-
-            // this is going to round the number we found that matches to the precision that the teacher requested
-            const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[this.answerPrecision]);
-            if (normRawAnswer === roundedNumberAsString)
-              return true;
-          }
-        }
-        return false;
+        return otherNormAnswers.includes(answer as string);
       }) 
     }
-    return false;
+    return true;
   }
 
   static isAnswerTypeValid(input: string): Boolean {
