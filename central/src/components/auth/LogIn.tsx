@@ -17,20 +17,15 @@ const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>voi
     setLoading(true);
 
     try {
-      try{
-        await apiClients.auth.awsSignIn(email, password);
-      } catch (e) {
-        console.log(e);
-      }
+      await apiClients.auth.awsSignIn(email, password);
       if (await apiClients.auth.verifyAuth()) {
-            handleUserAuth(true);
-            window.location.href = "/";
+        handleUserAuth(true);
+        window.location.href = "/";
       }
       else {
         await apiClients.auth.awsSignOut();
         setAdminError(true);
       }
-
     } catch (e) {
       console.log(e);
       if (e instanceof Error){

@@ -388,7 +388,6 @@ export const RouteContainer = ({
   }
 
   const handleUserAuth = (isAuth: boolean) => {
-    console.log('handleUserAuth', isAuth);
     setIsUserAuth(isAuth);
   }
 
