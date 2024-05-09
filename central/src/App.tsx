@@ -33,13 +33,12 @@ function App() {
   };
 
   const { apiClients, loading } = useAPIClients(Environment.Developing);
-  
   return (
     <GoogleOAuthProvider clientId="23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com">
       <ThemeProvider theme={theme}>
         <AlertContext.Provider value={alertContext}>
           <Router>
-            {apiClients &&
+            { apiClients &&
               <RouteContainer setAlert={setAlert} apiClients={apiClients}/>
             }
           </Router>

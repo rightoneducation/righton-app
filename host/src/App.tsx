@@ -25,20 +25,18 @@ const RedirectToCentralIfMissing = () => {
 };
 
 function App() {
-
   const { apiClients, loading } = useAPIClients(Environment.Developing);
-  
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
           <Route path="/host/:gameSessionId">
-            {apiClients &&
+            { apiClients &&
               <GameSessionContainer apiClients={apiClients} />
             }
           </Route>
           <Route path="/new/:gameId">
-            {apiClients && 
+            { apiClients && 
               <CreateNewGameSession apiClients={apiClients} />
             }
           </Route>

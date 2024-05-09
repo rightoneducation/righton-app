@@ -59,7 +59,6 @@ async function createAndSignRequest(query, variables) {
     body: JSON.stringify({ query, variables }),
     path: endpoint.pathname
   });
-  
   return new Request(GRAPHQL_ENDPOINT, await signer.sign(requestToBeSigned));
 }
 /**
