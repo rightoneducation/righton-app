@@ -1,135 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onGameSessionUpdatedById = /* GraphQL */ `
-  subscription OnGameSessionUpdatedById($id: ID!) {
-    onGameSessionUpdatedById(id: $id) {
-      id
-      gameId
-      startTime
-      phaseOneTime
-      phaseTwoTime
-      teams {
-        nextToken
-        __typename
-      }
-      currentQuestionIndex
-      currentState
-      gameCode
-      isAdvancedMode
-      imageUrl
-      description
-      title
-      currentTimer
-      questions {
-        nextToken
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
-  subscription OnTeamMemberUpdateByTeamId($teamTeamMembersId: ID!) {
-    onTeamMemberUpdateByTeamId(teamTeamMembersId: $teamTeamMembersId) {
-      id
-      isFacilitator
-      answers {
-        nextToken
-        __typename
-      }
-      deviceId
-      createdAt
-      updatedAt
-      teamTeamMembersId
-      __typename
-    }
-  }
-`;
-export const onTeamCreateByGameSessionId = /* GraphQL */ `
-  subscription OnTeamCreateByGameSessionId($gameSessionTeamsId: ID!) {
-    onTeamCreateByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
-      id
-      name
-      question {
-        id
-        text
-        choices
-        answerSettings
-        responses
-        hints
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isConfidenceEnabled
-        isShortAnswerEnabled
-        isHintEnabled
-        gameSessionId
-        __typename
-      }
-      teamMembers {
-        nextToken
-        __typename
-      }
-      score
-      selectedAvatarIndex
-      createdAt
-      updatedAt
-      gameSessionTeamsId
-      teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
-      __typename
-    }
-  }
-`;
-export const onTeamDeleteByGameSessionId = /* GraphQL */ `
-  subscription OnTeamDeleteByGameSessionId($gameSessionTeamsId: ID!) {
-    onTeamDeleteByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
-      id
-      name
-      question {
-        id
-        text
-        choices
-        answerSettings
-        responses
-        hints
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isConfidenceEnabled
-        isShortAnswerEnabled
-        isHintEnabled
-        gameSessionId
-        __typename
-      }
-      teamMembers {
-        nextToken
-        __typename
-      }
-      score
-      selectedAvatarIndex
-      createdAt
-      updatedAt
-      gameSessionTeamsId
-      teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
-      __typename
-    }
-  }
-`;
 export const onCreateGameTemplate = /* GraphQL */ `
   subscription OnCreateGameTemplate(
     $filter: ModelSubscriptionGameTemplateFilterInput
@@ -798,6 +669,135 @@ export const onDeleteGameQuestions = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      __typename
+    }
+  }
+`;
+export const onGameSessionUpdatedById = /* GraphQL */ `
+  subscription OnGameSessionUpdatedById($id: ID!) {
+    onGameSessionUpdatedById(id: $id) {
+      id
+      gameId
+      startTime
+      phaseOneTime
+      phaseTwoTime
+      teams {
+        nextToken
+        __typename
+      }
+      currentQuestionIndex
+      currentState
+      gameCode
+      isAdvancedMode
+      imageUrl
+      description
+      title
+      currentTimer
+      questions {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
+  subscription OnTeamMemberUpdateByTeamId($teamTeamMembersId: ID!) {
+    onTeamMemberUpdateByTeamId(teamTeamMembersId: $teamTeamMembersId) {
+      id
+      isFacilitator
+      answers {
+        nextToken
+        __typename
+      }
+      deviceId
+      createdAt
+      updatedAt
+      teamTeamMembersId
+      __typename
+    }
+  }
+`;
+export const onTeamCreateByGameSessionId = /* GraphQL */ `
+  subscription OnTeamCreateByGameSessionId($gameSessionTeamsId: ID!) {
+    onTeamCreateByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
+      id
+      name
+      question {
+        id
+        text
+        choices
+        answerSettings
+        responses
+        hints
+        imageUrl
+        instructions
+        standard
+        cluster
+        domain
+        grade
+        order
+        isConfidenceEnabled
+        isShortAnswerEnabled
+        isHintEnabled
+        gameSessionId
+        __typename
+      }
+      teamMembers {
+        nextToken
+        __typename
+      }
+      score
+      selectedAvatarIndex
+      createdAt
+      updatedAt
+      gameSessionTeamsId
+      teamQuestionId
+      teamQuestionOrder
+      teamQuestionGameSessionId
+      __typename
+    }
+  }
+`;
+export const onTeamDeleteByGameSessionId = /* GraphQL */ `
+  subscription OnTeamDeleteByGameSessionId($gameSessionTeamsId: ID!) {
+    onTeamDeleteByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
+      id
+      name
+      question {
+        id
+        text
+        choices
+        answerSettings
+        responses
+        hints
+        imageUrl
+        instructions
+        standard
+        cluster
+        domain
+        grade
+        order
+        isConfidenceEnabled
+        isShortAnswerEnabled
+        isHintEnabled
+        gameSessionId
+        __typename
+      }
+      teamMembers {
+        nextToken
+        __typename
+      }
+      score
+      selectedAvatarIndex
+      createdAt
+      updatedAt
+      gameSessionTeamsId
+      teamQuestionId
+      teamQuestionOrder
+      teamQuestionGameSessionId
       __typename
     }
   }

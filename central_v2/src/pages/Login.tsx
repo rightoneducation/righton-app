@@ -4,7 +4,7 @@ import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import RightOnLogo from "../images/RightOnLogo.png";
 import { GoogleLogin } from '@react-oauth/google';
-import { IAuthAPIClient, handleGoogleSignIn } from "@righton/networking";
+import { IAuthAPIClient } from "@righton/networking";
 
 interface LoginProps {
   authAPIClient: IAuthAPIClient;
@@ -18,9 +18,7 @@ const Login = ({
   const [password, setPassword] = React.useState("");
   const [adminError, setAdminError] = React.useState(false);
   const handleGoogleLogin = async(googleToken: string) => {
-    if (await authAPIClient.handleGoogleSignIn(googleToken)){
-      window.location.href = "/";
-    }
+    console.log('google signin');
   }
 
   const handleSubmit = async (e: React.SyntheticEvent<Element, Event>) => {

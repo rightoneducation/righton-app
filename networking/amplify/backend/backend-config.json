@@ -68,21 +68,6 @@
     }
   },
   "function": {
-    "createGame": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ],
-          "category": "api",
-          "resourceName": "mobile"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "mobile6060603cPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",

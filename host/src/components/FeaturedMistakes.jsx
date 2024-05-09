@@ -35,6 +35,9 @@ export default function FeaturedMistakes({
         return mistakes;
       }, []);
     let sortedMistakes = extractedMistakes.sort((a, b) => {
+      if (a.percent === b.percent) {
+        return a.answer.localeCompare(b.answer);
+      }
       return b.percent - a.percent;
     });
     if (isPopularMode) {
