@@ -234,7 +234,7 @@ export default function GameInProgressContentSwitch({
       ) : (
         graphClickRenderSwitch(graphClickInfo)
       )
-      };
+      }
     </Box>,
   ];
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GameSessionState,GameSessionParser } from '@righton/networking';
+import { GameSessionState,GameSessionParser, ConfidenceLevel } from '@righton/networking';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
@@ -20,10 +20,9 @@ interface ConfidenceOption {
 }
 
 export default function GameSessionContainer() {
-  const gameSession = GameSessionParser.gameSessionFromAWSGameSession({
-    ...MockGameSession,
-    currentState: MockGameSession.currentState as GameSessionState,
-  });
+  
+  const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
+    currentState: MockGameSession.currentState as GameSessionState}); 
 
   const samplePlayerOne: Player = {
     answer: 'C',

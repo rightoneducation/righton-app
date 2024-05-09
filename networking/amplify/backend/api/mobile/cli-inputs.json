@@ -4,17 +4,12 @@
     "apiName": "mobile",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "authmobile6060603c"
+      "mode": "API_KEY",
+      "expirationTime": 365,
+      "apiKeyExpirationDate": "2025-04-04T19:50:54.710Z",
+      "keyDescription": "apikey"
     },
     "conflictResolution": {},
-    "additionalAuthTypes": [
-      {
-        "mode": "API_KEY",
-        "expirationTime": 7,
-        "apiKeyExpirationDate": "2024-04-11T19:35:58.316Z",
-        "keyDescription": ""
-      }
-    ]
+    "additionalAuthTypes": []
   }
 }
