@@ -394,6 +394,9 @@ export const RouteContainer = ({
   const persistUserAuth = (async () => {
     let user = null;
     try {
+      Auth.currentCredentials()
+      .then(data => console.log(data))
+      .catch(err => console.error(err));
       user = await Auth.currentAuthenticatedUser();
       console.log(user);
       if (user) {

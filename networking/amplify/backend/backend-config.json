@@ -12,14 +12,16 @@
       ],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authmobile6060603c"
+              }
+            }
+          ],
           "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDate": "2025-04-04T19:50:54.710Z",
-              "apiKeyExpirationDays": 365,
-              "description": "apikey"
-            },
-            "authenticationType": "API_KEY"
+            "authenticationType": "AWS_IAM"
           }
         }
       },
@@ -73,6 +75,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "mobile6060603cPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -81,6 +88,38 @@
         {
           "category": "auth",
           "resourceName": "mobile6060603c"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGame_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
         }
       ]
     },

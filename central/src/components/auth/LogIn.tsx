@@ -19,7 +19,11 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     setLoading(true);
 
     try {
+      try{
       await Auth.signIn(email, password);
+      } catch (e) {
+        console.log(e);
+      }
       const user = await Auth.currentAuthenticatedUser();
       console.log(user);
       if (user.signInUserSession.accessToken.payload["cognito:groups"].includes('Teacher_Auth')){
@@ -42,8 +46,10 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
 
   const handleGoogleLogin = async(googleToken: string) => {
     if (await handleGoogleSignIn(googleToken)){
+      const user = await Auth.currentAuthenticatedUser();
+      console.log(user);
       handleUserAuth(true);
-      window.location.href = "/";
+      //window.location.href = "/";
     }
   }
 

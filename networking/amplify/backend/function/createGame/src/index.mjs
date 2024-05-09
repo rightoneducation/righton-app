@@ -22,7 +22,6 @@ import { default as fetch, Request } from 'node-fetch';
 const GRAPHQL_ENDPOINT = process.env.API_MOBILE_GRAPHQLAPIENDPOINTOUTPUT;
 const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const { Sha256 } = crypto;
-const API_KEY = process.env.API_MOBILE_GRAPHQLAPIKEYOUTPUT;
 
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   let questionTemplates = [];
@@ -64,19 +63,28 @@ async function createAndSignRequest(query, variables) {
     service: 'appsync',
     sha256: crypto.Sha256
   });
+  const credentials = await Auth.currentCredentials();
+  const accessKeyId = credentials.accessKeyId;
+  const secretAccessKey = credentials.secretAccessKey;
+  const sessionToken = credentials.sessionToken;
 
   const requestToBeSigned = new HttpRequest({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': API_KEY ?? '',
+      'X-Amz-Security-Token': sessionToken,
       host: endpoint.host,
     },
     hostname: endpoint.host,
     body: JSON.stringify({ query, variables }),
     path: endpoint.pathname
   });
-  return new Request(endpoint, await signer.sign(requestToBeSigned));
+
+  return new Request(endpoint, await signer.sign(requestToBeSigned, {
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+    sessionToken: sessionToken
+  }));
 }
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
