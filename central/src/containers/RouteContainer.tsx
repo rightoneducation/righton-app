@@ -398,6 +398,7 @@ export const RouteContainer = ({
       .then(data => console.log(data))
       .catch(err => console.error(err));
       user = await Auth.currentAuthenticatedUser();
+      console.log(user);
       if (user) {
         setIsUserAuth(true);
       }

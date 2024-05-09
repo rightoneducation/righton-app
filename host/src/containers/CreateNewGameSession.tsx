@@ -14,6 +14,7 @@ const CreateNewGameSession = ({apiClients}:CreateNewGameSessionProps) => {
 
   useEffect(() => {
     apiClients.gameSession.createGameSessionFromTemplate(gameId).then((response) => {
+      console.log(response);
       if (!response) {
         return;
       }
