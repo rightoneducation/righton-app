@@ -19,13 +19,8 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     setLoading(true);
 
     try {
-      try{
       await signIn({username: email, password: password});
-      } catch (e) {
-        console.log(e);
-      }
       const user = await fetchAuthSession();
-      console.log(user);
       if (user && user.tokens && user.tokens.accessToken) {
         const groups = user.tokens.accessToken.payload["cognito:groups"];
         if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {

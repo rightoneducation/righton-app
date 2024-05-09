@@ -9,7 +9,6 @@ export const handleGoogleSignIn = async (googleCredential: string): Promise<Bool
     {provider: 'Google'}
   );
   const currentUser = await fetchUserAttributes();
-  console.log(currentUser);
   if (currentUser)
     return true;
   return false;
