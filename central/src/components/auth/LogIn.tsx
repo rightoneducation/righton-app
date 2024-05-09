@@ -1,7 +1,7 @@
 import React from "react";
+import { signIn, signOut, fetchAuthSession } from "@aws-amplify/auth";
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
-import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
 import { Grid, Typography } from "@material-ui/core";
 import RightOnLogo from "./RightOnLogo.png";
@@ -19,19 +19,17 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     setLoading(true);
 
     try {
-      try{
-      await Auth.signIn(email, password);
-      } catch (e) {
-        console.log(e);
-      }
-      const user = await Auth.currentAuthenticatedUser();
-      console.log(user);
-      if (user.signInUserSession.accessToken.payload["cognito:groups"].includes('Teacher_Auth')){
-        handleUserAuth(true);
-        window.location.href = "/";
+      await signIn({username: email, password: password});
+      const user = await fetchAuthSession();
+      if (user && user.tokens && user.tokens.accessToken) {
+        const groups = user.tokens.accessToken.payload["cognito:groups"];
+        if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
+            handleUserAuth(true);
+            window.location.href = "/";
+        }
       }
       else {
-        await Auth.signOut();
+        await signOut();
         setAdminError(true);
       }
 
@@ -46,8 +44,6 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
 
   const handleGoogleLogin = async(googleToken: string) => {
     if (await handleGoogleSignIn(googleToken)){
-      const user = await Auth.currentAuthenticatedUser();
-      console.log(user);
       handleUserAuth(true);
       //window.location.href = "/";
     }

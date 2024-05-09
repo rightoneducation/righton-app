@@ -13,7 +13,7 @@
     "@react-oauth/google": "^0.12.1",
     "@types/lodash": "^4.14.202",
     "@types/react-router-dom": "^5.1.5",
-    "aws-amplify": "^4.3.36",
+    "aws-amplify": "^6.0.30",
     "aws-sdk": "^2.1573.0",
     "axios": "^1.6.0",
     "babel-loader": "8.1.0",

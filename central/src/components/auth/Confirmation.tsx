@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
-import { Auth } from "aws-amplify";
+import {confirmSignUp} from "@aws-amplify/auth";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
@@ -20,7 +20,7 @@ const Confirmation: React.FC = () => {
     setLoading(true);
 
     try {
-      await Auth.confirmSignUp(email, String(code));
+      await confirmSignUp({username: email, confirmationCode: String(code)});
       setDisplayText(true);
     } catch (error) {
       console.log(error);

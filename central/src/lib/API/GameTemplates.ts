@@ -5,7 +5,6 @@ import {
   UpdateGameTemplateInput,
   isNullOrUndefined
 } from '@righton/networking';
-// import { Auth } from 'aws-amplify';
 import { IListQuerySettings, SortField } from './QueryInputs';
 import { Auth } from 'aws-amplify';
 
