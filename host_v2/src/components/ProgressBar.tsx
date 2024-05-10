@@ -27,7 +27,7 @@ const PBTotalTypography = styled(Typography)({
 const PBDescriptionTypography = styled(Typography)({
   width: '160px', // 144 but bad
   height: '19px',
-  font: 'Rubik',
+  fontFamily: 'Rubik',
   fontWeight: '400',
   fontSize: '16px',
   lineHeight: '18.96px',
