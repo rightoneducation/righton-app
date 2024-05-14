@@ -2,11 +2,12 @@ import {
   IAPIClients,
   IGameQuestion,
   CreatePublicGameQuestionsInput,
-  CreatePrivateGameQuestionsInput
+  CreatePrivateGameQuestionsInput,
+  PublicPrivateType
 } from '@righton/networking';
 
 export const createGameQuestions = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   createGameQuestionsInput: CreatePublicGameQuestionsInput | CreatePrivateGameQuestionsInput
 ): Promise<IGameQuestion | null> => {
@@ -20,7 +21,7 @@ export const createGameQuestions = async (
 }
 
 export const getGameQuestions = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients,
   id: string
 ): Promise<IGameQuestion | null> => {
@@ -35,7 +36,7 @@ export const getGameQuestions = async (
 }
 
 export const deleteGameQuestions = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   id: string
 ): Promise<boolean> => {
@@ -43,7 +44,7 @@ export const deleteGameQuestions = async (
 };
 
 export const getSortedGameQuestionss = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   queryLimit: number, 
   nextToken: string | null

@@ -1,3 +1,4 @@
+import { PublicPrivateType } from "../../BaseAPIClient";
 import { IGameTemplate } from "../../../Models";
 import { 
   createPublicGameTemplate,
@@ -146,30 +147,30 @@ export const gameTemplateRuntimeMap = {
 
 }
 
-export type GameTemplateType<T extends 'public' | 'private'> = T extends 'public' ? IPublicGameTemplate : IPrivateGameTemplate;
+export type GameTemplateType<T extends PublicPrivateType> = T extends 'public' ? IPublicGameTemplate : IPrivateGameTemplate;
 
 export interface IGameTemplateAPIClient {
-  createGameTemplate<T extends 'public' | 'private'>(
+  createGameTemplate<T extends PublicPrivateType>(
     type: T,
     createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate>;
 
-  getGameTemplate<T extends 'public' | 'private'>(
+  getGameTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<IGameTemplate>;
 
-  updateGameTemplate<T extends 'public' | 'private'>(
+  updateGameTemplate<T extends PublicPrivateType>(
     type: T,
     updateGameTemplateInput: GameTemplateType<T>['update']['input'] | IGameTemplate
   ): Promise<IGameTemplate>;
 
-  deleteGameTemplate<T extends 'public' | 'private'>(
+  deleteGameTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<boolean>;
 
-  listGameTemplates<T extends 'public' | 'private'>(
+  listGameTemplates<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -177,7 +178,7 @@ export interface IGameTemplateAPIClient {
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
-  listGameTemplatesByDate<T extends 'public' | 'private'>(
+  listGameTemplatesByDate<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -185,7 +186,7 @@ export interface IGameTemplateAPIClient {
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
-  listGameTemplatesByGrade<T extends 'public' | 'private'>(
+  listGameTemplatesByGrade<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -193,7 +194,7 @@ export interface IGameTemplateAPIClient {
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
-  listGameTemplatesByQuestionTemplatesCount<T extends 'public' | 'private'>(
+  listGameTemplatesByQuestionTemplatesCount<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,

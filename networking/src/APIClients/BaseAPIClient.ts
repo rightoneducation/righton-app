@@ -13,6 +13,11 @@ export enum HTTPMethod {
   Post = "POST",
 }
 
+export enum PublicPrivateType {
+  PUBLIC = "public",
+  PRIVATE = "private",
+}
+
 export interface GraphQLOptions {
   input?: object;
   variables?: object;

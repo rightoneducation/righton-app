@@ -1,6 +1,7 @@
 import {
   IAPIClients,
   IGameTemplate,
+  PublicPrivateType,
   CreatePublicGameTemplateInput,
   CreatePrivateGameTemplateInput,
   UpdatePublicGameTemplateInput,
@@ -9,7 +10,7 @@ import {
 import { IListQuerySettings, SortField } from './QueryInputs';
 
 export const createGameTemplate = async (
-  type: 'public' | 'private', 
+  type: PublicPrivateType, 
   apiClients: IAPIClients, 
   createGameTemplateInput: CreatePublicGameTemplateInput | CreatePrivateGameTemplateInput
 ): Promise<IGameTemplate | null> => {
@@ -23,7 +24,7 @@ export const createGameTemplate = async (
 }
 
 export const getGameTemplate = async (
-  type: 'public' | 'private', 
+  type: PublicPrivateType, 
   apiClients: IAPIClients, 
   id: string
 ): Promise<IGameTemplate | null> => {
@@ -38,7 +39,7 @@ export const getGameTemplate = async (
 }
 
 export const updateGameTemplate = async (
-  type: 'public' | 'private', 
+  type: PublicPrivateType, 
   apiClients: IAPIClients, 
   updateGameTemplateInput: UpdatePublicGameTemplateInput | UpdatePrivateGameTemplateInput
 ): Promise<IGameTemplate | null> => {
@@ -57,7 +58,7 @@ export const updateGameTemplate = async (
 };
 
 export const deleteGameTemplate = async (
-  type: 'public' | 'private', 
+  type: PublicPrivateType, 
   apiClients: IAPIClients, 
   id: string
 ): Promise<boolean> => {
@@ -76,7 +77,7 @@ export const deleteGameTemplate = async (
 };
 
 export const listGameTemplates = async (
-  type: 'public' | 'private', 
+  type: PublicPrivateType, 
   apiClients: IAPIClients, 
   listQuerySettings: IListQuerySettings | null
 ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {

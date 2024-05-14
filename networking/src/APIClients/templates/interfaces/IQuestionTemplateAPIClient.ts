@@ -1,3 +1,4 @@
+import { PublicPrivateType } from "../../BaseAPIClient";
 import { IQuestionTemplate } from "../../../Models";
 import {
   createPublicQuestionTemplate,
@@ -145,30 +146,30 @@ export const questionTemplateRuntimeMap = {
   }
 }
 
-export type QuestionTemplateType<T extends 'public' | 'private'> = T extends 'public' ? IPublicQuestionTemplate : IPrivateQuestionTemplate;
+export type QuestionTemplateType<T extends PublicPrivateType> = T extends 'public' ? IPublicQuestionTemplate : IPrivateQuestionTemplate;
 
 export interface IQuestionTemplateAPIClient {
-  createQuestionTemplate<T extends 'public' | 'private'>(
+  createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     createQuestionTemplateInput: QuestionTemplateType<T>['create']['input'] | IQuestionTemplate
   ): Promise<IQuestionTemplate>;
 
-  getQuestionTemplate<T extends 'public' | 'private'>(
+  getQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<IQuestionTemplate>;
 
-  updateQuestionTemplate<T extends 'public' | 'private'>(
+  updateQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     updateQuestionTemplateInput: QuestionTemplateType<T>['update']['input'] | IQuestionTemplate
   ): Promise<IQuestionTemplate>;
 
-  deleteQuestionTemplate<T extends 'public' | 'private'>(
+  deleteQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<boolean>;
 
-  listQuestionTemplates<T extends 'public' | 'private'>(
+  listQuestionTemplates<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -176,7 +177,7 @@ export interface IQuestionTemplateAPIClient {
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
-  listQuestionTemplatesByDate<T extends 'public' | 'private'>(
+  listQuestionTemplatesByDate<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -184,7 +185,7 @@ export interface IQuestionTemplateAPIClient {
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
-  listQuestionTemplatesByGrade<T extends 'public' | 'private'>(
+  listQuestionTemplatesByGrade<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,
@@ -192,7 +193,7 @@ export interface IQuestionTemplateAPIClient {
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
-  listQuestionTemplatesByGameTemplatesCount<T extends 'public' | 'private'>(
+  listQuestionTemplatesByGameTemplatesCount<T extends PublicPrivateType>(
     type: T,
     limit: number | null,
     nextToken: string | null,

@@ -1,4 +1,4 @@
-import { BaseAPIClient } from "../BaseAPIClient";
+import { BaseAPIClient, PublicPrivateType } from "../BaseAPIClient";
 import { QuestionTemplateType, questionTemplateRuntimeMap, IQuestionTemplateAPIClient } from "./interfaces/IQuestionTemplateAPIClient";
 import { IQuestionTemplate } from "../../Models";
 import { QuestionTemplateParser } from "../../Parsers/QuestionTemplateParser";
@@ -10,7 +10,7 @@ export class QuestionTemplateAPIClient
   extends BaseAPIClient
   implements IQuestionTemplateAPIClient
 {
-  async createQuestionTemplate<T extends 'public' | 'private'>(
+  async createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     createQuestionTemplateInput: QuestionTemplateType<T>['create']['input'] | IQuestionTemplate
   ): Promise<IQuestionTemplate> {
@@ -29,7 +29,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate as AWSQuestionTemplate);
   }
 
-  async getQuestionTemplate<T extends 'public' | 'private'>(
+  async getQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<IQuestionTemplate> {
@@ -52,7 +52,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate({} as AWSQuestionTemplate);
   }
 
-  async updateQuestionTemplate<T extends 'public' | 'private'>(
+  async updateQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     updateQuestionTemplateInput: QuestionTemplateType<T>['update']['input']
   ): Promise<IQuestionTemplate> {
@@ -71,7 +71,7 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.updateQuestionTemplate as AWSQuestionTemplate);
   }
 
-  async deleteQuestionTemplate<T extends 'public' | 'private'>(
+  async deleteQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     id: string
   ): Promise<boolean> {
@@ -86,7 +86,7 @@ export class QuestionTemplateAPIClient
     return (!isNullOrUndefined(result));
   }
 
-  async listQuestionTemplates<T extends 'public' | 'private'>(
+  async listQuestionTemplates<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -98,7 +98,7 @@ export class QuestionTemplateAPIClient
     return response;
   }
 
-  async listQuestionTemplatesByDate<T extends 'public' | 'private'>(
+  async listQuestionTemplatesByDate<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -110,7 +110,7 @@ export class QuestionTemplateAPIClient
     return response;
   }
 
-  async listQuestionTemplatesByGrade<T extends 'public' | 'private'>(
+  async listQuestionTemplatesByGrade<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,
@@ -122,7 +122,7 @@ export class QuestionTemplateAPIClient
     return response;
   }
 
-  async listQuestionTemplatesByGameTemplatesCount<T extends 'public' | 'private'>(
+  async listQuestionTemplatesByGameTemplatesCount<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,

@@ -1,6 +1,7 @@
 import {
   IAPIClients,
   IQuestionTemplate,
+  PublicPrivateType,
   CreatePublicQuestionTemplateInput,
   CreatePrivateQuestionTemplateInput,
   UpdatePublicQuestionTemplateInput,
@@ -9,7 +10,7 @@ import {
 import { IListQuerySettings, SortField } from './QueryInputs';
 
 export const createQuestionTemplate = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   createQuestionTemplateInput: CreatePublicQuestionTemplateInput | CreatePrivateQuestionTemplateInput
 ): Promise<IQuestionTemplate | null> => {
@@ -23,7 +24,7 @@ export const createQuestionTemplate = async (
 }
 
 export const getQuestionTemplate = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   id: string
 ): Promise<IQuestionTemplate | null> => {
@@ -37,7 +38,7 @@ export const getQuestionTemplate = async (
 }
 
 export const updateQuestionTemplate = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   updateQuestionTemplateInput: UpdatePublicQuestionTemplateInput | UpdatePrivateQuestionTemplateInput
 ): Promise<IQuestionTemplate | null> => {
@@ -55,7 +56,7 @@ export const updateQuestionTemplate = async (
 };
 
 export const deleteQuestionTemplate = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   id: string
 ): Promise<boolean> => {
@@ -74,7 +75,7 @@ export const deleteQuestionTemplate = async (
 };
 
 export const listQuestionTemplates = async (
-  type: 'public' | 'private',
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   listQuerySettings: IListQuerySettings | null
 ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null> => {

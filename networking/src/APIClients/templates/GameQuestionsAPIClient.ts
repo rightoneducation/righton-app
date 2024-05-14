@@ -1,11 +1,11 @@
-import { BaseAPIClient } from "../BaseAPIClient";
+import { BaseAPIClient, PublicPrivateType } from "../BaseAPIClient";
 import { IGameQuestionsAPIClient, GameQuestionType, gameQuestionRuntimeMap } from "./interfaces";
 import { IGameQuestion, AWSGameQuestion } from "../../Models";
 import { GameQuestionParser } from "../../Parsers/GameQuestionParser";
 import { isNullOrUndefined } from "../../global";
 
 export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuestionsAPIClient {
-    async createGameQuestions<T extends 'public' | 'private'>(
+    async createGameQuestions<T extends PublicPrivateType>(
         type: T,
         input: GameQuestionType<T>['create']['input']
     ): Promise<IGameQuestion> {
@@ -21,7 +21,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions.data.createGameQuestions as AWSGameQuestion) as IGameQuestion;
     }
 
-    async getGameQuestions<T extends 'public' | 'private'>(
+    async getGameQuestions<T extends PublicPrivateType>(
         type: T,
         id: string
     ): Promise<IGameQuestion> {
@@ -40,7 +40,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         return GameQuestionParser.gameQuestionFromAWSGameQuestion(result.data.getGameQuestions as AWSGameQuestion) as IGameQuestion;
     }
 
-    async deleteGameQuestions<T extends 'public' | 'private'>(
+    async deleteGameQuestions<T extends PublicPrivateType>(
         type: T,
         id: string
     ): Promise<boolean> {
@@ -59,7 +59,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         return (!isNullOrUndefined(result));
     }
 
-    async listGameQuestions<T extends 'public' | 'private'>(
+    async listGameQuestions<T extends PublicPrivateType>(
         type: T, 
         limit: number, 
         nextToken: string | null

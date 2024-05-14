@@ -1,3 +1,4 @@
+import { PublicPrivateType } from "../../BaseAPIClient";
 import { IGameQuestion } from "../../../Models";
 import { 
   CreatePublicGameQuestionsInput, 
@@ -106,26 +107,26 @@ export const gameQuestionRuntimeMap = {
   }
 };
 
-export type GameQuestionType<T extends 'public' | 'private'> = 
+export type GameQuestionType<T extends PublicPrivateType> = 
     T extends 'public' ? IPublicGameQuestion : IPrivateGameQuestion;
 
 export interface IGameQuestionsAPIClient {
-  createGameQuestions<T extends 'public' | 'private'>(
+  createGameQuestions<T extends PublicPrivateType>(
     type: T,
     createGameQuestionsInput: GameQuestionType<T>['create']['input']
   ): Promise<IGameQuestion>;
 
-  getGameQuestions<T extends 'public' | 'private'>(
+  getGameQuestions<T extends PublicPrivateType>(
     type: T,
     id: string,
   ): Promise<IGameQuestion>;
 
-  deleteGameQuestions<T extends 'public' | 'private'>(
+  deleteGameQuestions<T extends PublicPrivateType>(
     type: T,
     id: string,
   ): Promise<boolean>;
 
-  listGameQuestions<T extends 'public' | 'private'>(
+  listGameQuestions<T extends PublicPrivateType>(
     type: T,
     limit: number,
     nextToken: string | null,
