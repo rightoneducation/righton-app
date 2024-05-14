@@ -1,28 +1,7 @@
 import { BaseAPIClient } from "../BaseAPIClient";
-import { IGameTemplateAPIClient } from "./interfaces";
+import { GameTemplateType, gameTemplateRuntimeMap, IGameTemplateAPIClient } from "./interfaces/IGameTemplateAPIClient";
 import { IGameTemplate } from "../../Models";
 import { GameTemplateParser } from "../../Parsers/GameTemplateParser";
-import { 
-  createGameTemplate,
-  getGameTemplate,
-  updateGameTemplate,
-  deleteGameTemplate,
-  listGameTemplates,
-  gameTemplatesByDate,
-  gameTemplatesByGrade,
-  gameTemplatesByQuestionTemplatesCount
-} from "../../graphql";
-import { 
-  CreateGameTemplateInput, 
-  CreateGameTemplateMutation, 
-  GetGameTemplateQuery,
-  UpdateGameTemplateInput, 
-  UpdateGameTemplateMutation, 
-  UpdateGameTemplateMutationVariables,
-  DeleteGameTemplateInput,
-  DeleteGameTemplateMutation,
-  DeleteGameTemplateMutationVariables
-} from "../../AWSMobileApi";
 import { AWSGameTemplate } from "../../Models";
 import { isNullOrUndefined } from "../../global";
 import { GraphQLOptions } from "../BaseAPIClient";
@@ -31,32 +10,38 @@ export class GameTemplateAPIClient
   extends BaseAPIClient
   implements IGameTemplateAPIClient
 {
-  async createGameTemplate( 
-    createGameTemplateInput: CreateGameTemplateInput
+  async createGameTemplate<T extends 'public' | 'private'>( 
+    type: T,
+    createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate> {
-    const variables: GraphQLOptions = { input: createGameTemplateInput as CreateGameTemplateInput }
-    const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
-        createGameTemplate,
+    const variables: GraphQLOptions = { input: createGameTemplateInput as GameTemplateType<T>['create']['input']};
+    const queryFunction = gameTemplateRuntimeMap[type].create.queryFunction;
+    const gameTemplate = await this.callGraphQL<GameTemplateType<T>['create']['query']>(
+        queryFunction,
         variables
-    ) 
+    ) as { data: any};
     if (
-        isNullOrUndefined(gameTemplate.data) ||
-        isNullOrUndefined(gameTemplate.data.createGameTemplate)
+        isNullOrUndefined(gameTemplate?.data) ||
+        isNullOrUndefined(gameTemplate?.data.createGameTemplate)
     ) {
         throw new Error(`Failed to create game template.`)
     }
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate as AWSGameTemplate)
   } 
 
-  async getGameTemplate(id: string): Promise<IGameTemplate> {
+  async getGameTemplate<T extends 'public' | 'private'>(
+    type: T,
+    id: string
+  ): Promise<IGameTemplate> {
     try{
-      const result = await this.callGraphQL<GetGameTemplateQuery>(
-        getGameTemplate,
+      const queryFunction = gameTemplateRuntimeMap[type].get.queryFunction;
+      const result = await this.callGraphQL<GameTemplateType<T>['get']['query']>(
+        queryFunction,
         { id } as unknown as GraphQLOptions
-      )
+      ) as { data: any };
       if (
-        isNullOrUndefined(result.data) ||
-        isNullOrUndefined(result.data.getGameTemplate)
+        isNullOrUndefined(result?.data) ||
+        isNullOrUndefined(result?.data.getGameTemplate)
       ) {
         throw new Error(`Failed to get game template`)
       }
@@ -67,50 +52,85 @@ export class GameTemplateAPIClient
     return GameTemplateParser.gameTemplateFromAWSGameTemplate({} as AWSGameTemplate);
   }
 
-  async updateGameTemplate(updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate> {
-    const input: UpdateGameTemplateInput = updateGameTemplateInput as UpdateGameTemplateInput;
-    const variables: UpdateGameTemplateMutationVariables = { input };
-    const gameTemplate = await this.callGraphQL<UpdateGameTemplateMutation>(
-        updateGameTemplate,
-        variables as unknown as GraphQLOptions
-    );
+  async updateGameTemplate<T extends 'public' | 'private'>(
+    type: T,
+    updateGameTemplateInput: GameTemplateType<T>['update']['input']
+  ): Promise<IGameTemplate> {
+    const queryFunction = gameTemplateRuntimeMap[type].update.queryFunction;
+    const variables: GameTemplateType<T>['update']['variables'] = { input: updateGameTemplateInput };
+    const gameTemplate = await this.callGraphQL<GameTemplateType<T>['update']['query']>(
+        queryFunction,
+        variables
+    ) as {data: any};
     if (
-        isNullOrUndefined(gameTemplate.data) ||
-        isNullOrUndefined(gameTemplate.data.updateGameTemplate)
+        isNullOrUndefined(gameTemplate?.data) ||
+        isNullOrUndefined(gameTemplate?.data.updateGameTemplate)
     ) {
         throw new Error(`Failed to update game template`);
     }
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.updateGameTemplate as AWSGameTemplate);
   }
 
-  async deleteGameTemplate(id: string): Promise<boolean> {
-    const input: DeleteGameTemplateInput = {id};
-    const variables: DeleteGameTemplateMutationVariables = { input };
-    const result = await this.callGraphQL<DeleteGameTemplateMutation>(
-        deleteGameTemplate,
-        variables as unknown as GraphQLOptions
-    );
+  async deleteGameTemplate<T extends 'public' | 'private'>(
+    type: T,
+    id: string
+  ): Promise<boolean> {
+    const queryFunction = gameTemplateRuntimeMap[type].delete.queryFunction;
+    const input: GameTemplateType<T>['delete']['input'] = {id};
+    const variables: GameTemplateType<T>['delete']['variables'] = { input };
+    const result = await this.callGraphQL<GameTemplateType<T>['delete']['query']>(
+        queryFunction,
+        variables
+    ) as {data: any};
     // if return is true, the delete was successful
     return (!isNullOrUndefined(result));
   }
 
-  async listGameTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", listGameTemplates, "listGameTemplates"); 
+  async listGameTemplates<T extends 'public' | 'private'>(
+    type: T,
+    limit: number, 
+    nextToken: string | null, 
+    sortDirection: string | null, 
+    filterString: string | null
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.default;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", queryFunction, "listGameTemplates"); 
     return response;
   }
 
-  async listGameTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByDate, "gameTemplatesByDate");
+  async listGameTemplatesByDate<T extends 'public' | 'private'>(
+    type: T,
+    limit: number, 
+    nextToken: string | null, 
+    sortDirection: string | null, 
+    filterString: string | null
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byDate;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", queryFunction, "gameTemplatesByDate");
     return response;
   }
 
-  async listGameTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByGrade, "gameTemplatesByGrade");
+  async listGameTemplatesByGrade<T extends 'public' | 'private'>(
+    type: T,
+    limit: number, 
+    nextToken: string | null, 
+    sortDirection: string | null, 
+    filterString: string | null
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byGrade;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", queryFunction, "gameTemplatesByGrade");
     return response; 
   }
 
-  async listGameTemplatesByQuestionTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByQuestionTemplatesCount, "gameTemplatesByQuestionTemplatesCount");
+  async listGameTemplatesByQuestionTemplatesCount<T extends 'public' | 'private'>(
+    type: T,
+    limit: number,
+    nextToken: string | null, 
+    sortDirection: string | null, 
+    filterString: string | null
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byQuestionTemplatesCount;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", queryFunction, "gameTemplatesByQuestionTemplatesCount");
     return response;
   }
 }
