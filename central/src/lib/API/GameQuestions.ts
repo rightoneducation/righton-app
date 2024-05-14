@@ -9,9 +9,14 @@ import {
 export const createGameQuestions = async (
   type: PublicPrivateType,
   apiClients: IAPIClients, 
-  createGameQuestionsInput: CreatePublicGameQuestionsInput | CreatePrivateGameQuestionsInput
+  ids: { questionTemplateID: string, gameTemplateID: string }
 ): Promise<IGameQuestion | null> => {
   try {
+    let createGameQuestionsInput: CreatePublicGameQuestionsInput | CreatePrivateGameQuestionsInput | null = null;
+    if (type === PublicPrivateType.PUBLIC) 
+      createGameQuestionsInput = { publicQuestionTemplateID: ids.questionTemplateID, publicGameTemplateID: ids.gameTemplateID };
+    else
+      createGameQuestionsInput = { privateQuestionTemplateID: ids.questionTemplateID, privateGameTemplateID: ids.gameTemplateID };
     const gameQuestions = await apiClients.gameQuestions.createGameQuestions(type, createGameQuestionsInput);
     return gameQuestions;
   } catch (e) {
