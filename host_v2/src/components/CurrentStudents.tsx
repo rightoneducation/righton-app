@@ -82,13 +82,14 @@ const BoxStyled = styled(Box)({
 
 function CurrentStudents ({ teams, handleDeleteTeam }: CurrentStudentProps) {
   const sortedTeams = teams ? [...teams].sort((a, b) => a.name.localeCompare(b.name)) : [];
+  const fakeTeam = 'c7f712e7-084b-48a0-a024-edfc3292d98d';
   return (
       <BoxStyled>
           {sortedTeams.map((team) => (
               <MenuItemStyled key={uuidv4()}>
                   <MonsterContainer/>
                   <GridNameStyled>{team.name}</GridNameStyled>
-                  <CloseSvg onClick={()=>handleDeleteTeam(team.id)}/>
+                  <CloseSvg onClick={()=>handleDeleteTeam(fakeTeam)}/>
               </MenuItemStyled>
           ))}
       </BoxStyled>
