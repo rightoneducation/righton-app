@@ -94,7 +94,7 @@ export class GameTemplateAPIClient
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.default;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", queryFunction, "listGameTemplates"); 
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, type, queryFunction); 
     return response;
   }
 
@@ -106,7 +106,7 @@ export class GameTemplateAPIClient
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byDate;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", queryFunction, "gameTemplatesByDate");
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, type, queryFunction);
     return response;
   }
 
@@ -118,7 +118,7 @@ export class GameTemplateAPIClient
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byGrade;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", queryFunction, "gameTemplatesByGrade");
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, type, queryFunction);
     return response; 
   }
 
@@ -126,11 +126,11 @@ export class GameTemplateAPIClient
     type: T,
     limit: number,
     nextToken: string | null, 
-    sortDirection: string | null, 
+    sortDirection: string | null,  
     filterString: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byQuestionTemplatesCount;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", queryFunction, "gameTemplatesByQuestionTemplatesCount");
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, type, queryFunction);
     return response;
   }
 }

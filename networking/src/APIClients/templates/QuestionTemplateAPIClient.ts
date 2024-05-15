@@ -94,7 +94,7 @@ export class QuestionTemplateAPIClient
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.default;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", queryFunction, "listQuestionTemplates");
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, `list${type}QuestionTemplates`, queryFunction);
     return response;
   }
 
@@ -106,7 +106,7 @@ export class QuestionTemplateAPIClient
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", queryFunction, "questionTemplatesByDate");
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "PublicQuestionTemplate", queryFunction);
     return response;
   }
 
@@ -118,7 +118,7 @@ export class QuestionTemplateAPIClient
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGrade;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", queryFunction, "questionTemplatesByGrade");
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "PublicQuestionTemplate", queryFunction);
     return response;
   }
 
@@ -130,7 +130,7 @@ export class QuestionTemplateAPIClient
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGameTemplatesCount;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", queryFunction, "questionTemplatesByGameTemplatesCount");
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "PublicQuestionTemplate", queryFunction);
     return response;
   }
 }
