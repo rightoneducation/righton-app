@@ -7,7 +7,10 @@
 // import sortMistakes from "../lib/HelperFunctions";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { GameSessionState, GameSessionParser, APIClients, Environment } from '@righton/networking';
+import { GameSessionState, GameSessionParser, 
+  APIClients, Environment,
+  IGameSession,
+ } from '@righton/networking';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
@@ -29,9 +32,30 @@ interface ConfidenceOption {
 
 export default function GameSessionContainer() {
   const apiClients = new APIClients(Environment.Developing);
+  
+  // WHAT I ADDED from host v1 - 
+  // let { gameSessionId } = useParams<{ gameSessionId: string }>();
+  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
+  const gameSessionId = '9eceab46-d5a0-4835-b1e1-a9a1d0f34d80';
+  // const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
+  //   currentState: MockGameSession.currentState as GameSessionState}); 
 
-  const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
-    currentState: MockGameSession.currentState as GameSessionState}); 
+  useEffect(() => {
+    // Fetch game session data from AWS DynamoDB using the provided gameId
+    const fetchGameSession = async () => {
+      try {
+        const response = await apiClients.gameSession.getGameSession(gameSessionId);
+        setGameSession(response); // Set the game session data in state
+      } catch (error) {
+        console.error('error fetching game session:', error);
+      }
+    };
+
+    fetchGameSession();
+  }, [apiClients.gameSession, gameSessionId]);
+
+
+
 
   const samplePlayerOne: Player = {
     answer: 'C',
@@ -95,10 +119,14 @@ export default function GameSessionContainer() {
   const hasRejoined = false;
   const currentTimer = 90;
 
-  const totalTime =
-    gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
-      ? phaseOneTime
-      : phaseTwoTime;
+  // const totalTime =
+  //   gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+  //     ? phaseOneTime
+  //     : phaseTwoTime;
+
+  const totalTime = gameSession && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+    ? phaseOneTime
+    : phaseTwoTime;
 
   const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([ // eslint-disable-line
     {
@@ -162,14 +190,14 @@ export default function GameSessionContainer() {
   }
 
 
-  switch (gameSession.currentState){
+  switch (gameSession?.currentState){
     case GameSessionState.TEAMS_JOINING:
       return (
         <StartGame
-          teams={gameSession.teams ?? []}
-          questions={gameSession.questions}
-          title={gameSession.title ?? ''}
-          gameCode={gameSession.gameCode}
+          teams={gameSession?.teams ?? []}
+          questions={gameSession?.questions}
+          title={gameSession?.title ?? ''}
+          gameCode={gameSession?.gameCode}
           handleDeleteTeam={handleDeleteTeam}
         />
       );
@@ -177,7 +205,7 @@ export default function GameSessionContainer() {
     default:
       return (
         <GameInProgress
-          totalQuestions={gameSession.questions.length ?? 0}
+          totalQuestions={gameSession?.questions.length ?? 0}
           currentQuestionIndex={currentQuestionIndex}
           isCorrect={isCorrect}
           isIncorrect={isIncorrect}
