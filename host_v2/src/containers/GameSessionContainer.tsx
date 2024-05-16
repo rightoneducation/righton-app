@@ -51,8 +51,16 @@ export default function GameSessionContainer() {
       }
     };
 
+    let gameSessionSubscription: any | null = null;
+    gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
+      gameSessionId,
+      (response) => {
+        setGameSession({...gameSession, ...response});
+      },
+    );
+
     fetchGameSession();
-  }, [apiClients.gameSession, gameSessionId]);
+  }, [apiClients.gameSession, gameSessionId]); // eslint-disable-line
 
 
 
