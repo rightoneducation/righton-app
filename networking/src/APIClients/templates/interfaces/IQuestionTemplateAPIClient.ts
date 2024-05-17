@@ -100,7 +100,7 @@ export interface IPrivateQuestionTemplate {
 }
 
 export const questionTemplateRuntimeMap = {
-  public: {
+  Public: {
     create: {
       queryFunction: createPublicQuestionTemplate,
     },
@@ -122,7 +122,7 @@ export const questionTemplateRuntimeMap = {
       },
     },
   },
-  private: {
+  Private: {
     create: {
       queryFunction: createPrivateQuestionTemplate,
     },
@@ -146,7 +146,7 @@ export const questionTemplateRuntimeMap = {
   }
 }
 
-export type QuestionTemplateType<T extends PublicPrivateType> = T extends 'public' ? IPublicQuestionTemplate : IPrivateQuestionTemplate;
+export type QuestionTemplateType<T extends PublicPrivateType> = T extends 'Public' ? IPublicQuestionTemplate : IPrivateQuestionTemplate;
 
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate<T extends PublicPrivateType>(

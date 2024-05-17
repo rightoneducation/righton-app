@@ -100,7 +100,7 @@ export interface IPrivateGameTemplate {
 }
 
 export const gameTemplateRuntimeMap = {
-  public: {
+  Public: {
     create: {
       queryFunction: createPublicGameTemplate,
     },
@@ -122,7 +122,7 @@ export const gameTemplateRuntimeMap = {
       },
     },
   },
-  private: {
+  Private: {
     create: {
       queryFunction: createPrivateGameTemplate,
     },
@@ -144,10 +144,9 @@ export const gameTemplateRuntimeMap = {
       },
     },
   }
-
 }
 
-export type GameTemplateType<T extends PublicPrivateType> = T extends 'public' ? IPublicGameTemplate : IPrivateGameTemplate;
+export type GameTemplateType<T extends PublicPrivateType> = T extends 'Public' ? IPublicGameTemplate : IPrivateGameTemplate;
 
 export interface IGameTemplateAPIClient {
   createGameTemplate<T extends PublicPrivateType>(

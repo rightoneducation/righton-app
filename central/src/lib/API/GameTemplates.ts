@@ -84,6 +84,7 @@ export const listGameTemplates = async (
   try {
     console.log('sup');
     console.log(listQuerySettings);
+    console.log(type);
     const nextToken = listQuerySettings?.nextToken ?? null;
     const sortDirection = listQuerySettings?.sortDirection ?? null;
     const sortField = listQuerySettings?.sortField ?? null;

@@ -94,8 +94,9 @@ export class QuestionTemplateAPIClient
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.default;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, `list${type}QuestionTemplates`, queryFunction);
-    return response;
+    const awsType = `${type}QuestionTemplate`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `list${type}QuestionTemplates`, queryFunction);
+    return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
   async listQuestionTemplatesByDate<T extends PublicPrivateType>(
@@ -106,8 +107,9 @@ export class QuestionTemplateAPIClient
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "PublicQuestionTemplate", queryFunction);
-    return response;
+    const awsType = `${type}QuestionTemplate`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase}QuestionTemplatesByDate`, queryFunction);
+    return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
   async listQuestionTemplatesByGrade<T extends PublicPrivateType>(
@@ -118,8 +120,9 @@ export class QuestionTemplateAPIClient
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGrade;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "PublicQuestionTemplate", queryFunction);
-    return response;
+    const awsType = `${type}QuestionTemplate`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase}QuestionTemplatesByGrade`, queryFunction);
+    return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
   async listQuestionTemplatesByGameTemplatesCount<T extends PublicPrivateType>(
@@ -130,7 +133,8 @@ export class QuestionTemplateAPIClient
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGameTemplatesCount;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "PublicQuestionTemplate", queryFunction);
-    return response;
+    const awsType = `${type}QuestionTemplate`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase}QuestionTemplatesByGameTemplatesCount`, queryFunction);
+    return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 }

@@ -77,7 +77,7 @@ export interface IPrivateGameQuestion {
 
 // runtime mapping of game question type to mutation function
 export const gameQuestionRuntimeMap = {
-  public: {
+  Public: {
     create: {
       queryFunction: createPublicGameQuestions,
     },
@@ -91,7 +91,7 @@ export const gameQuestionRuntimeMap = {
       queryFunction: listPublicGameQuestions,
     },
   },
-  private: {
+  Private: {
     create: {
       queryFunction: createPrivateGameQuestions,
     },
@@ -108,7 +108,7 @@ export const gameQuestionRuntimeMap = {
 };
 
 export type GameQuestionType<T extends PublicPrivateType> = 
-    T extends 'public' ? IPublicGameQuestion : IPrivateGameQuestion;
+    T extends 'Public' ? IPublicGameQuestion : IPrivateGameQuestion;
 
 export interface IGameQuestionsAPIClient {
   createGameQuestions<T extends PublicPrivateType>(

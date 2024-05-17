@@ -433,6 +433,12 @@ export const RouteContainer = ({
       return true;
   };
 
+  const handlePublicPrivateChange = async (value: PublicPrivateType) => {
+    setPublicPrivateQueryType(value);
+    console.log(value);
+    const games = await listGameTemplates(value, apiClients, listQuerySettings);
+  }
+
   // this useEffect establishes the Hub.listener to subscribe to changes in user auth
   useEffect(() => {
     persistUserAuth();
@@ -529,6 +535,8 @@ export const RouteContainer = ({
             handleSearchChange={handleSearchChange}
             sortByCheck={sortByCheck}
             setSortByCheck={setSortByCheck}
+            publicPrivateQueryType={publicPrivateQueryType}
+            handlePublicPrivateChange={handlePublicPrivateChange}
           />
         </Box>
       </Box>

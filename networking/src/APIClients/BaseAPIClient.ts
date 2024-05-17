@@ -14,8 +14,8 @@ export enum HTTPMethod {
 }
 
 export enum PublicPrivateType {
-  PUBLIC = "public",
-  PRIVATE = "private",
+  PUBLIC = "Public",
+  PRIVATE = "Private",
 }
 
 export interface GraphQLOptions {
@@ -120,10 +120,11 @@ export abstract class BaseAPIClient {
       nextToken: string | null, 
       sortDirection: string | null,
       filterString: string | null,
+      awsType: string,
       queryName: string, 
       query: any
     ): Promise<QueryResult | null> {
-      let queryParameters: IQueryParameters = { limit, nextToken };
+      let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
       if (filterString != null) {
         queryParameters.filter = { title: { contains: filterString } };
       }
@@ -134,7 +135,7 @@ export abstract class BaseAPIClient {
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
-      if () {
+      if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
         const gameTemplates = operationResult.items.map(GameTemplateParser.gameTemplateFromAWSGameTemplate);
         return { gameTemplates, nextToken: parsedNextToken } as QueryResult;
       } else {
