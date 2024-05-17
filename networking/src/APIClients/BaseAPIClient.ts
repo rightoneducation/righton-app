@@ -13,6 +13,11 @@ export enum HTTPMethod {
   Post = "POST",
 }
 
+export enum PublicPrivateType {
+  PUBLIC = "Public",
+  PRIVATE = "Private",
+}
+
 export interface GraphQLOptions {
   input?: object;
   variables?: object;
@@ -28,18 +33,13 @@ export interface SubscriptionValue<T> {
 
 export const client = generateClient({});
 
-type QueryResult<T> = T extends "GameTemplate"
-? { gameTemplates: IGameTemplate[]; nextToken: string }
-: T extends "QuestionTemplate"
-? { questionTemplates: IQuestionTemplate[]; nextToken: string }
-: never;
+type QueryResult = { gameTemplates: IGameTemplate[]; nextToken: string } | { questionTemplates: IQuestionTemplate[]; nextToken: string };
 
 // used in GameTemplateAPIClient and QuestionTemplateAPIClient to store query settings
 export interface IQueryParameters { 
   limit?: number | null;
   nextToken: string | null;
   sortDirection?: string | null;
-  type: string;
   [key: string]: any; // This line allows for additional properties like 'filter'
 }
 
@@ -115,16 +115,16 @@ export abstract class BaseAPIClient {
   }
   /* given that GameTemplate and QuestionTemplate are structured in the same way, 
   this function can be used to query both without duplicating a done of code */
-  protected async executeQuery <T extends "GameTemplate" | "QuestionTemplate">(
+  protected async executeQuery(
       limit: number | null, 
       nextToken: string | null, 
       sortDirection: string | null,
       filterString: string | null,
-      type: T, 
-      query: any,
-      queryName: string
-    ): Promise<QueryResult<T> | null> {
-      let queryParameters: IQueryParameters = { limit, nextToken, type };
+      awsType: string,
+      queryName: string, 
+      query: any
+    ): Promise<QueryResult | null> {
+      let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
       if (filterString != null) {
         queryParameters.filter = { title: { contains: filterString } };
       }
@@ -135,12 +135,12 @@ export abstract class BaseAPIClient {
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
-      if (type === "GameTemplate") {
+      if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
         const gameTemplates = operationResult.items.map(GameTemplateParser.gameTemplateFromAWSGameTemplate);
-        return { gameTemplates, nextToken: parsedNextToken } as QueryResult<T>;
+        return { gameTemplates, nextToken: parsedNextToken } as QueryResult;
       } else {
         const questionTemplates = operationResult.items.map(QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate);
-        return { questionTemplates, nextToken: parsedNextToken } as QueryResult<T>;
+        return { questionTemplates, nextToken: parsedNextToken } as QueryResult;
       }
   }
 }

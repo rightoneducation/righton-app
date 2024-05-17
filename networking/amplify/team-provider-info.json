@@ -28,9 +28,6 @@
           "deploymentBucketName": "amplify-mobile-testfive-295cb-deployment",
           "s3Key": "amplify-builds/createGame-3937633361496b394d4e-build.zip"
         }
-      },
-      "api": {
-        "mobile": {}
       }
     }
   }

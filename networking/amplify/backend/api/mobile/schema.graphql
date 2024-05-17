@@ -13,12 +13,13 @@ input CreateGameSessionFromTemplateInput {
   gameTemplateId: ID!
 }
 
-# define a GameTemplate in amplify and graphql to list all gametemplates sorted by updatedAt
-type GameTemplate @model
+type PublicGameTemplate @model
 @auth(
   rules: [
+    { allow: owner, provider: userPools }
+    { allow: private, operations: [read], provider: userPools },
     { allow: public, operations: [read], provider: iam  },
-    { allow: private, operations: [read, create, update, delete], provider: userPools }
+    
   ]
 )
 @aws_iam
@@ -27,8 +28,8 @@ type GameTemplate @model
   id: ID!
   title: String!
   owner: String! @index(
-      name: "gameTemplatesByOwner"
-      queryField: "gameTemplatesByOwner"
+      name: "publicGameTemplatesByOwner"
+      queryField: "publicGameTemplatesByOwner"
       sortKeyFields: ["createdAt"]
     )
   version: Int!
@@ -40,25 +41,24 @@ type GameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
-  questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
+  questionTemplates: [PublicQuestionTemplate] @manyToMany(relationName: "PublicGameQuestions")
   questionTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-  type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByQuestionTemplatesCount", queryField: "gameTemplatesByQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
+  type: String @default(value: "PublicGameTemplate") @index(name: "publicGameTemplatesByDate", queryField: "publicGameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "publicGameTemplatesByGrade", queryField: "publicGameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "publicGameTemplatesByPublicQuestionTemplatesCount", queryField: "publicGameTemplatesByPublicQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
 }
 
-input GameTemplateInput {
+input PublicGameTemplateInput {
   title: String
   owner: String
   version: Int
   description: String
 }
 
-type QuestionTemplate @model 
+type PrivateGameTemplate @model
 @auth(
   rules: [
-    { allow: public, operations: [read], provider: iam  },
-    { allow: private, operations: [read, create, update, delete], provider: userPools  }
+    { allow: owner, provider: userPools }
   ]
 )
 @aws_iam
@@ -66,7 +66,52 @@ type QuestionTemplate @model
 {
   id: ID!
   title: String!
-  owner: String!
+  owner: String! @index(
+      name: "privateGameTemplatesByOwner"
+      queryField: "privateGameTemplatesByOwner"
+      sortKeyFields: ["createdAt"]
+    )
+  version: Int!
+  description: String!
+  domain: String
+  cluster: String
+  grade: String
+  standard: String
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  imageUrl: String
+  questionTemplates: [PrivateQuestionTemplate] @manyToMany(relationName: "PrivateGameQuestions")
+  questionTemplatesCount: Int! @default(value: "0")
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  type: String @default(value: "PrivateGameTemplate") @index(name: "privateGameTemplatesByDate", queryField: "privateGameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "privateGameTemplatesByGrade", queryField: "privateGameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "privateGameTemplatesByPrivateQuestionTemplatesCount", queryField: "privateGameTemplatesByPrivateQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
+}
+
+input PrivateGameTemplateInput {
+  title: String
+  owner: String
+  version: Int
+  description: String
+}
+
+type PublicQuestionTemplate @model 
+@auth(
+  rules: [
+    { allow: public, operations: [read], provider: iam  },
+    { allow: private, operations: [read], provider: userPools },
+    { allow: owner, provider: userPools }
+  ]
+)
+@aws_iam
+@aws_cognito_user_pools
+{
+  id: ID!
+  title: String!
+  owner: String!  @index(
+      name: "publicQuestionTemplatesByOwner"
+      queryField: "publicQuestionTemplatesByOwner"
+      sortKeyFields: ["createdAt"]
+    )
   version: Int!
   choices: AWSJSON
   instructions: AWSJSON
@@ -76,14 +121,52 @@ type QuestionTemplate @model
   grade: String
   standard: String
   imageUrl: String
-  gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
+  gameTemplates: [PublicGameTemplate] @manyToMany(relationName: "PublicGameQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-   type: String @default(value: "QuestionTemplate") @index(name: "questionTemplatesByDate", queryField: "questionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "questionTemplatesByGrade", queryField: "questionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "questionTemplatesByGameTemplatesCount", queryField: "questionTemplatesByGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
+   type: String @default(value: "PublicQuestionTemplate") @index(name: "publicQuestionTemplatesByDate", queryField: "publicQuestionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "publicQuestionTemplatesByGrade", queryField: "publicQuestionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "publicQuestionTemplatesByPublicGameTemplatesCount", queryField: "publicQuestionTemplatesByPublicGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
 }
 
-input QuestionTemplateInput {
+input PublicQuestionTemplateInput {
+  title: String
+  owner: String
+  version: Int
+}
+
+type PrivateQuestionTemplate @model 
+@auth(
+  rules: [
+    { allow: owner, provider: userPools }
+  ]
+)
+@aws_iam
+@aws_cognito_user_pools
+{
+  id: ID!
+  title: String!
+  owner: String!  @index(
+      name: "privateQuestionTemplatesByOwner"
+      queryField: "privateQuestionTemplatesByOwner"
+      sortKeyFields: ["createdAt"]
+    )
+  version: Int!
+  choices: AWSJSON
+  instructions: AWSJSON
+  answerSettings: AWSJSON
+  domain: String
+  cluster: String
+  grade: String
+  standard: String
+  imageUrl: String
+  gameTemplates: [PrivateGameTemplate] @manyToMany(relationName: "PrivateGameQuestions")
+  gameTemplatesCount: Int! @default(value: "0")
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+   type: String @default(value: "PrivateQuestionTemplate") @index(name: "privateQuestionTemplatesByDate", queryField: "privateQuestionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "privateQuestionTemplatesByGrade", queryField: "privateQuestionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "privateQuestionTemplatesByPrivateGameTemplatesCount", queryField: "privateQuestionTemplatesByPrivateGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
+}
+
+input PrivateQuestionTemplateInput {
   title: String
   owner: String
   version: Int
