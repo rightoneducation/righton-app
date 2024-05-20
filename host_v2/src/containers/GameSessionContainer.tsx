@@ -36,7 +36,8 @@ export default function GameSessionContainer() {
   // WHAT I ADDED from host v1 - 
   // let { gameSessionId } = useParams<{ gameSessionId: string }>();
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  const gameSessionId = '9eceab46-d5a0-4835-b1e1-a9a1d0f34d80';
+  // const gameSessionId = '9eceab46-d5a0-4835-b1e1-a9a1d0f34d80';
+  const gameSessionId = 'd0974480-7566-48b5-9ca4-5e099c75f812';
   // const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
   //   currentState: MockGameSession.currentState as GameSessionState}); 
 

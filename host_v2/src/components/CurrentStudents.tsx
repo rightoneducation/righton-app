@@ -89,7 +89,7 @@ function CurrentStudents ({ teams, handleDeleteTeam }: CurrentStudentProps) {
               <MenuItemStyled key={uuidv4()}>
                   <MonsterContainer/>
                   <GridNameStyled>{team.name}</GridNameStyled>
-                  <CloseSvg onClick={()=>handleDeleteTeam(fakeTeam)}/>
+                  <CloseSvg onClick={()=>handleDeleteTeam(team.id)}/>
               </MenuItemStyled>
           ))}
       </BoxStyled>
