@@ -52,7 +52,7 @@ export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSele
             style={{display: 'flex', alignItems:'center', justifyContent: 'center', marginRight: '0px',boxSizing: 'border-box',}}
             ref={swiperRef}
           > 
-        <SwiperSlide style={{ alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', marginRight: '0px', boxSizing: 'border-box',   border: '1px solid red',
+        <SwiperSlide style={{ alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', marginRight: '0px', boxSizing: 'border-box',
         
 }}>
           {/* <CurrentStudents teams={teams} /> */}
