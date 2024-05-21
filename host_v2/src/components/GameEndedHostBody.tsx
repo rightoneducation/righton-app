@@ -14,7 +14,9 @@ interface TestTeamProp{
   name: string
 }
 const BodyStyled = styled(Box)({
-    margin: 'auto',
+    // margin: 'auto',
+    paddingLeft: '28px',
+    paddingRight: '32px',
     overflowY: 'scroll', // Enable vertical scrolling if needed
     flexGrow: 1,
     scrollbarWidth: 'none',
@@ -50,7 +52,9 @@ export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSele
             style={{display: 'flex', alignItems:'center', justifyContent: 'center', marginRight: '0px',boxSizing: 'border-box',}}
             ref={swiperRef}
           > 
-        <SwiperSlide style={{ height: '100%', marginRight: '0px', boxSizing: 'border-box',}}>
+        <SwiperSlide style={{ alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', marginRight: '0px', boxSizing: 'border-box',   border: '1px solid red',
+        
+}}>
           {/* <CurrentStudents teams={teams} /> */}
           {teams.length === 0 ? <NoPlayersLobby /> : <SuggestedGames teams={teams} isGameSelected = {isGameSelected} setIsGameSelected={setIsGameSelected}/>}
         </SwiperSlide>
@@ -63,3 +67,8 @@ export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSele
     </BodyStyled>
   );
 }
+// width: Fill (316px)px;
+// height: Hug (1,108px)px;
+// padding: 16px 12px 16px 12px;
+// gap: 12px;
+// opacity: 0px;
