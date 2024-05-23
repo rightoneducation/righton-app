@@ -21,6 +21,7 @@ export interface ITeamAPIClient {
   addTeamToGameSessionId(
     gameSessionId: string,
     name: string,
-    questionId: string | null
+    questionId: string | null,
+    selectedAvatarIndex: number,
   ): Promise<ITeam>;
 }

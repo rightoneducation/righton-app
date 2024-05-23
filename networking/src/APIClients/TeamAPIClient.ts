@@ -60,12 +60,13 @@ export class TeamAPIClient
   async addTeamToGameSessionId(
     gameSessionId: string,
     name: string,
-    questionId: string | null
+    questionId: string | null,
+    selectedAvatarIndex: number,
   ): Promise<ITeam> {
     const input: CreateTeamInput = {
         name,
         score: 0,
-        selectedAvatarIndex: 0,
+        selectedAvatarIndex: selectedAvatarIndex,
         teamQuestionId: questionId,
         gameSessionTeamsId: gameSessionId,
         teamQuestionGameSessionId: gameSessionId,

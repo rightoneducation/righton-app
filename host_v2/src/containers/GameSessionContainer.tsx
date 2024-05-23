@@ -270,7 +270,7 @@ export default function GameSessionContainer() {
   // WHAT I ADDED from host v1 - 
   // let { gameSessionId } = useParams<{ gameSessionId: string }>();
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  const gameSessionId = '34faa2ff-5314-453e-bed7-1de7ffe0bf1f';
+  const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
   // const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
   //   currentState: MockGameSession.currentState as GameSessionState}); 
 

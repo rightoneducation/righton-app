@@ -11,6 +11,7 @@ import { ReactComponent as Monster0Icon } from '../images/Monsters00.svg';
 interface Team {
   name: string;
   id: string;
+  selectedAvatarIndex: number;
 }
 
 interface CurrentStudentProps {
@@ -88,7 +89,7 @@ function CurrentStudents ({ teams, handleDeleteTeam }: CurrentStudentProps) {
           {sortedTeams.map((team) => (
               <MenuItemStyled key={uuidv4()}>
                   <MonsterContainer/>
-                  <GridNameStyled>{team.name}</GridNameStyled>
+                  <GridNameStyled>{team.selectedAvatarIndex}{team.name}</GridNameStyled>
                   <CloseSvg onClick={()=>handleDeleteTeam(team.id)}/>
               </MenuItemStyled>
           ))}
