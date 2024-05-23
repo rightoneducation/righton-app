@@ -4,8 +4,11 @@ import { TeamParser } from "../Parsers/TeamParser";
 import { AWSTeam, ITeam } from "../Models";
 import {
   CreateTeamInput,
+  DeleteTeamInput,
   CreateTeamMutation,
   CreateTeamMutationVariables,
+  DeleteTeamMutationVariables,
+  DeleteTeamMutation,
   OnCreateTeamSubscription,
   OnDeleteTeamSubscription,
   UpdateTeamInput,
@@ -15,6 +18,7 @@ import {
 import {
   getTeam,
   createTeam,
+  deleteTeam,
   onCreateTeam,
   onDeleteTeam,
   updateTeam,
@@ -79,6 +83,28 @@ export class TeamAPIClient
     }
     return TeamParser.teamFromAWSTeam(team.data.createTeam as AWSTeam)
   }
+
+
+  async deleteTeam(
+    teamId: string,
+  ): Promise<ITeam> {
+    const input: DeleteTeamInput = {
+        id: teamId,
+    }
+    const variables: DeleteTeamMutationVariables = { input }
+    const team = await this.callGraphQL<DeleteTeamMutation>(
+        deleteTeam,
+        variables
+    )
+    if (
+        isNullOrUndefined(team.data) ||
+        isNullOrUndefined(team.data.deleteTeam)
+    ) {
+        throw new Error(`Failed to delete team`)
+    }
+    return TeamParser.teamFromAWSTeam(team.data.deleteTeam as AWSTeam)
+  }
+
 
   subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
     return this.subscribeGraphQL<OnCreateTeamSubscription>(

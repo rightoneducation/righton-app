@@ -11,6 +11,8 @@ export interface ITeamAPIClient {
 
   updateTeam(teamInput: UpdateTeamInput): Promise<ITeam>;
 
+  deleteTeam(teamId: string): Promise<ITeam>;
+
   subscribeDeleteTeam(
     id: string,
     callback: (result: ITeam) => void
