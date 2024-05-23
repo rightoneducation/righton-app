@@ -25,6 +25,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
     phaseOneTime
     phaseTwoTime
     imageUrl
+    isPublic
     questionTemplates {
       items {
         id
@@ -43,6 +44,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
           phaseOneTime
           phaseTwoTime
           imageUrl
+          isPublic
           questionTemplates {
             items {
               id
@@ -61,6 +63,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -138,6 +141,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -219,6 +223,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
     phaseOneTime
     phaseTwoTime
     imageUrl
+    isPublic
     questionTemplates {
       items {
         id
@@ -237,6 +242,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
           phaseOneTime
           phaseTwoTime
           imageUrl
+          isPublic
           questionTemplates {
             items {
               id
@@ -255,6 +261,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -332,6 +339,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -413,6 +421,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
     phaseOneTime
     phaseTwoTime
     imageUrl
+    isPublic
     questionTemplates {
       items {
         id
@@ -431,6 +440,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
           phaseOneTime
           phaseTwoTime
           imageUrl
+          isPublic
           questionTemplates {
             items {
               id
@@ -449,6 +459,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -526,6 +537,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -625,6 +637,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
           phaseOneTime
           phaseTwoTime
           imageUrl
+          isPublic
           questionTemplates {
             items {
               id
@@ -643,6 +656,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -720,6 +734,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -819,6 +834,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
           phaseOneTime
           phaseTwoTime
           imageUrl
+          isPublic
           questionTemplates {
             items {
               id
@@ -837,6 +853,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -914,6 +931,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -1013,6 +1031,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
           phaseOneTime
           phaseTwoTime
           imageUrl
+          isPublic
           questionTemplates {
             items {
               id
@@ -1031,6 +1050,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -1108,6 +1128,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -2057,6 +2078,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -2075,6 +2097,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -2093,6 +2116,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2162,6 +2186,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2244,6 +2269,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -2262,6 +2288,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2331,6 +2358,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2412,6 +2440,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -2430,6 +2459,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -2448,6 +2478,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2517,6 +2548,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2599,6 +2631,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -2617,6 +2650,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2686,6 +2720,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2767,6 +2802,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -2785,6 +2821,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -2803,6 +2840,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2872,6 +2910,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2954,6 +2993,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -2972,6 +3012,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -3041,6 +3082,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt

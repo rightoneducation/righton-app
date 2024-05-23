@@ -22,6 +22,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     phaseOneTime
     phaseTwoTime
     imageUrl
+    isPublic
     questionTemplates {
       items {
         id
@@ -40,6 +41,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
           phaseOneTime
           phaseTwoTime
           imageUrl
+          isPublic
           questionTemplates {
             items {
               id
@@ -58,6 +60,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -135,6 +138,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -218,6 +222,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -236,6 +241,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -254,6 +260,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -323,6 +330,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -411,6 +419,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -429,6 +438,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -447,6 +457,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -516,6 +527,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -604,6 +616,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -622,6 +635,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -640,6 +654,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -709,6 +724,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -797,6 +813,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -815,6 +832,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -833,6 +851,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -902,6 +921,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -990,6 +1010,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -1008,6 +1029,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -1026,6 +1048,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -1095,6 +1118,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -1186,6 +1210,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
           phaseOneTime
           phaseTwoTime
           imageUrl
+          isPublic
           questionTemplates {
             items {
               id
@@ -1204,6 +1229,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -1281,6 +1307,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                isPublic
                 questionTemplates {
                   nextToken
                   __typename
@@ -1382,6 +1409,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -1400,6 +1428,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -1469,6 +1498,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -1575,6 +1605,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -1593,6 +1624,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -1662,6 +1694,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -1768,6 +1801,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -1786,6 +1820,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -1855,6 +1890,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -1961,6 +1997,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -1979,6 +2016,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2048,6 +2086,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -2983,6 +3022,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
       phaseOneTime
       phaseTwoTime
       imageUrl
+      isPublic
       questionTemplates {
         items {
           id
@@ -3001,6 +3041,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -3019,6 +3060,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -3088,6 +3130,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -3170,6 +3213,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             phaseOneTime
             phaseTwoTime
             imageUrl
+            isPublic
             questionTemplates {
               items {
                 id
@@ -3188,6 +3232,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -3257,6 +3302,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  isPublic
                   questionTemplatesCount
                   createdAt
                   updatedAt
@@ -3340,6 +3386,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
         phaseOneTime
         phaseTwoTime
         imageUrl
+        isPublic
         questionTemplates {
           items {
             id
@@ -3358,6 +3405,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               phaseOneTime
               phaseTwoTime
               imageUrl
+              isPublic
               questionTemplates {
                 items {
                   id
@@ -3451,6 +3499,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               phaseOneTime
               phaseTwoTime
               imageUrl
+              isPublic
               questionTemplates {
                 items {
                   id

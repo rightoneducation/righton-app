@@ -40,6 +40,7 @@ type GameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
+  isPublic: Boolean
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
   questionTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
