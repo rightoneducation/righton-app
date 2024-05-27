@@ -68,21 +68,6 @@
     }
   },
   "function": {
-    "createGame": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ],
-          "category": "api",
-          "resourceName": "mobile"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "mobile6060603cPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -90,30 +75,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile6060603c_googleClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile6060603c"
-        }
-      ]
-    },
-    "AMPLIFY_function_createGame_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "createGame"
-        }
-      ]
-    },
-    "AMPLIFY_function_createGame_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "createGame"
-        }
-      ]
-    },
     "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
       "usedBy": [
         {

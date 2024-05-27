@@ -1,33 +1,27 @@
 {
-  "testfive": {
+  "ownertest": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-testfive-295cb-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-testfive-295cb-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-testfive-295cb-authRole",
+      "AuthRoleName": "amplify-mobile-ownertest-bf1b6-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ownertest-bf1b6-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ownertest-bf1b6-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-testfive-295cb-deployment",
-      "UnauthRoleName": "amplify-mobile-testfive-295cb-unauthRole",
-      "StackName": "amplify-mobile-testfive-295cb",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-testfive-295cb/95d97030-0310-11ef-9cde-0affc1f4db4b",
+      "DeploymentBucketName": "amplify-mobile-ownertest-bf1b6-deployment",
+      "UnauthRoleName": "amplify-mobile-ownertest-bf1b6-unauthRole",
+      "StackName": "amplify-mobile-ownertest-bf1b6",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-ownertest-bf1b6/a9ea0600-0e25-11ef-a360-0affe1279fd3",
       "AmplifyAppId": "d2z6928w5qibze",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-testfive-295cb-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-ownertest-bf1b6-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
-      "auth": {
-        "mobile6060603c": {
-          "googleClientId": "23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com"
-        }
-      },
       "function": {
         "mobile6060603cPostConfirmation": {
           "GROUP": "Teacher_Auth",
-          "deploymentBucketName": "amplify-mobile-testfive-295cb-deployment",
+          "deploymentBucketName": "amplify-mobile-ownertest-bf1b6-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
-        },
-        "createGame": {
-          "deploymentBucketName": "amplify-mobile-testfive-295cb-deployment",
-          "s3Key": "amplify-builds/createGame-3937633361496b394d4e-build.zip"
         }
+      },
+      "auth": {
+        "mobile6060603c": {}
       }
     }
   }
