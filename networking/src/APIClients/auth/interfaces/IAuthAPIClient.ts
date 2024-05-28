@@ -1,6 +1,7 @@
 
 export interface IAuthAPIClient {
   isUserAuth: boolean;
+  init(): Promise<void>;
   configAmplify(awsconfig: any): void;
   authEvents(payload: any): void;
   authListener(): void;

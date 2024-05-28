@@ -1,10 +1,18 @@
 type Mutation {
-  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String @function(name: "createGame-${env}")
+  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String 
+  @function(name: "createGame-${env}") 
+  @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
 }
 
 input CreateGameSessionFromTemplateInput {
   gameTemplateId: ID!
 }
+
 # define a GameTemplate in amplify and graphql to list all gametemplates sorted by updatedAt
 type GameTemplate @model
 @auth(
@@ -32,6 +40,7 @@ type GameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
+  isPublic: Boolean
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
   questionTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
@@ -81,11 +90,10 @@ input QuestionTemplateInput {
   version: Int
 }
 
-
 type GameSession @model 
 @auth(
   rules: [
-    { allow: public, operations: [read, create, update], provider: iam  },
+    { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -125,7 +133,7 @@ enum GameSessionState {
 type Question @model(subscriptions: null, timestamps: null)
 @auth(
   rules: [
-    { allow: public, operations: [read, create, update], provider: iam  },
+    { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -152,7 +160,7 @@ type Question @model(subscriptions: null, timestamps: null)
 type Team @model 
 @auth(
   rules: [
-    { allow: public, operations: [read, create, update], provider: iam  },
+    { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -168,7 +176,7 @@ type Team @model
 type TeamMember @model 
 @auth(
   rules: [
-    { allow: public, operations: [read, create, update], provider: iam  },
+    { allow: public, provider: iam  },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -191,7 +199,7 @@ enum ConfidenceLevel {
 type TeamAnswer @model 
 @auth(
   rules: [
-    { allow: public, operations: [read, create, update], provider: iam },
+    { allow: public, provider: iam },
     { allow: private, operations: [read, create, update, delete], provider: userPools }
   ]
 )
@@ -212,11 +220,34 @@ type TeamAnswer @model
 type Subscription {
   onGameSessionUpdatedById(id: ID!): GameSession
     @aws_subscribe(mutations: ["updateGameSession"])
+    @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
   onTeamMemberUpdateByTeamId(teamTeamMembersId: ID!): TeamMember
     @aws_subscribe(mutations: ["updateTeamMember"])
+    @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
   onTeamCreateByGameSessionId(gameSessionTeamsId: ID!): Team
     @aws_subscribe(mutations: ["createTeam"])
+    @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
   onTeamDeleteByGameSessionId(gameSessionTeamsId: ID!): Team
-    @aws_subscribe(mutations: ["deleteTeam"])
+    @aws_subscribe(mutations: ["deleteTeam"]) 
+    @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
 }
-

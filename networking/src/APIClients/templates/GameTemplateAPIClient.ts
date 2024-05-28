@@ -2,7 +2,6 @@ import { BaseAPIClient } from "../BaseAPIClient";
 import { IGameTemplateAPIClient } from "./interfaces";
 import { IGameTemplate } from "../../Models";
 import { GameTemplateParser } from "../../Parsers/GameTemplateParser";
-// import { Auth } from "aws-amplify";
 import { 
   createGameTemplate,
   getGameTemplate,
@@ -96,39 +95,22 @@ export class GameTemplateAPIClient
   }
 
   async listGameTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    console.log("Current user: ");
-
-    console.log("A");
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", listGameTemplates, "listGameTemplates");
-    console.log(response);  
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", listGameTemplates, "listGameTemplates"); 
     return response;
   }
 
   async listGameTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    console.log("Current user: ");
-    // const user = await Auth.currentAuthenticatedUser();
-    //   console.log(user);
-      console.log("B");
-      const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByDate, "gameTemplatesByDate");
-      console.log(response);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByDate, "gameTemplatesByDate");
     return response;
   }
 
   async listGameTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    console.log("Current user: ");
- 
-      console.log("C");
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByGrade, "gameTemplatesByGrade");
-    console.log(response);
     return response; 
   }
 
   async listGameTemplatesByQuestionTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    console.log("Current user: ");
-  
-    console.log("D");
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByQuestionTemplatesCount, "gameTemplatesByQuestionTemplatesCount");
-    console.log(response);
     return response;
   }
 }

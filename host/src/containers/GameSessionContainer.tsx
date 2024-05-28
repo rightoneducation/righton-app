@@ -108,7 +108,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   // initial query for gameSessions and teams
   useEffect(() => {
     try{
-    apiClients.gameSession.getGameSession(gameSessionId).then((response) => {
+    apiClients.gameSession.getGameSession( gameSessionId).then((response) => {
       setGameSession(response); // set initial gameSession state
       gameSessionId = response.id; // set gameSessionId to the response id (in case it was a new gameSession)
       checkGameTimer(response); // checks if the timer needs to start
@@ -533,7 +533,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
 
           return { ...parsedHint, teams: updatedTeams };
         });
-        console.log(combinedHints);
         setGptHints(combinedHints);
         setisHintLoading(false);
         if (combinedHints) {

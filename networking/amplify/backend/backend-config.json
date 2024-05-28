@@ -72,83 +72,9 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    },
-    "mobile6060603cPostConfirmation": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "mobile6060603cPostConfirmation": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile6060603c_googleClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile6060603c"
-        }
-      ]
-    },
-    "AMPLIFY_function_createGame_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile6060603c"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
     "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
       "usedBy": [
         {

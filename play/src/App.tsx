@@ -6,7 +6,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
-import { APIClients, Environment } from '@righton/networking';
+import { useAPIClients, Environment, IAPIClients } from '@righton/networking';
 import {
   PregameContainer,
   PregameLocalModelLoader,
@@ -22,30 +22,35 @@ function RedirectToPlayIfMissing() {
   return null;
 }
 
-const apiClients = new APIClients(Environment.Developing);
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route
-        path="/"
-        element={<PregameContainer apiClients={apiClients} />}
-        loader={PregameLocalModelLoader}
-      />
-      <Route
-        path="/game"
-        element={<GameInProgressContainer apiClients={apiClients} />}
-        loader={LocalModelLoader}
-      />
-      <Route element={<RedirectToPlayIfMissing />} />
-    </>
-  )
-);
+interface RouteWrapperProps {
+  component: React.ComponentType<any>;
+  apiClients: any; 
+}
+
+function RouteWrapper({ component: Component, apiClients, ...props }: RouteWrapperProps) {
+  return <Component apiClients={apiClients} {...props} />;
+}
+
+const createCustomRouteProvider = (apiClients: IAPIClients): any => {
+  return createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="/" element={<RouteWrapper component={PregameContainer} apiClients={apiClients} />} loader={PregameLocalModelLoader} />
+        <Route path="/game" element={<RouteWrapper component={GameInProgressContainer} apiClients={apiClients} />} loader={LocalModelLoader} />
+        <Route element={<RedirectToPlayIfMissing />} />
+      </>
+      )
+  );
+};
 
 function App() {
+  const { apiClients, loading } = useAPIClients(Environment.Developing);
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>
-        <RouterProvider router={router} />
+        {apiClients &&
+          <RouterProvider router={createCustomRouteProvider(apiClients)} />
+        }
       </ThemeProvider>
     </StyledEngineProvider>
   );

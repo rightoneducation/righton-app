@@ -8,7 +8,7 @@ import { ITeamMemberAPIClient } from '../gamesession/interfaces/ITeamMemberAPICl
 import { ITeamAnswerAPIClient } from '../gamesession/interfaces/ITeamAnswerAPIClient';
 
 export interface IAPIClients {
-  auth: IAuthAPIClient
+  auth: IAuthAPIClient;
   gameTemplate: IGameTemplateAPIClient;
   questionTemplate: IQuestionTemplateAPIClient;
   gameQuestions: IGameQuestionsAPIClient;

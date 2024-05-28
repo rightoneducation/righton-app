@@ -35,19 +35,21 @@ export class APIClients {
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
 
-
-  constructor(env: Environment) {
-    this.auth = new AuthAPIClient();
-    this.gameTemplate = new GameTemplateAPIClient(env);
-    this.questionTemplate = new QuestionTemplateAPIClient(env);
-    this.gameQuestions = new GameQuestionsAPIClient(env);
-    this.gameSession = new GameSessionAPIClient(env);
-    this.question = new QuestionAPIClient(env);
-    this.team = new TeamAPIClient(env);
-    this.teamMember = new TeamMemberAPIClient(env);
-    this.teamAnswer = new TeamAnswerAPIClient(env);
- 
+  private constructor(env: Environment, authClient: IAuthAPIClient) {
+    this.auth = authClient;
+    this.gameTemplate = new GameTemplateAPIClient(env, this.auth);
+    this.questionTemplate = new QuestionTemplateAPIClient(env, this.auth);
+    this.gameQuestions = new GameQuestionsAPIClient(env, this.auth);
+    this.gameSession = new GameSessionAPIClient(env, this.auth);
+    this.question = new QuestionAPIClient(env, this.auth);
+    this.team = new TeamAPIClient(env, this.auth);
+    this.teamMember = new TeamMemberAPIClient(env, this.auth);
+    this.teamAnswer = new TeamAnswerAPIClient(env, this.auth);
+  }
+  static async create(env: Environment): Promise<APIClients> {
+    const authClient = new AuthAPIClient();
+    await authClient.init(); // Ensure the auth client is initialized
+    return new APIClients(env, authClient); 
   }
 
-  
 }

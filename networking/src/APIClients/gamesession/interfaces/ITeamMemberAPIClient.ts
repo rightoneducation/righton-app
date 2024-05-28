@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs'; // this is used in aws-amplify to handle subscriptions
 import { ITeamMember } from "../../../Models";
 
 export interface ITeamMemberAPIClient {
@@ -10,5 +11,5 @@ export interface ITeamMemberAPIClient {
   subscribeUpdateTeamMember(
     id: string,
     callback: (result: ITeamMember) => void
-  ): Promise<any>;
+  ): Subscription;
 }

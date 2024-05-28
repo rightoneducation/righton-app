@@ -1,15 +1,16 @@
-import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { Amplify } from "aws-amplify";
-import { Hub } from 'aws-amplify/utils';
+import { Hub, CookieStorage  } from 'aws-amplify/utils';
+import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { 
   signUp, 
   confirmSignUp, 
   signIn, 
   signInWithRedirect, 
   signOut, 
-  fetchAuthSession 
+  fetchAuthSession
 } from 'aws-amplify/auth';
-import awsconfig from "../../aws-exports";
+import amplifyconfig from "../../amplifyconfiguration.json";
+import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -17,12 +18,18 @@ export class AuthAPIClient
   isUserAuth: boolean;
   constructor(){
     this.isUserAuth = false;
-    this.configAmplify(awsconfig);
-    this.authEvents(null);
+    this.configAmplify(amplifyconfig);
     this.authListener();
   }
+  async init(): Promise<void> {
+    this.authEvents(null); 
+    this.isUserAuth = await this.verifyAuth();
+  }
+
   configAmplify(awsconfig: any): void {
     Amplify.configure(awsconfig);
+    // change userPools auth storage to cookies so that auth persists across central/host apps for signed-in teachers
+    cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
   }
 
   authEvents (payload: any): void {

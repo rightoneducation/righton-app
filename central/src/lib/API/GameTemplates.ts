@@ -6,7 +6,6 @@ import {
   isNullOrUndefined
 } from '@righton/networking';
 import { IListQuerySettings, SortField } from './QueryInputs';
-import { Auth } from 'aws-amplify';
 
 export const createGameTemplate = async (apiClients: IAPIClients, createGameTemplateInput: CreateGameTemplateInput): Promise<IGameTemplate | null> => {
   try {
