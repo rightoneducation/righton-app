@@ -77,6 +77,7 @@ export const RouteContainer = ({
   const queryLimit = 12; // number of games retrieved on main page
   const [publicPrivateQueryType, setPublicPrivateQueryType] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [listQuerySettings, setListQuerySettings] = useState<IListQuerySettings>({
+    publicPrivateType: PublicPrivateType.PUBLIC,
     nextToken: null,
     queryLimit
   });
@@ -86,6 +87,7 @@ export const RouteContainer = ({
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
     setSortByCheck(false);
     const updatedListQuerySettings = {
+      publicPrivateType: listQuerySettings.publicPrivateType,
       nextToken: null,
       queryLimit,
       sortDirection: listQuerySettings.sortDirection,
@@ -101,7 +103,7 @@ export const RouteContainer = ({
   const getAllGameTemplates = async (listQuerySettings: IListQuerySettings | null) => {
     try { 
       setLoading(true);
-      const games = await listGameTemplates(publicPrivateQueryType, apiClients, listQuerySettings);
+      const games = await listGameTemplates(apiClients, listQuerySettings);
       if (games?.gameTemplates){
         setGames(games?.gameTemplates);
         setNextToken(games?.nextToken ?? null);
@@ -130,7 +132,7 @@ export const RouteContainer = ({
     let currentToken = nextToken;
     listQuerySettings.nextToken = nextToken;
     if (location.pathname === '/'){
-      const games = await listGameTemplates(publicPrivateQueryType, apiClients, listQuerySettings);
+      const games = await listGameTemplates(apiClients, listQuerySettings);
       if (games?.gameTemplates){
         setGames((prev) => [
           ...(prev ?? []),
@@ -436,7 +438,9 @@ export const RouteContainer = ({
   const handlePublicPrivateChange = async (value: PublicPrivateType) => {
     setPublicPrivateQueryType(value);
     console.log(value);
-    const games = await listGameTemplates(value, apiClients, listQuerySettings);
+    listQuerySettings.publicPrivateType = value;
+    const games = await getAllGameTemplates(listQuerySettings);
+    localStorage.setItem('games', JSON.stringify(games));
   }
 
   // this useEffect establishes the Hub.listener to subscribe to changes in user auth
@@ -448,6 +452,7 @@ export const RouteContainer = ({
     // get either a list of games or questions when the route changes
     setSearchInput('');
     const updatedListQuerySettings = {
+      publicPrivateType: PublicPrivateType.PUBLIC,
       nextToken: null,
       queryLimit,
       sortDirection: SortDirection.DESC,

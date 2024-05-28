@@ -32,8 +32,7 @@ export default function SortByDropdown({
   };
 
   const handleRadioChange = (event) => {
-    console.log(event.target.value);
-        handlePublicPrivateChange(event.target.value);
+    handlePublicPrivateChange(event.target.value);
   };
 
   const sortDirectionIconElement = [

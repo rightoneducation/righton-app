@@ -1,3 +1,4 @@
+import { PublicPrivateType } from '@righton/networking';
 export enum SortDirection {
   ASC = 'ASC',
   DESC = 'DESC'
@@ -10,6 +11,7 @@ export enum SortField {
 }
 
 export interface IListQuerySettings {
+  publicPrivateType: PublicPrivateType
   nextToken: string | null
   sortDirection?: SortDirection | null
   sortField?: SortField | null

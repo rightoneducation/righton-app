@@ -95,7 +95,10 @@ export class GameTemplateAPIClient
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.default;
     const awsType = `${type}GameTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `list${type}GameTemplates`, queryFunction); 
+    const queryName = `list${type}GameTemplates`;
+    console.log(awsType);
+    console.log(queryName);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction); 
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
@@ -109,6 +112,8 @@ export class GameTemplateAPIClient
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}GameTemplate`;
     const queryName = `${type.toLowerCase()}GameTemplatesByDate`;
+    console.log(awsType);
+    console.log(queryName);
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
