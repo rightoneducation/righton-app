@@ -13,6 +13,7 @@ import EnableHintCard from "./EnableHintCard";
 import FeaturedMistakes from "./FeaturedMistakes";
 import PlayerThinking from "./PlayerThinking/PlayerThinking";
 import PlayerThinkingSelectedAnswer from './PlayerThinking/PlayerThinkingSelectedAnswer';
+import Leaderboard from './Leaderboard/Leaderboard';
 
 export default function GameInProgressContentSwitch({
   questions,
@@ -47,7 +48,9 @@ export default function GameInProgressContentSwitch({
   gptHints,
   hintsError,
   isHintLoading,
-  handleProcessHints
+  handleProcessHints,
+  teams,
+  setSelectedMistakes
 }) {
   const classes = useStyles();
   const graphClickRenderSwitch = (graphClickInfo) => {
@@ -183,6 +186,7 @@ export default function GameInProgressContentSwitch({
                 shortAnswerResponses={shortAnswerResponses}
                 totalAnswers={totalAnswers}
                 onSelectMistake={onSelectMistake}
+                setSelectedMistakes={setSelectedMistakes}
                 numPlayers={numPlayers}
               />
             </div>
@@ -237,7 +241,11 @@ export default function GameInProgressContentSwitch({
       }
     </Box>,
   ];
-
+  const leaderboardComponents = [
+    <Box className={classes.configContainer}>
+      <Leaderboard teams={teams} />
+    </Box>
+  ];
   const questionCofigurationComponents = [
     <Box className={classes.configContainer}>
       <div id="responses-scrollbox" ref={responsesRef} style={{width:'100%'}}>
@@ -272,7 +280,9 @@ export default function GameInProgressContentSwitch({
 
   return currentState !== GameSessionState.TEAMS_JOINING
     ? gameplayComponents
-    : questionCofigurationComponents;
+    : currentQuestionIndex === 0 
+      ? questionCofigurationComponents 
+      : leaderboardComponents;
 }
 
 const useStyles = makeStyles({
@@ -289,6 +299,6 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     gap: '24px',
     width: '100%',
-    maxWidth: "500px"
+    maxWidth: "500px",
   }
 });

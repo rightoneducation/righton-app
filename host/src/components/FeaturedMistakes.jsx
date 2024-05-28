@@ -14,6 +14,7 @@ export default function FeaturedMistakes({
   shortAnswerResponses,
   totalAnswers,
   onSelectMistake,
+  setSelectedMistakes
 }) {
   const classes = useStyles();
   const title = "Featured Mistakes";
@@ -22,7 +23,6 @@ export default function FeaturedMistakes({
   const radioButtonText2 = "Manually pick the options";
   const numOfPopularMistakes = 3;
   const [isPopularMode, setIsPopularMode] = useState(true);
-  const [selectedMistakes, setSelectedMistakes] = useState([]);
   const sortMistakes = (shortAnswerResponses, totalAnswers) => {
     const extractedMistakes = shortAnswerResponses
       .filter(shortAnswerResponse => !shortAnswerResponse.isCorrect)
@@ -43,9 +43,9 @@ export default function FeaturedMistakes({
     if (isPopularMode) {
       for (let i = 0; i < Math.min(sortedMistakes.length, numOfPopularMistakes); i++){
         sortedMistakes[i].isSelected = true;
-        onSelectMistake(sortedMistakes[i].answer, true);
       }
     }
+    setSelectedMistakes(sortedMistakes.filter(mistake => mistake.isSelected).map(mistake => mistake.answer));
     return sortedMistakes;
   };
   const [sortedMistakes, setSortedMistakes] = useState([]);

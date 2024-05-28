@@ -326,7 +326,6 @@ export const buildShortAnswerResponses = (prevShortAnswer, correctAnswer, answer
       teams: [{name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
     });
   }
-  console.log(prevShortAnswer);
   return prevShortAnswer;
 };
 
