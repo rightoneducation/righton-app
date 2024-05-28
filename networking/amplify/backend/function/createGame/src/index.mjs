@@ -26,11 +26,9 @@ const API_KEY = process.env.API_MOBILE_GRAPHQLAPIKEYOUTPUT;
 
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   let questionTemplates = [];
-  console.log(awsGameTemplate);
   try {
       if (awsGameTemplate && awsGameTemplate.data && awsGameTemplate.data.getGameTemplate) {
           const { getGameTemplate } = awsGameTemplate.data;
-          console.log(getGameTemplate);
           questionTemplates = getGameTemplate.questionTemplates.items.map((item) => {
               const { questionTemplate } = item;
               const { gameTemplates, questionTemplates, ...rest } = questionTemplate;
@@ -189,10 +187,8 @@ async function createAndSignRequest(query, variables) {
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
     const gameTemplateRequest = await createAndSignRequest(getGameTemplate, { id: gameTemplateId });
-    console.log(gameTemplateRequest);
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json());
-
     const { questionTemplates: questions, ...game } = gameTemplateParsed;
 
     // createGameSession

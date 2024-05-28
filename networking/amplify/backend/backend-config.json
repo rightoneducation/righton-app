@@ -4,16 +4,12 @@
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
-            }
-          ],
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-12-11T10:29:18.626Z",
+              "apiKeyExpirationDate": "2025-04-04T19:50:54.710Z",
               "apiKeyExpirationDays": 365,
-              "description": "mobiledev"
+              "description": "apikey"
             },
             "authenticationType": "API_KEY"
           }
@@ -24,12 +20,39 @@
     }
   },
   "auth": {
-    "mobile96b14818": {
+    "mobile6060603c": {
       "customAuth": false,
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation",
+          "triggerProvider": "Cognito"
+        }
+      ],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
       "providerPlugin": "awscloudformation",
-      "service": "Cognito",
-      "serviceType": "imported"
+      "service": "Cognito"
     }
   },
   "function": {
@@ -48,54 +71,51 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "mobile6060603cPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_api_createGame_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "api",
-          "resourceName": "createGame"
-        }
-      ]
-    },
-    "AMPLIFY_api_createGame_s3Key": {
-      "usedBy": [
-        {
-          "category": "api",
-          "resourceName": "createGame"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobile96b14818_nativeClientId": {
+    "AMPLIFY_auth_mobile6060603c_googleClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile96b14818"
+          "resourceName": "mobile6060603c"
         }
       ]
     },
-    "AMPLIFY_auth_mobile96b14818_userPoolId": {
+    "AMPLIFY_auth_mobilee1238193_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile96b14818"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
-    "AMPLIFY_auth_mobile96b14818_userPoolName": {
+    "AMPLIFY_auth_mobilee1238193_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile96b14818"
+          "resourceName": "mobilee1238193"
         }
       ]
     },
-    "AMPLIFY_auth_mobile96b14818_webClientId": {
+    "AMPLIFY_auth_mobilee1238193_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "mobile96b14818"
+          "resourceName": "mobilee1238193"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee1238193_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee1238193"
         }
       ]
     },
@@ -112,6 +132,30 @@
         {
           "category": "function",
           "resourceName": "createGame"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
         }
       ]
     }
