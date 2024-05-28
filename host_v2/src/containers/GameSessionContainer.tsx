@@ -289,12 +289,17 @@ export default function GameSessionContainer() {
     gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
       gameSessionId,
       (response) => {
+        console.log(response);
         setGameSession({...gameSession, ...response});
       },
     );
 
     fetchGameSession();
-  }, [apiClients.gameSession, gameSessionId]); // eslint-disable-line
+    return () => {
+      gameSessionSubscription?.unsubscribe();
+    };
+
+  }, [apiClients]); // eslint-disable-line
 
 
 
