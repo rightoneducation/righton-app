@@ -13,7 +13,6 @@ import SearchBar from './SearchBar.jsx';
 import SortByDropdown from './SortByDropdown';
 import QuestionDashboard from './QuestionDashboard';
 import { v4 as uuidv4 } from 'uuid';
-import { set } from 'lodash';
 
 // New "empty" game
 const newGame = {
