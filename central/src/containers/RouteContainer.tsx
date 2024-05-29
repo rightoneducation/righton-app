@@ -86,6 +86,7 @@ export const RouteContainer = ({
   const [sortByCheck, setSortByCheck] = React.useState(false);
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
     setSortByCheck(false);
+    console.log(listQuerySettings);
     const updatedListQuerySettings = {
       publicPrivateType: listQuerySettings.publicPrivateType,
       nextToken: null,
@@ -186,11 +187,11 @@ export const RouteContainer = ({
   }
 
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const createNewGameTemplate = async (newGame: CreatePublicGameTemplateInput | CreatePrivateGameTemplateInput) => {
+  const createNewGameTemplate = async (listQuerySettings: IListQuerySettings, newGame: CreatePublicGameTemplateInput | CreatePrivateGameTemplateInput) => {
     try{
-    newGame.owner = "Owner";
+    newGame.grade = '8';
     newGame.version = 0;
-    const game = await createGameTemplate(publicPrivateQueryType, apiClients, newGame);
+    const game = await createGameTemplate(listQuerySettings.publicPrivateType, apiClients, newGame);
       if (!game) {
         throw new Error ('Game was unable to be created');
       }
@@ -211,7 +212,7 @@ export const RouteContainer = ({
     gameTemplateUpdateInput.questionTemplatesCount = gameTemplateUpdateInput.questionTemplates?.length ?? 0;
     if (isNullOrUndefined(existingGame))
     {
-      backendGame = await createNewGameTemplate(gameTemplateUpdateInput);
+      backendGame = await createNewGameTemplate(listQuerySettings, gameTemplateUpdateInput);
     }
     else {
       backendGame = await updateGameTemplate(publicPrivateQueryType, apiClients, gameTemplateUpdateInput);

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent, Box } from '@material-ui/core';
+import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent, Box, Radio } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
-import { isNullOrUndefined } from '@righton/networking';
+import { PublicPrivateType, isNullOrUndefined } from '@righton/networking';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import CCSS from './CCSS';
 import GameCCSS from './GameMakerCCSS';
@@ -13,6 +13,7 @@ import SearchBar from './SearchBar.jsx';
 import SortByDropdown from './SortByDropdown';
 import QuestionDashboard from './QuestionDashboard';
 import { v4 as uuidv4 } from 'uuid';
+import { set } from 'lodash';
 
 // New "empty" game
 const newGame = {
@@ -115,6 +116,9 @@ export default function GameMaker({
       return gameDetails.phaseTwoTime;
     }
   });
+  const handlePublicPrivateChange = (event) => {
+    handleUpdateListQuerySettings({...listQuerySettings, publicPrivateType: event.target.value});
+  }
   // Handles changing and storing of new values for both Phase Timers
   const handlePhaseOne = (event) => {
     setPhaseOne(event.target.value);
@@ -244,6 +248,27 @@ export default function GameMaker({
 
                 <Grid container item xs={12} sm={4} justifyContent='center'>
                   {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'} />}
+                </Grid>
+                <Grid container item xs={12} sm={4} style={{display: 'flex', alignItems: 'center', gap: 10}}>
+                  <Typography style={{ fontWeight: 200, fontSize: '1 rem', color: 'rgba(0,0,0,0.75)' }}> Game Type: </Typography>
+                  <Box style={{ display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)' }}> Public </Typography>
+                    <Radio
+                      checked={listQuerySettings.publicPrivateType === PublicPrivateType.PUBLIC} 
+                      value={PublicPrivateType.PUBLIC} 
+                      onChange={handlePublicPrivateChange} 
+                      color='default'
+                    />
+                  </Box>
+                  <Box style={{display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)'}}> Private </Typography>
+                    <Radio 
+                      checked={listQuerySettings.publicPrivateType === PublicPrivateType.PRIVATE} 
+                      value={PublicPrivateType.PRIVATE} 
+                      onChange={handlePublicPrivateChange} 
+                      color='default'
+                    />
+                  </Box>
                 </Grid>
               </Grid>
             </Grid>
