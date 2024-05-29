@@ -11,8 +11,11 @@ import {
   IAPIClients,
   IGameTemplate,
   IQuestionTemplate,
-  CreateGameTemplateInput,
-  CreateQuestionTemplateInput,
+  PublicPrivateType,
+  CreatePublicGameTemplateInput,
+  CreatePrivateGameTemplateInput,
+  CreatePublicQuestionTemplateInput,
+  CreatePrivateQuestionTemplateInput,
   isNullOrUndefined
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
@@ -72,7 +75,9 @@ export const RouteContainer = ({
   const location = useLocation();
   const history = useHistory();
   const queryLimit = 12; // number of games retrieved on main page
+  const [publicPrivateQueryType, setPublicPrivateQueryType] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [listQuerySettings, setListQuerySettings] = useState<IListQuerySettings>({
+    publicPrivateType: PublicPrivateType.PUBLIC,
     nextToken: null,
     queryLimit
   });
@@ -81,7 +86,9 @@ export const RouteContainer = ({
   const [sortByCheck, setSortByCheck] = React.useState(false);
   const handleUpdateListQuerySettings = async (listQuerySettings: IListQuerySettings ) => {
     setSortByCheck(false);
+    console.log(listQuerySettings);
     const updatedListQuerySettings = {
+      publicPrivateType: listQuerySettings.publicPrivateType,
       nextToken: null,
       queryLimit,
       sortDirection: listQuerySettings.sortDirection,
@@ -111,7 +118,7 @@ export const RouteContainer = ({
   const getAllQuestionTemplates = async (listQuerySettings: IListQuerySettings | null) => {
     try {
       setLoading(true);
-      const questions = await listQuestionTemplates(apiClients, listQuerySettings);
+      const questions = await listQuestionTemplates(publicPrivateQueryType, apiClients, listQuerySettings);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
         setNextToken(questions?.nextToken ?? null);
@@ -136,7 +143,7 @@ export const RouteContainer = ({
       }
   
     } else if (location.pathname === '/questions'){
-      const questions = await listQuestionTemplates(apiClients, listQuerySettings);
+      const questions = await listQuestionTemplates(publicPrivateQueryType, apiClients, listQuerySettings);
       if (questions?.questionTemplates){
         setQuestions((prev) => [
           ...(prev ?? []),
@@ -171,20 +178,20 @@ export const RouteContainer = ({
   };
 
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
-  const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
+  const cloneQuestion = async (questionInput: CreatePublicQuestionTemplateInput | CreatePrivateQuestionTemplateInput) => {
     try{
-    const question = await createQuestionTemplate(apiClients, questionInput);
+    const question = await createQuestionTemplate(publicPrivateQueryType, apiClients, questionInput);
     } catch (e) {
       console.log(e);
     }
   }
 
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const createNewGameTemplate = async (newGame: CreateGameTemplateInput) => {
+  const createNewGameTemplate = async (listQuerySettings: IListQuerySettings, newGame: CreatePublicGameTemplateInput | CreatePrivateGameTemplateInput) => {
     try{
-    newGame.owner = "Owner";
+    newGame.grade = '8';
     newGame.version = 0;
-    const game = await createGameTemplate(apiClients, newGame);
+    const game = await createGameTemplate(listQuerySettings.publicPrivateType, apiClients, newGame);
       if (!game) {
         throw new Error ('Game was unable to be created');
       }
@@ -205,10 +212,10 @@ export const RouteContainer = ({
     gameTemplateUpdateInput.questionTemplatesCount = gameTemplateUpdateInput.questionTemplates?.length ?? 0;
     if (isNullOrUndefined(existingGame))
     {
-      backendGame = await createNewGameTemplate(gameTemplateUpdateInput);
+      backendGame = await createNewGameTemplate(listQuerySettings, gameTemplateUpdateInput);
     }
     else {
-      backendGame = await updateGameTemplate(apiClients, gameTemplateUpdateInput);
+      backendGame = await updateGameTemplate(publicPrivateQueryType, apiClients, gameTemplateUpdateInput);
     }
     if (!isNullOrUndefined(updatedGame.questionTemplates) && updatedGame.questionTemplates.length > 0) {
       const newQuestionTemplates = updatedGame.questionTemplates.map((updatedQuestion) => {
@@ -249,7 +256,7 @@ export const RouteContainer = ({
         const {questionTemplates, ...rest} = newGame;
         const gameTemplateUpdate = rest; 
         const questionTemplatesUpdate = questionTemplates;
-        const game = await updateGameTemplate(apiClients, gameTemplateUpdate);
+        const game = await updateGameTemplate(publicPrivateQueryType, apiClients, gameTemplateUpdate);
           
         if (game) {
           // ~~~~ add questions to game ~~~~~~ using , questionIDSet
@@ -275,7 +282,7 @@ export const RouteContainer = ({
     const {questionTemplates, ...rest} = game;
     const questionTemplatesUpdate = questionTemplates;
     const newGameTemplate = { ...rest, id: uuidv4(), title: `Clone of ${game.title}`};
-    const result = await createGameTemplate(apiClients, newGameTemplate);
+    const result = await createGameTemplate(publicPrivateQueryType, apiClients, newGameTemplate);
     if (result) {
       listQuerySettings.nextToken = nextToken;
       getAllGameTemplates(listQuerySettings);
@@ -285,7 +292,7 @@ export const RouteContainer = ({
   }
 
   const handleDeleteGameTemplate = async (id: string) => {
-    const result = await deleteGameTemplate(apiClients, id);
+    const result = await deleteGameTemplate(publicPrivateQueryType, apiClients, id);
     if (result) {
       listQuerySettings.nextToken = nextToken;
       const games = await getAllGameTemplates(listQuerySettings);
@@ -294,7 +301,7 @@ export const RouteContainer = ({
   }
 
   const handleDeleteQuestionTemplate = async (id: string, game: Game) => {
-    const result = await deleteQuestionTemplate(apiClients, id);
+    const result = await deleteQuestionTemplate(publicPrivateQueryType, apiClients, id);
     if (result) {
       listQuerySettings.nextToken = nextToken;
       getAllQuestionTemplates(listQuerySettings)
@@ -305,7 +312,7 @@ export const RouteContainer = ({
   const handleCreateQuestionTemplate = async ( question: IQuestionTemplate) => {
     try {
       const newQuestionInput = {...question, createdAt: question.createdAt?.toString(), updatedAt: question.updatedAt?.toString()};
-      const result = await createQuestionTemplate(apiClients, newQuestionInput);
+      const result = await createQuestionTemplate(publicPrivateQueryType, apiClients, newQuestionInput);
       return result;
     } catch (e) {
       console.log(e);
@@ -323,7 +330,7 @@ export const RouteContainer = ({
       const updatedAt = questionTemplateUpdate.updatedAt?.toString();
       const createdAt = questionTemplateUpdate.createdAt?.toString();
       const updatedQuestion = {...questionTemplateUpdate, updatedAt, createdAt};
-      const question = await updateQuestionTemplate(apiClients, updatedQuestion);
+      const question = await updateQuestionTemplate(publicPrivateQueryType, apiClients, updatedQuestion);
       if (question) {  
         listQuerySettings.nextToken = nextToken;
         const question = await getAllQuestionTemplates(listQuerySettings);
@@ -341,8 +348,8 @@ export const RouteContainer = ({
   const handleCloneQuestionTemplate = async (question : IQuestionTemplate) => {
     const {gameTemplates, ...rest} = question;
     const gameTemplatesUpdate = gameTemplates;
-    const updatedQuestionTemplate: CreateQuestionTemplateInput = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`, createdAt: question.createdAt?.toISOString(), updatedAt: question.updatedAt?.toISOString()};
-    const result = await createQuestionTemplate(apiClients, updatedQuestionTemplate);
+    const updatedQuestionTemplate: CreatePublicQuestionTemplateInput | CreatePrivateQuestionTemplateInput = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`, createdAt: question.createdAt?.toISOString(), updatedAt: question.updatedAt?.toISOString()};
+    const result = await createQuestionTemplate(publicPrivateQueryType, apiClients, updatedQuestionTemplate);
     if (result) {
       listQuerySettings.nextToken = null;
       getAllGameTemplates(listQuerySettings);
@@ -352,7 +359,9 @@ export const RouteContainer = ({
   }
   const handleCreateGameQuestion = async (gameId: string, questionId: string) => {
     try {
-      const result = await createGameQuestions(apiClients, {gameTemplateID: gameId, questionTemplateID: questionId});
+      const result = await createGameQuestions(publicPrivateQueryType, apiClients, {
+        questionTemplateID: questionId, gameTemplateID: gameId
+      });
       // when a game and question are linked, we update the respective gameTemplatesCount and questionTemplatesCount
       if (
         !isNullOrUndefined(result) &&
@@ -369,8 +378,8 @@ export const RouteContainer = ({
         const {gameTemplates, ...restQuestion} = result.questionTemplate;
         const questionTemplateUpdate = {...restQuestion, gameTemplatesCount: gameTemplates.length};
         const questionTemplateUpdateInput = {...questionTemplateUpdate, createdAt: questionTemplateUpdate.createdAt?.toString(), updatedAt: questionTemplateUpdate.updatedAt?.toString()};
-        await updateGameTemplate(apiClients, gameTemplateUpdateInput);
-        await updateQuestionTemplate(apiClients, questionTemplateUpdateInput);
+        await updateGameTemplate(publicPrivateQueryType, apiClients, gameTemplateUpdateInput);
+        await updateQuestionTemplate(publicPrivateQueryType, apiClients, questionTemplateUpdateInput);
       }
       return result;
     } catch (e) {
@@ -379,9 +388,9 @@ export const RouteContainer = ({
   };
   
   const handleDeleteGameQuestion = async (id: string, gameId?: string) => {
-    const result = await deleteGameQuestions(apiClients, id);
+    const result = await deleteGameQuestions(publicPrivateQueryType, apiClients, id);
     if (gameId && gameId !== ''){
-      const updatedGame = await getGameTemplate(apiClients, gameId ?? '');
+      const updatedGame = await getGameTemplate(publicPrivateQueryType, apiClients, gameId ?? '');
       if (updatedGame) 
         setGames((prevGames) => prevGames.map(game => game.id === updatedGame.id ? updatedGame : game));
     }  
@@ -427,6 +436,14 @@ export const RouteContainer = ({
       return true;
   };
 
+  const handlePublicPrivateChange = async (value: PublicPrivateType) => {
+    setPublicPrivateQueryType(value);
+    console.log(value);
+    listQuerySettings.publicPrivateType = value;
+    const games = await getAllGameTemplates(listQuerySettings);
+    localStorage.setItem('games', JSON.stringify(games));
+  }
+
   // this useEffect establishes the Hub.listener to subscribe to changes in user auth
   useEffect(() => {
     persistUserAuth();
@@ -436,6 +453,7 @@ export const RouteContainer = ({
     // get either a list of games or questions when the route changes
     setSearchInput('');
     const updatedListQuerySettings = {
+      publicPrivateType: PublicPrivateType.PUBLIC,
       nextToken: null,
       queryLimit,
       sortDirection: SortDirection.DESC,
@@ -523,6 +541,8 @@ export const RouteContainer = ({
             handleSearchChange={handleSearchChange}
             sortByCheck={sortByCheck}
             setSortByCheck={setSortByCheck}
+            publicPrivateQueryType={publicPrivateQueryType}
+            handlePublicPrivateChange={handlePublicPrivateChange}
           />
         </Box>
       </Box>
