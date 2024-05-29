@@ -184,7 +184,6 @@ export const RouteContainer = ({
     try{
     newGame.owner = "Owner";
     newGame.version = 0;
-    newGame.isPublic = false;
     const game = await createGameTemplate(apiClients, newGame);
       if (!game) {
         throw new Error ('Game was unable to be created');
@@ -202,7 +201,7 @@ export const RouteContainer = ({
     // seperate out questionTemplates from gameTemplate object
     const {questionTemplates, ...rest} = updatedGame;
     const gameTemplateUpdate = rest as IGameTemplate; 
-    const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString(), isPublic: false}
+    const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()}
     gameTemplateUpdateInput.questionTemplatesCount = gameTemplateUpdateInput.questionTemplates?.length ?? 0;
     if (isNullOrUndefined(existingGame))
     {
