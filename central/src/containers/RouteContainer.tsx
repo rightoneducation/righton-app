@@ -210,6 +210,8 @@ export const RouteContainer = ({
     const gameTemplateUpdate = rest as IGameTemplate; 
     const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()}
     gameTemplateUpdateInput.questionTemplatesCount = gameTemplateUpdateInput.questionTemplates?.length ?? 0;
+    console.log(gameTemplateUpdateInput);
+    console.log(listQuerySettings);
     if (isNullOrUndefined(existingGame))
     {
       backendGame = await createNewGameTemplate(listQuerySettings, gameTemplateUpdateInput);

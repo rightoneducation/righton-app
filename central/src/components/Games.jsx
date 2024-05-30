@@ -163,7 +163,7 @@ export default function Games({
               const { questionId } = match.params;
               const question = getQuestionTemplateById(questions, questionId);
               handleSearchClick(false);
-              return <QuestionMaker originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
+              return <QuestionMaker originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings}/>
             } 
         }/>
         <Route path="/">

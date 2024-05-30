@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
+import { Typography, TextField, Divider, Button, Select, MenuItem, Grid, Box, Radio } from '@material-ui/core';
 import { v4 as uuidv4 } from 'uuid';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionMakerAnswerDropdown from './QuestionMakerAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
-import { NumericAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision } from '@righton/networking';
+import { NumericAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision, PublicPrivateType } from '@righton/networking';
 
 export default function QuestionMaker({ 
   gameId, 
@@ -16,6 +16,8 @@ export default function QuestionMaker({
   setLocalQuestionTemplates,
   handleCreateQuestionTemplate, 
   handleUpdateQuestionTemplate,
+  listQuerySettings,
+  handleUpdateListQuerySettings,
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
@@ -61,6 +63,10 @@ export default function QuestionMaker({
   const handleStringInput = (value) => {
     let newString = value.replace(/\'/g, '\u2019');
     return newString;
+  }
+
+  const handlePublicPrivateChange = (event) => {
+    handleUpdateListQuerySettings({...listQuerySettings, publicPrivateType: event.target.value});
   }
 
   const isNullOrEmpty = (str) => {
@@ -194,7 +200,6 @@ export default function QuestionMaker({
           <Button type="button" className={classes.back} onClick={handleBack}>
             <ArrowBack style={{ marginRight: 8 }} />
               {match ? `Back to Game Maker` : `Back to Questions`}
-              
           </Button>
         </Grid>
 
@@ -214,7 +219,27 @@ export default function QuestionMaker({
           <Grid item container justifyContent='center' xs={8} sm={4}>
             {question.imageUrl ? <img src={question.imageUrl} alt="" width={'60%'} /> : <img className={classes.image} src={Placeholder} alt="Invalid URL" />}
           </Grid>
-
+          <Grid container item xs={12} sm={4} style={{display: 'flex', alignItems: 'center', gap: 10}}>
+                  <Typography style={{ fontWeight: 200, fontSize: '1 rem', color: 'rgba(0,0,0,0.75)' }}> Game Type: </Typography>
+                  <Box style={{ display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)' }}> Public </Typography>
+                    <Radio
+                      checked={listQuerySettings.publicPrivateType === PublicPrivateType.PUBLIC} 
+                      value={PublicPrivateType.PUBLIC} 
+                      onChange={handlePublicPrivateChange} 
+                      color='default'
+                    />
+                  </Box>
+                  <Box style={{display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)'}}> Private </Typography>
+                    <Radio 
+                      checked={listQuerySettings.publicPrivateType === PublicPrivateType.PRIVATE} 
+                      value={PublicPrivateType.PRIVATE} 
+                      onChange={handlePublicPrivateChange} 
+                      color='default'
+                    />
+                  </Box>
+                </Grid>
           <Grid item xs={12}>
             <Divider className={classes.divider} />
           </Grid>
