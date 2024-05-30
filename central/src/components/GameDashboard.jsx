@@ -6,7 +6,7 @@ import LoadingIndicator from './LoadingIndicator';
 import GameCard from './GameCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function GameDashboard({ loading, nextToken, games, handleScrollDown, deleteGame, cloneGameTemplate, gameId, isUserAuth }) {
+export default function GameDashboard({ loading, nextToken, publicPrivateQueryType, games, handleScrollDown, deleteGame, cloneGameTemplate, gameId, isUserAuth }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -88,6 +88,7 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
                 anchorEl={anchorEl}
                 activeIndex={activeIndex}
                 onClick={() => history.push(`/games/${game.id}`)}
+                publicPrivateQueryType={publicPrivateQueryType}
               />
             </Grid>
           ) : 

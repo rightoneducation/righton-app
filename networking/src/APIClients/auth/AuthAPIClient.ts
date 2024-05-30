@@ -72,8 +72,8 @@ export class AuthAPIClient
     await confirmSignUp({username: email, confirmationCode: code});
   }
 
-  async awsSignIn(email: string, password: string): Promise<void> {
-    await signIn({username: email, password: password});
+  async awsSignIn(username: string, password: string): Promise<void> {
+    await signIn({username: username, password: password});
   }
 
   async awsSignInFederated (): Promise<void> {

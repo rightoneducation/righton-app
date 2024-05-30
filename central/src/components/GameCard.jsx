@@ -14,6 +14,7 @@ import {
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
+import { PublicPrivateType } from '@righton/networking';
 export default function GameCard({ 
   game,
   index,
@@ -26,10 +27,11 @@ export default function GameCard({
   isUserAuth,
   onClick,
   anchorEl,
-  activeIndex
+  activeIndex,
+  publicPrivateQueryType
  }) {
   const classes = useStyles();
-  const { id, title, description, cluster, domain, grade, standard, imageUrl } = game;
+  const { id, title, description, cluster, domain, grade, standard, imageUrl, owner } = game;
   const questionCount = game?.questionTemplates.length || 0;
   const history = useHistory();
     return (
@@ -48,9 +50,16 @@ export default function GameCard({
                     </Typography>
                   </Grid>
                 </Grid>
-                <Typography className={classes.title} >
-                  {title}
-                </Typography>
+                <>
+                  <Typography className={classes.title} >
+                    {title}
+                  </Typography>
+                  { publicPrivateQueryType === PublicPrivateType.PUBLIC &&
+                    <Typography className={classes.owner} >
+                      Created by: {owner}
+                    </Typography>
+                  }
+                </>
                 <Typography className={classes.textSecondary} color="textSecondary" >
                   {description}
                 </Typography>
@@ -125,7 +134,13 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     fontWeight: 700,
-    height: '80%',
+    lineHeight: '1.2',
+    color: '#384466',
+    textOverflow: 'ellipsis',
+  },
+  owner: {
+    fontWeight: 400,
+    height: '60%',
     color: '#384466',
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
