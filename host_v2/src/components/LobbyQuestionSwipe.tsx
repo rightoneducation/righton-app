@@ -18,6 +18,7 @@ const BoxStyled = styled(Box)({
   width: '90%',
   boxSizing: 'border-box',
   margin: 'auto',
+  // touchAction: 'auto',
 });
 
 export default function QuestionList({ questions, title }: QuestionListProps) {
@@ -33,6 +34,7 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
               borderBottom: `1px solid ${theme.palette.divider}`,
               // paddingBottom: theme.spacing(2),
               width: '100%',
+              touchAction: 'pan-y',
             }}
           >
         <TitleQuestionCard title ={title} questions={questions}/>          

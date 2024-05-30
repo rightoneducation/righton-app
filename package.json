@@ -1,0 +1,8 @@
+{
+  "name": "righton-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/rightoneducation/righton-app.git",
+  "author": "kellycouvrette <kellycouvrette@gmail.com>",
+  "license": "MIT"
+}

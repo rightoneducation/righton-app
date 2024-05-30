@@ -251,7 +251,7 @@ export default createTheme({
     },
   },
   typography: {
-    fontFamily: 'Poppins',
+    fontFamily: 'Poppins, Rubik', 
     h1: {
       // screen titles
       fontWeight: '800',

@@ -29,6 +29,7 @@ const TitleBoxStyled = styled(Paper)({
   padding: '16px 18px 20px 18px',
   gap: '2px',
   boxShadow: '0px 4px 10px 0px rgba(15, 27, 40, 0.3)',
+  touchAction: 'pan-y',
 });
 
 const TitleBoxTopStyled = styled(Box)({

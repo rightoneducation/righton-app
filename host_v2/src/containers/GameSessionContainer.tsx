@@ -269,37 +269,37 @@ export default function GameSessionContainer() {
   
   // WHAT I ADDED from host v1 - 
   // let { gameSessionId } = useParams<{ gameSessionId: string }>();
-  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
-  // const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
-  //   currentState: MockGameSession.currentState as GameSessionState}); 
+  // THIS const [gameSession, setGameSession] = useState<IGameSession | null>(null);
+  // THIS const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
+  const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
+  currentState: MockGameSession.currentState as GameSessionState}); 
 
-  useEffect(() => {
-    // Fetch game session data from AWS DynamoDB using the provided gameId
-    const fetchGameSession = async () => {
-      try {
-        const response = await apiClients.gameSession.getGameSession(gameSessionId);
-        setGameSession(response); // Set the game session data in state
-      } catch (error) {
-        console.error('error fetching game session:', error);
-      }
-    };
+  // THIS useEffect(() => {
+  //   // Fetch game session data from AWS DynamoDB using the provided gameId
+  //   const fetchGameSession = async () => {
+  //     try {
+  //       const response = await apiClients.gameSession.getGameSession(gameSessionId);
+  //       setGameSession(response); // Set the game session data in state
+  //     } catch (error) {
+  //       console.error('error fetching game session:', error);
+  //     }
+  //   };
 
-    let gameSessionSubscription: any | null = null;
-    gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
-      gameSessionId,
-      (response) => {
-        console.log(response);
-        setGameSession({...gameSession, ...response});
-      },
-    );
+  //   let gameSessionSubscription: any | null = null;
+  //   gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
+  //     gameSessionId,
+  //     (response) => {
+  //       console.log(response);
+  //       setGameSession({...gameSession, ...response});
+  //     },
+  //   );
 
-    fetchGameSession();
-    return () => {
-      gameSessionSubscription?.unsubscribe();
-    };
+  //   fetchGameSession();
+  //   return () => {
+  //     gameSessionSubscription?.unsubscribe();
+  //   };
 
-  }, [apiClients]); // eslint-disable-line
+  // }, [apiClients]); // eslint-disable-line
 
 
 

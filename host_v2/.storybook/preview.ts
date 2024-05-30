@@ -1,24 +1,18 @@
-import type { Preview } from '@storybook/react';
-
-const preview: Preview = {
-  parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/,
-      },
+export const parameters = {
+  actions: { argTypesRegex: '^on[A-Z].*' },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
     },
-    backgrounds: {
-      default: 'dark',
-    },
-    options: {
-      storySort: {
-        method: 'alphabetical',
-      },
-    },
-    layout: 'fullscreen',
   },
+  backgrounds: {
+    default: 'dark',
+  },
+  options: {
+    storySort: {
+      method: 'alphabetical',
+    },
+  },
+  layout: 'fullscreen',
 };
-
-export default preview;
