@@ -264,8 +264,11 @@ interface ConfidenceOption {
   players: Player[]; // an array of the players that selected this option
 }
 
-export default function GameSessionContainer() {
-  const apiClients = new APIClients(Environment.Developing);
+interface GameSessionContainerProps {
+  apiClients: APIClients;
+}
+
+export default function GameSessionContainer({apiClients}: GameSessionContainerProps) {
   
   // WHAT I ADDED from host v1 - 
   // let { gameSessionId } = useParams<{ gameSessionId: string }>();
@@ -293,7 +296,7 @@ export default function GameSessionContainer() {
         setGameSession({...gameSession, ...response});
       },
     );
-
+    
     fetchGameSession();
     return () => {
       gameSessionSubscription?.unsubscribe();
@@ -439,18 +442,8 @@ export default function GameSessionContainer() {
 
 
   switch (gameSession?.currentState){
-    case GameSessionState.TEAMS_JOINING:
-      return (
-        <StartGame
-          teams={gameSession?.teams ?? []}
-          questions={gameSession?.questions}
-          title={gameSession?.title ?? ''}
-          gameCode={gameSession?.gameCode}
-          handleDeleteTeam={handleDeleteTeam}
-        />
-      );
+ 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
-    default:
       return (
         <GameInProgress
           totalQuestions={gameSession?.questions.length ?? 0}
@@ -469,5 +462,16 @@ export default function GameSessionContainer() {
           setIsPopularMode={setIsPopularMode}
         />
       );
+      case GameSessionState.TEAMS_JOINING:
+        default:
+        return (
+          <StartGame
+            teams={gameSession?.teams ?? []}
+            questions={gameSession?.questions ?? []}
+            title={gameSession?.title ?? ''}
+            gameCode={gameSession?.gameCode ?? 0}
+            handleDeleteTeam={handleDeleteTeam}
+          />
+        );
   }
 }
