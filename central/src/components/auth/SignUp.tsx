@@ -10,7 +10,7 @@ const Signup: React.FC <{apiClients: any}> = ({apiClients}) =>{
 
   const history = useHistory();
 
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,7 +23,7 @@ const Signup: React.FC <{apiClients: any}> = ({apiClients}) =>{
       return;
     }
     try {
-      await apiClients.auth.awsSignUp(email, password);
+      await apiClients.auth.awsSignUp(username, email, password);
       history.push("/confirmation");
     } catch (error) {
       console.error(error);
@@ -67,9 +67,9 @@ const Signup: React.FC <{apiClients: any}> = ({apiClients}) =>{
           <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%", marginBottom: '0'}}>
             <Field
               variant="outlined"
-              label="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              label="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <Field
               variant="outlined"

@@ -55,13 +55,14 @@ export class AuthAPIClient
     );
   }
 
-  async awsSignUp(email: string, password: string) {
+  async awsSignUp(username: string, email: string, password: string) {
     await signUp({
-      username: email,
+      username: username,
       password: password,
       options: {
         userAttributes: {
-          email
+          preferred_username: username,
+          email: email,
         },
       }
     });
