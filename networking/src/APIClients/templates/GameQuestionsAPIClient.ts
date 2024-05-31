@@ -19,7 +19,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         if (isNullOrUndefined(gameQuestions?.data) || isNullOrUndefined(gameQuestions?.data.createGameQuestions)) {
             throw new Error(`Failed to create gameQuestions.`);
         }
-        return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions.data.createGameQuestions as AWSGameQuestion) as IGameQuestion;
+        return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions.data.createGameQuestions as AWSGameQuestion, type) as IGameQuestion;
     }
 
     async getGameQuestions<T extends PublicPrivateType>(
@@ -38,7 +38,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         ) {
             throw new Error(`Failed to create gameQuestions.`)
         }
-        return GameQuestionParser.gameQuestionFromAWSGameQuestion(result.data.getGameQuestions as AWSGameQuestion) as IGameQuestion;
+        return GameQuestionParser.gameQuestionFromAWSGameQuestion(result.data.getGameQuestions as AWSGameQuestion, type) as IGameQuestion;
     }
 
     async deleteGameQuestions<T extends PublicPrivateType>(
@@ -72,7 +72,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
             { variables }
         ) as { data: any };
         const parsedGameQuestions = result.data.listGameQuestions.items.map((gameQuestions: AWSGameQuestion) => {
-            return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions) as IGameQuestion;
+            return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions, type) as IGameQuestion;
         });
         const parsedNextToken = result.data.listGameQuestions.nextToken;
 

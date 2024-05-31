@@ -126,7 +126,8 @@ export abstract class BaseAPIClient {
       filterString: string | null,
       awsType: string,
       queryName: string, 
-      query: any
+      query: any,
+      type: PublicPrivateType
     ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
       if (filterString != null) {
@@ -141,10 +142,14 @@ export abstract class BaseAPIClient {
         const operationResult = result.data[queryName];
         const parsedNextToken = operationResult.nextToken;
         if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-          const gameTemplates = operationResult.items.map(GameTemplateParser.gameTemplateFromAWSGameTemplate);
+          const gameTemplates = operationResult.items.map((item: any) => 
+            GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
+          );
           return { gameTemplates, nextToken: parsedNextToken } as QueryResult;
         } else {
-          const questionTemplates = operationResult.items.map(QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate);
+          const questionTemplates = operationResult.items.map((item: any) => 
+            QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
+          );
           return { questionTemplates, nextToken: parsedNextToken } as QueryResult;
         }
       }

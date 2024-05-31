@@ -101,6 +101,7 @@ export const RouteContainer = ({
     try { 
       setLoading(true);
       const games = await listGameTemplates(publicPrivateQueryType, apiClients, listQuerySettings);
+      console.log(games);
       if (games?.gameTemplates){
         setGames(games?.gameTemplates);
         setNextToken(games?.nextToken ?? null);

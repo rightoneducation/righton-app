@@ -27,7 +27,7 @@ export class QuestionTemplateAPIClient
     ) {
         throw new Error(`Failed to create question template.`);
     }
-    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate as AWSQuestionTemplate);
+    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate as AWSQuestionTemplate, type);
   }
 
   async getQuestionTemplate<T extends PublicPrivateType>(
@@ -46,11 +46,11 @@ export class QuestionTemplateAPIClient
       ) {
         throw new Error(`Failed to get question template`);
       }
-      return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(result.data.getQuestionTemplate as AWSQuestionTemplate);
+      return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(result.data.getQuestionTemplate as AWSQuestionTemplate, type);
     } catch (e) {
       console.log(e);
     }
-    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate({} as AWSQuestionTemplate);
+    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate({} as AWSQuestionTemplate, type);
   }
 
   async updateQuestionTemplate<T extends PublicPrivateType>(
@@ -69,7 +69,7 @@ export class QuestionTemplateAPIClient
     ) {
         throw new Error(`Failed to update question template`);
     }
-    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.updateQuestionTemplate as AWSQuestionTemplate);
+    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.updateQuestionTemplate as AWSQuestionTemplate, type);
   }
 
   async deleteQuestionTemplate<T extends PublicPrivateType>(
@@ -96,7 +96,7 @@ export class QuestionTemplateAPIClient
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.default;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `list${type}QuestionTemplates`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `list${type}QuestionTemplates`, queryFunction, type);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
@@ -111,7 +111,7 @@ export class QuestionTemplateAPIClient
     console.log('response2');
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByDate`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByDate`, queryFunction, type);
     console.log('response');
     console.log(response);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
@@ -126,7 +126,7 @@ export class QuestionTemplateAPIClient
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGrade;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGrade`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGrade`, queryFunction, type);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
@@ -139,7 +139,7 @@ export class QuestionTemplateAPIClient
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGameTemplatesCount;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGameTemplatesCount`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGameTemplatesCount`, queryFunction, type);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 }
