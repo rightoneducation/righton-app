@@ -80,11 +80,14 @@ export const listQuestionTemplates = async (
   listQuerySettings: IListQuerySettings | null
 ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null> => {
   try {
+    console.log('sup');
+    console.log(listQuerySettings);
     const nextToken = listQuerySettings?.nextToken ?? null;
     const sortDirection = listQuerySettings?.sortDirection ?? null;
     const sortField = listQuerySettings?.sortField ?? null;
     const filterString = (listQuerySettings?.filterString && listQuerySettings?.filterString != "") ? listQuerySettings?.filterString : null;
     const queryLimit = listQuerySettings?.queryLimit ?? null;
+    console.log(nextToken);
     switch (sortField) {
       case SortField.GRADE:
         return await apiClients.questionTemplate.listQuestionTemplatesByGrade(type, queryLimit, nextToken, sortDirection, filterString);

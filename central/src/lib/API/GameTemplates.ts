@@ -77,6 +77,7 @@ export const deleteGameTemplate = async (
 };
 
 export const listGameTemplates = async (
+  type: PublicPrivateType,
   apiClients: IAPIClients, 
   listQuerySettings: IListQuerySettings | null
 ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
@@ -88,7 +89,6 @@ export const listGameTemplates = async (
     const sortField = listQuerySettings?.sortField ?? null;
     const filterString = (listQuerySettings?.filterString && listQuerySettings?.filterString != "") ? listQuerySettings?.filterString : null;
     const queryLimit = listQuerySettings?.queryLimit ?? null;
-    const type = listQuerySettings?.publicPrivateType ?? PublicPrivateType.PUBLIC;
     switch (sortField) {
       case SortField.GRADE:
         return await apiClients.gameTemplate.listGameTemplatesByGrade(type, queryLimit, nextToken, sortDirection, filterString);

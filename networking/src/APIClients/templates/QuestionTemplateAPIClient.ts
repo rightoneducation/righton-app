@@ -15,6 +15,7 @@ export class QuestionTemplateAPIClient
     createQuestionTemplateInput: QuestionTemplateType<T>['create']['input'] | IQuestionTemplate
   ): Promise<IQuestionTemplate> {
     const variables: GraphQLOptions = { input: createQuestionTemplateInput as QuestionTemplateType<T>['create']['input'] };
+    console.log(variables);
     const queryFunction = questionTemplateRuntimeMap[type].create.queryFunction;
     const questionTemplate = await this.callGraphQL<QuestionTemplateType<T>['create']['query']>(
         queryFunction,
@@ -106,9 +107,13 @@ export class QuestionTemplateAPIClient
     sortDirection: string | null,
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    console.log(nextToken);
+    console.log('response2');
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase}QuestionTemplatesByDate`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByDate`, queryFunction);
+    console.log('response');
+    console.log(response);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
@@ -121,7 +126,7 @@ export class QuestionTemplateAPIClient
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGrade;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase}QuestionTemplatesByGrade`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGrade`, queryFunction);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
@@ -134,7 +139,7 @@ export class QuestionTemplateAPIClient
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGameTemplatesCount;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase}QuestionTemplatesByGameTemplatesCount`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGameTemplatesCount`, queryFunction);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 }

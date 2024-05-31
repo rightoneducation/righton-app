@@ -79,6 +79,8 @@ export default function GameMaker({
   nextToken,
   localQuestionTemplates,
   setLocalQuestionTemplates,
+  publicPrivateQueryType,
+  handlePublicPrivateChange
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
@@ -115,9 +117,6 @@ export default function GameMaker({
       return gameDetails.phaseTwoTime;
     }
   });
-  const handlePublicPrivateChange = (event) => {
-    handleUpdateListQuerySettings({...listQuerySettings, publicPrivateType: event.target.value});
-  }
   // Handles changing and storing of new values for both Phase Timers
   const handlePhaseOne = (event) => {
     setPhaseOne(event.target.value);
@@ -253,7 +252,7 @@ export default function GameMaker({
                   <Box style={{ display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
                     <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)' }}> Public </Typography>
                     <Radio
-                      checked={listQuerySettings.publicPrivateType === PublicPrivateType.PUBLIC} 
+                      checked={publicPrivateQueryType === PublicPrivateType.PUBLIC} 
                       value={PublicPrivateType.PUBLIC} 
                       onChange={handlePublicPrivateChange} 
                       color='default'
@@ -262,7 +261,7 @@ export default function GameMaker({
                   <Box style={{display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
                     <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)'}}> Private </Typography>
                     <Radio 
-                      checked={listQuerySettings.publicPrivateType === PublicPrivateType.PRIVATE} 
+                      checked={publicPrivateQueryType === PublicPrivateType.PRIVATE} 
                       value={PublicPrivateType.PRIVATE} 
                       onChange={handlePublicPrivateChange} 
                       color='default'

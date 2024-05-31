@@ -82,9 +82,9 @@ input PrivateGameTemplateInput {
 type PublicQuestionTemplate @model 
 @auth(
   rules: [
+    { allow: owner, provider: userPools },
     { allow: public, operations: [read], provider: iam  },
-    { allow: private, operations: [read], provider: userPools },
-    { allow: owner, provider: userPools }
+    { allow: private, operations: [read], provider: userPools }
   ]
 )
 @aws_iam
@@ -92,12 +92,8 @@ type PublicQuestionTemplate @model
 {
   id: ID!
   title: String!
-  owner: String!  @index(
-      name: "publicQuestionTemplatesByOwner"
-      queryField: "publicQuestionTemplatesByOwner"
-      sortKeyFields: ["createdAt"]
-    )
   version: Int!
+  owner: String
   choices: AWSJSON
   instructions: AWSJSON
   answerSettings: AWSJSON
@@ -130,11 +126,6 @@ type PrivateQuestionTemplate @model
 {
   id: ID!
   title: String!
-  owner: String!  @index(
-      name: "privateQuestionTemplatesByOwner"
-      queryField: "privateQuestionTemplatesByOwner"
-      sortKeyFields: ["createdAt"]
-    )
   version: Int!
   choices: AWSJSON
   instructions: AWSJSON

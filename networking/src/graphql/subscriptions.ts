@@ -72,8 +72,8 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -110,8 +110,8 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
         publicQuestionTemplate {
           id
           title
-          owner
           version
+          owner
           choices
           instructions
           answerSettings
@@ -151,8 +151,8 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -269,8 +269,8 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -307,8 +307,8 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
         publicQuestionTemplate {
           id
           title
-          owner
           version
+          owner
           choices
           instructions
           answerSettings
@@ -348,8 +348,8 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -466,8 +466,8 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -504,8 +504,8 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
         publicQuestionTemplate {
           id
           title
-          owner
           version
+          owner
           choices
           instructions
           answerSettings
@@ -545,8 +545,8 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -663,7 +663,6 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -681,6 +680,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -701,7 +701,6 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
         privateQuestionTemplate {
           id
           title
-          owner
           version
           choices
           instructions
@@ -742,7 +741,6 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -760,6 +758,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -774,6 +773,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -860,7 +860,6 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -878,6 +877,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -898,7 +898,6 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
         privateQuestionTemplate {
           id
           title
-          owner
           version
           choices
           instructions
@@ -939,7 +938,6 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -957,6 +955,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -971,6 +970,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1057,7 +1057,6 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -1075,6 +1074,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1095,7 +1095,6 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
         privateQuestionTemplate {
           id
           title
-          owner
           version
           choices
           instructions
@@ -1136,7 +1135,6 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -1154,6 +1152,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1168,6 +1167,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1197,8 +1197,8 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
   onCreatePublicQuestionTemplate(filter: $filter, owner: $owner) {
     id
     title
-    owner
     version
+    owner
     choices
     instructions
     answerSettings
@@ -1255,8 +1255,8 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -1293,8 +1293,8 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
         publicQuestionTemplate {
           id
           title
-          owner
           version
+          owner
           choices
           instructions
           answerSettings
@@ -1334,8 +1334,8 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -1394,8 +1394,8 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
   onUpdatePublicQuestionTemplate(filter: $filter, owner: $owner) {
     id
     title
-    owner
     version
+    owner
     choices
     instructions
     answerSettings
@@ -1452,8 +1452,8 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -1490,8 +1490,8 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
         publicQuestionTemplate {
           id
           title
-          owner
           version
+          owner
           choices
           instructions
           answerSettings
@@ -1531,8 +1531,8 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -1591,8 +1591,8 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
   onDeletePublicQuestionTemplate(filter: $filter, owner: $owner) {
     id
     title
-    owner
     version
+    owner
     choices
     instructions
     answerSettings
@@ -1649,8 +1649,8 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -1687,8 +1687,8 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
         publicQuestionTemplate {
           id
           title
-          owner
           version
+          owner
           choices
           instructions
           answerSettings
@@ -1728,8 +1728,8 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
               publicQuestionTemplate {
                 id
                 title
-                owner
                 version
+                owner
                 choices
                 instructions
                 answerSettings
@@ -1788,7 +1788,6 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
   onCreatePrivateQuestionTemplate(filter: $filter, owner: $owner) {
     id
     title
-    owner
     version
     choices
     instructions
@@ -1846,7 +1845,6 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -1864,6 +1862,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1884,7 +1883,6 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
         privateQuestionTemplate {
           id
           title
-          owner
           version
           choices
           instructions
@@ -1925,7 +1923,6 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -1943,6 +1940,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1957,6 +1955,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1971,6 +1970,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1985,7 +1985,6 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
   onUpdatePrivateQuestionTemplate(filter: $filter, owner: $owner) {
     id
     title
-    owner
     version
     choices
     instructions
@@ -2043,7 +2042,6 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -2061,6 +2059,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -2081,7 +2080,6 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
         privateQuestionTemplate {
           id
           title
-          owner
           version
           choices
           instructions
@@ -2122,7 +2120,6 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -2140,6 +2137,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -2154,6 +2152,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -2168,6 +2167,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -2182,7 +2182,6 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
   onDeletePrivateQuestionTemplate(filter: $filter, owner: $owner) {
     id
     title
-    owner
     version
     choices
     instructions
@@ -2240,7 +2239,6 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -2258,6 +2256,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -2278,7 +2277,6 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
         privateQuestionTemplate {
           id
           title
-          owner
           version
           choices
           instructions
@@ -2319,7 +2317,6 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
               privateQuestionTemplate {
                 id
                 title
-                owner
                 version
                 choices
                 instructions
@@ -2337,6 +2334,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -2351,6 +2349,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -2365,6 +2364,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -3195,8 +3195,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3229,8 +3229,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
           publicQuestionTemplate {
             id
             title
-            owner
             version
+            owner
             choices
             instructions
             answerSettings
@@ -3266,8 +3266,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3314,8 +3314,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
     publicQuestionTemplate {
       id
       title
-      owner
       version
+      owner
       choices
       instructions
       answerSettings
@@ -3368,8 +3368,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3402,8 +3402,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
           publicQuestionTemplate {
             id
             title
-            owner
             version
+            owner
             choices
             instructions
             answerSettings
@@ -3439,8 +3439,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3557,8 +3557,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3591,8 +3591,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
           publicQuestionTemplate {
             id
             title
-            owner
             version
+            owner
             choices
             instructions
             answerSettings
@@ -3628,8 +3628,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3676,8 +3676,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
     publicQuestionTemplate {
       id
       title
-      owner
       version
+      owner
       choices
       instructions
       answerSettings
@@ -3730,8 +3730,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3764,8 +3764,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
           publicQuestionTemplate {
             id
             title
-            owner
             version
+            owner
             choices
             instructions
             answerSettings
@@ -3801,8 +3801,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3919,8 +3919,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -3953,8 +3953,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
           publicQuestionTemplate {
             id
             title
-            owner
             version
+            owner
             choices
             instructions
             answerSettings
@@ -3990,8 +3990,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -4038,8 +4038,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
     publicQuestionTemplate {
       id
       title
-      owner
       version
+      owner
       choices
       instructions
       answerSettings
@@ -4092,8 +4092,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -4126,8 +4126,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
           publicQuestionTemplate {
             id
             title
-            owner
             version
+            owner
             choices
             instructions
             answerSettings
@@ -4163,8 +4163,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 publicQuestionTemplate {
                   id
                   title
-                  owner
                   version
+                  owner
                   choices
                   instructions
                   answerSettings
@@ -4281,7 +4281,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -4295,6 +4294,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4315,7 +4315,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
           privateQuestionTemplate {
             id
             title
-            owner
             version
             choices
             instructions
@@ -4352,7 +4351,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -4366,6 +4364,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4380,6 +4379,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4400,7 +4400,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
     privateQuestionTemplate {
       id
       title
-      owner
       version
       choices
       instructions
@@ -4454,7 +4453,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -4468,6 +4466,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4488,7 +4487,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
           privateQuestionTemplate {
             id
             title
-            owner
             version
             choices
             instructions
@@ -4525,7 +4523,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -4539,6 +4536,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4553,6 +4551,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4567,6 +4566,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt
@@ -4643,7 +4643,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -4657,6 +4656,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4677,7 +4677,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
           privateQuestionTemplate {
             id
             title
-            owner
             version
             choices
             instructions
@@ -4714,7 +4713,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -4728,6 +4726,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4742,6 +4741,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4762,7 +4762,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
     privateQuestionTemplate {
       id
       title
-      owner
       version
       choices
       instructions
@@ -4816,7 +4815,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -4830,6 +4828,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4850,7 +4849,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
           privateQuestionTemplate {
             id
             title
-            owner
             version
             choices
             instructions
@@ -4887,7 +4885,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -4901,6 +4898,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4915,6 +4913,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4929,6 +4928,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt
@@ -5005,7 +5005,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -5019,6 +5018,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -5039,7 +5039,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
           privateQuestionTemplate {
             id
             title
-            owner
             version
             choices
             instructions
@@ -5076,7 +5075,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -5090,6 +5088,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -5104,6 +5103,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -5124,7 +5124,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
     privateQuestionTemplate {
       id
       title
-      owner
       version
       choices
       instructions
@@ -5178,7 +5177,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -5192,6 +5190,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -5212,7 +5211,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
           privateQuestionTemplate {
             id
             title
-            owner
             version
             choices
             instructions
@@ -5249,7 +5247,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                 privateQuestionTemplate {
                   id
                   title
-                  owner
                   version
                   choices
                   instructions
@@ -5263,6 +5260,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -5277,6 +5275,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -5291,6 +5290,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt

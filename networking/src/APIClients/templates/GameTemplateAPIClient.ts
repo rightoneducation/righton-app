@@ -16,6 +16,8 @@ export class GameTemplateAPIClient
   ): Promise<IGameTemplate> {
     const variables: GraphQLOptions = { input: createGameTemplateInput as GameTemplateType<T>['create']['input']};
     const queryFunction = gameTemplateRuntimeMap[type].create.queryFunction;
+    console.log(variables);
+    console.log(queryFunction);
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['create']['query']>(
         queryFunction,
         variables
@@ -112,8 +114,6 @@ export class GameTemplateAPIClient
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}GameTemplate`;
     const queryName = `${type.toLowerCase()}GameTemplatesByDate`;
-    console.log(awsType);
-    console.log(queryName);
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
@@ -127,8 +127,7 @@ export class GameTemplateAPIClient
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byGrade;
     const awsType = `${type}GameTemplate`;
-    const queryName = `${type.toLowerCase}GameTemplatesByGrade`;
-    console.log(queryName);
+    const queryName = `${type.toLowerCase()}GameTemplatesByGrade`;
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; }; 
   }
@@ -142,7 +141,7 @@ export class GameTemplateAPIClient
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byQuestionTemplatesCount;
     const awsType = `${type}GameTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase}GameTemplatesByDate`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}GameTemplatesByDate`, queryFunction);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 }

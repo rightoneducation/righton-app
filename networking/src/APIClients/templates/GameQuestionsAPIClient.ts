@@ -11,6 +11,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
     ): Promise<IGameQuestion> {
         const variables: GameQuestionType<T>['create']['variables'] = { input } as GameQuestionType<T>['create']['variables'];
         const { queryFunction } = gameQuestionRuntimeMap[type]['create'];
+        console.log(variables);
         const gameQuestions = await this.callGraphQL<GameQuestionType<T>['create']['query']>(
             queryFunction, variables
         ) as { data: any };

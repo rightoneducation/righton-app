@@ -17,7 +17,8 @@ export default function QuestionMaker({
   handleCreateQuestionTemplate, 
   handleUpdateQuestionTemplate,
   listQuerySettings,
-  handleUpdateListQuerySettings,
+  publicPrivateQueryType,
+  handlePublicPrivateChange,
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
@@ -63,10 +64,6 @@ export default function QuestionMaker({
   const handleStringInput = (value) => {
     let newString = value.replace(/\'/g, '\u2019');
     return newString;
-  }
-
-  const handlePublicPrivateChange = (event) => {
-    handleUpdateListQuerySettings({...listQuerySettings, publicPrivateType: event.target.value});
   }
 
   const isNullOrEmpty = (str) => {
@@ -168,7 +165,6 @@ export default function QuestionMaker({
       questionToSend.choices = JSON.stringify(questionToSend.choices)
       questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
       questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
-      questionToSend.owner = "Owners Name";
       questionToSend.version = 0;
       questionToSend.gameTemplatesCount = 0;
       let newQuestion;
@@ -224,7 +220,7 @@ export default function QuestionMaker({
                   <Box style={{ display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
                     <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)' }}> Public </Typography>
                     <Radio
-                      checked={listQuerySettings.publicPrivateType === PublicPrivateType.PUBLIC} 
+                      checked={publicPrivateQueryType === PublicPrivateType.PUBLIC} 
                       value={PublicPrivateType.PUBLIC} 
                       onChange={handlePublicPrivateChange} 
                       color='default'
@@ -233,7 +229,7 @@ export default function QuestionMaker({
                   <Box style={{display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
                     <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)'}}> Private </Typography>
                     <Radio 
-                      checked={listQuerySettings.publicPrivateType === PublicPrivateType.PRIVATE} 
+                      checked={publicPrivateQueryType === PublicPrivateType.PRIVATE} 
                       value={PublicPrivateType.PRIVATE} 
                       onChange={handlePublicPrivateChange} 
                       color='default'

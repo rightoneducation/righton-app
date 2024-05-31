@@ -105,7 +105,7 @@ export default function Games({
                 question = getQuestionTemplateById(questions, questionId) ?? null;
               }
               handleSearchClick(false);
-              return <QuestionMaker gameId={gameId} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
+              return <QuestionMaker gameId={gameId} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} publicPrivateQueryType={publicPrivateQueryType} handlePublicPrivateChange={handlePublicPrivateChange}/>
             } 
           }/>
         }
@@ -151,6 +151,8 @@ export default function Games({
                 nextToken={nextToken}
                 localQuestionTemplates={localQuestionTemplates}
                 setLocalQuestionTemplates={setLocalQuestionTemplates}
+                publicPrivateQueryType={publicPrivateQueryType}
+                handlePublicPrivateChange={handlePublicPrivateChange}
               />;
             }
         } />
@@ -163,7 +165,7 @@ export default function Games({
               const { questionId } = match.params;
               const question = getQuestionTemplateById(questions, questionId);
               handleSearchClick(false);
-              return <QuestionMaker originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings}/>
+              return <QuestionMaker originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} publicPrivateQueryType={publicPrivateQueryType} handlePublicPrivateChange={handlePublicPrivateChange}/>
             } 
         }/>
         <Route path="/">

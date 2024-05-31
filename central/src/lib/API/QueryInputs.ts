@@ -11,7 +11,6 @@ export enum SortField {
 }
 
 export interface IListQuerySettings {
-  publicPrivateType: PublicPrivateType
   nextToken: string | null
   sortDirection?: SortDirection | null
   sortField?: SortField | null
