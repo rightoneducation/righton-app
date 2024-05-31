@@ -26,6 +26,7 @@ import { QuestionTemplateParser } from '../Parsers/QuestionTemplateParser';
 import { IQuestionTemplate, AWSQuestionTemplate } from "../Models";
 import { GraphQLOptions } from "./BaseAPIClient";
 import { isNullOrUndefined } from "../global";
+import { QueryType } from "./interfaces/IBaseAPIClient";
 
 export class QuestionTemplateAPIClient
   extends BaseAPIClient
@@ -88,19 +89,19 @@ export class QuestionTemplateAPIClient
   }
 
   
-  async listQuestionTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", listQuestionTemplates, "listQuestionTemplates");
+  async listQuestionTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null, queryType: QueryType): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", listQuestionTemplates, "listQuestionTemplates", queryType);
   }
 
-  async listQuestionTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByDate, "questionTemplatesByDate");
+  async listQuestionTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null, queryType: QueryType): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByDate, "questionTemplatesByDate", queryType);
   }
 
-  async listQuestionTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByGrade, "questionTemplatesByGrade");
+  async listQuestionTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null, queryType: QueryType): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByGrade, "questionTemplatesByGrade", queryType);
   }
 
-  async listQuestionTemplatesByGameTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByGameTemplatesCount, "questionTemplatesByGameTemplatesCount");
+  async listQuestionTemplatesByGameTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null, queryType: QueryType): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "QuestionTemplate", questionTemplatesByGameTemplatesCount, "questionTemplatesByGameTemplatesCount", queryType);
   }
 }

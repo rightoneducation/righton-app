@@ -1,7 +1,7 @@
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
 import { API, graphqlOperation } from "aws-amplify";
 import { isNullOrUndefined } from "../global";
-import { Environment } from "./interfaces/IBaseAPIClient";
+import { Environment, QueryType } from "./interfaces/IBaseAPIClient";
 import { IGameTemplate, IQuestionTemplate} from "../Models";
 import { GameTemplateParser } from "../Parsers/GameTemplateParser";
 import { QuestionTemplateParser } from "../Parsers/QuestionTemplateParser";
@@ -96,20 +96,29 @@ export abstract class BaseAPIClient {
       filterString: string | null,
       type: T, 
       query: any,
-      queryName: string
+      queryName: string,
+      queryType: QueryType
     ): Promise<QueryResult<T> | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type };
-      if (filterString != null) {
-        queryParameters.filter = { title: { contains: filterString } };
-      }
+
+      // if (filterString != null) {
+      //   console.log("inside filter string")
+      //   queryParameters.filter = queryType === QueryType.TITLE ? { title: { contains: filterString } } : { grade: { eq: filterString } };
+      console.log(queryType)
+      // }
+      console.log(filterString)
+      queryParameters.grade = { grade: { eq: filterString } }
+
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
+      
       let result = (await API.graphql(
         graphqlOperation(query, queryParameters)
       )) as { data: any }
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
+      // console.log(result)
       if (type === "GameTemplate") {
         const gameTemplates = operationResult.items.map(GameTemplateParser.gameTemplateFromAWSGameTemplate);
         return { gameTemplates, nextToken: parsedNextToken } as QueryResult<T>;

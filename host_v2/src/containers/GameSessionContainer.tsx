@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { GameSessionState,GameSessionParser, ConfidenceLevel } from '@righton/networking';
+import React, { useEffect, useState } from 'react';
+import { GameSessionState,GameSessionParser, ConfidenceLevel, APIClients, Environment, IGameTemplate, QueryType } from '@righton/networking';
 import { ThemeContext } from 'styled-components';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
@@ -22,6 +22,7 @@ interface ConfidenceOption {
 }
 
 export default function GameSessionContainer() {
+  const apiClients = new APIClients(Environment.Developing);
   const gameSession = GameSessionParser.gameSessionFromAWSGameSession({
     ...MockGameSession,
     currentState: MockGameSession.currentState as GameSessionState,
@@ -169,6 +170,18 @@ export default function GameSessionContainer() {
   const [hintsError, setHintsError] = React.useState(false);
   const [isHintLoading, setisHintLoading] = React.useState(false);
 
+  const [lobbyGameTemplate, setLobbyGameTemplate] = useState<IGameTemplate[]>([])
+  useEffect(() => {
+    apiClients.gameTemplate.listGameTemplatesByGrade(3, null, null, '8', QueryType.GRADE).then(response => {
+      if (response !== null){
+        setLobbyGameTemplate(response.gameTemplates)
+        console.log("client side")
+        console.log(lobbyGameTemplate)
+      }
+    })
+    
+  }, []); // eslint-disable-line
+
 /*
 */
   const mockTeam = [{name: "Muhammad"}, {name: "kevin"}];
@@ -203,6 +216,7 @@ export default function GameSessionContainer() {
         // />
         <GameEnded
           // teams={gameSession.teams ?? []}
+          gametemplates={lobbyGameTemplate}
           teams={mockTeam}
           questions={gameSession.questions}
           title={gameSession.title ?? ''}

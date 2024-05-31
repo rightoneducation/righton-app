@@ -3,3 +3,7 @@ export enum Environment {
   Developing = "developing",
   Testing = "testing"
 }
+export enum QueryType {
+  TITLE,
+  GRADE
+}

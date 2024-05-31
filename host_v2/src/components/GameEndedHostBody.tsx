@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { ITeam } from '@righton/networking';
+import { IGameTemplate, ITeam } from '@righton/networking';
 // import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import SuggestedGames from './SuggestedGames';
 import NoPlayersLobby from './NoPlayersLobby';
@@ -27,9 +27,10 @@ interface GameEndedHostBodyProps{
   setIsGameSelected: (value: boolean) => void; 
   teams: TestTeamProp[]
   isGameSelected: boolean
+  gametemplates: IGameTemplate[]
 }
 
-export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSelected }: GameEndedHostBodyProps ) {
+export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSelected, gametemplates }: GameEndedHostBodyProps ) {
     const swiperRef = useRef<SwiperRef>(null);
     console.log(isGameSelected)
     return (
@@ -56,7 +57,7 @@ export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSele
         
 }}>
           {/* <CurrentStudents teams={teams} /> */}
-          {teams.length === 0 ? <NoPlayersLobby /> : <SuggestedGames teams={teams} isGameSelected = {isGameSelected} setIsGameSelected={setIsGameSelected}/>}
+          {teams.length === 0 ? <NoPlayersLobby /> : <SuggestedGames gametemplates = {gametemplates} teams={teams} isGameSelected = {isGameSelected} setIsGameSelected={setIsGameSelected}/>}
         </SwiperSlide>
         <SwiperSlide>
           <Typography style={{ marginTop: '48px' }}>

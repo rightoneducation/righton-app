@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import {
   ITeam,
   IQuestion,
+  IGameTemplate,
 } from '@righton/networking';
 import GameEndedHostHeader from '../components/GameEndedHostHeader';
 import GameCard from '../components/GameCard';
@@ -16,6 +17,7 @@ interface TestTeamProp{
   name: string
 }
 interface GameEndedProps {
+  gametemplates: IGameTemplate[];
   teams: TestTeamProp[]
   questions:IQuestion[]
   title: string
@@ -40,17 +42,18 @@ const SafeAreaStyled = styled(Box)({
   boxSizing: 'border-box',
   gap: '16px',
 });
-
 function GameEnded({teams,
+  gametemplates,
   questions,
   title,
   gameCode,
   }: GameEndedProps) {
     const [isGameSelected, setIsGameSelected] = useState(false)
+    console.log(gametemplates)
     return (
         <SafeAreaStyled>
           <GameEndedHostHeader gameCode = {gameCode} />
-          <GameEndedHostBody teams={teams} isGameSelected = {isGameSelected} setIsGameSelected ={setIsGameSelected}/>
+          <GameEndedHostBody gametemplates={gametemplates} teams={teams} isGameSelected = {isGameSelected} setIsGameSelected ={setIsGameSelected}/>
           <FooterGameEnded 
           teamsLength={teams ? teams.length : 0}
           isGameSelected = {isGameSelected}

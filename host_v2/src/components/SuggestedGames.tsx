@@ -2,6 +2,8 @@ import React from 'react';
 import { Grid, MenuItem, Divider, Typography, Box, TextField  } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
+import { IGameTemplate } from '@righton/networking';
+
 import SearchIcon from '../images/SearchIcon.svg';
 import RightOnPlaceHolder from '../images/RightOnLogo.png';
 
@@ -13,6 +15,7 @@ interface SuggestedGamesProps {
   teams: Team[] | null;
   setIsGameSelected: (value: boolean) => void; 
   isGameSelected: boolean
+  gametemplates: IGameTemplate[]
 }
 
 const GridStyled = styled(Grid)({
@@ -213,8 +216,32 @@ const OuterBoxStyled = styled(Box)({
 });
 
 
-function SuggestedGames ({ teams, setIsGameSelected, isGameSelected }: SuggestedGamesProps) {
-    // const classes = useStyles();
+function SuggestedGames ({ teams, setIsGameSelected, isGameSelected, gametemplates }: SuggestedGamesProps) {
+    const renderGradeTypography = (gametemplate: IGameTemplate) => {
+      const { grade, domain, cluster, standard } = gametemplate;
+  
+      if (grade === 'Mashup') {
+        return <TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>Mashup</TopBoxText1>;
+      }
+      if (grade === 'Misc' && domain === 'Misc') {
+        return <TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>Misc.</TopBoxText1>;
+      }
+      if (grade === 'Misc') {
+        return <TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>{`${domain}`}</TopBoxText1>;
+      }
+      if (grade && domain) {
+        const clusterCombined = cluster ? `.${cluster}` : '';
+        const standardCombined = standard ? `.${standard}` : '';
+        const domainCombined = domain ? `.${domain}` : '';
+        return (
+          <TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>
+            {`${grade}${domainCombined}${clusterCombined}${standardCombined}`}
+          </TopBoxText1>
+        );
+      }
+      return null;
+    };
+
     return (
         <OuterBoxStyled>
             <SearchStyled>
@@ -229,24 +256,27 @@ function SuggestedGames ({ teams, setIsGameSelected, isGameSelected }: Suggested
                 <PStyled>Continue your current session with our suggested games:</PStyled>
             </BoxStyled>
             {/* <HrStyled/> */}
-            {teams && teams.map((team) => (
+            {gametemplates && gametemplates.map((gametemplate) => (
               
                 <MenuItemStyled key = {uuidv4()} onClick={()=> setIsGameSelected(!isGameSelected)}>
                   <LeftBox>
                     <TopBox>
-                      <TopBoxText1>MASHUP</TopBoxText1>
+                      {gametemplate.grade === 'Mashup' ? (<TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>Mashup</TopBoxText1>) : null}
+                      {renderGradeTypography(gametemplate)}
+                      {/* <TopBoxText1>{gametemplate.grade}</TopBoxText1> */}
                       <TopBoxText2>18 Questions</TopBoxText2>
                     </TopBox>
-                    <TitleStyled>Fun with Fractions</TitleStyled>
+                    <TitleStyled>{gametemplate.title}</TitleStyled>
                     <Box style ={{width: '100%'}}>
-                        <Typography style ={{fontSize:"12px", fontWeight:"500", 
+                      <Typography style ={{fontSize:"12px", fontWeight:"500", 
                         wordWrap: 'break-word', whiteSpace: "normal", 
                         textOverflow: "ellipsis",
                         display: '-webkit-box',
                         WebkitBoxOrient: 'vertical',
                         WebkitLineClamp: 2,
                         overflow: 'hidden',}} >
-                          asdfafasdfasdfasdfasdfaasd asdfasdfasdfasdf This is a sample for where the paragraph is going to be written.</Typography>    
+                        {gametemplate.description}
+                      </Typography>    
                     </Box>
                   </LeftBox>
                   <RightBox>
