@@ -215,7 +215,7 @@ export default function QuestionMaker({
           <Grid item container justifyContent='center' xs={8} sm={4}>
             {question.imageUrl ? <img src={question.imageUrl} alt="" width={'60%'} /> : <img className={classes.image} src={Placeholder} alt="Invalid URL" />}
           </Grid>
-          <Grid container item xs={12} sm={4} style={{display: 'flex', alignItems: 'center', gap: 10}}>
+          <Grid container item xs={12} sm={12} style={{display: 'flex', alignItems: 'center', gap: 10, width: '100%'}}>
                   <Typography style={{ fontWeight: 200, fontSize: '1 rem', color: 'rgba(0,0,0,0.75)' }}> Game Type: </Typography>
                   <Box style={{ display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
                     <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)' }}> Public </Typography>
@@ -224,6 +224,7 @@ export default function QuestionMaker({
                       value={PublicPrivateType.PUBLIC} 
                       onChange={handlePublicPrivateChange} 
                       color='default'
+                      disabled={gameId}
                     />
                   </Box>
                   <Box style={{display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
@@ -233,8 +234,14 @@ export default function QuestionMaker({
                       value={PublicPrivateType.PRIVATE} 
                       onChange={handlePublicPrivateChange} 
                       color='default'
+                      disabled={gameId}
                     />
                   </Box>
+                </Grid>
+                <Grid item xs={12}>
+                { gameId &&
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.50)', fontStyle: "italic"}}> Question access type must match game access type </Typography>
+                  }
                 </Grid>
           <Grid item xs={12}>
             <Divider className={classes.divider} />

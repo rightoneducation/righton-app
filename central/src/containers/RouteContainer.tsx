@@ -276,6 +276,10 @@ export const RouteContainer = ({
     history.push(`/gamemaker/${gameDetails.id}/addquestion`)
   }
 
+  const handleCreateQuestionTemplateClick = (gameDetails: any) => {
+    history.push(`/gamemaker/${gameDetails.id}/questionmaker/${uuidv4()}`);
+  };
+
   // @ts-ignore
   const cloneGameTemplate = async (game) => {
     const {questionTemplates, ...rest} = game;
@@ -435,9 +439,9 @@ export const RouteContainer = ({
       return true;
   };
 
-  const handlePublicPrivateChange = async (value: PublicPrivateType) => {
-    setPublicPrivateQueryType(value);
-    const games = await getAllGameTemplates(value, listQuerySettings);
+  const handlePublicPrivateChange = async (event:any) => {
+    if (event !== null && event.target !== null && event.target.value !== null)
+      setPublicPrivateQueryType(event?.target.value);
     localStorage.setItem('games', JSON.stringify(games));
   }
 
@@ -528,6 +532,7 @@ export const RouteContainer = ({
             searchInput={searchInput} 
             isResolutionMobile={isResolutionMobile} 
             handleQuestionBankClick={handleQuestionBankClick}
+            handleCreateQuestionTemplateClick={handleCreateQuestionTemplateClick}
             handleCreateQuestionTemplate={handleCreateQuestionTemplate}
             handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
             handleCloneQuestionTemplate={handleCloneQuestionTemplate}

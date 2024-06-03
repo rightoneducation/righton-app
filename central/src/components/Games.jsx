@@ -34,6 +34,7 @@ export default function Games({
   handleSearchClick, 
   isResolutionMobile, 
   handleQuestionBankClick,
+  handleCreateQuestionTemplateClick,
   handleDeleteGameQuestion,
   saveGameTemplate,
   listQuerySettings,
@@ -51,9 +52,31 @@ export default function Games({
   if (match && !getGameById(games, match.params.gameId)) {
     gameId  = match.params.gameId;
   }
+
+
   const questionMatch = useRouteMatch('/games/:gameId/questions/:questionId');
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const game = getGameById(games, gameId) ?? null;
+    // New "empty" game
+    const newGame = {
+      title: '',
+      description: '',
+      grade: '',
+      domain: '',
+      phaseOneTime: 180,
+      phaseTwoTime: 180,
+      imageUrl: '',
+      questionTemplates: [],
+    }
+  
+    const [gameDetails, setGameDetails] = useState(() => {
+      if (game) {
+        return { ...game };
+      }
+      else {
+        return {id: gameId, ...newGame};
+      }
+    });
   // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
   const [localQuestionTemplates, setLocalQuestionTemplates] = useState(game ? [...game.questionTemplates] : []);
   const handleQuestionSelected = (question, isSelected) => {
@@ -124,13 +147,17 @@ export default function Games({
               return <GameMaker 
                 loading={loading} 
                 questions={questions} 
-                game={game} 
+                gameDetails={gameDetails} 
+                setGameDetails={setGameDetails}
                 createNewGameTemplate={createNewGameTemplate} 
                 editGameTemplate={editGameTemplate} 
                 gameId={gameId} 
+                game={game}
                 games={games} 
                 cloneQuestion={cloneQuestion} 
                 handleQuestionBankClick={handleQuestionBankClick} 
+                handleCreateQuestionTemplateClick={handleCreateQuestionTemplateClick}
+                handleCreateQuestionTemplate={handleCreateQuestionTemplate}
                 handleDeleteGameQuestion={handleDeleteGameQuestion} 
                 selectedQuestions={selectedQuestions} 
                 setSelectedQuestions={setSelectedQuestions} 
@@ -165,7 +192,7 @@ export default function Games({
               const { questionId } = match.params;
               const question = getQuestionTemplateById(questions, questionId);
               handleSearchClick(false);
-              return <QuestionMaker originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} publicPrivateQueryType={publicPrivateQueryType} handlePublicPrivateChange={handlePublicPrivateChange}/>
+              return <QuestionMaker gameId={null} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} publicPrivateQueryType={publicPrivateQueryType} handlePublicPrivateChange={handlePublicPrivateChange}/>
             } 
         }/>
         <Route path="/">

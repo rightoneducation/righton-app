@@ -14,18 +14,6 @@ import SortByDropdown from './SortByDropdown';
 import QuestionDashboard from './QuestionDashboard';
 import { v4 as uuidv4 } from 'uuid';
 
-// New "empty" game
-const newGame = {
-  title: '',
-  description: '',
-  grade: '',
-  domain: '',
-  phaseOneTime: 180,
-  phaseTwoTime: 180,
-  imageUrl: '',
-  questionTemplates: [],
-}
-
 // Preset times
 const times = [
   {
@@ -53,9 +41,12 @@ const times = [
 export default function GameMaker({ 
   loading,
   questions, 
+  gameDetails,
+  setGameDetails,
   game,
   games, 
   handleQuestionBankClick, 
+  handleCreateQuestionTemplateClick,
   selectedQuestions, 
   setSelectedQuestions, 
   saveGameTemplate, 
@@ -88,14 +79,7 @@ export default function GameMaker({
   }, []);
   const classes = useStyles();
   const history = useHistory();
-  const [gameDetails, setGameDetails] = useState(() => {
-    if (game) {
-      return { ...game };
-    }
-    else {
-      return {id: gameId, ...newGame};
-    }
-  });
+
 
   const selectedQuestionTemplates = selectedQuestions.map(question => {
     return {questionTemplate: question, gameQuestionId: null }
@@ -144,6 +128,7 @@ export default function GameMaker({
     setLocalQuestionTemplates([]);
     gameDetails.questionTemplates = localQuestionTemplates;
     saveGameTemplate(game, gameDetails);
+    setGameDetails({});
     event.preventDefault();
     history.push('/');
   };
@@ -348,7 +333,7 @@ export default function GameMaker({
                   </Grid>
 
                   <Grid container item xs={6} justifyContent='center'>
-                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/questionmaker/${uuidv4()}`)}>
+                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => handleCreateQuestionTemplateClick(gameDetails)}>
                       Create Question
                     </Button>
                   </Grid>
