@@ -8,7 +8,7 @@ import i18n from '../i18n.mock';
 import StartGameButton from './StartGameButton';
 
 export default {
-  title: 'Design System/1_Atoms/SmallButton',
+  title: 'Design System/1_Atoms/StartButton',
   component: StartGameButton,
 } as Meta<typeof StartGameButton>;
 
@@ -30,4 +30,9 @@ Enabled.args = {
 export const Disabled = Template.bind({});
 Disabled.args = {
   disabled: true,
+};
+export const Clicked = Template.bind({});
+Clicked.args = {
+  disabled: false,
+  initialClicked: true,
 };

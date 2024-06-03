@@ -46,6 +46,8 @@ import { styled } from '@mui/material/styles';
 
 interface StartGameButtonProps {
   disabled: boolean;
+  initialClicked?: boolean; 
+
 }
 
 // const ButtonStyled = styled(Button)<{ clicked: boolean }>(({ clicked }) => ({
@@ -133,8 +135,8 @@ const ButtonStyled = styled(Button)<{ clicked: boolean }>(({ clicked }) => ({
 
 
 
-function StartGameButton({ disabled }: StartGameButtonProps) {
-  const [clicked, setClicked] = useState(false);
+function StartGameButton({ disabled, initialClicked = false }: StartGameButtonProps) {
+  const [clicked, setClicked] = useState(initialClicked);
 
   const handleClick = () => {
     setClicked(true);
