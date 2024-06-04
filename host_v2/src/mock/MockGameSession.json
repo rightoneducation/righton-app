@@ -126,7 +126,7 @@
         "name": "Mark Rothko",
         "createdAt": "2023-03-07T17:14:50.860Z",
         "updatedAt": "2023-03-07T17:16:24.160Z",
-        "selectedAvatarIndex": 0,
+        "selectedAvatarIndex": 1,
         "teamMembers": {
           "items": [
             {
@@ -232,7 +232,7 @@
         "name": "Gustave Caillebotte",
         "createdAt": "2023-03-07T17:14:50.860Z",
         "updatedAt": "2023-03-07T17:16:24.160Z",
-        "selectedAvatarIndex": 0,
+        "selectedAvatarIndex": 2,
         "teamMembers": {
           "items": [
             {
@@ -338,7 +338,7 @@
         "name": "Diane Arbus",
         "createdAt": "2023-03-07T17:14:50.860Z",
         "updatedAt": "2023-03-07T17:16:24.160Z",
-        "selectedAvatarIndex": 0,
+        "selectedAvatarIndex": 3,
         "teamMembers": {
           "items": [
             {
@@ -444,7 +444,7 @@
         "name": "Katsushika Hokusai",
         "createdAt": "2023-03-07T17:14:50.860Z",
         "updatedAt": "2023-03-07T17:16:24.160Z",
-        "selectedAvatarIndex": 0,
+        "selectedAvatarIndex": 4,
         "teamMembers": {
           "items": [
             {
