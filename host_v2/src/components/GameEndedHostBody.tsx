@@ -57,7 +57,7 @@ export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSele
         
 }}>
           {/* <CurrentStudents teams={teams} /> */}
-          {teams.length === 0 ? <NoPlayersLobby /> : <SuggestedGames gametemplates = {gametemplates} teams={teams} isGameSelected = {isGameSelected} setIsGameSelected={setIsGameSelected}/>}
+          {teams.length === 0 ? <NoPlayersLobby /> : <SuggestedGames gametemplates = {gametemplates} isGameSelected = {isGameSelected} setIsGameSelected={setIsGameSelected}/>}
         </SwiperSlide>
         <SwiperSlide>
           <Typography style={{ marginTop: '48px' }}>

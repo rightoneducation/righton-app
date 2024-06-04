@@ -172,10 +172,9 @@ export default function GameSessionContainer() {
 
   const [lobbyGameTemplate, setLobbyGameTemplate] = useState<IGameTemplate[]>([])
   useEffect(() => {
-    apiClients.gameTemplate.listGameTemplatesByGrade(3, null, null, '8', QueryType.GRADE).then(response => {
+    apiClients.gameTemplate.listGameTemplatesByGrade(5, null, null, '7', QueryType.GRADE).then(response => {
       if (response !== null){
         setLobbyGameTemplate(response.gameTemplates)
-        console.log("client side")
         console.log(lobbyGameTemplate)
       }
     })

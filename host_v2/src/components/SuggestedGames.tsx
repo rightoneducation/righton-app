@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+
 import { Grid, MenuItem, Divider, Typography, Box, TextField  } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,7 +13,7 @@ interface Team {
 }
 
 interface SuggestedGamesProps {
-  teams: Team[] | null;
+  // teams: Team[] | null;
   setIsGameSelected: (value: boolean) => void; 
   isGameSelected: boolean
   gametemplates: IGameTemplate[]
@@ -216,7 +217,17 @@ const OuterBoxStyled = styled(Box)({
 });
 
 
-function SuggestedGames ({ teams, setIsGameSelected, isGameSelected, gametemplates }: SuggestedGamesProps) {
+function SuggestedGames ({setIsGameSelected, isGameSelected, gametemplates }: SuggestedGamesProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredGameTemplates = gametemplates.filter((gametemplate) =>
+    gametemplate.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
     const renderGradeTypography = (gametemplate: IGameTemplate) => {
       const { grade, domain, cluster, standard } = gametemplate;
   
@@ -250,13 +261,15 @@ function SuggestedGames ({ teams, setIsGameSelected, isGameSelected, gametemplat
               </SearchIconStyled>
               <InputInputStyled 
               placeholder = "Search outside suggestions"
+              value={searchQuery}
+              onChange={handleSearchInputChange}
               />
             </SearchStyled>
             <BoxStyled>
                 <PStyled>Continue your current session with our suggested games:</PStyled>
             </BoxStyled>
             {/* <HrStyled/> */}
-            {gametemplates && gametemplates.map((gametemplate) => (
+            {gametemplates && filteredGameTemplates.map((gametemplate) => (
               
                 <MenuItemStyled key = {uuidv4()} onClick={()=> setIsGameSelected(!isGameSelected)}>
                   <LeftBox>
@@ -264,7 +277,7 @@ function SuggestedGames ({ teams, setIsGameSelected, isGameSelected, gametemplat
                       {gametemplate.grade === 'Mashup' ? (<TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>Mashup</TopBoxText1>) : null}
                       {renderGradeTypography(gametemplate)}
                       {/* <TopBoxText1>{gametemplate.grade}</TopBoxText1> */}
-                      <TopBoxText2>18 Questions</TopBoxText2>
+                      <TopBoxText2>{gametemplate.questionTemplates?.length} Questions</TopBoxText2>
                     </TopBox>
                     <TitleStyled>{gametemplate.title}</TitleStyled>
                     <Box style ={{width: '100%'}}>
