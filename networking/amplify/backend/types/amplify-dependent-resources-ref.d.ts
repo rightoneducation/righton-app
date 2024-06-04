@@ -9,7 +9,6 @@ export type AmplifyDependentResourcesAttributes = {
     "mobile6060603c": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
-      "GoogleWebClient": "string",
       "HostedUIDomain": "string",
       "IdentityPoolId": "string",
       "IdentityPoolName": "string",
@@ -17,12 +16,16 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"
-    },
-    "userPoolGroups": {
-      "adminGroupRole": "string"
     }
   },
   "function": {
+    "createGameTest": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "mobile6060603cPostConfirmation": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

@@ -16,8 +16,9 @@ type QuestionCardProps = {
   index: number;
   activeIndex: number | null;
   handleClick: (event: any) => void;
-  cloneHandler: (question: IQuestionTemplate) => () => void;
-  deleteHandler: (id: string) => () => void;
+  editHandler: (question: IQuestionTemplate) => void;
+  cloneHandler: (question: IQuestionTemplate) => void;
+  deleteHandler: (question: IQuestionTemplate) => void;
   handleClose: () => void;
   handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
   handleQuestionCardClick: (id: string) => void;
@@ -32,6 +33,7 @@ export default function QuestionCard({
   index,
   activeIndex,
   handleClick,
+  editHandler,
   cloneHandler,
   deleteHandler,
   handleClose,
@@ -92,9 +94,9 @@ return (
                   onClose={handleClose}
                   onClick={(event) => { if (!match) event.stopPropagation(); }}
                 >
-                  <MenuItem onClick={(event) => { history.push(`/questionmaker/${question.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
-                  <MenuItem onClick={cloneHandler(question)}>Clone</MenuItem>
-                  <MenuItem onClick={deleteHandler(question.id)}>Delete</MenuItem>
+                  <MenuItem onClick={(event) => { editHandler(question)}}>Edit</MenuItem>
+                  <MenuItem onClick={(event) => {cloneHandler(question)}}>Clone</MenuItem>
+                  <MenuItem onClick={(event) => {deleteHandler(question)}}>Delete</MenuItem>
                 </Menu>             
               </Grid>
             }

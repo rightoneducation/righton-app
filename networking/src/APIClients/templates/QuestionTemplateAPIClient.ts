@@ -15,19 +15,18 @@ export class QuestionTemplateAPIClient
     createQuestionTemplateInput: QuestionTemplateType<T>['create']['input'] | IQuestionTemplate
   ): Promise<IQuestionTemplate> {
     const variables: GraphQLOptions = { input: createQuestionTemplateInput as QuestionTemplateType<T>['create']['input'] };
-    console.log(variables);
     const queryFunction = questionTemplateRuntimeMap[type].create.queryFunction;
+    const createType = `create${type}QuestionTemplate`;
     const questionTemplate = await this.callGraphQL<QuestionTemplateType<T>['create']['query']>(
         queryFunction,
         variables
     ) as { data: any };
     if (
-        isNullOrUndefined(questionTemplate?.data) ||
-        isNullOrUndefined(questionTemplate?.data.createQuestionTemplate)
+        isNullOrUndefined(questionTemplate?.data)
     ) {
         throw new Error(`Failed to create question template.`);
     }
-    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate as AWSQuestionTemplate, type);
+    return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data[createType] as AWSQuestionTemplate, type);
   }
 
   async getQuestionTemplate<T extends PublicPrivateType>(
@@ -36,17 +35,17 @@ export class QuestionTemplateAPIClient
   ): Promise<IQuestionTemplate> {
     try {
       const queryFunction = questionTemplateRuntimeMap[type].get.queryFunction;
+      const getType = `get${type}QuestionTemplate`;
       const result = await this.callGraphQL<QuestionTemplateType<T>['get']['query']>(
         queryFunction,
         { id } as unknown as GraphQLOptions
       ) as { data: any };
       if (
-        isNullOrUndefined(result?.data) ||
-        isNullOrUndefined(result?.data.getQuestionTemplate)
+        isNullOrUndefined(result?.data)
       ) {
         throw new Error(`Failed to get question template`);
       }
-      return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(result.data.getQuestionTemplate as AWSQuestionTemplate, type);
+      return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(result.data[getType] as AWSQuestionTemplate, type);
     } catch (e) {
       console.log(e);
     }
@@ -107,13 +106,11 @@ export class QuestionTemplateAPIClient
     sortDirection: string | null,
     filterString: string | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
-    console.log(nextToken);
-    console.log('response2');
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}QuestionTemplate`;
+    console.log('supsup');
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByDate`, queryFunction, type);
-    console.log('response');
-    console.log(response);
+
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 

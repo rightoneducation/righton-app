@@ -214,8 +214,6 @@ export const RouteContainer = ({
     else {
       backendGame = await updateGameTemplate(publicPrivateQueryType, apiClients, gameTemplateUpdateInput);
     }
-    console.log(updatedGame);
-    console.log(backendGame);
     if (!isNullOrUndefined(updatedGame.questionTemplates) && updatedGame.questionTemplates.length > 0) {
       const newQuestionTemplates = updatedGame.questionTemplates.map((updatedQuestion) => {
         if (updatedQuestion.gameQuestionId === null)  {
@@ -277,6 +275,7 @@ export const RouteContainer = ({
   }
 
   const handleCreateQuestionTemplateClick = (gameDetails: any) => {
+    console.log(gameDetails);
     history.push(`/gamemaker/${gameDetails.id}/questionmaker/${uuidv4()}`);
   };
 
@@ -303,7 +302,7 @@ export const RouteContainer = ({
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
-  const handleDeleteQuestionTemplate = async (id: string, game: Game) => {
+  const handleDeleteQuestionTemplate = async (id: string) => {
     const result = await deleteQuestionTemplate(publicPrivateQueryType, apiClients, id);
     if (result) {
       listQuerySettings.nextToken = nextToken;
@@ -355,7 +354,7 @@ export const RouteContainer = ({
     const result = await createQuestionTemplate(publicPrivateQueryType, apiClients, updatedQuestionTemplate);
     if (result) {
       listQuerySettings.nextToken = null;
-      getAllGameTemplates(publicPrivateQueryType, listQuerySettings);
+      getAllQuestionTemplates(publicPrivateQueryType, listQuerySettings);
       setAlert({ message: 'Question cloned.', type: 'success' });
     }
     return result
@@ -439,11 +438,36 @@ export const RouteContainer = ({
       return true;
   };
 
-  const handlePublicPrivateChange = async (event:any) => {
-    if (event !== null && event.target !== null && event.target.value !== null)
-      setPublicPrivateQueryType(event?.target.value);
-    localStorage.setItem('games', JSON.stringify(games));
+  const handlePublicPrivateChange = async (value:any) => {
+    setPublicPrivateQueryType(value);
+    setLoading(true);
+    if (location.pathname === '/'){
+      const games = await listGameTemplates(value, apiClients, listQuerySettings);
+      if (games?.gameTemplates){
+        setGames(games?.gameTemplates ?? []);
+      }
+      localStorage.setItem('games', JSON.stringify(games));
+    } else if (location.pathname === '/questions'){
+      const questions = await listQuestionTemplates(value, apiClients, listQuerySettings);
+      if (questions?.questionTemplates){
+        setQuestions(questions.questionTemplates);
+      }
+      localStorage.setItem('questions', JSON.stringify(questions));
+    }
+    setLoading(false);
   }
+
+  const checkGameOwner = async (game: IGameTemplate) => {
+    if (await apiClients.auth.verifyGameOwner(game.owner))
+      return true;
+    return false;
+  };
+
+  const checkQuestionOwner = async (question: IQuestionTemplate) => {
+    if (await apiClients.auth.verifyQuestionOwner(question.owner))
+      return true;
+    return false;
+  };
 
   // this useEffect establishes the Hub.listener to subscribe to changes in user auth
   useEffect(() => {
@@ -545,6 +569,8 @@ export const RouteContainer = ({
             setSortByCheck={setSortByCheck}
             publicPrivateQueryType={publicPrivateQueryType}
             handlePublicPrivateChange={handlePublicPrivateChange}
+            checkGameOwner={checkGameOwner}
+            checkQuestionOwner={checkQuestionOwner}
           />
         </Box>
       </Box>

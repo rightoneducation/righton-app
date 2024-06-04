@@ -19,6 +19,8 @@ export default function QuestionMaker({
   listQuerySettings,
   publicPrivateQueryType,
   handlePublicPrivateChange,
+  question,
+  setQuestion
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
@@ -31,24 +33,7 @@ export default function QuestionMaker({
   const [isAnswerTypeValid, setIsAnswerTypeValid] = useState(false);
   const [isAnswerPrecisionValid, setIsAnswerPrecisionValid] = useState(false);
   const initialState = useMemo(() => originalQuestion != null, [originalQuestion]);
-  const [question, setQuestion] = useState(() => {
-    if (originalQuestion) {
-      const copyOfOriginal = { ...originalQuestion }
-      copyOfOriginal.choices = JSON.parse(copyOfOriginal.choices)
-      copyOfOriginal.instructions = JSON.parse(copyOfOriginal.instructions);
-      copyOfOriginal.answerSettings = JSON.parse(copyOfOriginal.answerSettings);
-      return copyOfOriginal
-    }
-    return {
-      title: '',
-      imageUrl: '',
-      choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }],
-      grade: null,
-      domain: null,
-      cluster: null,
-      standard: null,
-    }
-  });
+
   const [answerType, setAnswerType] = useState(question.answerSettings?.answerType ?? AnswerType.NUMBER);
   const [answerPrecision, setAnswerPrecision] = useState(question.answerSettings?.answerPrecision ?? AnswerPrecision.WHOLE);
   // Handles which Url to redirect to when clicking the Back to Game Maker button

@@ -8,8 +8,8 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `
   ) {
     onCreatePublicGameTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       description
       domain
@@ -38,8 +38,8 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `
   ) {
     onUpdatePublicGameTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       description
       domain
@@ -68,8 +68,8 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `
   ) {
     onDeletePublicGameTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       description
       domain
@@ -98,8 +98,8 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `
   ) {
     onCreatePrivateGameTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       description
       domain
@@ -128,8 +128,8 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `
   ) {
     onUpdatePrivateGameTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       description
       domain
@@ -158,8 +158,8 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `
   ) {
     onDeletePrivateGameTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       description
       domain
@@ -188,8 +188,8 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onCreatePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       choices
       instructions
@@ -218,8 +218,8 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onUpdatePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       choices
       instructions
@@ -248,8 +248,8 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onDeletePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       choices
       instructions
@@ -278,8 +278,8 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `
   ) {
     onCreatePrivateQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       choices
       instructions
@@ -308,8 +308,8 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `
   ) {
     onUpdatePrivateQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       choices
       instructions
@@ -338,8 +338,8 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `
   ) {
     onDeletePrivateQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      title
       owner
+      title
       version
       choices
       instructions
@@ -714,8 +714,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
-        title
         owner
+        title
         version
         description
         domain
@@ -733,8 +733,8 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions
@@ -768,8 +768,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
-        title
         owner
+        title
         version
         description
         domain
@@ -787,8 +787,8 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions
@@ -822,8 +822,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
-        title
         owner
+        title
         version
         description
         domain
@@ -841,8 +841,8 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions
@@ -876,8 +876,8 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
-        title
         owner
+        title
         version
         description
         domain
@@ -895,8 +895,8 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions
@@ -930,8 +930,8 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
-        title
         owner
+        title
         version
         description
         domain
@@ -949,8 +949,8 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions
@@ -984,8 +984,8 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
-        title
         owner
+        title
         version
         description
         domain
@@ -1003,8 +1003,8 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions

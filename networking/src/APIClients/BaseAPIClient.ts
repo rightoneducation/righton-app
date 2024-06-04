@@ -61,11 +61,7 @@ export abstract class BaseAPIClient {
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
     const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-    console.log('yooohoooo');
-    console.log(authMode);
     const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
-    console.log('response');
-    console.log(response);
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
@@ -137,9 +133,13 @@ export abstract class BaseAPIClient {
         queryParameters.sortDirection = sortDirection;
       }
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+      console.log(queryParameters);
+      console.log(query);
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
+      console.log('here');
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
         const operationResult = result.data[queryName];
+        console.log(operationResult);
         const parsedNextToken = operationResult.nextToken;
         if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
           const gameTemplates = operationResult.items.map((item: any) => 
@@ -147,7 +147,7 @@ export abstract class BaseAPIClient {
           );
           return { gameTemplates, nextToken: parsedNextToken } as QueryResult;
         } else {
-          const questionTemplates = operationResult.items.map((item: any) => 
+            const questionTemplates = operationResult.items.map((item: any) => 
             QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
           );
           return { questionTemplates, nextToken: parsedNextToken } as QueryResult;

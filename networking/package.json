@@ -13,6 +13,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
     "aws-amplify": "^6.0.30",
     "jwt-decode": "^4.0.0",
     "mathjs": "^11.11.2",

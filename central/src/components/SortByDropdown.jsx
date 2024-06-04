@@ -32,6 +32,7 @@ export default function SortByDropdown({
   };
 
   const handleRadioChange = (event) => {
+    console.log(event);
     handlePublicPrivateChange(event.target.value);
   };
 

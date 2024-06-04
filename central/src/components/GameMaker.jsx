@@ -80,7 +80,6 @@ export default function GameMaker({
   const classes = useStyles();
   const history = useHistory();
 
-
   const selectedQuestionTemplates = selectedQuestions.map(question => {
     return {questionTemplate: question, gameQuestionId: null }
   });
@@ -127,6 +126,8 @@ export default function GameMaker({
     setSelectedQuestions([]); 
     setLocalQuestionTemplates([]);
     gameDetails.questionTemplates = localQuestionTemplates;
+    gameDetails.id = gameId;
+    console.log(gameDetails.title);
     saveGameTemplate(game, gameDetails);
     setGameDetails({});
     event.preventDefault();

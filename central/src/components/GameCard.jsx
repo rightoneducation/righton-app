@@ -20,6 +20,7 @@ export default function GameCard({
   index,
   handleClick,
   handleClose,
+  editHandler,
   cloneHandler,
   deleteHandler,
   addquestion,
@@ -85,9 +86,9 @@ export default function GameCard({
                     onClose={handleClose}
                     onClick={(event) => { if (!match) event.stopPropagation(); }}
                   >
-                    <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
-                    <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
-                    <MenuItem onClick={deleteHandler(game.id)}>Delete</MenuItem>
+                    <MenuItem onClick={(event) => editHandler(game, event)}> Edit </MenuItem>
+                    <MenuItem onClick={(event) => cloneHandler(game, event)}>Clone</MenuItem>
+                    <MenuItem onClick={(event) => deleteHandler(game, event)}>Delete</MenuItem>
                   </Menu>             
                 </Grid>
               }

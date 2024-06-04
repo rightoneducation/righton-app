@@ -14,6 +14,7 @@ type QuestionDashboardProps = {
   isUserAuth: boolean;
   // gameDetails: ;
   // setGameDetails: (gameDetails: ) => void;
+  checkQuestionOwner: (question: IQuestionTemplate) => Promise<boolean>;
   handleDeleteQuestionTemplate: (id: string) => void;
   handleCloneQuestionTemplate: (question: IQuestionTemplate) => void;
   nextToken: string | null; 
@@ -28,6 +29,7 @@ export default function QuestionDashboard({
   isUserAuth,
   // gameDetails,
   // setGameDetails,
+  checkQuestionOwner,
   handleCloneQuestionTemplate,
   handleDeleteQuestionTemplate,
   nextToken,
@@ -51,16 +53,54 @@ export default function QuestionDashboard({
     setAnchorEl(null);
     setActiveIndex(null);
   };
-  const cloneHandler = (question: IQuestionTemplate) => () => {
-    handleCloneQuestionTemplate(question);
-    handleClose();
-  };
-  const deleteHandler = (id: string) => () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this question?');
-    if (confirmDelete) {
-      handleDeleteQuestionTemplate(id);
+
+
+  const editHandler = async (question: IQuestionTemplate) => {
+    try {
+      const isOwner = await checkQuestionOwner(question);
+      if (isOwner){
+        history.push(`/questionmaker/${question.id}`); 
+        handleClose(); 
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to edit this question.');
+      }
+    }catch (error){
+      console.log(error);
     }
-    handleClose();
+  };
+
+  const cloneHandler = async (question: IQuestionTemplate) => {
+    try {
+      const isOwner = await checkQuestionOwner(question);
+      if (isOwner){
+        handleCloneQuestionTemplate(question);
+        handleClose(); 
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to clone this game.');
+      }
+    } catch (error){
+      console.log(error);
+    }
+  };
+
+  const deleteHandler = async (question: IQuestionTemplate) => {
+    try {
+      const isOwner = await checkQuestionOwner(question);
+      if (isOwner){
+        const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+        if (confirmDelete) {
+          handleDeleteQuestionTemplate(question.id);
+        }
+        handleClose();
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to delete this game.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderQuestions = (loading: boolean) => {
@@ -115,6 +155,7 @@ export default function QuestionDashboard({
                   index={index}
                   activeIndex={activeIndex}
                   handleClick={handleClick}
+                  editHandler={editHandler}
                   cloneHandler={cloneHandler}
                   deleteHandler={deleteHandler}
                   handleClose={handleClose}

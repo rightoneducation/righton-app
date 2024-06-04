@@ -7,7 +7,8 @@ import {
   signIn, 
   signInWithRedirect, 
   signOut, 
-  fetchAuthSession
+  fetchAuthSession,
+  getCurrentUser
 } from 'aws-amplify/auth';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
@@ -96,4 +97,18 @@ export class AuthAPIClient
     };
     return false;
   }
+
+   async verifyGameOwner(gameOwner: string): Promise<boolean> {
+    const { username } = await getCurrentUser();
+    if (username === gameOwner)
+      return true;
+    return false;
+   }
+
+   async verifyQuestionOwner(questionOwner: string): Promise<boolean> {
+    const { username } = await getCurrentUser();
+    if (username === questionOwner)
+      return true;
+    return false;
+   }
 }

@@ -43,6 +43,7 @@ export const updateGameTemplate = async (
   apiClients: IAPIClients, 
   updateGameTemplateInput: UpdatePublicGameTemplateInput | UpdatePrivateGameTemplateInput
 ): Promise<IGameTemplate | null> => {
+  console.log(updateGameTemplateInput);
   try {
     // need to ensure that the createdAt and updatedAt fields are in the correct string format for graphql
     const existingCreatedAt = updateGameTemplateInput.createdAt;

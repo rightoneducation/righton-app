@@ -43,7 +43,9 @@ export default function Games({
   sortByCheck,
   setSortByCheck,
   publicPrivateQueryType,
-  handlePublicPrivateChange
+  handlePublicPrivateChange,
+  checkGameOwner,
+  checkQuestionOwner
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -108,7 +110,7 @@ export default function Games({
                   const { gameId } = match.params;
                   const game = getGameById(games, gameId);
                   handleSearchClick(false);
-                  return <GameLaunch loading={loading} saveGame={editGameTemplate} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleDeleteGameQuestion={handleDeleteGameQuestion} game={game} gameId={gameId} deleteGame={deleteGame} handleCloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />;
+                  return <GameLaunch publicPrivateQueryType={publicPrivateQueryType} loading={loading} saveGame={editGameTemplate} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleDeleteGameQuestion={handleDeleteGameQuestion} game={game} gameId={gameId} deleteGame={deleteGame} handleCloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />;
                 }
               } />
           </Grid>
@@ -140,6 +142,7 @@ export default function Games({
               }
               const { gameId } = match.params;
               const game = getGameById(games, gameId);
+              gameDetails.id = gameId;
               if (game && game.questionTemplates.length > 0){
                 setLocalQuestionTemplates(game.questionTemplates);
               }
@@ -203,10 +206,10 @@ export default function Games({
             </Box>
             <Box onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
-                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate}/>   
+                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate} checkQuestionOwner={checkQuestionOwner}/>   
               }/>
               <Route exact path="/" render= { () => 
-                <GameDashboard id="GameDashboard" nextToken={nextToken} publicPrivateQueryType={publicPrivateQueryType} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />
+                <GameDashboard id="GameDashboard" checkGameOwner={checkGameOwner} nextToken={nextToken} publicPrivateQueryType={publicPrivateQueryType} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} setGameDetails={setGameDetails}/>
               }/>
             </Box>
           </Grid>

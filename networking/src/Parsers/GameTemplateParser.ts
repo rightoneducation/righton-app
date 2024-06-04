@@ -47,9 +47,8 @@ export class GameTemplateParser {
           imageUrl,
           questionTemplatesCount,
       } = awsGameTemplate || {}
-
-        const createdAt = new Date(awsGameTemplate.createdAt ?? 0);
-        const updatedAt = new Date(awsGameTemplate.updatedAt ?? 0);
+        const createdAt = awsGameTemplate.createdAt ? new Date(awsGameTemplate.createdAt) : new Date();
+        const updatedAt = awsGameTemplate.updatedAt ? new Date(awsGameTemplate.updatedAt) : new Date();
         const phaseOneTime = awsGameTemplate.phaseOneTime ?? 0;
         const phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 0;
 

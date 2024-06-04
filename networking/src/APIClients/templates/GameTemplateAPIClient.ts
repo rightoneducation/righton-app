@@ -16,19 +16,17 @@ export class GameTemplateAPIClient
   ): Promise<IGameTemplate> {
     const variables: GraphQLOptions = { input: createGameTemplateInput as GameTemplateType<T>['create']['input']};
     const queryFunction = gameTemplateRuntimeMap[type].create.queryFunction;
-    console.log(variables);
-    console.log(queryFunction);
+    const createType = `create${type}GameTemplate`;
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['create']['query']>(
         queryFunction,
         variables
     ) as { data: any};
     if (
-        isNullOrUndefined(gameTemplate?.data) ||
-        isNullOrUndefined(gameTemplate?.data.createGameTemplate)
+        isNullOrUndefined(gameTemplate?.data)
     ) {
         throw new Error(`Failed to create game template.`)
     }
-    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate as AWSGameTemplate, type)
+    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data[createType] as AWSGameTemplate, type)
   } 
 
   async getGameTemplate<T extends PublicPrivateType>(

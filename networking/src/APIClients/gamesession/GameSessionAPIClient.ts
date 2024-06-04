@@ -1,6 +1,6 @@
 import { IGameSession } from "../../Models";
 import { GameSessionParser } from "../../Parsers/GameSessionParser";
-import { BaseAPIClient, HTTPMethod, GraphQLOptions } from "../BaseAPIClient";
+import { BaseAPIClient, HTTPMethod, GraphQLOptions, PublicPrivateType } from "../BaseAPIClient";
 import {
   createGameSessionFromTemplate,
   gameSessionByCode,
@@ -23,10 +23,11 @@ export class GameSessionAPIClient
   implements IGameSessionAPIClient
 {
 
-  async createGameSessionFromTemplate(id: string): Promise<string | null> {
+  async createGameSessionFromTemplate(id: string, publicPrivate: PublicPrivateType): Promise<string | null> {
     let variables: CreateGameSessionFromTemplateMutationVariables = {
-      input: { gameTemplateId: id },
+      input: { gameTemplateId: id, publicPrivate },
     };
+    console.log(variables);
     try {      
         const response = await this.mutateGraphQL(createGameSessionFromTemplate, variables) as {data: { createGameSessionFromTemplate: string }};
         const result = response.data.createGameSessionFromTemplate;

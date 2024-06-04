@@ -9,6 +9,7 @@ export class QuestionTemplateParser {
         awsQuestionTemplate: AWSQuestionTemplate,
         publicPrivate: PublicPrivateType
     ): IQuestionTemplate {
+        console.log(awsQuestionTemplate);
         let gameTemplates: Array<{ gameTemplate: IGameTemplate, gameQuestionId: string }> | null = [];
         if (!isNullOrUndefined(awsQuestionTemplate) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
             for (const item of awsQuestionTemplate.gameTemplates.items) {

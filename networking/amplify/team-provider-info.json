@@ -1,30 +1,61 @@
 {
-  "ownertwo": {
+  "ownertest": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-ownertwo-a0674-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ownertwo-a0674-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ownertwo-a0674-authRole",
+      "AuthRoleName": "amplify-mobile-ownertest-bf1b6-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ownertest-bf1b6-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-ownertest-bf1b6-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-ownertwo-a0674-deployment",
-      "UnauthRoleName": "amplify-mobile-ownertwo-a0674-unauthRole",
-      "StackName": "amplify-mobile-ownertwo-a0674",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-ownertwo-a0674/006af710-1dde-11ef-94ab-12484f0ddbb5",
+      "DeploymentBucketName": "amplify-mobile-ownertest-bf1b6-deployment",
+      "UnauthRoleName": "amplify-mobile-ownertest-bf1b6-unauthRole",
+      "StackName": "amplify-mobile-ownertest-bf1b6",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-ownertest-bf1b6/a9ea0600-0e25-11ef-a360-0affe1279fd3",
       "AmplifyAppId": "d2z6928w5qibze",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-ownertwo-a0674-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-ownertest-bf1b6-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "function": {
         "mobile6060603cPostConfirmation": {
           "GROUP": "Teacher_Auth",
-          "deploymentBucketName": "amplify-mobile-ownertwo-a0674-deployment",
+          "deploymentBucketName": "amplify-mobile-ownertest-bf1b6-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
+        },
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-ownertest-bf1b6-deployment",
+          "s3Key": "amplify-builds/createGameTest-585074304247744b3763-build.zip"
         }
       },
       "auth": {
-        "mobile6060603c": {
-          "googleClientId": "23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com"
+        "mobile6060603c": {}
+      }
+    }
+  },
+  "owntesttwo": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-owntesttwo-b8907-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-owntesttwo-b8907-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-owntesttwo-b8907-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-owntesttwo-b8907-deployment",
+      "UnauthRoleName": "amplify-mobile-owntesttwo-b8907-unauthRole",
+      "StackName": "amplify-mobile-owntesttwo-b8907",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-owntesttwo-b8907/1b6a39e0-21ad-11ef-8259-12eb08a4abad",
+      "AmplifyAppId": "d2z6928w5qibze",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-owntesttwo-b8907-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "mobile6060603c": {}
+      },
+      "function": {
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-owntesttwo-b8907-deployment",
+          "s3Key": "amplify-builds/createGameTest-5344537465434a464876-build.zip"
         },
-        "userPoolGroups": {}
+        "mobile6060603cPostConfirmation": {
+          "GROUP": "Teacher_Auth",
+          "deploymentBucketName": "amplify-mobile-owntesttwo-b8907-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
+        }
       },
       "api": {
         "mobile": {}

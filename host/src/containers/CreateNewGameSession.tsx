@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { IAPIClients, GameSessionState } from '@righton/networking';
+import { IAPIClients, GameSessionState, PublicPrivateType } from '@righton/networking';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { makeStyles } from '@material-ui/core';
 
@@ -10,13 +10,14 @@ interface CreateNewGameSessionProps {
 
 const CreateNewGameSession = ({apiClients}:CreateNewGameSessionProps) => {
   const classes = useStyles();
-  let { gameId } = useParams<{ gameId: string }>();
-
+  let { gameId, publicPrivate } = useParams<{ gameId: string, publicPrivate: PublicPrivateType }>();
+  console.log(publicPrivate);
   useEffect(() => {
-    apiClients.gameSession.createGameSessionFromTemplate(gameId).then((response) => {
+    apiClients.gameSession.createGameSessionFromTemplate(gameId, publicPrivate).then((response) => {
       if (!response) {
         return;
       }
+      console.log(response);
       apiClients.gameSession
         .updateGameSession({
           id: response,

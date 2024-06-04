@@ -1,6 +1,6 @@
 type Mutation {
   createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String 
-  @function(name: "createGame-${env}") 
+  @function(name: "createGameTest-${env}") 
   @auth(
     rules: [
       { allow: public, provider: iam  },
@@ -12,16 +12,16 @@ type Mutation {
 type PublicGameTemplate @model
 @auth(
   rules: [
-    { allow: owner, provider: userPools }
-    { allow: private, operations: [read], provider: userPools },
     { allow: public, operations: [read], provider: iam  },
-    
+    { allow: owner, provider: userPools },
+    { allow: private, operations: [read], provider: userPools },  
   ]
 )
 @aws_iam
 @aws_cognito_user_pools
 {
   id: ID!
+  owner: String
   title: String!
   version: Int!
   description: String!
@@ -56,6 +56,7 @@ type PrivateGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  owner: String
   title: String!
   version: Int!
   description: String!
@@ -82,8 +83,8 @@ input PrivateGameTemplateInput {
 type PublicQuestionTemplate @model 
 @auth(
   rules: [
-    { allow: owner, provider: userPools },
     { allow: public, operations: [read], provider: iam  },
+    { allow: owner, provider: userPools },
     { allow: private, operations: [read], provider: userPools }
   ]
 )
@@ -91,9 +92,9 @@ type PublicQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  owner: String
   title: String!
   version: Int!
-  owner: String
   choices: AWSJSON
   instructions: AWSJSON
   answerSettings: AWSJSON
@@ -125,6 +126,7 @@ type PrivateQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  owner: String
   title: String!
   version: Int!
   choices: AWSJSON
@@ -150,6 +152,7 @@ input PrivateQuestionTemplateInput {
 
 input CreateGameSessionFromTemplateInput {
   gameTemplateId: ID!
+  publicPrivate: String!
 }
 
 type GameSession @model 
