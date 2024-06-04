@@ -11,4 +11,6 @@ export interface IAuthAPIClient {
   awsSignInFederated(): void;
   awsSignOut(): void;
   verifyAuth(): Promise<boolean>;
+  verifyGameOwner(gameOwner: string): Promise<boolean>;
+  verifyQuestionOwner(questionOwner: string): Promise<boolean>;
 }

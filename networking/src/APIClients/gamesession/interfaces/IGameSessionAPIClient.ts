@@ -1,9 +1,13 @@
 import { UpdateGameSessionInput } from "../../../AWSMobileApi";
+import { PublicPrivateType } from "../../BaseAPIClient";
 import { IGameSession } from "../../../Models";
 import { Subscription } from 'rxjs'; // this is used in aws-amplify to handle subscriptions
 
 export interface IGameSessionAPIClient {
-  createGameSessionFromTemplate(id: string): Promise<string | null>;
+  createGameSessionFromTemplate(
+    id: string,
+    publicPrivate: PublicPrivateType
+  ): Promise<string | null>;
 
   createGameSession(
     gameId: number,

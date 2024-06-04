@@ -16,17 +16,17 @@ export class GameTemplateAPIClient
   ): Promise<IGameTemplate> {
     const variables: GraphQLOptions = { input: createGameTemplateInput as GameTemplateType<T>['create']['input']};
     const queryFunction = gameTemplateRuntimeMap[type].create.queryFunction;
+    const createType = `create${type}GameTemplate`;
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['create']['query']>(
         queryFunction,
         variables
     ) as { data: any};
     if (
-        isNullOrUndefined(gameTemplate?.data) ||
-        isNullOrUndefined(gameTemplate?.data.createGameTemplate)
+        isNullOrUndefined(gameTemplate?.data)
     ) {
         throw new Error(`Failed to create game template.`)
     }
-    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate as AWSGameTemplate)
+    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data[createType] as AWSGameTemplate, type)
   } 
 
   async getGameTemplate<T extends PublicPrivateType>(
@@ -45,11 +45,11 @@ export class GameTemplateAPIClient
       ) {
         throw new Error(`Failed to get game template`)
       }
-      return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data.getGameTemplate as AWSGameTemplate);
+      return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data.getGameTemplate as AWSGameTemplate, type);
     } catch (e) {
       console.log(e);
     }
-    return GameTemplateParser.gameTemplateFromAWSGameTemplate({} as AWSGameTemplate);
+    return GameTemplateParser.gameTemplateFromAWSGameTemplate({} as AWSGameTemplate, type);
   }
 
   async updateGameTemplate<T extends PublicPrivateType>(
@@ -68,7 +68,7 @@ export class GameTemplateAPIClient
     ) {
         throw new Error(`Failed to update game template`);
     }
-    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.updateGameTemplate as AWSGameTemplate);
+    return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.updateGameTemplate as AWSGameTemplate, type);
   }
 
   async deleteGameTemplate<T extends PublicPrivateType>(
@@ -98,7 +98,7 @@ export class GameTemplateAPIClient
     const queryName = `list${type}GameTemplates`;
     console.log(awsType);
     console.log(queryName);
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction); 
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type); 
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
@@ -112,9 +112,9 @@ export class GameTemplateAPIClient
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}GameTemplate`;
     const queryName = `${type.toLowerCase()}GameTemplatesByDate`;
-    console.log(awsType);
-    console.log(queryName);
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type);
+    console.log('apiclient');
+    console.log(response);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
@@ -127,9 +127,8 @@ export class GameTemplateAPIClient
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byGrade;
     const awsType = `${type}GameTemplate`;
-    const queryName = `${type.toLowerCase}GameTemplatesByGrade`;
-    console.log(queryName);
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction);
+    const queryName = `${type.toLowerCase()}GameTemplatesByGrade`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; }; 
   }
 
@@ -142,7 +141,7 @@ export class GameTemplateAPIClient
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byQuestionTemplatesCount;
     const awsType = `${type}GameTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase}GameTemplatesByDate`, queryFunction);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}GameTemplatesByDate`, queryFunction, type);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 }

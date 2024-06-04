@@ -65,25 +65,24 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
-    },
-    "userPoolGroups": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId",
-            "AppClientIDWeb",
-            "AppClientID",
-            "IdentityPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "mobile6060603c"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito-UserPool-Groups"
     }
   },
   "function": {
+    "createGameTest": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "mobile"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "mobile6060603cPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -91,11 +90,19 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile6060603c_googleClientId": {
+    "AMPLIFY_function_createGameTest_deploymentBucketName": {
       "usedBy": [
         {
-          "category": "auth",
-          "resourceName": "mobile6060603c"
+          "category": "function",
+          "resourceName": "createGameTest"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGameTest_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGameTest"
         }
       ]
     },

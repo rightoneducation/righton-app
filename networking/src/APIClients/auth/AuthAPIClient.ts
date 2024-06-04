@@ -7,7 +7,8 @@ import {
   signIn, 
   signInWithRedirect, 
   signOut, 
-  fetchAuthSession
+  fetchAuthSession,
+  getCurrentUser
 } from 'aws-amplify/auth';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
@@ -72,8 +73,8 @@ export class AuthAPIClient
     await confirmSignUp({username: email, confirmationCode: code});
   }
 
-  async awsSignIn(email: string, password: string): Promise<void> {
-    await signIn({username: email, password: password});
+  async awsSignIn(username: string, password: string): Promise<void> {
+    await signIn({username: username, password: password});
   }
 
   async awsSignInFederated (): Promise<void> {
@@ -96,4 +97,18 @@ export class AuthAPIClient
     };
     return false;
   }
+
+   async verifyGameOwner(gameOwner: string): Promise<boolean> {
+    const { username } = await getCurrentUser();
+    if (username === gameOwner)
+      return true;
+    return false;
+   }
+
+   async verifyQuestionOwner(questionOwner: string): Promise<boolean> {
+    const { username } = await getCurrentUser();
+    if (username === questionOwner)
+      return true;
+    return false;
+   }
 }
