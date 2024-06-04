@@ -30,3 +30,10 @@ export const Teams = Template.bind({});
 Teams.args = {
   teamsLength: 2,
 };
+
+
+export const TeamsButtonClicked = Template.bind({});
+TeamsButtonClicked.args = {
+  teamsLength: 2,
+  initialClicked: true,
+};

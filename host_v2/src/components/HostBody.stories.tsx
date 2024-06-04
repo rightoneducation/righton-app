@@ -14,19 +14,7 @@ import MockGameSession from '../mock/MockGameSession.json';
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
     currentState: MockGameSession.currentState as GameSessionState}); 
 
-// Mock data for the stories
-// const mockTeams: ITeam[] = [
-//   { id: '1', name: 'Team 1', null, selectedAvatarIndex: 0 },
-//   { id: '2', name: 'Team 2', students: [{ id: '2', name: 'Student 2' }] },
-//   { id: '3', name: 'Team 3', students: [{ id: '3', name: 'Student 3' }] },
-//   // Add more teams as needed
-// ];
 
-// const mockQuestions: IQuestion[] = [
-//   { id: '1', text: 'What is 2 + 2?' },
-//   { id: '2', text: 'What is the capital of France?' },
-//   // Add more questions as needed
-// ];
 
 export default {
   title: 'Design System/3_Organisms/Body',
