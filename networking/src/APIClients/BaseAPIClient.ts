@@ -101,14 +101,15 @@ export abstract class BaseAPIClient {
     ): Promise<QueryResult<T> | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type };
 
-      // if (filterString != null) {
-      //   console.log("inside filter string")
-      //   queryParameters.filter = queryType === QueryType.TITLE ? { title: { contains: filterString } } : { grade: { eq: filterString } };
-      console.log(queryType)
-      // }
-      console.log(filterString)
-      queryParameters.grade = { grade: { eq: filterString } }
-
+      if (filterString != null) {
+        if(queryType === QueryType.TITLE){
+          queryParameters.filter = { title: { contains: filterString } }
+        }
+        else if(queryType === QueryType.GRADE){
+          queryParameters.grade = {eq: filterString}
+        }
+      }
+      
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
