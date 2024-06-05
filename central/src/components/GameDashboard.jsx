@@ -126,6 +126,7 @@ export default function GameDashboard({ checkGameOwner, loading, nextToken, publ
                 anchorEl={anchorEl}
                 activeIndex={activeIndex}
                 onClick={() => history.push(`/games/${game.id}`)}
+                publicPrivateQueryType={publicPrivateQueryType}
               />
             </Grid>
           ) : 

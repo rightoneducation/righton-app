@@ -206,7 +206,7 @@ export default function Games({
             </Box>
             <Box onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
-                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate} checkQuestionOwner={checkQuestionOwner}/>   
+                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate} checkQuestionOwner={checkQuestionOwner} publicPrivateQueryType={publicPrivateQueryType} />   
               }/>
               <Route exact path="/" render= { () => 
                 <GameDashboard id="GameDashboard" checkGameOwner={checkGameOwner} nextToken={nextToken} publicPrivateQueryType={publicPrivateQueryType} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} setGameDetails={setGameDetails}/>

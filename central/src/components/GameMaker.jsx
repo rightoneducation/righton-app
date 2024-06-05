@@ -127,7 +127,6 @@ export default function GameMaker({
     setLocalQuestionTemplates([]);
     gameDetails.questionTemplates = localQuestionTemplates;
     gameDetails.id = gameId;
-    console.log(gameDetails.title);
     saveGameTemplate(game, gameDetails);
     setGameDetails({});
     event.preventDefault();

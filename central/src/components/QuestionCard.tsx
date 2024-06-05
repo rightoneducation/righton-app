@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Card, CardContent, Grid, Typography, Button, Menu, MenuItem, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { IQuestionTemplate, IGameTemplate } from '@righton/networking';
+import { IQuestionTemplate, PublicPrivateType } from '@righton/networking';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
@@ -22,6 +22,7 @@ type QuestionCardProps = {
   handleClose: () => void;
   handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
   handleQuestionCardClick: (id: string) => void;
+  publicPrivateQueryType: PublicPrivateType;
 };
 
 export default function QuestionCard({
@@ -38,7 +39,8 @@ export default function QuestionCard({
   deleteHandler,
   handleClose,
   handleQuestionSelected,
-  handleQuestionCardClick
+  handleQuestionCardClick,
+  publicPrivateQueryType
 } : QuestionCardProps) {
   const classes = useStyles();
   const gameCount = question.gameTemplates ? question.gameTemplates.length : 0;
@@ -63,6 +65,11 @@ return (
             <Typography className={classes.title} >
               {question.title}
             </Typography>
+            { publicPrivateQueryType === PublicPrivateType.PUBLIC &&
+              <Typography className={classes.owner} >
+                Created by: {question.owner}
+              </Typography>
+            }
           </div>
         </Grid>
         <Grid container item xs={4} md={3}>
@@ -142,6 +149,17 @@ const useStyles = makeStyles(theme => ({
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
       WebkitLineClamp: 3,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      maxWidth: '95%',
+    }, 
+    owner: {
+      fontWeight: 400,
+      height: '60%',
+      color: '#384466',
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 2,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       maxWidth: '95%',

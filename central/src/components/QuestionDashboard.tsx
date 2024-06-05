@@ -4,7 +4,7 @@ import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from './LoadingIndicator';
-import { IQuestionTemplate, isNullOrUndefined } from '@righton/networking';
+import { IQuestionTemplate, PublicPrivateType, isNullOrUndefined } from '@righton/networking';
 import QuestionCard from './QuestionCard';
 
 type QuestionDashboardProps = {
@@ -20,6 +20,7 @@ type QuestionDashboardProps = {
   nextToken: string | null; 
   handleScrollDown: (nextToken: string | null) => void;
   handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
+  publicPrivateQueryType: PublicPrivateType;
 };
 
 export default function QuestionDashboard({
@@ -34,7 +35,8 @@ export default function QuestionDashboard({
   handleDeleteQuestionTemplate,
   nextToken,
   handleScrollDown,
-  handleQuestionSelected
+  handleQuestionSelected,
+  publicPrivateQueryType
 }: QuestionDashboardProps) {
   const classes = useStyles();
   const history = useHistory();
@@ -161,6 +163,7 @@ export default function QuestionDashboard({
                   handleClose={handleClose}
                   handleQuestionSelected={handleQuestionSelected}
                   handleQuestionCardClick={handleQuestionCardClick}
+                  publicPrivateQueryType={publicPrivateQueryType}
                 />
               </Grid>
             )}

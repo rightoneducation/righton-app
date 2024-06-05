@@ -11,13 +11,11 @@ interface CreateNewGameSessionProps {
 const CreateNewGameSession = ({apiClients}:CreateNewGameSessionProps) => {
   const classes = useStyles();
   let { gameId, publicPrivate } = useParams<{ gameId: string, publicPrivate: PublicPrivateType }>();
-  console.log(publicPrivate);
   useEffect(() => {
     apiClients.gameSession.createGameSessionFromTemplate(gameId, publicPrivate).then((response) => {
       if (!response) {
         return;
       }
-      console.log(response);
       apiClients.gameSession
         .updateGameSession({
           id: response,
