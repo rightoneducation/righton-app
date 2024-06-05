@@ -63,7 +63,6 @@ export const deleteGameTemplate = async (
   id: string
 ): Promise<boolean> => {
   const gameTemplate = await apiClients.gameTemplate.getGameTemplate(type, id);
-  console.log(gameTemplate);
   if (gameTemplate?.questionTemplates) {
     await Promise.all(gameTemplate.questionTemplates.map(async (questionTemplate) => {
       try {
