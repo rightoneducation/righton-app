@@ -19,15 +19,14 @@ export default function GameDashboard({ checkGameOwner, loading, nextToken, publ
     event.stopPropagation();
   };
   const handleClose = () => {
-    setAnchorEl(null);
     setActiveIndex(null);
   };
   const editHandler = async (game) => {
     try {
       const isOwner = await checkGameOwner(game);
       if (isOwner){
-        setGameDetails(game);
-        history.push(`/gamemaker/${game.id}`); 
+       setGameDetails(game);
+       history.push(`/gamemaker/${game.id}`); 
         handleClose(); 
       } else {
         handleClose();
@@ -146,6 +145,7 @@ const useStyles = makeStyles(theme => ({
   loadingContainer: {
     margin: 'auto',
     width: '60%',
+    height: `calc(100vh - 156px)`
   },
   loadingTitle: {
     fontSize: '24px',

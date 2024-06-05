@@ -186,6 +186,7 @@ const useStyles = makeStyles((theme) => ({
   loadingContainer: {
     margin: 'auto',
     width: '60%',
+    height: `calc(100vh - 156px)`
   },
   loadingTitle: {
     fontSize: '24px',

@@ -46,7 +46,7 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         id: string
     ): Promise<boolean> {
         const variables: GameQuestionType<T>['delete']['variables'] = {input: {id}};
-        const { queryFunction } = gameQuestionRuntimeMap[type]['get'];
+        const { queryFunction } = gameQuestionRuntimeMap[type]['delete'];
         const result = await this.callGraphQL<GameQuestionType<T>['delete']['query']>(
             queryFunction,
             variables

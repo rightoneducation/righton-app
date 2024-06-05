@@ -11,6 +11,7 @@ import QuestionMaker from './QuestionMaker';
 import GameMaker from './GameMaker';
 import { getGameById, getQuestionTemplateById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
+import { get, set } from 'lodash';
 
 export default function Games({ 
   loading,
@@ -79,6 +80,25 @@ export default function Games({
         return {id: gameId, ...newGame};
       }
     });
+
+  const [question, setQuestion] = useState((prev) => {
+    if (prev) {
+      const copyOfOriginal = { ...prev }
+      copyOfOriginal.choices = JSON.parse(copyOfOriginal.choices)
+      copyOfOriginal.instructions = JSON.parse(copyOfOriginal.instructions);
+      copyOfOriginal.answerSettings = JSON.parse(copyOfOriginal.answerSettings);
+      return copyOfOriginal
+    }
+    return {
+      title: '',
+      imageUrl: '',
+      choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }],
+      grade: null,
+      domain: null,
+      cluster: null,
+      standard: null,
+    }
+  });
   // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
   const [localQuestionTemplates, setLocalQuestionTemplates] = useState(game ? [...game.questionTemplates] : []);
   const handleQuestionSelected = (question, isSelected) => {
@@ -124,13 +144,15 @@ export default function Games({
               const { gameId, questionId } = match.params;
               const game = getGameById(games, gameId);
               let questions = null;
-              let question = null;
               if (game && game.questionTemplates.length > 0){
                 questions = game.questionTemplates.map(({ questionTemplate }) => questionTemplate) ?? null;
-                question = getQuestionTemplateById(questions, questionId) ?? null;
+                const checkForQuestion = getQuestionTemplateById(questions, questionId);
+                if (checkForQuestion) {
+                  setQuestion(checkForQuestion);
+                };
               }
               handleSearchClick(false);
-              return <QuestionMaker gameId={gameId} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} publicPrivateQueryType={publicPrivateQueryType} handlePublicPrivateChange={handlePublicPrivateChange}/>
+              return <QuestionMaker gameId={gameId} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} publicPrivateQueryType={publicPrivateQueryType} handlePublicPrivateChange={handlePublicPrivateChange} question={question} setQuestion={setQuestion}/>
             } 
           }/>
         }
@@ -193,9 +215,12 @@ export default function Games({
                 return null;
               }
               const { questionId } = match.params;
-              const question = getQuestionTemplateById(questions, questionId);
+              const checkForQuestion = getQuestionTemplateById(questions, questionId);
+              if (checkForQuestion) {
+                setQuestion(checkForQuestion);
+              };
               handleSearchClick(false);
-              return <QuestionMaker gameId={null} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} publicPrivateQueryType={publicPrivateQueryType} handlePublicPrivateChange={handlePublicPrivateChange}/>
+              return <QuestionMaker gameId={null} originalQuestion={question} localQuestionTemplates={localQuestionTemplates} setLocalQuestionTemplates={setLocalQuestionTemplates} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate} listQuerySettings={listQuerySettings} handleUpdateListQuerySettings={handleUpdateListQuerySettings} publicPrivateQueryType={publicPrivateQueryType} handlePublicPrivateChange={handlePublicPrivateChange} question={question} setQuestion={setQuestion}/>
             } 
         }/>
         <Route path="/">

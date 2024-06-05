@@ -35,17 +35,18 @@ export class GameTemplateAPIClient
   ): Promise<IGameTemplate> {
     try{
       const queryFunction = gameTemplateRuntimeMap[type].get.queryFunction;
+      const getType = `get${type}GameTemplate`;
       const result = await this.callGraphQL<GameTemplateType<T>['get']['query']>(
         queryFunction,
         { id } as unknown as GraphQLOptions
       ) as { data: any };
+      console.log(result);
       if (
-        isNullOrUndefined(result?.data) ||
-        isNullOrUndefined(result?.data.getGameTemplate)
+        isNullOrUndefined(result?.data)
       ) {
         throw new Error(`Failed to get game template`)
       }
-      return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data.getGameTemplate as AWSGameTemplate, type);
+      return GameTemplateParser.gameTemplateFromAWSGameTemplate(result.data[getType] as AWSGameTemplate, type);
     } catch (e) {
       console.log(e);
     }
