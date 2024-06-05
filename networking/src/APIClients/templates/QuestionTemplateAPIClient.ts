@@ -108,7 +108,6 @@ export class QuestionTemplateAPIClient
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}QuestionTemplate`;
-    console.log('supsup');
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByDate`, queryFunction, type);
 
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };

@@ -27,7 +27,6 @@ export class GameSessionAPIClient
     let variables: CreateGameSessionFromTemplateMutationVariables = {
       input: { gameTemplateId: id, publicPrivate },
     };
-    console.log(variables);
     try {      
         const response = await this.mutateGraphQL(createGameSessionFromTemplate, variables) as {data: { createGameSessionFromTemplate: string }};
         const result = response.data.createGameSessionFromTemplate;
