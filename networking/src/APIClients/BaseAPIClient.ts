@@ -133,13 +133,9 @@ export abstract class BaseAPIClient {
         queryParameters.sortDirection = sortDirection;
       }
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-      console.log(queryParameters);
-      console.log(query);
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
-      console.log('here');
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
         const operationResult = result.data[queryName];
-        console.log(operationResult);
         const parsedNextToken = operationResult.nextToken;
         if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
           const gameTemplates = operationResult.items.map((item: any) => 

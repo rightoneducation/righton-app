@@ -82,8 +82,6 @@ export const listGameTemplates = async (
   listQuerySettings: IListQuerySettings | null
 ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
   try {
-    console.log('sup');
-    console.log(listQuerySettings);
     const nextToken = listQuerySettings?.nextToken ?? null;
     const sortDirection = listQuerySettings?.sortDirection ?? null;
     const sortField = listQuerySettings?.sortField ?? null;
