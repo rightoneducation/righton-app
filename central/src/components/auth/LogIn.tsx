@@ -8,7 +8,7 @@ import { GoogleLogin } from '@react-oauth/google';
 
 const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>void }> = ({apiClients, handleUserAuth}) => {
   const [loading, setLoading] = React.useState(false);
-  const [email, setEmail] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [adminError, setAdminError] = React.useState(false);
 
@@ -17,7 +17,7 @@ const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>voi
     setLoading(true);
 
     try {
-      await apiClients.auth.awsSignIn(email, password);
+      await apiClients.auth.awsSignIn(username, password);
       if (await apiClients.auth.verifyAuth()) {
         handleUserAuth(true);
         window.location.href = "/";
@@ -74,10 +74,10 @@ const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>voi
           </h1>
           <Field
             variant="outlined"
-            label="Email"
-            value={email}
-            type="email"
-            onChange={(e) => setEmail(e.target.value)}
+            label="Username"
+            value={username}
+            type="username"
+            onChange={(e) => setUsername(e.target.value)}
           />
           <Field
             variant="outlined"

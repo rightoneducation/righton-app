@@ -35,7 +35,7 @@ function App() {
               <GameSessionContainer apiClients={apiClients} />
             }
           </Route>
-          <Route path="/new/:gameId">
+          <Route path="/new/:publicPrivate/:gameId">
             { apiClients && 
               <CreateNewGameSession apiClients={apiClients} />
             }
