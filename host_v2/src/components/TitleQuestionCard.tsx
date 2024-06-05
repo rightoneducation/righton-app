@@ -62,7 +62,14 @@ export default function TitleQuestionCard({
   }: TitleQuestionCardProps) {
     const theme = useTheme();
     const { t } = useTranslation();
-  
+    if (questions.length === 0) {
+      return (
+        <TitleBoxStyled>
+          <TitleTypography>{title}</TitleTypography>
+          <TopLineTypography>No questions available</TopLineTypography>
+        </TitleBoxStyled>
+      );
+    }
     const firstQuestion = questions[0];
     const { grade, domain, cluster, standard } = firstQuestion;
   
