@@ -287,7 +287,7 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
         console.error('error fetching game session:', error);
       }
     };
-
+    
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
       gameSessionId,
@@ -297,9 +297,25 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
       },
     );
     
+    // set up subscription for new teams joining
+    let createTeamSubscription: any | null = null;
+    createTeamSubscription = apiClients.team.subscribeCreateTeam(
+      gameSessionId,
+      (teamResponse) => {
+        if (teamResponse.gameSessionTeamsId === gameSessionId) {
+          setGameSession((prevState) => {
+            const newState = JSON.parse(JSON.stringify(prevState));
+            newState.teams.push(teamResponse);
+            return newState;
+          });
+        }
+      },
+    );
+
     fetchGameSession();
     return () => {
       gameSessionSubscription?.unsubscribe();
+      createTeamSubscription?.unsubscribe();
     };
 
   }, [apiClients]); // eslint-disable-line
