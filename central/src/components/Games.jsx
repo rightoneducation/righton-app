@@ -11,7 +11,6 @@ import QuestionMaker from './QuestionMaker';
 import GameMaker from './GameMaker';
 import { getGameById, getQuestionTemplateById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
-import { get, set } from 'lodash';
 
 export default function Games({ 
   loading,
