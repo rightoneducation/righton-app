@@ -204,12 +204,25 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
   const handleDeleteTeam = (id: string) => {
     console.log("made it in");
     console.log(id);
+    // try {
+    //   apiClients.team.deleteTeam(id).then((response)=>{
+    //     console.log(response);
+    //   })
+    // }
+    // catch (error){
+    //   console.log("DELETE TEAM DIDNT WORK HERE");
+    //   console.log(error);
+    // }
     try {
-      apiClients.team.deleteTeam(id).then((response)=>{
+      apiClients.team.deleteTeam(id).then((response) => {
         console.log(response);
-      })
-    }
-    catch (error){
+        setGameSession((prevState) => {
+          if (!prevState) return prevState;
+          const updatedTeams = prevState.teams.filter((team) => team.id !== id);
+          return { ...prevState, teams: updatedTeams };
+        });
+      });
+    } catch (error) {
       console.log("DELETE TEAM DIDNT WORK HERE");
       console.log(error);
     }
