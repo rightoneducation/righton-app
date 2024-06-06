@@ -57,8 +57,8 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
     { ref: responsesRef, text: 'Responses Settings' },
-    { ref: confidenceCardRef, text: 'Confidence Settings' },
-    { ref: hintCardRef, text: 'Player Thinking Settings' },
+    { ref: confidenceCardRef, text: 'Confidence Meter Settings' },
+    { ref: hintCardRef, text: 'Student Hints Settings' },
   ];
   const [navDictionary, setNavDictionary] = useState(
     questionConfigNavDictionary,
@@ -82,14 +82,14 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     if (isConfidenceEnabled && (state === GameSessionState.CHOOSE_CORRECT_ANSWER || state === GameSessionState.PHASE_1_DISCUSS)) {
       newDictionary.splice(insertIndex, 0, {
         ref: confidenceCardRef,
-        text: 'Player Confidence',
+        text: 'Confidence Meter',
       });
       insertIndex++;
     }
     if (isHintEnabled && (state === GameSessionState.CHOOSE_TRICKIEST_ANSWER || state === GameSessionState.PHASE_2_DISCUSS)) {
       newDictionary.splice(insertIndex, 0, {
         ref: hintCardRef,
-        text: 'Player Thinking',
+        text: 'Student Hints',
       });
       insertIndex++;
     }
