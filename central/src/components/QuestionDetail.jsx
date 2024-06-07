@@ -11,6 +11,7 @@ export default function QuestionDetails({ gameTitle, question }) {
   const history = useHistory();
   const choices = JSON.parse(question.choices);
   const answer = choices.find(({ isAnswer }) => isAnswer);
+  const instructions = JSON.parse(question.instructions);
   let wrongAnswerSet = choices.filter(({ isAnswer }) => !isAnswer);
 
   if (wrongAnswerSet.length < 1) {
@@ -57,7 +58,7 @@ export default function QuestionDetails({ gameTitle, question }) {
             </Typography>
           </Grid>
 
-          <AnswerDropdown answer={answer?.text} explanation={answer?.reason} correct={true} />
+          <AnswerDropdown answer={answer?.text} instructions={instructions} explanation={answer?.reason} correct={true} />
 
           <Grid item xs={12}>
             <Divider className={classes.divider} />
