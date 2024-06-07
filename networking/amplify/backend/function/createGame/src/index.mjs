@@ -215,7 +215,7 @@ async function createAndSignRequest(query, variables) {
           isShortAnswerEnabled: false,
           isHintEnabled: true,
           responses: '[]',
-          order: 0
+          order: index
         }
       });
       const questionResponse = await fetch(questionRequest);
