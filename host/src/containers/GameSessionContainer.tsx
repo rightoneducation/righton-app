@@ -93,7 +93,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
       });
       insertIndex++;
     }
-    if (isShortAnswerEnabled) {
+    if (isShortAnswerEnabled && (state === GameSessionState.CHOOSE_CORRECT_ANSWER || state === GameSessionState.PHASE_1_DISCUSS)) {
       newDictionary.splice(insertIndex, 0, {
         ref: featuredMistakesRef,
         text: 'Featured Mistakes',
@@ -609,6 +609,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           hintsError={hintsError}
           isHintLoading={isHintLoading}
           handleProcessHints={handleProcessHints}
+          multipleChoiceText={multipleChoiceText}
         />
       );
     }
@@ -647,6 +648,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           isHintLoading={isHintLoading}
           handleProcessHints={handleProcessHints}
           setSelectedMistakes={setSelectedMistakes}
+          multipleChoiceText={multipleChoiceText}
         />
       );
 
@@ -662,6 +664,9 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           setIsConfidenceEnabled={setIsConfidenceEnabled}
           assembleNavDictionary={assembleNavDictionary}
           isHintEnabled={isHintEnabled}
+          isConfidenceEnabled={isConfidenceEnabled}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          multipleChoiceText={multipleChoiceText}
         />
       );
 

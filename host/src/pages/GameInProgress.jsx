@@ -56,7 +56,8 @@ export default function GameInProgress({
   hintsError,
   isHintLoading,
   handleProcessHints,
-  setSelectedMistakes
+  setSelectedMistakes,
+  multipleChoiceText
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -186,12 +187,12 @@ export default function GameInProgress({
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
+      assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
       return;
     }
     if (nextState === GameSessionState.TEAMS_JOINING)
-      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
+      assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, nextState);
     if (
       nextState === GameSessionState.PHASE_1_DISCUSS ||
       nextState === GameSessionState.PHASE_2_DISCUSS
