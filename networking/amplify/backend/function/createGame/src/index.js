@@ -26,11 +26,9 @@ const API_KEY = process.env.API_MOBILE_GRAPHQLAPIKEYOUTPUT;
 
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   let questionTemplates = [];
-  console.log(awsGameTemplate);
   try {
       if (awsGameTemplate && awsGameTemplate.data && awsGameTemplate.data.getGameTemplate) {
           const { getGameTemplate } = awsGameTemplate.data;
-          console.log(getGameTemplate);
           questionTemplates = getGameTemplate.questionTemplates.items.map((item) => {
               const { questionTemplate } = item;
               const { gameTemplates, questionTemplates, ...rest } = questionTemplate;
@@ -189,10 +187,8 @@ async function createAndSignRequest(query, variables) {
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
     const gameTemplateRequest = await createAndSignRequest(getGameTemplate, { id: gameTemplateId });
-    console.log(gameTemplateRequest);
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json());
-
     const { questionTemplates: questions, ...game } = gameTemplateParsed;
 
     // createGameSession
@@ -202,8 +198,9 @@ async function createAndSignRequest(query, variables) {
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
 
     // createQuestions
-    const promises = questions.map(async (question) => {
-      const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
+    const promises = questions.map(async (question, index) => {
+      const {owner, version, createdAt, title, updatedAt, gameId, choices, __typename, ...trimmedQuestion} = question;
+      const shuffledChoices = JSON.parse(choices).sort(() => Math.random() - 0.5);
       const questionRequest = await createAndSignRequest(createQuestion, {
         input: {    
           ...trimmedQuestion,
@@ -215,6 +212,7 @@ async function createAndSignRequest(query, variables) {
           isShortAnswerEnabled: false,
           isHintEnabled: true,
           responses: '[]',
+          choices: JSON.stringify(shuffledChoices),
           order: index
         }
       });
