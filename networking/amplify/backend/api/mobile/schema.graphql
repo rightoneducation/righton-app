@@ -119,7 +119,7 @@ type Question @model(subscriptions: null, timestamps: null) {
   isConfidenceEnabled: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
   isHintEnabled: Boolean! @default(value: "true")
-  gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
+  gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["order"])
 }
 
 type Team @model {

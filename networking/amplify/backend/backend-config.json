@@ -51,22 +51,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_api_createGame_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "api",
-          "resourceName": "createGame"
-        }
-      ]
-    },
-    "AMPLIFY_api_createGame_s3Key": {
-      "usedBy": [
-        {
-          "category": "api",
-          "resourceName": "createGame"
-        }
-      ]
-    },
     "AMPLIFY_auth_mobile96b14818_nativeClientId": {
       "usedBy": [
         {
