@@ -1,27 +1,53 @@
 import React, { useState } from 'react';
-import { GameSessionState, APIClients, IGameSession} from '@righton/networking';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  useParams,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
+import { GameSessionState, APIClients, IGameSession, IAPIClients} from '@righton/networking';
 import useInitHostContainer from '../hooks/useInitHostContainer';
 import GameSessionContainer from './GameSessionContainer';
+import LaunchContainer from './LaunchContainer';
 
 interface HostContainerProps {
   apiClients: APIClients;
 }
 
 export default function HostContainer({apiClients}: HostContainerProps) {
-  const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
-  const backendGameSession = useInitHostContainer(apiClients, gameSessionId);
+  const gameSessionId = '0634dbc3-726c-48cb-ad5a-afed98293523';
+  let backendGameSession: IGameSession | null = null;
+  
+  backendGameSession = useInitHostContainer(apiClients, gameSessionId || '');
 
-  if (backendGameSession){
-    switch (backendGameSession.currentState){
-      case GameSessionState.TEAMS_JOINING:
-        default:
-        return (
-          <GameSessionContainer
-            backendGameSession={backendGameSession}
-          />
-        );
-    }
-  } else {
+  function RedirectToCentralIfMissing () {
+    window.location.href = 'http://dev-central.rightoneducation.com/';
     return null;
   }
+
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        {backendGameSession && gameSessionId && 
+          <Route
+            path="/host"        
+            element={<GameSessionContainer backendGameSession={backendGameSession}/>}
+            loader={useInitHostContainer(apiClients, gameSessionId)}
+          />
+        }
+        {/* {gameId &&
+          <Route
+            path="/launch"
+            element={<LaunchContainer apiClients={apiClients} gameId={gameId} />}
+          />
+        } */}
+        <Route element={<RedirectToCentralIfMissing />} />
+      </>,
+    ),
+  );
+
+  return (
+    <RouterProvider router={router} />
+  )
 }
