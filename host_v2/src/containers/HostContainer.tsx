@@ -17,13 +17,9 @@ interface HostContainerProps {
 }
 
 export default function HostContainer({apiClients}: HostContainerProps) {
-  const gameSessionId = '578b2bb8-448d-4040-8eb5-c6fec7bfb333';
+  const gameSessionId = '51d0a6a1-4d0f-4f13-ab7f-5a5f4a04ebce';
   const backendGameSession = useInitHostContainer(apiClients, gameSessionId);
 
-  function RedirectToCentralIfMissing () {
-    window.location.href = 'http://dev-central.rightoneducation.com/';
-    return null;
-  }
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
