@@ -4,22 +4,21 @@ import useInitHostContainer from '../hooks/useInitHostContainer';
 import StartGame from '../pages/StartGame';
 
 interface GameSessionContainerProps {
-  backendGameSession: IGameSession | null;
+  backendGameSession: IGameSession;
 }
 
 export default function GameSessionContainer({backendGameSession}: GameSessionContainerProps) {
-  const [localGameSession, setLocalGameSession] = useState<IGameSession | null>(backendGameSession);
+  const [localGameSession, setLocalGameSession] = useState<IGameSession>(backendGameSession);
   const handleDeleteTeam = () => {}
-
-  switch (backendGameSession?.currentState){
+  switch (localGameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
       default:
       return (
         <StartGame
-          teams={localGameSession?.teams ?? []}
-          questions={localGameSession?.questions ?? []}
-          title={localGameSession?.title ?? ''}
-          gameCode={localGameSession?.gameCode ?? 0}
+          teams={localGameSession.teams}
+          questions={localGameSession.questions}
+          title={localGameSession.title }
+          gameCode={localGameSession.gameCode}
           handleDeleteTeam={handleDeleteTeam}
         />
       );

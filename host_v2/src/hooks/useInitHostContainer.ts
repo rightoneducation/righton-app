@@ -4,30 +4,37 @@ import { APIClients, IGameSession } from '@righton/networking';
 export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): IGameSession | null{
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
   useEffect(() => {
-    
-    const fetchGameSession = async () => {
-      try {
-        const response = await apiClients.gameSession.getGameSession(gameSessionId);
-        setGameSession(response); // Set the game session data in state
-        console.log(response);
-      } catch (error) {
-        console.error('error fetching game session:', error);
+    let gameSessionSubscription: any;
+
+    apiClients.gameSession
+      .getGameSession(gameSessionId)
+      .then((fetchedGame: IGameSession) => {
+        if (!fetchedGame || !fetchedGame.id) {
+          console.log('error')
+          return;
+        }
+        setGameSession(fetchedGame);
+        gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
+          fetchedGame.id,
+          (response: IGameSession) => {
+            if (!response) {
+              console.log('error')
+              return;
+            }
+            setGameSession((prevGame) => ({ ...prevGame, ...response }));
+          }
+        );
+      })
+      .catch((e) => {
+        if (e instanceof Error) console.log(e.message);
+      });
+    // eslint-disable-next-line consistent-return
+    return () => {
+      if (gameSessionSubscription && gameSessionSubscription.unsubscribe) {
+        gameSessionSubscription.unsubscribe();
       }
     };
-    
-    let gameSessionSubscription: any | null = null;
-    gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
-      gameSessionId,
-      (response) => {
-        setGameSession((prev) => ({ ...prev, ...response }));
-      },
-    );
-
-    fetchGameSession();
-    return () => {
-      if (gameSessionSubscription && gameSessionSubscription.unsubscribe)
-        gameSessionSubscription.unsubscribe();
-    };
   }, [apiClients, gameSessionId]);
+  console.log(gameSession);
   return gameSession;
 }
