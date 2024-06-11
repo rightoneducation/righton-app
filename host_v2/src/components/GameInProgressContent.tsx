@@ -49,11 +49,11 @@ export default function GameInProgressContent({
     <BodyContentAreaTripleColumnStyled container>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <ConfidenceCard
+        {/* <ConfidenceCard
             confidenceData={confidenceData}
             graphClickIndex={confidenceGraphClickIndex}
             handleGraphClick={handleConfidenceGraphClick}
-          />
+          /> */}
           <Card />
         </ScrollBoxStyled>
       </Grid>
@@ -97,11 +97,11 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
-              <ConfidenceCard
+              {/* <ConfidenceCard
                 confidenceData={confidenceData}
                 graphClickIndex={confidenceGraphClickIndex}
                 handleGraphClick={handleConfidenceGraphClick}
-              />
+              /> */}
               <Card />
             </ScrollBoxStyled>
           </Grid>
@@ -151,11 +151,11 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-              <ConfidenceCard
+              {/* <ConfidenceCard
                 confidenceData={confidenceData}
                 graphClickIndex={confidenceGraphClickIndex}
                 handleGraphClick={handleConfidenceGraphClick}
-              />
+              /> */}
               <Card />
             </ScrollBoxStyled>
           </Grid>

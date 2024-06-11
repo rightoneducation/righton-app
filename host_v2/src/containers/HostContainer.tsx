@@ -25,7 +25,7 @@ export default function HostContainer({apiClients}: HostContainerProps) {
       <>
         {backendGameSession && gameSessionId && 
           <Route
-            path="/"        
+            path="/"
             element={<GameSessionContainer apiClients={apiClients} backendGameSession={backendGameSession}/>}
           />
         }

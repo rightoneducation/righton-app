@@ -38,14 +38,14 @@ const graphAccentColor = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and 
 const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns
 const answerBarBackgroundColor = 'rgba(8, 69, 143, 0.20)';
 const radialTimerArray = [
-  `${countdownColor}, 0.3)`,
-  `${countdownColor}, 0.4)`,
-  `${countdownColor}, 0.5)`,
-  `${countdownColor}, 0.6)`,
-  `${countdownColor}, 0.7)`,
-  `${countdownColor}, 0.8)`,
-  `${countdownColor}, 0.9)`,
-  `${countdownColor}, 1)`,
+  'rgb(126, 90, 175)',
+  'rgb(148, 98, 179)',
+  'rgb(169, 104, 180)',
+  'rgb(186, 107, 177)',
+  'rgb(202, 109, 172)',
+  'rgb(218, 112, 168)',
+  'rgb(237, 115, 166)',
+  'rgb(255, 120, 165)',
 ]; // radial timer color array - appended with '0.x )' opacity when used in countdown
 
 //  borders

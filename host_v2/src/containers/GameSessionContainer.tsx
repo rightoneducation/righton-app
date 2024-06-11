@@ -9,8 +9,11 @@ interface GameSessionContainerProps {
 }
 
 export default function GameSessionContainer({apiClients, backendGameSession}: GameSessionContainerProps) {
+  // TODO: create Context for gameSession
   const [localGameSession, setLocalGameSession] = useState<IGameSession>(backendGameSession);
   const handleDeleteTeam = () => {};
+
+  // TODO: extract to reducer
   const handleUpdateGameSession = (gameSessionState: GameSessionState) => {
     const updateInput = {
       id: localGameSession.id,
@@ -22,11 +25,14 @@ export default function GameSessionContainer({apiClients, backendGameSession}: G
 
   switch (localGameSession.currentState){
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
+    case GameSessionState.PHASE_1_DISCUSS:
+    case GameSessionState.PHASE_1_RESULTS:
+    case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+    case GameSessionState.PHASE_2_DISCUSS:
+    case GameSessionState.PHASE_2_RESULTS:
       return (
         <GameInProgress 
-          {...localGameSession}
-          totalQuestions={0}
-          currentQuestionIndex={0}
+          localGameSession={localGameSession}
           isCorrect={false}
           isIncorrect={false}
           totalTime={100}
