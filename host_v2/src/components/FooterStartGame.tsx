@@ -1,12 +1,9 @@
 import React from 'react';
 import { Button, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { GameSessionState } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBar from './ProgressBar';
-
-interface FootStartGameProps {
-  teamsLength: number;
-}
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -60,14 +57,22 @@ const InnerFooterContainer = styled(Box)({
   gap: '8px',
 
 });
-// need 16px between pagination and words
-function FooterStartGame({ teamsLength }: FootStartGameProps) {
+
+interface FootStartGameProps {
+  teamsLength: number;
+  handleUpdateGameSession: (gameSessionState: GameSessionState) => void;
+}
+
+function FooterStartGame({ 
+  teamsLength, 
+  handleUpdateGameSession
+}: FootStartGameProps) {
   return (
     <FooterContainer>
       <PaginationContainerStyled className="swiper-pagination-container" />
       <InnerFooterContainer>
         <ProgressBar teamsLength={teamsLength} />
-        <ButtonStyled disabled={teamsLength <= 0}>Start Game</ButtonStyled>
+        <ButtonStyled disabled={teamsLength <= 0} onClick={()=>handleUpdateGameSession(GameSessionState.CHOOSE_CORRECT_ANSWER)}>Start Game</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );

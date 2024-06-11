@@ -4,20 +4,13 @@ import { styled } from '@mui/material/styles';
 import {
   ITeam,
   IQuestion,
+  GameSessionState
 } from '@righton/networking';
 import HostHeader from '../components/HostHeader';
 import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
-
-interface StartGameProps {
-  teams: ITeam[]
-  questions:IQuestion[]
-  title: string
-  gameCode: number
-  handleDeleteTeam: (id: string) => void;
-}  
 
 const BackgroundStyled = styled(Paper)({
   minHeight: '100vh',
@@ -38,18 +31,29 @@ const SafeAreaStyled = styled(Box)({
   gap: '16px',
 });
 
+interface StartGameProps {
+  teams: ITeam[]
+  questions:IQuestion[]
+  title: string
+  gameCode: number
+  handleDeleteTeam: (id: string) => void;
+  handleUpdateGameSession: (gameSessionState: GameSessionState) => void;
+}  
+
 function StartGame({teams,
   questions,
   title,
   gameCode,
   handleDeleteTeam,
+  handleUpdateGameSession
   }: StartGameProps) {
     return (
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
           <HostBody teams={teams} questions={questions} title={title} handleDeleteTeam={handleDeleteTeam}/>
           <FooterStartGame 
-          teamsLength={teams ? teams.length : 0}
+            teamsLength={teams ? teams.length : 0}
+            handleUpdateGameSession={handleUpdateGameSession}
           />
         </SafeAreaStyled>
     )
