@@ -5,7 +5,7 @@ import HostContainer from './containers/HostContainer';
 import Theme from './lib/Theme';
 
 function App() {
-  const apiClients = new APIClients(Environment.Developing, AppType.HOST);
+  const apiClients = new APIClients(Environment.Developing);
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>
