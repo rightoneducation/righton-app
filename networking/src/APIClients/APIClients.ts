@@ -17,8 +17,8 @@ import { TeamAPIClient } from './TeamAPIClient';
 import { TeamMemberAPIClient } from './TeamMemberAPIClient';
 import { TeamAnswerAPIClient } from './TeamAnswerAPIClient';
 import { Environment } from './BaseAPIClient';
-import { SubscriptionManagerAPIClient } from './subscription/SubscriptionManagerAPIClient';
-import { ISubscriptionManagerAPIClient } from './subscription';
+import { PlaySubscriptionManagerAPIClient, HostSubscriptionManagerAPIClient } from './subscription/SubscriptionManagerAPIClient';
+import { IPlaySubscriptionManagerAPIClient, IHostSubscriptionManagerAPIClient } from './subscription/interfaces/ISubscriptionManagerAPIClient';
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 
@@ -36,9 +36,9 @@ export class APIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
-  subscriptionManager: ISubscriptionManagerAPIClient;
+  subscriptionManager: IPlaySubscriptionManagerAPIClient | IHostSubscriptionManagerAPIClient;
 
-  constructor(env: Environment) {
+  constructor(env: Environment, appType: AppType) {
     this.configAmplify(awsconfig);
     this.gameTemplate = new GameTemplateAPIClient(env);
     this.questionTemplate = new QuestionTemplateAPIClient(env);
@@ -48,34 +48,26 @@ export class APIClients {
     this.team = new TeamAPIClient(env);
     this.teamMember = new TeamMemberAPIClient(env);
     this.teamAnswer = new TeamAnswerAPIClient(env);
-    this.subscriptionManager = new SubscriptionManagerAPIClient(
-      env,
-      this.gameSession,
-      this.question,
-      this.team,
-      this.teamMember,
-      this.teamAnswer
-    );
-    //this.setSubscription(env);
+    this.subscriptionManager = this.setSubscription(env, appType);
   }
 
-  // setSubscription(env: Environment) {
-  //   // if (appType === AppType.PLAY) {
-  //   //   this.subscription = new SubscriptionManagerAPIClient(
-  //   //     env,
-  //   //     this.gameSession,
-  //   //   );
-  //   // } else {
-  //     this.subscription = new SubscriptionManagerAPIClient(
-  //       env,
-  //       this.gameSession,
-  //       this.question,
-  //       this.team,
-  //       this.teamMember,
-  //       this.teamAnswer
-  //     );
-  //     //); //going to be SubscriptionsAPIClient(env, auth.this);
-  // }
+  setSubscription(env: Environment, appType: AppType) {
+    if (appType === AppType.PLAY) {
+      return new PlaySubscriptionManagerAPIClient(
+        env,
+        this.gameSession,
+      );
+    } else {
+      return new HostSubscriptionManagerAPIClient(
+        env,
+        this.gameSession,
+        this.question,
+        this.team,
+        this.teamMember,
+        this.teamAnswer
+      );
+    }
+  }
   
   configAmplify(awsconfig: any) {
     Amplify.configure(awsconfig);

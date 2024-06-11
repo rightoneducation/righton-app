@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { APIClients, IGameSession, SubscriptionManagerAPIClient } from '@righton/networking';
+import { APIClients, IGameSession, IHostSubscriptionManagerAPIClient } from '@righton/networking';
 
 export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): IGameSession | null{
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
   useEffect(() => {
-    const subscriptionManager = apiClients.subscriptionManager; //eslint-disable-line
+    const subscriptionManager = apiClients.subscriptionManager as IHostSubscriptionManagerAPIClient; //eslint-disable-line
     subscriptionManager.initSubscription(gameSessionId, setGameSession)
       .then((initialSession: IGameSession) => {
         setGameSession(initialSession); 
