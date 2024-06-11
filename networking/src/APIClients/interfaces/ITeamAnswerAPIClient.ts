@@ -12,6 +12,11 @@ export interface ITeamAnswerAPIClient {
     inputAnswer: BackendAnswer
   ): Promise<BackendAnswer>;
 
+  subscribeUpdateTeamAnswer(
+    id: string,
+    callback: (result: BackendAnswer) => void
+  ): Promise<any>;
+
   updateTeamAnswer(
     teamAnswerId: string,
     confidenceLevel: ConfidenceLevel

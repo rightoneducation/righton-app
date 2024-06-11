@@ -11,3 +11,4 @@ export * from './TeamAPIClient';
 export * from './TeamAnswerAPIClient';
 export * from './TeamMemberAPIClient';
 export * from './interfaces';
+export * from './subscription';
