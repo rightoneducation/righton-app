@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { GameSessionState,GameSessionParser, ConfidenceLevel } from '@righton/networking';
+import { useAnimate } from "framer-motion";
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
 import sortMistakes from "../lib/HelperFunctions"
+
 
 interface Player {
   answer: string; // answer chosen by this player
@@ -20,7 +22,7 @@ interface ConfidenceOption {
 }
 
 export default function GameSessionContainer() {
-  
+  const [gameSessionState, setGameSessionState] = useState<GameSessionState>(GameSessionState.TEAMS_JOINING);
   const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
     currentState: MockGameSession.currentState as GameSessionState}); 
 
@@ -133,6 +135,27 @@ export default function GameSessionContainer() {
       teams: ['Name14'],
     },
   ]);
+
+  const [scope, animate] = useAnimate();
+  const [scope2, animate2] = useAnimate();
+  const [scope3, animate3] = useAnimate();
+  const [scope4, animate4] = useAnimate();
+
+  const handleStartGame = () =>{
+    const exitAnimation = () => {
+      // Start all animations concurrently and return a promise that resolves when all animations are complete
+      return Promise.all([
+        animate(scope.current, { y: 'calc(-100vh + 250px)', zIndex: -1, position: 'relative'}, { duration: 1 }),
+        animate2(scope2.current, { y: '-100vh', opacity: 0, position: 'relative'}, { duration: 1 }),
+        animate3(scope3.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
+        animate4(scope4.current, { opacity: 0, position: 'relative'}, { duration: 0.1 }),
+      ]);
+    };
+    exitAnimation().then(() => {
+      setGameSessionState(GameSessionState.CHOOSE_CORRECT_ANSWER);
+    });
+  }
+
   const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
   const [sortedMistakes, setSortedMistakes] = useState(React.useMemo(() => 
      sortMistakes(shortAnswerResponses, shortAnswerResponses.length, isPopularMode, 3),
@@ -141,12 +164,22 @@ export default function GameSessionContainer() {
 
   switch (gameSession.currentState){
     case GameSessionState.TEAMS_JOINING:
+      console.log("HERE")
+      console.log(gameSession.teams)
       return (
+        
         <StartGame
+  
+          scope={scope}
+          scope2={scope2}
+          scope3={scope3}
+          scope4={scope4}
+          handleStartGame={handleStartGame}
           teams={gameSession.teams ?? []}
           questions={gameSession.questions}
           title={gameSession.title ?? ''}
           gameCode={gameSession.gameCode}
+
         />
       );
     case GameSessionState.CHOOSE_CORRECT_ANSWER:

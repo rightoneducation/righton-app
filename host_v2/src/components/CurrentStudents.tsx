@@ -66,7 +66,8 @@ const BoxStyled = styled(Box)({
 
 function CurrentStudents ({ teams }: CurrentStudentProps) {
     // const classes = useStyles();
-
+    console.log("In current students")
+    console.log(teams)
     return (
         <Box>
             <GridStyled>{teams ? teams.length : 0}</GridStyled>

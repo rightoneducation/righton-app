@@ -1,10 +1,13 @@
 import React from 'react';
 import {Button, Box} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { motion } from "framer-motion";
 
 
 interface FootStartGameProps{
     teamsLength: number;
+    handleStateGame: () => void
+    scope3: React.RefObject<HTMLDivElement>;
 }
 
 const ButtonStyled = styled(Button)({
@@ -46,22 +49,25 @@ const BottomNavigationStyled = styled(Box)({
   alignItems: 'center',
   bottom: '0',
   width: '100%',
-  height: '80px',
-  paddingTop: '80px',
-  paddingBottom: '50px',
+  height: '40px',
+  paddingTop: '20px',
+  paddingBottom: '20px',
   background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
 
 })
 
-function FooterStartGame ({ teamsLength}: FootStartGameProps){    
+function FooterStartGame ({ teamsLength, scope3, handleStateGame}: FootStartGameProps){    
     return (
         <BottomNavigationStyled>
             <Box>
+              <motion.div ref={scope3} exit={{ y: 0, opacity: 0}}>
                 <ButtonStyled 
                     disabled={teamsLength <= 0}
+                    onClick = {handleStateGame}
                 >
                     Start Game    
                 </ButtonStyled>
+              </motion.div>
             </Box>
         </BottomNavigationStyled>
     );
