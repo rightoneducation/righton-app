@@ -23,7 +23,7 @@ export default function QuestionDetails({ gameTitle, question }) {
   };
 
   return (
-    <Grid container>
+    <Grid container className={classes.container}>
       <Grid item xs={12}>
         <Button type="button" onClick={() => history.goBack()}>
           <ArrowBackIcon className={classes.back} />Back to {gameTitle}
@@ -74,6 +74,16 @@ export default function QuestionDetails({ gameTitle, question }) {
 }
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    overflowY: 'hidden',
+    overflowX: 'hidden',
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE and Edge
+  },
   back: {
     marginRight: theme.spacing(1),
   },

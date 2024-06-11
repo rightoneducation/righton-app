@@ -202,6 +202,14 @@ const useStyles = makeStyles(theme => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
+    overflowY: 'hidden',
+    overflowX: 'hidden',
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE and Edge
   },
   actions: {
     paddingTop: '10px',
@@ -216,8 +224,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'white',
     zIndex:3
   },
-
-  
 
   addQuestionFooter: {
     width: '100%',
