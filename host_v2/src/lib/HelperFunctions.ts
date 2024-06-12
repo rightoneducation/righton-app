@@ -1,6 +1,7 @@
+import { GameSessionState } from '@righton/networking';
 import { ShortAnswerResponse, Mistake } from './HostModels';
 
-const sortMistakes = (
+export const sortMistakes = (
   shortAnswerResponses: ShortAnswerResponse[],
   totalAnswers: number,
   isPopularMode: boolean,
@@ -25,4 +26,8 @@ const sortMistakes = (
   return orderedMistakes;
 };
 
-export default sortMistakes;
+export const getNextGameSessionState = (currentState: GameSessionState) => {
+  const states = Object.values(GameSessionState);
+  const currentIndex = states.indexOf(currentState);
+  return states[currentIndex + 1];
+};

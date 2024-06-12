@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import { GameSessionState, IGameSession, APIClients} from '@righton/networking';
+import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
+import { IGameSessionReducer } from '../lib/reducer/IGameSessionReducer';
+import { getNextGameSessionState } from '../lib/HelperFunctions';
 import GameInProgress from '../pages/GameInProgress';
 import StartGame from '../pages/StartGame';
 
@@ -10,17 +13,14 @@ interface GameSessionContainerProps {
 
 export default function GameSessionContainer({apiClients, backendGameSession}: GameSessionContainerProps) {
   // TODO: create Context for gameSession
-  const [localGameSession, setLocalGameSession] = useState<IGameSession>(backendGameSession);
+  const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
   const handleDeleteTeam = () => {};
 
   // TODO: extract to reducer
   const handleUpdateGameSession = (gameSessionState: GameSessionState) => {
-    const updateInput = {
-      id: localGameSession.id,
-      currentState: gameSessionState,
-    }
-    apiClients.gameSession.updateGameSession(updateInput);
-    setLocalGameSession({...localGameSession, currentState: gameSessionState});
+    const nextState = getNextGameSessionState(gameSessionState);
+    dispatch({type: 'advance_game_phase', payload: {nextState}});
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState});
   };
 
   switch (localGameSession.currentState){
