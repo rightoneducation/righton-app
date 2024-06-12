@@ -1,7 +1,8 @@
 import React, { useReducer } from 'react';
 import { GameSessionState, IGameSession, APIClients} from '@righton/networking';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
-import { IGameSessionReducer } from '../lib/reducer/IGameSessionReducer';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
 import GameInProgress from '../pages/GameInProgress';
 import StartGame from '../pages/StartGame';
@@ -12,25 +13,19 @@ interface GameSessionContainerProps {
 }
 
 export default function GameSessionContainer({apiClients, backendGameSession}: GameSessionContainerProps) {
-  // TODO: create Context for gameSession
   const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
+
   const handleDeleteTeam = () => {};
 
-  // TODO: extract to reducer
-  const handleUpdateGameSession = (gameSessionState: GameSessionState) => {
-    const nextState = getNextGameSessionState(gameSessionState);
-    dispatch({type: 'advance_game_phase', payload: {nextState}});
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState});
-  };
-
-  switch (localGameSession.currentState){
+  let renderContent;
+  switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
     case GameSessionState.PHASE_2_RESULTS:
-      return (
+      renderContent = (
         <GameInProgress 
           localGameSession={localGameSession}
           isCorrect={false}
@@ -47,17 +42,28 @@ export default function GameSessionContainer({apiClients, backendGameSession}: G
           setIsPopularMode={() => {}}
         />
       );
+      break;
     case GameSessionState.TEAMS_JOINING:
     default:
-      return (
+      renderContent = (
         <StartGame
           teams={localGameSession.teams}
           questions={localGameSession.questions}
           title={localGameSession.title }
           gameCode={localGameSession.gameCode}
           handleDeleteTeam={handleDeleteTeam}
-          handleUpdateGameSession={handleUpdateGameSession}
         />
       );
+      break;
   }
+
+  return (
+    <APIClientsContext.Provider value={apiClients}>
+      <LocalGameSessionContext.Provider value={localGameSession}>
+        <LocalGameSessionDispatchContext.Provider value={dispatch}>
+          {localGameSession && renderContent}
+        </LocalGameSessionDispatchContext.Provider>
+      </LocalGameSessionContext.Provider>
+    </APIClientsContext.Provider>
+  )
 }

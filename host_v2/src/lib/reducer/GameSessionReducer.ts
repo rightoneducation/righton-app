@@ -1,4 +1,3 @@
-
 import { IGameSession } from "@righton/networking";
 import { IAction } from "./IGameSessionReducer";
 
