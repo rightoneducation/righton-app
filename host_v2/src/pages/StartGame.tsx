@@ -37,7 +37,6 @@ interface StartGameProps {
   title: string
   gameCode: number
   handleDeleteTeam: (id: string) => void;
-  handleUpdateGameSession: (gameSessionState: GameSessionState) => void;
 }  
 
 function StartGame({teams,
@@ -45,7 +44,6 @@ function StartGame({teams,
   title,
   gameCode,
   handleDeleteTeam,
-  handleUpdateGameSession
   }: StartGameProps) {
     return (
         <SafeAreaStyled>
@@ -53,7 +51,6 @@ function StartGame({teams,
           <HostBody teams={teams} questions={questions} title={title} handleDeleteTeam={handleDeleteTeam}/>
           <FooterStartGame 
             teamsLength={teams ? teams.length : 0}
-            handleUpdateGameSession={handleUpdateGameSession}
           />
         </SafeAreaStyled>
     )

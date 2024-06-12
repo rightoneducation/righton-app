@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBar from './ProgressBar';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
+import { getNextGameSessionState } from '../lib/HelperFunctions';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -60,19 +65,27 @@ const InnerFooterContainer = styled(Box)({
 
 interface FootStartGameProps {
   teamsLength: number;
-  handleUpdateGameSession: (gameSessionState: GameSessionState) => void;
 }
 
 function FooterStartGame({ 
-  teamsLength, 
-  handleUpdateGameSession
+  teamsLength
 }: FootStartGameProps) {
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
+
+  const handleButtonClick = () => {
+    const nextState = getNextGameSessionState(localGameSession.currentState);
+    dispatch({type: 'advance_game_phase', payload: {nextState}});
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
+  };
+
   return (
     <FooterContainer>
       <PaginationContainerStyled className="swiper-pagination-container" />
       <InnerFooterContainer>
         <ProgressBar teamsLength={teamsLength} />
-        <ButtonStyled disabled={teamsLength <= 0} onClick={()=>handleUpdateGameSession(GameSessionState.CHOOSE_CORRECT_ANSWER)}>Start Game</ButtonStyled>
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );
