@@ -165,12 +165,6 @@ export default function GameMaker({
               </Grid>
 
               <Grid container item xs={12}>
-                <Typography style={{ fontWeight: 700, fontSize: '16px', color: '#FC1047', paddingBottom: '10px' }}>
-                  Note: In order for this game to be playable in advanced mode, there must be a minimum of 5 questions.
-                </Typography>
-              </Grid>
-
-              <Grid container item xs={12}>
                 <Grid container item xs={12} sm={8}>
                   <Grid container item xs={12}>
                     <TextField
