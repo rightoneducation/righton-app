@@ -11,6 +11,7 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
+import Responses from './Responses';
 import ConfidenceCard from './ConfidenceCard';
 import QuestionCard from './QuestionCard';
 import AnswerCard from './AnswerCard';
@@ -60,7 +61,7 @@ export default function GameInProgressContent({
             graphClickIndex={confidenceGraphClickIndex}
             handleGraphClick={handleConfidenceGraphClick}
           /> */}
-          <Card />
+          <Responses />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>

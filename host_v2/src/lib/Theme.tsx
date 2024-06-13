@@ -70,17 +70,67 @@ const footerHeight = 60;
 const answerBarHeight = 18;
 const nextStateButtonWidth = 300;
 const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
-const extraExtraSmallPadding = 4; //  used on question indicators
 const answerOptionBorderRadius = 22; // border radius of options on answer cards
-const extraSmallPadding = 8; // small icons, text positioning
-const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
-const mediumPadding = 24; // timer margin
-const largePadding = 32; // text spacing on answer selector, top margin on titles
-const extraLargePadding = 48; // spacing between card and edge of screen
-const extraExtraLargePadding = 64; // spacing between buttons and bottom of screen
+const xxSmPadding = 4; // positioning in Victory Graphs
+const xSmPadding = 8; // small icons, text positioning
+const smPadding = 16; // upper and lower margins on text, spacing of content in cards
+const mdPadding = 24; // timer margin
+const lgPadding = 32; // text spacing on answer selector, top margin on titles
+const xLgPadding = 48; // spacing between card and edge of screen
+const xxLgPadding = 64; // spacing between buttons and bottom of screen
 const barStrokeWidth = 2; // stroke width of the bar outlines on host graph cards
 const confidenceBarThickness = 55; // thickness of each bar component in confidence bar graph
 
+// Victory Graphs Theming
+
+// victory applies a default of 50px to the VictoryChart component
+// we intentionally set this so that we can reference it programmatically throughout the chart
+const defaultVictoryPadding = 50;
+
+// Responses Graph
+const barThicknessResponses = 18;
+const barThicknessZeroResponses = 26;
+const labelOffsetResponses = 3;
+
+// victory theme object that we pass into the component to style the graph
+// see: https://commerce.nearform.com/open-source/victory/guides/themes
+const customVictoryTheme = {
+  axis: {
+    style: {
+      axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+      grid: { stroke: 'transparent' },
+      tickLabels: {
+        padding: smPadding,
+      },
+    },
+  },
+  dependentAxis: {
+    style: {
+      axis: { stroke: 'transparent' },
+      grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+      tickLabels: {
+        fill: 'rgba(255, 255, 255, 0.5)',
+        fontFamily: 'Rubik',
+        fontWeight: '400',
+        fontSize: '12px',
+      },
+    },
+  },
+  bar: {
+    style: {
+      data: {
+        stroke: '#FFF',
+        strokeWidth: 1,
+      },
+      labels: {
+        fontFamily: 'Rubik',
+        fontWeight: '400',
+        textAnchor: 'end',
+        fontSize: '12px',
+      },
+    },
+  },
+};
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
@@ -99,14 +149,56 @@ declare module '@mui/material/styles' {
       pregameMinColumnWidth: number;
       extraExtraSmallPadding: number;
       answerOptionBorderRadius: number;
-      extraSmallPadding: number;
-      smallPadding: number;
-      mediumPadding: number;
-      largePadding: number;
-      extraLargePadding: number;
-      extraExtraLargePadding: number;
+      xxSmPadding: number;
+      xSmPadding: number;
+      smPadding: number;
+      mdPadding: number;
+      lgPadding: number;
+      xLgPadding: number;
+      xxLgPadding: number;
       barStrokeWidth: number;
       confidenceBarThickness: number;
+      defaultVictoryPadding: number;
+      barThicknessResponses: number;
+      barThicknessZeroResponses: number;
+      labelOffsetResponses: number;
+    };
+    victoryTheme: {
+      axis: {
+        style: {
+          axis: { stroke: string; strokeWidth: number };
+          grid: { stroke: string };
+          tickLabels: {
+            padding: number;
+          };
+        };
+      };
+      dependentAxis: {
+        style: {
+          axis: { stroke: string };
+          grid: { stroke: string; strokeWidth: number };
+          tickLabels: {
+            fill: string;
+            fontFamily: string;
+            fontWeight: string;
+            fontSize: string;
+          };
+        };
+      };
+      bar: {
+        style: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          labels: {
+            fontFamily: string;
+            fontWeight: string;
+            textAnchor: string;
+            fontSize: string;
+          };
+        };
+      };
     };
   }
 
@@ -124,16 +216,57 @@ declare module '@mui/material/styles' {
       answerBarHeight?: number;
       nextStateButtonWidth?: number;
       pregameMinColumnWidth?: number;
-      extraExtraSmallPadding?: number;
       answerOptionBorderRadius?: number;
-      extraSmallPadding?: number;
-      smallPadding?: number;
-      mediumPadding?: number;
-      largePadding?: number;
-      extraLargePadding?: number;
-      extraExtraLargePadding?: number;
+      xxSmPadding: number;
+      xSmPadding: number;
+      smPadding: number;
+      mdPadding: number;
+      lgPadding: number;
+      xLgPadding: number;
+      xxLgPadding: number;
       barStrokeWidth?: number;
       confidenceBarThickness?: number;
+      defaultVictoryPadding?: number;
+      barThicknessResponses?: number;
+      barThicknessZeroResponses?: number;
+      labelOffsetResponses?: number;
+    };
+    victoryTheme?: {
+      axis?: {
+        style?: {
+          axis?: { stroke: string; strokeWidth: number };
+          grid?: { stroke: string };
+          tickLabels?: {
+            padding: number;
+          };
+        };
+      };
+      dependentAxis?: {
+        style?: {
+          axis?: { stroke: string };
+          grid?: { stroke: string; strokeWidth: number };
+          tickLabels?: {
+            fill: string;
+            fontFamily: string;
+            fontWeight: string;
+            fontSize: string;
+          };
+        };
+      };
+      bar?: {
+        style?: {
+          data?: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          labels?: {
+            fontFamily: string;
+            fontWeight: string;
+            textAnchor: string;
+            fontSize: string;
+          };
+        };
+      };
     };
   }
 
@@ -215,17 +348,22 @@ export default createTheme({
     answerBarHeight,
     nextStateButtonWidth,
     pregameMinColumnWidth,
-    extraExtraSmallPadding,
+    xxSmPadding,
+    xSmPadding,
+    smPadding,
+    mdPadding,
+    lgPadding,
+    xLgPadding,
+    xxLgPadding,
     answerOptionBorderRadius,
-    extraSmallPadding,
-    smallPadding,
-    mediumPadding,
-    largePadding,
-    extraLargePadding,
-    extraExtraLargePadding,
     barStrokeWidth,
     confidenceBarThickness,
+    defaultVictoryPadding,
+    barThicknessResponses,
+    barThicknessZeroResponses,
+    labelOffsetResponses,
   },
+  victoryTheme: customVictoryTheme,
   palette: {
     primary: {
       main: mainColor,
