@@ -37,6 +37,8 @@ const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of t
 const graphAccentColor = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
 const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns
 const answerBarBackgroundColor = 'rgba(8, 69, 143, 0.20)';
+const progressBarColor = '#08458F';
+const progressBarBackgroundColor = '#D0DAE7';
 const radialTimerArray = [
   'rgb(126, 90, 175)',
   'rgb(148, 98, 179)',
@@ -158,6 +160,8 @@ declare module '@mui/material/styles' {
     graphAccentColor: string;
     dropdownInfoBackgroundColor: string;
     answerBarBackgroundColor: string;
+    progressBarColor: string;
+    progressBarBackgroundColor: string;
     countdownColor: string;
     radialTimerArray: string[];
   }
@@ -187,6 +191,8 @@ declare module '@mui/material/styles' {
     graphAccentColor?: string;
     dropdownInfoBackgroundColor?: string;
     answerBarBackgroundColor?: string;
+    progressBarColor?: string;
+    progressBarBackgroundColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
   }
@@ -246,6 +252,8 @@ export default createTheme({
       graphAccentColor,
       dropdownInfoBackgroundColor,
       answerBarBackgroundColor,
+      progressBarColor,
+      progressBarBackgroundColor,
       countdownColor,
       radialTimerArray,
     },

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { GameSessionState, IGameSession } from '@righton/networking';
 import { ConfidenceOption, LocalModel, Mistake } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
@@ -9,9 +8,9 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import GameInProgressContent from '../components/GameInProgressContent';
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
+import FooterGameInProgress from '../components/FooterGameInProgress';
 
 interface GameInProgressProps {
-  localGameSession: IGameSession,
   isCorrect: boolean,
   isIncorrect: boolean,
   totalTime: number,
@@ -27,7 +26,6 @@ interface GameInProgressProps {
 }
 
 export default function GameInProgress({
-  localGameSession,
   isCorrect,
   isIncorrect,
   totalTime,
@@ -41,9 +39,6 @@ export default function GameInProgress({
   isPopularMode,
   setIsPopularMode,
 }: GameInProgressProps) {
-
-    // const inputNum = 3;
-    const statePosition = 2;
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
       setConfidenceGraphClickIndex(selectedIndex);
@@ -53,10 +48,6 @@ export default function GameInProgress({
       <StackContainerStyled>
       <HeaderBackgroundStyled />
       <HeaderContent
-        currentState={localGameSession.currentState}
-        totalQuestions={localGameSession.questions.length}
-        currentQuestionIndex={localGameSession.currentQuestionIndex}
-        statePosition={statePosition}
         isCorrect={isCorrect}
         isIncorrect={isIncorrect}
         totalTime={totalTime}
@@ -69,9 +60,9 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <GameInProgressContent
-          confidenceData={sampleConfidenceData}
-          confidenceGraphClickIndex={confidenceGraphClickIndex}
-          handleConfidenceGraphClick={handleConfidenceGraphClick}
+          // confidenceData={sampleConfidenceData}
+          // confidenceGraphClickIndex={confidenceGraphClickIndex}
+          // handleConfidenceGraphClick={handleConfidenceGraphClick}
           onSelectMistake={onSelectMistake}
           sortedMistakes={sortedMistakes}
           setSortedMistakes={setSortedMistakes}
@@ -79,7 +70,9 @@ export default function GameInProgress({
           setIsPopularMode={setIsPopularMode}
         />
       </BodyStackContainerStyled>
-      <FooterBackgroundStyled />
+      <FooterBackgroundStyled >
+        <FooterGameInProgress teamsLength={5}/>
+      </FooterBackgroundStyled>
     </StackContainerStyled>
   );
 }

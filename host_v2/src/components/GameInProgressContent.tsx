@@ -12,36 +12,42 @@ import {
 } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
 import ConfidenceCard from './ConfidenceCard';
+import QuestionCard from './QuestionCard';
+import AnswerCard from './AnswerCard';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import FeaturedMistakes from './FeaturedMistakes';
+import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
+import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
 
 interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
-  confidenceData: ConfidenceOption[];
-  confidenceGraphClickIndex: number | null;
-  handleConfidenceGraphClick: (selectedIndex: number | null) => void;
+  // confidenceData: ConfidenceOption[];
+  // confidenceGraphClickIndex: number | null;
+  // handleConfidenceGraphClick: (selectedIndex: number | null) => void;
   onSelectMistake: (answer: string, isSelected: boolean) => void;
   sortedMistakes: Mistake[];
   setSortedMistakes: (value: Mistake[]) => void;
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
 } // eslint-disable-line
+
 export default function GameInProgressContent({
-  confidenceData,
-  confidenceGraphClickIndex,
-  handleConfidenceGraphClick,
+  // confidenceData,
+  // confidenceGraphClickIndex,
+  // handleConfidenceGraphClick,
   onSelectMistake,
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
   setIsPopularMode,
 }: GameInProgressContentProps) {
-  // eslint-disable-line
-
-  const theme = useTheme();
+  const theme = useTheme(); // eslint-disable-line
+  const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
+  const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
+  
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
@@ -60,11 +66,11 @@ export default function GameInProgressContent({
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
           <FeaturedMistakes
-            onSelectMistake={onSelectMistake}
             sortedMistakes={sortedMistakes}
             setSortedMistakes={setSortedMistakes}
             isPopularMode={isPopularMode}
             setIsPopularMode={setIsPopularMode}
+            onSelectMistake={onSelectMistake}
             featuredMistakesSelectionValue={featuredMistakesSelectionValue}
           />
           <Card />
@@ -72,8 +78,21 @@ export default function GameInProgressContent({
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <Card />
-          <Card />
+          <QuestionCard 
+           questionText={currentQuestion.text}
+           imageUrl={currentQuestion.imageUrl}
+           currentQuestionIndex={localGameSession.currentQuestionIndex}
+           currentState={localGameSession.currentState}
+          />
+          { currentQuestion.choices.map((choice, index) => 
+            <AnswerCard 
+              isCorrectAnswer={choice.isAnswer}
+              answerIndex={index}
+              answerContent={choice.text}
+              instructions={currentQuestion.instructions}
+              answerReason={choice.reason}
+            />
+          )}
         </ScrollBoxStyled>
       </Grid>
     </BodyContentAreaTripleColumnStyled>

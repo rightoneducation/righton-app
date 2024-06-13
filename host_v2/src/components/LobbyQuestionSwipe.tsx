@@ -49,7 +49,7 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
             <QuestionCard
               questionText={question.text}
               imageUrl={question.imageUrl}
-              index = {index}
+              currentQuestionIndex = {index}
                           />
           </Box>
         </BoxStyled>

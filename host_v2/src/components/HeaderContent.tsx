@@ -10,14 +10,13 @@ import HostPlayerIconContainer from '../lib/styledcomponents/HostPlayerIconConta
 import { LocalModel } from '../lib/HostModels';
 import Timer from './Timer';
 import TimerAddButton from '../lib/styledcomponents/TimerAddButton';
+import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
+import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+
 
 interface HeaderContentProps {
-  currentState: GameSessionState;
   isCorrect: boolean;
   isIncorrect: boolean;
-  totalQuestions?: number;
-  currentQuestionIndex?: number;
-  statePosition?: number;
   totalTime: number;
   currentTimer: number;
   isPaused: boolean;
@@ -26,10 +25,6 @@ interface HeaderContentProps {
 } // eslint-disable-line
 
 export default function HeaderContent({
-  currentState,
-  totalQuestions,
-  currentQuestionIndex,
-  statePosition,
   isCorrect,
   isIncorrect,
   totalTime,
@@ -40,7 +35,9 @@ export default function HeaderContent({
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
+  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
 
+  const statePosition = Object.keys(GameSessionState).indexOf(localGameSession.currentState);
   const stateMap = {
     [GameSessionState.NOT_STARTED]: t('gameinprogress.header.notstarted'),
     [GameSessionState.TEAMS_JOINING]: t('gameinprogress.header.teamsjoining'),
@@ -87,8 +84,8 @@ export default function HeaderContent({
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <QuestionIndicator
-              totalQuestions={totalQuestions}
-              currentQuestionIndex={currentQuestionIndex}
+              totalQuestions={localGameSession.questions.length}
+              currentQuestionIndex={localGameSession.currentQuestionIndex}
               statePosition={statePosition}
             />
           </Grid>
@@ -103,13 +100,13 @@ export default function HeaderContent({
         </Grid>
         <Grid item style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
           <Typography variant="h1" style={{ fontFamily: 'Poppins' }}>
-            {stateCheck(currentState, isCorrect, isIncorrect)}
+            {stateCheck(localGameSession.currentState, isCorrect, isIncorrect)}
           </Typography>
         </Grid>
         <Grid item>
           <Grid container justifyContent="space-between" alignItems="center">
-            {(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-              currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
+            {(localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+              localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
             localModel ? (
               <Timer
                 totalTime={totalTime}
