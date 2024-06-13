@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { IGameSession } from '@righton/networking';
 import { ConfidenceOption, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
@@ -20,14 +21,13 @@ import PaginationContainerStyled from '../lib/styledcomponents/PaginationContain
 import 'swiper/css';
 import 'swiper/css/pagination';
 import FeaturedMistakes from './FeaturedMistakes';
-import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
-import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
 
 interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
   // confidenceData: ConfidenceOption[];
   // confidenceGraphClickIndex: number | null;
   // handleConfidenceGraphClick: (selectedIndex: number | null) => void;
+  localGameSession: IGameSession;
   onSelectMistake: (answer: string, isSelected: boolean) => void;
   sortedMistakes: Mistake[];
   setSortedMistakes: (value: Mistake[]) => void;
@@ -39,6 +39,7 @@ export default function GameInProgressContent({
   // confidenceData,
   // confidenceGraphClickIndex,
   // handleConfidenceGraphClick,
+  localGameSession,
   onSelectMistake,
   sortedMistakes,
   setSortedMistakes,
@@ -46,7 +47,7 @@ export default function GameInProgressContent({
   setIsPopularMode,
 }: GameInProgressContentProps) {
   const theme = useTheme(); // eslint-disable-line
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
+  
   const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
   
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -215,7 +216,7 @@ export default function GameInProgressContent({
         {mediumScreen}
         <PaginationContainerStyled
           className="swiper-pagination-container"
-          style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
+          style={{ paddingTop: `${theme.sizing.lgPadding}px`, zIndex: 2 }}
         />
       </>
     );
@@ -225,7 +226,7 @@ export default function GameInProgressContent({
       {smallScreen}
       <PaginationContainerStyled
         className="swiper-pagination-container"
-        style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
+        style={{ paddingTop: `${theme.sizing.lgPadding}px`, zIndex: 2 }}
       />
     </>
   );

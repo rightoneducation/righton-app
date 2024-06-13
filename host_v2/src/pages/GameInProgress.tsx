@@ -9,6 +9,8 @@ import GameInProgressContent from '../components/GameInProgressContent';
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
 import FooterGameInProgress from '../components/FooterGameInProgress';
+import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
+import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
 
 interface GameInProgressProps {
   isCorrect: boolean,
@@ -40,9 +42,14 @@ export default function GameInProgress({
   setIsPopularMode,
 }: GameInProgressProps) {
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
+    const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
+    const teams = localGameSession.teams;
+    const answers = 
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
       setConfidenceGraphClickIndex(selectedIndex);
     };
+
+
 
     return(
       <StackContainerStyled>
@@ -60,6 +67,7 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <GameInProgressContent
+          localGameSession={localGameSession}
           // confidenceData={sampleConfidenceData}
           // confidenceGraphClickIndex={confidenceGraphClickIndex}
           // handleConfidenceGraphClick={handleConfidenceGraphClick}
