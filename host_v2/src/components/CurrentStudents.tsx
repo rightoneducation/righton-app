@@ -23,13 +23,13 @@ const GridStyled = styled(Grid)({
 
 const HrStyled = styled(Divider)({
   
-  marginTop: '30px',
+  // marginTop: '30px',
   marginBottom: '25px',
   width: '266px',
   height: '1px',
   borderRadius: '1.54px',
   border: '0',
-  borderTop: '1px solid rgba(255, 255, 255, 0.25)',
+  // borderTop: '1px solid rgba(255, 255, 255, 0.25)',
 
 })
 
@@ -61,7 +61,8 @@ const GridNameStyled = styled(Grid)({
 const BoxStyled = styled(Box)({
   width: '80px',
   height: '40px',
-  margin: 'auto',
+  // margin: 'auto',
+  marginTop: '170px',
 })
 
 function CurrentStudents ({ teams }: CurrentStudentProps) {
@@ -69,10 +70,6 @@ function CurrentStudents ({ teams }: CurrentStudentProps) {
 
     return (
         <Box>
-            <GridStyled>{teams ? teams.length : 0}</GridStyled>
-            <BoxStyled>
-                <PStyled>Students in Session</PStyled>
-            </BoxStyled>
             <HrStyled/>
             {teams && teams.map((team) => (
                 <MenuItemStyled key = {uuidv4()}>

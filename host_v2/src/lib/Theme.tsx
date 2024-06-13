@@ -251,7 +251,7 @@ export default createTheme({
     },
   },
   typography: {
-    fontFamily: 'Karla',
+    fontFamily: 'Poppins',
     h1: {
       // screen titles
       fontWeight: '800',
@@ -282,7 +282,7 @@ export default createTheme({
     },
     h5: {
       // card answer list letters (A, B, C, D, etc)
-      fontFamily: 'Karla',
+      fontFamily: 'Poppins',
       fontSize: '16px',
       fontWeight: 800,
       lineHeight: '19px',

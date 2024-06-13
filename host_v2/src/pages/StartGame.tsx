@@ -9,6 +9,7 @@ import HostHeader from '../components/HostHeader';
 import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
+import HostBody from '../components/HostBody';
 
 interface StartGameProps {
   teams: ITeam[]
@@ -18,31 +19,23 @@ interface StartGameProps {
 }  
 
 const BackgroundStyled = styled(Paper)({
-  display: 'flex',
   minHeight: '100vh',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)'
+  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  backgroundAttachment: 'fixed',
 })
 
-const UpperStyled = styled(Box)({
+const SafeAreaStyled = styled(Box)({
+  paddingTop: '47px',
+  paddingBottom: '34px',
+  width: '100%',
+  height: '100vh',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  gap: '24px',
-    
-})
-
-const GameStyled = styled(Typography)({
-  textAlign: 'center',
-  fontWeight: 'bold',
-  fontStyle: 'Italic',
-  fontSize: '18px',
-  color: 'rgba(255, 255, 255, 0.46)',
-  paddingTop: '10%',
-})
+  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  backgroundAttachment: 'fixed',
+  boxSizing: 'border-box',
+  gap: '16px',
+});
 
 function StartGame({teams,
   questions,
@@ -50,19 +43,13 @@ function StartGame({teams,
   gameCode,
   }: StartGameProps) {
     return (
-      <BackgroundStyled>
-        <UpperStyled>
-          <HostHeader 
-          gameCode = {gameCode}
+        <SafeAreaStyled>
+          <HostHeader gameCode = {gameCode} />
+          <HostBody teams={teams}/>
+          <FooterStartGame 
+          teamsLength={teams ? teams.length : 0}
           />
-          <GameCard questions = {questions} title={title} />
-          <GameStyled>Basic Mode</GameStyled>
-          <CurrentStudents teams={teams}/>
-        </UpperStyled>
-        <FooterStartGame 
-        teamsLength={teams ? teams.length : 0}
-        />
-      </BackgroundStyled>
+        </SafeAreaStyled>
     )
 
   }
