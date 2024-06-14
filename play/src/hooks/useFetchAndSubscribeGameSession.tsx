@@ -53,6 +53,7 @@ import {
         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
+            console.log(response);
             if (!response) {
               setError(`${t('error.connect.subscriptionerror')}`);
               return;

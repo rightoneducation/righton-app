@@ -41,6 +41,8 @@ export class GameSessionParser {
         if (!isNullOrUndefined(awsGameSession?.questions) && !isNullOrUndefined(awsGameSession?.questions.items)) {
             questions = GameSessionParser.mapQuestions(awsGameSession.questions.items);    
         }
+        console.log("Aws game session:");
+        console.log(awsGameSession);
       const {
           id,
           gameId,

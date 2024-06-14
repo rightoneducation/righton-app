@@ -76,6 +76,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
         parseInt(inputGameCodeValue, 10)
       );
+      console.log(gameSessionResponse);
       if (isNullOrUndefined(gameSessionResponse)) {
         return false;
       }
