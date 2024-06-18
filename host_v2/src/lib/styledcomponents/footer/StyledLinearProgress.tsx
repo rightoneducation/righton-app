@@ -7,11 +7,11 @@ export default styled(LinearProgress)(({ theme }) => ({
   left: '0',
   height: `${theme.sizing.answerBarHeight}px`,
   width: '100%',
-  borderRadius: `${theme.sizing.extraExtraSmallPadding}px`,
+  borderRadius: `${theme.sizing.xxSmPadding}px`,
   backgroundColor: theme.palette.primary.answerBarBackgroundColor,
-  marginBottom: `${theme.sizing.smallPadding}px`,
+  marginBottom: `${theme.sizing.smPadding}px`,
   '& .MuiLinearProgress-bar': {
     backgroundColor: theme.palette.primary.darkBlueCardColor,
-    borderRadius: `${theme.sizing.extraExtraSmallPadding}px`,
+    borderRadius: `${theme.sizing.xxSmPadding}px`,
   },
 }));

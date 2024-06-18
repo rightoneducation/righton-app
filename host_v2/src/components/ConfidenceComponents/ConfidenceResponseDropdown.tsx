@@ -23,39 +23,39 @@ interface DropdownProps {
 }
 
 const Container = styled(Box)(({ theme }) => ({
-  paddingTop: `${theme.sizing.smallPadding}px`,
-  paddingBottom: `${theme.sizing.smallPadding}px`,
+  paddingTop: `${theme.sizing.smPadding}px`,
+  paddingBottom: `${theme.sizing.smPadding}px`,
 }));
 
 const HeaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.extraSmallPadding}px`,
+  gap: `${theme.sizing.xSmPadding}px`,
 }));
 
 const DropDownContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flexEnd',
-  gap: `${theme.sizing.extraSmallPadding}px`,
+  gap: `${theme.sizing.xSmPadding}px`,
   alignSelf: 'stretch',
 }));
 
 const AnswerDataContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: `${theme.sizing.extraSmallPadding}px`,
+  gap: `${theme.sizing.xSmPadding}px`,
   justifyContent: 'center',
-  paddingRight: `${theme.sizing.extraSmallPadding}px`,
+  paddingRight: `${theme.sizing.xSmPadding}px`,
 }));
 
 const PlayerCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  gap: `${theme.sizing.extraSmallPadding}px`,
+  gap: `${theme.sizing.xSmPadding}px`,
   alignSelf: 'stretch',
-  borderRadius: `${theme.sizing.extraSmallPadding}px`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   background: `${theme.palette.primary.dropdownInfoBackgroundColor}`,
 }));
 
@@ -88,7 +88,7 @@ const NameText = styled(Typography)(({ theme }) => ({
   fontSize: `${theme.typography.h5.fontSize}`,
   fontWeight: `${theme.typography.body1.fontWeight}`,
   lineHeight: `${theme.typography.subtitle1.lineHeight}`,
-  paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+  paddingLeft: `${theme.sizing.xSmPadding}px`,
 }));
 
 const AnswerText = styled(Typography)(({ theme }) => ({

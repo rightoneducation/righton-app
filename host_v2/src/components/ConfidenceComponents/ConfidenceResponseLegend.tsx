@@ -8,19 +8,19 @@ const LegendContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: `${theme.sizing.smallPadding}px`,
+  marginTop: `${theme.sizing.smPadding}px`,
 }));
 
 const LabelStyled = styled(Typography)(({ theme }) => ({
   color: `${theme.palette.primary.playerFeedbackLabelColor}`,
   fontSize: `${theme.typography.caption.fontSize}`,
-  paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+  paddingLeft: `${theme.sizing.xSmPadding}px`,
 }));
 
 const KeyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
-  marginRight: `${theme.sizing.extraSmallPadding}px`,
+  marginRight: `${theme.sizing.xSmPadding}px`,
   alignItems: 'center',
 }));
 
