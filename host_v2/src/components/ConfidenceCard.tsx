@@ -37,7 +37,7 @@ const SmallTextContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   alignSelf: 'stretch',
-  marginTop: `${theme.sizing.extraSmallPadding}px`,
+  marginTop: `${theme.sizing.xSmPadding}px`,
 }));
 
 const InstructionsText = styled(Typography)(({ theme }) => ({

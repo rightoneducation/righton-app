@@ -11,9 +11,9 @@ export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme }) => ({
   width: '100%',
   height: '100%',
   overflow: 'hidden',
-  paddingTop: `${theme.sizing.smallPadding}px`,
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  paddingTop: `${theme.sizing.smPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
   zIndex: 2,
 }));
 
@@ -58,8 +58,8 @@ export const BodyContentAreaLeaderboardStyled = styled(
   alignItems: 'center',
   justifyContent: 'flex-start',
   maxWidth: '500px',
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
   height: '100%',
   overflow: 'scroll',
   flexWrap: 'nowrap',

@@ -4,5 +4,5 @@ import { Stack } from '@mui/material';
 export default styled(Stack)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
-  gap: `${theme.sizing.extraExtraSmallPadding}px`,
+  gap: `${theme.sizing.xxSmPadding}px`,
 }));

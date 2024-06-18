@@ -2,9 +2,9 @@ import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
 export const BaseQuestionIndicator = styled(Box)(({ theme }) => ({
-  width: `${theme.sizing.largePadding}px`,
-  height: `${theme.sizing.smallPadding}px`,
-  borderRadius: `${theme.sizing.extraExtraSmallPadding}px`,
+  width: `${theme.sizing.lgPadding}px`,
+  height: `${theme.sizing.smPadding}px`,
+  borderRadius: `${theme.sizing.xxSmPadding}px`,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -20,8 +20,8 @@ export const CurrentQuestionIndicator = styled(BaseQuestionIndicator)(
     background: theme.palette.primary.questionGradient,
     border: theme.borders.solidWhite,
     justifyContent: 'flex-start',
-    width: `${theme.sizing.extraExtraLargePadding}px`,
-    paddingLeft: `${theme.sizing.extraExtraSmallPadding}px`,
+    width: `${theme.sizing.xxLgPadding}px`,
+    paddingLeft: `${theme.sizing.xxSmPadding}px`,
     color: theme.palette.primary.darkBlue,
   }),
 );
