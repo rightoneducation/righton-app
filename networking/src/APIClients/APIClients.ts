@@ -18,8 +18,9 @@ import { TeamMemberAPIClient } from './TeamMemberAPIClient';
 import { TeamAnswerAPIClient } from './TeamAnswerAPIClient';
 import { Environment } from './BaseAPIClient';
 import { PlayDataManagerAPIClient } from './datamanagers/PlayDataManagerAPIClient';
+import { IPlayDataManagerAPIClient } from './datamanagers/interfaces/IPlayDataManagerAPIClient';
 import { HostDataManagerAPIClient } from './datamanagers/HostDataManagerAPIClient';
-import { IPlaySubscriptionManagerAPIClient, IHostSubscriptionManagerAPIClient } from './datamanagers/interfaces/IHostDataManagerAPIClient';
+import { IHostDataManagerAPIClient } from './datamanagers/interfaces/IHostDataManagerAPIClient';
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 
@@ -37,7 +38,7 @@ export class APIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
-  subscriptionManager: IPlaySubscriptionManagerAPIClient | IHostSubscriptionManagerAPIClient;
+  subscriptionManager: IPlayDataManagerAPIClient | IHostDataManagerAPIClient;
 
   constructor(env: Environment, appType: AppType) {
     this.configAmplify(awsconfig);

@@ -10,5 +10,5 @@ export * from './QuestionTemplateAPIClient';
 export * from './TeamAPIClient';
 export * from './TeamAnswerAPIClient';
 export * from './TeamMemberAPIClient';
-export * from './interfaces';
 export * from './datamanagers';
+export * from './interfaces';

@@ -1,4 +1,5 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
+import { Answer } from "./AnswerClasses";
 
 /* 
  * IHostTeamAnswers
