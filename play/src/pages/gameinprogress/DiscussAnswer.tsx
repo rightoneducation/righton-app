@@ -7,6 +7,7 @@ import {
   ITeam,
   IQuestion,
   IChoice,
+  IGameSession,
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -22,6 +23,8 @@ import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
+import ResultsCard from '../../components/ResultsCard';
+
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -33,6 +36,7 @@ interface DiscussAnswerProps {
   currentTeam: ITeam;
   currentQuestion: IQuestion;
   isShortAnswerEnabled: boolean;
+  gameSession: IGameSession;
 }
 
 export default function DiscussAnswer({
@@ -45,6 +49,7 @@ export default function DiscussAnswer({
   currentTeam,
   currentQuestion,
   isShortAnswerEnabled,
+  gameSession,
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -88,6 +93,13 @@ export default function DiscussAnswer({
             answerText={correctAnswer?.text ?? ''}
             answerIndex={correctIndex ?? 0}
             currentState={currentState}
+          />
+          <ResultsCard
+            gameSession={gameSession}
+            answers={answerChoices ?? []}
+            selectedAnswer={selectedAnswer ?? null}
+            currentState={currentState}
+            currentQuestionId={currentQuestion.id}
           />
         </Stack>
         {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
@@ -196,6 +208,7 @@ export default function DiscussAnswer({
     <BodyContentAreaSingleColumnStyled>
       <Box sx={{ width: '100%', height: '100%' }}>
         {questionCorrectAnswerContents}
+        
       </Box>
     </BodyContentAreaSingleColumnStyled>
   );

@@ -97,6 +97,7 @@ export default function GameSessionSwitch({
           localModel={localModel}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
+          gameSession={gameSession}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -116,6 +117,7 @@ export default function GameSessionSwitch({
           localModel={localModel}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
+          gameSession={gameSession}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
