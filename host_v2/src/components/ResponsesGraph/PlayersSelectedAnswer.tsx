@@ -104,23 +104,21 @@ const StyledRect = styled(Box)({
 
 
 interface PlayersSelectedAnswerProps {
-  props: {
-    data: any;
+    data: {answerCount: number, answerCorrect: boolean, answerChoice: string, answerText: string, answerTeams: ITeam[]}[];
     graphClickInfo: any;
     numPlayers: number;
     statePosition: number;
     isShortAnswerEnabled: boolean;
-  }
 }
 
-export default function PlayersSelectedAnswer({props}: PlayersSelectedAnswerProps) {
-  const {
-    data,
-    graphClickInfo,
-    numPlayers,
-    statePosition,
-    isShortAnswerEnabled
-  } = props;
+export default function PlayersSelectedAnswer({
+  data, 
+  graphClickInfo, 
+  numPlayers, 
+  statePosition, 
+  isShortAnswerEnabled
+}: PlayersSelectedAnswerProps) {
+
   const answerCount = data[graphClickInfo.selectedIndex].answerCount;
   const percentage = (answerCount / numPlayers) * 100;
   const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].answerTeams.map((team: ITeam) => team.name);

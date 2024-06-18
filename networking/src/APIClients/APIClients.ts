@@ -38,7 +38,7 @@ export class APIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
-  subscriptionManager: IPlayDataManagerAPIClient | IHostDataManagerAPIClient;
+  dataManager: IPlayDataManagerAPIClient | IHostDataManagerAPIClient;
 
   constructor(env: Environment, appType: AppType) {
     this.configAmplify(awsconfig);
@@ -50,10 +50,10 @@ export class APIClients {
     this.team = new TeamAPIClient(env);
     this.teamMember = new TeamMemberAPIClient(env);
     this.teamAnswer = new TeamAnswerAPIClient(env);
-    this.subscriptionManager = this.setSubscription(env, appType);
+    this.dataManager = this.setDataManager(env, appType);
   }
 
-  setSubscription(env: Environment, appType: AppType) {
+  setDataManager(env: Environment, appType: AppType) {
     if (appType === AppType.PLAY) {
       return new PlayDataManagerAPIClient(
         env,

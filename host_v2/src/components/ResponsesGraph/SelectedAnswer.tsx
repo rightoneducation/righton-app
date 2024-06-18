@@ -1,10 +1,85 @@
 import React from 'react';
-import { Typography, makeStyles } from '@material-ui/core';
+import { Typography, Box } from '@mui/material';
+import styled from '@mui/material/styles/styled';
+import Tooltip from '@mui/material/Tooltip';
+import { ITeam } from '@righton/networking';
 import check from '../../images/Pickedcheck.svg';
-import { Tooltip } from '@material-ui/core';
 import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
-export default function SelectedAnswer(props) {
+interface SelectedAnswerProps {
+  data: {answerCount: number, answerCorrect: boolean, answerChoice: string, answerText: string, answerTeams: ITeam[]}[];
+  correctChoiceIndex: number;
+  numPlayers: number;
+  statePosition: number;
+  graphClickInfo: any;
+  isShortAnswerEnabled: boolean;
+}
+
+const Text = styled(Typography)({
+  color: 'rgba(255, 255, 255, 0.6)',
+  textAlign: 'center',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: '400',
+});
+
+
+const TitleText = styled(Typography)({
+  color: '#FFF',
+  textAlign: 'left',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: '400',
+  paddingBottom: '10px',
+});
+
+const TextContainer = styled(Typography)({
+  color: '#FFF',
+  fontFamily: 'Rubik',
+  fontSize: '18px',
+  fontWeight: '400',
+  lineHeight: '22px',
+})
+
+const RectStyle = styled(Box)({
+  width: '100%',
+  height: '40px',
+  display: 'flex',
+  alignItems: 'center',
+  color: 'white',
+  fontSize: '16px',
+  padding: '10px',
+  borderRadius: '22px',
+  border: '1px solid #B1BACB',
+  position: 'relative',
+  maxWidth: '500px',
+  boxSizing: 'border-box',
+})
+
+const ChoiceContainer = styled(Box)({
+  color: 'rgba(255, 255, 255, 0.5)',
+  fontFamily: 'Poppins',
+  fontSize: '16px',
+  fontWeight: '800',
+  lineHeight: '20px',
+  paddingRight: '8px',
+})
+
+const ToolTip = styled(Box)({
+  whiteSpace: 'pre-line',
+  textAlign: 'center',
+})
+
+const Icon = styled(Box)({
+  position: 'absolute',
+  top: '50%',
+  right: '16px',
+  transform: 'translateY(-50%)',
+  display: 'flex',
+  alignItems: 'center',
+})
+
+export default function SelectedAnswer(props: SelectedAnswerProps) {
   const {
     data,
     correctChoiceIndex,
@@ -13,45 +88,44 @@ export default function SelectedAnswer(props) {
     graphClickInfo,
     isShortAnswerEnabled
   } = props;
-  const classes = useStyles();
   const showCustomTick =
     graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
   return (
-    <div>
+    <Box>
       {graphClickInfo.selectedIndex === null ? (
-        <Typography className={classes.text}>
+        <Text>
           Tap on a response to see more details.
-        </Typography>
+        </Text>
       ) : (
-        <div style={{ width: '100%' }}>
-          <Typography className={classes.titleText}>
+        <Box style={{ width: '100%' }}>
+          <TitleText>
             Showing players who answered:
-          </Typography>
-          <div className={classes.rectStyle}>
+          </TitleText>
+          <RectStyle>
             { !isShortAnswerEnabled &&
-            <div className={classes.choiceContainer}>
+            <ChoiceContainer>
               {data[graphClickInfo.selectedIndex].answerChoice}
-            </div>
+            </ChoiceContainer>
             }
-            <div className={classes.textContainer}>
+            <TextContainer>
               {data[graphClickInfo.selectedIndex].answerText}
-            </div>
+            </TextContainer>
             {showCustomTick && (
               <Tooltip
                 title={
-                  <div className={classes.tooltip}>
+                  <ToolTip>
                     This is the {'\n'} correct answer
-                  </div>
+                  </ToolTip>
                 }
                 placement="bottom"
                 arrow
               >
-                <span className={classes.checkIconStyle}>
+                <Icon>
                   <img src={check} alt="correct answer" />
-                </span>
+                </Icon>
               </Tooltip>
             )}
-          </div>
+          </RectStyle>
           <PlayersSelectedAnswer
             data={data}
             graphClickInfo={graphClickInfo}
@@ -59,67 +133,8 @@ export default function SelectedAnswer(props) {
             statePosition={statePosition}
             isShortAnswerEnabled={isShortAnswerEnabled}
           />
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
-
-const useStyles = makeStyles({
-  text: {
-    color: 'rgba(255, 255, 255, 0.6)',
-    textAlign: 'center',
-    fontFamily: 'Rubik',
-    fontSize: '14px',
-    fontWeight: '400',
-  },
-  choiceContainer: {
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontFamily: 'Poppins',
-    fontSize: '16px',
-    fontWeight: '800',
-    lineHeight: '20px',
-    paddingRight: '8px',
-  },
-  textContainer: {
-    color: '#FFF',
-    fontFamily: 'Rubik',
-    fontSize: '18px',
-    fontWeight: '400',
-    lineHeight: '22px',
-  },
-  titleText: {
-    color: '#FFF',
-    textAlign: 'left',
-    fontFamily: 'Rubik',
-    fontSize: '14px',
-    fontWeight: '400',
-    paddingBottom: '10px',
-  },
-  tooltip: {
-    whiteSpace: 'pre-line',
-    textAlign: 'center',
-  },
-  rectStyle: {
-    width: '100%',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    color: 'white',
-    fontSize: '16px',
-    padding: '10px',
-    borderRadius: '22px',
-    border: '1px solid #B1BACB',
-    position: 'relative',
-    maxWidth: '500px',
-    boxSizing: 'border-box',
-  },
-  checkIconStyle: {
-    position: 'absolute',
-    top: '50%',
-    right: '16px',
-    transform: 'translateY(-50%)',
-    display: 'flex',
-    alignItems: 'center',
-  },
-});

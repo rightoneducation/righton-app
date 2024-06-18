@@ -4,7 +4,7 @@ import { IHostTeamAnswers } from '../../Models';
 import { Environment } from '../interfaces/IBaseAPIClient';
 import { IGameSessionAPIClient } from '../interfaces';
 import { IGameSession } from '../../Models/IGameSession';
-import { BackendAnswer, Answer, NumericAnswer} from '../../Models/AnswerClasses';
+import { BackendAnswer, Answer, NumericAnswer, AnswerFactory } from '../../Models/AnswerClasses';
 import { ModelHelper } from '../../ModelHelper';
 
 export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
@@ -45,8 +45,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   // GameSession handling 
-
-  async initUpdateGameSessionSubscription(gameSessionId: string, callback: (gameSession: IGameSession) => void): Promise<IGameSession> {
+  async subscribeToUpdateGameSession(gameSessionId: string, callback: (gameSession: IGameSession) => void): Promise<IGameSession> {
     try {
       this.gameSessionId = gameSessionId;
       const fetchedGame = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
@@ -73,29 +72,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   // TeamAnswers handling 
-
   getHostTeamAnswers() {
     return this.hostTeamAnswers
-  }
-
-  async initCreateTeamAnswerSubscription(gameSessionId: string, callback: (teamAnswer: BackendAnswer) => void): Promise<IHostTeamAnswers> {
-    try {
-      this.gameSessionId = gameSessionId;
-      this.subscribeToCreateTeamAnswer(callback);
-      return this.hostTeamAnswers;
-    } catch (error) {
-      throw new Error (`Error: ${error}`)
-    }
-  }
-
-  async initUpdateTeamAnswerSubscription(gameSessionId: string, callback: (teamAnswer: BackendAnswer) => void): Promise<IHostTeamAnswers> {
-    try {
-      this.gameSessionId = gameSessionId;
-      this.subscribeToUpdateTeamAnswer(callback);
-      return this.hostTeamAnswers;
-    } catch (error) {
-      throw new Error (`Error: ${error}`)
-    }
   }
 
   // type guard to check for answer type at runtime (to ensure normAnswer: string[] | number[] is typesafe)
@@ -106,16 +84,26 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   private updateHostTeamAnswers(teamAnswer: BackendAnswer): IHostTeamAnswers {
     let isExistingAnswer = false;  
     let isCorrect = false;
+    const newAnswer = AnswerFactory.createAnswer(
+      teamAnswer.answer.rawAnswer, 
+      teamAnswer.answer.answerType, 
+      this.isAnswerNumeric(teamAnswer.answer) 
+        ? teamAnswer.answer.answerPrecision 
+        : undefined
+    );
+    if (newAnswer)
+      newAnswer.normalizeAnswer(newAnswer.rawAnswer);
+
     this.hostTeamAnswers.answers.forEach((answer) => {
-      if (this.isAnswerNumeric(teamAnswer.answer)){
-        if(teamAnswer.answer.isEqualTo(answer.normAnswer as number[])){
+      if (this.isAnswerNumeric(newAnswer)){
+        if(newAnswer.isEqualTo(answer.normAnswer as number[])){
           isExistingAnswer = true;
           answer.count += 1;
           answer.teams.push(teamAnswer.teamName);
           if (answer.isCorrect)
             isCorrect = true;
         }
-      } else if (teamAnswer.answer.isEqualTo(answer.normAnswer as string[])){
+      } else if (newAnswer.isEqualTo(answer.normAnswer as string[])){
         isExistingAnswer = true;
         answer.count += 1;
         answer.teams.push(teamAnswer.teamName);
@@ -127,8 +115,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     // if the answer is not already in the array, add it
     if (!isExistingAnswer){
       this.hostTeamAnswers.answers.push({
-        normAnswer: teamAnswer.answer.normAnswer as string[] | number[],
-        rawAnswer: teamAnswer.answer.rawAnswer,
+        normAnswer: newAnswer.normAnswer as string[] | number[],
+        rawAnswer: newAnswer.rawAnswer,
         count: 1,
         isCorrect,
         teams: [teamAnswer.teamName]
@@ -153,7 +141,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return this.hostTeamAnswers;
   }
 
-  protected async subscribeToCreateTeamAnswer(callback: (teamAnswer: any) => void) {
+  async subscribeToCreateTeamAnswer(callback: (hostTeamAnswers: IHostTeamAnswers) => void) {
     if (!this.gameSessionId) {
       console.error('Error: Invalid game session id');
       return;
@@ -163,12 +151,13 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team answer');
         return;
       }
+      console.log('TeamAnswer:', teamAnswer);
       this.hostTeamAnswers = this.updateHostTeamAnswers(teamAnswer);
-      callback(teamAnswer);
+      callback(this.hostTeamAnswers);
     });
   }
 
-  protected async subscribeToUpdateTeamAnswer(callback: (teamAnswer: any) => void) {
+  async subscribeToUpdateTeamAnswer(callback: (teamAnswer: any) => void) {
     if (!this.gameSessionId) {
       console.error('Error: Invalid game session id');
       return;
@@ -179,7 +168,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         return;
       }
       this.hostTeamAnswers = this.updateHostTeamAnswers(teamAnswer);
-      callback(teamAnswer);
+      callback(this.hostTeamAnswers);
     });
   }
 }

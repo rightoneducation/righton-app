@@ -219,6 +219,7 @@ export class MultiChoiceAnswer extends BaseAnswer<string> {
   }
 
   normalizeMultiChoiceAnswer(rawAnswer: string): NormAnswerType[] {
+    console.log('here!');
     const normAnswers: NormAnswerType[] = [];
     normAnswers.push(rawAnswer.trim());
     return normAnswers;

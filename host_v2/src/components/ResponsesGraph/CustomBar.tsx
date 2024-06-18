@@ -2,6 +2,7 @@ import React from 'react';
 import { Bar } from 'victory';
 import { Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
+import { ITeam } from '@righton/networking';
 
 const HighlightRectangle = styled(Box)({
   '&:hover': {
@@ -16,7 +17,7 @@ interface CustomBarProps {
     defaultVictoryPadding: number;
     selectedWidth: number;
     selectedHeight: number;
-    datum: any;
+    datum: {answerCount: number, answerCorrect: boolean, answerChoice: string, answerText: string, answerTeams: ITeam[]};
     index: number;
     graphClickInfo: any;
     handleGraphClick: (value: any) => void;

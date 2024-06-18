@@ -1,20 +1,29 @@
 import { useState, useEffect } from 'react';
-import { APIClients, IGameSession, IHostTeamAnswers, IHostSubscriptionManagerAPIClient } from '@righton/networking';
+import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient } from '@righton/networking';
 
 export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): IGameSession | null{
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  // const [answers, setAnswers] = <IHostTeamAnswers | null>(null);
+  const [hostTeamAnswers, setHostTeamAnswers] = useState<IHostTeamAnswers | null>(null);
+  console.log(gameSessionId);
   useEffect(() => {
-    const subscriptionManager = apiClients.subscriptionManager as IHostSubscriptionManagerAPIClient; //eslint-disable-line
-    subscriptionManager.initSubscription(gameSessionId, setGameSession)
-      .then((initialSession: IGameSession) => {
-        setGameSession(initialSession); 
-      })
+    const dataManager = apiClients.dataManager as IHostDataManagerAPIClient; //eslint-disable-line
+    try {
+      dataManager.initUpdateGameSessionSubscription(gameSessionId, setGameSession)
+        .then((initialSession: IGameSession) => {
+          setGameSession(initialSession); 
+      });
+      dataManager.subscribeToCreateTeamAnswer((teamAnswers) => {
+        setHostTeamAnswers(teamAnswers);
+        console.log(teamAnswers);
+      });
+    } catch (error) {
+      console.log('Error:', error);
+    }
 
     // eslint-disable-next-line consistent-return
     return () => {
-      subscriptionManager.cleanupSubscription();
+      dataManager.cleanupSubscription();
     };
-  }, [apiClients, gameSessionId]);
+  }, []); // eslint-disable-line
   return gameSession;
 }

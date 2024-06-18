@@ -185,6 +185,7 @@ export default function GameInProgress({
   // creates new team answer when student submits
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
+      console.log(answer);
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
