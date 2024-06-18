@@ -72,6 +72,8 @@ export const checkForSubmittedAnswerOnRejoin = (
     isShortAnswerEnabled,
     questionId: '',
     teamMemberAnswersId: '',
+    teamAnswersId: '',
+    teamName: '',
     text: ''
   };
   if (hasRejoined) {

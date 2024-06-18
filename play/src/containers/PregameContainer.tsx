@@ -141,8 +141,9 @@ export function PregameContainer({ apiClients }: PregameFinished) {
         const storageObject: LocalModel = {
           currentTime: new Date().getTime() / 60000,
           gameSessionId: gameSession.id,
-          teamId: teamInfo.teamId,
           teamMemberAnswersId: teamInfo.teamMemberAnswersId,
+          teamId: teamInfo.teamId,
+          teamName: `${firstName} ${lastName}`,
           selectedAvatar,
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,

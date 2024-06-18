@@ -573,6 +573,8 @@ export const createTeamAnswer = /* GraphQL */ `
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -596,6 +598,8 @@ export const updateTeamAnswer = /* GraphQL */ `
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -619,6 +623,8 @@ export const deleteTeamAnswer = /* GraphQL */ `
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel

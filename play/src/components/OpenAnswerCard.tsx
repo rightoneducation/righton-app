@@ -7,6 +7,7 @@ import {
   BackendAnswer,
   AnswerFactory,
   IAnswerSettings,
+  ITeam,
   GameSessionState,
   AnswerType,
   AnswerPrecision
@@ -30,6 +31,7 @@ interface OpenAnswerCardProps {
   currentQuestionIndex: number;
   questionId: string;
   teamMemberAnswersId: string;
+  currentTeam: ITeam  | null;
   handleSubmitAnswer: (result: BackendAnswer) => void;
 }
 
@@ -42,6 +44,7 @@ export default function OpenAnswerCard({
   currentQuestionIndex,
   questionId,
   teamMemberAnswersId,
+  currentTeam,
   handleSubmitAnswer,
 }: OpenAnswerCardProps) {
   const theme = useTheme();
@@ -97,6 +100,8 @@ export default function OpenAnswerCard({
       currentQuestionIndex,
       questionId,
       teamMemberAnswersId,
+      currentTeam?.id ?? '',
+      currentTeam?.name ?? '',
       currentAnswer
     );
     window.localStorage.setItem(
@@ -117,6 +122,8 @@ export default function OpenAnswerCard({
       currentQuestionIndex,
       questionId,
       teamMemberAnswersId,
+      currentTeam?.id ?? '',
+      currentTeam?.name ?? '',
       currentContents
     );
     handleSubmitAnswer(packagedAnswer);
@@ -236,6 +243,7 @@ export default function OpenAnswerCard({
             }
             questionId={questionId}
             teamMemberAnswersId={teamMemberAnswersId}
+            currentTeam={currentTeam}
           />
         </Box>
       </BodyCardContainerStyled>

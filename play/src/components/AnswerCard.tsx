@@ -7,6 +7,7 @@ import {
   GameSessionState,
   BackendAnswer,
   IChoice,
+  ITeam
 } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
@@ -24,6 +25,7 @@ interface AnswerCardProps {
   selectedAnswer: string | null;
   questionId: string;
   teamMemberAnswersId: string;
+  currentTeam: ITeam | null;
   handleSelectAnswer: (answerText: string) => void;
 }
 
@@ -37,6 +39,7 @@ export default function AnswerCard({
   selectedAnswer,
   questionId,
   teamMemberAnswersId,
+  currentTeam,
   handleSelectAnswer,
 }: AnswerCardProps) {
   const theme = useTheme();
@@ -118,6 +121,7 @@ export default function AnswerCard({
           isSelected={!isNullOrUndefined(selectedAnswer)}
           questionId={questionId}
           teamMemberAnswersId={teamMemberAnswersId}
+          currentTeam={currentTeam}
         />
       </BodyCardContainerStyled>
     </BodyCardStyled>

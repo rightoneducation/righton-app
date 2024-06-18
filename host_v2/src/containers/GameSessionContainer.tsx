@@ -27,7 +27,6 @@ export default function GameSessionContainer({apiClients, backendGameSession}: G
     case GameSessionState.PHASE_2_RESULTS:
       renderContent = (
         <GameInProgress 
-          localGameSession={localGameSession}
           isCorrect={false}
           isIncorrect={false}
           totalTime={100}

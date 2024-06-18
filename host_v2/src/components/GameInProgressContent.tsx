@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { IGameSession } from '@righton/networking';
 import { ConfidenceOption, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
@@ -11,7 +12,10 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
+import Responses from './Responses';
 import ConfidenceCard from './ConfidenceCard';
+import QuestionCard from './QuestionCard';
+import AnswerCard from './AnswerCard';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import 'swiper/css';
@@ -20,28 +24,32 @@ import FeaturedMistakes from './FeaturedMistakes';
 
 interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
-  confidenceData: ConfidenceOption[];
-  confidenceGraphClickIndex: number | null;
-  handleConfidenceGraphClick: (selectedIndex: number | null) => void;
+  // confidenceData: ConfidenceOption[];
+  // confidenceGraphClickIndex: number | null;
+  // handleConfidenceGraphClick: (selectedIndex: number | null) => void;
+  localGameSession: IGameSession;
   onSelectMistake: (answer: string, isSelected: boolean) => void;
   sortedMistakes: Mistake[];
   setSortedMistakes: (value: Mistake[]) => void;
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
 } // eslint-disable-line
+
 export default function GameInProgressContent({
-  confidenceData,
-  confidenceGraphClickIndex,
-  handleConfidenceGraphClick,
+  // confidenceData,
+  // confidenceGraphClickIndex,
+  // handleConfidenceGraphClick,
+  localGameSession,
   onSelectMistake,
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
   setIsPopularMode,
 }: GameInProgressContentProps) {
-  // eslint-disable-line
-
-  const theme = useTheme();
+  const theme = useTheme(); // eslint-disable-line
+  
+  const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
+  
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
@@ -54,17 +62,17 @@ export default function GameInProgressContent({
             graphClickIndex={confidenceGraphClickIndex}
             handleGraphClick={handleConfidenceGraphClick}
           /> */}
-          <Card />
+          <Responses />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
           <FeaturedMistakes
-            onSelectMistake={onSelectMistake}
             sortedMistakes={sortedMistakes}
             setSortedMistakes={setSortedMistakes}
             isPopularMode={isPopularMode}
             setIsPopularMode={setIsPopularMode}
+            onSelectMistake={onSelectMistake}
             featuredMistakesSelectionValue={featuredMistakesSelectionValue}
           />
           <Card />
@@ -72,8 +80,21 @@ export default function GameInProgressContent({
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-          <Card />
-          <Card />
+          <QuestionCard 
+           questionText={currentQuestion.text}
+           imageUrl={currentQuestion.imageUrl}
+           currentQuestionIndex={localGameSession.currentQuestionIndex}
+           currentState={localGameSession.currentState}
+          />
+          { currentQuestion.choices.map((choice, index) => 
+            <AnswerCard 
+              isCorrectAnswer={choice.isAnswer}
+              answerIndex={index}
+              answerContent={choice.text}
+              instructions={currentQuestion.instructions}
+              answerReason={choice.reason}
+            />
+          )}
         </ScrollBoxStyled>
       </Grid>
     </BodyContentAreaTripleColumnStyled>
@@ -195,7 +216,7 @@ export default function GameInProgressContent({
         {mediumScreen}
         <PaginationContainerStyled
           className="swiper-pagination-container"
-          style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
+          style={{ paddingTop: `${theme.sizing.lgPadding}px`, zIndex: 2 }}
         />
       </>
     );
@@ -205,7 +226,7 @@ export default function GameInProgressContent({
       {smallScreen}
       <PaginationContainerStyled
         className="swiper-pagination-container"
-        style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
+        style={{ paddingTop: `${theme.sizing.lgPadding}px`, zIndex: 2 }}
       />
     </>
   );

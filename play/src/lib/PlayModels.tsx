@@ -123,8 +123,9 @@ export enum ErrorType {
  */
 export interface LocalModel {
   gameSessionId: string;
-  teamId: string;
   teamMemberAnswersId: string;
+  teamId: string;
+  teamName: string;
   currentTime: number;
   currentTimer: number;
   selectedAvatar: number;

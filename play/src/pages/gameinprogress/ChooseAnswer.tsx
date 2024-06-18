@@ -138,6 +138,7 @@ export default function ChooseAnswer({
           handleSubmitAnswer={handleSubmitAnswer}
           questionId={questionId}
           teamMemberAnswersId={teamMemberAnswersId}
+          currentTeam={currentTeam}
         />
       ) : (
         <AnswerCard
@@ -151,6 +152,7 @@ export default function ChooseAnswer({
           handleSelectAnswer={handleSelectAnswer}
           questionId={questionId}
           teamMemberAnswersId={teamMemberAnswersId}
+          currentTeam={currentTeam}
         />
       )}
       {isSubmitted && !isSmallDevice ? (

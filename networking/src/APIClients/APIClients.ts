@@ -17,8 +17,10 @@ import { TeamAPIClient } from './TeamAPIClient';
 import { TeamMemberAPIClient } from './TeamMemberAPIClient';
 import { TeamAnswerAPIClient } from './TeamAnswerAPIClient';
 import { Environment } from './BaseAPIClient';
-import { PlaySubscriptionManagerAPIClient, HostSubscriptionManagerAPIClient } from './subscription/SubscriptionManagerAPIClient';
-import { IPlaySubscriptionManagerAPIClient, IHostSubscriptionManagerAPIClient } from './subscription/interfaces/ISubscriptionManagerAPIClient';
+import { PlayDataManagerAPIClient } from './datamanagers/PlayDataManagerAPIClient';
+import { IPlayDataManagerAPIClient } from './datamanagers/interfaces/IPlayDataManagerAPIClient';
+import { HostDataManagerAPIClient } from './datamanagers/HostDataManagerAPIClient';
+import { IHostDataManagerAPIClient } from './datamanagers/interfaces/IHostDataManagerAPIClient';
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 
@@ -36,7 +38,7 @@ export class APIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
-  subscriptionManager: IPlaySubscriptionManagerAPIClient | IHostSubscriptionManagerAPIClient;
+  dataManager: IPlayDataManagerAPIClient | IHostDataManagerAPIClient;
 
   constructor(env: Environment, appType: AppType) {
     this.configAmplify(awsconfig);
@@ -48,17 +50,17 @@ export class APIClients {
     this.team = new TeamAPIClient(env);
     this.teamMember = new TeamMemberAPIClient(env);
     this.teamAnswer = new TeamAnswerAPIClient(env);
-    this.subscriptionManager = this.setSubscription(env, appType);
+    this.dataManager = this.setDataManager(env, appType);
   }
 
-  setSubscription(env: Environment, appType: AppType) {
+  setDataManager(env: Environment, appType: AppType) {
     if (appType === AppType.PLAY) {
-      return new PlaySubscriptionManagerAPIClient(
+      return new PlayDataManagerAPIClient(
         env,
         this.gameSession,
       );
     } else {
-      return new HostSubscriptionManagerAPIClient(
+      return new HostDataManagerAPIClient(
         env,
         this.gameSession,
         this.question,

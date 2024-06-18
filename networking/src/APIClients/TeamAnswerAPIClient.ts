@@ -43,6 +43,8 @@ export class TeamAnswerAPIClient
           currentQuestionIndex: inputAnswer.currentQuestionIndex,
           questionId: inputAnswer.questionId,
           teamMemberAnswersId: inputAnswer.teamMemberAnswersId,
+          teamAnswersId: inputAnswer.teamAnswersId,
+          teamName: inputAnswer.teamName,
           text: inputAnswer.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
           confidenceLevel: ConfidenceLevel.NOT_RATED,
           hint: JSON.stringify(inputAnswer.hint)
@@ -114,6 +116,7 @@ export class TeamAnswerAPIClient
     id: string,
     callback: (result: BackendAnswer) => void
   ) {
+    console.log("subscribeCreateTeamAnswer");
     return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>(
         {
             query: onCreateTeamAnswer,
@@ -123,6 +126,8 @@ export class TeamAnswerAPIClient
         },
         (value: OnCreateTeamAnswerSubscription) => {
             let teamAnswer = this.mapOnCreateTeamAnswerSubscription(value)
+            console.log("apiClient");
+            console.log(teamAnswer);
             callback(teamAnswer)
         }
     )

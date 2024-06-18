@@ -155,6 +155,8 @@ type TeamAnswer @model {
   currentQuestionIndex: Int!
   questionId: ID!
   teamMemberAnswersId: ID!
+  teamAnswersId: ID
+  teamName: String
   text: String!
   answer: AWSJSON!
   confidenceLevel: ConfidenceLevel

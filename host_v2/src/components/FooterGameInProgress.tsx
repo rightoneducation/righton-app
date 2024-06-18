@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
-import ProgressBar from './ProgressBarGroup';
+import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
@@ -41,26 +41,22 @@ const ButtonStyled = styled(Button)({
 
 const FooterContainer = styled(Box)({
   position: 'sticky',
+  bottom: '0',
+  height: '144px',
+  width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  bottom: '0',
-  width: '100%',
-  gap: '16px',
-
+  justifyContent: 'flex-end',
+  padding: '16px 24px 24px 24px',
+  boxSizing: 'border-box'
 });
 
 const InnerFooterContainer = styled(Box)({
-  position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '92px',
-  gap: '8px',
-
+  gap: 16
 });
 
 interface FootStartGameProps {
@@ -82,9 +78,8 @@ function FooterStartGame({
 
   return (
     <FooterContainer>
-      <PaginationContainerStyled className="swiper-pagination-container" />
       <InnerFooterContainer>
-        <ProgressBar teamsLength={teamsLength} />
+        <ProgressBarGroup teamsLength={teamsLength} />
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>

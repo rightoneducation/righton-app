@@ -40,12 +40,13 @@ interface GameInProgressProps {
   teams: ITeam[];
   currentState: GameSessionState;
   teamMemberAnswersId: string;
+  teamId: string;
+  teamName: string;
   teamAvatar: number;
   phaseOneTime: number;
   phaseTwoTime: number;
   questions: IQuestion[];
   currentQuestionIndex: number;
-  teamId: string;
   score: number;
   answerChoices: IChoice[];
   hasRejoined: boolean;
@@ -59,12 +60,13 @@ export default function GameInProgress({
   teams,
   currentState,
   teamMemberAnswersId,
+  teamId,
+  teamName,
   teamAvatar,
   questions,
   phaseOneTime,
   phaseTwoTime,
   currentQuestionIndex,
-  teamId,
   score,
   answerChoices,
   hasRejoined,
@@ -183,6 +185,7 @@ export default function GameInProgress({
   // creates new team answer when student submits
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
+      console.log(answer);
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
@@ -228,6 +231,8 @@ export default function GameInProgress({
       currentQuestionIndex ?? 0,
       currentQuestion.id,
       teamMemberAnswersId,
+      teamId,
+      teamName,
       answerText
     )
     window.localStorage.setItem(
