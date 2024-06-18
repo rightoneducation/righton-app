@@ -98,7 +98,7 @@ export default function HeaderContent({
             </HostPlayerIconContainer>
           </Grid>
         </Grid>
-        <Grid item style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
+        <Grid item style={{ marginTop: `${theme.sizing.smPadding}px` }}>
           <Typography variant="h1" style={{ fontFamily: 'Poppins' }}>
             {stateCheck(localGameSession.currentState, isCorrect, isIncorrect)}
           </Typography>

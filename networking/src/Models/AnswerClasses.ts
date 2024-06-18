@@ -242,6 +242,8 @@ export class BackendAnswer {
   currentQuestionIndex: number;
   questionId: string;
   teamMemberAnswersId: string;
+  teamAnswersId: string;
+  teamName: string;
   text: string; // temporary to maintain build compatibility
   confidenceLevel?: ConfidenceLevel | null;
   hint?: IAnswerHint | null;
@@ -254,6 +256,8 @@ export class BackendAnswer {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
+    teamAnswerId: string,
+    teamName: string,
     text: string,
     id?: string | null,
     confidenceLevel?: ConfidenceLevel | null,
@@ -266,6 +270,8 @@ export class BackendAnswer {
     this.currentQuestionIndex = currentQuestionIndex;
     this.questionId = questionId;
     this.teamMemberAnswersId = teamMemberAnswersId;
+    this.teamAnswersId = teamAnswerId;
+    this.teamName = teamName;
     this.text = text;
     this.id = id ?? uuidv4();
     this.confidenceLevel = confidenceLevel;

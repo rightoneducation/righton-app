@@ -1228,6 +1228,8 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
                 currentQuestionIndex
                 questionId
                 teamMemberAnswersId
+                teamAnswersId
+                teamName
                 text
                 answer
                 confidenceLevel
@@ -1349,6 +1351,8 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
                 currentQuestionIndex
                 questionId
                 teamMemberAnswersId
+                teamAnswersId
+                teamName
                 text
                 answer
                 confidenceLevel
@@ -1470,6 +1474,8 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
                 currentQuestionIndex
                 questionId
                 teamMemberAnswersId
+                teamAnswersId
+                teamName
                 text
                 answer
                 confidenceLevel
@@ -1671,6 +1677,8 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
             currentQuestionIndex
             questionId
             teamMemberAnswersId
+            teamAnswersId
+            teamName
             text
             answer
             confidenceLevel
@@ -1746,6 +1754,8 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
             currentQuestionIndex
             questionId
             teamMemberAnswersId
+            teamAnswersId
+            teamName
             text
             answer
             confidenceLevel
@@ -1821,6 +1831,8 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
             currentQuestionIndex
             questionId
             teamMemberAnswersId
+            teamAnswersId
+            teamName
             text
             answer
             confidenceLevel
@@ -1872,6 +1884,8 @@ export const createTeamMember = /* GraphQL */ `mutation CreateTeamMember(
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
@@ -1910,6 +1924,8 @@ export const updateTeamMember = /* GraphQL */ `mutation UpdateTeamMember(
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
@@ -1948,6 +1964,8 @@ export const deleteTeamMember = /* GraphQL */ `mutation DeleteTeamMember(
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
@@ -1982,6 +2000,8 @@ export const createTeamAnswer = /* GraphQL */ `mutation CreateTeamAnswer(
     currentQuestionIndex
     questionId
     teamMemberAnswersId
+    teamAnswersId
+    teamName
     text
     answer
     confidenceLevel
@@ -2007,6 +2027,8 @@ export const updateTeamAnswer = /* GraphQL */ `mutation UpdateTeamAnswer(
     currentQuestionIndex
     questionId
     teamMemberAnswersId
+    teamAnswersId
+    teamName
     text
     answer
     confidenceLevel
@@ -2032,6 +2054,8 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
     currentQuestionIndex
     questionId
     teamMemberAnswersId
+    teamAnswersId
+    teamName
     text
     answer
     confidenceLevel

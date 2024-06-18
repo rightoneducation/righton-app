@@ -17,8 +17,9 @@ import { TeamAPIClient } from './TeamAPIClient';
 import { TeamMemberAPIClient } from './TeamMemberAPIClient';
 import { TeamAnswerAPIClient } from './TeamAnswerAPIClient';
 import { Environment } from './BaseAPIClient';
-import { PlaySubscriptionManagerAPIClient, HostSubscriptionManagerAPIClient } from './subscription/SubscriptionManagerAPIClient';
-import { IPlaySubscriptionManagerAPIClient, IHostSubscriptionManagerAPIClient } from './subscription/interfaces/ISubscriptionManagerAPIClient';
+import { PlayDataManagerAPIClient } from './datamanagers/PlayDataManagerAPIClient';
+import { HostDataManagerAPIClient } from './datamanagers/HostDataManagerAPIClient';
+import { IPlaySubscriptionManagerAPIClient, IHostSubscriptionManagerAPIClient } from './datamanagers/interfaces/IHostDataManagerAPIClient';
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 
@@ -53,12 +54,12 @@ export class APIClients {
 
   setSubscription(env: Environment, appType: AppType) {
     if (appType === AppType.PLAY) {
-      return new PlaySubscriptionManagerAPIClient(
+      return new PlayDataManagerAPIClient(
         env,
         this.gameSession,
       );
     } else {
-      return new HostSubscriptionManagerAPIClient(
+      return new HostDataManagerAPIClient(
         env,
         this.gameSession,
         this.question,

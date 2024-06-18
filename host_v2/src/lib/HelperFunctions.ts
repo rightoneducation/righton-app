@@ -1,4 +1,4 @@
-import { GameSessionState, ITeam } from '@righton/networking';
+import { GameSessionState, ITeam, ITeamMember } from '@righton/networking';
 import { ShortAnswerResponse, Mistake } from './HostModels';
 
 export const sortMistakes = (
@@ -26,12 +26,12 @@ export const sortMistakes = (
   return orderedMistakes;
 };
 
-export const extractAnswersByTeam =  (teams: ITeam[], currentState: GameSessionState, currentQuestionId: number) => {
-  let results = [{}];
+export const extractAnswersByTeam =  (teams: ITeam[], currentState: GameSessionState, currentQuestionId: string) => {
+  const results = [{}];
   teams.forEach((team: ITeam) => {
-    team.teamMembers && team.teamMembers.forEach(teamMember => {
-      teamMember.answers && teamMember.answers.forEach(answer => {
-        if (answer.questionId === currentQuestionId && answer.currentState === currentState) {
+    team.teamMembers && team.teamMembers.forEach((teamMember: ITeamMember) => {
+      teamMember.answers && teamMember.answers.forEach((answer: any) => {
+        if (answer && answer.questionId === currentQuestionId && answer.currentState === currentState) {
           results.push({team, answer});
         }
       });

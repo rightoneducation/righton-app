@@ -79,7 +79,7 @@ export default function ConfidenceResponsesGraph({
         },
         grid: { stroke: 'transparent' },
         tickLabels: {
-          padding: `${theme.sizing.extraSmallPadding}`,
+          padding: `${theme.sizing.xSmPadding}`,
           fill: `${theme.palette.primary.playerFeedbackLabelColor}`,
           fontSize: `${theme.typography.body2.fontSize}`,
         },
@@ -148,7 +148,7 @@ export default function ConfidenceResponsesGraph({
         dataComponent={
           <CustomBar
             selectedWidth={
-              theme.sizing.confidenceBarThickness + theme.sizing.smallPadding
+              theme.sizing.confidenceBarThickness + theme.sizing.xSmPadding
             }
             selectedHeight={200}
             graphClickIndex={graphClickIndex}

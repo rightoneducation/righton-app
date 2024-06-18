@@ -30,12 +30,12 @@ export default function AnswerCard({
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'flex-start',
-          marginTop: `${theme.sizing.extraSmallPadding}px`,
+          marginTop: `${theme.sizing.xSmPadding}px`,
         }}
       >
         <Typography
           sx={{
-            marginLeft: `${theme.sizing.smallPadding}px`,
+            marginLeft: `${theme.sizing.smPadding}px`,
             fontSize: `${theme.typography.h3.fontSize}px`,
             fontWeight: `${theme.typography.h3.fontWeight}`,
             color: `${theme.palette.primary.darkPurple}`,
@@ -45,7 +45,7 @@ export default function AnswerCard({
         </Typography>
         <Typography
           sx={{
-            marginLeft: `${theme.sizing.extraSmallPadding}px`,
+            marginLeft: `${theme.sizing.xSmPadding}px`,
           }}
         >
           {instructions !== null ? instructions[index] : null}
@@ -61,12 +61,12 @@ export default function AnswerCard({
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'flex-start',
-          marginTop: `${theme.sizing.extraSmallPadding}px`,
+          marginTop: `${theme.sizing.xSmPadding}px`,
         }}
       >
         <Typography
           sx={{
-            marginLeft: `${theme.sizing.extraSmallPadding}px`,
+            marginLeft: `${theme.sizing.xSmPadding}px`,
           }}
         >
           {answerReason}
@@ -88,7 +88,7 @@ export default function AnswerCard({
           >
             <Typography
               sx={{
-                marginRight: `${theme.sizing.extraSmallPadding}px`,
+                marginRight: `${theme.sizing.xSmPadding}px`,
                 fontWeight: `${theme.typography.h5.fontWeight}`,
                 opacity: 0.5,
               }}

@@ -361,6 +361,8 @@ export const getTeamAnswer = /* GraphQL */ `
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -386,6 +388,8 @@ export const listTeamAnswers = /* GraphQL */ `
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
