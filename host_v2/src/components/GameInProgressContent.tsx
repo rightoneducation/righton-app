@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession } from '@righton/networking';
+import { IGameSession, IHostTeamAnswers } from '@righton/networking';
 import { ConfidenceOption, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
@@ -28,6 +28,7 @@ interface GameInProgressContentProps {
   // confidenceGraphClickIndex: number | null;
   // handleConfidenceGraphClick: (selectedIndex: number | null) => void;
   localGameSession: IGameSession;
+  localHostTeamAnswers: IHostTeamAnswers;
   onSelectMistake: (answer: string, isSelected: boolean) => void;
   sortedMistakes: Mistake[];
   setSortedMistakes: (value: Mistake[]) => void;
@@ -40,6 +41,7 @@ export default function GameInProgressContent({
   // confidenceGraphClickIndex,
   // handleConfidenceGraphClick,
   localGameSession,
+  localHostTeamAnswers,
   onSelectMistake,
   sortedMistakes,
   setSortedMistakes,
@@ -62,7 +64,16 @@ export default function GameInProgressContent({
             graphClickIndex={confidenceGraphClickIndex}
             handleGraphClick={handleConfidenceGraphClick}
           /> */}
-          <Responses />
+          <Responses 
+            localHostTeamAnswers={localHostTeamAnswers}
+            numPlayers={8}
+            totalAnswers={6}
+            questionChoices={currentQuestion.choices.map((choice) => choice.text)}
+            statePosition={0}
+            graphClickInfo={null}
+            isShortAnswerEnabled={false}
+            handleGraphClick={() => {}}
+          />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>

@@ -100,7 +100,7 @@ const customVictoryTheme = {
       axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
       grid: { stroke: 'transparent' },
       tickLabels: {
-        padding: smPadding,
+        padding: mdPadding,
       },
     },
   },
@@ -119,10 +119,16 @@ const customVictoryTheme = {
   bar: {
     style: {
       data: {
+        fill: ({ datum, index }: any) =>
+          index === 0 ? 'transparent' : '#FFF',
         stroke: '#FFF',
         strokeWidth: 1,
       },
       labels: {
+        fill: ({ datum, index }: any) =>
+          index === 0 || datum.answerCount === 0
+            ? '#FFF'
+            : '#384466',
         fontFamily: 'Rubik',
         fontWeight: '400',
         textAnchor: 'end',

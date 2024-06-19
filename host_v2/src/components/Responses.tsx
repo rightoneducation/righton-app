@@ -1,8 +1,9 @@
 import React from 'react';
 import { LinearProgress, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
+import { IHostTeamAnswers, IHostTeamAnswersResponse } from '@righton/networking';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
-// import ResponsesGraph from './ResponsesGraph';
+import ResponsesGraph from './ResponsesGraph/ResponsesGraph';
 
 const ResponseContainer = styled(Box)({
   display: 'flex',
@@ -23,25 +24,36 @@ const TitleStyled = styled(Typography)({
   textAlign: 'left',
 })
 
+interface ResponsesProps {
+  localHostTeamAnswers: IHostTeamAnswers;
+  numPlayers: number;
+  totalAnswers: number;
+  questionChoices: string[];
+  statePosition: number;
+  graphClickInfo: any;
+  isShortAnswerEnabled: boolean;
+  handleGraphClick: (event: any) => void;
+}
+
 export default function Responses({
-  // data,
-  // numPlayers,
-  // totalAnswers,
-  // questionChoices,
-  // statePosition,
-  // graphClickInfo,
-  // isShortAnswerEnabled,
-  // handleGraphClick,
-}) {
-  
+  localHostTeamAnswers,
+  numPlayers,
+  totalAnswers,
+  questionChoices,
+  statePosition,
+  graphClickInfo,
+  isShortAnswerEnabled,
+  handleGraphClick,
+}: ResponsesProps) {
+  console.log(localHostTeamAnswers.responses); // eslint-disable-line
   return (
     <HostDefaultCardStyled>
       <ResponseContainer>
         <TitleStyled>
           Responses
         </TitleStyled>
-        {/* <ResponsesGraph
-          data={data}
+        <ResponsesGraph
+          data={localHostTeamAnswers.responses}
           numPlayers={numPlayers}
           totalAnswers={totalAnswers}
           questionChoices={questionChoices}
@@ -49,7 +61,7 @@ export default function Responses({
           graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
           handleGraphClick={handleGraphClick}
-        /> */}
+        />
       </ResponseContainer>
     </HostDefaultCardStyled>
   );

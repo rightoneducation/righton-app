@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
 import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient } from '@righton/networking';
 
-export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): IGameSession | null{
-  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  const [hostTeamAnswers, setHostTeamAnswers] = useState<IHostTeamAnswers | null>(null);
-  console.log(gameSessionId);
+export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { backendGameSession: IGameSession | null, backendHostTeamAnswers: IHostTeamAnswers } {
+  const dataManager = apiClients.dataManager as IHostDataManagerAPIClient; //eslint-disable-line
+  const [backendGameSession, setBackendGameSession] = useState<IGameSession | null>(null);
+  const [backendHostTeamAnswers, setBackendHostTeamAnswers] = useState<IHostTeamAnswers>({responses: [], confidences: [], hints: []});
   useEffect(() => {
-    const dataManager = apiClients.dataManager as IHostDataManagerAPIClient; //eslint-disable-line
     try {
-      dataManager.initUpdateGameSessionSubscription(gameSessionId, setGameSession)
+      dataManager.init(gameSessionId).then(() => {
+        setBackendGameSession(dataManager.getGameSession());
+        setBackendHostTeamAnswers(dataManager.getHostTeamAnswers());
+      })
+      dataManager.subscribeToUpdateGameSession(gameSessionId, setBackendGameSession)
         .then((initialSession: IGameSession) => {
-          setGameSession(initialSession); 
+          setBackendGameSession(initialSession); 
       });
       dataManager.subscribeToCreateTeamAnswer((teamAnswers) => {
-        setHostTeamAnswers(teamAnswers);
+        setBackendHostTeamAnswers(dataManager.getHostTeamAnswers());
         console.log(teamAnswers);
       });
     } catch (error) {
@@ -25,5 +28,5 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
       dataManager.cleanupSubscription();
     };
   }, []); // eslint-disable-line
-  return gameSession;
+  return { backendGameSession, backendHostTeamAnswers };
 }

@@ -1,27 +1,10 @@
 import React, {useCallback} from 'react';
 import { VictoryLabel } from 'victory';
 import { useTheme } from '@mui/material/styles';
-import check from '../../images/Pickedcheck_white.svg';
+import check from '../../img/Pickedcheck_white.svg';
 
-interface CustomLabelProps {
-  props: {
-    x: number;
-    y: number;
-    datum: any;
-    noResponseLabel: string;
-    isShortAnswerEnabled: boolean;
-  };
-};
-
-export default function CustomLabel({props}: CustomLabelProps) {
-  const {
-    x,
-    y,
-    datum,
-    noResponseLabel,
-    isShortAnswerEnabled,
-  } = props;
-
+export default function CustomLabel(props: any) {
+  const {x, y, datum, noResponseLabel, isShortAnswerEnabled} = props;
   const theme = useTheme();
   // done to prevent embedding a nested ternary in the render function
   const labelPadding = useCallback(() => {

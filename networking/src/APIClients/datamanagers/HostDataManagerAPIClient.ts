@@ -5,7 +5,7 @@ import { Environment } from '../interfaces/IBaseAPIClient';
 import { IGameSessionAPIClient } from '../interfaces';
 import { IGameSession } from '../../Models/IGameSession';
 import { BackendAnswer, Answer, NumericAnswer, AnswerFactory } from '../../Models/AnswerClasses';
-import { ModelHelper } from '../../ModelHelper';
+// import { ModelHelper } from '../../ModelHelper';
 
 export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   protected questionAPIClient: IQuestionAPIClient;
@@ -29,7 +29,21 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     this.teamAPIClient = teamAPIClient;
     this.teamMemberAPIClient = teamMemberAPIClient;
     this.teamAnswerAPIClient = teamAnswerAPIClient;
-    this.hostTeamAnswers = {answers: [], confidence: [], hints: []};
+    this.hostTeamAnswers = {responses: [], confidences: [], hints: []};
+  }
+
+  async init(gameSessionId: string){
+    this.hostTeamAnswers = {responses: [
+      {
+        normAnswer: ['No Response'],
+        rawAnswer: 'No Response',
+        count: 5,
+        isCorrect: false,
+        teams: []
+      },
+    ], confidences: [], hints: []};
+    this.gameSessionId = gameSessionId;
+    this.gameSession = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
   }
 
   cleanupSubscription() {
@@ -49,17 +63,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     try {
       this.gameSessionId = gameSessionId;
       const fetchedGame = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
-      const currentQuestion = fetchedGame.questions[fetchedGame.currentQuestionIndex];
-      const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion) ?? null;
-      if (correctAnswer){
-        this.hostTeamAnswers.answers.push({
-          normAnswer: [correctAnswer.text] as string[] | number[],
-          rawAnswer: correctAnswer.text,
-          count: 0,
-          isCorrect: true,
-          teams: []
-        });
-      }
+      // const currentQuestion = fetchedGame.questions[fetchedGame.currentQuestionIndex];
+      // const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion) ?? null;
       if (!fetchedGame || !fetchedGame.id) {
         throw new Error('Invalid game session');
       }
@@ -91,30 +96,34 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         ? teamAnswer.answer.answerPrecision 
         : undefined
     );
+
     if (newAnswer)
       newAnswer.normalizeAnswer(newAnswer.rawAnswer);
 
-    this.hostTeamAnswers.answers.forEach((answer) => {
+    this.hostTeamAnswers.responses.forEach((response) => {
       if (this.isAnswerNumeric(newAnswer)){
-        if(newAnswer.isEqualTo(answer.normAnswer as number[])){
+        if(newAnswer.isEqualTo(response.normAnswer as number[])){
           isExistingAnswer = true;
-          answer.count += 1;
-          answer.teams.push(teamAnswer.teamName);
-          if (answer.isCorrect)
+          response.count += 1;
+          response.teams.push(teamAnswer.teamName);
+          if (response.isCorrect)
             isCorrect = true;
         }
-      } else if (newAnswer.isEqualTo(answer.normAnswer as string[])){
+      } else if (newAnswer.isEqualTo(response.normAnswer as string[])){
         isExistingAnswer = true;
-        answer.count += 1;
-        answer.teams.push(teamAnswer.teamName);
-          if (answer.isCorrect)
+        response.count += 1;
+        response.teams.push(teamAnswer.teamName);
+          if (response.isCorrect)
             isCorrect = true;
       }
+      // update no response object in responses[] while we are iterating the array
+      if (response.rawAnswer === 'No Response')
+        response.count -= 1;
     });
 
     // if the answer is not already in the array, add it
     if (!isExistingAnswer){
-      this.hostTeamAnswers.answers.push({
+      this.hostTeamAnswers.responses.push({
         normAnswer: newAnswer.normAnswer as string[] | number[],
         rawAnswer: newAnswer.rawAnswer,
         count: 1,
@@ -124,7 +133,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
 
     if (teamAnswer.confidenceLevel) {
-      this.hostTeamAnswers.confidence.find((confidence) => confidence.level === teamAnswer.confidenceLevel)?.responses.push({
+      this.hostTeamAnswers.confidences.find((confidence) => confidence.level === teamAnswer.confidenceLevel)?.responses.push({
         team: teamAnswer.teamName,
         answer: teamAnswer.answer,
         isCorrect

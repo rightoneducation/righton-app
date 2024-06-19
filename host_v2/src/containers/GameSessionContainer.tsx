@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { GameSessionState, IGameSession, APIClients} from '@righton/networking';
+import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers} from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
@@ -10,11 +10,14 @@ import StartGame from '../pages/StartGame';
 interface GameSessionContainerProps {
   apiClients: APIClients;
   backendGameSession: IGameSession;
+  backendHostTeamAnswers: IHostTeamAnswers;
 }
 
-export default function GameSessionContainer({apiClients, backendGameSession}: GameSessionContainerProps) {
+export default function GameSessionContainer({apiClients, backendGameSession, backendHostTeamAnswers}: GameSessionContainerProps) {
   const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
-
+  console.log("GameSessionContainer");
+  console.log(backendHostTeamAnswers);
+  const [localHostTeamAnswers, setLocalHostTeamAnswers] = React.useState<IHostTeamAnswers>(backendHostTeamAnswers);
   const handleDeleteTeam = () => {};
 
   let renderContent;
@@ -39,6 +42,7 @@ export default function GameSessionContainer({apiClients, backendGameSession}: G
           setSortedMistakes={() => {}}
           isPopularMode={false}
           setIsPopularMode={() => {}}
+          localHostTeamAnswers={localHostTeamAnswers}
         />
       );
       break;

@@ -2,40 +2,16 @@ import React from 'react';
 import { VictoryLabel } from 'victory';
 import { Tooltip, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import check from '../../images/Pickedcheck.svg';
-import noResponse from '../../images/noResponse.svg';
-
-const StyledVictoryLabel = styled(VictoryLabel, {
-  shouldForwardProp: (prop) => prop !== 'fillTick',
-})(({fillTick}) => ({
-  fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
-  fontFamily: 'Poppins',
-  fontWeight: '800',
-  fontSize: '16px',
-}));
+import check from '../../img/Pickedcheck.svg';
+import noResponse from '../../img/noResponse.svg';
 
 const TooltipBox = styled(Box)({
   whiteSpace: 'pre-line',
   textAlign: 'center',
 })
 
-interface CustomTickProps {
-    x: number;
-    y: number;
-    index: number;
-    text: string;
-    correctChoiceIndex: number;
-    statePosition: number;
-};
-
-export default function CustomTick({
-  x,
-  y,
-  index,
-  text,
-  correctChoiceIndex,
-  statePosition,
-}: CustomTickProps) {
+export default function CustomTick(props: any) {
+  const { x, y, index, text, correctChoiceIndex, statePosition } = props;
   const theme = useTheme();
   const showCustomTick = index ===  correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
@@ -82,7 +58,17 @@ export default function CustomTick({
           </Tooltip>
         </foreignObject>
       ) : (
-        <StyledVictoryLabel x={x} y={y} text={text} fillTick={fillTick}/>
+        <VictoryLabel 
+          x={x} 
+          y={y} 
+          text={text} 
+          style={{
+            fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
+            fontFamily: 'Poppins',
+            fontWeight: '800',
+            fontSize: '16px',
+          }}
+        />
       )}
     </g>
   );
