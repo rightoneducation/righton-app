@@ -93,43 +93,6 @@ export default function ResponsesGraph({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  const customVictoryTheme = {
-    axis: {
-      style: {
-        axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
-        grid: { stroke: 'transparent' },
-        tickLabels: {
-          padding: theme.sizing.smPadding,
-        },
-      },
-    },
-    dependentAxis: {
-      style: {
-        axis: { stroke: 'transparent' },
-        grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
-        tickLabels: {
-          fill: 'rgba(255, 255, 255, 0.5)',
-          fontFamily: 'Rubik',
-          fontWeight: '400',
-          fontSize: '12px',
-        },
-      },
-    },
-    bar: {
-      style: {
-        data: {
-          stroke: '#FFF',
-          strokeWidth: 1,
-        },
-        labels: {
-          fontFamily: 'Rubik',
-          fontWeight: '400',
-          textAnchor: 'end',
-          fontSize: '12px',
-        },
-      },
-    },
-  };
   return (
      <ResponseGraphContainer>
       <TitleContainer>
