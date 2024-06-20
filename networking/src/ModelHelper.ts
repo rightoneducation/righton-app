@@ -120,6 +120,7 @@ export abstract class ModelHelper {
         ))
     }
     static calculateBasicModeScoreForQuestion(gameSession: IGameSession, question: IQuestion, team: ITeam, isShortAnswerEnabled: boolean) {
+        console.log("MADE IT IN");
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length === 0) {
             console.error("No team member exists for the specified team")
@@ -129,7 +130,8 @@ export abstract class ModelHelper {
         const answers = this.getBasicTeamMemberAnswersToQuestionId(team, question.id)
         if (isNullOrUndefined(answers) ||
             answers.length === 0) {
-            return 0
+                console.log("answer length is 0");
+                return 0;
         }
 
         const correctAnswer = this.getCorrectAnswer(question)
@@ -137,17 +139,52 @@ export abstract class ModelHelper {
         let submittedTrickAnswer = answers.find(answer => (!this.isAnswerFromPhaseOne(answer)) && answer?.questionId === currentQuestion.id)
 
         if (submittedTrickAnswer){
-          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
+            console.log("HERE");
+            return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
         } else {
-            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
-                return this.correctAnswerScore
+            // loads of logging to see whats going on
+            console.log("isShortAnswerEnabled:", isShortAnswerEnabled);
+            console.log("answers:", answers);
+            console.log("correctAnswer:", correctAnswer);
+            console.log("currentQuestion:", currentQuestion);
+            console.log("gameSession.currentState:", gameSession?.currentState);
+    
+            const answerFound = answers.find(answer => {
+                const fromPhaseOne = this.isAnswerFromPhaseOne(answer);
+                const textMatch = answer?.text === correctAnswer?.text;
+                const questionIdMatch = answer?.questionId === currentQuestion.id;
+                const phaseMatch = gameSession?.currentState === GameSessionState.PHASE_1_RESULTS;
+    
+                // Log each condition
+                console.log("Checking answer:", answer);
+                console.log("From Phase One:", fromPhaseOne);
+                console.log("Text Match:", textMatch);
+                console.log("Question ID Match:", questionIdMatch);
+                console.log("Phase Match:", phaseMatch);
+    
+                return fromPhaseOne && textMatch && questionIdMatch && phaseMatch;
+            });
+    
+            console.log("answerFound:", answerFound);
+
+
+            // changing this from PHASE_!_RESULTS to discuss
+            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_DISCUSS)){
+                console.log("HERE1");
+                return this.correctAnswerScore;
             } else {
                 const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses
-                if (isNullOrUndefined(teamResponses))
-                    return 0
-                if (ModelHelper.isShortAnswerResponseCorrect(teamResponses, team))
-                    return this.correctAnswerScore 
+                if (isNullOrUndefined(teamResponses)){
+                    console.log("HERE2");
+                    return 0;
+                }
+                if (ModelHelper.isShortAnswerResponseCorrect(teamResponses, team)){
+                    console.log("HERE3");
+                    return this.correctAnswerScore;
+
+                }
             }
+            console.log("HERE4");
             return 0;
         }
    

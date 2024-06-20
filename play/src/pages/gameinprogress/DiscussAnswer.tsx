@@ -24,7 +24,7 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import ResultsCard from '../../components/ResultsCard';
-
+// import { useTeamScore } from '../../hooks/useTeamScore';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -55,6 +55,8 @@ export default function DiscussAnswer({
   const { t } = useTranslation();
   const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
   const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
+  
+  
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
@@ -213,3 +215,200 @@ export default function DiscussAnswer({
     </BodyContentAreaSingleColumnStyled>
   );
 }
+// import React from 'react';
+// import { useTheme } from '@mui/material/styles';
+// import { Typography, Grid, Stack } from '@mui/material';
+// import {
+//   GameSessionState,
+//   IChoice,
+//   IGameSession,
+//   ITeam,
+//   IQuestion,
+//   IAPIClients,
+//   ModelHelper,
+// } from '@righton/networking';
+// import { useTranslation } from 'react-i18next';
+// import QuestionCard from '../../components/QuestionCard';
+// import DiscussAnswerCard from '../../components/DiscussAnswerCard';
+// import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
+// import { AnswerState } from '../../lib/PlayModels';
+// import { v4 as uuidv4 } from 'uuid';
+// import {
+//   BodyContentAreaDoubleColumnStyled,
+// } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
+// import ResultsCard from '../../components/ResultsCard';
+// import { useTeamScore } from '../../hooks/useTeamScore';
+
+// interface DiscussAnswerProps {
+//   isSmallDevice: boolean;
+//   questionText: string[];
+//   questionUrl: string;
+//   answerChoices: IChoice[] | undefined;
+//   instructions: string[];
+//   currentState: GameSessionState;
+//   currentTeam: ITeam;
+//   currentQuestion: IQuestion;
+//   isShortAnswerEnabled: boolean;
+//   gameSession: IGameSession;
+//   apiClients: IAPIClients;
+//   score: number;
+//   hasRejoined: boolean;
+//   currentQuestionIndex: number;
+// }
+// interface BackendAnswer {
+//   id: string;
+//   text: string;
+//   reason?: string;
+//   isAnswer?: boolean;
+// }
+// export default function DiscussAnswer({
+//   isSmallDevice,
+//   questionText,
+//   questionUrl,
+//   answerChoices,
+//   instructions,
+//   currentState,
+//   currentTeam,
+//   currentQuestion,
+//   isShortAnswerEnabled,
+//   gameSession,
+//   apiClients,
+//   score,
+//   hasRejoined,
+//   currentQuestionIndex,
+// }: DiscussAnswerProps) {
+//   const theme = useTheme();
+//   const { t } = useTranslation();
+
+//   const {
+//     isError,
+//     newPoints,
+//     selectedAnswer,
+//     handleRetry,
+//   } = useTeamScore({
+//     apiClients,
+//     teams: [currentTeam],
+//     currentState,
+//     currentQuestionIndex,
+//     teamId: currentTeam.id,
+//     gameSession,
+//     score,
+//     hasRejoined,
+//     isShortAnswerEnabled,
+//   });
+
+//   const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
+//   const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
+  
+//   const isPlayerCorrect = isShortAnswerEnabled
+//     ? ModelHelper.isShortAnswerResponseCorrect(
+//         currentQuestion.responses ?? [],
+//         currentTeam
+//       )
+//     : correctAnswer?.text === selectedAnswer?.text;
+
+//   const questionCorrectAnswerContents = (
+//     <>
+//       <Typography
+//         variant="h2"
+//         sx={{
+//           marginTop: `${theme.sizing.smallPadding}px`,
+//           marginBottom: `${theme.sizing.smallPadding}px`,
+//           textAlign: 'center',
+//         }}
+//       >
+//         {t('gameinprogress.discussanswer.questionanswercolumn')}
+//       </Typography>
+//       <ScrollBoxStyled>
+//         <Stack spacing={2}>
+//           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
+//           <DiscussAnswerCard
+//             isPlayerCorrect={isPlayerCorrect}
+//             instructions={instructions}
+//             answerStatus={
+//               isPlayerCorrect
+//                 ? AnswerState.PLAYER_SELECTED_CORRECT
+//                 : AnswerState.CORRECT
+//             }
+//             answerText={correctAnswer?.text ?? ''}
+//             answerIndex={correctIndex ?? 0}
+//             currentState={currentState}
+//           />
+//           <ResultsCard
+//             gameSession={gameSession}
+//             answers={answerChoices ?? []}
+//             selectedAnswer={selectedAnswer ?? null}
+//             currentState={currentState}
+//             currentQuestionId={currentQuestion.id}
+//           />
+//         </Stack>
+//         {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
+//           <Typography
+//             variant="body1"
+//             sx={{
+//               textAlign: 'center',
+//               marginTop: `${theme.sizing.largePadding}px`,
+//               opacity: 0.5,
+//             }}
+//           >
+//             {t('gameinprogress.general.swipealert')}
+//           </Typography>
+//         )}
+//       </ScrollBoxStyled>
+//     </>
+//   );
+
+//   const incorrectAnswerContents = (
+//     <>
+//       <Typography
+//         variant="h2"
+//         sx={{
+//           marginTop: `${theme.sizing.smallPadding}px`,
+//           marginBottom: `${theme.sizing.smallPadding}px`,
+//           textAlign: 'center',
+//         }}
+//       >
+//         {t('gameinprogress.discussanswer.incorrectanswercolumn')}
+//       </Typography>
+//       <ScrollBoxStyled>
+//         <Stack spacing={2}>
+//           {answerChoices?.map(
+//             (answer, index) =>
+//               !answer.isAnswer && (
+//                 <DiscussAnswerCard
+//                   isPlayerCorrect={isPlayerCorrect}
+//                   instructions={instructions ?? ''}
+//                   answerStatus={
+//                     answer.text === selectedAnswer?.text
+//                       ? AnswerState.SELECTED
+//                       : AnswerState.DEFAULT
+//                   }
+//                   answerText={answer.text}
+//                   answerIndex={index}
+//                   answerReason={answer.reason ?? ''}
+//                   currentState={currentState}
+//                   key={uuidv4()}
+//                 />
+//               )
+//           )}
+//         </Stack>
+//       </ScrollBoxStyled>
+//     </>
+//   );
+
+//   return currentState === GameSessionState.PHASE_2_DISCUSS ? (
+//     <BodyContentAreaDoubleColumnStyled
+//       container
+//       spacing={isSmallDevice ? 0 : 2}
+//     >
+//       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+//         {isSmallDevice ? incorrectAnswerContents : questionCorrectAnswerContents}
+//       </Grid>
+//       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+//         {isSmallDevice ? questionCorrectAnswerContents : incorrectAnswerContents}
+//       </Grid>
+//     </BodyContentAreaDoubleColumnStyled>
+//   ) : (
+//     <div>/* Other content based on different game states */</div>
+//   );
+// }
