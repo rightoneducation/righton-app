@@ -22,6 +22,7 @@ interface GameSessionSwitchProps {
   hasRejoined: boolean;
   gameSession: IGameSession;
   localModel: LocalModel;
+  newPoints: number;
 }
 
 export default function GameSessionSwitch({
@@ -30,6 +31,7 @@ export default function GameSessionSwitch({
   hasRejoined,
   gameSession,
   localModel,
+  newPoints,
 }: GameSessionSwitchProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(
     !hasRejoined
@@ -98,9 +100,28 @@ export default function GameSessionSwitch({
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}
+          newPoints={0}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+      return (
+        <GameInProgress
+          {...gameSession}
+          apiClients={apiClients}
+          teamMemberAnswersId={localModel.teamMemberAnswersId}
+          teamAvatar={localModel.selectedAvatar}
+          answerChoices={answerChoices}
+          teamId={localModel.teamId}
+          score={score}
+          hasRejoined={hasRejoined}
+          currentTimer={currentTimer}
+          localModel={localModel}
+          currentQuestionIndex={gameSession.currentQuestionIndex}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          gameSession={gameSession}
+          newPoints={0}
+        />
+      );
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.PHASE_2_DISCUSS:
       return (
@@ -118,6 +139,7 @@ export default function GameSessionSwitch({
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}
+          newPoints={newPoints}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:

@@ -95,6 +95,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}
       gameSession={subscription.gameSession}
+      newPoints={subscription.newPoints}
       {...props}
     />
   );

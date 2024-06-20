@@ -54,7 +54,7 @@ interface GameInProgressProps {
   localModel: LocalModel;
   isShortAnswerEnabled: boolean;
   gameSession: IGameSession;
-
+  newPoints: number;
 }
 
 export default function GameInProgress({
@@ -75,6 +75,7 @@ export default function GameInProgress({
   localModel,
   isShortAnswerEnabled,
   gameSession,
+  newPoints,
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
@@ -350,6 +351,7 @@ export default function GameInProgress({
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           score={score}
+          newPoints={newPoints}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

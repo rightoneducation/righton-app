@@ -204,7 +204,7 @@ export default function useFetchAndSubscribeGameSession(
               console.log("PHASE_1_DISCUSS or PHASE_2_DISCUSS found");
               const currentQuestionIndex = response.currentQuestionIndex ?? 0;
               const currentQuestion = response.questions[currentQuestionIndex];
-              const teamId = '5f2681c2-9a8d-43cd-a062-5eb44e882419';
+              const teamId = 'b4be4220-821f-4536-928c-55967d40afe3';
               const currentTeam = response.teams?.find((team) => team.id === teamId);
               const currName = currentTeam?.name;
               console.log(currName);
