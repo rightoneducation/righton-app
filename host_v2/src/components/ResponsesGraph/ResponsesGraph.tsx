@@ -93,13 +93,15 @@ export default function ResponsesGraph({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+  console.log(data);
+  console.log(largestAnswerCount);
   return (
      <ResponseGraphContainer>
       <TitleContainer>
         <TitleText>Number of players</TitleText>
       </TitleContainer>
       <Box ref={graphRef}>
-        {(isShortAnswerEnabled ? data.length >= 1 : data.length > 1) && (
+        {(isShortAnswerEnabled ? data.length >= 1 : data.length >= 1) && (
         <VictoryChart
           domainPadding={{ x: 36, y: 0 }}
           padding={{

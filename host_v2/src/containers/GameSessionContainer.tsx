@@ -19,7 +19,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   console.log(backendHostTeamAnswers);
   const [localHostTeamAnswers, setLocalHostTeamAnswers] = React.useState<IHostTeamAnswers>(backendHostTeamAnswers);
   const handleDeleteTeam = () => {};
-
+  console.log(localHostTeamAnswers);
   let renderContent;
   switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:

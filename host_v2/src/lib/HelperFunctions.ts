@@ -29,8 +29,8 @@ export const sortMistakes = (
 export const extractAnswersByTeam =  (teams: ITeam[], currentState: GameSessionState, currentQuestionId: string) => {
   const results = [{}];
   teams.forEach((team: ITeam) => {
-    team.teamMembers && team.teamMembers.forEach((teamMember: ITeamMember) => {
-      teamMember.answers && teamMember.answers.forEach((answer: any) => {
+    team.teamMembers && team.teamMembers.forEach((teamMember: ITeamMember) => { // eslint-disable-line
+      teamMember.answers && teamMember.answers.forEach((answer: any) => { // eslint-disable-line
         if (answer && answer.questionId === currentQuestionId && answer.currentState === currentState) {
           results.push({team, answer});
         }

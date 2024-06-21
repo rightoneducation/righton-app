@@ -43,7 +43,13 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       },
     ], confidences: [], hints: []};
     this.gameSessionId = gameSessionId;
-    this.gameSession = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
+    this.gameSession = await this.gameSessionAPIClient.getGameSession(this.gameSessionId).then(
+      (gameSession: IGameSession) => {
+        this.gameSession = gameSession;
+        
+        return gameSession;
+      }
+    );
   }
 
   cleanupSubscription() {

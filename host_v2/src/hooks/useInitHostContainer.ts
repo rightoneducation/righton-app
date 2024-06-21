@@ -14,6 +14,7 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
         const gameSession = dataManager.getGameSession();
         const hostTeamAnswers = dataManager.getHostTeamAnswers();
         setBackendGameSession(gameSession);
+        if ()
         setBackendHostTeamAnswers(hostTeamAnswers);
       });
 
