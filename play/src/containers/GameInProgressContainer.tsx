@@ -38,7 +38,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.gameSessionId,
     apiClients,
     retry,
-    localModel?.hasRejoined
+    localModel?.hasRejoined,
+    localModel?.teamId,
   );
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;

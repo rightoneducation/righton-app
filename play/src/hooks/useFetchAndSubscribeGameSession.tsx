@@ -123,6 +123,12 @@
 // }
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+// TRYING THIS
+// import { Navigate, useLoaderData } from 'react-router-dom';
+// import {
+//   LocalModel,
+// } from '../lib/PlayModels';
+// TO THIS
 import {
   isNullOrUndefined,
   IAPIClients,
@@ -142,7 +148,8 @@ export default function useFetchAndSubscribeGameSession(
   gameSessionId: string,
   apiClients: IAPIClients,
   retry: number,
-  isInitialRejoin: boolean
+  isInitialRejoin: boolean,
+  teamId: string
 ) {
   const [gameSession, setGameSession] = useState<IGameSession>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -202,9 +209,11 @@ export default function useFetchAndSubscribeGameSession(
             // added
             if (response.currentState === GameSessionState.PHASE_1_DISCUSS || response.currentState === GameSessionState.PHASE_2_DISCUSS) {
               console.log("PHASE_1_DISCUSS or PHASE_2_DISCUSS found");
+              setNewPoints(0);
               const currentQuestionIndex = response.currentQuestionIndex ?? 0;
               const currentQuestion = response.questions[currentQuestionIndex];
-              const teamId = 'b4be4220-821f-4536-928c-55967d40afe3';
+              // const teamId = '46499047-59db-4ebc-a7ff-695b8d327d99';
+              
               const currentTeam = response.teams?.find((team) => team.id === teamId);
               const currName = currentTeam?.name;
               console.log(currName);
@@ -242,7 +251,7 @@ export default function useFetchAndSubscribeGameSession(
         gameSessionSubscription.unsubscribe();
       }
     };
-  }, [gameSessionId, apiClients, t, retry, hasRejoined]);
+  }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]);
 
   return { isLoading, error, gameSession, hasRejoined, newPoints };
 }
