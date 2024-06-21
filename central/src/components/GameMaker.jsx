@@ -161,7 +161,7 @@ export default function GameMaker({
     setSelectedQuestions([]); 
     setLocalQuestionTemplates([]);
     gameDetails.questionTemplates = localQuestionTemplates;
-    if (CCSS === 'Mashup'){
+    if (CCSS === 'Mashup' || CCSS === undefined){
       gameDetails.grade = 'Mashup';
       gameDetails.domain = '';
       gameDetails.cluster = '';
@@ -171,7 +171,12 @@ export default function GameMaker({
       gameDetails.domain = CCSS.split('.')[1];
       gameDetails.cluster = CCSS.split('.')[2];
       gameDetails.standard = CCSS.split('.')[3];
+      
     }
+    gameDetails.questionTemplatesOrder = 
+      localQuestionTemplates.map((question, index) => {
+        return { questionTemplateId: question.questionTemplate.id, index: index };
+      });
     saveGameTemplate(game, gameDetails);
     event.preventDefault();
     history.push('/');

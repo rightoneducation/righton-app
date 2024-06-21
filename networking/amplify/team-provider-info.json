@@ -24,7 +24,41 @@
         "createGame": {
           "deploymentBucketName": "amplify-mobile-mainnew-e72f0-deployment",
           "s3Key": "amplify-builds/createGame-626367383045726c7330-build.zip"
+        },
+        "mobile": {}
+      }
+    }
+  },
+  "main": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-main-c3589-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-main-c3589-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-main-c3589-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-main-c3589-deployment",
+      "UnauthRoleName": "amplify-mobile-main-c3589-unauthRole",
+      "StackName": "amplify-mobile-main-c3589",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-main-c3589/751c22e0-2fe1-11ef-addc-0e973b0dffb3",
+      "AmplifyAppId": "d2z6928w5qibze"
+    },
+    "categories": {
+      "auth": {
+        "mobile96b14818": {
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
         }
+      },
+      "function": {
+        "createGame": {
+          "deploymentBucketName": "amplify-mobile-main-c3589-deployment",
+          "s3Key": "amplify-builds/createGame-626367383045726c7330-build.zip"
+        },
+        "mobile": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }
