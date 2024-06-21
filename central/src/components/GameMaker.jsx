@@ -104,9 +104,10 @@ export default function GameMaker({
     if (CCSSArray[0] != null && CCSSArray.every(val => val === CCSSArray[0])){
       return CCSSArray[0];
     }
+    return 'Mashup';
   };
 
-  const [CCSS, setCCSS] = useState(localQuestionTemplates.length > 0 ? calculateCCSS(localQuestionTemplates) : 'NA');
+  const [CCSS, setCCSS] = useState(localQuestionTemplates.length > 0 ? calculateCCSS(localQuestionTemplates) : 'Mashup');
 
   useEffect(() => {
     if (localQuestionTemplates.length > 0) {
