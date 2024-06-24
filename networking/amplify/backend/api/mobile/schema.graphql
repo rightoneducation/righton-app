@@ -31,6 +31,7 @@ type GameTemplate @model{
   imageUrl: String
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions") 
   questionTemplatesCount: Int! @default(value: "0")
+  questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
   type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByQuestionTemplatesCount", queryField: "gameTemplatesByQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
