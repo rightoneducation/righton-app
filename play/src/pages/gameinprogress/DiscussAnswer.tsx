@@ -72,11 +72,15 @@ export default function DiscussAnswer({
   const questionCorrectAnswerContents = (
     <>
       <Typography
-        variant="h2"
         sx={{
           marginTop: `${theme.sizing.smallPadding}px`,
           marginBottom: `${theme.sizing.smallPadding}px`,
           textAlign: 'center',
+          fontFamily: 'Karla',
+          fontWeight: '800',
+          fontSize: '16px',
+          lineHeight: '18.7px',
+          color: 'white',
         }}
       >
         {t('gameinprogress.discussanswer.questionanswercolumn')}
@@ -96,13 +100,28 @@ export default function DiscussAnswer({
             answerIndex={correctIndex ?? 0}
             currentState={currentState}
           />
-          <ResultsCard
-            gameSession={gameSession}
-            answers={answerChoices ?? []}
-            selectedAnswer={selectedAnswer ?? null}
-            currentState={currentState}
-            currentQuestionId={currentQuestion.id}
-          />
+          {isSmallDevice && currentState === GameSessionState.PHASE_1_DISCUSS && (
+          <Typography
+            variant="body1"
+            sx={{
+              textAlign: 'center',
+              marginTop: `${theme.sizing.largePadding}px`,
+              opacity: 0.5,
+            }}
+          >
+            <pre
+              style={{
+                fontFamily: 'inherit', // Ensures the Typography font family is applied
+                fontSize: 'inherit', // Ensures the Typography font size is applied
+                whiteSpace: 'pre-wrap', // Preserves newlines and wraps text
+                wordWrap: 'break-word', // Breaks long words to fit the container
+                margin: 0, // Removes default margin of <pre>
+              }}
+            >
+              {'Swipe to the left to see your\nanswer'}
+            </pre>
+          </Typography>
+        )}
         </Stack>
         {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
           <Typography
@@ -113,7 +132,17 @@ export default function DiscussAnswer({
               opacity: 0.5,
             }}
           >
-            {t('gameinprogress.general.swipealert')}
+            <pre
+              style={{
+                fontFamily: 'inherit', // Ensures the Typography font family is applied
+                fontSize: 'inherit', // Ensures the Typography font size is applied
+                whiteSpace: 'pre-wrap', // Preserves newlines and wraps text
+                wordWrap: 'break-word', // Breaks long words to fit the container
+                margin: 0, // Removes default margin of <pre>
+              }}
+            >
+              {'Swipe to the left to see\nexplanations and results'}
+            </pre>
           </Typography>
         )}
       </ScrollBoxStyled>
@@ -123,11 +152,15 @@ export default function DiscussAnswer({
   const incorrectAnswerContents = (
     <>
       <Typography
-        variant="h2"
         sx={{
           marginTop: `${theme.sizing.smallPadding}px`,
           marginBottom: `${theme.sizing.smallPadding}px`,
           textAlign: 'center',
+          fontFamily: 'Karla',
+          fontWeight: '800',
+          fontSize: '16px',
+          lineHeight: '18.7px',
+          color: 'white',
         }}
       >
         {t('gameinprogress.discussanswer.incorrectanswercolumn')}
@@ -163,6 +196,106 @@ export default function DiscussAnswer({
       container
       spacing={isSmallDevice ? 0 : 2}
     >
+      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+        {isSmallDevice ? (
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={4}
+            centeredSlides
+            slidesPerView="auto"
+            pagination={{
+              el: '.swiper-pagination-container',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              clickable: true,
+              renderBullet(index, className) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+              },
+            }}
+            style={{ height: '100%' }}
+          >
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {questionCorrectAnswerContents}
+              
+            </SwiperSlide>
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {incorrectAnswerContents}
+              
+            </SwiperSlide>
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              <Typography
+                sx={{
+                  marginTop: `${theme.sizing.smallPadding}px`,
+                  marginBottom: `${theme.sizing.smallPadding}px`,
+                  textAlign: 'center',
+                  fontFamily: 'Karla',
+                  fontWeight: '800',
+                  fontSize: '16px',
+                  lineHeight: '18.7px',
+                  color: 'white',
+                }}
+              >
+                Your Answer
+              </Typography>
+              <ResultsCard
+                gameSession={gameSession}
+                answers={answerChoices ?? []}
+                selectedAnswer={selectedAnswer ?? null}
+                currentState={currentState}
+                currentQuestionId={currentQuestion.id}
+            />
+            </SwiperSlide>
+          </Swiper>
+        ) : (
+          questionCorrectAnswerContents
+        )}
+      </Grid>
+      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+        {incorrectAnswerContents}
+      </Grid>
+      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+        <Typography
+          sx={{
+            marginTop: `${theme.sizing.smallPadding}px`,
+            marginBottom: `${theme.sizing.smallPadding}px`,
+            textAlign: 'center',
+            fontFamily: 'Karla',
+            fontWeight: '800',
+            fontSize: '16px',
+            lineHeight: '18.7px',
+            color: 'white',
+          }}
+        >
+                  Your Answer
+                </Typography>
+              <ResultsCard
+                gameSession={gameSession}
+                answers={answerChoices ?? []}
+                selectedAnswer={selectedAnswer ?? null}
+                currentState={currentState}
+                currentQuestionId={currentQuestion.id}
+            />      </Grid>
+    </BodyContentAreaDoubleColumnStyled>
+  ) : (
+    <BodyContentAreaDoubleColumnStyled
+      container
+      spacing={isSmallDevice ? 0 : 2}
+    >
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
         {isSmallDevice ? (
           <Swiper
@@ -188,6 +321,7 @@ export default function DiscussAnswer({
               }}
             >
               {questionCorrectAnswerContents}
+              
             </SwiperSlide>
             <SwiperSlide
               style={{
@@ -195,7 +329,27 @@ export default function DiscussAnswer({
                 height: '100%',
               }}
             >
-              {incorrectAnswerContents}
+              <Typography
+                sx={{
+                  marginTop: `${theme.sizing.smallPadding}px`,
+                  marginBottom: `${theme.sizing.smallPadding}px`,
+                  textAlign: 'center',
+                  fontFamily: 'Karla',
+                  fontWeight: '800',
+                  fontSize: '16px',
+                  lineHeight: '18.7px',
+                  color: 'white',
+                }}
+              >
+                  Answer
+                </Typography>
+              <ResultsCard
+                gameSession={gameSession}
+                answers={answerChoices ?? []}
+                selectedAnswer={selectedAnswer ?? null}
+                currentState={currentState}
+                currentQuestionId={currentQuestion.id}
+            />
             </SwiperSlide>
           </Swiper>
         ) : (
@@ -203,212 +357,36 @@ export default function DiscussAnswer({
         )}
       </Grid>
       <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
-        {incorrectAnswerContents}
+        <Typography
+          sx={{
+            marginTop: `${theme.sizing.smallPadding}px`,
+            marginBottom: `${theme.sizing.smallPadding}px`,
+            textAlign: 'center',
+            fontFamily: 'Karla',
+            fontWeight: '800',
+            fontSize: '16px',
+            lineHeight: '18.7px',
+            color: 'white',
+          }}
+        >
+        Answer
+      </Typography>
+        <ResultsCard
+            gameSession={gameSession}
+            answers={answerChoices ?? []}
+            selectedAnswer={selectedAnswer ?? null}
+            currentState={currentState}
+            currentQuestionId={currentQuestion.id}
+          />
       </Grid>
     </BodyContentAreaDoubleColumnStyled>
-  ) : (
-    <BodyContentAreaSingleColumnStyled>
-      <Box sx={{ width: '100%', height: '100%' }}>
-        {questionCorrectAnswerContents}
-        
-      </Box>
-    </BodyContentAreaSingleColumnStyled>
   );
+  // (
+  //   <BodyContentAreaSingleColumnStyled>
+  //     <Box sx={{ width: '100%', height: '100%' }}>
+  //       {questionCorrectAnswerContents}
+        
+  //     </Box>
+  //   </BodyContentAreaSingleColumnStyled>
+  // );
 }
-// import React from 'react';
-// import { useTheme } from '@mui/material/styles';
-// import { Typography, Grid, Stack } from '@mui/material';
-// import {
-//   GameSessionState,
-//   IChoice,
-//   IGameSession,
-//   ITeam,
-//   IQuestion,
-//   IAPIClients,
-//   ModelHelper,
-// } from '@righton/networking';
-// import { useTranslation } from 'react-i18next';
-// import QuestionCard from '../../components/QuestionCard';
-// import DiscussAnswerCard from '../../components/DiscussAnswerCard';
-// import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-// import { AnswerState } from '../../lib/PlayModels';
-// import { v4 as uuidv4 } from 'uuid';
-// import {
-//   BodyContentAreaDoubleColumnStyled,
-// } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-// import ResultsCard from '../../components/ResultsCard';
-// import { useTeamScore } from '../../hooks/useTeamScore';
-
-// interface DiscussAnswerProps {
-//   isSmallDevice: boolean;
-//   questionText: string[];
-//   questionUrl: string;
-//   answerChoices: IChoice[] | undefined;
-//   instructions: string[];
-//   currentState: GameSessionState;
-//   currentTeam: ITeam;
-//   currentQuestion: IQuestion;
-//   isShortAnswerEnabled: boolean;
-//   gameSession: IGameSession;
-//   apiClients: IAPIClients;
-//   score: number;
-//   hasRejoined: boolean;
-//   currentQuestionIndex: number;
-// }
-// interface BackendAnswer {
-//   id: string;
-//   text: string;
-//   reason?: string;
-//   isAnswer?: boolean;
-// }
-// export default function DiscussAnswer({
-//   isSmallDevice,
-//   questionText,
-//   questionUrl,
-//   answerChoices,
-//   instructions,
-//   currentState,
-//   currentTeam,
-//   currentQuestion,
-//   isShortAnswerEnabled,
-//   gameSession,
-//   apiClients,
-//   score,
-//   hasRejoined,
-//   currentQuestionIndex,
-// }: DiscussAnswerProps) {
-//   const theme = useTheme();
-//   const { t } = useTranslation();
-
-//   const {
-//     isError,
-//     newPoints,
-//     selectedAnswer,
-//     handleRetry,
-//   } = useTeamScore({
-//     apiClients,
-//     teams: [currentTeam],
-//     currentState,
-//     currentQuestionIndex,
-//     teamId: currentTeam.id,
-//     gameSession,
-//     score,
-//     hasRejoined,
-//     isShortAnswerEnabled,
-//   });
-
-//   const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
-//   const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
-  
-//   const isPlayerCorrect = isShortAnswerEnabled
-//     ? ModelHelper.isShortAnswerResponseCorrect(
-//         currentQuestion.responses ?? [],
-//         currentTeam
-//       )
-//     : correctAnswer?.text === selectedAnswer?.text;
-
-//   const questionCorrectAnswerContents = (
-//     <>
-//       <Typography
-//         variant="h2"
-//         sx={{
-//           marginTop: `${theme.sizing.smallPadding}px`,
-//           marginBottom: `${theme.sizing.smallPadding}px`,
-//           textAlign: 'center',
-//         }}
-//       >
-//         {t('gameinprogress.discussanswer.questionanswercolumn')}
-//       </Typography>
-//       <ScrollBoxStyled>
-//         <Stack spacing={2}>
-//           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-//           <DiscussAnswerCard
-//             isPlayerCorrect={isPlayerCorrect}
-//             instructions={instructions}
-//             answerStatus={
-//               isPlayerCorrect
-//                 ? AnswerState.PLAYER_SELECTED_CORRECT
-//                 : AnswerState.CORRECT
-//             }
-//             answerText={correctAnswer?.text ?? ''}
-//             answerIndex={correctIndex ?? 0}
-//             currentState={currentState}
-//           />
-//           <ResultsCard
-//             gameSession={gameSession}
-//             answers={answerChoices ?? []}
-//             selectedAnswer={selectedAnswer ?? null}
-//             currentState={currentState}
-//             currentQuestionId={currentQuestion.id}
-//           />
-//         </Stack>
-//         {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
-//           <Typography
-//             variant="body1"
-//             sx={{
-//               textAlign: 'center',
-//               marginTop: `${theme.sizing.largePadding}px`,
-//               opacity: 0.5,
-//             }}
-//           >
-//             {t('gameinprogress.general.swipealert')}
-//           </Typography>
-//         )}
-//       </ScrollBoxStyled>
-//     </>
-//   );
-
-//   const incorrectAnswerContents = (
-//     <>
-//       <Typography
-//         variant="h2"
-//         sx={{
-//           marginTop: `${theme.sizing.smallPadding}px`,
-//           marginBottom: `${theme.sizing.smallPadding}px`,
-//           textAlign: 'center',
-//         }}
-//       >
-//         {t('gameinprogress.discussanswer.incorrectanswercolumn')}
-//       </Typography>
-//       <ScrollBoxStyled>
-//         <Stack spacing={2}>
-//           {answerChoices?.map(
-//             (answer, index) =>
-//               !answer.isAnswer && (
-//                 <DiscussAnswerCard
-//                   isPlayerCorrect={isPlayerCorrect}
-//                   instructions={instructions ?? ''}
-//                   answerStatus={
-//                     answer.text === selectedAnswer?.text
-//                       ? AnswerState.SELECTED
-//                       : AnswerState.DEFAULT
-//                   }
-//                   answerText={answer.text}
-//                   answerIndex={index}
-//                   answerReason={answer.reason ?? ''}
-//                   currentState={currentState}
-//                   key={uuidv4()}
-//                 />
-//               )
-//           )}
-//         </Stack>
-//       </ScrollBoxStyled>
-//     </>
-//   );
-
-//   return currentState === GameSessionState.PHASE_2_DISCUSS ? (
-//     <BodyContentAreaDoubleColumnStyled
-//       container
-//       spacing={isSmallDevice ? 0 : 2}
-//     >
-//       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-//         {isSmallDevice ? incorrectAnswerContents : questionCorrectAnswerContents}
-//       </Grid>
-//       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-//         {isSmallDevice ? questionCorrectAnswerContents : incorrectAnswerContents}
-//       </Grid>
-//     </BodyContentAreaDoubleColumnStyled>
-//   ) : (
-//     <div>/* Other content based on different game states */</div>
-//   );
-// }

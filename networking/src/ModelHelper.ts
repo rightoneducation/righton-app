@@ -50,8 +50,8 @@ export abstract class ModelHelper {
         const findSelectedAnswer = (answers: (BackendAnswer | null)[]) => {
             const selectedAnswer = answers.find((teamAnswer: BackendAnswer | null) => 
                 this.isAnswerFromPhaseOne(teamAnswer)
-                    ? currentState === GameSessionState.PHASE_1_RESULTS
-                    : currentState === GameSessionState.PHASE_2_RESULTS
+                    ? currentState === GameSessionState.PHASE_1_DISCUSS
+                    : currentState === GameSessionState.PHASE_1_DISCUSS
             );
             return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
         };
@@ -153,7 +153,8 @@ export abstract class ModelHelper {
                 const fromPhaseOne = this.isAnswerFromPhaseOne(answer);
                 const textMatch = answer?.text === correctAnswer?.text;
                 const questionIdMatch = answer?.questionId === currentQuestion.id;
-                const phaseMatch = gameSession?.currentState === GameSessionState.PHASE_1_RESULTS;
+                // changed this...
+                const phaseMatch = gameSession?.currentState === GameSessionState.PHASE_1_DISCUSS;
     
                 // Log each condition
                 console.log("Checking answer:", answer);

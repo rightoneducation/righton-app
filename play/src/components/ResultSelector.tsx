@@ -105,7 +105,7 @@ export default function ResultSelector({
         </Typography>
       </Box>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        {currentState === GameSessionState.PHASE_2_RESULTS && ( // if in phase 2, display percentage text
+        {currentState === GameSessionState.PHASE_2_DISCUSS && ( // changed this
           <Typography
             variant="body2"
             sx={{
