@@ -20,7 +20,7 @@ export function CustomBar(props: any) {
     handleGraphClick,
     isShortAnswerEnabled
    } = props;
-   const height = (isShortAnswerEnabled ? 18 : 13) + theme.sizing.mdPadding - theme.sizing.xSmPadding / 2;
+   const height = (isShortAnswerEnabled ? 36 : 16) + theme.sizing.mdPadding - theme.sizing.xSmPadding / 2;
    // wrapping this in a useMemo in an effort to avoid any additional renders
    const isSelected = useMemo(() =>{
     // ensure that 0 isn't treated as falsy
@@ -34,9 +34,9 @@ export function CustomBar(props: any) {
     <Bar {...props} />
     {datum.count > 0 && (
       <HighlightRectangle
-        x =  {theme.sizing.defaultVictoryPadding - theme.sizing.xSmPadding}
-        y =  {y - theme.sizing.smPadding}
-        width = {customBarSelectedWidth + theme.sizing.defaultVictoryPadding + theme.sizing.xSmPadding}
+        x =  {isShortAnswerEnabled ? 0 : theme.sizing.defaultVictoryPadding - theme.sizing.xSmPadding}
+        y =  {isShortAnswerEnabled ? y - theme.sizing.xLgPadding + theme.sizing.xSmPadding : y - theme.sizing.smPadding}
+        width = {customBarSelectedWidth + theme.sizing.defaultVictoryPadding }
         height = {height}
         fill={
           isSelected

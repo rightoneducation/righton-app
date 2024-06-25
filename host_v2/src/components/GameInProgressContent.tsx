@@ -73,9 +73,6 @@ export default function GameInProgressContent({
           <Responses 
             localGameSession={localGameSession}
             localHostTeamAnswers={localHostTeamAnswers}
-            numPlayers={8}
-            totalAnswers={6}
-            questionChoices={currentQuestion.choices.map((choice) => choice.text)}
             statePosition={0}
             graphClickInfo={graphClickInfo}
             isShortAnswerEnabled={false}
@@ -144,13 +141,10 @@ export default function GameInProgressContent({
               /> */}
               <Responses 
                 localGameSession={localGameSession}
-                localHostTeamAnswers={localHostTeamAnswers}
-                numPlayers={8}
-                totalAnswers={6}
-                questionChoices={currentQuestion.choices.map((choice) => choice.text)}
+                localHostTeamAnswers={localHostTeamAnswers}   
                 statePosition={0}
                 graphClickInfo={graphClickInfo}
-                isShortAnswerEnabled={false}
+                isShortAnswerEnabled
                 handleGraphClick={handleGraphClick}
               />
             </ScrollBoxStyled>
@@ -209,9 +203,6 @@ export default function GameInProgressContent({
               <Responses 
                 localGameSession={localGameSession}
                 localHostTeamAnswers={localHostTeamAnswers}
-                numPlayers={8}
-                totalAnswers={6}
-                questionChoices={currentQuestion.choices.map((choice) => choice.text)}
                 statePosition={0}
                 graphClickInfo={graphClickInfo}
                 isShortAnswerEnabled={false}

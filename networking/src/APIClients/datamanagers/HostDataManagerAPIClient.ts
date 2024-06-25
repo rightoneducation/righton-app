@@ -1,5 +1,6 @@
 import { PlayDataManagerAPIClient } from './PlayDataManagerAPIClient';
 import { IQuestionAPIClient, ITeamAPIClient, ITeamMemberAPIClient, ITeamAnswerAPIClient } from '../interfaces';
+import { IQuestion, IChoice } from '../../Models/IQuestion';
 import { IHostTeamAnswers } from '../../Models';
 import { Environment } from '../interfaces/IBaseAPIClient';
 import { IGameSessionAPIClient } from '../interfaces';
@@ -141,6 +142,85 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
   }
 
+  private buildEmptyHostTeamAnswerShortAnswer() {
+    return {
+      phase1: {
+          responses: [{
+          normAnswer: [],
+          rawAnswer: this.noResponseCharacter,
+          count: 0,
+          isCorrect: false,
+          multiChoiceCharacter: this.noResponseCharacter,
+          teams: []
+          }],
+          confidences: [],
+      },
+      phase2: {
+          responses: [{
+          normAnswer: [],
+          rawAnswer: this.noResponseCharacter,
+          count: 0,
+          isCorrect: false,
+          multiChoiceCharacter: this.noResponseCharacter,
+          teams: []
+          }],
+          hints: []
+      }
+    }
+  }
+
+  private buildEmptyHostTeamAnswerMultiChoice(question: IQuestion) {
+    return {
+      phase1: {
+          responses: [
+            {
+              normAnswer: [],
+              rawAnswer: this.noResponseCharacter,
+              count: 0,
+              isCorrect: false,
+              multiChoiceCharacter: this.noResponseCharacter,
+              teams: []
+            },
+            ...question.choices.map((choice: IChoice, index: number) => {
+              return {
+                normAnswer: [choice.text],
+                rawAnswer: choice.text,
+                count: 0,
+                isCorrect: choice.isAnswer,
+                multiChoiceCharacter: String.fromCharCode(65 + index),
+                teams: []
+              }
+            })
+          ],
+          confidences: [],
+      },
+      phase2: 
+        {
+          responses: [
+            {
+              normAnswer: [],
+              rawAnswer: this.noResponseCharacter,
+              count: 0,
+              isCorrect: false,
+              multiChoiceCharacter: this.noResponseCharacter,
+              teams: []
+            },
+            ...question.choices.map((choice: IChoice, index: number) => {
+              return {
+              normAnswer: [choice.text],
+              rawAnswer: choice.text,
+              count: 0,
+              isCorrect: choice.isAnswer,
+              multiChoiceCharacter: String.fromCharCode(65 + index),
+              teams: []
+              }
+            })
+          ],
+          hints: []
+        }
+    }
+  }
+
   buildHostTeamAnswers(gameSession: IGameSession){
     let teamAnswers: any;
     if (gameSession.questions.length > 0) {
@@ -148,32 +228,11 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         questions: gameSession.questions.map((question) => {
           return {
             questionId: question.id,
-            phase1: {
-              responses: [{
-                normAnswer: [],
-                rawAnswer: this.noResponseCharacter,
-                count: 0,
-                isCorrect: false,
-                multiChoiceCharacter: this.noResponseCharacter,
-                teams: []
-              }],
-              confidences: [],
-            },
-            phase2: {
-              responses: [{
-                normAnswer: [],
-                rawAnswer: this.noResponseCharacter,
-                count: 0,
-                isCorrect: false,
-                multiChoiceCharacter: this.noResponseCharacter,
-                teams: []
-              }],
-              hints: []
-            }
+            ...question.isShortAnswerEnabled ? this.buildEmptyHostTeamAnswerShortAnswer() : this.buildEmptyHostTeamAnswerMultiChoice(question)
           }
         })
       } as IHostTeamAnswers;
-
+      console.log(teamAnswers);
       gameSession.teams.forEach((team) => {
         team.teamMembers.forEach((teamMember) => {
           gameSession.questions.forEach((question) => {
@@ -241,8 +300,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team answer');
         return;
       }
-      console.log('TeamAnswer:', teamAnswer);
-      console.log('CALLLLLLLLLEEEDDDDD2');
       this.hostTeamAnswers = this.updateHostTeamAnswers(teamAnswer);
       callback(this.hostTeamAnswers);
     });
@@ -258,7 +315,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team answer');
         return;
       }
-      console.log('CALLLLLLLLLEEEDDDDD');
       this.hostTeamAnswers = this.updateHostTeamAnswers(teamAnswer);
       callback(this.hostTeamAnswers);
     });

@@ -48,7 +48,7 @@ const RectStyle = styled(Box)({
   alignItems: 'center',
   color: 'white',
   fontSize: '16px',
-  padding: '10px',
+  padding: '8px',
   borderRadius: '22px',
   border: '1px solid #B1BACB',
   position: 'relative',

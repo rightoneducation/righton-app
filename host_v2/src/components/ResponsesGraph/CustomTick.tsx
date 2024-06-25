@@ -11,13 +11,14 @@ const TooltipBox = styled(Box)({
 })
 
 export default function CustomTick(props: any) {
-  const { x, y, index, text, correctChoiceIndex, statePosition } = props;
+  const { x, y, index, text, correctChoiceIndex, statePosition} = props;
   const theme = useTheme();
   const showCustomTick = index ===  correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
-  const isNoResponse = index === 0;
+  const isNoResponse = index === 0; 
   return (
     <g>
+
       {showCustomTick && (
         <foreignObject
           x={x - theme.sizing.mdPadding}

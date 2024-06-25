@@ -32,9 +32,6 @@ const TitleContainer = styled(Box)({
 
 interface ResponseGraphProps {
   data: IHostTeamAnswersResponse[];
-  numPlayers: number;
-  totalAnswers: number;
-  questionChoices: any,
   statePosition: number,
   graphClickInfo: IGraphClickInfo, // eslint-disable-line
   isShortAnswerEnabled: boolean,
@@ -44,9 +41,6 @@ interface ResponseGraphProps {
 
 export default function ResponsesGraph({
   data,
-  numPlayers,
-  totalAnswers,
-  questionChoices,
   statePosition,
   isShortAnswerEnabled,
   setGraphClickIndex,
@@ -99,6 +93,19 @@ export default function ResponsesGraph({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  let tickLabelComponent;
+
+  if (!isShortAnswerEnabled && statePosition < 6) {
+    tickLabelComponent = (
+      <CustomTick 
+        correctChoiceIndex={correctChoiceIndex}
+        statePosition={statePosition}
+        isShortAnswerEnabled={isShortAnswerEnabled}
+      />
+    );
+  }
+
   return (
      <ResponseGraphContainer>
       <TitleContainer>
@@ -107,7 +114,7 @@ export default function ResponsesGraph({
       <Box ref={graphRef}>
         {(isShortAnswerEnabled ? data.length >= 1 : data.length >= 1) && (
         <VictoryChart
-          domainPadding={{ x: 36, y: 0 }}
+          domainPadding={{ x: isShortAnswerEnabled ? 28: 36, y: 0 }}
           padding={{
             top: theme.sizing.smPadding,
             bottom: theme.sizing.xSmPadding,
@@ -128,10 +135,7 @@ export default function ResponsesGraph({
           <VictoryAxis
             standalone={false}
             tickLabelComponent={
-              <CustomTick 
-                correctChoiceIndex={correctChoiceIndex}
-                statePosition={statePosition}
-              />
+              tickLabelComponent
             }
           />
           {largestAnswerCount < 5 && (
@@ -156,7 +160,7 @@ export default function ResponsesGraph({
           <VictoryBar
             data={data}
             y="count"
-            x="multiChoiceCharacter"
+            x={isShortAnswerEnabled ? "rawAnswer" : "multiChoiceCharacter"}
             horizontal
             standalone={false}
             cornerRadius={{ topLeft: 4, topRight: 4 }}
@@ -184,6 +188,7 @@ export default function ResponsesGraph({
                 isShortAnswerEnabled={isShortAnswerEnabled}
               />
             }
+          
           />
         </VictoryChart>
         )}

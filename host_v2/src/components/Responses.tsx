@@ -29,9 +29,6 @@ const TitleStyled = styled(Typography)({
 interface ResponsesProps {
   localGameSession: IGameSession;
   localHostTeamAnswers: IHostTeamAnswers;
-  numPlayers: number;
-  totalAnswers: number;
-  questionChoices: string[];
   statePosition: number;
   graphClickInfo: IGraphClickInfo;
   isShortAnswerEnabled: boolean;
@@ -41,9 +38,6 @@ interface ResponsesProps {
 export default function Responses({
   localGameSession,
   localHostTeamAnswers,
-  numPlayers,
-  totalAnswers,
-  questionChoices,
   statePosition,
   graphClickInfo,
   isShortAnswerEnabled,
@@ -52,7 +46,10 @@ export default function Responses({
   const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
   const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
   const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
+  console.log('Current Team Answers');
+  console.log(currentTeamAnswers);
   const correctChoiceIndex = currentQuestion.choices.findIndex((choice) => choice.isAnswer);
+  const numPlayers = currentTeamAnswers?.responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(null);
   return (
     <HostDefaultCardStyled>
@@ -62,12 +59,9 @@ export default function Responses({
         </TitleStyled>
         <ResponsesGraph
           data={currentTeamAnswers?.responses ?? []}
-          numPlayers={numPlayers}
-          totalAnswers={totalAnswers}
-          questionChoices={questionChoices}
           statePosition={statePosition}
           graphClickInfo={graphClickInfo}
-          isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
+          isShortAnswerEnabled={isShortAnswerEnabled}
           handleGraphClick={handleGraphClick}
           setGraphClickIndex={setGraphClickIndex}
         />
