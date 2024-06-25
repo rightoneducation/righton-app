@@ -197,7 +197,7 @@ export default function DiscussAnswer({
       container
       spacing={isSmallDevice ? 0 : 2}
     >
-      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={12} sm={4} sx={{ width: '424px', height: '100%', padding: '0px' }}>
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
@@ -266,10 +266,10 @@ export default function DiscussAnswer({
           questionCorrectAnswerContents
         )}
       </Grid>
-      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={12} sm={4} sx={{ width: '424px', height: '100%',padding: '0px' }}>
         {incorrectAnswerContents}
       </Grid>
-      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={12} sm={4} sx={{ width: '424px', height: '100%', padding: '0px' }}>
         <Typography
           sx={{
             marginTop: `${theme.sizing.smallPadding}px`,
@@ -297,7 +297,7 @@ export default function DiscussAnswer({
       container
       spacing={isSmallDevice ? 0 : 2}
     >
-      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={12} sm={6} sx={{ width: '424px', height: '100%', padding: '0px' }}>
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
@@ -344,20 +344,20 @@ export default function DiscussAnswer({
               >
                   Answer
                 </Typography>
-              <ResultsCard
-                gameSession={gameSession}
-                answers={answerChoices ?? []}
-                selectedAnswer={selectedAnswer ?? null}
-                currentState={currentState}
-                currentQuestionId={currentQuestion.id}
-            />
+                <ResultsCard
+                  gameSession={gameSession}
+                  answers={answerChoices ?? []}
+                  selectedAnswer={selectedAnswer ?? null}
+                  currentState={currentState}
+                  currentQuestionId={currentQuestion.id}
+              />
             </SwiperSlide>
           </Swiper>
         ) : (
           questionCorrectAnswerContents
         )}
       </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={0} sm={6} sx={{ width: '424px', height: '100%', padding: '0px' }}>
         <Typography
           sx={{
             marginTop: `${theme.sizing.smallPadding}px`,

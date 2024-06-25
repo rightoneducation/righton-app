@@ -60,6 +60,7 @@ export default function CardResults({
               }
               currentState={currentState}
               key={uuidv4()}
+              stars
             />
           ))}
         </Stack>
