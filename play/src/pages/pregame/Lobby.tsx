@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { ITeam, GameSessionState } from '@righton/networking';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
+import BackgroundContainerStyledOverride from '../../lib/styledcomponents/layout/BackgroundContainerStyledOverride';
 import { LobbyMode, TimerMode } from '../../lib/PlayModels';
 import RadialTimer from '../../components/RadialTimer';
 import HowToPlay from './HowToPlay';
@@ -71,9 +72,9 @@ export default function Lobby({
       );
     default:
       return (
-        <BackgroundContainerStyled>
+        <BackgroundContainerStyledOverride>
           <HowToPlay mode={mode} />
-        </BackgroundContainerStyled>
+        </BackgroundContainerStyledOverride>
       );
   }
 }

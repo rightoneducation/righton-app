@@ -1,7 +1,8 @@
 import { styled } from '@mui/material/styles';
 import { Stack } from '@mui/material';
+import BackgroundContainerStyled from './BackgroundContainerStyled';
 
-export default styled(Stack)(({ theme }) => ({
+export default styled(BackgroundContainerStyled)(({ theme }) => ({
   height: '100%',
   position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
   width: '100%',
@@ -11,5 +12,5 @@ export default styled(Stack)(({ theme }) => ({
   backgroundAttachment: 'fixed',
   display: 'flex',
   alignItems: 'center',
-  touchAction: 'pan-x'
+  touchAction: 'auto'
 }));
