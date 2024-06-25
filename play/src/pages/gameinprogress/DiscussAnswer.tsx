@@ -20,6 +20,7 @@ import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import {
+  BodyContentAreaTripleColumnStyled,
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
@@ -192,7 +193,7 @@ export default function DiscussAnswer({
   );
 
   return currentState === GameSessionState.PHASE_2_DISCUSS ? (
-    <BodyContentAreaDoubleColumnStyled
+    <BodyContentAreaTripleColumnStyled
       container
       spacing={isSmallDevice ? 0 : 2}
     >
@@ -290,7 +291,7 @@ export default function DiscussAnswer({
                 currentState={currentState}
                 currentQuestionId={currentQuestion.id}
             />      </Grid>
-    </BodyContentAreaDoubleColumnStyled>
+    </BodyContentAreaTripleColumnStyled>
   ) : (
     <BodyContentAreaDoubleColumnStyled
       container

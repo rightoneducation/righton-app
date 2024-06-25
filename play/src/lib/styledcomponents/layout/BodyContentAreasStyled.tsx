@@ -15,7 +15,18 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
   overflow: 'hidden',
   zIndex: 2,
 });
-
+export const BodyContentAreaTripleColumnStyled = styled(Grid)({
+  position: 'absolute',
+  top: '0',
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  maxWidth: '1024px',
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  zIndex: 2,
+});
 // content area of body that floats above background layers above - Single Column Page
 export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled
