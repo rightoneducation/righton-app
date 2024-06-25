@@ -119,8 +119,6 @@ const customVictoryTheme = {
   bar: {
     style: {
       data: {
-        fill: ({ datum, index }: any) =>
-          index === 0 ? 'transparent' : '#FFF',
         stroke: '#FFF',
         strokeWidth: 1,
       },

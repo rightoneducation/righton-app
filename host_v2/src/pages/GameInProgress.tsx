@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IHostTeamAnswers } from '@righton/networking';
+import { IHostTeamAnswers, GameSessionState } from '@righton/networking';
 import { ConfidenceOption, LocalModel, Mistake } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';

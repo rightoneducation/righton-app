@@ -14,7 +14,10 @@ import {
   IAnswerHint,
   AnswerFactory,
   AnswerType,
-  IAnswerSettings
+  IAnswerSettings,
+  Answer,
+  NumericAnswer,
+  MultiChoiceAnswer
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -97,6 +100,7 @@ export default function GameInProgress({
       currentQuestion.id
     ) ?? [];
   }
+  const [multiChoiceCharacter, setMultiChoiceCharacter] = useState('');
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
   // second, if there isn't a question mark, it looks for the last period and cuts the question from the proceeding period to the end of the string
@@ -182,10 +186,28 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
+  function isAnswerNumeric (answer: Answer): answer is NumericAnswer {
+    return answer instanceof NumericAnswer;
+  }
+
+  function isAnswerMultiChoice (answer: Answer): answer is MultiChoiceAnswer {
+    return answer instanceof MultiChoiceAnswer;
+  }
+
   // creates new team answer when student submits
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
       console.log(answer);
+      const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)?.text ?? null;
+      if (correctAnswer){
+        if (isAnswerNumeric(answer.answer))
+          answer.isCorrect = answer.answer.isEqualTo([Number(correctAnswer)]) as boolean; // eslint-disable-line 
+        else 
+          answer.isCorrect = answer.answer.isEqualTo([correctAnswer]) as boolean; // eslint-disable-line 
+        if (isAnswerMultiChoice(answer.answer))
+          answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line
+      }
+      
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
@@ -222,9 +244,10 @@ export default function GameInProgress({
     }
   };
 
-  const handleSelectAnswer = (answerText: string) => {
+  const handleSelectAnswer = (answerText: string, currentMultiChoiceCharacter: string) => {
+    setMultiChoiceCharacter(currentMultiChoiceCharacter);
     const answer = new BackendAnswer(
-      AnswerFactory.createAnswer(answerText, AnswerType.MULTICHOICE),
+      AnswerFactory.createAnswer(answerText, AnswerType.MULTICHOICE, undefined, currentMultiChoiceCharacter),
       false,
       false,
       currentState,
@@ -233,7 +256,8 @@ export default function GameInProgress({
       teamMemberAnswersId,
       teamId,
       teamName,
-      answerText
+      answerText,
+      false
     )
     window.localStorage.setItem(
       StorageKeyAnswer,

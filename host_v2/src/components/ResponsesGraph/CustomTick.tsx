@@ -41,35 +41,17 @@ export default function CustomTick(props: any) {
           </Tooltip>
         </foreignObject>
       )}
-      {isNoResponse ? (
-        <foreignObject x={x - 1} y={y - theme.sizing.smPadding} width={16} height={32}>
-          <Tooltip
-            title={
-              <TooltipBox>
-                Players who {'\n'} have not responded
-              </TooltipBox>
-            }
-            placement="bottom"
-            arrow
-          >
-            <span>
-              <img src={noResponse} alt="no response" />
-            </span>
-          </Tooltip>
-        </foreignObject>
-      ) : (
-        <VictoryLabel 
-          x={x} 
-          y={y} 
-          text={text} 
-          style={{
-            fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
-            fontFamily: 'Poppins',
-            fontWeight: '800',
-            fontSize: '16px',
-          }}
-        />
-      )}
+      <VictoryLabel 
+        x={x} 
+        y={y} 
+        text={text} 
+        style={{
+          fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
+          fontFamily: 'Poppins',
+          fontWeight: '800',
+          fontSize: '16px',
+        }}
+      />
     </g>
   );
 }

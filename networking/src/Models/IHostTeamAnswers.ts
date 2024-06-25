@@ -5,6 +5,7 @@ export interface IHostTeamAnswersResponse {
   normAnswer: number[] | string[];
   rawAnswer: string;
   count: number;
+  multiChoiceCharacter: string;
   isCorrect: boolean;
   teams: string[];
 }
@@ -35,7 +36,15 @@ export interface IHostTeamAnswersHint {
  * hints -> Hints
  */
 export interface IHostTeamAnswers {
-  responses: IHostTeamAnswersResponse[],
-  confidences: IHostTeamAnswersConfidence[],
-  hints: IHostTeamAnswersHint[] 
+  questions: {
+    questionId: string,
+    phase1: {
+      responses: IHostTeamAnswersResponse[],
+      confidences: IHostTeamAnswersConfidence[],
+    },
+    phase2: {
+      responses: IHostTeamAnswersResponse[],
+      hints: IHostTeamAnswersHint[] 
+    },
+  }[]
 }

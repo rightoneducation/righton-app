@@ -8,6 +8,7 @@ import {
   VictoryContainer,
 } from 'victory';
 import { ITeam, IHostTeamAnswersResponse } from '@righton/networking';
+import { IGraphClickInfo } from '../../lib/HostModels';
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import { CustomBar } from './CustomBar';
@@ -35,9 +36,9 @@ interface ResponseGraphProps {
   totalAnswers: number;
   questionChoices: any,
   statePosition: number,
-  graphClickInfo: any,
+  graphClickInfo: IGraphClickInfo,
   isShortAnswerEnabled: boolean,
-  handleGraphClick: (value: any) => void,
+  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 export default function ResponsesGraph({
@@ -93,8 +94,6 @@ export default function ResponsesGraph({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  console.log(data);
-  console.log(largestAnswerCount);
   return (
      <ResponseGraphContainer>
       <TitleContainer>
@@ -152,7 +151,7 @@ export default function ResponsesGraph({
           <VictoryBar
             data={data}
             y="count"
-            x="choice"
+            x="multiChoiceCharacter"
             horizontal
             standalone={false}
             cornerRadius={{ topLeft: 4, topRight: 4 }}
@@ -164,13 +163,21 @@ export default function ResponsesGraph({
               onLoad: { duration: 200 },
               duration: 200,
             }}
+            style={{ 
+              data: { 
+                fill: ({index}:any) => data.length === index ? 'transparent' : '#FFF'
+              }
+            }}
             dataComponent={
               <CustomBar 
+                data={data}
                 customBarSelectedWidth={customBarSelectedWidth}
                 theme={theme}
                 graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
+                defaultVictoryPadding={theme.sizing.defaultVictoryPadding}
                 isShortAnswerEnabled={isShortAnswerEnabled}
+                responseCount={data.length}
               />
             }
             labelComponent={

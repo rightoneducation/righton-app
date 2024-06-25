@@ -38,3 +38,9 @@ export interface Mistake {
   percent: number;
   isSelected: boolean;
 }
+
+
+export interface IGraphClickInfo {
+  graph: string | null;
+  selectedIndex: number | null;
+}

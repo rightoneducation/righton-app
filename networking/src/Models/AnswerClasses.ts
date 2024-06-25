@@ -212,14 +212,15 @@ export class ExpressionAnswer extends BaseAnswer<string>{
 
 export class MultiChoiceAnswer extends BaseAnswer<string> {
   normAnswer: NormAnswerType[]
+  multiChoiceCharacter: string
 
-  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
+  constructor (rawAnswer: string, answerType: AnswerType, multiChoiceCharacter?: string, normAnswer?: string[]){
     super(rawAnswer, answerType)
+    this.multiChoiceCharacter = multiChoiceCharacter ?? ''
     this.normAnswer = normAnswer ?? []
   }
 
   normalizeMultiChoiceAnswer(rawAnswer: string): NormAnswerType[] {
-    console.log('here!');
     const normAnswers: NormAnswerType[] = [];
     normAnswers.push(rawAnswer.trim());
     return normAnswers;
@@ -246,6 +247,7 @@ export class BackendAnswer {
   teamAnswersId: string;
   teamName: string;
   text: string; // temporary to maintain build compatibility
+  isCorrect: boolean;
   confidenceLevel?: ConfidenceLevel | null;
   hint?: IAnswerHint | null;
 
@@ -260,6 +262,7 @@ export class BackendAnswer {
     teamAnswerId: string,
     teamName: string,
     text: string,
+    isCorrect: boolean,
     id?: string | null,
     confidenceLevel?: ConfidenceLevel | null,
     hint?: IAnswerHint | null
@@ -274,6 +277,7 @@ export class BackendAnswer {
     this.teamAnswersId = teamAnswerId;
     this.teamName = teamName;
     this.text = text;
+    this.isCorrect = isCorrect;
     this.id = id ?? uuidv4();
     this.confidenceLevel = confidenceLevel;
     this.hint = hint;
@@ -302,6 +306,7 @@ export class BackendAnswer {
         rest.currentQuestionIndex,
         rest.questionId,
         rest.teamMemberAnswersId,
+        rest.isCorrect,
         rest.id,
         rest.confidenceLevel,
         rest.hint);
@@ -313,14 +318,14 @@ export class BackendAnswer {
 }
 
 export class AnswerFactory {
-  static createAnswer(rawAnswer: string, answerType: AnswerType, answerPrecision?: AnswerPrecision): Answer {
+  static createAnswer(rawAnswer: string, answerType: AnswerType, answerPrecision?: AnswerPrecision, multiChoiceCharacter?: string): Answer {
     switch (answerType) {
       case AnswerType.NUMBER:
-        return new NumericAnswer(rawAnswer, answerType, answerPrecision || AnswerPrecision.WHOLE);
+        return new NumericAnswer(rawAnswer, answerType, answerPrecision || AnswerPrecision.WHOLE,);
       case AnswerType.EXPRESSION:
         return new ExpressionAnswer(rawAnswer, answerType);
       case AnswerType.MULTICHOICE:
-        return new MultiChoiceAnswer(rawAnswer, answerType);
+        return new MultiChoiceAnswer(rawAnswer, answerType, multiChoiceCharacter || '');
       case AnswerType.STRING:
       default:
         return new StringAnswer(rawAnswer, answerType);

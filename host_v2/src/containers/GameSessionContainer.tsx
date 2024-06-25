@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers} from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
@@ -18,6 +18,9 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   console.log("GameSessionContainer");
   console.log(backendHostTeamAnswers);
   const [localHostTeamAnswers, setLocalHostTeamAnswers] = React.useState<IHostTeamAnswers>(backendHostTeamAnswers);
+  useEffect(() => {
+    setLocalHostTeamAnswers(backendHostTeamAnswers);
+  }, [backendHostTeamAnswers]);
   const handleDeleteTeam = () => {};
   console.log(localHostTeamAnswers);
   let renderContent;
