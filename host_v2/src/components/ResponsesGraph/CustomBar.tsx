@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Bar } from 'victory';
-import { Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { IHostTeamAnswersResponse, ITeam } from '@righton/networking';
 
 const HighlightRectangle = styled('rect')({
   cursor: 'pointer', 
@@ -16,14 +14,21 @@ export function CustomBar(props: any) {
   const { 
     datum,
     y,
-    defaultVictoryPadding,
     customBarSelectedWidth,
-    selectedHeight,
     index,
     graphClickInfo,
     handleGraphClick,
     isShortAnswerEnabled
    } = props;
+   const height = (isShortAnswerEnabled ? 18 : 13) + theme.sizing.mdPadding - theme.sizing.xSmPadding / 2;
+   // wrapping this in a useMemo in an effort to avoid any additional renders
+   const isSelected = useMemo(() =>{
+    // ensure that 0 isn't treated as falsy
+    return graphClickInfo.selectedIndex !== null &&
+    graphClickInfo.selectedIndex !== undefined &&
+    graphClickInfo.selectedIndex === index &&
+    graphClickInfo.graph === 'realtime';
+   }, [graphClickInfo.selectedIndex, index, graphClickInfo.graph]);
   return (
     <g>
     <Bar {...props} />
@@ -32,15 +37,9 @@ export function CustomBar(props: any) {
         x =  {theme.sizing.defaultVictoryPadding - theme.sizing.xSmPadding}
         y =  {y - theme.sizing.smPadding}
         width = {customBarSelectedWidth + theme.sizing.defaultVictoryPadding + theme.sizing.xSmPadding}
-        height = {13 + theme.sizing.mdPadding - theme.sizing.xSmPadding / 2}
-        // x={isShortAnswerEnabled ? 0 : defaultVictoryPadding - xSmallPadding}
-        // y={y - mediumPadding}
-        // width={selectedWidth + defaultVictoryPadding}
-        // height={selectedHeight + mediumPadding - xSmallPadding / 2}
+        height = {height}
         fill={
-          graphClickInfo.selectedIndex &&
-          graphClickInfo.selectedIndex === index &&
-          graphClickInfo.graph === 'realtime'
+          isSelected
             ? 'rgba(255, 255, 255, 0.2)'
             : 'transparent'
         }

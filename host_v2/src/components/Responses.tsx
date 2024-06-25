@@ -5,6 +5,7 @@ import { IHostTeamAnswers, IHostTeamAnswersResponse, IGameSession, GameSessionSt
 import { IGraphClickInfo } from '../lib/HostModels';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 import ResponsesGraph from './ResponsesGraph/ResponsesGraph';
+import SelectedAnswer from './ResponsesGraph/SelectedAnswer';
 
 const ResponseContainer = styled(Box)({
   display: 'flex',
@@ -49,8 +50,10 @@ export default function Responses({
   handleGraphClick,
 }: ResponsesProps) {
   const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-    const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
-    const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
+  const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
+  const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
+  const correctChoiceIndex = currentQuestion.choices.findIndex((choice) => choice.isAnswer);
+  const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(null);
   return (
     <HostDefaultCardStyled>
       <ResponseContainer>
@@ -66,6 +69,15 @@ export default function Responses({
           graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
           handleGraphClick={handleGraphClick}
+          setGraphClickIndex={setGraphClickIndex}
+        />
+        <SelectedAnswer 
+          data={currentTeamAnswers?.responses ?? []}
+          numPlayers={numPlayers}
+          statePosition={statePosition}
+          graphClickIndex={graphClickIndex}
+          isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
+          correctChoiceIndex={correctChoiceIndex}
         />
       </ResponseContainer>
     </HostDefaultCardStyled>

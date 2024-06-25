@@ -18,9 +18,9 @@ export default function CustomLabel(props: any) {
 
   return (
     <g>
-      {datum.answerCount !== 0 && isShortAnswerEnabled && (
+      {datum.count !== 0 && isShortAnswerEnabled && (
         <>
-          {datum.answerCorrect && (
+          {datum.isCorrect && (
             <foreignObject x={theme.sizing.mdPadding - theme.sizing.xxSmPadding} y={y - theme.sizing.lgPadding} width={16} height={18}>
               <span>
                 <img src={check} alt="correct answer"/>
@@ -35,7 +35,7 @@ export default function CustomLabel(props: any) {
             dy={-theme.sizing.barThicknessResponses / 2 - theme.sizing.xxSmPadding}
             textAnchor="start"
             verticalAnchor="end"
-            text={datum.answerText}
+            text={datum.rawAnswer}
             style={{
               fontSize: 15,
               fill: 'white',
@@ -49,12 +49,12 @@ export default function CustomLabel(props: any) {
         y={y}
         textAnchor="end"
         verticalAnchor="middle"
-        text={datum.answerCount > 0 ? `${Math.ceil(datum.answerCount)}` : ''}
+        text={datum.count > 0 ? `${Math.ceil(datum.count)}` : ''}
         style={{
           fontSize: 15,
           fill:
-            datum.answerCount === 0 ||
-            datum.answerChoice === noResponseLabel ||
+            datum.count === 0 ||
+            datum.multiChoiceCharacter === noResponseLabel ||
             x <= 70
               ? '#FFF'
               : '#384466',

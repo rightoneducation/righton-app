@@ -36,9 +36,10 @@ interface ResponseGraphProps {
   totalAnswers: number;
   questionChoices: any,
   statePosition: number,
-  graphClickInfo: IGraphClickInfo,
+  graphClickInfo: IGraphClickInfo, // eslint-disable-line
   isShortAnswerEnabled: boolean,
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
+  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
+  setGraphClickIndex: (index: number | null) => void;
 }
 
 export default function ResponsesGraph({
@@ -47,9 +48,8 @@ export default function ResponsesGraph({
   totalAnswers,
   questionChoices,
   statePosition,
-  graphClickInfo,
   isShortAnswerEnabled,
-  handleGraphClick,
+  setGraphClickIndex,
 }: ResponseGraphProps) {
   const theme = useTheme();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
@@ -74,6 +74,11 @@ export default function ResponsesGraph({
       (_, index) => index * tickInterval,
     );
   };
+  const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
+  const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
+    setGraphClickInfo({graph, selectedIndex })
+    setGraphClickIndex(selectedIndex);
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -159,10 +164,6 @@ export default function ResponsesGraph({
             barWidth={({ datum }) =>
               datum.count !== 0 ? theme.sizing.barThicknessResponses : theme.sizing.barThicknessZeroResponses
             }
-            animate={{
-              onLoad: { duration: 200 },
-              duration: 200,
-            }}
             style={{ 
               data: { 
                 fill: ({index}:any) => data.length === index ? 'transparent' : '#FFF'
@@ -172,12 +173,9 @@ export default function ResponsesGraph({
               <CustomBar 
                 data={data}
                 customBarSelectedWidth={customBarSelectedWidth}
-                theme={theme}
                 graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
-                defaultVictoryPadding={theme.sizing.defaultVictoryPadding}
                 isShortAnswerEnabled={isShortAnswerEnabled}
-                responseCount={data.length}
               />
             }
             labelComponent={

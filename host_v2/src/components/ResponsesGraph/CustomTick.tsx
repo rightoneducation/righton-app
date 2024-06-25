@@ -16,7 +16,6 @@ export default function CustomTick(props: any) {
   const showCustomTick = index ===  correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
   const isNoResponse = index === 0;
-  console.log(text);
   return (
     <g>
       {showCustomTick && (
