@@ -8,4 +8,5 @@ export default styled(Stack)(({ theme }) => ({
   border: 'none',
   width: '100vw',
   height: `${theme.sizing.headerHeight}px`,
+  boxSizing: 'border-box',
 }));

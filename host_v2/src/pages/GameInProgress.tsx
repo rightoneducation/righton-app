@@ -69,9 +69,6 @@ export default function GameInProgress({
         <GameInProgressContent
           localGameSession={localGameSession}
           localHostTeamAnswers={localHostTeamAnswers}
-          // confidenceData={sampleConfidenceData}
-          // confidenceGraphClickIndex={confidenceGraphClickIndex}
-          // handleConfidenceGraphClick={handleConfidenceGraphClick}
           onSelectMistake={onSelectMistake}
           sortedMistakes={sortedMistakes}
           setSortedMistakes={setSortedMistakes}
