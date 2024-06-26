@@ -46,7 +46,6 @@ export default function GameInProgress({
 }: GameInProgressProps) {
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
-    console.log(localHostTeamAnswers);
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
       setConfidenceGraphClickIndex(selectedIndex);
     };

@@ -97,7 +97,6 @@ export class GameSessionAPIClient
     id: string,
     callback: (result: IGameSession) => void
   ) {
-    console.log(id);
     return this.subscribeGraphQL<OnGameSessionUpdatedByIdSubscription>(
       {
         query: onGameSessionUpdatedById,
@@ -106,8 +105,6 @@ export class GameSessionAPIClient
         },
       },
       (value: OnGameSessionUpdatedByIdSubscription) => {
-        console.log("Game session updated");
-        console.log(value);
         let gameSession = this.mapOnGameSessionUpdatedByIdSubscription(value);
         callback(gameSession);
       }

@@ -15,14 +15,11 @@ interface GameSessionContainerProps {
 
 export default function GameSessionContainer({apiClients, backendGameSession, backendHostTeamAnswers}: GameSessionContainerProps) {
   const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
-  console.log("GameSessionContainer");
-  console.log(backendHostTeamAnswers);
   const [localHostTeamAnswers, setLocalHostTeamAnswers] = React.useState<IHostTeamAnswers>(backendHostTeamAnswers);
   useEffect(() => {
     setLocalHostTeamAnswers(backendHostTeamAnswers);
   }, [backendHostTeamAnswers]);
   const handleDeleteTeam = () => {};
-  console.log(localHostTeamAnswers);
   let renderContent;
   switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:

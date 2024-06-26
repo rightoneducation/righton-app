@@ -75,7 +75,7 @@ export default function GameInProgressContent({
             localHostTeamAnswers={localHostTeamAnswers}
             statePosition={0}
             graphClickInfo={graphClickInfo}
-            isShortAnswerEnabled={false}
+            isShortAnswerEnabled
             handleGraphClick={handleGraphClick}
           />
         </ScrollBoxStyled>

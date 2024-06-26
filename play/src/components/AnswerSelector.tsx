@@ -62,7 +62,6 @@ export default function AnswerSelector({
 }: AnswerSelectorComponentProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
-  console.log(letterCode);
   const imageMap = {
     [AnswerState.DEFAULT]: UnselectedAnswerImage,
     [AnswerState.CORRECT]: CorrectAnswerImage,

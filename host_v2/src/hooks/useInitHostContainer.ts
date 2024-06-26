@@ -7,15 +7,12 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
   const [backendHostTeamAnswers, setBackendHostTeamAnswers] = useState<IHostTeamAnswers>({questions: []});
 
   useEffect(() => {
-    console.log("Initializing Host Container");
 
     try {
       dataManager.init(gameSessionId).then(() => {
         const gameSession = dataManager.getGameSession();
         const hostTeamAnswers = dataManager.getHostTeamAnswers();
         setBackendGameSession(gameSession);
-        console.log('sup');
-        console.log(hostTeamAnswers);
         setBackendHostTeamAnswers(hostTeamAnswers);
       });
 

@@ -32,7 +32,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     this.teamMemberAPIClient = teamMemberAPIClient;
     this.teamAnswerAPIClient = teamAnswerAPIClient;
     this.hostTeamAnswers = {questions:[]};
-    this.noResponseCharacter = `-`;
+    this.noResponseCharacter = '–';
   }
 
   async init(gameSessionId: string){
@@ -122,12 +122,19 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           teams: [teamName]
         });
       }
-      teamAnswersQuestion[phase].responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
+      if (this.isAnswerMultiChoice(answerObj))
+        teamAnswersQuestion[phase].responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
+      else{
+        teamAnswersQuestion[phase].responses.sort((a: any, b: any) => a.rawAnswer.localeCompare(b.rawAnswer));
+        const noResponse = teamAnswersQuestion[phase].responses.filter((response: any) => response.rawAnswer === this.noResponseCharacter);
+        const otherResponses = teamAnswersQuestion[phase].responses.filter((response: any) => response.rawAnswer !== this.noResponseCharacter);
+        teamAnswersQuestion[phase].responses = [...otherResponses, ...noResponse];
+      }
     }
   }
 
   private incrementNoResponseCount(teamAnswersQuestion: any, phase: string, teamName: string) {
-    const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.rawAnswer === this.noResponseCharacter);
+    const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
     if (noResponse) {
       noResponse.count += 1;
       noResponse.teams.push(teamName);
@@ -135,7 +142,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   private decrementNoResponseCount(teamAnswersQuestion: any, phase: string, teamName: string) {
-    const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.rawAnswer === this.noResponseCharacter);
+    const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
     if (noResponse) {
       noResponse.count -= 1;
       noResponse.teams = noResponse.teams.filter((team: string) => team !== teamName);
@@ -147,7 +154,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       phase1: {
           responses: [{
           normAnswer: [],
-          rawAnswer: this.noResponseCharacter,
+          rawAnswer: 'No response',
           count: 0,
           isCorrect: false,
           multiChoiceCharacter: this.noResponseCharacter,
@@ -158,7 +165,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       phase2: {
           responses: [{
           normAnswer: [],
-          rawAnswer: this.noResponseCharacter,
+          rawAnswer: 'No response',
           count: 0,
           isCorrect: false,
           multiChoiceCharacter: this.noResponseCharacter,
@@ -232,7 +239,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           }
         })
       } as IHostTeamAnswers;
-      console.log(teamAnswers);
       gameSession.teams.forEach((team) => {
         team.teamMembers.forEach((teamMember) => {
           gameSession.questions.forEach((question) => {
@@ -272,8 +278,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
 
   private updateHostTeamAnswers(teamAnswer: BackendAnswer): IHostTeamAnswers {
-    console.log(teamAnswer);
-    console.log(this.hostTeamAnswers);
     const answerPhase = teamAnswer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
     let answerQuestion = this.hostTeamAnswers.questions.find((question: any) => question.questionId === teamAnswer.questionId);
     this.processAnswer(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);

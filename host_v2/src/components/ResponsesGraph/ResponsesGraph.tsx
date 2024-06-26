@@ -56,7 +56,7 @@ export default function ResponsesGraph({
   const largestAnswerCount = Math.max(
     ...data.map((response: any) => response.count),
   );
-
+  const numAnswers = data.length;
   const calculateRoundedTicks = () => {
     const maxAnswerCount = Math.max(
       ...data.map(({ count }) => count),
@@ -114,7 +114,7 @@ export default function ResponsesGraph({
       <Box ref={graphRef}>
         {(isShortAnswerEnabled ? data.length >= 1 : data.length >= 1) && (
         <VictoryChart
-          domainPadding={{ x: isShortAnswerEnabled ? 28: 36, y: 0 }}
+          domainPadding={{ x: isShortAnswerEnabled ? 32: 16, y: 0 }} // domainPadding is offsetting all data away from the origin. used in conjunction with height
           padding={{
             top: theme.sizing.smPadding,
             bottom: theme.sizing.xSmPadding,
@@ -130,7 +130,7 @@ export default function ResponsesGraph({
           }
           theme={theme.victoryTheme}
           width={boundingRect.width}
-          height={data.length * 65}
+          height={isShortAnswerEnabled ? data.length * 68 : data.length * 40} // height is a calc of the width of the bars + the space between them + the offset
         >
           <VictoryAxis
             standalone={false}
@@ -170,8 +170,8 @@ export default function ResponsesGraph({
             }
             style={{ 
               data: { 
-                fill: ({index}:any) => data.length === index ? 'transparent' : '#FFF'
-              }
+                fill: ({ index }: any) => index === numAnswers-1 ? 'transparent' : '#FFF'
+              } 
             }}
             dataComponent={
               <CustomBar 

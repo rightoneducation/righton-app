@@ -102,7 +102,6 @@ export class TeamAnswerParser {
             updatedAt,
             hint
         } as BackendAnswer;
-        console.log(teamAnswer);
         return teamAnswer
     }
 }
