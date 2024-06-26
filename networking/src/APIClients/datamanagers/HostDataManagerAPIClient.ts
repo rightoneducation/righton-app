@@ -133,6 +133,20 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
   }
 
+  private processConfidenceLevel(ans: any, teamAnswersQuestion: any, phase: string, teamName: string){
+    const confidenceLevel = teamAnswersQuestion[phase].confidences.find((confidence: any) => confidence.level === ans.confidenceLevel);
+    if (confidenceLevel) {
+      confidenceLevel.count += 1;
+      confidenceLevel.teams.push(teamName);
+    } else {
+      teamAnswersQuestion[phase].confidences.push({
+        level: ans.confidenceLevel,
+        count: 1,
+        teams: [teamName]
+      });
+    }
+  }
+
   private incrementNoResponseCount(teamAnswersQuestion: any, phase: string, teamName: string) {
     const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
     if (noResponse) {
@@ -282,6 +296,12 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     let answerQuestion = this.hostTeamAnswers.questions.find((question: any) => question.questionId === teamAnswer.questionId);
     this.processAnswer(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);
     this.decrementNoResponseCount(answerQuestion, answerPhase, teamAnswer.teamName);
+
+    if (teamAnswer.confidenceLevel){
+      // todo: confidence levels are preset so we shouldn't have to push to create them
+      this.processConfidenceLevel(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);
+    }
+
     if (teamAnswer.hint){
       console.log('hint');
     }
