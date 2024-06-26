@@ -11,5 +11,5 @@ export default styled(Stack)(({ theme }) => ({
   backgroundAttachment: 'fixed',
   display: 'flex',
   alignItems: 'center',
-  touchAction: 'pan-x'
+  touchAction: 'none'
 }));
