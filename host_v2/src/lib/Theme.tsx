@@ -94,7 +94,7 @@ const labelOffsetResponses = 3;
 
 // victory theme object that we pass into the component to style the graph
 // see: https://commerce.nearform.com/open-source/victory/guides/themes
-const customVictoryTheme = {
+const customVictoryResponsesTheme = {
   axis: {
     style: {
       axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
@@ -135,6 +135,40 @@ const customVictoryTheme = {
     },
   },
 };
+
+const customVictoryConfidenceTheme = {
+  axis: {
+    style: {
+      axis: {
+        stroke: graphAccentColor,
+        strokeWidth: barStrokeWidth,
+      },
+      grid: { stroke: 'transparent' },
+      tickLabels: {
+        padding: xSmPadding,
+        fill: playerFeedbackLabelColor,
+        fontSize: '18px',
+      },
+    },
+  },
+  stack: {
+    colorScale: ['transparent', primaryTextColor],
+    style: {
+      data: {
+        stroke: primaryTextColor,
+        strokeWidth: barStrokeWidth,
+      },
+    },
+  },
+  bar: {
+    style: {
+      data: {
+        fill: graphAccentColor,
+      },
+    },
+    barWidth: confidenceBarThickness,
+  },
+};
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
@@ -167,7 +201,7 @@ declare module '@mui/material/styles' {
       barThicknessZeroResponses: number;
       labelOffsetResponses: number;
     };
-    victoryTheme: {
+    victoryResponsesTheme: {
       axis: {
         style: {
           axis: { stroke: string; strokeWidth: number };
@@ -204,6 +238,39 @@ declare module '@mui/material/styles' {
         };
       };
     };
+    victoryConfidenceTheme: {
+      axis: {
+        style: {
+          axis: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          grid: { stroke: string };
+          tickLabels: {
+            padding: number;
+            fill: string;
+            fontSize: string;
+          },
+        },
+      },
+      stack: {
+        colorScale: string[];
+        style: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          },
+        },
+      },
+      bar: {
+        style: {
+          data: {
+            fill: string;
+          },
+        },
+        barWidth: number;
+      },
+    }
   }
 
   interface ThemeOptions {
@@ -235,7 +302,7 @@ declare module '@mui/material/styles' {
       barThicknessZeroResponses?: number;
       labelOffsetResponses?: number;
     };
-    victoryTheme?: {
+    victoryResponsesTheme?: {
       axis?: {
         style?: {
           axis?: { stroke: string; strokeWidth: number };
@@ -272,6 +339,39 @@ declare module '@mui/material/styles' {
         };
       };
     };
+    victoryConfidenceTheme?: {
+      axis?: {
+        style?: {
+          axis?: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          grid?: { stroke: string };
+          tickLabels?: {
+            padding: number;
+            fill: string;
+            fontSize: string;
+          },
+        },
+      },
+      stack?: {
+        colorScale?: string[];
+        style?: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          },
+        },
+      },
+      bar?: {
+        style?: {
+          data?: {
+            fill: string;
+          },
+        },
+        barWidth: number;
+      },
+    }
   }
 
   interface PaletteColor {
@@ -367,7 +467,8 @@ export default createTheme({
     barThicknessZeroResponses,
     labelOffsetResponses,
   },
-  victoryTheme: customVictoryTheme,
+  victoryResponsesTheme: customVictoryResponsesTheme,
+  victoryConfidenceTheme: customVictoryConfidenceTheme,
   palette: {
     primary: {
       main: mainColor,

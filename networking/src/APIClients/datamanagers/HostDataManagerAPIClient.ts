@@ -6,7 +6,7 @@ import { Environment } from '../interfaces/IBaseAPIClient';
 import { IGameSessionAPIClient } from '../interfaces';
 import { IGameSession } from '../../Models/IGameSession';
 import { BackendAnswer, Answer, NumericAnswer, MultiChoiceAnswer, AnswerFactory, AnswerType } from '../../Models/AnswerClasses';
-import { GameSessionState } from '../../AWSMobileApi';
+import { GameSessionState, ConfidenceLevel } from '../../AWSMobileApi';
 
 export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   protected questionAPIClient: IQuestionAPIClient;
@@ -135,15 +135,18 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
   private processConfidenceLevel(ans: any, teamAnswersQuestion: any, phase: string, teamName: string){
     const confidenceLevel = teamAnswersQuestion[phase].confidences.find((confidence: any) => confidence.level === ans.confidenceLevel);
-    if (confidenceLevel) {
-      confidenceLevel.count += 1;
-      confidenceLevel.teams.push(teamName);
-    } else {
-      teamAnswersQuestion[phase].confidences.push({
-        level: ans.confidenceLevel,
-        count: 1,
-        teams: [teamName]
-      });
+    if (confidenceLevel){
+      if (ans.isCorrect) {
+        confidenceLevel.correct.push({
+          team: teamName,
+          rawAnswer: ans.answer.rawAnswer
+        });
+      } else {
+        confidenceLevel.incorrect.push({
+          team: teamName,
+          rawAnswer: ans.answer.rawAnswer
+        });
+      }
     }
   }
 
@@ -163,6 +166,28 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
   }
 
+  private ConfidenceLevelDictionary: { [key in ConfidenceLevel]: string } = {
+    [ConfidenceLevel.NOT_RATED]: 'Not\nRated',
+    [ConfidenceLevel.NOT_AT_ALL]: 'Not\nAt All',
+    [ConfidenceLevel.KINDA]: 'Kinda',
+    [ConfidenceLevel.QUITE]: 'Quite',
+    [ConfidenceLevel.VERY]: 'Very',
+    [ConfidenceLevel.TOTALLY]: 'Totally',
+  };
+
+  private buildEmptyHostTeamAnswerConfidences() {
+    let confidenceArray = [];
+    for (const [key, value] of Object.entries(this.ConfidenceLevelDictionary)) {
+      confidenceArray.push({
+        level: key,
+        label: value,
+        correct: [],
+        incorrect: []
+      });
+    }
+    return confidenceArray;
+  };
+
   private buildEmptyHostTeamAnswerShortAnswer() {
     return {
       phase1: {
@@ -174,7 +199,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           multiChoiceCharacter: this.noResponseCharacter,
           teams: []
           }],
-          confidences: [],
+          confidences: this.buildEmptyHostTeamAnswerConfidences(),
       },
       phase2: {
           responses: [{
@@ -189,6 +214,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       }
     }
   }
+
+
 
   private buildEmptyHostTeamAnswerMultiChoice(question: IQuestion) {
     return {
@@ -213,7 +240,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
               }
             })
           ],
-          confidences: [],
+          confidences: this.buildEmptyHostTeamAnswerConfidences(),
       },
       phase2: 
         {
@@ -266,6 +293,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
               if (answer?.questionId === question.id) {
                 const phase = answer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
                 this.processAnswer(answer, teamAnswersQuestion, phase, team.name);
+                this.processConfidenceLevel(answer, teamAnswersQuestion, phase, team.name);
                 if (phase === 'phase1') {
                   answeredPhase1 = true;
                 } else {
@@ -296,9 +324,9 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     let answerQuestion = this.hostTeamAnswers.questions.find((question: any) => question.questionId === teamAnswer.questionId);
     this.processAnswer(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);
     this.decrementNoResponseCount(answerQuestion, answerPhase, teamAnswer.teamName);
-
+    console.log(teamAnswer);
+    console.log(this.hostTeamAnswers);
     if (teamAnswer.confidenceLevel){
-      // todo: confidence levels are preset so we shouldn't have to push to create them
       this.processConfidenceLevel(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);
     }
 

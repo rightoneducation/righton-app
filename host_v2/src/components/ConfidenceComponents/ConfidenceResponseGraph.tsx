@@ -11,27 +11,15 @@ import {
   VictoryAxis,
 } from 'victory';
 import { debounce } from 'lodash';
-import { ConfidenceLevel } from '@righton/networking';
+import { ConfidenceLevel, IHostTeamAnswersConfidence } from '@righton/networking';
+import { IGraphClickInfo } from '../../lib/HostModels';
 import Legend from './ConfidenceResponseLegend';
 import CustomBar from './CustomBar';
 
-interface Player {
-  answer: string; // answer chosen by this player
-  isCorrect: boolean; // true iff the chosen answer is the correct answer
-  name: string; // this player's name
-}
-
-interface ConfidenceOption {
-  confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly
-  incorrect: number; // number of players who selected tgis option and answered incorrectly
-  players: Player[]; // an array of the players that selected this option
-}
-
 interface GraphProps {
-  confidenceData: ConfidenceOption[];
+  currentConfidences: IHostTeamAnswersConfidence[];
   graphClickIndex: number | null;
-  handleGraphClick: (selectedIndex: number | null) => void;
+  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 interface Response {
@@ -61,50 +49,40 @@ const CenteredContainer = styled(Box)({
 });
 
 export default function ConfidenceResponsesGraph({
-  confidenceData,
+  currentConfidences,
   graphClickIndex,
   handleGraphClick,
 }: GraphProps) {
   const theme = useTheme(); // eslint-disable-line
-  const { t } = useTranslation();
-
-  const correctColor = `${theme.palette.primary.main}`;
-  const incorrectColor = 'transparent';
-  const customThemeGraph = {
-    axis: {
-      style: {
-        axis: {
-          stroke: `${theme.palette.primary.graphAccentColor}`,
-          strokeWidth: `${theme.sizing.barStrokeWidth}`,
-        },
-        grid: { stroke: 'transparent' },
-        tickLabels: {
-          padding: `${theme.sizing.xSmPadding}`,
-          fill: `${theme.palette.primary.playerFeedbackLabelColor}`,
-          fontSize: `${theme.typography.body2.fontSize}`,
-        },
-      },
-    },
-    stack: {
-      colorScale: [incorrectColor, correctColor],
-      style: {
-        data: {
-          stroke: `${theme.palette.primary.main}`,
-          strokeWidth: `${theme.sizing.barStrokeWidth}`,
-        },
-      },
-    },
-    bar: {
-      style: {
-        data: {
-          fill: `${theme.palette.primary.graphAccentColor}`,
-        },
-      },
-      barWidth: `${theme.sizing.confidenceBarThickness}`,
-    },
-  };
+  const { t } = useTranslation();  
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 }); // eslint-disable-line
   const graphRef = useRef<HTMLDivElement>(null);
+  console.log(currentConfidences);
+  const correctConfidencesArray = currentConfidences.map(confidence => {
+    return {
+        level: confidence.level,
+        label: confidence.label,
+        correct: confidence.correct
+    };
+  });
+  const incorrectConfidencesArray = currentConfidences.map(confidence => {
+    return {
+        level: confidence.level,
+        label: confidence.label,
+        incorrect: confidence.incorrect
+    };
+  });
+
+  const currentCorrectConfidences = correctConfidencesArray.map((confidence, index) => ({
+    x: confidence.label,
+    y: confidence.correct.length,
+  }));
+
+  const currentIncorrectConfidences = incorrectConfidencesArray.map((confidence, index) => ({
+    x: confidence.label,
+    y: confidence.incorrect.length,
+  }));
+
   // this is req'd to handle the resizing of the graph container so that Victory can render the svgs
   // eslint-disable-next-line consistent-return
   useEffect(() => {
@@ -122,62 +100,6 @@ export default function ConfidenceResponsesGraph({
       };
     }
   }, []);
-  // parse the confidenceData to be used by Victory
-  const correctResponders: Response[] = [];
-  const incorrectResponders: Response[] = [];
-
-  /**
-   * To avoid repetitive code for rendering victory bar
-   * @param name must be either 'correct' or 'incorrect'
-   * @returns VictoryBar component for appropriate data based on name arg
-   */
-  function customBar(name: string): React.ReactNode {
-    return (
-      <VictoryBar
-        name={name}
-        data={name === 'incorrect' ? incorrectResponders : correctResponders}
-        cornerRadius={({ index }) =>
-          (index !== undefined && correctResponders[Number(index)].y === 0) ||
-          name === 'correct'
-            ? 5
-            : 0
-        }
-        labels={({ index }) =>
-          correctResponders[index].y + incorrectResponders[index].y
-        }
-        dataComponent={
-          <CustomBar
-            selectedWidth={
-              theme.sizing.confidenceBarThickness + theme.sizing.xSmPadding
-            }
-            selectedHeight={200}
-            graphClickIndex={graphClickIndex}
-            handleGraphClick={handleGraphClick}
-          />
-        }
-      />
-    );
-  }
-
-  const ConfidenceLevelDictionary: { [key: number]: string } = {
-    0: 'Not\nRated',
-    1: 'Not At\nAll',
-    2: 'Kinda',
-    3: 'Quite',
-    4: 'Very',
-    5: 'Totally',
-  };
-  Object.keys(ConfidenceLevel).forEach((key, index: number) => {
-    correctResponders.push({
-      x: ConfidenceLevelDictionary[index],
-      y: confidenceData[index].correct,
-    });
-    incorrectResponders.push({
-      x: ConfidenceLevelDictionary[index],
-      y: confidenceData[index].incorrect,
-    });
-  });
-
   return (
     <ContainerStyled>
       <CenteredContainer>
@@ -185,7 +107,7 @@ export default function ConfidenceResponsesGraph({
       </CenteredContainer>
       <div ref={graphRef}>
         <VictoryChart
-          theme={customThemeGraph}
+          theme={theme.victoryConfidenceTheme}
           height={200}
           containerComponent={
             <VictoryContainer style={{ touchAction: 'auto' }} />
@@ -202,10 +124,52 @@ export default function ConfidenceResponsesGraph({
               />
             }
           >
-            {customBar('incorrect')}
-            {customBar('correct')}
+            {currentIncorrectConfidences.length > 0 &&
+              <VictoryBar
+                name='incorrect'
+                data={currentIncorrectConfidences}
+                cornerRadius={({ index }) =>
+                  (index !== undefined && currentCorrectConfidences[Number(index)].y === 0)
+                    ? 5
+                    : 0
+                }
+                labels={({ index }) =>
+                  currentIncorrectConfidences[index].y + currentCorrectConfidences[index].y
+                }
+                dataComponent={
+                  <CustomBar
+                    selectedWidth={
+                      theme.sizing.confidenceBarThickness + theme.sizing.xSmPadding
+                    }
+                    selectedHeight={200}
+                    graphClickIndex={graphClickIndex}
+                    handleGraphClick={handleGraphClick}
+                  />
+                }
+              />
+            }
+            {currentCorrectConfidences.length > 0 &&
+              <VictoryBar
+                name='correct'
+                data={currentCorrectConfidences}
+                cornerRadius={5}
+                labels={({ index }) =>
+                  currentIncorrectConfidences[index].y + currentCorrectConfidences[index].y
+                }
+                dataComponent={
+                  <CustomBar
+                    selectedWidth={
+                      theme.sizing.confidenceBarThickness + theme.sizing.xSmPadding
+                    }
+                    selectedHeight={200}
+                    graphClickIndex={graphClickIndex}
+                    handleGraphClick={handleGraphClick}
+                  />
+                }
+              />
+            }
             <VictoryAxis
-              tickValues={correctResponders.map((datum: Response) => datum.x)}
+              tickValues={currentCorrectConfidences.map((datum: Response) => datum.x)}
             />
           </VictoryStack>
         </VictoryChart>

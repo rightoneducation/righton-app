@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bar } from 'victory';
 import { useTheme } from '@mui/material/styles';
+import { IGraphClickInfo } from '../../lib/HostModels';
 
 interface BarProps {
   x?: number;
@@ -8,7 +9,7 @@ interface BarProps {
   selectedHeight: number;
   index?: number;
   graphClickIndex: number | null;
-  handleGraphClick: (selectedIndex: number | null) => void;
+  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 export default function CustomBar(props: BarProps) {
@@ -44,7 +45,7 @@ export default function CustomBar(props: BarProps) {
         ry={8}
         onClick={() => {
           if (index !== null && index !== undefined) {
-            handleGraphClick(index);
+            handleGraphClick({graph: 'confidence', selectedIndex: index});
           }
         }}
         style={{ cursor: 'pointer' }}

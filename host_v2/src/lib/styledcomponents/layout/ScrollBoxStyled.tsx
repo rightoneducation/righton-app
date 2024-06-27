@@ -7,6 +7,9 @@ import { Box } from '@mui/material';
  */
 export default styled(Box)(({ theme }) => ({
   height: `calc(100vh - ${theme.sizing.headerHeight}px - ${theme.sizing.footerHeight}px)`,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px )`,
   paddingBottom: `${theme.sizing.mdPadding}px`, // added so box shadow shows around edge of card
   marginLeft: `${theme.sizing.xSmPadding}px`,
   marginRight: `${theme.sizing.xSmPadding}px`,

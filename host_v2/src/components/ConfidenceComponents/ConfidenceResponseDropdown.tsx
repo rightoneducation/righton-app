@@ -2,24 +2,13 @@ import React from 'react';
 import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/material/styles';
+import { IHostTeamAnswersConfidence, IHostTeamAnswersConfidenceResponse } from '@righton/networking';
 import check from '../../images/correctAnswerCheck.png';
 
-interface Player {
-  answer: string; // answer chosen by this player
-  isCorrect: boolean; // true iff the chosen answer is the correct answer
-  name: string; // this player's name
-}
-
-interface ConfidenceOption {
-  confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly
-  incorrect: number; // number of players who selected tgis option and answered incorrectly
-  players: Player[]; // an array of the players that selected this option
-}
 
 interface DropdownProps {
   graphClickIndex: number | null;
-  selectedConfidenceData: ConfidenceOption;
+  selectedConfidence: IHostTeamAnswersConfidence;
 }
 
 const Container = styled(Box)(({ theme }) => ({
@@ -99,7 +88,7 @@ const AnswerText = styled(Typography)(({ theme }) => ({
 
 export default function ConfidenceResponseDropdown({
   graphClickIndex,
-  selectedConfidenceData,
+  selectedConfidence,
 }: DropdownProps) {
   const { t } = useTranslation();
   const ConfidenceLevelDictionary: { [key: number]: string } = {
@@ -110,14 +99,10 @@ export default function ConfidenceResponseDropdown({
     4: 'Very Confident',
     5: 'Totally Confident',
   };
-  const playerResponse = ({
-    name,
-    answer,
-    isCorrect,
-  }: Player): React.ReactNode => {
+  const playerResponse = (team: string, answer: string, isCorrect: boolean): React.ReactNode => {
     return (
       <PlayerCard>
-        <NameText>{name}</NameText>
+        <NameText>{team}</NameText>
         <AnswerDataContainer>
           {isCorrect && <img src={check} width={18} height={24} alt="" />}
           <AnswerText>{answer}</AnswerText>
@@ -133,43 +118,24 @@ export default function ConfidenceResponseDropdown({
    * @param selectedData confidence data passed in from parent
    * @returns sorted array of input
    */
-  const sortPlayers = (selectedData: {
-    players: Player[];
-  }): {
-    correct: Player[];
-    incorrect: Player[];
+  const sortPlayers = (selectedConfidenceInput: IHostTeamAnswersConfidence): {
+    correct: IHostTeamAnswersConfidenceResponse[];
+    incorrect: IHostTeamAnswersConfidenceResponse[];
   } => {
-    const correctPlayers: Player[] = [];
-    const incorrectPlayers: Player[] = [];
+    const correctPlayers: IHostTeamAnswersConfidenceResponse[] = selectedConfidenceInput.correct;
+    const incorrectPlayers: IHostTeamAnswersConfidenceResponse[] = selectedConfidenceInput.incorrect;
     const answerFrequency: Record<string, number> = {};
-    selectedData.players.forEach((playerData: Player) => {
-      // split players into correct and incorrect so .sort is limited to these subsets
-      if (playerData.isCorrect) {
-        correctPlayers.push(playerData);
-      } else {
-        incorrectPlayers.push(playerData);
-        // if incorrect, also store the frequency of the answer for sorting later
-        answerFrequency[playerData.answer] =
-          (answerFrequency[playerData.answer] || 0) + 1;
-      }
-    });
+  
     // sort correct alphabetically
-    correctPlayers.sort((a, b) => a.name.localeCompare(b.name));
-    incorrectPlayers.sort((a, b) => {
-      // sort incorrect by answer frequency, then alphabetically
-      const freqDifference =
-        answerFrequency[b.answer] - answerFrequency[a.answer];
-      return freqDifference !== 0
-        ? freqDifference
-        : a.name.localeCompare(b.name);
-    });
+    correctPlayers.sort((a, b) => a.team.localeCompare(b.team));
+    incorrectPlayers.sort((a, b) => a.team.localeCompare(b.team));
     return { correct: correctPlayers, incorrect: incorrectPlayers };
   };
   // return both and then render them in the correct order
-  const sortedPlayers = sortPlayers(selectedConfidenceData);
+  const sortedPlayers = sortPlayers(selectedConfidence);
   return (
     <Container>
-      {selectedConfidenceData.players.length === 0 ? (
+      {selectedConfidence.correct.length === 0 && selectedConfidence.incorrect.length === 0 ? (
         <HeaderText>
           {t('gamesession.confidenceCard.graph.dropdown.header.noResponses')}
         </HeaderText>
@@ -191,10 +157,10 @@ export default function ConfidenceResponseDropdown({
           </HeaderContainer>
           <DropDownContainer>
             {sortedPlayers.correct.map((playerData) =>
-              playerResponse(playerData),
+              playerResponse(playerData.team, playerData.rawAnswer, true),
             )}
             {sortedPlayers.incorrect.map((playerData) =>
-              playerResponse(playerData),
+              playerResponse(playerData.team, playerData.rawAnswer, false),
             )}
           </DropDownContainer>
         </>

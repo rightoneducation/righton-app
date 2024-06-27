@@ -17,7 +17,7 @@ interface HostContainerProps {
 }
 
 export default function HostContainer({apiClients}: HostContainerProps) {
-  const gameSessionId = 'a698fb8c-f390-4016-9293-935ffe859bf2';
+  const gameSessionId = '41b25962-74a2-4197-84ca-3f16209d9cd2';
   const {backendGameSession, backendHostTeamAnswers} = useInitHostContainer(apiClients, gameSessionId);
   const router = createBrowserRouter(
     createRoutesFromElements(

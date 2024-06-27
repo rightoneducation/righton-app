@@ -2,28 +2,17 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { IHostTeamAnswersConfidence } from '@righton/networking';
+import { IGraphClickInfo } from '../lib/HostModels';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 import ConfidenceResponsesGraph from './ConfidenceComponents/ConfidenceResponseGraph';
 import ConfidenceResponseDropdown from './ConfidenceComponents/ConfidenceResponseDropdown';
 
-interface Player {
-  answer: string; // answer chosen by this player
-  isCorrect: boolean; // true iff the chosen answer is the correct answer
-  name: string; // this player's name
-}
-
-interface ConfidenceOption {
-  confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly
-  incorrect: number; // number of players who selected tgis option and answered incorrectly
-  players: Player[]; // an array of the players that selected this option
-}
-
 interface CardProps {
-  confidenceData: ConfidenceOption[];
-  graphClickIndex: number | null;
-  handleGraphClick: (selectedIndex: number | null) => void;
+  currentConfidences: IHostTeamAnswersConfidence[];
+  graphClickInfo: { graph: string | null; selectedIndex: number | null};
+  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 const CardContentContainer = styled(Box)({
@@ -60,8 +49,8 @@ const DescriptionText = styled(Typography)(({ theme }) => ({
 }));
 
 export default function ConfidenceCard({
-  confidenceData,
-  graphClickIndex,
+  currentConfidences,
+  graphClickInfo,
   handleGraphClick,
 }: CardProps) {
   const { t } = useTranslation();
@@ -76,14 +65,14 @@ export default function ConfidenceCard({
             </DescriptionText>
           </SmallTextContainer>
           <ConfidenceResponsesGraph
-            confidenceData={confidenceData}
-            graphClickIndex={graphClickIndex}
+            currentConfidences={currentConfidences}
+            graphClickIndex={graphClickInfo.selectedIndex}
             handleGraphClick={handleGraphClick}
           />
-          {graphClickIndex !== null ? (
+          {graphClickInfo.selectedIndex !== null ? (
             <ConfidenceResponseDropdown
-              graphClickIndex={graphClickIndex}
-              selectedConfidenceData={confidenceData[graphClickIndex]}
+              graphClickIndex={graphClickInfo.selectedIndex}
+              selectedConfidence={currentConfidences[graphClickInfo.selectedIndex]}
             />
           ) : (
             <SmallTextContainer>

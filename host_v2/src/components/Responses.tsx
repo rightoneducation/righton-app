@@ -1,7 +1,7 @@
 import React from 'react';
 import { LinearProgress, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { IHostTeamAnswers, IHostTeamAnswersResponse, IGameSession, GameSessionState } from '@righton/networking';
+import { IQuestion, IHostTeamAnswers, IHostTeamAnswersResponse, IGameSession, GameSessionState } from '@righton/networking';
 import { IGraphClickInfo } from '../lib/HostModels';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 import ResponsesGraph from './ResponsesGraph/ResponsesGraph';
@@ -27,8 +27,8 @@ const TitleStyled = styled(Typography)({
 })
 
 interface ResponsesProps {
-  localGameSession: IGameSession;
-  localHostTeamAnswers: IHostTeamAnswers;
+  currentQuestion: IQuestion;
+  currentResponses: IHostTeamAnswersResponse[];
   statePosition: number;
   graphClickInfo: IGraphClickInfo;
   isShortAnswerEnabled: boolean;
@@ -36,20 +36,16 @@ interface ResponsesProps {
 }
 
 export default function Responses({
-  localGameSession,
-  localHostTeamAnswers,
+  currentQuestion,
+  currentResponses,
   statePosition,
   graphClickInfo,
   isShortAnswerEnabled,
   handleGraphClick,
 }: ResponsesProps) {
-  const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-  const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
-  const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
-  console.log('Current Team Answers');
-  console.log(currentTeamAnswers);
+  console.log(currentResponses);
   const correctChoiceIndex = currentQuestion.choices.findIndex((choice) => choice.isAnswer);
-  const numPlayers = currentTeamAnswers?.responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  const numPlayers = currentResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(null);
   return (
     <HostDefaultCardStyled>
@@ -58,7 +54,7 @@ export default function Responses({
           Responses
         </TitleStyled>
         <ResponsesGraph
-          data={currentTeamAnswers?.responses ?? []}
+          data={currentResponses}
           statePosition={statePosition}
           graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={isShortAnswerEnabled}
@@ -66,7 +62,7 @@ export default function Responses({
           setGraphClickIndex={setGraphClickIndex}
         />
         <SelectedAnswer 
-          data={currentTeamAnswers?.responses ?? []}
+          data={currentResponses}
           numPlayers={numPlayers}
           statePosition={statePosition}
           graphClickIndex={graphClickIndex}

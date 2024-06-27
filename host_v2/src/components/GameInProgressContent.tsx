@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession, IHostTeamAnswers } from '@righton/networking';
+import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfidenceOption, IGraphClickInfo, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
@@ -51,11 +51,18 @@ export default function GameInProgressContent({
   setIsPopularMode,
 }: GameInProgressContentProps) {
   const theme = useTheme(); // eslint-disable-line
-  
-  const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-  
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
+  const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
+  const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
+
+  // currentResponses is used for the Real Time Responses Victory Graph
+  const currentResponses = currentTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
+  // currentConfidences is used for the Confidence Meter Victory Graph
+  const currentConfidences = currentTeamAnswers?.confidences ?? [] as IHostTeamAnswersConfidence[];
+
+
   const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
@@ -65,17 +72,17 @@ export default function GameInProgressContent({
     <BodyContentAreaTripleColumnStyled container>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
-        {/* <ConfidenceCard
-            confidenceData={confidenceData}
-            graphClickIndex={confidenceGraphClickIndex}
-            handleGraphClick={handleConfidenceGraphClick}
-          /> */}
           <Responses 
-            localGameSession={localGameSession}
-            localHostTeamAnswers={localHostTeamAnswers}
+            currentQuestion={currentQuestion}
+            currentResponses={currentResponses}
             statePosition={0}
             graphClickInfo={graphClickInfo}
             isShortAnswerEnabled
+            handleGraphClick={handleGraphClick}
+          />
+           <ConfidenceCard 
+            currentConfidences={currentConfidences}
+            graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick}
           />
         </ScrollBoxStyled>
@@ -134,17 +141,17 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
-              {/* <ConfidenceCard
-                confidenceData={confidenceData}
-                graphClickIndex={confidenceGraphClickIndex}
-                handleGraphClick={handleConfidenceGraphClick}
-              /> */}
               <Responses 
-                localGameSession={localGameSession}
-                localHostTeamAnswers={localHostTeamAnswers}   
+                currentQuestion={currentQuestion}
+                currentResponses={currentResponses}
                 statePosition={0}
                 graphClickInfo={graphClickInfo}
                 isShortAnswerEnabled
+                handleGraphClick={handleGraphClick}
+              />
+               <ConfidenceCard 
+                currentConfidences={currentConfidences}
+                graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
               />
             </ScrollBoxStyled>
@@ -195,17 +202,17 @@ export default function GameInProgressContent({
         <SwiperSlide>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             <ScrollBoxStyled>
-              {/* <ConfidenceCard
-                confidenceData={confidenceData}
-                graphClickIndex={confidenceGraphClickIndex}
-                handleGraphClick={handleConfidenceGraphClick}
-              /> */}
               <Responses 
-                localGameSession={localGameSession}
-                localHostTeamAnswers={localHostTeamAnswers}
+                currentQuestion={currentQuestion}
+                currentResponses={currentResponses}
                 statePosition={0}
                 graphClickInfo={graphClickInfo}
                 isShortAnswerEnabled={false}
+                handleGraphClick={handleGraphClick}
+              />
+              <ConfidenceCard 
+                currentConfidences={currentConfidences}
+                graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
               />
             </ScrollBoxStyled>
