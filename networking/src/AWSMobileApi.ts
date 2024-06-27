@@ -412,6 +412,7 @@ export type ModelTeamAnswerConnection = {
 export type TeamAnswer = {
   __typename: "TeamAnswer",
   id: string,
+  isCorrect?: boolean | null,
   isSubmitted: boolean,
   isShortAnswerEnabled: boolean,
   currentState: GameSessionState,
@@ -602,6 +603,7 @@ export type DeleteTeamMemberInput = {
 
 export type CreateTeamAnswerInput = {
   id?: string | null,
+  isCorrect?: boolean | null,
   isSubmitted: boolean,
   isShortAnswerEnabled: boolean,
   currentState: GameSessionState,
@@ -617,6 +619,7 @@ export type CreateTeamAnswerInput = {
 };
 
 export type ModelTeamAnswerConditionInput = {
+  isCorrect?: ModelBooleanInput | null,
   isSubmitted?: ModelBooleanInput | null,
   isShortAnswerEnabled?: ModelBooleanInput | null,
   currentState?: ModelGameSessionStateInput | null,
@@ -643,6 +646,7 @@ export type ModelConfidenceLevelInput = {
 
 export type UpdateTeamAnswerInput = {
   id: string,
+  isCorrect?: boolean | null,
   isSubmitted?: boolean | null,
   isShortAnswerEnabled?: boolean | null,
   currentState?: GameSessionState | null,
@@ -844,6 +848,7 @@ export type ModelTeamMemberFilterInput = {
 
 export type ModelTeamAnswerFilterInput = {
   id?: ModelIDInput | null,
+  isCorrect?: ModelBooleanInput | null,
   isSubmitted?: ModelBooleanInput | null,
   isShortAnswerEnabled?: ModelBooleanInput | null,
   currentState?: ModelGameSessionStateInput | null,
@@ -1031,6 +1036,7 @@ export type ModelSubscriptionTeamMemberFilterInput = {
 
 export type ModelSubscriptionTeamAnswerFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  isCorrect?: ModelSubscriptionBooleanInput | null,
   isSubmitted?: ModelSubscriptionBooleanInput | null,
   isShortAnswerEnabled?: ModelSubscriptionBooleanInput | null,
   currentState?: ModelSubscriptionStringInput | null,
@@ -2275,6 +2281,7 @@ export type CreateGameSessionMutation = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
+                isCorrect?: boolean | null,
                 isSubmitted: boolean,
                 isShortAnswerEnabled: boolean,
                 currentState: GameSessionState,
@@ -2397,6 +2404,7 @@ export type UpdateGameSessionMutation = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
+                isCorrect?: boolean | null,
                 isSubmitted: boolean,
                 isShortAnswerEnabled: boolean,
                 currentState: GameSessionState,
@@ -2519,6 +2527,7 @@ export type DeleteGameSessionMutation = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
+                isCorrect?: boolean | null,
                 isSubmitted: boolean,
                 isShortAnswerEnabled: boolean,
                 currentState: GameSessionState,
@@ -2716,6 +2725,7 @@ export type CreateTeamMutation = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -2792,6 +2802,7 @@ export type UpdateTeamMutation = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -2868,6 +2879,7 @@ export type DeleteTeamMutation = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -2918,6 +2930,7 @@ export type CreateTeamMemberMutation = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
+        isCorrect?: boolean | null,
         isSubmitted: boolean,
         isShortAnswerEnabled: boolean,
         currentState: GameSessionState,
@@ -2957,6 +2970,7 @@ export type UpdateTeamMemberMutation = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
+        isCorrect?: boolean | null,
         isSubmitted: boolean,
         isShortAnswerEnabled: boolean,
         currentState: GameSessionState,
@@ -2996,6 +3010,7 @@ export type DeleteTeamMemberMutation = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
+        isCorrect?: boolean | null,
         isSubmitted: boolean,
         isShortAnswerEnabled: boolean,
         currentState: GameSessionState,
@@ -3029,6 +3044,7 @@ export type CreateTeamAnswerMutation = {
   createTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
+    isCorrect?: boolean | null,
     isSubmitted: boolean,
     isShortAnswerEnabled: boolean,
     currentState: GameSessionState,
@@ -3055,6 +3071,7 @@ export type UpdateTeamAnswerMutation = {
   updateTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
+    isCorrect?: boolean | null,
     isSubmitted: boolean,
     isShortAnswerEnabled: boolean,
     currentState: GameSessionState,
@@ -3081,6 +3098,7 @@ export type DeleteTeamAnswerMutation = {
   deleteTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
+    isCorrect?: boolean | null,
     isSubmitted: boolean,
     isShortAnswerEnabled: boolean,
     currentState: GameSessionState,
@@ -4957,6 +4975,7 @@ export type GetGameSessionQuery = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
+                isCorrect?: boolean | null,
                 isSubmitted: boolean,
                 isShortAnswerEnabled: boolean,
                 currentState: GameSessionState,
@@ -5082,6 +5101,7 @@ export type ListGameSessionsQuery = {
                 items:  Array< {
                   __typename: "TeamAnswer",
                   id: string,
+                  isCorrect?: boolean | null,
                   isSubmitted: boolean,
                   isShortAnswerEnabled: boolean,
                   currentState: GameSessionState,
@@ -5261,6 +5281,7 @@ export type GetTeamQuery = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -5340,6 +5361,7 @@ export type ListTeamsQuery = {
             items:  Array< {
               __typename: "TeamAnswer",
               id: string,
+              isCorrect?: boolean | null,
               isSubmitted: boolean,
               isShortAnswerEnabled: boolean,
               currentState: GameSessionState,
@@ -5391,6 +5413,7 @@ export type GetTeamMemberQuery = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
+        isCorrect?: boolean | null,
         isSubmitted: boolean,
         isShortAnswerEnabled: boolean,
         currentState: GameSessionState,
@@ -5433,6 +5456,7 @@ export type ListTeamMembersQuery = {
         items:  Array< {
           __typename: "TeamAnswer",
           id: string,
+          isCorrect?: boolean | null,
           isSubmitted: boolean,
           isShortAnswerEnabled: boolean,
           currentState: GameSessionState,
@@ -5467,6 +5491,7 @@ export type GetTeamAnswerQuery = {
   getTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
+    isCorrect?: boolean | null,
     isSubmitted: boolean,
     isShortAnswerEnabled: boolean,
     currentState: GameSessionState,
@@ -5496,6 +5521,7 @@ export type ListTeamAnswersQuery = {
     items:  Array< {
       __typename: "TeamAnswer",
       id: string,
+      isCorrect?: boolean | null,
       isSubmitted: boolean,
       isShortAnswerEnabled: boolean,
       currentState: GameSessionState,
@@ -7425,6 +7451,7 @@ export type GameSessionByStateQuery = {
                 items:  Array< {
                   __typename: "TeamAnswer",
                   id: string,
+                  isCorrect?: boolean | null,
                   isSubmitted: boolean,
                   isShortAnswerEnabled: boolean,
                   currentState: GameSessionState,
@@ -7554,6 +7581,7 @@ export type GameSessionByCodeQuery = {
                 items:  Array< {
                   __typename: "TeamAnswer",
                   id: string,
+                  isCorrect?: boolean | null,
                   isSubmitted: boolean,
                   isShortAnswerEnabled: boolean,
                   currentState: GameSessionState,
@@ -7677,6 +7705,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
+                isCorrect?: boolean | null,
                 isSubmitted: boolean,
                 isShortAnswerEnabled: boolean,
                 currentState: GameSessionState,
@@ -7763,6 +7792,7 @@ export type OnTeamMemberUpdateByTeamIdSubscription = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
+        isCorrect?: boolean | null,
         isSubmitted: boolean,
         isShortAnswerEnabled: boolean,
         currentState: GameSessionState,
@@ -7827,6 +7857,7 @@ export type OnTeamCreateByGameSessionIdSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -7902,6 +7933,7 @@ export type OnTeamDeleteByGameSessionIdSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -9138,6 +9170,7 @@ export type OnCreateGameSessionSubscription = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
+                isCorrect?: boolean | null,
                 isSubmitted: boolean,
                 isShortAnswerEnabled: boolean,
                 currentState: GameSessionState,
@@ -9259,6 +9292,7 @@ export type OnUpdateGameSessionSubscription = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
+                isCorrect?: boolean | null,
                 isSubmitted: boolean,
                 isShortAnswerEnabled: boolean,
                 currentState: GameSessionState,
@@ -9380,6 +9414,7 @@ export type OnDeleteGameSessionSubscription = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
+                isCorrect?: boolean | null,
                 isSubmitted: boolean,
                 isShortAnswerEnabled: boolean,
                 currentState: GameSessionState,
@@ -9492,6 +9527,7 @@ export type OnCreateTeamSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -9567,6 +9603,7 @@ export type OnUpdateTeamSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -9642,6 +9679,7 @@ export type OnDeleteTeamSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
+            isCorrect?: boolean | null,
             isSubmitted: boolean,
             isShortAnswerEnabled: boolean,
             currentState: GameSessionState,
@@ -9691,6 +9729,7 @@ export type OnCreateTeamMemberSubscription = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
+        isCorrect?: boolean | null,
         isSubmitted: boolean,
         isShortAnswerEnabled: boolean,
         currentState: GameSessionState,
@@ -9729,6 +9768,7 @@ export type OnUpdateTeamMemberSubscription = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
+        isCorrect?: boolean | null,
         isSubmitted: boolean,
         isShortAnswerEnabled: boolean,
         currentState: GameSessionState,
@@ -9767,6 +9807,7 @@ export type OnDeleteTeamMemberSubscription = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
+        isCorrect?: boolean | null,
         isSubmitted: boolean,
         isShortAnswerEnabled: boolean,
         currentState: GameSessionState,
@@ -9799,6 +9840,7 @@ export type OnCreateTeamAnswerSubscription = {
   onCreateTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
+    isCorrect?: boolean | null,
     isSubmitted: boolean,
     isShortAnswerEnabled: boolean,
     currentState: GameSessionState,
@@ -9824,6 +9866,7 @@ export type OnUpdateTeamAnswerSubscription = {
   onUpdateTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
+    isCorrect?: boolean | null,
     isSubmitted: boolean,
     isShortAnswerEnabled: boolean,
     currentState: GameSessionState,
@@ -9849,6 +9892,7 @@ export type OnDeleteTeamAnswerSubscription = {
   onDeleteTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
+    isCorrect?: boolean | null,
     isSubmitted: boolean,
     isShortAnswerEnabled: boolean,
     currentState: GameSessionState,

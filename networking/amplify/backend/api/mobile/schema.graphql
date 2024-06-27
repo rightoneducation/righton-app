@@ -149,6 +149,7 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
+  isCorrect: Boolean
   isSubmitted: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
   currentState: GameSessionState!

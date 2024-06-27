@@ -77,7 +77,7 @@ export default function GameInProgressContent({
             currentResponses={currentResponses}
             statePosition={0}
             graphClickInfo={graphClickInfo}
-            isShortAnswerEnabled
+            isShortAnswerEnabled={false}
             handleGraphClick={handleGraphClick}
           />
            <ConfidenceCard 
@@ -146,7 +146,7 @@ export default function GameInProgressContent({
                 currentResponses={currentResponses}
                 statePosition={0}
                 graphClickInfo={graphClickInfo}
-                isShortAnswerEnabled
+                isShortAnswerEnabled={false}
                 handleGraphClick={handleGraphClick}
               />
                <ConfidenceCard 

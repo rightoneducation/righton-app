@@ -57,7 +57,6 @@ export default function ConfidenceResponsesGraph({
   const { t } = useTranslation();  
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 }); // eslint-disable-line
   const graphRef = useRef<HTMLDivElement>(null);
-  console.log(currentConfidences);
   const correctConfidencesArray = currentConfidences.map(confidence => {
     return {
         level: confidence.level,
@@ -82,7 +81,6 @@ export default function ConfidenceResponsesGraph({
     x: confidence.label,
     y: confidence.incorrect.length,
   }));
-
   // this is req'd to handle the resizing of the graph container so that Victory can render the svgs
   // eslint-disable-next-line consistent-return
   useEffect(() => {
@@ -133,9 +131,12 @@ export default function ConfidenceResponsesGraph({
                     ? 5
                     : 0
                 }
-                labels={({ index }) =>
-                  currentIncorrectConfidences[index].y + currentCorrectConfidences[index].y
-                }
+                labels={({ index }) => {
+                  if (currentCorrectConfidences[index].y === 0) {
+                    return currentIncorrectConfidences[index].y + currentCorrectConfidences[index].y;
+                  }
+                  return null;
+                }}
                 dataComponent={
                   <CustomBar
                     selectedWidth={

@@ -197,15 +197,17 @@ export default function GameInProgress({
   // creates new team answer when student submits
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
-      console.log(answer);
       const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)?.text ?? null;
       if (correctAnswer){
         if (isAnswerNumeric(answer.answer))
           answer.isCorrect = answer.answer.isEqualTo([Number(correctAnswer)]) as boolean; // eslint-disable-line 
-        else 
+        else {
           answer.isCorrect = answer.answer.isEqualTo([correctAnswer]) as boolean; // eslint-disable-line 
-        if (isAnswerMultiChoice(answer.answer))
+        }
+        if (isAnswerMultiChoice(answer.answer)){
           answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line
+          answer.answer.rawAnswer = multiChoiceCharacter; // eslint-disable-line
+        }
       }
       
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);

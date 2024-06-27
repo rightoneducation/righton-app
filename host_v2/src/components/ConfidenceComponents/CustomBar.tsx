@@ -12,7 +12,7 @@ interface BarProps {
   handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
-export default function CustomBar(props: BarProps) {
+export default function CustomBar(props: any) {
   const {
     x,
     selectedWidth,

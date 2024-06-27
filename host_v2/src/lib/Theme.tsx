@@ -152,7 +152,7 @@ const customVictoryConfidenceTheme = {
     },
   },
   stack: {
-    colorScale: ['transparent', primaryTextColor],
+    colorScale: [ primaryTextColor, 'transparent'],
     style: {
       data: {
         stroke: primaryTextColor,
@@ -161,11 +161,6 @@ const customVictoryConfidenceTheme = {
     },
   },
   bar: {
-    style: {
-      data: {
-        fill: graphAccentColor,
-      },
-    },
     barWidth: confidenceBarThickness,
   },
 };
