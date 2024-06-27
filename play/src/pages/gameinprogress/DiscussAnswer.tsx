@@ -17,6 +17,7 @@ import { AnswerState } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
+import ThreeColumnScrollBox from '../../lib/styledcomponents/layout/ThreeColumnScrollBox';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import {
@@ -86,7 +87,7 @@ export default function DiscussAnswer({
       >
         {t('gameinprogress.discussanswer.questionanswercolumn')}
       </Typography>
-      <ScrollBoxStyled>
+      <ThreeColumnScrollBox>
         <Stack spacing={2}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
           <DiscussAnswerCard
@@ -146,7 +147,7 @@ export default function DiscussAnswer({
             </pre>
           </Typography>
         )}
-      </ScrollBoxStyled>
+      </ThreeColumnScrollBox>
     </>
   );
 
@@ -166,7 +167,7 @@ export default function DiscussAnswer({
       >
         {t('gameinprogress.discussanswer.incorrectanswercolumn')}
       </Typography>
-      <ScrollBoxStyled>
+      <ThreeColumnScrollBox>
         <Stack spacing={2}>
           {answerChoices?.map(
             (answer, index) =>
@@ -188,7 +189,7 @@ export default function DiscussAnswer({
               )
           )}
         </Stack>
-      </ScrollBoxStyled>
+      </ThreeColumnScrollBox>
     </>
   );
 
@@ -197,7 +198,7 @@ export default function DiscussAnswer({
       container
       spacing={isSmallDevice ? 0 : 2}
     >
-      <Grid item xs={12} sm={4} sx={{ width: '424px', height: '100%', padding: '0px' }}>
+      <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%', padding: '0px' }}>
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
@@ -253,6 +254,7 @@ export default function DiscussAnswer({
               >
                 Your Answer
               </Typography>
+              <ThreeColumnScrollBox>
               <ResultsCard
                 gameSession={gameSession}
                 answers={answerChoices ?? []}
@@ -260,16 +262,17 @@ export default function DiscussAnswer({
                 currentState={currentState}
                 currentQuestionId={currentQuestion.id}
             />
+            </ThreeColumnScrollBox>
             </SwiperSlide>
           </Swiper>
         ) : (
           questionCorrectAnswerContents
         )}
       </Grid>
-      <Grid item xs={12} sm={4} sx={{ width: '424px', height: '100%',padding: '0px' }}>
+      <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%',padding: '0px' }}>
         {incorrectAnswerContents}
       </Grid>
-      <Grid item xs={12} sm={4} sx={{ width: '424px', height: '100%', padding: '0px' }}>
+      <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%', padding: '0px' }}>
         <Typography
           sx={{
             marginTop: `${theme.sizing.smallPadding}px`,
@@ -284,20 +287,23 @@ export default function DiscussAnswer({
         >
                   Your Answer
                 </Typography>
+                <ThreeColumnScrollBox>
               <ResultsCard
                 gameSession={gameSession}
                 answers={answerChoices ?? []}
                 selectedAnswer={selectedAnswer ?? null}
                 currentState={currentState}
                 currentQuestionId={currentQuestion.id}
-            />      </Grid>
+            />
+            </ThreeColumnScrollBox>
+                  </Grid>
     </BodyContentAreaTripleColumnStyled>
   ) : (
     <BodyContentAreaDoubleColumnStyled
       container
       spacing={isSmallDevice ? 0 : 2}
     >
-      <Grid item xs={12} sm={6} sx={{ width: '424px', height: '100%', padding: '0px' }}>
+      <Grid item xs={12} sm={6} style={{ width: '100%', height: '100%', padding: '0px' }}>
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
@@ -344,20 +350,22 @@ export default function DiscussAnswer({
               >
                   Answer
                 </Typography>
-                <ResultsCard
-                  gameSession={gameSession}
-                  answers={answerChoices ?? []}
-                  selectedAnswer={selectedAnswer ?? null}
-                  currentState={currentState}
-                  currentQuestionId={currentQuestion.id}
-              />
+                <ThreeColumnScrollBox>
+              <ResultsCard
+                gameSession={gameSession}
+                answers={answerChoices ?? []}
+                selectedAnswer={selectedAnswer ?? null}
+                currentState={currentState}
+                currentQuestionId={currentQuestion.id}
+            />
+            </ThreeColumnScrollBox>
             </SwiperSlide>
           </Swiper>
         ) : (
           questionCorrectAnswerContents
         )}
       </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '424px', height: '100%', padding: '0px' }}>
+      <Grid item xs={0} sm={6} style={{ width: '100%', height: '100%', padding: '0px' }}>
         <Typography
           sx={{
             marginTop: `${theme.sizing.smallPadding}px`,
@@ -372,13 +380,15 @@ export default function DiscussAnswer({
         >
         Answer
       </Typography>
-        <ResultsCard
-            gameSession={gameSession}
-            answers={answerChoices ?? []}
-            selectedAnswer={selectedAnswer ?? null}
-            currentState={currentState}
-            currentQuestionId={currentQuestion.id}
-          />
+      <ThreeColumnScrollBox>
+              <ResultsCard
+                gameSession={gameSession}
+                answers={answerChoices ?? []}
+                selectedAnswer={selectedAnswer ?? null}
+                currentState={currentState}
+                currentQuestionId={currentQuestion.id}
+            />
+            </ThreeColumnScrollBox>
       </Grid>
     </BodyContentAreaDoubleColumnStyled>
   );
