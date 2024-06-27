@@ -296,7 +296,7 @@ export default function DiscussAnswer({
                 height: '100%',
               }}
             >
-              <ColumnHeader>Answer</ColumnHeader>
+              <ColumnHeader> Your Answer</ColumnHeader>
                 <ThreeColumnScrollBox>
               <ResultsCard
                 gameSession={gameSession}
@@ -313,7 +313,7 @@ export default function DiscussAnswer({
         )}
       </Grid>
       <Grid item xs={0} sm={6} style={{ width: '100%', height: '100%', padding: '0px' }}>
-        <ColumnHeader>Answer</ColumnHeader>
+        <ColumnHeader>Your Answer</ColumnHeader>
       <ThreeColumnScrollBox>
               <ResultsCard
                 gameSession={gameSession}
