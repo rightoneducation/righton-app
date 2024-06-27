@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Grid, Stack, Box } from '@mui/material';
 import {
   GameSessionState,
@@ -41,6 +41,17 @@ interface DiscussAnswerProps {
   gameSession: IGameSession;
 }
 
+const ColumnHeader = styled(Typography)({
+  marginTop: `16px`,
+  marginBottom: `16px`,
+  textAlign: 'center',
+  fontFamily: 'Karla',
+  fontWeight: '800',
+  fontSize: '16px',
+  lineHeight: '18.7px',
+  color: 'white',
+});
+
 export default function DiscussAnswer({
   isSmallDevice,
   questionText,
@@ -73,20 +84,9 @@ export default function DiscussAnswer({
 
   const questionCorrectAnswerContents = (
     <>
-      <Typography
-        sx={{
-          marginTop: `${theme.sizing.smallPadding}px`,
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-          fontFamily: 'Karla',
-          fontWeight: '800',
-          fontSize: '16px',
-          lineHeight: '18.7px',
-          color: 'white',
-        }}
-      >
-        {t('gameinprogress.discussanswer.questionanswercolumn')}
-      </Typography>
+      <ColumnHeader>
+      {t('gameinprogress.discussanswer.questionanswercolumn')}
+      </ColumnHeader>
       <ThreeColumnScrollBox>
         <Stack spacing={2}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
@@ -153,20 +153,9 @@ export default function DiscussAnswer({
 
   const incorrectAnswerContents = (
     <>
-      <Typography
-        sx={{
-          marginTop: `${theme.sizing.smallPadding}px`,
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-          fontFamily: 'Karla',
-          fontWeight: '800',
-          fontSize: '16px',
-          lineHeight: '18.7px',
-          color: 'white',
-        }}
-      >
+      <ColumnHeader>
         {t('gameinprogress.discussanswer.incorrectanswercolumn')}
-      </Typography>
+      </ColumnHeader>
       <ThreeColumnScrollBox>
         <Stack spacing={2}>
           {answerChoices?.map(
@@ -223,7 +212,6 @@ export default function DiscussAnswer({
               }}
             >
               {questionCorrectAnswerContents}
-              
             </SwiperSlide>
             <SwiperSlide
               style={{
@@ -231,8 +219,7 @@ export default function DiscussAnswer({
                 height: '100%',
               }}
             >
-              {incorrectAnswerContents}
-              
+              {incorrectAnswerContents} 
             </SwiperSlide>
             <SwiperSlide
               style={{
@@ -240,21 +227,8 @@ export default function DiscussAnswer({
                 height: '100%',
               }}
             >
-              <Typography
-                sx={{
-                  marginTop: `${theme.sizing.smallPadding}px`,
-                  marginBottom: `${theme.sizing.smallPadding}px`,
-                  textAlign: 'center',
-                  fontFamily: 'Karla',
-                  fontWeight: '800',
-                  fontSize: '16px',
-                  lineHeight: '18.7px',
-                  color: 'white',
-                }}
-              >
-                Your Answer
-              </Typography>
-              <ThreeColumnScrollBox>
+              <ColumnHeader>Your Answer</ColumnHeader>
+             <ThreeColumnScrollBox>
               <ResultsCard
                 gameSession={gameSession}
                 answers={answerChoices ?? []}
@@ -273,30 +247,17 @@ export default function DiscussAnswer({
         {incorrectAnswerContents}
       </Grid>
       <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%', padding: '0px' }}>
-        <Typography
-          sx={{
-            marginTop: `${theme.sizing.smallPadding}px`,
-            marginBottom: `${theme.sizing.smallPadding}px`,
-            textAlign: 'center',
-            fontFamily: 'Karla',
-            fontWeight: '800',
-            fontSize: '16px',
-            lineHeight: '18.7px',
-            color: 'white',
-          }}
-        >
-                  Your Answer
-                </Typography>
-                <ThreeColumnScrollBox>
-              <ResultsCard
-                gameSession={gameSession}
-                answers={answerChoices ?? []}
-                selectedAnswer={selectedAnswer ?? null}
-                currentState={currentState}
-                currentQuestionId={currentQuestion.id}
-            />
-            </ThreeColumnScrollBox>
-                  </Grid>
+        <ColumnHeader>Your Answer </ColumnHeader>
+        <ThreeColumnScrollBox>
+          <ResultsCard
+            gameSession={gameSession}
+            answers={answerChoices ?? []}
+            selectedAnswer={selectedAnswer ?? null}
+            currentState={currentState}
+            currentQuestionId={currentQuestion.id}
+          />
+        </ThreeColumnScrollBox>
+      </Grid>
     </BodyContentAreaTripleColumnStyled>
   ) : (
     <BodyContentAreaDoubleColumnStyled
@@ -328,7 +289,6 @@ export default function DiscussAnswer({
               }}
             >
               {questionCorrectAnswerContents}
-              
             </SwiperSlide>
             <SwiperSlide
               style={{
@@ -336,20 +296,7 @@ export default function DiscussAnswer({
                 height: '100%',
               }}
             >
-              <Typography
-                sx={{
-                  marginTop: `${theme.sizing.smallPadding}px`,
-                  marginBottom: `${theme.sizing.smallPadding}px`,
-                  textAlign: 'center',
-                  fontFamily: 'Karla',
-                  fontWeight: '800',
-                  fontSize: '16px',
-                  lineHeight: '18.7px',
-                  color: 'white',
-                }}
-              >
-                  Answer
-                </Typography>
+              <ColumnHeader>Answer</ColumnHeader>
                 <ThreeColumnScrollBox>
               <ResultsCard
                 gameSession={gameSession}
@@ -366,20 +313,7 @@ export default function DiscussAnswer({
         )}
       </Grid>
       <Grid item xs={0} sm={6} style={{ width: '100%', height: '100%', padding: '0px' }}>
-        <Typography
-          sx={{
-            marginTop: `${theme.sizing.smallPadding}px`,
-            marginBottom: `${theme.sizing.smallPadding}px`,
-            textAlign: 'center',
-            fontFamily: 'Karla',
-            fontWeight: '800',
-            fontSize: '16px',
-            lineHeight: '18.7px',
-            color: 'white',
-          }}
-        >
-        Answer
-      </Typography>
+        <ColumnHeader>Answer</ColumnHeader>
       <ThreeColumnScrollBox>
               <ResultsCard
                 gameSession={gameSession}
@@ -392,12 +326,4 @@ export default function DiscussAnswer({
       </Grid>
     </BodyContentAreaDoubleColumnStyled>
   );
-  // (
-  //   <BodyContentAreaSingleColumnStyled>
-  //     <Box sx={{ width: '100%', height: '100%' }}>
-  //       {questionCorrectAnswerContents}
-        
-  //     </Box>
-  //   </BodyContentAreaSingleColumnStyled>
-  // );
 }
