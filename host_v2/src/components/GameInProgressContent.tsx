@@ -13,8 +13,9 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
-import Responses from './Responses';
-import ConfidenceCard from './ConfidenceCard';
+import Responses from './ResponsesGraph/ResponsesCard';
+import ConfidenceCard from './ConfidenceGraph/ConfidenceCard';
+import HintsCard from './HintsGraph/HintsCard';
 import QuestionCard from './QuestionCard';
 import AnswerCard from './AnswerCard';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
@@ -97,7 +98,21 @@ export default function GameInProgressContent({
             onSelectMistake={onSelectMistake}
             featuredMistakesSelectionValue={featuredMistakesSelectionValue}
           />
-          <Card />
+          <HintsCard 
+            hints={{}}
+            gptHints={{}}
+            numPlayers={10}
+            totalAnswers={10}
+            questionChoices={{}}
+            statePosition={0}
+            graphClickInfo={{}}
+            isShortAnswerEnabled={false}
+            handleGraphClick={()=>{}}
+            hintsError={false}
+            currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
+            isHintLoading={false}
+            handleProcessHints={()=>{}}
+          />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
@@ -168,7 +183,21 @@ export default function GameInProgressContent({
                 setIsPopularMode={setIsPopularMode}
                 featuredMistakesSelectionValue={featuredMistakesSelectionValue}
               />
-              <Card />
+              <HintsCard 
+                 hints={{}}
+                 gptHints={{}}
+                 numPlayers={10}
+                 totalAnswers={10}
+                 questionChoices={{}}
+                 statePosition={0}
+                 graphClickInfo={{}}
+                 isShortAnswerEnabled={false}
+                 handleGraphClick={()=>{}}
+                 hintsError={false}
+                 currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
+                 isHintLoading={false}
+                 handleProcessHints={()=>{}}
+              />
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>
@@ -228,6 +257,21 @@ export default function GameInProgressContent({
                 isPopularMode={isPopularMode}
                 setIsPopularMode={setIsPopularMode}
                 featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+              />
+              <HintsCard 
+                 hints={{}}
+                 gptHints={{}}
+                 numPlayers={10}
+                 totalAnswers={10}
+                 questionChoices={{}}
+                 statePosition={0}
+                 graphClickInfo={{}}
+                 isShortAnswerEnabled={false}
+                 handleGraphClick={()=>{}}
+                 hintsError={false}
+                 currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
+                 isHintLoading={false}
+                 handleProcessHints={()=>{}}
               />
             </ScrollBoxStyled>
           </Grid>

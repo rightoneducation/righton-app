@@ -3,11 +3,11 @@ import { styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IHostTeamAnswersConfidence } from '@righton/networking';
-import { IGraphClickInfo } from '../lib/HostModels';
-import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
-import ConfidenceResponsesGraph from './ConfidenceGraph/ConfidenceResponseGraph';
-import ConfidenceResponseDropdown from './ConfidenceGraph/ConfidenceResponseDropdown';
+import { IGraphClickInfo } from '../../lib/HostModels';
+import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
+import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardStyled';
+import ConfidenceResponsesGraph from './ConfidenceResponseGraph';
+import ConfidenceResponseDropdown from './ConfidenceResponseDropdown';
 
 interface CardProps {
   currentConfidences: IHostTeamAnswersConfidence[];

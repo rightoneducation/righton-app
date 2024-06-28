@@ -387,6 +387,7 @@ declare module '@mui/material/styles' {
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    baseQuestionColor: string;
     playerFeedbackLabelColor: string;
     feedbackCardsInstructionsColor: string;
     graphAccentColor: string;

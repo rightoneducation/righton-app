@@ -2,10 +2,10 @@ import React from 'react';
 import { LinearProgress, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { IQuestion, IHostTeamAnswers, IHostTeamAnswersResponse, IGameSession, GameSessionState } from '@righton/networking';
-import { IGraphClickInfo } from '../lib/HostModels';
-import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
-import ResponsesGraph from './ResponsesGraph/ResponsesGraph';
-import SelectedAnswer from './ResponsesGraph/SelectedAnswer';
+import { IGraphClickInfo } from '../../lib/HostModels';
+import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardStyled';
+import ResponsesGraph from './ResponsesGraph';
+import SelectedAnswer from './SelectedAnswer';
 
 const ResponseContainer = styled(Box)({
   display: 'flex',
