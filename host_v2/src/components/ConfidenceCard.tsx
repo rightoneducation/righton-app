@@ -6,8 +6,8 @@ import { IHostTeamAnswersConfidence } from '@righton/networking';
 import { IGraphClickInfo } from '../lib/HostModels';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
-import ConfidenceResponsesGraph from './ConfidenceComponents/ConfidenceResponseGraph';
-import ConfidenceResponseDropdown from './ConfidenceComponents/ConfidenceResponseDropdown';
+import ConfidenceResponsesGraph from './ConfidenceGraph/ConfidenceResponseGraph';
+import ConfidenceResponseDropdown from './ConfidenceGraph/ConfidenceResponseDropdown';
 
 interface CardProps {
   currentConfidences: IHostTeamAnswersConfidence[];
