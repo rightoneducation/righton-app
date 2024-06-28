@@ -128,7 +128,7 @@ export default function ResponsesGraph({
               }}
             />
           }
-          theme={theme.victoryTheme}
+          theme={theme.victoryResponsesTheme}
           width={boundingRect.width}
           height={isShortAnswerEnabled ? data.length * 68 : data.length * 40} // height is a calc of the width of the bars + the space between them + the offset
         >

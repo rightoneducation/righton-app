@@ -1,5 +1,4 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
-import { Answer } from "./AnswerClasses";
 
 export interface IHostTeamAnswersResponse {
   normAnswer: number[] | string[];
@@ -10,13 +9,16 @@ export interface IHostTeamAnswersResponse {
   teams: string[];
 }
 
+export interface IHostTeamAnswersConfidenceResponse {
+  team: string;
+  rawAnswer: string;
+}
+
 export interface IHostTeamAnswersConfidence {
   level: ConfidenceLevel;
-  responses: {
-    team: string;
-    answer: Answer;
-    isCorrect: boolean;
-  }[]
+  label: string;
+  correct: IHostTeamAnswersConfidenceResponse[];
+  incorrect: IHostTeamAnswersConfidenceResponse[];
 }
 
 export interface IHostTeamAnswersHint {
@@ -27,6 +29,13 @@ export interface IHostTeamAnswersHint {
   }[];
   teamCount: number;
 }
+
+export interface IHostTeamAnswersPerPhase {
+  responses: IHostTeamAnswersResponse[],
+  confidences?: IHostTeamAnswersConfidence[],
+  hints?: IHostTeamAnswersHint[] 
+}
+
 /* 
  * IHostTeamAnswers
  * Interface that types the answer object required for host to
@@ -38,13 +47,7 @@ export interface IHostTeamAnswersHint {
 export interface IHostTeamAnswers {
   questions: {
     questionId: string,
-    phase1: {
-      responses: IHostTeamAnswersResponse[],
-      confidences: IHostTeamAnswersConfidence[],
-    },
-    phase2: {
-      responses: IHostTeamAnswersResponse[],
-      hints: IHostTeamAnswersHint[] 
-    },
+    phase1: IHostTeamAnswersPerPhase,
+    phase2: IHostTeamAnswersPerPhase,
   }[]
 }

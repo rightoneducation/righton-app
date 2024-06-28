@@ -794,6 +794,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
             answers {
               items {
                 id
+                isCorrect
                 isSubmitted
                 isShortAnswerEnabled
                 currentState
@@ -919,6 +920,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
               answers {
                 items {
                   id
+                  isCorrect
                   isSubmitted
                   isShortAnswerEnabled
                   currentState
@@ -1105,6 +1107,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
         answers {
           items {
             id
+            isCorrect
             isSubmitted
             isShortAnswerEnabled
             currentState
@@ -1181,6 +1184,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
           answers {
             items {
               id
+              isCorrect
               isSubmitted
               isShortAnswerEnabled
               currentState
@@ -1231,6 +1235,7 @@ export const getTeamMember = /* GraphQL */ `query GetTeamMember($id: ID!) {
     answers {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
@@ -1273,6 +1278,7 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
       answers {
         items {
           id
+          isCorrect
           isSubmitted
           isShortAnswerEnabled
           currentState
@@ -1309,6 +1315,7 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
 export const getTeamAnswer = /* GraphQL */ `query GetTeamAnswer($id: ID!) {
   getTeamAnswer(id: $id) {
     id
+    isCorrect
     isSubmitted
     isShortAnswerEnabled
     currentState
@@ -1338,6 +1345,7 @@ export const listTeamAnswers = /* GraphQL */ `query ListTeamAnswers(
   listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
@@ -3324,6 +3332,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
               answers {
                 items {
                   id
+                  isCorrect
                   isSubmitted
                   isShortAnswerEnabled
                   currentState
@@ -3460,6 +3469,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
               answers {
                 items {
                   id
+                  isCorrect
                   isSubmitted
                   isShortAnswerEnabled
                   currentState

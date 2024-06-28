@@ -37,6 +37,7 @@ export class TeamAnswerAPIClient
       }
       const input: CreateTeamAnswerInput = {
           answer: JSON.stringify(inputAnswer.answer), 
+          isCorrect: inputAnswer.isCorrect,
           isSubmitted: inputAnswer.isSubmitted,
           isShortAnswerEnabled: inputAnswer.isShortAnswerEnabled,
           currentState: inputAnswer.currentState,

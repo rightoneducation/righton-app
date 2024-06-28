@@ -1222,6 +1222,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
             answers {
               items {
                 id
+                isCorrect
                 isSubmitted
                 isShortAnswerEnabled
                 currentState
@@ -1345,6 +1346,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
             answers {
               items {
                 id
+                isCorrect
                 isSubmitted
                 isShortAnswerEnabled
                 currentState
@@ -1468,6 +1470,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
             answers {
               items {
                 id
+                isCorrect
                 isSubmitted
                 isShortAnswerEnabled
                 currentState
@@ -1671,6 +1674,7 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
         answers {
           items {
             id
+            isCorrect
             isSubmitted
             isShortAnswerEnabled
             currentState
@@ -1748,6 +1752,7 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
         answers {
           items {
             id
+            isCorrect
             isSubmitted
             isShortAnswerEnabled
             currentState
@@ -1825,6 +1830,7 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
         answers {
           items {
             id
+            isCorrect
             isSubmitted
             isShortAnswerEnabled
             currentState
@@ -1878,6 +1884,7 @@ export const createTeamMember = /* GraphQL */ `mutation CreateTeamMember(
     answers {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
@@ -1918,6 +1925,7 @@ export const updateTeamMember = /* GraphQL */ `mutation UpdateTeamMember(
     answers {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
@@ -1958,6 +1966,7 @@ export const deleteTeamMember = /* GraphQL */ `mutation DeleteTeamMember(
     answers {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
@@ -1994,6 +2003,7 @@ export const createTeamAnswer = /* GraphQL */ `mutation CreateTeamAnswer(
 ) {
   createTeamAnswer(input: $input, condition: $condition) {
     id
+    isCorrect
     isSubmitted
     isShortAnswerEnabled
     currentState
@@ -2021,6 +2031,7 @@ export const updateTeamAnswer = /* GraphQL */ `mutation UpdateTeamAnswer(
 ) {
   updateTeamAnswer(input: $input, condition: $condition) {
     id
+    isCorrect
     isSubmitted
     isShortAnswerEnabled
     currentState
@@ -2048,6 +2059,7 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
 ) {
   deleteTeamAnswer(input: $input, condition: $condition) {
     id
+    isCorrect
     isSubmitted
     isShortAnswerEnabled
     currentState

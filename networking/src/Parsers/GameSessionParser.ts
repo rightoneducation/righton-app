@@ -47,13 +47,13 @@ export class GameSessionParser {
           startTime = awsGameSession?.startTime ?? '',
           phaseOneTime,
           phaseTwoTime,
-          currentQuestionIndex = awsGameSession.currentQuestionIndex ?? 0,
+          currentQuestionIndex = awsGameSession?.currentQuestionIndex ?? 0,
           currentState,
           gameCode,
-          currentTimer = awsGameSession.currentTimer ?? 120,
+          currentTimer = awsGameSession?.currentTimer ?? 120,
           updatedAt,
           createdAt,
-          title = awsGameSession.title ?? '',
+          title = awsGameSession?.title ?? '',
           isAdvancedMode,
       } = awsGameSession || {}
       if (
