@@ -74,7 +74,8 @@ export const checkForSubmittedAnswerOnRejoin = (
     teamMemberAnswersId: '',
     teamAnswersId: '',
     teamName: '',
-    text: ''
+    text: '',
+    isCorrect: false,
   };
   if (hasRejoined) {
     if (

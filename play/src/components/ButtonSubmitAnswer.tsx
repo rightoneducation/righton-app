@@ -71,6 +71,7 @@ export default function ButtonSubmitAnswer({
           currentTeam?.id ?? '',
           currentTeam?.name ?? '',
           selectedAnswer ?? '',
+          false,
           null,
           null
         );

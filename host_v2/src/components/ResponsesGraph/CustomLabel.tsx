@@ -1,27 +1,10 @@
 import React, {useCallback} from 'react';
 import { VictoryLabel } from 'victory';
 import { useTheme } from '@mui/material/styles';
-import check from '../../images/Pickedcheck_white.svg';
+import check from '../../img/Pickedcheck_white.svg';
 
-interface CustomLabelProps {
-  props: {
-    x: number;
-    y: number;
-    datum: any;
-    noResponseLabel: string;
-    isShortAnswerEnabled: boolean;
-  };
-};
-
-export default function CustomLabel({props}: CustomLabelProps) {
-  const {
-    x,
-    y,
-    datum,
-    noResponseLabel,
-    isShortAnswerEnabled,
-  } = props;
-
+export default function CustomLabel(props: any) {
+  const {x, y, datum, noResponseLabel, isShortAnswerEnabled} = props;
   const theme = useTheme();
   // done to prevent embedding a nested ternary in the render function
   const labelPadding = useCallback(() => {
@@ -35,9 +18,9 @@ export default function CustomLabel({props}: CustomLabelProps) {
 
   return (
     <g>
-      {datum.answerCount !== 0 && isShortAnswerEnabled && (
+      {datum.count !== 0 && isShortAnswerEnabled && (
         <>
-          {datum.answerCorrect && (
+          {datum.isCorrect && (
             <foreignObject x={theme.sizing.mdPadding - theme.sizing.xxSmPadding} y={y - theme.sizing.lgPadding} width={16} height={18}>
               <span>
                 <img src={check} alt="correct answer"/>
@@ -52,7 +35,7 @@ export default function CustomLabel({props}: CustomLabelProps) {
             dy={-theme.sizing.barThicknessResponses / 2 - theme.sizing.xxSmPadding}
             textAnchor="start"
             verticalAnchor="end"
-            text={datum.answerText}
+            text={datum.rawAnswer}
             style={{
               fontSize: 15,
               fill: 'white',
@@ -66,12 +49,12 @@ export default function CustomLabel({props}: CustomLabelProps) {
         y={y}
         textAnchor="end"
         verticalAnchor="middle"
-        text={datum.answerCount > 0 ? `${Math.ceil(datum.answerCount)}` : ''}
+        text={datum.count > 0 ? `${Math.ceil(datum.count)}` : ''}
         style={{
           fontSize: 15,
           fill:
-            datum.answerCount === 0 ||
-            datum.answerChoice === noResponseLabel ||
+            datum.count === 0 ||
+            datum.multiChoiceCharacter === noResponseLabel ||
             x <= 70
               ? '#FFF'
               : '#384466',

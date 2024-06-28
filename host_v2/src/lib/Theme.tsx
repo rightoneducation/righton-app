@@ -65,8 +65,8 @@ const xl = 1536;
 
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
 const fullHeaderHeight = 228;
-const headerHeight = 150;
-const footerHeight = 60;
+const headerHeight = 140;
+const footerHeight = 144;
 const answerBarHeight = 18;
 const nextStateButtonWidth = 300;
 const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
@@ -100,7 +100,7 @@ const customVictoryTheme = {
       axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
       grid: { stroke: 'transparent' },
       tickLabels: {
-        padding: smPadding,
+        padding: mdPadding,
       },
     },
   },
@@ -123,6 +123,10 @@ const customVictoryTheme = {
         strokeWidth: 1,
       },
       labels: {
+        fill: ({ datum, index }: any) =>
+          index === 0 || datum.answerCount === 0
+            ? '#FFF'
+            : '#384466',
         fontFamily: 'Rubik',
         fontWeight: '400',
         textAnchor: 'end',

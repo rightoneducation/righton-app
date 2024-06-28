@@ -57,7 +57,6 @@ export class TeamAnswerParser {
             console.error("Error parsing answer:", error);
             throw new Error("Error parsing the 'answer' field.");
         }
-        console.log(awsTeamAnswer);
         const {
             id,
             isSubmitted = awsTeamAnswer.isSubmitted,
@@ -69,6 +68,7 @@ export class TeamAnswerParser {
             teamAnswersId = awsTeamAnswer.teamAnswersId,
             teamName = awsTeamAnswer.teamName ?? '',
             text = awsTeamAnswer.text ?? '',
+            isCorrect = awsTeamAnswer.isCorrect ?? false,
             confidenceLevel = awsTeamAnswer.confidenceLevel as ConfidenceLevel ?? ConfidenceLevel.NOT_RATED,
             hint = awsTeamAnswer.hint ?? '',
             createdAt = awsTeamAnswer.createdAt,
@@ -96,12 +96,12 @@ export class TeamAnswerParser {
             teamAnswersId,
             teamName,
             text,
+            isCorrect,
             confidenceLevel,
             createdAt,
             updatedAt,
             hint
         } as BackendAnswer;
-        console.log(teamAnswer);
         return teamAnswer
     }
 }

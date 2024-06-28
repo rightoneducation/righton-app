@@ -7,10 +7,11 @@ import {
   VictoryBar,
   VictoryContainer,
 } from 'victory';
-import { ITeam } from '@righton/networking';
+import { ITeam, IHostTeamAnswersResponse } from '@righton/networking';
+import { IGraphClickInfo } from '../../lib/HostModels';
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
-import CustomBar from './CustomBar';
+import { CustomBar } from './CustomBar';
 
 const ResponseGraphContainer = styled(Box)({
   textAlign: 'center',
@@ -30,21 +31,19 @@ const TitleContainer = styled(Box)({
 });
 
 interface ResponseGraphProps {
-  data: {answerCount: number, answerCorrect: boolean, answerChoice: string, answerText: string, answerTeams: ITeam[]}[];
-  questionChoices: any,
+  data: IHostTeamAnswersResponse[];
   statePosition: number,
-  graphClickInfo: any,
+  graphClickInfo: IGraphClickInfo, // eslint-disable-line
   isShortAnswerEnabled: boolean,
-  handleGraphClick: (value: any) => void,
+  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
+  setGraphClickIndex: (index: number | null) => void;
 }
 
 export default function ResponsesGraph({
   data,
-  questionChoices,
   statePosition,
-  graphClickInfo,
   isShortAnswerEnabled,
-  handleGraphClick,
+  setGraphClickIndex,
 }: ResponseGraphProps) {
   const theme = useTheme();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
@@ -53,14 +52,14 @@ export default function ResponsesGraph({
 
   const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - theme.sizing.defaultVictoryPadding : boundingRect.width - (theme.sizing.defaultVictoryPadding + theme.sizing.mdPadding * 2);
   const correctChoiceIndex =
-    data.findIndex((element: any) => element.answerCorrect);
+    data.findIndex((element: any) => element.isCorrect);
   const largestAnswerCount = Math.max(
-    ...data.map((response: any) => response.answerCount),
+    ...data.map((response: any) => response.count),
   );
-
+  const numAnswers = data.length;
   const calculateRoundedTicks = () => {
     const maxAnswerCount = Math.max(
-      ...data.map(({ answerCount }) => answerCount),
+      ...data.map(({ count }) => count),
     );
     const tickInterval = 5;
     const tickCount = Math.ceil(maxAnswerCount / tickInterval);
@@ -69,6 +68,11 @@ export default function ResponsesGraph({
       (_, index) => index * tickInterval,
     );
   };
+  const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
+  const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
+    setGraphClickInfo({graph, selectedIndex })
+    setGraphClickIndex(selectedIndex);
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -90,102 +94,105 @@ export default function ResponsesGraph({
     };
   }, []);
 
-  // theme to eventually be wrapped into a mui theme when host is upgraded to mui v5
-  
+  let tickLabelComponent;
+
+  if (!isShortAnswerEnabled && statePosition < 6) {
+    tickLabelComponent = (
+      <CustomTick 
+        correctChoiceIndex={correctChoiceIndex}
+        statePosition={statePosition}
+        isShortAnswerEnabled={isShortAnswerEnabled}
+      />
+    );
+  }
+
   return (
-    console.log(data)
-    // <ResponseGraphContainer>
-    //   <TitleContainer>
-    //     <TitleText>Number of players</TitleText>
-    //   </TitleContainer>
-    //   <Box ref={graphRef}>
-    //     {(isShortAnswerEnabled ? data.length >= 1 : data.length > 1) && (
-    //     <VictoryChart
-    //       domainPadding={{ x: 36, y: 0 }}
-    //       padding={{
-    //         top: theme.sizing.smPadding,
-    //         bottom: theme.sizing.xSmPadding,
-    //         left: (isShortAnswerEnabled && statePosition < 6) ? theme.sizing.xSmPadding : theme.sizing.defaultVictoryPadding,
-    //         right: theme.sizing.xSmPadding,
-    //       }}
-    //       containerComponent={
-    //         <VictoryContainer 
-    //           style={{
-    //             touchAction: "auto"
-    //           }}
-    //         />
-    //       }
-    //       theme={theme.victoryTheme}
-    //       width={boundingRect.width}
-    //       height={data.length * 65}
-    //     >
-    //       <VictoryAxis
-    //         standalone={false}
-    //         tickLabelComponent={
-    //           <CustomTick
-    //             x={x}
-    //             y={y}
-    //             index={index}
-    //             text={text}
-    //             correctChoiceIndex={correctChoiceIndex}
-    //             statePosition={statePosition}
-    //           />
-    //         }
-    //       />
-    //       {largestAnswerCount < 5 && (
-    //         <VictoryAxis
-    //           dependentAxis
-    //           crossAxis={false}
-    //           standalone={false}
-    //           orientation="top"
-    //           tickValues={[0]}
-    //         />
-    //       )}
-    //       {largestAnswerCount >= 5 && (
-    //         <VictoryAxis
-    //           dependentAxis
-    //           crossAxis={false}
-    //           standalone={false}
-    //           orientation="top"
-    //           tickValues={calculateRoundedTicks()}
-    //           tickFormat={(tick) => Math.round(tick)}
-    //         />
-    //       )}
-    //       <VictoryBar
-    //         data={data}
-    //         y="answerCount"
-    //         x="answerChoice"
-    //         horizontal
-    //         standalone={false}
-    //         cornerRadius={{ topLeft: 4, topRight: 4 }}
-    //         labels={({ datum }) => `${datum.answerCount}`}
-    //         barWidth={({ datum }) =>
-    //           datum.answerCount !== 0 ? theme.sizing.barThicknessResponses : theme.sizing.barThicknessZeroResponses
-    //         }
-    //         animate={{
-    //           onLoad: { duration: 200 },
-    //           duration: 200,
-    //         }}
-    //         dataComponent={
-    //           <CustomBar
-    //             selectedWidth={customBarSelectedWidth}
-    //             selectedHeight={18}
-    //             graphClickInfo={graphClickInfo}
-    //             handleGraphClick={handleGraphClick}
-    //             isShortAnswerEnabled={isShortAnswerEnabled}
-    //           />
-    //         }
-    //         labelComponent={
-    //           <CustomLabel
-    //             questionChoices={questionChoices}
-    //             noResponseLabel={noResponseLabel}
-    //             isShortAnswerEnabled={isShortAnswerEnabled}
-    //           />
-    //         }
-    //       />
-    //     </VictoryChart>
-    //     )}
-    //   </Box>
-    // </ResponseGraphContainer>
+     <ResponseGraphContainer>
+      <TitleContainer>
+        <TitleText>Number of players</TitleText>
+      </TitleContainer>
+      <Box ref={graphRef}>
+        {(isShortAnswerEnabled ? data.length >= 1 : data.length >= 1) && (
+        <VictoryChart
+          domainPadding={{ x: isShortAnswerEnabled ? 32: 16, y: 0 }} // domainPadding is offsetting all data away from the origin. used in conjunction with height
+          padding={{
+            top: theme.sizing.smPadding,
+            bottom: theme.sizing.xSmPadding,
+            left: (isShortAnswerEnabled && statePosition < 6) ? theme.sizing.xSmPadding : theme.sizing.defaultVictoryPadding,
+            right: theme.sizing.xSmPadding,
+          }}
+          containerComponent={
+            <VictoryContainer 
+              style={{
+                touchAction: "auto"
+              }}
+            />
+          }
+          theme={theme.victoryTheme}
+          width={boundingRect.width}
+          height={isShortAnswerEnabled ? data.length * 68 : data.length * 40} // height is a calc of the width of the bars + the space between them + the offset
+        >
+          <VictoryAxis
+            standalone={false}
+            tickLabelComponent={
+              tickLabelComponent
+            }
+          />
+          {largestAnswerCount < 5 && (
+            <VictoryAxis
+              dependentAxis
+              crossAxis={false}
+              standalone={false}
+              orientation="top"
+              tickValues={[0]}
+            />
+          )}
+          {largestAnswerCount >= 5 && (
+            <VictoryAxis
+              dependentAxis
+              crossAxis={false}
+              standalone={false}
+              orientation="top"
+              tickValues={calculateRoundedTicks()}
+              tickFormat={(tick) => Math.round(tick)}
+            />
+          )}
+          <VictoryBar
+            data={data}
+            y="count"
+            x={isShortAnswerEnabled ? "rawAnswer" : "multiChoiceCharacter"}
+            horizontal
+            standalone={false}
+            cornerRadius={{ topLeft: 4, topRight: 4 }}
+            labels={({ datum }) => `${datum.count}`}
+            barWidth={({ datum }) =>
+              datum.count !== 0 ? theme.sizing.barThicknessResponses : theme.sizing.barThicknessZeroResponses
+            }
+            style={{ 
+              data: { 
+                fill: ({ index }: any) => index === numAnswers-1 ? 'transparent' : '#FFF'
+              } 
+            }}
+            dataComponent={
+              <CustomBar 
+                data={data}
+                customBarSelectedWidth={customBarSelectedWidth}
+                graphClickInfo={graphClickInfo}
+                handleGraphClick={handleGraphClick}
+                isShortAnswerEnabled={isShortAnswerEnabled}
+              />
+            }
+            labelComponent={
+              <CustomLabel
+                noResponseLabel={noResponseLabel}
+                isShortAnswerEnabled={isShortAnswerEnabled}
+              />
+            }
+          
+          />
+        </VictoryChart>
+        )}
+      </Box>
+    </ResponseGraphContainer>
   );
 }

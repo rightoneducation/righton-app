@@ -2,16 +2,16 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import styled from '@mui/material/styles/styled';
 import Tooltip from '@mui/material/Tooltip';
-import { ITeam } from '@righton/networking';
-import check from '../../images/Pickedcheck.svg';
+import { IHostTeamAnswersResponse } from '@righton/networking';
+import check from '../../img/Pickedcheck.svg';
 import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
 interface SelectedAnswerProps {
-  data: {answerCount: number, answerCorrect: boolean, answerChoice: string, answerText: string, answerTeams: ITeam[]}[];
+  data: IHostTeamAnswersResponse[];
   correctChoiceIndex: number;
   numPlayers: number;
   statePosition: number;
-  graphClickInfo: any;
+  graphClickIndex: number | null;
   isShortAnswerEnabled: boolean;
 }
 
@@ -43,12 +43,12 @@ const TextContainer = styled(Typography)({
 
 const RectStyle = styled(Box)({
   width: '100%',
-  height: '40px',
+  height: '100%',
   display: 'flex',
   alignItems: 'center',
   color: 'white',
   fontSize: '16px',
-  padding: '10px',
+  padding: '8px',
   borderRadius: '22px',
   border: '1px solid #B1BACB',
   position: 'relative',
@@ -85,30 +85,30 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
     correctChoiceIndex,
     numPlayers,
     statePosition,
-    graphClickInfo,
+    graphClickIndex,
     isShortAnswerEnabled
   } = props;
   const showCustomTick =
-    graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
+    graphClickIndex === data.length - 1 - correctChoiceIndex;
   return (
     <Box>
-      {graphClickInfo.selectedIndex === null ? (
+      {graphClickIndex === null ? (
         <Text>
           Tap on a response to see more details.
         </Text>
       ) : (
-        <Box style={{ width: '100%' }}>
+        <Box style={{ width: '100%'}}>
           <TitleText>
             Showing players who answered:
           </TitleText>
           <RectStyle>
             { !isShortAnswerEnabled &&
             <ChoiceContainer>
-              {data[graphClickInfo.selectedIndex].answerChoice}
+              {data[graphClickIndex].multiChoiceCharacter}
             </ChoiceContainer>
             }
             <TextContainer>
-              {data[graphClickInfo.selectedIndex].answerText}
+              {data[graphClickIndex].rawAnswer}
             </TextContainer>
             {showCustomTick && (
               <Tooltip
@@ -128,7 +128,7 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
           </RectStyle>
           <PlayersSelectedAnswer
             data={data}
-            graphClickInfo={graphClickInfo}
+            graphClickIndex={graphClickIndex}
             numPlayers={numPlayers}
             statePosition={statePosition}
             isShortAnswerEnabled={isShortAnswerEnabled}

@@ -26,7 +26,7 @@ interface AnswerCardProps {
   questionId: string;
   teamMemberAnswersId: string;
   currentTeam: ITeam | null;
-  handleSelectAnswer: (answerText: string) => void;
+  handleSelectAnswer: (answerText: string, multiChoiceCharacter: string) => void;
 }
 
 export default function AnswerCard({

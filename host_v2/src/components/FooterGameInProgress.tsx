@@ -39,17 +39,17 @@ const ButtonStyled = styled(Button)({
   },
 });
 
-const FooterContainer = styled(Box)({
+const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
   bottom: '0',
-  height: '144px',
+  // height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-end',
-  padding: '16px 24px 24px 24px',
+  padding: '16px 16px 24px',
   boxSizing: 'border-box'
-});
+}));
 
 const InnerFooterContainer = styled(Box)({
   display: 'flex',

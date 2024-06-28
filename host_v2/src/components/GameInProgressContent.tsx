@@ -4,8 +4,9 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession } from '@righton/networking';
-import { ConfidenceOption, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
+import { IGameSession, IHostTeamAnswers } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
+import { ConfidenceOption, IGraphClickInfo, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaTripleColumnStyled,
@@ -18,9 +19,10 @@ import QuestionCard from './QuestionCard';
 import AnswerCard from './AnswerCard';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
+import FeaturedMistakes from './FeaturedMistakes';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import FeaturedMistakes from './FeaturedMistakes';
+
 
 interface GameInProgressContentProps {
   // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
@@ -28,6 +30,7 @@ interface GameInProgressContentProps {
   // confidenceGraphClickIndex: number | null;
   // handleConfidenceGraphClick: (selectedIndex: number | null) => void;
   localGameSession: IGameSession;
+  localHostTeamAnswers: IHostTeamAnswers;
   onSelectMistake: (answer: string, isSelected: boolean) => void;
   sortedMistakes: Mistake[];
   setSortedMistakes: (value: Mistake[]) => void;
@@ -40,6 +43,7 @@ export default function GameInProgressContent({
   // confidenceGraphClickIndex,
   // handleConfidenceGraphClick,
   localGameSession,
+  localHostTeamAnswers,
   onSelectMistake,
   sortedMistakes,
   setSortedMistakes,
@@ -52,6 +56,10 @@ export default function GameInProgressContent({
   
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
+  const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
+    setGraphClickInfo({graph, selectedIndex })
+  }
 
   const largeScreen = (
     <BodyContentAreaTripleColumnStyled container>
@@ -62,7 +70,14 @@ export default function GameInProgressContent({
             graphClickIndex={confidenceGraphClickIndex}
             handleGraphClick={handleConfidenceGraphClick}
           /> */}
-          <Responses />
+          <Responses 
+            localGameSession={localGameSession}
+            localHostTeamAnswers={localHostTeamAnswers}
+            statePosition={0}
+            graphClickInfo={graphClickInfo}
+            isShortAnswerEnabled
+            handleGraphClick={handleGraphClick}
+          />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
@@ -93,6 +108,7 @@ export default function GameInProgressContent({
               answerContent={choice.text}
               instructions={currentQuestion.instructions}
               answerReason={choice.reason}
+              key={uuidv4()}
             />
           )}
         </ScrollBoxStyled>
@@ -123,7 +139,14 @@ export default function GameInProgressContent({
                 graphClickIndex={confidenceGraphClickIndex}
                 handleGraphClick={handleConfidenceGraphClick}
               /> */}
-              <Card />
+              <Responses 
+                localGameSession={localGameSession}
+                localHostTeamAnswers={localHostTeamAnswers}   
+                statePosition={0}
+                graphClickInfo={graphClickInfo}
+                isShortAnswerEnabled
+                handleGraphClick={handleGraphClick}
+              />
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>
@@ -177,7 +200,14 @@ export default function GameInProgressContent({
                 graphClickIndex={confidenceGraphClickIndex}
                 handleGraphClick={handleConfidenceGraphClick}
               /> */}
-              <Card />
+              <Responses 
+                localGameSession={localGameSession}
+                localHostTeamAnswers={localHostTeamAnswers}
+                statePosition={0}
+                graphClickInfo={graphClickInfo}
+                isShortAnswerEnabled={false}
+                handleGraphClick={handleGraphClick}
+              />
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>

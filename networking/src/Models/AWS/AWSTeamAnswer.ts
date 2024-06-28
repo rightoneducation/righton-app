@@ -10,6 +10,7 @@ export type AWSTeamAnswer = {
   teamAnswersId?: string | null
   teamName?: string | null
   text?: string | null
+  isCorrect?: boolean | null
   confidenceLevel?: string | null
   hint?: string | null
   createdAt: string

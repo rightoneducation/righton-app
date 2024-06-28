@@ -50,7 +50,7 @@ interface AnswerSelectorComponentProps {
   index: number;
   answerText: string;
   isSubmitted: boolean;
-  handleSelectAnswer: (answerText: string) => void;
+  handleSelectAnswer: (answerText: string, multiChoiceCharacter: string) => void;
 }
 
 export default function AnswerSelector({
@@ -62,7 +62,6 @@ export default function AnswerSelector({
 }: AnswerSelectorComponentProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
-
   const imageMap = {
     [AnswerState.DEFAULT]: UnselectedAnswerImage,
     [AnswerState.CORRECT]: CorrectAnswerImage,
@@ -122,7 +121,7 @@ export default function AnswerSelector({
     case AnswerState.CORRECT:
       return (
         <AnswerSelectorCorrect
-          onClick={() => handleSelectAnswer(answerText)}
+          onClick={() => handleSelectAnswer(answerText, String.fromCharCode(letterCode))}
           disabled
           variant="text"
           isSubmitted={isSubmitted}
@@ -133,7 +132,7 @@ export default function AnswerSelector({
     case AnswerState.SELECTED:
       return (
         <AnswerSelectorSelected
-          onClick={() => handleSelectAnswer(answerText)}
+          onClick={() => handleSelectAnswer(answerText, String.fromCharCode(letterCode))}
           disabled={isSubmitted}
           variant="text"
           isSubmitted={isSubmitted}
@@ -145,7 +144,7 @@ export default function AnswerSelector({
     default:
       return (
         <AnswerSelectorDefault
-          onClick={() => handleSelectAnswer(answerText)}
+          onClick={() => handleSelectAnswer(answerText, String.fromCharCode(letterCode))}
           variant="text"
           disabled={isSubmitted}
           isSubmitted={isSubmitted}

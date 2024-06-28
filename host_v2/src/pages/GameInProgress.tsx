@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { IHostTeamAnswers, GameSessionState } from '@righton/networking';
 import { ConfidenceOption, LocalModel, Mistake } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
@@ -25,6 +26,7 @@ interface GameInProgressProps {
   setSortedMistakes: (value: Mistake[]) => void;
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
+  localHostTeamAnswers: IHostTeamAnswers;
 }
 
 export default function GameInProgress({
@@ -40,10 +42,10 @@ export default function GameInProgress({
   setSortedMistakes,
   isPopularMode,
   setIsPopularMode,
+  localHostTeamAnswers
 }: GameInProgressProps) {
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
-    
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
       setConfidenceGraphClickIndex(selectedIndex);
     };
@@ -65,9 +67,7 @@ export default function GameInProgress({
         <BodyBoxLowerStyled />
         <GameInProgressContent
           localGameSession={localGameSession}
-          // confidenceData={sampleConfidenceData}
-          // confidenceGraphClickIndex={confidenceGraphClickIndex}
-          // handleConfidenceGraphClick={handleConfidenceGraphClick}
+          localHostTeamAnswers={localHostTeamAnswers}
           onSelectMistake={onSelectMistake}
           sortedMistakes={sortedMistakes}
           setSortedMistakes={setSortedMistakes}

@@ -1,20 +1,30 @@
 import { useState, useEffect } from 'react';
 import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient } from '@righton/networking';
 
-export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): IGameSession | null{
-  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  const [hostTeamAnswers, setHostTeamAnswers] = useState<IHostTeamAnswers | null>(null);
-  console.log(gameSessionId);
+export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { backendGameSession: IGameSession | null, backendHostTeamAnswers: IHostTeamAnswers } {
+  const dataManager = apiClients.dataManager as IHostDataManagerAPIClient; //eslint-disable-line
+  const [backendGameSession, setBackendGameSession] = useState<IGameSession | null>(null);
+  const [backendHostTeamAnswers, setBackendHostTeamAnswers] = useState<IHostTeamAnswers>({questions: []});
+
   useEffect(() => {
-    const dataManager = apiClients.dataManager as IHostDataManagerAPIClient; //eslint-disable-line
+
     try {
-      dataManager.initUpdateGameSessionSubscription(gameSessionId, setGameSession)
-        .then((initialSession: IGameSession) => {
-          setGameSession(initialSession); 
+      dataManager.init(gameSessionId).then(() => {
+        const gameSession = dataManager.getGameSession();
+        const hostTeamAnswers = dataManager.getHostTeamAnswers();
+        setBackendGameSession(gameSession);
+        setBackendHostTeamAnswers(hostTeamAnswers);
       });
+
+      dataManager.subscribeToUpdateGameSession(gameSessionId, setBackendGameSession)
+        .then((updatedGameSession: IGameSession) => {
+          setBackendGameSession((prev) => {return {...updatedGameSession}});
+      });
+
       dataManager.subscribeToCreateTeamAnswer((teamAnswers) => {
-        setHostTeamAnswers(teamAnswers);
-        console.log(teamAnswers);
+        const updatedHostTeamAnswers = dataManager.getHostTeamAnswers();
+        setBackendHostTeamAnswers((prev) => {return {...updatedHostTeamAnswers}});
+        console.log("Team Answer Created", teamAnswers);
       });
     } catch (error) {
       console.log('Error:', error);
@@ -25,5 +35,6 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
       dataManager.cleanupSubscription();
     };
   }, []); // eslint-disable-line
-  return gameSession;
+
+  return { backendGameSession, backendHostTeamAnswers };
 }
