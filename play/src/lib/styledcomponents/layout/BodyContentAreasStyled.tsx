@@ -14,6 +14,7 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
   height: '100%',
   overflow: 'hidden',
   zIndex: 2,
+  marginLeft: '0px',
 });
 export const BodyContentAreaTripleColumnStyled = styled(Grid)({
   position: 'absolute',
