@@ -5,6 +5,7 @@
     "@types/jest": "^29.5.1",
     "@types/node": "^18.16.3",
     "@types/stopword": "^2.0.3",
+    "@types/uuid": "^9.0.8",
     "create-ts-index": "^1.14.0",
     "jest": "^29.5.0",
     "ts-jest": "^29.1.0",
@@ -15,7 +16,8 @@
     "aws-amplify": "^5.3.1",
     "mathjs": "^11.11.2",
     "reflect-metadata": "^0.1.13",
-    "stopword": "^2.0.8"
+    "stopword": "^2.0.8",
+    "uuid": "^9.0.1"
   },
   "scripts": {
     "build": "cti s -p ./tsconfig.build.json ./src -s true -b -f index.ts && tsc --build tsconfig.json",

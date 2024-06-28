@@ -100,7 +100,8 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       const team = await apiClients.team.addTeamToGameSessionId(
         gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         teamName,
-        null
+        null,
+        selectedAvatar
       );
       if (!team) {
         setIsAPIError(true);

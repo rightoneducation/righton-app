@@ -82,36 +82,36 @@ export default function PhaseResults({
     gameSession.currentState
   );
 
-  const [newPoints, setNewPoints] = React.useState<number>(0);
-  // update teamscore on the backend, if it fails, flag the error to pop the error modal
-  const updateTeamScore = async (inputTeamId: string, newScore: number) => {
-    try {
-      await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + score });
-      setNewPoints(newScore);
-    } catch {
-      setIsError({ error: true, withheldPoints: newScore });
-    }
-  };
+  // const [newPoints, setNewPoints] = React.useState<number>(0);
+  // // update teamscore on the backend, if it fails, flag the error to pop the error modal
+  // const updateTeamScore = async (inputTeamId: string, newScore: number) => {
+  //   try {
+  //     await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + score });
+  //     setNewPoints(newScore);
+  //   } catch {
+  //     setIsError({ error: true, withheldPoints: newScore });
+  //   }
+  // };
 
-  // calculate new score for use in footer
-  // using useEffect here because scoreindicator causes parent rerenders as it listens to newScore while animating
-  useEffect(() => {
-    let calcNewScore = 0;
-    if (!hasRejoined) {
-      calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
-        gameSession,
-        currentQuestion,
-        currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        isShortAnswerEnabled
-      );
-    }
-    updateTeamScore(teamId, calcNewScore);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // // calculate new score for use in footer
+  // // using useEffect here because scoreindicator causes parent rerenders as it listens to newScore while animating
+  // useEffect(() => {
+  //   let calcNewScore = 0;
+  //   if (!hasRejoined) {
+  //     calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
+  //       gameSession,
+  //       currentQuestion,
+  //       currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  //       isShortAnswerEnabled
+  //     );
+  //   }
+  //   updateTeamScore(teamId, calcNewScore);
+  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleRetry = () => {
-    setIsError((prev) => ({ ...prev, error: false }));
-    updateTeamScore(teamId, isError.withheldPoints);
-  };
+  // const handleRetry = () => {
+  //   setIsError((prev) => ({ ...prev, error: false }));
+  //   updateTeamScore(teamId, isError.withheldPoints);
+  // };
 
   return (
     <StackContainerStyled
@@ -119,7 +119,7 @@ export default function PhaseResults({
       alignItems="center"
       justifyContent="space-between"
     >
-      <ErrorModal
+      {/* <ErrorModal
         isModalOpen={isError.error}
         errorType={ErrorType.SCORE}
         handleRetry={handleRetry}
@@ -156,7 +156,7 @@ export default function PhaseResults({
           newPoints={newPoints}
           score={score}
         />
-      </FooterStackContainerStyled>
+      </FooterStackContainerStyled> */}
     </StackContainerStyled>
   );
 }
