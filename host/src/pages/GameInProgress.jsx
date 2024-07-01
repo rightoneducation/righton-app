@@ -73,10 +73,10 @@ export default function GameInProgress({
   const footerButtonTextDictionary = {
     1: 'Begin Question', // TEAMS_JOINING
     2: 'Continue', // PHASE_1_DISCUSS
-    4: 'Go to Phase 2', // SKIPPED PHASE_1_RESULTS
+    3: 'Go to Phase 2', // SKIPPED PHASE_1_RESULTS
     5: 'Start Phase 2 Question', // PHASE_2_START
     6: 'Continue', // PHASE_2_DISCUSS
-    8: 'Go to Next Question', // SKIPPED PHASE_2_RESULTS
+    7: 'Go to Next Question', // SKIPPED PHASE_2_RESULTS
     9: 'Proceed to RightOn Central', // CHOOSE_CORRECT_ANSWER
   };
   const numPlayers = teams.length;
