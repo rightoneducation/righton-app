@@ -22,6 +22,11 @@ export interface IHostTeamAnswersConfidence {
 }
 
 export interface IHostTeamAnswersHint {
+  rawHint: string;
+  team: string;
+}
+
+export interface IHostTeamAnswersGPTHint {
   themeText: string;
   teams: {
     name: string;
@@ -33,7 +38,8 @@ export interface IHostTeamAnswersHint {
 export interface IHostTeamAnswersPerPhase {
   responses: IHostTeamAnswersResponse[],
   confidences?: IHostTeamAnswersConfidence[],
-  hints?: IHostTeamAnswersHint[] 
+  hints?: IHostTeamAnswersHint[],
+  gptHints?: IHostTeamAnswersGPTHint[] 
 }
 
 /* 
@@ -51,3 +57,10 @@ export interface IHostTeamAnswers {
     phase2: IHostTeamAnswersPerPhase,
   }[]
 }
+
+
+export interface IGPTHints {
+  themeText: string,
+  teams: string[],
+  teamCount: number
+}[]

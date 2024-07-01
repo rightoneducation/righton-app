@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence } from '@righton/networking';
+import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfidenceOption, IGraphClickInfo, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
@@ -13,8 +13,9 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
-import Responses from './Responses';
-import ConfidenceCard from './ConfidenceCard';
+import Responses from './ResponsesGraph/ResponsesCard';
+import ConfidenceCard from './ConfidenceGraph/ConfidenceCard';
+import HintsCard from './HintsGraph/HintsCard';
 import QuestionCard from './QuestionCard';
 import AnswerCard from './AnswerCard';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
@@ -48,7 +49,7 @@ export default function GameInProgressContent({
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
-  setIsPopularMode,
+  setIsPopularMode
 }: GameInProgressContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -56,18 +57,17 @@ export default function GameInProgressContent({
   const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
   const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
   const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
-
-  // currentResponses is used for the Real Time Responses Victory Graph
+  // currentResponses are used for the Real Time Responses Victory Graph
   const currentResponses = currentTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
-  // currentConfidences is used for the Confidence Meter Victory Graph
+  // currentConfidences are used for the Confidence Meter Victory Graph
   const currentConfidences = currentTeamAnswers?.confidences ?? [] as IHostTeamAnswersConfidence[];
-
+  // currentHints are used for the Hints Progress Bar (Pre-GPT)
+  const currentHints = currentTeamAnswers?.hints ?? [] as IHostTeamAnswersHint[];
 
   const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
   }
-
   const largeScreen = (
     <BodyContentAreaTripleColumnStyled container>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
@@ -97,7 +97,15 @@ export default function GameInProgressContent({
             onSelectMistake={onSelectMistake}
             featuredMistakesSelectionValue={featuredMistakesSelectionValue}
           />
-          <Card />
+          <HintsCard 
+            hints={currentHints}
+            numPlayers={localGameSession.teams.length}
+            graphClickInfo={{}}
+            handleGraphClick={()=>{}}
+            hintsError={false}
+            currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
+            isHintLoading={false}
+          />
         </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
@@ -168,7 +176,15 @@ export default function GameInProgressContent({
                 setIsPopularMode={setIsPopularMode}
                 featuredMistakesSelectionValue={featuredMistakesSelectionValue}
               />
-              <Card />
+              <HintsCard 
+                 hints={currentHints}
+                 numPlayers={localGameSession.teams.length}
+                 graphClickInfo={{}}
+                 handleGraphClick={()=>{}}
+                 hintsError={false}
+                 currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
+                 isHintLoading={false}
+              />
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>
@@ -228,6 +244,15 @@ export default function GameInProgressContent({
                 isPopularMode={isPopularMode}
                 setIsPopularMode={setIsPopularMode}
                 featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+              />
+              <HintsCard 
+                 hints={currentHints}
+                 numPlayers={localGameSession.teams.length}
+                 graphClickInfo={{}}
+                 handleGraphClick={()=>{}}
+                 hintsError={false}
+                 currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
+                 isHintLoading={false}
               />
             </ScrollBoxStyled>
           </Grid>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient } from '@righton/networking';
 
 export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { backendGameSession: IGameSession | null, backendHostTeamAnswers: IHostTeamAnswers } {
-  const dataManager = apiClients.dataManager as IHostDataManagerAPIClient; //eslint-disable-line
+  const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
   const [backendGameSession, setBackendGameSession] = useState<IGameSession | null>(null);
   const [backendHostTeamAnswers, setBackendHostTeamAnswers] = useState<IHostTeamAnswers>({questions: []});
 
