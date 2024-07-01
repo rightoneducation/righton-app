@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers} from '@righton/networking';
+import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers, IHostTeamAnswersHint, ModelHelper} from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
@@ -20,6 +20,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     setLocalHostTeamAnswers(backendHostTeamAnswers);
   }, [backendHostTeamAnswers]);
   const handleDeleteTeam = () => {};
+
   let renderContent;
   switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:

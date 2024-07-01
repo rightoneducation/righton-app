@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
-import { LinearProgress, Box, Paper, Typography } from '@mui/material';
+import React, {useState, useEffect} from 'react';
+import { CircularProgress, Box, Paper, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { GameSessionState, isNullOrUndefined } from '@righton/networking';
-// import LinearProgressBar from '../LinearProgressBar';
+import { GameSessionState, isNullOrUndefined, IHostTeamAnswersHint, ModelHelper } from '@righton/networking';
 import HostDefaultCardStyled from '../../lib/styledcomponents/HostDefaultCardStyled';
 import ButtonStyled from '../../lib/styledcomponents/ButtonStyled';
 import HintsSubmittedBar from './HintsSubmittedBar';
 import HintsGraph from './HintsGraph';
+import { APIClientsContext } from '../../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
+import { LocalGameSessionContext } from '../../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../../hooks/context/useLocalGameSessionContext';
+
 
 const BackgroundStyled = styled(Paper)({
   display: 'flex',
@@ -42,37 +46,46 @@ const SubtitleStyledLeftAlign = styled(SubtitleStyled)({
 
 interface HintsProps {
   hints: any;
-  gptHints: any;
   numPlayers: number;
-  totalAnswers: number;
-  questionChoices: any;
-  statePosition: number;
   graphClickInfo: any;
-  isShortAnswerEnabled: boolean;
   handleGraphClick: any;
   hintsError: boolean;
   currentState: GameSessionState;
   isHintLoading: boolean;
-  handleProcessHints: any;
 }
 
 export default function Hints({
   hints,
-  gptHints,
   numPlayers,
-  totalAnswers,
-  questionChoices,
-  statePosition,
   graphClickInfo,
-  isShortAnswerEnabled,
   handleGraphClick,
   hintsError,
   currentState,
-  isHintLoading,
-  handleProcessHints
+  isHintLoading
 }: HintsProps) {
+  const [gptHints, setGPTHints] = useState<any>(null);
   const isHintEmpty = isNullOrUndefined(gptHints) || gptHints?.length === 0;
   const theme = useTheme();
+  const [graphClickIndex, setGraphClickIndex] = useState<number | null>(null);
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+
+  const handleProcessHints = (inputHints: IHostTeamAnswersHint[]) => {
+    const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
+    const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion);
+    let processedGPTHints;
+    if (apiClients.hostDataManager)
+      processedGPTHints = apiClients.hostDataManager.processGPTHints(inputHints, currentQuestion.text, correctAnswer?.text ?? '');
+    setGPTHints(processedGPTHints);
+  };
+  console.log(hints);
+  useEffect(() => {
+    console.log(localGameSession.currentState);
+    if (localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS && hints) {
+      handleProcessHints(hints);
+    }
+  }, [localGameSession.currentState]); // eslint-disable-line
+
   return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
@@ -85,7 +98,7 @@ export default function Hints({
                 Players that have submitted a hint:
             </SubtitleStyledLeftAlign>
             <HintsSubmittedBar
-                inputNum={5}
+                inputNum={hints ? hints.length : 0}
                 totalNum={numPlayers}
             />
              <SubtitleStyled style={{fontStyle: 'italic'}}>
@@ -95,9 +108,15 @@ export default function Hints({
         ) : (
           !isHintEmpty && !isHintLoading && !hintsError ? (
             graphClickInfo.graph === null && (
+              <>
+                <HintsGraph
+                  data={gptHints}
+                  setGraphClickIndex={setGraphClickIndex}
+                />
                 <Typography variant='h4' color={`${theme.palette.primary.main}`}>
                     Tap on a response to see more details.
                 </Typography>
+              </>
             )
           ) : (
             <>
@@ -108,7 +127,7 @@ export default function Hints({
               )}
               {(isHintLoading && !hintsError) && (
                 <>
-                  {/* <CircularProgress style={{color:'#159EFA'}}/> */}
+                  <CircularProgress style={{color:`${theme.palette.primary.circularProgress}`}}/>
                   <Typography variant='h4' color={`${theme.palette.primary.main}`}>
                     The hints are loading ...
                   </Typography>

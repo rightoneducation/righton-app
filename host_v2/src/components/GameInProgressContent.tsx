@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence } from '@righton/networking';
+import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfidenceOption, IGraphClickInfo, Mistake, featuredMistakesSelectionValue } from '../lib/HostModels';
 import {
@@ -49,7 +49,7 @@ export default function GameInProgressContent({
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
-  setIsPopularMode,
+  setIsPopularMode
 }: GameInProgressContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -57,18 +57,17 @@ export default function GameInProgressContent({
   const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
   const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
   const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
-
-  // currentResponses is used for the Real Time Responses Victory Graph
+  // currentResponses are used for the Real Time Responses Victory Graph
   const currentResponses = currentTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
-  // currentConfidences is used for the Confidence Meter Victory Graph
+  // currentConfidences are used for the Confidence Meter Victory Graph
   const currentConfidences = currentTeamAnswers?.confidences ?? [] as IHostTeamAnswersConfidence[];
-
+  // currentHints are used for the Hints Progress Bar (Pre-GPT)
+  const currentHints = currentTeamAnswers?.hints ?? [] as IHostTeamAnswersHint[];
 
   const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
   }
-
   const largeScreen = (
     <BodyContentAreaTripleColumnStyled container>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
@@ -99,19 +98,13 @@ export default function GameInProgressContent({
             featuredMistakesSelectionValue={featuredMistakesSelectionValue}
           />
           <HintsCard 
-            hints={{}}
-            gptHints={{}}
-            numPlayers={10}
-            totalAnswers={10}
-            questionChoices={{}}
-            statePosition={0}
+            hints={currentHints}
+            numPlayers={localGameSession.teams.length}
             graphClickInfo={{}}
-            isShortAnswerEnabled={false}
             handleGraphClick={()=>{}}
             hintsError={false}
             currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
             isHintLoading={false}
-            handleProcessHints={()=>{}}
           />
         </ScrollBoxStyled>
       </Grid>
@@ -184,19 +177,13 @@ export default function GameInProgressContent({
                 featuredMistakesSelectionValue={featuredMistakesSelectionValue}
               />
               <HintsCard 
-                 hints={{}}
-                 gptHints={{}}
-                 numPlayers={10}
-                 totalAnswers={10}
-                 questionChoices={{}}
-                 statePosition={0}
+                 hints={currentHints}
+                 numPlayers={localGameSession.teams.length}
                  graphClickInfo={{}}
-                 isShortAnswerEnabled={false}
                  handleGraphClick={()=>{}}
                  hintsError={false}
                  currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
                  isHintLoading={false}
-                 handleProcessHints={()=>{}}
               />
             </ScrollBoxStyled>
           </Grid>
@@ -259,19 +246,13 @@ export default function GameInProgressContent({
                 featuredMistakesSelectionValue={featuredMistakesSelectionValue}
               />
               <HintsCard 
-                 hints={{}}
-                 gptHints={{}}
-                 numPlayers={10}
-                 totalAnswers={10}
-                 questionChoices={{}}
-                 statePosition={0}
+                 hints={currentHints}
+                 numPlayers={localGameSession.teams.length}
                  graphClickInfo={{}}
-                 isShortAnswerEnabled={false}
                  handleGraphClick={()=>{}}
                  hintsError={false}
                  currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
                  isHintLoading={false}
-                 handleProcessHints={()=>{}}
               />
             </ScrollBoxStyled>
           </Grid>

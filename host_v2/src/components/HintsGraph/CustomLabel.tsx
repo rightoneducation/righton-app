@@ -1,26 +1,23 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { VictoryLabel } from 'victory';
+import { useTheme } from '@mui/material/styles';
+import check from '../../img/Pickedcheck_white.svg';
 
-export default function CustomLabel(props) {
-  const {
-    x,
-    y,
-    datum,
-    barThickness,
-    labelOffset,
-    xSmallPadding,
-    mediumLargePadding,
-    noResponseLabel
-  } = props;
+export default function CustomLabel(props: any) {
+  const {x, y, datum, noResponseLabel} = props;
+  const theme = useTheme();
+  const labelPadding = theme.sizing.defaultVictoryPadding + theme.sizing.xxSmPadding;
+ 
+
   return (
     <g>
-      {datum.teams.length !== 0 && (
+      {datum.count !== 0 && (
         <VictoryLabel
           {...props}
-          x={mediumLargePadding}
-          y={y- labelOffset}
+          x={labelPadding}
+          y={y- theme.sizing.labelOffsetResponses}
           dx={0}
-          dy={-barThickness / 2 - xSmallPadding}
+          dy={-theme.sizing.barThicknessResponses / 2 - theme.sizing.xxSmPadding}
           textAnchor="start"
           verticalAnchor="end"
           text={datum.themeText}
@@ -28,11 +25,11 @@ export default function CustomLabel(props) {
             fontSize: 15,
             fill: 'white',
           }}
-        />
+          />
       )}
       <VictoryLabel
         {...props}
-        x={x > 70 ? x - labelOffset : x + mediumLargePadding}
+        x={x > 70 ? x - theme.sizing.labelOffsetResponses : x + (theme.sizing.mdPadding - theme.sizing.xxSmPadding)}
         y={y}
         textAnchor="end"
         verticalAnchor="middle"

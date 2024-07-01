@@ -1,12 +1,16 @@
 import { PlayDataManagerAPIClient } from './PlayDataManagerAPIClient';
 import { IQuestionAPIClient, ITeamAPIClient, ITeamMemberAPIClient, ITeamAnswerAPIClient } from '../interfaces';
 import { IQuestion, IChoice } from '../../Models/IQuestion';
-import { IHostTeamAnswers } from '../../Models';
+import { IHostTeamAnswers, IHostTeamAnswersHint } from '../../Models';
 import { Environment } from '../interfaces/IBaseAPIClient';
 import { IGameSessionAPIClient } from '../interfaces';
 import { IGameSession } from '../../Models/IGameSession';
 import { BackendAnswer, Answer, NumericAnswer, MultiChoiceAnswer, AnswerFactory, AnswerType } from '../../Models/AnswerClasses';
 import { GameSessionState, ConfidenceLevel } from '../../AWSMobileApi';
+
+export enum HTTP {
+  Post = "POST",
+}
 
 export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   protected questionAPIClient: IQuestionAPIClient;
@@ -17,6 +21,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   private createTeamAnswerSubscription: any;
   private updateTeamAnswerSubscription: any;
   private noResponseCharacter: string;
+  private lambdaHintEndpoint: string;
 
   constructor (
     env: Environment,
@@ -33,6 +38,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     this.teamAnswerAPIClient = teamAnswerAPIClient;
     this.hostTeamAnswers = {questions:[]};
     this.noResponseCharacter = '–';
+    this.lambdaHintEndpoint = `https://yh5ionr9rg.execute-api.us-east-1.amazonaws.com/groupHints/groupHints`;
   }
 
   async init(gameSessionId: string){
@@ -133,8 +139,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
   }
 
-  private processConfidenceLevel(ans: any, teamAnswersQuestion: any, phase: string, teamName: string){
-    const confidenceLevel = teamAnswersQuestion[phase].confidences.find((confidence: any) => confidence.level === ans.confidenceLevel);
+  private processConfidenceLevel(ans: any, teamAnswersQuestion: any, teamName: string){
+    const confidenceLevel = teamAnswersQuestion['phase1'].confidences.find((confidence: any) => confidence.level === ans.confidenceLevel);
     if (confidenceLevel){
       if (ans.isCorrect) {
         confidenceLevel.correct.push({
@@ -148,6 +154,50 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         });
       }
     }
+  }
+
+  private processHint(ans: any, teamAnswersQuestion: any){
+    const hints = teamAnswersQuestion['phase2'].hints;
+    const hint = JSON.parse(ans.hint);
+    if (hint){
+      hints.push({
+        rawAnswer: hint.rawHint,
+        team: hint.teamName  
+      })
+    }
+  }
+
+  public async processGPTHints(
+    hints: IHostTeamAnswersHint[],
+    questionText: string,
+    correctAnswer: string
+  ):Promise<string> {
+      try { 
+      const attempt = fetch(this.lambdaHintEndpoint, {
+          method: HTTP.Post,
+          headers: {
+              "content-type": "application/json",
+              connection: "close",
+              "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({
+              hints: hints,
+              questionText: questionText,
+              correctAnswer: correctAnswer
+          }),
+      })
+      .then((response) => {
+          if (!response.ok) {
+            console.error(response.statusText)
+          }
+          return response.json();
+      })
+      
+      return attempt;
+      } catch (e) {
+          console.log(e)
+      }
+    return "";
   }
 
   private incrementNoResponseCount(teamAnswersQuestion: any, phase: string, teamName: string) {
@@ -293,7 +343,10 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
               if (answer?.questionId === question.id) {
                 const phase = answer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
                 this.processAnswer(answer, teamAnswersQuestion, phase, team.name);
-                this.processConfidenceLevel(answer, teamAnswersQuestion, phase, team.name);
+                if (phase === 'phase1' && answer.confidenceLevel) 
+                  this.processConfidenceLevel(answer, teamAnswersQuestion, team.name);
+                if (phase === 'phase2' && answer.hint)
+                  this.processHint(answer, teamAnswersQuestion);
                 if (phase === 'phase1') {
                   answeredPhase1 = true;
                 } else {
@@ -324,14 +377,11 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     let answerQuestion = this.hostTeamAnswers.questions.find((question: any) => question.questionId === teamAnswer.questionId);
     this.processAnswer(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);
     this.decrementNoResponseCount(answerQuestion, answerPhase, teamAnswer.teamName);
-    console.log(teamAnswer);
-    console.log(this.hostTeamAnswers);
-    if (teamAnswer.confidenceLevel){
-      this.processConfidenceLevel(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);
+    if (answerPhase === 'phase1' && teamAnswer.confidenceLevel){
+      this.processConfidenceLevel(teamAnswer, answerQuestion, teamAnswer.teamName);
     }
-
-    if (teamAnswer.hint){
-      console.log('hint');
+    if (answerPhase === 'phase2' && teamAnswer.hint){
+      this.processHint(teamAnswer, answerQuestion);
     }
 
     if (!teamAnswer) {
