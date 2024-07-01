@@ -55,8 +55,7 @@ export default function GameSessionSwitch({
         (acc: IChoice[], response: IResponse) => {
           const shouldAddResponse = 
             (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
-            currentState !== GameSessionState.PHASE_1_DISCUSS && 
-            currentState !== GameSessionState.PHASE_1_RESULTS) 
+            currentState !== GameSessionState.PHASE_1_DISCUSS) 
               ? (response.isSelectedMistake || response.isCorrect) 
               : true;
         
@@ -142,22 +141,22 @@ export default function GameSessionSwitch({
           newPoints={newPoints}
         />
       );
-    case GameSessionState.PHASE_1_RESULTS:
-    case GameSessionState.PHASE_2_RESULTS:
-      return (
-        <PhaseResults
-          {...gameSession}
-          apiClients={apiClients}
-          gameSession={gameSession}
-          currentQuestionIndex={gameSession.currentQuestionIndex}
-          teamAvatar={localModel.selectedAvatar}
-          teamId={localModel.teamId}
-          answerChoices={answerChoices}
-          score={score}
-          hasRejoined={hasRejoined}
-          isShortAnswerEnabled={isShortAnswerEnabled}
-        />
-      );
+    // case GameSessionState.PHASE_1_RESULTS:
+    // case GameSessionState.PHASE_2_RESULTS:
+    //   return (
+    //     <PhaseResults
+    //       {...gameSession}
+    //       apiClients={apiClients}
+    //       gameSession={gameSession}
+    //       currentQuestionIndex={gameSession.currentQuestionIndex}
+    //       teamAvatar={localModel.selectedAvatar}
+    //       teamId={localModel.teamId}
+    //       answerChoices={answerChoices}
+    //       score={score}
+    //       hasRejoined={hasRejoined}
+    //       isShortAnswerEnabled={isShortAnswerEnabled}
+    //     />
+    //   );
     case GameSessionState.PHASE_2_START:
       return <StartPhase2 />;
     case GameSessionState.FINAL_RESULTS:

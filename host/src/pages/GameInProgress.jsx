@@ -58,22 +58,34 @@ export default function GameInProgress({
   handleProcessHints
 }) {
   const classes = useStyles();
+  // const footerButtonTextDictionary = {
+  //   //dictionary used to assign button text based on the next state
+  //   1: 'Begin Question',
+  //   2: 'Continue',
+  //   3: 'Go to Results',
+  //   4: 'Go to Phase 2',
+  //   5: 'Start Phase 2 Question',
+  //   6: 'Continue',
+  //   7: 'Go to Results',
+  //   8: 'Go to Next Question',
+  //   9: 'Proceed to RightOn Central',
+  // };
   const footerButtonTextDictionary = {
-    //dictionary used to assign button text based on the next state
-    1: 'Begin Question',
-    2: 'Continue',
-    3: 'Go to Results',
-    4: 'Go to Phase 2',
-    5: 'Start Phase 2 Question',
-    6: 'Continue',
-    7: 'Go to Results',
-    8: 'Go to Next Question',
-    9: 'Proceed to RightOn Central',
+    1: 'Begin Question', // TEAMS_JOINING
+    2: 'Continue', // PHASE_1_DISCUSS
+    4: 'Go to Phase 2', // SKIPPED PHASE_1_RESULTS
+    5: 'Start Phase 2 Question', // PHASE_2_START
+    6: 'Continue', // PHASE_2_DISCUSS
+    8: 'Go to Next Question', // SKIPPED PHASE_2_RESULTS
+    9: 'Proceed to RightOn Central', // CHOOSE_CORRECT_ANSWER
   };
   const numPlayers = teams.length;
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+  // for the nextstate func. added
+    let isLastQuestion =
+    (currentQuestionIndex + 1) === questions.length;
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answers = useMemo(
@@ -160,9 +172,41 @@ export default function GameInProgress({
   };
 
   let [modalOpen, setModalOpen] = useState(false);
+  // const nextStateFunc = (currentState) => {
+  //   let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
+  //   return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
+  // };
+  // from the student view file
+  // const nextStateFunc = (currentState) => {
+  //   if (currentState === GameSessionState.PHASE_2_RESULTS && !isLastQuestion) {
+  //     return GameSessionState.CHOOSE_CORRECT_ANSWER;
+  //   } else {
+  //     let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
+  //     return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
+  //   }
+  // };
   const nextStateFunc = (currentState) => {
-    let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
-    return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
+    const stateKeys = Object.keys(GameSessionState);
+    let currentIndex = stateKeys.indexOf(currentState);
+  
+    if (currentIndex === -1) {
+      throw new Error(`Unknown state: ${currentState}`);
+    }
+    // if (currentState === GameSessionState.PHASE_2_DISCUSS && !isLastQuestion) {
+    //   return GameSessionState.CHOOSE_CORRECT_ANSWER;
+    // }
+    let nextIndex = currentIndex + 1;
+  
+    // Skip PHASE_1_RESULTS and PHASE_2_RESULTS
+    if (stateKeys[nextIndex] === 'PHASE_1_RESULTS') {
+      nextIndex += 1; // Skip to PHASE_2_START
+    }
+    if (stateKeys[nextIndex] === 'PHASE_2_RESULTS') {
+      nextIndex += 1; // Skip to CHOOSE_CORRECT_ANSWER
+    }
+    
+  
+    return GameSessionState[stateKeys[nextIndex]];
   };
 
   // handles closing the modal by clicking outside of it or with the "Im done" text
