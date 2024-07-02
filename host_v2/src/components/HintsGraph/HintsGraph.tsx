@@ -31,17 +31,19 @@ const TitleContainer = styled(Box)({
 
 interface HintsGraphProps {
   data: IHostTeamAnswersResponse[];
-  setGraphClickIndex: (index: number | null) => void;
+  graphClickIndex: number | null;
+  handleGraphClick: (selectedIndex: number) => void; // eslint-disable-line
 }
 
 export default function HintsGraph({
   data,
-  setGraphClickIndex,
+  graphClickIndex,
+  handleGraphClick,
 }: HintsGraphProps) {
   const theme = useTheme();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
-  const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
   const graphRef = useRef<HTMLElement | null>(null);
+
   const noResponseLabel = '–';
   const labelOffset = 3;
   const barThickness = 18;
@@ -50,10 +52,6 @@ export default function HintsGraph({
   const largestHintCount = Math.max(
     ...data.map((response) => response.teams.length),
   );
-  const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
-    setGraphClickInfo({graph, selectedIndex })
-    setGraphClickIndex(selectedIndex);
-  }
   const calculateRoundedTicks = () => {
     const maxHintCount = Math.max(
       ...data.map((response) => response.teams.length),
@@ -92,7 +90,7 @@ export default function HintsGraph({
       <Box ref={graphRef}>
         {data.length >= 1 && (
         <VictoryChart
-          domainPadding={{ x: 36, y: 0 }} // domainPadding is offsetting all data away from the origin. used in conjunction with height
+          domainPadding={{ x: 28, y: 0 }} // domainPadding is offsetting all data away from the origin. used in conjunction with height
           padding={{
             top: theme.sizing.smPadding,
             bottom: theme.sizing.xSmPadding,
@@ -147,14 +145,19 @@ export default function HintsGraph({
               onLoad: { duration: 200 },
               duration: 200,
             }}
+            style={{ 
+              data: { 
+                fill: '#FFF'
+              } 
+            }}
             dataComponent={
               <CustomBar
                 xSmallPadding={theme.sizing.xxSmPadding}
                 mediumPadding={theme.sizing.smPadding}
                 defaultVictoryPadding={theme.sizing.defaultVictoryPadding}
-                selectedWidth={customBarSelectedWidth}
+                customBarSelectedWidth={customBarSelectedWidth}
                 selectedHeight={barThickness}
-                graphClickInfo={graphClickInfo}
+                graphClickIndex={graphClickIndex}
                 handleGraphClick={handleGraphClick}
               />
             }

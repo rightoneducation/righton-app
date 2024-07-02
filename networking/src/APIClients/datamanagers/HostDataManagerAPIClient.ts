@@ -161,8 +161,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     const hint = JSON.parse(ans.hint);
     if (hint){
       hints.push({
-        rawAnswer: hint.rawHint,
-        team: hint.teamName  
+        rawHint: hint.rawHint,
+        teamName: hint.teamName  
       })
     }
   }
@@ -171,7 +171,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     hints: IHostTeamAnswersHint[],
     questionText: string,
     correctAnswer: string
-  ):Promise<string> {
+  ):Promise<any> {
+    console.log(hints);
       try { 
       const attempt = fetch(this.lambdaHintEndpoint, {
           method: HTTP.Post,
@@ -181,7 +182,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
               "Access-Control-Allow-Origin": "*",
           },
           body: JSON.stringify({
-              hints: hints,
+              hints,
               questionText: questionText,
               correctAnswer: correctAnswer
           }),
@@ -190,6 +191,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           if (!response.ok) {
             console.error(response.statusText)
           }
+          console.log(response);
           return response.json();
       })
       

@@ -15,7 +15,7 @@ export default function CustomBar( props: any ) {
     y,
     customBarSelectedWidth,
     index,
-    graphClickInfo,
+    graphClickIndex,
     handleGraphClick
    } = props;
    const theme = useTheme();
@@ -23,11 +23,10 @@ export default function CustomBar( props: any ) {
     // wrapping this in a useMemo in an effort to avoid any additional renders
     const isSelected = useMemo(() =>{
       // ensure that 0 isn't treated as falsy
-      return graphClickInfo.selectedIndex !== null &&
-      graphClickInfo.selectedIndex !== undefined &&
-      graphClickInfo.selectedIndex === index &&
-      graphClickInfo.graph === 'realtime';
-     }, [graphClickInfo.selectedIndex, index, graphClickInfo.graph]);
+      return graphClickIndex !== null &&
+      graphClickIndex !== undefined &&
+      graphClickIndex === index 
+     }, [graphClickIndex, index]);
   return (
     <g>
       <Bar {...props} />
@@ -46,7 +45,7 @@ export default function CustomBar( props: any ) {
           rx={8}
           ry={8}
           onClick={() =>
-            handleGraphClick({ graph: 'realtime', selectedIndex: index })
+            handleGraphClick(index)
           }
           style={{ 
             cursor: 'pointer',

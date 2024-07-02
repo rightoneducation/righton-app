@@ -66,6 +66,7 @@ export default function GameInProgressContent({
 
   const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
+    console.log('handleGraphClick');
     setGraphClickInfo({graph, selectedIndex })
   }
   const largeScreen = (
@@ -100,11 +101,7 @@ export default function GameInProgressContent({
           <HintsCard 
             hints={currentHints}
             numPlayers={localGameSession.teams.length}
-            graphClickInfo={{}}
-            handleGraphClick={()=>{}}
-            hintsError={false}
             currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
-            isHintLoading={false}
           />
         </ScrollBoxStyled>
       </Grid>
@@ -179,11 +176,7 @@ export default function GameInProgressContent({
               <HintsCard 
                  hints={currentHints}
                  numPlayers={localGameSession.teams.length}
-                 graphClickInfo={{}}
-                 handleGraphClick={()=>{}}
-                 hintsError={false}
                  currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
-                 isHintLoading={false}
               />
             </ScrollBoxStyled>
           </Grid>
@@ -248,11 +241,7 @@ export default function GameInProgressContent({
               <HintsCard 
                  hints={currentHints}
                  numPlayers={localGameSession.teams.length}
-                 graphClickInfo={{}}
-                 handleGraphClick={()=>{}}
-                 hintsError={false}
                  currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
-                 isHintLoading={false}
               />
             </ScrollBoxStyled>
           </Grid>

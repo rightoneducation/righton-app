@@ -6,7 +6,7 @@ import check from '../../img/Pickedcheck_white.svg';
 export default function CustomLabel(props: any) {
   const {x, y, datum, noResponseLabel} = props;
   const theme = useTheme();
-  const labelPadding = theme.sizing.defaultVictoryPadding + theme.sizing.xxSmPadding;
+  const labelPadding = theme.sizing.mdPadding;
  
 
   return (
