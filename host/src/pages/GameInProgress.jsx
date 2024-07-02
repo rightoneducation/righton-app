@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Box } from '@material-ui/core';
 import FooterGame from '../components/FooterGame';
 import HeaderGame from '../components/HeaderGame';
 import CheckMark from '../images/Union.png';
@@ -7,6 +7,10 @@ import GameModal from '../components/GameModal';
 import GameLoadModal from '../components/GameLoadModal';
 import { GameSessionState } from '@righton/networking';
 import GameInProgressContentSwitch from '../components/GameInProgressContentSwitch';
+import p1studentview from '../images/p1studentview.svg';
+import p2studentview from '../images/p2studentview.svg';
+
+
 import {
   getTotalAnswers,
   getQuestionChoices,
@@ -312,6 +316,12 @@ export default function GameInProgress({
           }
           gameTimer={gameTimer}
         />
+        {currentState === GameSessionState.PHASE_1_DISCUSS && (
+          <Box><img src={p1studentview}  alt="About Icon" /> </Box>
+        )}
+        {currentState === GameSessionState.PHASE_2_DISCUSS && (
+          <Box><img src={p2studentview}  alt="About Icon" /> </Box>
+        )}
         <div className={classes.contentContainer}>
           <GameInProgressContentSwitch
             questions={questions}
