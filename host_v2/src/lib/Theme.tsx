@@ -18,6 +18,7 @@ const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
 const questionGradient =
   'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator
+const circularProgress = '#159EFA';
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
@@ -378,6 +379,7 @@ declare module '@mui/material/styles' {
     highlightGradient: string;
     altHighlightGradient: string;
     questionGradient: string;
+    circularProgress: string;
     red: string;
     green: string;
     darkPurple: string;
@@ -387,6 +389,7 @@ declare module '@mui/material/styles' {
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    baseQuestionColor: string;
     playerFeedbackLabelColor: string;
     feedbackCardsInstructionsColor: string;
     graphAccentColor: string;
@@ -407,6 +410,7 @@ declare module '@mui/material/styles' {
     highlightGradient?: string;
     altHighlightGradient?: string;
     questionGradient?: string;
+    circularProgress?: string;
     red?: string;
     green?: string;
     darkPurple?: string;
@@ -475,6 +479,7 @@ export default createTheme({
       highlightGradient,
       altHighlightGradient,
       questionGradient,
+      circularProgress,
       red: redColor,
       green: greenColor,
       darkPurple: darkPurpleColor,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IHostTeamAnswers, GameSessionState } from '@righton/networking';
+import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint } from '@righton/networking';
 import { ConfidenceOption, LocalModel, Mistake } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
@@ -42,7 +42,7 @@ export default function GameInProgress({
   setSortedMistakes,
   isPopularMode,
   setIsPopularMode,
-  localHostTeamAnswers
+  localHostTeamAnswers,
 }: GameInProgressProps) {
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
