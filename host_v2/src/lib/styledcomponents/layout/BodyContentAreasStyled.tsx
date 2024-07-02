@@ -7,7 +7,7 @@ export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme, isShortA
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: isShortAnswerEnabled || isHintEnabled ? '1236px' : `${theme.breakpoints.values.md}px`,
+  maxWidth: isShortAnswerEnabled || isHintEnabled ? '1236px' : `${theme.breakpoints.values.lg}px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',
@@ -29,6 +29,7 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   width: '100%',
   height: '100%',
   overflow: 'hidden',
+  paddingTop: `${theme.sizing.smPadding}px`,
   zIndex: 2,
 }));
 

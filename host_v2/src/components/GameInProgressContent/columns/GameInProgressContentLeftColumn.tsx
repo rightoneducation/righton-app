@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Grid } from '@mui/material';
 import { IQuestion, IHostTeamAnswersResponse, IHostTeamAnswersConfidence } from '@righton/networking';
 import { ScreenSize, IGraphClickInfo } from '../../../lib/HostModels';
@@ -19,8 +20,7 @@ interface GameInProgressContentLeftColumnProps {
 }
 
 
-export const GameInProgressContentLeftColumn = (
-  { 
+export default function GameInProgressContentLeftColumn ({ 
     currentQuestion, 
     currentResponses, 
     currentConfidences, 
@@ -30,7 +30,7 @@ export const GameInProgressContentLeftColumn = (
     screenSize, 
     handleGraphClick 
   }: GameInProgressContentLeftColumnProps
-) => {
+){
   return (
     <Grid item xs={12} sm={isShortAnswerEnabled || screenSize !== ScreenSize.LARGE ? 4 : 6} sx={{ width: '100%', height: '100%' }}>
       <ScrollBoxStyled>

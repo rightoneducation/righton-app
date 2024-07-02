@@ -1,29 +1,20 @@
 import React from 'react';
-import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
-import { ConfidenceOption, IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
+import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaTripleColumnStyled,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import Card from '../Card';
-import Responses from '../ResponsesGraph/ResponsesCard';
-import ConfidenceCard from '../ConfidenceGraph/ConfidenceCard';
-import HintsCard from '../HintsGraph/HintsCard';
-import QuestionCard from '../QuestionCard';
-import AnswerCard from '../AnswerCard';
-import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled';
-import FeaturedMistakes from '../FeaturedMistakes';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { GameInProgressContentColumnOne } from './columns/GameInProgressContentColumnOne';
+import GameInProgressContentLeftColumn from './columns/GameInProgressContentLeftColumn';
+import GameInProgressContentMidColumn from './columns/GameInProgressContentMidColumn';
+import GameInProgressContentRightColumn from './columns/GameInProgressContentRightColumn';
 
 
 interface GameInProgressContentProps {
@@ -79,170 +70,118 @@ export default function GameInProgressContent({
     setGraphClickInfo({graph, selectedIndex })
   }
 
+  const leftCardsColumn = (
+    <GameInProgressContentLeftColumn 
+      currentQuestion={currentQuestion}
+      currentResponses={currentResponses}
+      currentConfidences={currentConfidences}
+      graphClickInfo={graphClickInfo}
+      isConfidenceEnabled={isConfidenceEnabled}
+      isShortAnswerEnabled={isShortAnswerEnabled}
+      screenSize={screenSize}
+      handleGraphClick={handleGraphClick}
+    />
+  );
 
-
+  const midCardsColumn = (
+    <GameInProgressContentMidColumn
+      onSelectMistake={onSelectMistake}
+      sortedMistakes={sortedMistakes}
+      setSortedMistakes={setSortedMistakes}
+      isPopularMode={isPopularMode}
+      setIsPopularMode={setIsPopularMode}
+      featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+      isShortAnswerEnabled={isShortAnswerEnabled}
+      isHintEnabled={isHintEnabled}
+      currentHints={currentHints}
+      numPlayers={localGameSession.teams.length}
+    />
+  );
   
-  const phase1ShortAnswerColumn = (
-    <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
-      <ScrollBoxStyled>
-        {isShortAnswerEnabled &&
-          <FeaturedMistakes
-            sortedMistakes={sortedMistakes}
-            setSortedMistakes={setSortedMistakes}
-            isPopularMode={isPopularMode}
-            setIsPopularMode={setIsPopularMode}
-            onSelectMistake={onSelectMistake}
-            featuredMistakesSelectionValue={featuredMistakesSelectionValue}
-          /> 
-        }
-        {isHintEnabled &&
-          <HintsCard 
-            hints={currentHints}
-            numPlayers={localGameSession.teams.length}
-            currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
-          />
-        }
-      </ScrollBoxStyled>
-    </Grid>
+  const rightCardsColumn = (
+    <GameInProgressContentRightColumn 
+      currentQuestion={currentQuestion}
+      localGameSession={localGameSession}
+      isShortAnswerEnabled={isShortAnswerEnabled}
+    />
   );
-  const phase1QuestionColumn = (
-    <Grid item xs={12} sm={isShortAnswerEnabled  ? 4 : 6} sx={{ width: '100%', height: '100%' }}>
-      <ScrollBoxStyled>
-        <QuestionCard 
-        questionText={currentQuestion.text}
-        imageUrl={currentQuestion.imageUrl}
-        currentQuestionIndex={localGameSession.currentQuestionIndex}
-        currentState={localGameSession.currentState}
-        />
-        { currentQuestion.choices.map((choice, index) => 
-          <AnswerCard 
-            isCorrectAnswer={choice.isAnswer}
-            answerIndex={index}
-            answerContent={choice.text}
-            instructions={currentQuestion.instructions}
-            answerReason={choice.reason}
-            key={uuidv4()}
-          />
-        )}
-      </ScrollBoxStyled>
-    </Grid>
-  );
-
-  const largeScreen = (
-    <BodyContentAreaTripleColumnStyled container>
-      <GameInProgressContentColumnOne 
-        currentQuestion={currentQuestion}
-        currentResponses={currentResponses}
-        currentConfidences={currentConfidences}
-        graphClickInfo={graphClickInfo}
-        isConfidenceEnabled={isConfidenceEnabled}
-        isShortAnswerEnabled={isShortAnswerEnabled}
-        screenSize={screenSize}
-        handleGraphClick={handleGraphClick}
-      />
-      { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
-        phase1ShortAnswerColumn
-      }
-      {phase1QuestionColumn}
-    </BodyContentAreaTripleColumnStyled>
-  );
-
-  const mediumScreen = (
-    <BodyContentAreaDoubleColumnStyled>
-      {isShortAnswerEnabled ? (
-        <Swiper
-          modules={[Pagination]}
-          pagination={{
-            el: '.swiper-pagination-container',
-            bulletClass: 'swiper-pagination-bullet',
-            bulletActiveClass: 'swiper-pagination-bullet-active',
-            clickable: true,
-            renderBullet(index: number, className: string) {
-              return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-            },
-          }}
-          slidesPerView={2.1}
-        >
-          <SwiperSlide>
-            {phase1AnsweringColumn}
-          </SwiperSlide>
-          <SwiperSlide>
-            {phase1ShortAnswerColumn}
-          </SwiperSlide>
-          <SwiperSlide>
-            {phase1QuestionColumn}
-          </SwiperSlide>
-        </Swiper>
-      ) : (
-        <>
-          {phase1AnsweringColumn}
-          {phase1QuestionColumn}
-        </>
-      )}
-    </BodyContentAreaDoubleColumnStyled>
-  );
-
-  const smallScreen = (
-    <BodyContentAreaSingleColumnStyled>
-      <Swiper
-        modules={[Pagination]}
-        pagination={{
-          el: '.swiper-pagination-container',
-          bulletClass: 'swiper-pagination-bullet',
-          bulletActiveClass: 'swiper-pagination-bullet-active',
-          clickable: true,
-          renderBullet(index: number, className: string) {
-            return `<span class="${className}" style="width:20px; height:6px; border-radius:0;"></span>`;
-          },
-        }}
-        slidesPerView={1.1}
-      >
-        <SwiperSlide>
-         {phase1AnsweringColumn}
-        </SwiperSlide>
-        {isShortAnswerEnabled &&
-          <SwiperSlide>
-            {phase1ShortAnswerColumn}
-          </SwiperSlide>
-        }
-        <SwiperSlide>
-          {phase1QuestionColumn}
-        </SwiperSlide>
-      </Swiper>
-    </BodyContentAreaSingleColumnStyled>
-  );
-
+  
   switch(screenSize) {
     case (ScreenSize.SMALL):
-      return smallScreen;
+      return (
+        <BodyContentAreaSingleColumnStyled>
+          <Swiper
+            modules={[Pagination]}
+            pagination={{
+              el: '.swiper-pagination-container',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              clickable: true,
+              renderBullet(index: number, className: string) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:0;"></span>`;
+              },
+            }}
+            slidesPerView={1.1}
+          >
+            <SwiperSlide>
+              {leftCardsColumn}
+            </SwiperSlide>
+            { isShortAnswerEnabled &&
+              <SwiperSlide>
+                {midCardsColumn}
+              </SwiperSlide>
+            }
+            <SwiperSlide>
+              {rightCardsColumn}
+            </SwiperSlide>
+          </Swiper>
+        </BodyContentAreaSingleColumnStyled>
+      );
     case (ScreenSize.MEDIUM):
-      return mediumScreen;
+      return (
+        <BodyContentAreaDoubleColumnStyled>
+          {isShortAnswerEnabled ? (
+            <Swiper
+              modules={[Pagination]}
+              pagination={{
+                el: '.swiper-pagination-container',
+                bulletClass: 'swiper-pagination-bullet',
+                bulletActiveClass: 'swiper-pagination-bullet-active',
+                clickable: true,
+                renderBullet(index: number, className: string) {
+                  return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                },
+              }}
+              slidesPerView={2.1}
+            >
+              <SwiperSlide>
+                {leftCardsColumn}
+              </SwiperSlide>
+              <SwiperSlide>
+                {midCardsColumn}
+              </SwiperSlide>
+              <SwiperSlide>
+                {rightCardsColumn}
+              </SwiperSlide>
+            </Swiper>
+          ) : (
+            <>
+              {leftCardsColumn}
+              {rightCardsColumn}
+            </>
+          )}
+        </BodyContentAreaDoubleColumnStyled>
+      );
     case (ScreenSize.LARGE):
     default:
-      return largeScreen;
+      return (
+        <BodyContentAreaTripleColumnStyled container>
+          {leftCardsColumn}
+          { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
+            midCardsColumn
+          }
+          {rightCardsColumn}
+        </BodyContentAreaTripleColumnStyled>
+      );
   }
-
-  // if (isLargeScreen) {
-  //   return largeScreen;
-  // }
-  // if (isMediumScreen) {
-  //   return (
-  //     <>
-  //       {mediumScreen}
-  //       <PaginationContainerStyled
-  //         className="swiper-pagination-container"
-  //         style={{ paddingTop: `${theme.sizing.lgPadding}px`, zIndex: 2 }}
-  //       />
-  //     </>
-  //   );
-  // }
-  // return (
-  //   <>
-  //     {smallScreen}
-  //     <PaginationContainerStyled
-  //       className="swiper-pagination-container"
-  //       style={{ paddingTop: `${theme.sizing.lgPadding}px`, zIndex: 2 }}
-  //     />
-  //   </>
-  // );
 }

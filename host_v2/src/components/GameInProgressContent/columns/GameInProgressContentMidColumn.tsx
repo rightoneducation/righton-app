@@ -1,36 +1,39 @@
-
+import React from 'react';
 import { Grid } from '@mui/material';
-import { IQuestion, IHostTeamAnswersResponse, IHostTeamAnswersConfidence } from '@righton/networking';
-import { ScreenSize, IGraphClickInfo } from '../../../lib/HostModels';
+import { GameSessionState, IHostTeamAnswersHint } from '@righton/networking';
+import { Mistake } from "../../../lib/HostModels";
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
 import FeaturedMistakes from '../../FeaturedMistakes';
 import HintsCard from '../../HintsGraph/HintsCard';
 
 
 interface GameInProgressContentMidColumnProps {
-  currentQuestion: IQuestion;
-  currentResponses: IHostTeamAnswersResponse[];
-  currentConfidences: IHostTeamAnswersConfidence[];
-  graphClickInfo: IGraphClickInfo;
-  isConfidenceEnabled: boolean;
+  onSelectMistake: (answer: string, isSelected: boolean) => void;
+  sortedMistakes: Mistake[];
+  setSortedMistakes: (value: Mistake[]) => void;
+  isPopularMode: boolean;
+  setIsPopularMode: (value: boolean) => void;
+  featuredMistakesSelectionValue: string;
   isShortAnswerEnabled: boolean;
-  screenSize: ScreenSize; 
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
+  isHintEnabled: boolean;
+  currentHints: IHostTeamAnswersHint[];
+  numPlayers: number;
 }
 
 
-export const GameInProgressContentMidColumn = (
-  { 
-    currentQuestion, 
-    currentResponses, 
-    currentConfidences, 
-    graphClickInfo, 
-    isConfidenceEnabled,
-    isShortAnswerEnabled, 
-    screenSize, 
-    handleGraphClick 
+export default function GameInProgressContentMidColumn ({ 
+    onSelectMistake,
+    sortedMistakes,
+    setSortedMistakes,
+    isPopularMode,
+    setIsPopularMode,
+    featuredMistakesSelectionValue,
+    isShortAnswerEnabled,
+    isHintEnabled,
+    currentHints,
+    numPlayers
   }: GameInProgressContentMidColumnProps
-) => {
+){
   return (
     <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
     <ScrollBoxStyled>
@@ -47,7 +50,7 @@ export const GameInProgressContentMidColumn = (
       {isHintEnabled &&
         <HintsCard 
           hints={currentHints}
-          numPlayers={localGameSession.teams.length}
+          numPlayers={numPlayers}
           currentState={GameSessionState.CHOOSE_TRICKIEST_ANSWER}
         />
       }
