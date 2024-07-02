@@ -192,22 +192,25 @@ export default function GameInProgress({
     if (currentIndex === -1) {
       throw new Error(`Unknown state: ${currentState}`);
     }
-    // if (currentState === GameSessionState.PHASE_2_DISCUSS && !isLastQuestion) {
-    //   return GameSessionState.CHOOSE_CORRECT_ANSWER;
-    // }
+    if (currentState === GameSessionState.PHASE_2_DISCUSS && !isLastQuestion) {
+      return GameSessionState.CHOOSE_CORRECT_ANSWER;
+    }
     let nextIndex = currentIndex + 1;
   
     // Skip PHASE_1_RESULTS and PHASE_2_RESULTS
     if (stateKeys[nextIndex] === 'PHASE_1_RESULTS') {
       nextIndex += 1; // Skip to PHASE_2_START
     }
+    // CHECK - changing this caused error at end
     if (stateKeys[nextIndex] === 'PHASE_2_RESULTS') {
       nextIndex += 1; // Skip to CHOOSE_CORRECT_ANSWER
+      // nextIndex = 2;
     }
     
   
     return GameSessionState[stateKeys[nextIndex]];
   };
+
 
   // handles closing the modal by clicking outside of it or with the "Im done" text
   const handleModalClose = (modalOpen) => {
@@ -228,6 +231,15 @@ export default function GameInProgress({
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
+    if (!isLastQuestion && currentState === GameSessionState.PHASE_2_DISCUSS) {
+      // if they are on the last page a\nd need to advance to the next question
+      assembleNavDictionary(false, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
+      handleUpdateGameSession({
+        currentState: nextStateFunc(currentState),
+        currentQuestionIndex: currentQuestionIndex + 1,
+      });
+      return;
+    }
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();

@@ -158,7 +158,8 @@ export default function GameSessionSwitch({
     //     />
     //   );
     case GameSessionState.PHASE_2_START:
-      return <StartPhase2 />;
+      return <StartPhase2 /> 
+
     case GameSessionState.FINAL_RESULTS:
       return (
         <FinalResultsContainer
