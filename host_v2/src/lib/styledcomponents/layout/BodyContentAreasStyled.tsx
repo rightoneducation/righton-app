@@ -1,13 +1,13 @@
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
-export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme }) => ({
+export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme, isShortAnswerEnabled, isHintEnabled }) => ({
   position: 'absolute',
   top: '0',
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: '1236px',
+  maxWidth: isShortAnswerEnabled || isHintEnabled ? '1236px' : `${theme.breakpoints.values.md}px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',

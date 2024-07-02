@@ -6,7 +6,7 @@ import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgro
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import GameInProgressContent from '../components/GameInProgressContent';
+import GameInProgressContent from '../components/GameInProgressContent/GameInProgressContent';
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
 import FooterGameInProgress from '../components/FooterGameInProgress';

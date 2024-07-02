@@ -4,6 +4,12 @@
 export const StorageKey = 'rightOn';
 export const featuredMistakesSelectionValue = 'A';
 
+export enum ScreenSize {
+  SMALL,
+  MEDIUM,
+  LARGE
+}
+
 export interface LocalModel {
   hasRejoined: boolean;
   currentTimer: number;
