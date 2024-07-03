@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { makeStyles, Box } from '@material-ui/core';
+import { makeStyles, Box, Typography } from '@material-ui/core';
 import FooterGame from '../components/FooterGame';
 import HeaderGame from '../components/HeaderGame';
 import CheckMark from '../images/Union.png';
@@ -271,6 +271,8 @@ export default function GameInProgress({
         return 'End Answering';
       else return footerButtonTextDictionary[statePosition];
     }
+    if (statePosition === 7 && isLastQuestion)
+        return 'See Leaderboard';
     return footerButtonTextDictionary[statePosition];
   };
   return (
@@ -317,10 +319,20 @@ export default function GameInProgress({
           gameTimer={gameTimer}
         />
         {currentState === GameSessionState.PHASE_1_DISCUSS && (
-          <Box><img src={p1studentview}  alt="About Icon" /> </Box>
+          <Box style={{display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          alignContent: 'center'}}>
+            <Typography style ={{color: 'white',fontWeight: '700',fontFamily: 'Poppins',size: '16px',lineHeight: '24px',}}>Current Student View</Typography>
+            <img src={p1studentview}  alt="About Icon" /> </Box>
         )}
         {currentState === GameSessionState.PHASE_2_DISCUSS && (
-          <Box><img src={p2studentview}  alt="About Icon" /> </Box>
+          <Box style={{display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          alignContent: 'center'}}>
+            <Typography style ={{color: 'white',fontWeight: '700',fontFamily: 'Poppins',size: '16px',lineHeight: '24px',}}>Current Student View</Typography>
+            <img src={p2studentview}  alt="About Icon" /> </Box>
         )}
         <div className={classes.contentContainer}>
           <GameInProgressContentSwitch
