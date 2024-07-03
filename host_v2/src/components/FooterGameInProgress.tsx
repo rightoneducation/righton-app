@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Button, Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBarGroup from './ProgressBarGroup';
@@ -9,6 +9,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { ScreenSize } from '../lib/HostModels';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -42,8 +43,10 @@ const ButtonStyled = styled(Button)({
 const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
   bottom: '0',
+  margin: 'auto',
   // height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
   width: '100%',
+  maxWidth: '700px',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-end',
@@ -62,14 +65,18 @@ const InnerFooterContainer = styled(Box)({
 interface FootStartGameProps {
   currentState: GameSessionState;
   teamsLength: number;
+  screenSize: ScreenSize;
 }
 
 function FooterStartGame({ 
   currentState,
-  teamsLength
+  teamsLength,
+  screenSize
 }: FootStartGameProps) {
+  const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const { isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
 
   const handleButtonClick = () => {
@@ -77,11 +84,16 @@ function FooterStartGame({
     dispatch({type: 'advance_game_phase', payload: {nextState}});
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
   };
-
   return (
     <FooterContainer>
       <InnerFooterContainer>
-        { currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
+        { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && isShortAnswerEnabled)) && (
+          <PaginationContainerStyled
+            className="swiper-pagination-container"
+            style={{ paddingTop: `${theme.sizing.xxSmPadding}px`, zIndex: 2 }}
+          />
+        )}
+        { (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
           <ProgressBarGroup teamsLength={teamsLength} />
         }
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>

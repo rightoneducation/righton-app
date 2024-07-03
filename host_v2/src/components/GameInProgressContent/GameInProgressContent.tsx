@@ -1,6 +1,4 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint } from '@righton/networking';
@@ -29,6 +27,7 @@ interface GameInProgressContentProps {
   setSortedMistakes: (value: Mistake[]) => void;
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
+  screenSize: ScreenSize;
 } // eslint-disable-line
 
 export default function GameInProgressContent({
@@ -41,16 +40,9 @@ export default function GameInProgressContent({
   sortedMistakes,
   setSortedMistakes,
   isPopularMode,
-  setIsPopularMode
+  setIsPopularMode,
+  screenSize
 }: GameInProgressContentProps) {
-  const theme = useTheme(); // eslint-disable-line
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const screenSize = isLargeScreen  // eslint-disable-line
-      ? ScreenSize.LARGE 
-      : isMediumScreen 
-        ? ScreenSize.MEDIUM 
-        : ScreenSize.SMALL;
   const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
   const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
   const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];

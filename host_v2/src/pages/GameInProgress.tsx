@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint } from '@righton/networking';
-import { ConfidenceOption, LocalModel, Mistake } from '../lib/HostModels';
+import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -44,11 +46,19 @@ export default function GameInProgress({
   setIsPopularMode,
   localHostTeamAnswers,
 }: GameInProgressProps) {
+    const theme = useTheme();
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
       setConfidenceGraphClickIndex(selectedIndex);
     };
+    const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+    const screenSize = isLargeScreen  // eslint-disable-line
+        ? ScreenSize.LARGE 
+        : isMediumScreen 
+          ? ScreenSize.MEDIUM 
+          : ScreenSize.SMALL;
 
     return(
       <StackContainerStyled>
@@ -73,10 +83,15 @@ export default function GameInProgress({
           setSortedMistakes={setSortedMistakes}
           isPopularMode={isPopularMode}
           setIsPopularMode={setIsPopularMode}
+          screenSize={screenSize}
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled >
-        <FooterGameInProgress teamsLength={5} currentState={localGameSession.currentState}/>
+        <FooterGameInProgress 
+          teamsLength={5} 
+          currentState={localGameSession.currentState}
+          screenSize={screenSize}
+        />
       </FooterBackgroundStyled>
     </StackContainerStyled>
   );
