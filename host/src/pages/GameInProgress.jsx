@@ -7,8 +7,6 @@ import GameModal from '../components/GameModal';
 import GameLoadModal from '../components/GameLoadModal';
 import { GameSessionState } from '@righton/networking';
 import GameInProgressContentSwitch from '../components/GameInProgressContentSwitch';
-import p1studentview from '../images/p1studentview.svg';
-import p2studentview from '../images/p2studentview.svg';
 
 
 import {
@@ -62,18 +60,7 @@ export default function GameInProgress({
   handleProcessHints
 }) {
   const classes = useStyles();
-  // const footerButtonTextDictionary = {
-  //   //dictionary used to assign button text based on the next state
-  //   1: 'Begin Question',
-  //   2: 'Continue',
-  //   3: 'Go to Results',
-  //   4: 'Go to Phase 2',
-  //   5: 'Start Phase 2 Question',
-  //   6: 'Continue',
-  //   7: 'Go to Results',
-  //   8: 'Go to Next Question',
-  //   9: 'Proceed to RightOn Central',
-  // };
+
   const footerButtonTextDictionary = {
     1: 'Begin Question', // TEAMS_JOINING
     2: 'Continue', // PHASE_1_DISCUSS
@@ -176,19 +163,6 @@ export default function GameInProgress({
   };
 
   let [modalOpen, setModalOpen] = useState(false);
-  // const nextStateFunc = (currentState) => {
-  //   let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
-  //   return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
-  // };
-  // from the student view file
-  // const nextStateFunc = (currentState) => {
-  //   if (currentState === GameSessionState.PHASE_2_RESULTS && !isLastQuestion) {
-  //     return GameSessionState.CHOOSE_CORRECT_ANSWER;
-  //   } else {
-  //     let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
-  //     return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
-  //   }
-  // };
   const nextStateFunc = (currentState) => {
     const stateKeys = Object.keys(GameSessionState);
     let currentIndex = stateKeys.indexOf(currentState);
@@ -318,22 +292,6 @@ export default function GameInProgress({
           }
           gameTimer={gameTimer}
         />
-        {currentState === GameSessionState.PHASE_1_DISCUSS && (
-          <Box style={{display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          alignContent: 'center'}}>
-            <Typography style ={{color: 'white',fontWeight: '700',fontFamily: 'Poppins',size: '16px',lineHeight: '24px',}}>Current Student View</Typography>
-            <img src={p1studentview}  alt="About Icon" /> </Box>
-        )}
-        {currentState === GameSessionState.PHASE_2_DISCUSS && (
-          <Box style={{display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          alignContent: 'center'}}>
-            <Typography style ={{color: 'white',fontWeight: '700',fontFamily: 'Poppins',size: '16px',lineHeight: '24px',}}>Current Student View</Typography>
-            <img src={p2studentview}  alt="About Icon" /> </Box>
-        )}
         <div className={classes.contentContainer}>
           <GameInProgressContentSwitch
             questions={questions}
@@ -464,7 +422,9 @@ const useStyles = makeStyles((theme) => ({
     },
     scrollbarWidth: 'none', // Firefox
     '-ms-overflow-style': 'none', // IE and Edge
-    padding: '24px',
+    paddingLeft: '24px',
+    paddingRight: '24px',
+    paddingTop: '0px',
     boxSizing: 'border-box',
   },
 }));
