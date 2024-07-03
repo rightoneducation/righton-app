@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { IGameSession, IQuestion } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
@@ -18,8 +19,9 @@ export default function GameInProgressContentRightColumn({
     isShortAnswerEnabled,
   }: GameInProgressContentRightColumnProps
 ){
+  const theme = useTheme();
   return (
-    <Grid item xs={12} sm={isShortAnswerEnabled  ? 4 : 6} sx={{ width: '100%', height: '100%' }}>
+    <Grid item xs={12} sm={isShortAnswerEnabled  ? 4 : 6} sx={{ width: '100%', height: '100%', paddingRight: `${theme.sizing.mdPadding}px` }}>
     <ScrollBoxStyled>
       <QuestionCard 
       questionText={currentQuestion.text}
