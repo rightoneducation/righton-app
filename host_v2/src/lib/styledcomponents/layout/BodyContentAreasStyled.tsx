@@ -11,7 +11,7 @@ export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme, isShortA
   width: '100%',
   height: '100%',
   overflow: 'hidden',
-  paddingTop: `${theme.sizing.smPadding}px`,
+  paddingTop: `${theme.sizing.mdPadding}px`,
   paddingLeft: `${theme.sizing.mdPadding}px`,
   paddingRight: `${theme.sizing.mdPadding}px`,
   zIndex: 2,
@@ -29,8 +29,8 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   width: '100%',
   height: '100%',
   overflow: 'hidden',
-  paddingTop: `${theme.sizing.smPadding}px`,
   zIndex: 2,
+  paddingTop: `${theme.sizing.mdPadding}px`,
 }));
 
 // content area of body that floats above background layers above - Single Column Page

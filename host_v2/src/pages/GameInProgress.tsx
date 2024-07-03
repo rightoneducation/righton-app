@@ -76,7 +76,7 @@ export default function GameInProgress({
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled >
-        <FooterGameInProgress teamsLength={5}/>
+        <FooterGameInProgress teamsLength={5} currentState={localGameSession.currentState}/>
       </FooterBackgroundStyled>
     </StackContainerStyled>
   );

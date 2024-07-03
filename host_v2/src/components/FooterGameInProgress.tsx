@@ -60,10 +60,12 @@ const InnerFooterContainer = styled(Box)({
 });
 
 interface FootStartGameProps {
+  currentState: GameSessionState;
   teamsLength: number;
 }
 
 function FooterStartGame({ 
+  currentState,
   teamsLength
 }: FootStartGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -79,7 +81,9 @@ function FooterStartGame({
   return (
     <FooterContainer>
       <InnerFooterContainer>
-        <ProgressBarGroup teamsLength={teamsLength} />
+        { currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
+          <ProgressBarGroup teamsLength={teamsLength} />
+        }
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>

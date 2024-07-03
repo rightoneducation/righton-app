@@ -1,35 +1,26 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { styled } from '@mui/material/styles';
-import { Container, Typography } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { LocalModel, StorageKey } from '../lib/HostModels';
 
-const TimerContainer = styled(Container)(({ theme }) => ({
+const TimerContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  marginLeft: `-${theme.sizing.smPadding}px`,
-  paddingRight: `${theme.sizing.xLgPadding}px`,
-  marginTop: `${theme.sizing.xxSmPadding}px`,
-  marginBottom: `${theme.sizing.xSmPadding}px`,
+  width: '100%',
+  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px)`,
 }));
 
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
   borderRadius: '40px',
   display: 'inline-block',
-  marginRight: `${theme.sizing.xxSmPadding}px`,
-  height: `${theme.sizing.xxSmPadding}px`,
-  width: `calc(100% - ${theme.sizing.smPadding}px)`,
+  height: `${theme.sizing.xSmPadding}px`,
+  width: '100%',
   backgroundColor: theme.palette.primary.baseQuestionColor,
   '& .MuiLinearProgress-bar': {
     background: theme.palette.primary.main,
   },
-}));
-
-const TimerText = styled(Container)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  width: `${theme.sizing.xSmPadding}px`,
 }));
 
 interface TimerProps {
@@ -47,6 +38,7 @@ export default function Timer({
   isFinished,
   localModel,
 }: TimerProps) {
+  const theme = useTheme();
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
   const currentTime = Math.trunc(currentTimeMilli / 1000);
   const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
@@ -108,17 +100,15 @@ export default function Timer({
   }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <TimerContainer maxWidth="md">
+    <TimerContainer>
       <TimerBar value={progress} variant="determinate" />
-      <TimerText maxWidth="sm">
-        <Typography
-          alignSelf="center"
-          variant="h6"
-          style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik' }}
-        >
-          {timerString}
-        </Typography>
-      </TimerText>
+      <Typography
+        alignSelf="center"
+        variant="h6"
+        style={{ width: `${theme.sizing.lgPadding}`, fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik', lineHeight: '14px' }}
+      >
+        {timerString}
+      </Typography>
     </TimerContainer>
   );
 }

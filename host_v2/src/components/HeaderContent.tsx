@@ -98,13 +98,12 @@ export default function HeaderContent({
             </HostPlayerIconContainer>
           </Grid>
         </Grid>
-        <Grid item style={{ marginTop: `${theme.sizing.xSmPadding}px` }}>
-          <Typography variant="h1" style={{ fontFamily: 'Poppins' }}>
+        <Grid item style={{ paddingTop: `${theme.sizing.xxSmPadding}px` }}>
+          <Typography variant="h1" style={{ fontSize: '24px', lineHeight: '36px', fontFamily: 'Poppins' }}>
             {stateCheck(localGameSession.currentState, isCorrect, isIncorrect)}
           </Typography>
         </Grid>
-        <Grid item>
-          <Grid container justifyContent="space-between" alignItems="center">
+        <Grid item style={{display: 'flex', justifyItems: 'space-between', alignItems: 'center', gap: '24px', paddingTop: `${theme.sizing.xSmPadding}px`}}>
             {(localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
               localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
             localModel ? (
@@ -121,7 +120,6 @@ export default function HeaderContent({
                 {t('gamesession.addtime')}
               </Typography>
             </TimerAddButton>
-          </Grid>
         </Grid>
       </Container>
     </HeaderStackContainerStyled>
