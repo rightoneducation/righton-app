@@ -3,6 +3,7 @@ import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers, IHostTeam
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
+import { useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
 import GameInProgress from '../pages/GameInProgress';
 import StartGame from '../pages/StartGame';
@@ -17,9 +18,14 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
   const [localHostTeamAnswers, setLocalHostTeamAnswers] = React.useState<IHostTeamAnswers>(backendHostTeamAnswers);
   useEffect(() => {
+    console.log('backendHostTeamAnswers', backendHostTeamAnswers);
     setLocalHostTeamAnswers(backendHostTeamAnswers);
   }, [backendHostTeamAnswers]);
   const handleDeleteTeam = () => {};
+
+  useEffect(() => {
+    dispatch({type: 'synch_local_gameSession', payload: {backendGameSession}});
+  }, [backendGameSession])
 
   let renderContent;
   switch (localGameSession.currentState) {

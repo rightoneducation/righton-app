@@ -104,15 +104,14 @@ export default function HeaderContent({
           </Typography>
         </Grid>
         <Grid item style={{display: 'flex', justifyItems: 'space-between', alignItems: 'center', gap: '24px', paddingTop: `${theme.sizing.xSmPadding}px`}}>
-            {(localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-              localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
-            localModel ? (
+            {localModel ? (
               <Timer
                 totalTime={totalTime}
                 currentTimer={currentTimer}
                 isFinished={isFinished}
                 isPaused={isPaused}
                 localModel={localModel}
+                localGameSession={localGameSession}
               />
             ) : null}
             <TimerAddButton onClick={handleTimerAddButtonClick}>

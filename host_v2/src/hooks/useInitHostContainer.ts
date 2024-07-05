@@ -26,6 +26,12 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
         setBackendHostTeamAnswers((prev) => {return {...updatedHostTeamAnswers}});
         console.log("Team Answer Created", teamAnswers);
       });
+
+      dataManager.subscribeToUpdateTeamAnswer((teamAnswers) => {
+        const updatedHostTeamAnswers = dataManager.getHostTeamAnswers();
+        setBackendHostTeamAnswers((prev) => {return {...updatedHostTeamAnswers}});
+        console.log("Team Answer Created", teamAnswers);
+      });
     } catch (error) {
       console.log('Error:', error);
     }

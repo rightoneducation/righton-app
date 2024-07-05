@@ -141,13 +141,23 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
   private processConfidenceLevel(ans: any, teamAnswersQuestion: any, teamName: string){
     const confidenceLevel = teamAnswersQuestion['phase1'].confidences.find((confidence: any) => confidence.level === ans.confidenceLevel);
+    console.log(confidenceLevel);
     if (confidenceLevel){
       if (ans.isCorrect) {
+        console.log('confidences');
+        console.log(teamAnswersQuestion['phase1'].confidences);
+        console.log(teamAnswersQuestion['phase1'].confidences.find ((confidence: any) => { confidence.correct = confidence.correct.filter((team: any) => team.team !== teamName)}));
+        teamAnswersQuestion['phase1'].confidences = teamAnswersQuestion['phase1'].confidences.filter((confidence: any) => {
+          return confidence.team !== null && confidence.correct.every((team: any) => team.team !== teamName);
+        });
         confidenceLevel.correct.push({
           team: teamName,
           rawAnswer: ans.answer.rawAnswer
         });
       } else {
+        teamAnswersQuestion['phase1'].confidences = teamAnswersQuestion['phase1'].confidences.filter((confidence: any) => {
+          return confidence.team !== null && confidence.incorrect.every((team: any) => team.team !== teamName);
+        });
         confidenceLevel.incorrect.push({
           team: teamName,
           rawAnswer: ans.answer.rawAnswer
@@ -379,18 +389,23 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     let answerQuestion = this.hostTeamAnswers.questions.find((question: any) => question.questionId === teamAnswer.questionId);
     this.processAnswer(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);
     this.decrementNoResponseCount(answerQuestion, answerPhase, teamAnswer.teamName);
+    if (!teamAnswer) {
+      console.error('Error: Invalid team answer');
+      return this.hostTeamAnswers;
+    }
+    
+    return this.hostTeamAnswers;
+  }
+
+  private updateHostTeamAnswerConfidenceHint(teamAnswer: BackendAnswer): IHostTeamAnswers{
+    const answerPhase = teamAnswer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
+    let answerQuestion = this.hostTeamAnswers.questions.find((question: any) => question.questionId === teamAnswer.questionId);
     if (answerPhase === 'phase1' && teamAnswer.confidenceLevel){
       this.processConfidenceLevel(teamAnswer, answerQuestion, teamAnswer.teamName);
     }
     if (answerPhase === 'phase2' && teamAnswer.hint){
       this.processHint(teamAnswer, answerQuestion);
     }
-
-    if (!teamAnswer) {
-      console.error('Error: Invalid team answer');
-      return this.hostTeamAnswers;
-    }
-    
     return this.hostTeamAnswers;
   }
 
@@ -419,7 +434,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team answer');
         return;
       }
-      this.hostTeamAnswers = this.updateHostTeamAnswers(teamAnswer);
+      this.hostTeamAnswers = this.updateHostTeamAnswerConfidenceHint(teamAnswer);
       callback(this.hostTeamAnswers);
     });
   }
