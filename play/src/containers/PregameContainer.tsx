@@ -81,8 +81,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
         return false;
       }
       if (
-        gameSessionResponse.currentState === GameSessionState.FINISHED ||
-        gameSessionResponse.currentState === GameSessionState.NOT_STARTED
+        gameSessionResponse.currentState !== GameSessionState.TEAMS_JOINING
       ) {
         return false;
       }

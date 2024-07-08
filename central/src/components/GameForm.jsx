@@ -11,7 +11,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import CCSS from './CCSS';
+import CCSS from './CCSSText';
 import Grid from '@material-ui/core/Grid';
 // import { deleteQuestion } from '../graphql/mutations';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';

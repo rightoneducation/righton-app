@@ -6,7 +6,7 @@ import { Card, Box, Button, Link, Typography, Menu, MenuItem, Grid } from '@mate
 import { MoreVert, ArrowBack } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import MoreCircle from './../images/MoreCircularIcon.png';
-import CCSS from './CCSS';
+import CCSS from './CCSSText';
 
 
 const useStyles = makeStyles(theme => ({

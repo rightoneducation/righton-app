@@ -55,7 +55,7 @@ export default function ButtonSubmitAnswer({
       {isHint ? hintButtonText : buttonText}
     </Typography>
   );
-
+  console.log(isSelected);
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
