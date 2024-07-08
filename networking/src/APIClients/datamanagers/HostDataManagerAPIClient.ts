@@ -78,6 +78,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       this.subscribeToGameSessionUpdates(callback);
       return this.gameSession;
     } catch (error) {
+      console.log(error);
       throw new Error (`Error: ${error}`)
     }
   }
