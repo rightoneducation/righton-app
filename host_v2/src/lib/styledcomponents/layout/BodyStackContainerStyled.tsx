@@ -11,4 +11,5 @@ export default styled(Stack)({
   alignItems: 'center',
   width: '100vw',
   border: 'none',
+  paddingTop: '20px'
 });

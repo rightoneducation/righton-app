@@ -12,5 +12,4 @@ export default styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   cursor: 'pointer',
-  marginLeft: `-${theme.sizing.xxLgPadding}px`,
 }));

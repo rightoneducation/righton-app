@@ -11,6 +11,6 @@ export default styled(Stack)(({ theme }) => ({
   background: theme.palette.primary.backgroundGradient,
   border: 'none',
   width: '100vw',
-  height: `${theme.sizing.fullHeaderHeight}px`,
+  height: `200px`,
   zIndex: -1,
 }));
