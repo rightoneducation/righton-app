@@ -39,6 +39,7 @@ export default function AnswerCard({
   teamMemberAnswersId,
   handleSelectAnswer,
 }: AnswerCardProps) {
+  console.log(selectedAnswer === '')
   const theme = useTheme();
   const { t } = useTranslation();
   const correctText = (
@@ -115,7 +116,7 @@ export default function AnswerCard({
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
-          isSelected={!isNullOrUndefined(selectedAnswer)}
+          isSelected={selectedAnswer !== '' }
           questionId={questionId}
           teamMemberAnswersId={teamMemberAnswersId}
         />

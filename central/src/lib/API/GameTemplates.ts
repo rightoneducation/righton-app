@@ -2,8 +2,7 @@ import {
   IAPIClients,
   IGameTemplate,
   CreateGameTemplateInput,
-  UpdateGameTemplateInput,
-  isNullOrUndefined
+  UpdateGameTemplateInput
 } from '@righton/networking';
 import { IListQuerySettings, SortField } from './QueryInputs';
 
