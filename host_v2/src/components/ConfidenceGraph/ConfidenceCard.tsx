@@ -10,7 +10,7 @@ import ConfidenceResponsesGraph from './ConfidenceResponseGraph';
 import ConfidenceResponseDropdown from './ConfidenceResponseDropdown';
 
 interface CardProps {
-  currentConfidences: IHostTeamAnswersConfidence[];
+  confidences: IHostTeamAnswersConfidence[];
   graphClickInfo: { graph: string | null; selectedIndex: number | null};
   handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
@@ -49,7 +49,7 @@ const DescriptionText = styled(Typography)(({ theme }) => ({
 }));
 
 export default function ConfidenceCard({
-  currentConfidences,
+  confidences,
   graphClickInfo,
   handleGraphClick,
 }: CardProps) {
@@ -65,14 +65,14 @@ export default function ConfidenceCard({
             </DescriptionText>
           </SmallTextContainer>
           <ConfidenceResponsesGraph
-            currentConfidences={currentConfidences}
+            confidences={confidences}
             graphClickIndex={graphClickInfo.selectedIndex}
             handleGraphClick={handleGraphClick}
           />
           {graphClickInfo.selectedIndex !== null ? (
             <ConfidenceResponseDropdown
               graphClickIndex={graphClickInfo.selectedIndex}
-              selectedConfidence={currentConfidences[graphClickInfo.selectedIndex]}
+              selectedConfidence={confidences[graphClickInfo.selectedIndex]}
             />
           ) : (
             <SmallTextContainer>

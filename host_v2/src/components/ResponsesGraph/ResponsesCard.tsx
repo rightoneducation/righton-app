@@ -28,7 +28,7 @@ const TitleStyled = styled(Typography)({
 
 interface ResponsesProps {
   currentQuestion: IQuestion;
-  currentResponses: IHostTeamAnswersResponse[];
+  responses: IHostTeamAnswersResponse[];
   statePosition: number;
   graphClickInfo: IGraphClickInfo;
   isShortAnswerEnabled: boolean;
@@ -37,24 +37,24 @@ interface ResponsesProps {
 
 export default function Responses({
   currentQuestion,
-  currentResponses,
+  responses,
   statePosition,
   graphClickInfo,
   isShortAnswerEnabled,
   handleGraphClick,
 }: ResponsesProps) {
-  console.log(currentResponses);
+  console.log(responses);
   const correctChoiceIndex = currentQuestion.choices.findIndex((choice) => choice.isAnswer);
-  const numPlayers = currentResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  const numPlayers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(null);
   return (
     <HostDefaultCardStyled>
       <ResponseContainer>
         <TitleStyled>
-          Responses
+          { statePosition < 6 ? `Responses` : `Popular Mistakes` }
         </TitleStyled>
         <ResponsesGraph
-          data={currentResponses}
+          data={responses}
           statePosition={statePosition}
           graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={isShortAnswerEnabled}
@@ -62,7 +62,7 @@ export default function Responses({
           setGraphClickIndex={setGraphClickIndex}
         />
         <SelectedAnswer 
-          data={currentResponses}
+          data={responses}
           numPlayers={numPlayers}
           statePosition={statePosition}
           graphClickIndex={graphClickIndex}

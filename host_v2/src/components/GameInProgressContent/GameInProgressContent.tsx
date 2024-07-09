@@ -1,7 +1,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint } from '@righton/networking';
+import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase } from '@righton/networking';
 import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
@@ -44,29 +44,34 @@ export default function GameInProgressContent({
   screenSize
 }: GameInProgressContentProps) {
   const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-  const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
-  const currentTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
+  const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1': 'phase2';
+  const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
   // currentResponses are used for the Real Time Responses Victory Graph
-  const currentResponses = currentTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
+  const currentResponses = currentPhaseTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
   // currentConfidences are used for the Confidence Meter Victory Graph
-  const currentConfidences = currentTeamAnswers?.confidences ?? [] as IHostTeamAnswersConfidence[];
+  const currentConfidences = currentPhaseTeamAnswers?.confidences ?? [] as IHostTeamAnswersConfidence[];
   // currentHints are used for the Hints Progress Bar (Pre-GPT)
-  const currentHints = currentTeamAnswers?.hints ?? [] as IHostTeamAnswersHint[];
-
+  const currentHints = currentPhaseTeamAnswers?.hints ?? [] as IHostTeamAnswersHint[];
+  
+  let prevPhaseResponses = [] as IHostTeamAnswersResponse[];
+  let prevPhaseConfidences = [] as IHostTeamAnswersConfidence[];
+  if (localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) {
+    prevPhaseResponses= localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [] as IHostTeamAnswersResponse[];
+    prevPhaseConfidences = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.confidences ?? [] as IHostTeamAnswersConfidence[];
+  }
   // these booleans turn on and off the respective feature cards in the render function below
   const {isConfidenceEnabled, isHintEnabled, isShortAnswerEnabled} = localGameSession.questions[localGameSession.currentQuestionIndex];
 
   const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
-    console.log('handleGraphClick');
     setGraphClickInfo({graph, selectedIndex })
   }
 
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
-      currentResponses={currentResponses}
-      currentConfidences={currentConfidences}
+      responses={currentPhase === 'phase1' ? currentResponses : prevPhaseResponses}
+      confidences={currentPhase === 'phase1' ? currentConfidences : prevPhaseConfidences}
       graphClickInfo={graphClickInfo}
       isConfidenceEnabled={isConfidenceEnabled}
       isShortAnswerEnabled={isShortAnswerEnabled}
@@ -77,7 +82,9 @@ export default function GameInProgressContent({
 
   const midCardsColumn = (
     <GameInProgressContentMidColumn
+      currentQuestion={currentQuestion}
       onSelectMistake={onSelectMistake}
+      responses={currentResponses}
       sortedMistakes={sortedMistakes}
       setSortedMistakes={setSortedMistakes}
       isPopularMode={isPopularMode}
@@ -87,6 +94,8 @@ export default function GameInProgressContent({
       isHintEnabled={isHintEnabled}
       currentHints={currentHints}
       numPlayers={localGameSession.teams.length}
+      graphClickInfo={graphClickInfo}
+      handleGraphClick={handleGraphClick}
     />
   );
   

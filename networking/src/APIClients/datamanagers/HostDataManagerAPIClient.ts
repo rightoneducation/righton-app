@@ -12,6 +12,11 @@ export enum HTTP {
   Post = "POST",
 }
 
+export enum IPhase {
+  ONE = 'phase1',
+  TWO = 'phase2'
+}
+
 export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   protected questionAPIClient: IQuestionAPIClient;
   protected teamAPIClient: ITeamAPIClient;
@@ -106,7 +111,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
   };
 
-  private processAnswer(ans: any, teamAnswersQuestion: any, phase: string, teamName: string) {
+  private processAnswer(ans: any, teamAnswersQuestion: any, phase: IPhase, teamName: string) {
     const answerObj = this.createAnswerFromBackendData(ans.answer);
     if (answerObj) {
       answerObj.normalizeAnswer(answerObj.rawAnswer);
@@ -141,23 +146,19 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   private processConfidenceLevel(ans: any, teamAnswersQuestion: any, teamName: string){
-    const confidenceLevel = teamAnswersQuestion['phase1'].confidences.find((confidence: any) => confidence.level === ans.confidenceLevel);
-    console.log(confidenceLevel);
+    const confidenceLevel = teamAnswersQuestion[IPhase.ONE].confidences.find((confidence: any) => confidence.level === ans.confidenceLevel);
     if (confidenceLevel){
       if (ans.isCorrect) {
-        console.log('confidences');
-        console.log(teamAnswersQuestion['phase1'].confidences);
-        console.log(teamAnswersQuestion['phase1'].confidences.find ((confidence: any) => { confidence.correct = confidence.correct.filter((team: any) => team.team !== teamName)}));
-        teamAnswersQuestion['phase1'].confidences = teamAnswersQuestion['phase1'].confidences.filter((confidence: any) => {
-          return confidence.team !== null && confidence.correct.every((team: any) => team.team !== teamName);
+        teamAnswersQuestion[IPhase.ONE].confidences = teamAnswersQuestion[IPhase.ONE].confidences.filter((confidence: any) => {
+          return confidence.correct.every((team: any) => team.team !== teamName);
         });
         confidenceLevel.correct.push({
           team: teamName,
           rawAnswer: ans.answer.rawAnswer
         });
       } else {
-        teamAnswersQuestion['phase1'].confidences = teamAnswersQuestion['phase1'].confidences.filter((confidence: any) => {
-          return confidence.team !== null && confidence.incorrect.every((team: any) => team.team !== teamName);
+        teamAnswersQuestion[IPhase.ONE].confidences = teamAnswersQuestion[IPhase.ONE].confidences.filter((confidence: any) => {
+          return confidence.incorrect.every((team: any) => team.team !== teamName);
         });
         confidenceLevel.incorrect.push({
           team: teamName,
@@ -168,7 +169,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   private processHint(ans: any, teamAnswersQuestion: any){
-    const hints = teamAnswersQuestion['phase2'].hints;
+    const hints = teamAnswersQuestion[IPhase.TWO].hints;
     const hint = JSON.parse(ans.hint);
     if (hint){
       hints.push({
@@ -183,7 +184,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     questionText: string,
     correctAnswer: string
   ):Promise<any> {
-    console.log(hints);
       try { 
       const attempt = fetch(this.lambdaHintEndpoint, {
           method: HTTP.Post,
@@ -202,7 +202,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           if (!response.ok) {
             console.error(response.statusText)
           }
-          console.log(response);
           return response.json();
       })
       
@@ -213,15 +212,18 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return "";
   }
 
-  private incrementNoResponseCount(teamAnswersQuestion: any, phase: string, teamName: string) {
-    const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
-    if (noResponse) {
-      noResponse.count += 1;
-      noResponse.teams.push(teamName);
+  private incrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
+    let noResponse = [];
+    if (teamAnswersQuestion[phase] && teamAnswersQuestion[phase].responses){
+      noResponse = teamAnswersQuestion[phase]?.responses?.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
+      if (noResponse) {
+        noResponse.count += 1;
+        noResponse.teams.push(teamName);
+      }
     }
   }
 
-  private decrementNoResponseCount(teamAnswersQuestion: any, phase: string, teamName: string) {
+  private decrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
     const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
     if (noResponse) {
       noResponse.count -= 1;
@@ -354,13 +356,13 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     
             teamMember.answers?.forEach((answer) => {
               if (answer?.questionId === question.id) {
-                const phase = answer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
+                const phase = answer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? IPhase.ONE : IPhase.TWO;
                 this.processAnswer(answer, teamAnswersQuestion, phase, team.name);
-                if (phase === 'phase1' && answer.confidenceLevel) 
+                if (phase === IPhase.ONE && answer.confidenceLevel) 
                   this.processConfidenceLevel(answer, teamAnswersQuestion, team.name);
-                if (phase === 'phase2' && answer.hint)
+                if (phase === IPhase.TWO && answer.hint)
                   this.processHint(answer, teamAnswersQuestion);
-                if (phase === 'phase1') {
+                if (phase === IPhase.ONE) {
                   answeredPhase1 = true;
                 } else {
                   answeredPhase2 = true;
@@ -369,10 +371,10 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
             });
     
             if (!answeredPhase1) {
-              this.incrementNoResponseCount(teamAnswersQuestion, 'phase1', team.name);
+              this.incrementNoResponseCount(teamAnswersQuestion, IPhase.ONE, team.name);
             }
             if (!answeredPhase2) {
-              this.incrementNoResponseCount(teamAnswersQuestion, 'phase2', team.name);
+              this.incrementNoResponseCount(teamAnswersQuestion, IPhase.TWO, team.name);
             }
           });
         });
@@ -386,7 +388,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
 
   private updateHostTeamAnswers(teamAnswer: BackendAnswer): IHostTeamAnswers {
-    const answerPhase = teamAnswer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
+    const answerPhase = teamAnswer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? IPhase.ONE : IPhase.TWO;
     let answerQuestion = this.hostTeamAnswers.questions.find((question: any) => question.questionId === teamAnswer.questionId);
     this.processAnswer(teamAnswer, answerQuestion, answerPhase, teamAnswer.teamName);
     this.decrementNoResponseCount(answerQuestion, answerPhase, teamAnswer.teamName);
@@ -399,12 +401,12 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   private updateHostTeamAnswerConfidenceHint(teamAnswer: BackendAnswer): IHostTeamAnswers{
-    const answerPhase = teamAnswer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1' : 'phase2';
+    const answerPhase = teamAnswer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? IPhase.ONE : IPhase.TWO;
     let answerQuestion = this.hostTeamAnswers.questions.find((question: any) => question.questionId === teamAnswer.questionId);
-    if (answerPhase === 'phase1' && teamAnswer.confidenceLevel){
+    if (answerPhase === IPhase.ONE && teamAnswer.confidenceLevel){
       this.processConfidenceLevel(teamAnswer, answerQuestion, teamAnswer.teamName);
     }
-    if (answerPhase === 'phase2' && teamAnswer.hint){
+    if (answerPhase === IPhase.TWO && teamAnswer.hint){
       this.processHint(teamAnswer, answerQuestion);
     }
     return this.hostTeamAnswers;

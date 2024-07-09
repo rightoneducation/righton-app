@@ -96,7 +96,7 @@ export default function ResponsesGraph({
 
   let tickLabelComponent;
 
-  if (!isShortAnswerEnabled && statePosition < 6) {
+  if (!isShortAnswerEnabled) {
     tickLabelComponent = (
       <CustomTick 
         correctChoiceIndex={correctChoiceIndex}

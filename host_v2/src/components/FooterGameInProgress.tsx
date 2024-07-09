@@ -84,6 +84,21 @@ function FooterStartGame({
     dispatch({type: 'advance_game_phase', payload: {nextState}});
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
   };
+  const GetButtonText =() => {
+    switch(currentState) {
+      case GameSessionState.CHOOSE_CORRECT_ANSWER:
+      case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+        return 'End Answering';
+      case GameSessionState.PHASE_2_START:
+        return 'Moving to Phase Two';
+      case GameSessionState.PHASE_1_DISCUSS:
+      case GameSessionState.PHASE_2_DISCUSS:
+        return 'Continue';
+      default:
+        return 'Start Game';
+    }
+  }
+  const buttonText = GetButtonText();
   return (
     <FooterContainer>
       <InnerFooterContainer>
@@ -96,7 +111,7 @@ function FooterStartGame({
         { (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
           <ProgressBarGroup teamsLength={teamsLength} />
         }
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>{buttonText}</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );

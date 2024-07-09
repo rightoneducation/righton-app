@@ -2,7 +2,7 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { IQuestion, IHostTeamAnswersResponse, IHostTeamAnswersConfidence } from '@righton/networking';
+import { IQuestion, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, GameSessionState } from '@righton/networking';
 import { ScreenSize, IGraphClickInfo } from '../../../lib/HostModels';
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
 import Responses from '../../ResponsesGraph/ResponsesCard';
@@ -11,8 +11,8 @@ import ConfidenceCard from '../../ConfidenceGraph/ConfidenceCard';
 
 interface GameInProgressContentLeftColumnProps {
   currentQuestion: IQuestion;
-  currentResponses: IHostTeamAnswersResponse[];
-  currentConfidences: IHostTeamAnswersConfidence[];
+  responses: IHostTeamAnswersResponse[];
+  confidences: IHostTeamAnswersConfidence[];
   graphClickInfo: IGraphClickInfo;
   isConfidenceEnabled: boolean;
   isShortAnswerEnabled: boolean;
@@ -23,8 +23,8 @@ interface GameInProgressContentLeftColumnProps {
 
 export default function GameInProgressContentLeftColumn ({ 
     currentQuestion, 
-    currentResponses, 
-    currentConfidences, 
+    responses, 
+    confidences,
     graphClickInfo, 
     isConfidenceEnabled,
     isShortAnswerEnabled, 
@@ -34,11 +34,11 @@ export default function GameInProgressContentLeftColumn ({
 ){
   const theme = useTheme();
   return (
-    <Grid item xs={12} sm={isShortAnswerEnabled || screenSize !== ScreenSize.LARGE ? 4 : 6} sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
+    <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
       <ScrollBoxStyled>
         <Responses 
           currentQuestion={currentQuestion}
-          currentResponses={currentResponses}
+          responses={responses}
           statePosition={0}
           graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={false}
@@ -46,7 +46,7 @@ export default function GameInProgressContentLeftColumn ({
         />
         { isConfidenceEnabled &&
           <ConfidenceCard 
-            currentConfidences={currentConfidences}
+            confidences={confidences}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick}
           />
