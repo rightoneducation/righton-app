@@ -50,8 +50,8 @@ export abstract class ModelHelper {
         const findSelectedAnswer = (answers: (BackendAnswer | null)[]) => {
             const selectedAnswer = answers.find((teamAnswer: BackendAnswer | null) => 
                 this.isAnswerFromPhaseOne(teamAnswer)
-                    ? currentState === GameSessionState.PHASE_1_RESULTS || currentState === GameSessionState.PHASE_1_DISCUSS
-                    : currentState === GameSessionState.PHASE_2_RESULTS || currentState === GameSessionState.PHASE_2_DISCUSS
+                    ? currentState === GameSessionState.PHASE_1_DISCUSS
+                    : currentState === GameSessionState.PHASE_2_DISCUSS
             );
             return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
         };
@@ -139,7 +139,7 @@ export abstract class ModelHelper {
         if (submittedTrickAnswer){
           return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
         } else {
-            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
+            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id)){
                 return this.correctAnswerScore
             } else {
                 const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses

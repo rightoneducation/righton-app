@@ -72,16 +72,19 @@ export default function ConfidenceResponsesGraph({
         incorrect: confidence.incorrect
     };
   });
-
   const currentCorrectConfidences = correctConfidencesArray.map((confidence, index) => ({
     x: confidence.label,
     y: confidence.correct.length,
   }));
-
   const currentIncorrectConfidences = incorrectConfidencesArray.map((confidence, index) => ({
     x: confidence.label,
     y: confidence.incorrect.length,
   }));
+  console.log('Correct Confidences');
+  console.log(currentCorrectConfidences);
+  console.log('Incorrect Confidences');
+  console.log(currentIncorrectConfidences);
+  console.log('_____');
   // this is req'd to handle the resizing of the graph container so that Victory can render the svgs
   // eslint-disable-next-line consistent-return
   useEffect(() => {

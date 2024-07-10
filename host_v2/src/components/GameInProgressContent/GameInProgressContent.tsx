@@ -44,7 +44,7 @@ export default function GameInProgressContent({
   screenSize
 }: GameInProgressContentProps) {
   const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-  const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 'phase1': 'phase2';
+  const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? IPhase.ONE : IPhase.TWO;
   const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
   // currentResponses are used for the Real Time Responses Victory Graph
   const currentResponses = currentPhaseTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
@@ -70,8 +70,8 @@ export default function GameInProgressContent({
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
-      responses={currentPhase === 'phase1' ? currentResponses : prevPhaseResponses}
-      confidences={currentPhase === 'phase1' ? currentConfidences : prevPhaseConfidences}
+      responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
+      confidences={currentPhase === IPhase.ONE ? currentConfidences : prevPhaseConfidences}
       graphClickInfo={graphClickInfo}
       isConfidenceEnabled={isConfidenceEnabled}
       isShortAnswerEnabled={isShortAnswerEnabled}

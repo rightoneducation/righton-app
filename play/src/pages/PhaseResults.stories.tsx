@@ -53,24 +53,3 @@ const answerChoices = gameSession.questions[0].choices.map(
   })
 );
 
-export const PhaseOne = Template.bind({});
-PhaseOne.args = {
-  teams: gameSession.teams,
-  currentState: GameSessionState.PHASE_1_RESULTS,
-  teamAvatar: 0,
-  currentQuestionIndex: gameSession.currentQuestionIndex,
-  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
-  gameSession,
-  answerChoices,
-};
-
-export const PhaseTwo = Template.bind({});
-PhaseTwo.args = {
-  teams: gameSession.teams,
-  currentState: GameSessionState.PHASE_2_RESULTS,
-  teamAvatar: 0,
-  currentQuestionIndex: gameSession.currentQuestionIndex,
-  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
-  gameSession,
-  answerChoices,
-};

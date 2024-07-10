@@ -105,21 +105,6 @@ export default function ResultSelector({
         </Typography>
       </Box>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        {currentState === GameSessionState.PHASE_2_RESULTS && ( // if in phase 2, display percentage text
-          <Typography
-            variant="body2"
-            sx={{
-              paddingRight:
-                answerStatus === AnswerState.CORRECT ||
-                answerStatus === AnswerState.PREVIOUS ||
-                answerStatus === AnswerState.SELECTED
-                  ? `${theme.sizing.extraSmallPadding}px`
-                  : `${theme.sizing.mediumPadding}px`,
-            }}
-          >
-            {percentageText}
-          </Typography>
-        )}
         {answerStatus !== AnswerState.PREVIOUS &&
           answerStatus !== AnswerState.DEFAULT &&
           (answerStatus === AnswerState.SELECTED ? (

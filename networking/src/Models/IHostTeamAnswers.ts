@@ -42,6 +42,12 @@ export interface IHostTeamAnswersPerPhase {
   gptHints?: IHostTeamAnswersGPTHint[] 
 }
 
+export interface IHostTeamAnswersQuestion {
+  questionId: string,
+  phase1: IHostTeamAnswersPerPhase,
+  phase2: IHostTeamAnswersPerPhase,
+}
+
 /* 
  * IHostTeamAnswers
  * Interface that types the answer object required for host to
@@ -51,11 +57,7 @@ export interface IHostTeamAnswersPerPhase {
  * hints -> Hints
  */
 export interface IHostTeamAnswers {
-  questions: {
-    questionId: string,
-    phase1: IHostTeamAnswersPerPhase,
-    phase2: IHostTeamAnswersPerPhase,
-  }[]
+  questions: IHostTeamAnswersQuestion[]
 }
 
 

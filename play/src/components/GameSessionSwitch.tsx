@@ -115,22 +115,6 @@ export default function GameSessionSwitch({
           isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
-    case GameSessionState.PHASE_1_RESULTS:
-    case GameSessionState.PHASE_2_RESULTS:
-      return (
-        <PhaseResults
-          {...gameSession}
-          apiClients={apiClients}
-          gameSession={gameSession}
-          currentQuestionIndex={gameSession.currentQuestionIndex}
-          teamAvatar={localModel.selectedAvatar}
-          teamId={localModel.teamId}
-          answerChoices={answerChoices}
-          score={score}
-          hasRejoined={hasRejoined}
-          isShortAnswerEnabled={isShortAnswerEnabled}
-        />
-      );
     case GameSessionState.PHASE_2_START:
       return <StartPhase2 />;
     case GameSessionState.FINAL_RESULTS:
