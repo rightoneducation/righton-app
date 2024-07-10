@@ -51,11 +51,11 @@ const useStyles = makeStyles(() => ({
 const label = {
   1: 'Preparing Questions',
   2: 'Phase 1 of 2 - Choose Correct Answer',
-  3: 'Phase 1 of 2 - Answer Explanation',
+  3: 'Phase 1 of 2 - View and Discuss Results',
   4: 'Phase 1 of 2 - Results',
   5: 'Phase 2 of 2 - Instructions',
   6: 'Phase 2 of 2 - Choose Trickiest Answer',
-  7: 'Phase 2 of 2 - Discussion',
+  7: 'Phase 2 of 2 - View and Discuss Results',
   8: 'Phase 2 of 2 - Results',
   9: 'Proceed to RightOn Central',
 };

@@ -58,9 +58,11 @@ export default function StudentViews({
   const studentViewImage = (currentState) => {
     if (currentState === GameSessionState.PHASE_1_RESULTS) {
       return SVP1Results;
-    } else if (currentState === GameSessionState.PHASE_2_RESULTS) {
-      return SVP2Results;
-    } else return SVP2Start;
+    } 
+    // else if (currentState === GameSessionState.PHASE_2_RESULTS) {
+    //   return SVP2Results;
+     
+    return SVP2Start;
   };
 
   // determines next state for use by footer
