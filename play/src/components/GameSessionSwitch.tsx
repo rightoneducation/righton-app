@@ -99,7 +99,6 @@ export default function GameSessionSwitch({
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}
-          newPoints={0}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -118,7 +117,6 @@ export default function GameSessionSwitch({
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}
-          newPoints={0}
         />
       );
     case GameSessionState.PHASE_1_DISCUSS:
@@ -143,22 +141,7 @@ export default function GameSessionSwitch({
           newPoints={newPoints}
         />
       );
-    // case GameSessionState.PHASE_1_RESULTS:
-    // case GameSessionState.PHASE_2_RESULTS:
-    //   return (
-    //     <PhaseResults
-    //       {...gameSession}
-    //       apiClients={apiClients}
-    //       gameSession={gameSession}
-    //       currentQuestionIndex={gameSession.currentQuestionIndex}
-    //       teamAvatar={localModel.selectedAvatar}
-    //       teamId={localModel.teamId}
-    //       answerChoices={answerChoices}
-    //       score={score}
-    //       hasRejoined={hasRejoined}
-    //       isShortAnswerEnabled={isShortAnswerEnabled}
-    //     />
-    //   );
+
     case GameSessionState.PHASE_2_START:
       return <StartPhase2 /> 
 

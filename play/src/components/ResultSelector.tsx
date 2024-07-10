@@ -107,7 +107,7 @@ export default function ResultSelector({
         </Typography>
       </Box>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        {currentState === GameSessionState.PHASE_2_DISCUSS && ( // changed this
+        {currentState === GameSessionState.PHASE_2_DISCUSS && ( 
           <Typography
             variant="body2"
             sx={{

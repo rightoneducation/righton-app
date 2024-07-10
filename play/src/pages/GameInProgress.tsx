@@ -54,7 +54,7 @@ interface GameInProgressProps {
   localModel: LocalModel;
   isShortAnswerEnabled: boolean;
   gameSession: IGameSession;
-  newPoints: number;
+  newPoints?: number;
 }
 
 export default function GameInProgress({
