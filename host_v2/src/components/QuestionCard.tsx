@@ -41,7 +41,7 @@ export default function QuestionCard({
         {imageUrl === undefined ? null : (
           <img
             style={{
-              width: '75%', // NOT on figma!! just there before
+              width: '75%', // this value was here before, so we're keeping it. (not found on figma)
               height: 'auto',
 
             }}

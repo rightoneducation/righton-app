@@ -30,20 +30,6 @@ export default function StudentViews({
   const footerButtonTextDictionary = {
     //dictionary used to assign button text based on the next state
 
-    //0-not started
-    //1-teams joining
-    //2-choose correct answer
-    //3-phase_1_discuss
-    //4-phase_1_results
-    //5-phase_2_start
-    //6-choose_trickiest_answer
-    //7_phase_2_discuss
-    //8-phase_2_results
-    //9-final_results
-    //10-finished
-
-    //put this in gameinprogress
-
     2: 'End Answering',
     3: 'Go to Results',
     4: 'Go to Phase 2',
@@ -59,9 +45,7 @@ export default function StudentViews({
     if (currentState === GameSessionState.PHASE_1_RESULTS) {
       return SVP1Results;
     } 
-    // else if (currentState === GameSessionState.PHASE_2_RESULTS) {
-    //   return SVP2Results;
-     
+
     return SVP2Start;
   };
 

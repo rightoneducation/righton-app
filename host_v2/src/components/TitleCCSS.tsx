@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { Typography } from '@mui/material';
-import { styled } from '@mui/material/styles'; // Import styled from MUI
+import { styled } from '@mui/material/styles'; 
 
 const TitleCCSSTypography = styled(Typography)({
   fontFamily: 'Poppins',
   textAlign: 'left', 
-  fontWeight: 700, // No need for quotes here
+  fontWeight: 700, 
   fontSize: '12px',
   lineHeight: '21px',
   letterSpacing: '.15em',
@@ -20,24 +20,24 @@ interface TitleCCSSProps {
   standard: string;
 }
 
-export default function TitleCCSS({
-  grade,
-  domain,
-  cluster,
-  standard
-}: TitleCCSSProps) {
-  if (grade === 'Mashup') return <TitleCCSSTypography>Mashup</TitleCCSSTypography>; // Use CCSSTypography component
-  if (grade === 'Misc' && domain === 'Misc') return <TitleCCSSTypography>Misc.</TitleCCSSTypography>; // Use CCSSTypography component
-  if (grade === 'Misc') return <TitleCCSSTypography>{domain}</TitleCCSSTypography>; // Use CCSSTypography component
-  if (grade && domain) {
-    const clusterCombined: string = cluster ? `.${cluster}` : '';
-    const standardCombined: string = standard ? `.${standard}` : '';
-    const domainCombined: string = domain ? `.${domain}` : '';
-    return (
-      <TitleCCSSTypography>
-        {`${grade}${domainCombined}${clusterCombined}${standardCombined}`}
-      </TitleCCSSTypography>
-    );
+export default function TitleCCSS({ grade, domain, cluster, standard }: TitleCCSSProps) {
+  let titleText;
+
+  if (grade === 'Mashup') {
+    titleText = 'Mashup';
+  } else if (grade === 'Misc' && domain === 'Misc') {
+    titleText = 'Misc.';
+  } else if (grade === 'Misc') {
+    titleText = domain;
+  } else if (grade && domain) {
+    const clusterCombined = cluster ? `.${cluster}` : '';
+    const standardCombined = standard ? `.${standard}` : '';
+    const domainCombined = domain ? `.${domain}` : '';
+    titleText = `${grade}${domainCombined}${clusterCombined}${standardCombined}`;
+  } else {
+    return null;
   }
-  return null;
+
+  return <TitleCCSSTypography>{titleText}</TitleCCSSTypography>;
 }
+
