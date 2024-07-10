@@ -182,7 +182,6 @@ export default function GameInProgress({
     // CHECK - changing this caused error at end
     if (stateKeys[nextIndex] === 'PHASE_2_RESULTS') {
       nextIndex += 1; // Skip to CHOOSE_CORRECT_ANSWER
-      // nextIndex = 2;
     }
     
   

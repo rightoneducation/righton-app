@@ -643,9 +643,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         />
       );
 
-    // case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
-    // case GameSessionState.PHASE_2_RESULTS:
       return (
         <StudentViews
           {...gameSession}

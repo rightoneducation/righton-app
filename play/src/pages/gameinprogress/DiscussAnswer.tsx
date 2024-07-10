@@ -26,7 +26,6 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import ResultsCard from '../../components/ResultsCard';
-// import { useTeamScore } from '../../hooks/useTeamScore';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -113,11 +112,11 @@ export default function DiscussAnswer({
           >
             <pre
               style={{
-                fontFamily: 'inherit', // Ensures the Typography font family is applied
-                fontSize: 'inherit', // Ensures the Typography font size is applied
-                whiteSpace: 'pre-wrap', // Preserves newlines and wraps text
-                wordWrap: 'break-word', // Breaks long words to fit the container
-                margin: 0, // Removes default margin of <pre>
+                fontFamily: 'inherit', 
+                fontSize: 'inherit', 
+                whiteSpace: 'pre-wrap', 
+                wordWrap: 'break-word', 
+                margin: 0, 
               }}
             >
               {'Swipe to the left to see your\nanswer'}
@@ -136,11 +135,11 @@ export default function DiscussAnswer({
           >
             <pre
               style={{
-                fontFamily: 'inherit', // Ensures the Typography font family is applied
-                fontSize: 'inherit', // Ensures the Typography font size is applied
-                whiteSpace: 'pre-wrap', // Preserves newlines and wraps text
-                wordWrap: 'break-word', // Breaks long words to fit the container
-                margin: 0, // Removes default margin of <pre>
+                fontFamily: 'inherit', 
+                fontSize: 'inherit', 
+                whiteSpace: 'pre-wrap', 
+                wordWrap: 'break-word', 
+                margin: 0, 
               }}
             >
               {'Swipe to the left to see\nexplanations and results'}

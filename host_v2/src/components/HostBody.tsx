@@ -11,8 +11,8 @@ import CurrentStudents from './CurrentStudents';
 import NoPlayersLobby from './NoPlayersLobby';
 import QuestionList from './LobbyQuestionSwipe'; // Import the QuestionList component
 
-const BodyStyled = styled(Box)({
-    // margin: 'auto',
+const BodyStyled = styled(Box
+)({
     overflowY: 'scroll',
     flexGrow: 1,
     scrollbarWidth: 'none',
