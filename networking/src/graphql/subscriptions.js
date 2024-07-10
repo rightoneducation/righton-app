@@ -152,6 +152,7 @@ export const onCreateGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -181,6 +182,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -210,6 +212,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -592,8 +595,6 @@ export const onCreateTeamAnswer = /* GraphQL */ `
       currentQuestionIndex
       questionId
       teamMemberAnswersId
-      teamAnswersId
-      teamName
       text
       answer
       confidenceLevel
@@ -616,8 +617,6 @@ export const onUpdateTeamAnswer = /* GraphQL */ `
       currentQuestionIndex
       questionId
       teamMemberAnswersId
-      teamAnswersId
-      teamName
       text
       answer
       confidenceLevel
@@ -640,8 +639,6 @@ export const onDeleteTeamAnswer = /* GraphQL */ `
       currentQuestionIndex
       questionId
       teamMemberAnswersId
-      teamAnswersId
-      teamName
       text
       answer
       confidenceLevel
@@ -674,6 +671,7 @@ export const onCreateGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -726,6 +724,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -778,6 +777,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type

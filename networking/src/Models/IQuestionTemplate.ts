@@ -1,5 +1,10 @@
 import { IGameTemplate } from './IGameTemplate';
 
+export interface IQuestionTemplateOrder {
+  questionTemplateId: string,
+  index: number
+}
+
 export interface IQuestionTemplate {
   id: string,
   title: string,

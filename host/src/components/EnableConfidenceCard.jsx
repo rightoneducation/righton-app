@@ -10,7 +10,7 @@ export default function EnableConfidenceCard({
   return (
     <Box className={classes.container}>
       <div className={classes.titleContainer}>
-        <Typography className={classes.title}>Confidence</Typography>
+        <Typography className={classes.title}>Confidence Meter</Typography>
         <Switch
           className={classes.switch}
           checked={isConfidenceEnabled}

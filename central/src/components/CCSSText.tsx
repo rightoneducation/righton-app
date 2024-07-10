@@ -1,19 +1,19 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 
-interface CCSSProps {
+interface CCSSTextProps {
   grade: string;
   domain: string;
   cluster: string;
   standard: string;
 };
 
-export default function CCSS({
+export default function CCSSText({
   grade,
   domain,
   cluster,
   standard
-}: CCSSProps) {
+}: CCSSTextProps) {
   if (grade === 'Mashup') return <Typography style={{fontWeight: 700, color: '#9139F8'}} >Mashup</Typography>;
   if (grade === 'Misc' && domain === 'Misc') return <Typography style={{fontWeight: 700, color: '#9139F8'}} >Misc.</Typography>;
   if (grade === 'Misc') return <Typography style={{fontWeight: 700, color: '#9139F8'}} >{`${domain}`}</Typography>;

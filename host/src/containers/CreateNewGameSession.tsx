@@ -13,12 +13,11 @@ const CreateNewGameSession = ({apiClients}:CreateNewGameSessionProps) => {
   let { gameId } = useParams<{ gameId: string }>();
 
   useEffect(() => {
-    console.log("sup");
     apiClients.gameSession.createGameSessionFromTemplate(gameId).then((response) => {
-      console.log(response);
       if (!response) {
         return;
       }
+      console.log(response);
       apiClients.gameSession
         .updateGameSession({
           id: response,

@@ -16,5 +16,5 @@
     "jsx": "react",
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "host/StartGame.jsx"]
+  "include": ["src", "host/StartGame.jsx", "src/babel.config.js"]
 }

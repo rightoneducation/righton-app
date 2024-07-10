@@ -150,12 +150,15 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
+  isCorrect: Boolean
   isSubmitted: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
   currentState: GameSessionState!
   currentQuestionIndex: Int!
   questionId: ID!
   teamMemberAnswersId: ID!
+  teamAnswersId: ID
+  teamName: String
   text: String!
   answer: AWSJSON!
   confidenceLevel: ConfidenceLevel

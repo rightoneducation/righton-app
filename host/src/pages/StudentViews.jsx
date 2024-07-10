@@ -20,7 +20,10 @@ export default function StudentViews({
   showFooterButtonOnly,
   setIsConfidenceEnabled,
   assembleNavDictionary,
-  isHintEnabled
+  isHintEnabled,
+  isConfidenceEnabled,
+  isShortAnswerEnabled,
+  multipleChoiceText
 }) {
   let statePosition;
   let isLastQuestion =
@@ -66,7 +69,7 @@ export default function StudentViews({
   // determines next state for use by footer
   const nextStateFunc = (currentState) => {
     if (currentState === GameSessionState.PHASE_2_RESULTS && !isLastQuestion) {
-      return GameSessionState.CHOOSE_CORRECT_ANSWER;
+      return GameSessionState.TEAMS_JOINING;
     } else {
       let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
       return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
@@ -81,15 +84,15 @@ export default function StudentViews({
   const handleFooterOnClick = () => {
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS) {
       // if they are on the last page a\nd need to advance to the next question
-      assembleNavDictionary(false, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
+      assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
       handleUpdateGameSession({
         currentState: nextStateFunc(currentState),
         currentQuestionIndex: currentQuestionIndex + 1,
       });
       return;
     }
-    if (currentState === GameSessionState.PHASE_1_RESULTS)
-      assembleNavDictionary(false, isHintEnabled, currentState);
+    if (currentState === GameSessionState.PHASE_2_START)
+      assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled,  isConfidenceEnabled, isHintEnabled, GameSessionState.CHOOSE_TRICKIEST_ANSWER);
     handleUpdateGameSession({ currentState: nextStateFunc(currentState) });
   };
 

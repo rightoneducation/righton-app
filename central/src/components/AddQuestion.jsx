@@ -3,7 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Link, Paper, Button, Box } from '@material-ui/core';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
-import CCSS from './CCSS';
+import CCSS from './CCSSText';
 
 export default function AddQuestion({ game, cloneQuestion, submit, selectedId, gameId }) {
   const classes = useStyles();

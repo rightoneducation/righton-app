@@ -9,7 +9,7 @@ export default function EnableHintCard({
   return (
     <Box className={classes.container}>
       <div className={classes.titleContainer}>
-        <Typography className={classes.title}>Player Thinking</Typography>
+        <Typography className={classes.title}>Student Hints</Typography>
         <Switch
           className={classes.switch}
           checked={isHintEnabled}

@@ -1,4 +1,4 @@
-import { IQuestionTemplate } from './IQuestionTemplate';
+import { IQuestionTemplate, IQuestionTemplateOrder } from './IQuestionTemplate';
 
 export interface IGameTemplate {
   id: string,
@@ -15,6 +15,7 @@ export interface IGameTemplate {
   imageUrl?: string | null | undefined,
   questionTemplates?: { questionTemplate: IQuestionTemplate, gameQuestionId: string }[] | null,
   questionTemplatesCount: number,
+  questionTemplatesOrder: IQuestionTemplateOrder[],
   createdAt?: Date | null,
   updatedAt?: Date | null
 }

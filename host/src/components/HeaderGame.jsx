@@ -84,15 +84,23 @@ export default function HeaderGame({
         />
       )}
       <Typography className={classes.title}>
-        {statePosition === 1 ? 'Game Configurations' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
+        {statePosition !== 1 ? `Question ${currentQuestionIndex + 1} of ${totalQuestions}`
+          : currentQuestionIndex === 0
+            ? 'Game Configurations'
+            : 'Leaderboard'
+        }
       </Typography>
-      <Typography className={classes.phases}>{label[statePosition]}</Typography>
-      <div style={{ opacity: gameTimer ? '1' : '0.4' }}>
-        <Timer
-          headerGameCurrentTime={gameTimer ? headerGameCurrentTime : 0}
-          totalRoundTime={totalRoundTime}
-        />
-      </div>
+      { (statePosition !== 1) && 
+        <>
+          <Typography className={classes.phases}>{label[statePosition]}</Typography>
+          <div style={{ opacity: gameTimer ? '1' : '0.4' }}>
+            <Timer
+              headerGameCurrentTime={gameTimer ? headerGameCurrentTime : 0}
+              totalRoundTime={totalRoundTime}
+            />
+          </div>
+        </>
+      }
     </div>
   );
 }

@@ -62,7 +62,6 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
           </div>
         </div>
     );
-    if (games.length >= 1) {
       return <InfiniteScroll
           dataLength={games.length}
           next={() => handleScrollDown(nextToken)}
@@ -72,7 +71,8 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
           scrollableTarget="GameDashboard"
           className={classes.infiniteScroll}
         > 
-          {games.map((game, index) => 
+        { (games.length >=1 ) ?
+          games.map((game, index) => 
             <Grid key={index} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4} style={{width: '100%'}}>
               <GameCard 
                 key={game.id}
@@ -90,15 +90,12 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
                 onClick={() => history.push(`/games/${game.id}`)}
               />
             </Grid>
-          )}
+          ) : 
+          <Typography> 
+            No results found.
+          </Typography>
+        }
       </InfiniteScroll>
-    }
-    return (
-      <Typography gutterBottom>
-        No results found.
-      </Typography>
-    );
-    
   }
 
   return (

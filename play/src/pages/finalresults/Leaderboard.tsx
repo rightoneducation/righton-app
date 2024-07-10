@@ -3,6 +3,7 @@ import {
   GameSessionState,
   ITeam,
   isNullOrUndefined,
+  ModelHelper
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { Grid } from '@mui/material';
@@ -19,7 +20,6 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import LeaderboardSelector from '../../components/LeaderboardSelector';
 import { StorageKey } from '../../lib/PlayModels';
-import { teamSorter } from '../../lib/HelperFunctions';
 
 interface LeaderboardProps {
   teams?: ITeam[];
@@ -36,7 +36,7 @@ export default function Leaderboard({
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
   const sortedTeams: ITeam[] = useRef<ITeam[]>(
-    !isNullOrUndefined(teams) ? teamSorter(teams, 5) : []
+    !isNullOrUndefined(teams) ? ModelHelper.teamSorter(teams, 5) : []
   ).current;
 
   // remove locally stored game info when reaching leaderboard
@@ -84,7 +84,7 @@ export default function Leaderboard({
     >
       <HeaderStackContainerStyled>
         <HeaderContent
-          currentState={currentState}
+          currentState={GameSessionState.FINAL_RESULTS}
           isCorrect={false}
           isIncorrect={false}
           totalTime={15}

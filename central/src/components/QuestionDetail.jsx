@@ -11,6 +11,7 @@ export default function QuestionDetails({ gameTitle, question }) {
   const history = useHistory();
   const choices = JSON.parse(question.choices);
   const answer = choices.find(({ isAnswer }) => isAnswer);
+  const instructions = JSON.parse(question.instructions);
   let wrongAnswerSet = choices.filter(({ isAnswer }) => !isAnswer);
 
   if (wrongAnswerSet.length < 1) {
@@ -29,40 +30,44 @@ export default function QuestionDetails({ gameTitle, question }) {
         </Button>
       </Grid>
 
-      <Grid container item xs={6}>
-        <Grid item xs={12}>
-          <Typography className={classes.title}>
-            Question
-          </Typography>
-        </Grid>
+      <Grid item xs={12} md={6}>
+        <Grid container xs={12} spacing={5}>
+          <Grid item xs={12}>
+            <Typography className={classes.title}>
+              Question
+            </Typography>
+          </Grid>
 
-        <Grid item xs={12}>
-          <Typography className={classes.question} gutterBottom>
-            {question.text}
-          </Typography>
-        </Grid>
+          <Grid item xs={12}>
+            <Typography className={classes.question} gutterBottom>
+              {question.title}
+            </Typography>
+          </Grid>
 
-        <Grid container item xs={12} alignItems='center' justifyContent='center'>
-          {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'} />}
+          <Grid container item xs={12} alignItems='center' justifyContent='center'>
+            {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'} />}
+          </Grid>
         </Grid>
       </Grid>
 
-      <Grid container item xs={6}>
-        <Grid item xs={12}>
-          <Typography className={classes.answerTitle}>
-            Answers
-          </Typography>
+      <Grid item xs={12} md={6}>
+        <Grid container xs={12} spacing={5}>
+          <Grid item xs={12}>
+            <Typography className={classes.answerTitle}>
+              Answers
+            </Typography>
+          </Grid>
+
+          <AnswerDropdown answer={answer?.text} instructions={instructions} explanation={answer?.reason} correct={true} />
+
+          <Grid item xs={12}>
+            <Divider className={classes.divider} />
+          </Grid>
+
+          {wrongAnswerSet.map((wrongAnswer, index) => (
+            <AnswerDropdown key={index} answer={wrongAnswer.text} explanation={wrongAnswer.reason} correct={false} />
+          ))}
         </Grid>
-
-        <AnswerDropdown answer={answer?.text} explanation={answer?.reason} correct={true} />
-
-        <Grid item xs={12}>
-          <Divider className={classes.divider} />
-        </Grid>
-
-        {wrongAnswerSet.map((wrongAnswer, index) => (
-          <AnswerDropdown key={index} answer={wrongAnswer.text} explanation={wrongAnswer.reason} correct={false} />
-        ))}
       </Grid>
     </Grid>
   );
@@ -82,8 +87,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700,
     color: '#0075FF',
     textAlign: 'center',
-    fontSize: '24px',
-    marginBottom: '10px',
+    fontSize: '24px'
   },
   question: {
     fontWeight: 500,

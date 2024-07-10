@@ -208,7 +208,7 @@ export default function QuestionMaker({
           <Grid item container xs={8}>
             <TextField className={classes.input} id="question-text" value={question.title} onChange={onChangeMaker('title')} label="Question Text" variant="outlined" fullWidth multiline rows={10} required />
 
-            <TextField id="image-url" onChange={onChangeMaker('imageUrl')} fullWidth value={question.imageUrl} label="URL for Photo" variant="outlined" />
+            <TextField id="image-url" onChange={onChangeMaker('imageUrl')} fullWidth value={question.imageUrl} label="URL for Image" variant="outlined" />
           </Grid>
 
           <Grid item container justifyContent='center' xs={8} sm={4}>

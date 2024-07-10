@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { IQuestionTemplate, IGameTemplate } from '@righton/networking';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CCSS from './CCSS';
+import CCSS from './CCSSText';
 
 type QuestionCardProps = {
   gameId: string | null;

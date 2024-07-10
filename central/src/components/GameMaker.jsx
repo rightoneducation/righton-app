@@ -5,7 +5,7 @@ import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Car
 import { Cancel } from '@material-ui/icons';
 import { isNullOrUndefined } from '@righton/networking';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
-import CCSS from './CCSS';
+import CCSSText from './CCSSText';
 import GameCCSS from './GameMakerCCSS';
 import QuestionMaker from './QuestionMaker';
 import { getQuestionTemplateById } from '../lib/HelperFunctions';
@@ -94,7 +94,26 @@ export default function GameMaker({
       return {id: gameId, ...newGame};
     }
   });
+  const calculateCCSS = (localQuestionTemplates) => {
+    if (localQuestionTemplates === 'Mashup') 
+      return localQuestionTemplates;
+    const extractedQuestions = localQuestionTemplates.map((question) => question.questionTemplate);
+    const CCSSArray = extractedQuestions.map((question) => {
+      return `${question.grade}.${question.domain}.${question.cluster}.${question.standard}`;
+    });
+    if (CCSSArray[0] != null && CCSSArray.every(val => val === CCSSArray[0])){
+      return CCSSArray[0];
+    }
+    return 'Mashup';
+  };
 
+  const [CCSS, setCCSS] = useState(localQuestionTemplates.length > 0 ? calculateCCSS(localQuestionTemplates) : 'Mashup');
+
+  useEffect(() => {
+    if (localQuestionTemplates.length > 0) {
+      setCCSS(calculateCCSS(localQuestionTemplates));
+    }
+  }, [localQuestionTemplates]);
   const selectedQuestionTemplates = selectedQuestions.map(question => {
     return {questionTemplate: question, gameQuestionId: null }
   });
@@ -125,15 +144,17 @@ export default function GameMaker({
     setGameDetails({ ...gameDetails, phaseTwoTime: event.target.value });
   };
 
-  // Handles changing the Game CCSS code when the question set is changed/updated
-  function handleCCSS(grade, domain, cluster, standard) {
-    setGameDetails({ ...gameDetails, grade: grade, domain: domain, cluster: cluster, standard: standard });
-  }
-
   const handleDelete = (index) => {
     const newQuestions = [...localQuestionTemplates];
     const newQuestionsDeleted = newQuestions.splice(index, 1);
     setLocalQuestionTemplates(newQuestions);
+  }
+
+  const handleCCSS =(isChecked) => {
+    if (isChecked)
+      setCCSS(calculateCCSS(localQuestionTemplates))
+    else
+      setCCSS('Mashup');
   }
 
   // Save New or Existing Game (preliminary submit)
@@ -141,6 +162,22 @@ export default function GameMaker({
     setSelectedQuestions([]); 
     setLocalQuestionTemplates([]);
     gameDetails.questionTemplates = localQuestionTemplates;
+    if (CCSS === 'Mashup' || CCSS === undefined){
+      gameDetails.grade = 'Mashup';
+      gameDetails.domain = '';
+      gameDetails.cluster = '';
+      gameDetails.standard = '';
+    } else {
+      gameDetails.grade = CCSS.split('.')[0];
+      gameDetails.domain = CCSS.split('.')[1];
+      gameDetails.cluster = CCSS.split('.')[2];
+      gameDetails.standard = CCSS.split('.')[3];
+      
+    }
+    gameDetails.questionTemplatesOrder = 
+      localQuestionTemplates.map((question, index) => {
+        return { questionTemplateId: question.questionTemplate.id, index: index };
+      });
     saveGameTemplate(game, gameDetails);
     event.preventDefault();
     history.push('/');
@@ -161,12 +198,6 @@ export default function GameMaker({
               <Grid container item xs={12}>
                 <Typography style={{ fontWeight: 500, fontSize: '20px' }}>
                   Create Game
-                </Typography>
-              </Grid>
-
-              <Grid container item xs={12}>
-                <Typography style={{ fontWeight: 700, fontSize: '16px', color: '#FC1047', paddingBottom: '10px' }}>
-                  Note: In order for this game to be playable in advanced mode, there must be a minimum of 5 questions.
                 </Typography>
               </Grid>
 
@@ -278,7 +309,7 @@ export default function GameMaker({
                             <Grid container item>
                               <Grid container item xs={10}>
                                 <Grid item xs={12}>
-                                  <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
+                                  <CCSSText CCSS={CCSS} />
                                 </Grid>
 
                                 <Grid item xs={12}>
@@ -333,7 +364,7 @@ export default function GameMaker({
               </Grid>
             </Grid>
 
-            {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS} currentGameGrade={gameDetails.grade} /> : <Grid container item xs={12}></Grid>}
+            {localQuestionTemplates.length > 0 ? <GameCCSS CCSS={CCSS} handleCCSS={handleCCSS} /> : <Grid container item xs={12}></Grid>}
 
             <Grid container item xs={12} style={{display: 'flex', justifyContent: 'center', gap: 16}}>
               <Button variant='contained' type='submit' disableElevation className={classes.blueButton}>

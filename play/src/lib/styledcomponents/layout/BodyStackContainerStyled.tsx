@@ -10,5 +10,5 @@ export default styled(Stack)({
   flexDirection: 'column',
   alignItems: 'center',
   width: '100vw',
-  border: 'none',
+  border: 'none'
 });

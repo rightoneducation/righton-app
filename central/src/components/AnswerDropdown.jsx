@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Typography, Card, CardContent, Collapse, IconButton } from "@material-ui/core";
+import { Grid, Typography, Card, CardContent, Collapse, IconButton, Box} from "@material-ui/core";
 import { ExpandMore } from '@material-ui/icons';
+import { v4 as uuidv4 } from 'uuid';
    
-export default function AnswerDropdown({answer, explanation, correct}) {
+export default function AnswerDropdown({answer, instructions, explanation, correct}) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
 
@@ -26,7 +27,48 @@ export default function AnswerDropdown({answer, explanation, correct}) {
                             Explanation:
                         </Typography>
                         <Typography className={classes.explanationText}>
-                            {explanation}
+                            {!correct 
+                            ? explanation 
+                            :
+                            instructions.map((instruction, index) => (
+                                <Box
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'flex-start',
+                                    gap: 5
+                                  }}
+                                  key={uuidv4()}
+                                >
+                                  <Box style={{ width: '30px' }}>
+                                    <Typography
+                                      style={{
+                                        width: '30px',
+                                        fontSize: '20px',
+                                        fontWeight: 700,
+                                        color: '#4700B2',
+                                        lineHeight: '20px',
+                                        textAlign: 'right',
+                                      }}
+                                    >
+                                      {index + 1}
+                                    </Typography>
+                                  </Box>
+                                  <Typography
+                                    style={{ 
+                                        fontWeight: '400',
+                                        fontSize: '16px',
+                                        lineHeight: '18px',
+                                        paddingLeft: `8px`,
+                                        color: '#384466',
+                                        paddingBottom: '10px'
+                                    }}
+                                  >
+                                    {instruction}
+                                  </Typography>
+                                </Box>
+                              ))
+                            }
                         </Typography>
                     </CardContent>
                 </Collapse>
@@ -75,6 +117,7 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 700,
         fontSize: '20px',
         color: '#384466',
+        paddingBottom: '10px'
     },
     explanationText: {
         fontWeight: 500,
