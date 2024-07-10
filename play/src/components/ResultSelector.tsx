@@ -151,7 +151,7 @@ export default function ResultSelector({
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
         <Box sx={{ width: '100%' }}>
-            {stars === true && (
+            {stars && (
               <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
                 <CorrectStarsStyled
                   src={CorrectStars}

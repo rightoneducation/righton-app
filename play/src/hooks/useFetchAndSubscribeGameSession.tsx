@@ -28,7 +28,6 @@ export default function useFetchAndSubscribeGameSession(
   const [error, setError] = useState<string>('');
   const [hasRejoined, setHasRejoined] = useState<boolean>(isInitialRejoin);
 
-  // added
   const [isError, setIsError] = useState<{ error: boolean; withheldPoints: number }>({ error: false, withheldPoints: 0 });
   const [newPoints, setNewPoints] = useState<number>(0);
 
@@ -47,7 +46,7 @@ export default function useFetchAndSubscribeGameSession(
       return;
     }
 
-    // added. put the +7 in here bc i dont know if i should pass in score
+    // added so we can update th score for the discuss page. (previously implemented in results pages we got rid of)
     const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
       try {
         await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
@@ -83,7 +82,6 @@ export default function useFetchAndSubscribeGameSession(
               setNewPoints(0);
               const currentQuestionIndex = response.currentQuestionIndex ?? 0;
               const currentQuestion = response.questions[currentQuestionIndex];
-              // const teamId = '46499047-59db-4ebc-a7ff-695b8d327d99';
               
               const currentTeam = response.teams?.find((team) => team.id === teamId);
               const currName = currentTeam?.name;
@@ -106,7 +104,7 @@ export default function useFetchAndSubscribeGameSession(
                   console.log("newscore", calcNewScore);
               }
               const prevScore = currentTeam?.score ?? 0;
-              updateTeamScore(teamId, prevScore, calcNewScore); // Use appropriate team ID
+              updateTeamScore(teamId, prevScore, calcNewScore); 
             }
           }
         );

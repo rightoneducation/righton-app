@@ -155,7 +155,6 @@ export default function GameInProgress({
     );
     return rejoinSubmittedAnswer;
   });
-  console.log(backendAnswer.isSubmitted);
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(backendAnswer?.isSubmitted)
   );
@@ -194,7 +193,6 @@ export default function GameInProgress({
       setBackendAnswer(answer);
       setDisplaySubmitted(true);
     } catch (e) {
-      console.log(e);
       setIsAnswerError(true);
     }
   };

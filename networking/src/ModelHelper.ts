@@ -141,7 +141,7 @@ export abstract class ModelHelper {
         } else {
     
 
-            // changing this from PHASE_!_RESULTS to discuss
+            // changed this from PHASE_1_RESULTS to PHASE_1_DISCUSS
             if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_DISCUSS)){
                 return this.correctAnswerScore;
             } else {
