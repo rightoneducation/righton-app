@@ -80,11 +80,6 @@ export default function ConfidenceResponsesGraph({
     x: confidence.label,
     y: confidence.incorrect.length,
   }));
-  console.log('Correct Confidences');
-  console.log(currentCorrectConfidences);
-  console.log('Incorrect Confidences');
-  console.log(currentIncorrectConfidences);
-  console.log('_____');
   // this is req'd to handle the resizing of the graph container so that Victory can render the svgs
   // eslint-disable-next-line consistent-return
   useEffect(() => {
@@ -157,6 +152,7 @@ export default function ConfidenceResponsesGraph({
             {currentCorrectConfidences.length > 0 &&
               <VictoryBar
                 name='correct'
+                style={{data: {fill: '#FFF'}}}
                 data={currentCorrectConfidences}
                 cornerRadius={5}
                 labels={({ index }) =>

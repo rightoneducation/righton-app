@@ -481,13 +481,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       let newHints = [];
       let newPhase = currentPhase;
       if (phase === IPhase.ONE){
-        console.log('inputs');
-        console.log(teamAnswer);
-        console.log(currentQuestion);
-        console.log(teamAnswer.teamName);
         newConfidences = this.processConfidenceLevel(teamAnswer, currentQuestion, teamAnswer.teamName);
-        console.log('newConfidences');
-        console.log(newConfidences);
         newPhase = {...currentPhase, confidences: newConfidences};
       }
       else {
