@@ -19,25 +19,57 @@ interface TitleCCSSProps {
   cluster: string;
   standard: string;
 }
+// export default function TitleCCSS({ grade, domain, cluster, standard }: TitleCCSSProps) {
+//   if (grade === 'Mashup') {
+//     return <Typography style={{ fontWeight: 700, color: '#9139F8' }}>Mashup</Typography>;
+//   }
+
+//   if (grade === 'Misc' && domain === 'Misc') {
+//     return <Typography style={{ fontWeight: 700, color: '#9139F8' }}>Misc.</Typography>;
+//   }
+
+//   if (grade === 'Misc') {
+//     return <Typography style={{ fontWeight: 700, color: '#9139F8' }}>{`${domain}`}</Typography>;
+//   }
+
+//   if (grade && domain) {
+//     const clusterCombined: string = cluster ? `.${cluster}` : '';
+//     const standardCombined: string = standard ? `.${standard}` : '';
+//     const domainCombined: string = domain ? `.${domain}` : '';
+
+//     return (
+//       <Typography style={{ fontWeight: 700, color: '#9139F8' }}>
+//         {`${grade}${domainCombined}${clusterCombined}${standardCombined}`}
+//       </Typography>
+//     );
+//   }
+
+//   return null;
+// }
 
 export default function TitleCCSS({ grade, domain, cluster, standard }: TitleCCSSProps) {
   let titleText;
 
-  if (grade === 'Mashup') {
-    titleText = 'Mashup';
-  } else if (grade === 'Misc' && domain === 'Misc') {
-    titleText = 'Misc.';
-  } else if (grade === 'Misc') {
-    titleText = domain;
-  } else if (grade && domain) {
-    const clusterCombined = cluster ? `.${cluster}` : '';
-    const standardCombined = standard ? `.${standard}` : '';
-    const domainCombined = domain ? `.${domain}` : '';
-    titleText = `${grade}${domainCombined}${clusterCombined}${standardCombined}`;
-  } else {
-    return null;
+  switch (true) {
+    case grade === 'Mashup':
+      titleText = 'Mashup';
+      break;
+    case grade === 'Misc' && domain === 'Misc':
+      titleText = 'Misc.';
+      break;
+    case grade === 'Misc':
+      titleText = domain;
+      break;
+    case !!grade && !!domain: {
+      const clusterCombined = cluster ? `.${cluster}` : '';
+      const standardCombined = standard ? `.${standard}` : '';
+      const domainCombined = domain ? `.${domain}` : '';
+      titleText = `${grade}${domainCombined}${clusterCombined}${standardCombined}`;
+      break;
+    }
+    default:
+      return null;
   }
 
   return <TitleCCSSTypography>{titleText}</TitleCCSSTypography>;
 }
-

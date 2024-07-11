@@ -32,8 +32,8 @@ export default function StudentViews({
 
     2: 'End Answering',
     3: 'Go to Results',
-    4: 'Go to Phase 2',
-    5: 'Start Phase 2 Question',
+    // 4: 'Go to Phase 2',
+    4: 'Start Phase 2 Question',
     6: 'End Answering',
     7: 'Go to Results',
     8: 'Go to Next Question',

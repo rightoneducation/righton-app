@@ -29,7 +29,8 @@ interface GameSessionContainerProps {
 
 export default function GameSessionContainer({apiClients}: GameSessionContainerProps) {
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
+  // const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
+  const gameSessionId = '943e7133-e09a-4695-8933-a8bd9e271470';
 
   useEffect(() => {
     // Fetch game session data from AWS DynamoDB using the provided gameId
