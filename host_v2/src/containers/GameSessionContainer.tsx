@@ -18,14 +18,18 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
   const [localHostTeamAnswers, setLocalHostTeamAnswers] = React.useState<IHostTeamAnswers>(backendHostTeamAnswers);
   useEffect(() => {
-    console.log('backendHostTeamAnswers', backendHostTeamAnswers);
     setLocalHostTeamAnswers(backendHostTeamAnswers);
   }, [backendHostTeamAnswers]);
-  const handleDeleteTeam = () => {};
+  const handleDeleteTeam = (teamId: string) => {
+    // replace this with an integrated local + backendGameSession in the custom hook
+    const updatedTeams = localGameSession.teams.filter((team) => team.id !== teamId);
+    dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
+    apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
+  };
 
   useEffect(() => {
-    dispatch({type: 'synch_local_gameSession', payload: {backendGameSession}});
-  }, [backendGameSession])
+    dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
+  }, [backendGameSession]);
 
   let renderContent;
   switch (localGameSession.currentState) {

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient } from '@righton/networking';
+import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient, ITeam } from '@righton/networking';
+import { set } from 'lodash';
 
 export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { backendGameSession: IGameSession | null, backendHostTeamAnswers: IHostTeamAnswers } {
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
   const [backendGameSession, setBackendGameSession] = useState<IGameSession | null>(null);
   const [backendHostTeamAnswers, setBackendHostTeamAnswers] = useState<IHostTeamAnswers>({questions: []});
-
+  console.log(backendGameSession);
   useEffect(() => {
 
     try {
@@ -20,6 +21,8 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
         .then((updatedGameSession: IGameSession) => {
           setBackendGameSession((prev) => {return {...updatedGameSession}});
       });
+
+      dataManager.subscribeToCreateTeam(setBackendGameSession);
 
       dataManager.subscribeToCreateTeamAnswer((teamAnswers) => {
         const updatedHostTeamAnswers = dataManager.getHostTeamAnswers();

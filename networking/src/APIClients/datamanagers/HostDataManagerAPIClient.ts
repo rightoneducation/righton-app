@@ -1,7 +1,7 @@
 import { PlayDataManagerAPIClient } from './PlayDataManagerAPIClient';
 import { IQuestionAPIClient, ITeamAPIClient, ITeamMemberAPIClient, ITeamAnswerAPIClient } from '../interfaces';
 import { IQuestion, IChoice } from '../../Models/IQuestion';
-import { IHostTeamAnswers, IHostTeamAnswersQuestion, IHostTeamAnswersHint, IHostTeamAnswersConfidence, IHostTeamAnswersResponse, IHostTeamAnswersPerPhase } from '../../Models';
+import { IHostTeamAnswers, IHostTeamAnswersQuestion, IHostTeamAnswersHint, IHostTeamAnswersConfidence, IHostTeamAnswersResponse, IHostTeamAnswersPerPhase, ITeam } from '../../Models';
 import { Environment } from '../interfaces/IBaseAPIClient';
 import { IGameSessionAPIClient } from '../interfaces';
 import { IGameSession } from '../../Models/IGameSession';
@@ -22,6 +22,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   protected teamAPIClient: ITeamAPIClient;
   protected teamMemberAPIClient: ITeamMemberAPIClient;
   protected teamAnswerAPIClient: ITeamAnswerAPIClient;
+  protected createTeamSubscription: any;
   private hostTeamAnswers: IHostTeamAnswers;
   private createTeamAnswerSubscription: any;
   private updateTeamAnswerSubscription: any;
@@ -62,6 +63,9 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (this.gameSessionSubscription && this.gameSessionSubscription.unsubscribe) {
       this.gameSessionSubscription.unsubscribe();
     }
+    if (this.createTeamSubscription && this.createTeamSubscription.unsubscribe) {
+      this.createTeamSubscription.unsubscribe();
+    }
     if (this.createTeamAnswerSubscription && this.createTeamAnswerSubscription.unsubscribe) {
       this.createTeamAnswerSubscription.unsubscribe();
     }
@@ -86,6 +90,39 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     } catch (error) {
       console.log(error);
       throw new Error (`Error: ${error}`)
+    }
+  }
+
+  //subscribe to created teams, when players are joining in the lobby
+  async subscribeToCreateTeam(callback: (gameSession: IGameSession) => void) {
+    try {
+      if (!this.gameSessionId)
+        throw new Error('Error: Invalid game session id');
+      this.createTeamSubscription = await this.teamAPIClient.subscribeCreateTeam(this.gameSessionId, (team: ITeam) => {
+        if (!team) {
+          throw new Error ('Error: Invalid team')
+        }
+        const newGameSession = {...this.gameSession as IGameSession};
+        newGameSession.teams.push(team);
+        this.gameSession = newGameSession;
+        callback(newGameSession);
+      });
+    } catch (error) {
+      console.log(error);
+      throw new Error (`Error: ${error}`)
+    }
+  }
+
+  async deleteTeam(teamId: string, callback: (gameSession: IGameSession) => void) {
+    try {
+      await this.teamAPIClient.deleteTeam(teamId).then(() => {
+        if (this.gameSession)
+          this.gameSessionAPIClient.getGameSession(this.gameSession.id).then((gameSession: IGameSession) => {
+            callback(gameSession);
+          });
+    });
+    } catch(e) {
+      console.log(e)
     }
   }
 

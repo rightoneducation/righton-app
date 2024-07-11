@@ -58,7 +58,7 @@ export default function HostBody({ teams, questions, title, handleDeleteTeam, sc
         return (
           <StartGameContentAreaDoubleColumnStyled container>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
-              {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} handleDeleteTeam={handleDeleteTeam}/>}
+                {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} handleDeleteTeam={handleDeleteTeam}/>}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
               <QuestionList questions={questions} title ={title}/> 

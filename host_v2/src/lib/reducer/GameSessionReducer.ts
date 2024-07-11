@@ -7,6 +7,8 @@ export function GameSessionReducer(gameSession: IGameSession, action: IAction): 
       return {...gameSession, currentState: action.payload.nextState};
     case 'synch_local_gameSession':
       return {...gameSession, ...action.payload.gameSession};
+    case 'update_teams':
+      return {...gameSession, teams: action.payload.teams};
     default:
       return gameSession;
   }

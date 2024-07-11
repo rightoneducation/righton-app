@@ -88,7 +88,6 @@ function FooterStartGame({
     dispatch({type: 'advance_game_phase', payload: {nextState}});
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
   };
-  console.log(screenSize);
   return (
     <FooterContainer>
       {screenSize === ScreenSize.SMALL &&
@@ -97,7 +96,9 @@ function FooterStartGame({
       <InnerFooterContainer>
         <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
           <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
-          <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>players have joined</PlayerCountTypography>
+          <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
+            {teamsLength === 1 ? "player has joined" : "players have joined"}
+          </PlayerCountTypography>
         </Box>
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
       </InnerFooterContainer>
