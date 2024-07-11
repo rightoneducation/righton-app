@@ -176,13 +176,13 @@ export default function GameInProgress({
     let nextIndex = currentIndex + 1;
   
     // Skip PHASE_1_RESULTS and PHASE_2_RESULTS
-    if (stateKeys[nextIndex] === 'PHASE_1_RESULTS') {
-      nextIndex += 1; // Skip to PHASE_2_START
-    }
+    // if (stateKeys[nextIndex] === 'PHASE_1_RESULTS') {
+    //   nextIndex += 1; // Skip to PHASE_2_START
+    // }
     // CHECK - changing this caused error at end
-    if (stateKeys[nextIndex] === 'PHASE_2_RESULTS') {
-      nextIndex += 1; // Skip to CHOOSE_CORRECT_ANSWER
-    }
+    // if (stateKeys[nextIndex] === 'PHASE_2_RESULTS') {
+    //   nextIndex += 1; // Skip to CHOOSE_CORRECT_ANSWER
+    // }
     
   
     return GameSessionState[stateKeys[nextIndex]];

@@ -108,19 +108,10 @@ export default function DiscussAnswer({
               textAlign: 'center',
               marginTop: `${theme.sizing.largePadding}px`,
               opacity: 0.5,
+              whiteSpace: 'pre-line'
             }}
           >
-            <pre
-              style={{
-                fontFamily: 'inherit', 
-                fontSize: 'inherit', 
-                whiteSpace: 'pre-wrap', 
-                wordWrap: 'break-word', 
-                margin: 0, 
-              }}
-            >
               {'Swipe to the left to see your\nanswer'}
-            </pre>
           </Typography>
         )}
         </Stack>
@@ -131,19 +122,10 @@ export default function DiscussAnswer({
               textAlign: 'center',
               marginTop: `${theme.sizing.largePadding}px`,
               opacity: 0.5,
+              whiteSpace: 'pre-line'
             }}
           >
-            <pre
-              style={{
-                fontFamily: 'inherit', 
-                fontSize: 'inherit', 
-                whiteSpace: 'pre-wrap', 
-                wordWrap: 'break-word', 
-                margin: 0, 
-              }}
-            >
               {'Swipe to the left to see\nexplanations and results'}
-            </pre>
           </Typography>
         )}
       </ThreeColumnScrollBox>

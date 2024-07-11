@@ -51,7 +51,7 @@ export abstract class ModelHelper {
             const selectedAnswer = answers.find((teamAnswer: BackendAnswer | null) => 
                 this.isAnswerFromPhaseOne(teamAnswer)
                     ? currentState === GameSessionState.PHASE_1_DISCUSS
-                    : currentState === GameSessionState.PHASE_1_DISCUSS
+                    : currentState === GameSessionState.PHASE_2_DISCUSS
             );
             return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
         };
