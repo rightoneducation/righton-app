@@ -1,11 +1,13 @@
 import React from 'react';
 import {Box, Paper, Typography} from '@mui/material';
-import { styled } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { styled, useTheme } from '@mui/material/styles';
 import {
   ITeam,
   IQuestion,
   GameSessionState
 } from '@righton/networking';
+import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
 import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
@@ -25,6 +27,7 @@ const SafeAreaStyled = styled(Box)({
   height: '100vh',
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
   background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
@@ -45,16 +48,19 @@ function StartGame({teams,
   gameCode,
   handleDeleteTeam,
   }: StartGameProps) {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
     return (
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
-          <HostBody teams={teams} questions={questions} title={title} handleDeleteTeam={handleDeleteTeam}/>
+          <HostBody teams={teams} questions={questions} title={title} handleDeleteTeam={handleDeleteTeam} screenSize={screenSize}/>
           <FooterStartGame 
             teamsLength={teams ? teams.length : 0}
+            screenSize={screenSize}
           />
         </SafeAreaStyled>
     )
-
   }
   
   export default StartGame;

@@ -1,8 +1,7 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import GameCode from './GameCode';
-
 import { ReactComponent as HelpIcon } from '../images/Help.svg';
 import { ReactComponent as CloseIcon } from '../images/Close.svg';
 
@@ -11,17 +10,19 @@ interface HostHeaderProps {
 }
 
 
-const UpperStyled = styled(Box)({
+const UpperStyled = styled(Box)(({theme}) => ({
   display: 'flex',
   position: 'sticky',
   flexDirection: 'column',
   justifyContent: 'space-between', 
   gap: '16px', /* this is for Header / Lobby */
   height: '170px', 
+  width: '100%',
+  maxWidth: `${theme.breakpoints.values.lg}px`,
   padding: '0px 16px 0px 16px', 
   boxSizing: 'border-box', /* got rid of width, added the display, flexdir, justify content */
-  zIndex: 9999,
-});
+  zIndex: 3,
+}));
 
 const TopLineStyled = styled(Box)({
   display: 'flex',
@@ -66,6 +67,7 @@ const handleCloseClick = () => {
 
 
 function HostHeader({ gameCode }: HostHeaderProps) {
+  const theme = useTheme();
   return (
     <UpperStyled>
       <TopLineStyled>

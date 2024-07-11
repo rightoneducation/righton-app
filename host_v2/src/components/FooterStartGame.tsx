@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBar from './ProgressBarGroup';
+import { ScreenSize } from '../lib/HostModels';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
@@ -59,16 +60,24 @@ const InnerFooterContainer = styled(Box)({
   alignItems: 'center',
   width: '100%',
   height: '92px',
-  gap: '8px',
+  gap: '16px',
+});
 
+const PlayerCountTypography = styled(Typography)({
+  fontFamily: 'Rubik',
+  color: "#FFF",
+  fontSize: '24px',
+  fontWeight: 700
 });
 
 interface FootStartGameProps {
   teamsLength: number;
+  screenSize: ScreenSize;
 }
 
 function FooterStartGame({ 
-  teamsLength
+  teamsLength,
+  screenSize
 }: FootStartGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
@@ -79,12 +88,17 @@ function FooterStartGame({
     dispatch({type: 'advance_game_phase', payload: {nextState}});
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
   };
-
+  console.log(screenSize);
   return (
     <FooterContainer>
-      <PaginationContainerStyled className="swiper-pagination-container" />
+      {screenSize === ScreenSize.SMALL &&
+        <PaginationContainerStyled className="swiper-pagination-container" />
+      }
       <InnerFooterContainer>
-        <ProgressBar teamsLength={teamsLength} />
+        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
+          <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
+          <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>players have joined</PlayerCountTypography>
+        </Box>
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
