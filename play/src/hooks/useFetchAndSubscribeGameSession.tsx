@@ -78,14 +78,12 @@ export default function useFetchAndSubscribeGameSession(
             
             // updates team score in the phase 1 and 2 discuss states
             if (response.currentState === GameSessionState.PHASE_1_DISCUSS || response.currentState === GameSessionState.PHASE_2_DISCUSS) {
-              console.log("PHASE_1_DISCUSS or PHASE_2_DISCUSS found");
               setNewPoints(0);
               const currentQuestionIndex = response.currentQuestionIndex ?? 0;
               const currentQuestion = response.questions[currentQuestionIndex];
               
               const currentTeam = response.teams?.find((team) => team.id === teamId);
               const currName = currentTeam?.name;
-              console.log(currName);
               if (!currentTeam) {
                 console.error('Team not found');
                 return;
@@ -101,7 +99,6 @@ export default function useFetchAndSubscribeGameSession(
                     currentTeam,
                     isShortAnswerEnabled
                   );
-                  console.log("newscore", calcNewScore);
               }
               const prevScore = currentTeam?.score ?? 0;
               updateTeamScore(teamId, prevScore, calcNewScore); 

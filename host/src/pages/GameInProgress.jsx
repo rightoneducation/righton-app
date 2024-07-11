@@ -65,9 +65,9 @@ export default function GameInProgress({
     1: 'Begin Question', // TEAMS_JOINING
     2: 'Continue', // PHASE_1_DISCUSS
     3: 'Go to Phase 2', // SKIPPED PHASE_1_RESULTS
-    5: 'Start Phase 2 Question', // PHASE_2_START
-    6: 'Continue', // PHASE_2_DISCUSS
-    7: 'Go to Next Question', // SKIPPED PHASE_2_RESULTS
+    4: 'Start Phase 2 Question', // PHASE_2_START
+    5: 'Continue', // phase 2 start to PHASE_2_DISCUSS
+    6: 'Go to Next Question', // SKIPPED PHASE_2_RESULTS
     9: 'Proceed to RightOn Central', // CHOOSE_CORRECT_ANSWER
   };
   const numPlayers = teams.length;
@@ -239,12 +239,14 @@ export default function GameInProgress({
 
   // used to determine which button text to show based on the dictionary above and whether all players have answered
   const getFooterText = (numPlayers, totalAnswers, statePosition) => {
-    if (statePosition === 2 || statePosition === 6) {
+    console.log(statePosition);
+    console.log(currentState);
+    if (statePosition === 2 || statePosition === 5) {
       if (totalAnswers < numPlayers && gameTimerZero === false)
         return 'End Answering';
       else return footerButtonTextDictionary[statePosition];
     }
-    if (statePosition === 7 && isLastQuestion)
+    if (statePosition === 6 && isLastQuestion)
         return 'See Leaderboard';
     return footerButtonTextDictionary[statePosition];
   };

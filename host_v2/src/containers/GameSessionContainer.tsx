@@ -46,7 +46,6 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
     gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
       gameSessionId,
       (response) => {
-        console.log(response);
         setGameSession({...gameSession, ...response});
       },
     );
@@ -138,7 +137,6 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
   const phaseTwoTime = 180;
   const hasRejoined = false;
   const currentTimer = 90;
-  
   const totalTime = gameSession && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
     ? phaseOneTime
     : phaseTwoTime;
@@ -192,11 +190,8 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
   ));
 
   const handleDeleteTeam = (id: string) => {
-    console.log("made it in");
-    console.log(id);
     try {
       apiClients.team.deleteTeam(id).then((response) => {
-        console.log(response);
         setGameSession((prevState) => {
           if (!prevState) return prevState;
           const updatedTeams = prevState.teams.filter((team) => team.id !== id);
@@ -204,8 +199,8 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
         });
       });
     } catch (error) {
-      console.log("DELETE TEAM DIDNT WORK HERE");
-      console.log(error);
+      console.error('error deleting team:', error);
+
     }
   }
 
