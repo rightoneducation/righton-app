@@ -173,20 +173,9 @@ export default function GameInProgress({
       throw new Error(`Unknown state: ${currentState}`);
     }
     if (currentState === GameSessionState.PHASE_2_DISCUSS && !isLastQuestion) {
-      return GameSessionState.CHOOSE_CORRECT_ANSWER;
+      return GameSessionState.TEAMS_JOINING;
     }
-    let nextIndex = currentIndex + 1;
-  
-    // Skip PHASE_1_RESULTS and PHASE_2_RESULTS
-    // if (stateKeys[nextIndex] === 'PHASE_1_RESULTS') {
-    //   nextIndex += 1; // Skip to PHASE_2_START
-    // }
-    // CHECK - changing this caused error at end
-    // if (stateKeys[nextIndex] === 'PHASE_2_RESULTS') {
-    //   nextIndex += 1; // Skip to CHOOSE_CORRECT_ANSWER
-    // }
-    
-  
+    let nextIndex = currentIndex + 1; 
     return GameSessionState[stateKeys[nextIndex]];
   };
 

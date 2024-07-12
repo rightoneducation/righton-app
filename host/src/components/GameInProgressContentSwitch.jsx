@@ -153,7 +153,7 @@ export default function GameInProgressContentSwitch({
           alignItems: 'center',
           alignContent: 'center', paddingBottom: '24px'}}>
             <Typography style ={{color: 'white',fontWeight: '700',fontFamily: 'Poppins',size: '16px',lineHeight: '24px',}}>Current Student View</Typography>
-            <img src={p1studentview}  alt="About Icon" /> </Box>
+            <img src={p1studentview} style={{width:'100%'}} alt="About Icon" /> </Box>
         )}
         {currentState === GameSessionState.PHASE_2_DISCUSS && (
           <Box style={{display: 'flex',
@@ -161,7 +161,7 @@ export default function GameInProgressContentSwitch({
           alignItems: 'center',
           alignContent: 'center', paddingBottom: '24px'}}>
             <Typography style ={{color: 'white',fontWeight: '700',fontFamily: 'Poppins',size: '16px',lineHeight: '24px',}}>Current Student View</Typography>
-            <img src={p2studentview}  alt="About Icon" /> </Box>
+            <img src={p2studentview} style={{width:'100%'}} alt="About Icon" /> </Box>
         )}
             <QuestionCard
               question={questions[currentQuestionIndex].text}
