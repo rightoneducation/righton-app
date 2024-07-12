@@ -57,7 +57,6 @@ export class TeamAnswerParser {
             console.error("Error parsing answer:", error);
             throw new Error("Error parsing the 'answer' field.");
         }
-        console.log(awsTeamAnswer);
         const {
             id,
             isSubmitted = awsTeamAnswer.isSubmitted,

@@ -55,7 +55,9 @@ export default function GameInProgress({
   gptHints,
   hintsError,
   isHintLoading,
-  handleProcessHints
+  handleProcessHints,
+  setSelectedMistakes,
+  multipleChoiceText
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -185,12 +187,12 @@ export default function GameInProgress({
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
+      assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
       return;
     }
     if (nextState === GameSessionState.TEAMS_JOINING)
-      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
+      assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, nextState);
     if (
       nextState === GameSessionState.PHASE_1_DISCUSS ||
       nextState === GameSessionState.PHASE_2_DISCUSS
@@ -217,7 +219,7 @@ export default function GameInProgress({
     <div className={classes.background}>
       <GameLoadModal
         handleStartGameModalTimerFinished={handleStartGameModalTimerFinished}
-        modalOpen={isLoadModalOpen}
+        modalOpen={isLoadModalOpen && currentQuestionIndex === 0}
       />
       <div
         style={{
@@ -291,6 +293,8 @@ export default function GameInProgress({
             hintsError={hintsError}
             isHintLoading={isHintLoading}
             handleProcessHints={handleProcessHints}
+            teams={teams}
+            setSelectedMistakes={setSelectedMistakes}
           />
         </div>
         <GameModal
@@ -380,13 +384,13 @@ const useStyles = makeStyles((theme) => ({
     border: 'none',
     overflowY: 'auto',
     touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
+    padding: '24px',
+    boxSizing: 'border-box',
     '&::-webkit-scrollbar': {
       // Chrome and Safari
       display: 'none',
     },
     scrollbarWidth: 'none', // Firefox
     '-ms-overflow-style': 'none', // IE and Edge
-    padding: '24px',
-    boxSizing: 'border-box',
   },
 }));

@@ -76,7 +76,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     if (
       subscription.gameSession?.currentQuestionIndex != null &&
       subscription.gameSession?.currentQuestionIndex > 0
-    )
+    ) {
       return (
         <Lobby
           mode={LobbyMode.PREQUESTION}
@@ -86,6 +86,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
           teamId={localModel.teamId}
         />
       );
+    }
     // if waiting for teacher, display waiting message on How to Play page
     return <Lobby mode={LobbyMode.READY} />;
   }
