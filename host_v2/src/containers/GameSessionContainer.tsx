@@ -5,6 +5,8 @@ import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
 import GameInProgress from '../pages/GameInProgress';
 import StartGame from '../pages/StartGame';
+import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
+import sortMistakes from '../lib/HelperFunctions';
 
 interface GameSessionContainerProps {
   apiClients: APIClients;

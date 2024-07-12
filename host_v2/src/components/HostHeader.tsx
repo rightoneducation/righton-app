@@ -15,7 +15,7 @@ const UpperStyled = styled(Box)(({theme}) => ({
   position: 'sticky',
   flexDirection: 'column',
   justifyContent: 'space-between', 
-  gap: '16px', /* this is for Header / Lobby */
+  gap: '16px', 
   height: '170px', 
   width: '100%',
   maxWidth: `${theme.breakpoints.values.lg}px`,
@@ -29,32 +29,32 @@ const TopLineStyled = styled(Box)({
   justifyContent: 'space-between', // send the "game lobby" and the icons to opp sides
   alignItems: 'center', // align items vertically in the center
   width: '100%', // fixed on the figma, but that would look goofy on bigger screens
-  padding: '0px 0px 0px 8px', // Adjust padding as needed
-  gap: '8px', /* changed the width to 100%, added the display, justify, and align */
+  padding: '0px 0px 0px 8px', 
+  gap: '8px', 
   height: '36px',
 });
 
 const GameLobbyTypographyStyled = styled(Typography)({
-  width: '255px', /* this si for the phase description */
+  width: '255px', // this is for the phase description
   height: '36px',
   fontSize: '24px',
   fontWeight: '700',
   color: 'rgba(255, 255, 255, 1)',
-  lineHeight: '36px', /* same everything */
+  lineHeight: '36px', 
 });
 
 const IconsContainer = styled(Box)({
   display: 'flex',
-  gap: '8px', // Adjust the gap between icons if needed
+  gap: '8px', 
 });
 
 const HelpSvg = styled(HelpIcon)({
-  cursor: 'pointer', // Set cursor to pointer
+  cursor: 'pointer', // So we can click on it
 });
 
 const CloseSvg = styled(CloseIcon)({
   marginRight: '8px',
-  cursor: 'pointer', // Set cursor to pointer
+  cursor: 'pointer', 
 });
 
 const handleHelpClick = () => {
