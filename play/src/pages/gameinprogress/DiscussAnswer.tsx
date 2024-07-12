@@ -26,7 +26,6 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import ResultsCard from '../../components/ResultsCard';
-// import { useTeamScore } from '../../hooks/useTeamScore';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -109,19 +108,10 @@ export default function DiscussAnswer({
               textAlign: 'center',
               marginTop: `${theme.sizing.largePadding}px`,
               opacity: 0.5,
+              whiteSpace: 'pre-line'
             }}
           >
-            <pre
-              style={{
-                fontFamily: 'inherit', // Ensures the Typography font family is applied
-                fontSize: 'inherit', // Ensures the Typography font size is applied
-                whiteSpace: 'pre-wrap', // Preserves newlines and wraps text
-                wordWrap: 'break-word', // Breaks long words to fit the container
-                margin: 0, // Removes default margin of <pre>
-              }}
-            >
               {'Swipe to the left to see your\nanswer'}
-            </pre>
           </Typography>
         )}
         </Stack>
@@ -132,19 +122,10 @@ export default function DiscussAnswer({
               textAlign: 'center',
               marginTop: `${theme.sizing.largePadding}px`,
               opacity: 0.5,
+              whiteSpace: 'pre-line'
             }}
           >
-            <pre
-              style={{
-                fontFamily: 'inherit', // Ensures the Typography font family is applied
-                fontSize: 'inherit', // Ensures the Typography font size is applied
-                whiteSpace: 'pre-wrap', // Preserves newlines and wraps text
-                wordWrap: 'break-word', // Breaks long words to fit the container
-                margin: 0, // Removes default margin of <pre>
-              }}
-            >
               {'Swipe to the left to see\nexplanations and results'}
-            </pre>
           </Typography>
         )}
       </ThreeColumnScrollBox>

@@ -54,7 +54,7 @@ interface GameInProgressProps {
   localModel: LocalModel;
   isShortAnswerEnabled: boolean;
   gameSession: IGameSession;
-  newPoints: number;
+  newPoints?: number;
 }
 
 export default function GameInProgress({
@@ -155,7 +155,6 @@ export default function GameInProgress({
     );
     return rejoinSubmittedAnswer;
   });
-
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(backendAnswer?.isSubmitted)
   );
@@ -194,7 +193,6 @@ export default function GameInProgress({
       setBackendAnswer(answer);
       setDisplaySubmitted(true);
     } catch (e) {
-      console.log(e);
       setIsAnswerError(true);
     }
   };

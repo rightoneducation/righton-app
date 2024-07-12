@@ -107,7 +107,7 @@ export default function ResultSelector({
         </Typography>
       </Box>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        {currentState === GameSessionState.PHASE_2_DISCUSS && ( // changed this
+        {currentState === GameSessionState.PHASE_2_DISCUSS && ( 
           <Typography
             variant="body2"
             sx={{
@@ -151,7 +151,7 @@ export default function ResultSelector({
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
         <Box sx={{ width: '100%' }}>
-            {stars === true && (
+            {stars && (
               <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
                 <CorrectStarsStyled
                   src={CorrectStars}

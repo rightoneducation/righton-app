@@ -13,12 +13,12 @@ import sortMistakes from '../lib/HelperFunctions';
 interface Player {
   answer: string; // answer chosen by this player
   isCorrect: boolean; // true iff the chosen answer is the correct answer
-  name: string; // this player's name
+  name: string; 
 }
 
 interface ConfidenceOption {
   confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly
+  correct: number; 
   incorrect: number; // number of players who selected tgis option and answered incorrectly
   players: Player[]; // an array of the players that selected this option
 }
@@ -28,13 +28,9 @@ interface GameSessionContainerProps {
 }
 
 export default function GameSessionContainer({apiClients}: GameSessionContainerProps) {
-  
-  // WHAT I ADDED from host v1 - 
-  // let { gameSessionId } = useParams<{ gameSessionId: string }>();
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
-  // const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
-  //   currentState: MockGameSession.currentState as GameSessionState}); 
+  // const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
+  const gameSessionId = '943e7133-e09a-4695-8933-a8bd9e271470';
 
   useEffect(() => {
     // Fetch game session data from AWS DynamoDB using the provided gameId
@@ -51,7 +47,6 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
     gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
       gameSessionId,
       (response) => {
-        console.log(response);
         setGameSession({...gameSession, ...response});
       },
     );
@@ -143,12 +138,6 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
   const phaseTwoTime = 180;
   const hasRejoined = false;
   const currentTimer = 90;
-
-  // const totalTime =
-  //   gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
-  //     ? phaseOneTime
-  //     : phaseTwoTime;
-
   const totalTime = gameSession && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
     ? phaseOneTime
     : phaseTwoTime;
@@ -202,11 +191,8 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
   ));
 
   const handleDeleteTeam = (id: string) => {
-    console.log("made it in");
-    console.log(id);
     try {
       apiClients.team.deleteTeam(id).then((response) => {
-        console.log(response);
         setGameSession((prevState) => {
           if (!prevState) return prevState;
           const updatedTeams = prevState.teams.filter((team) => team.id !== id);
@@ -214,8 +200,8 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
         });
       });
     } catch (error) {
-      console.log("DELETE TEAM DIDNT WORK HERE");
-      console.log(error);
+      console.error('error deleting team:', error);
+
     }
   }
 
