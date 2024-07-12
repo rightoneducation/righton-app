@@ -38,7 +38,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.gameSessionId,
     apiClients,
     retry,
-    localModel?.hasRejoined
+    localModel?.hasRejoined,
+    localModel?.teamId,
   );
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
@@ -96,6 +97,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}
       gameSession={subscription.gameSession}
+      newPoints={subscription.newPoints}
       {...props}
     />
   );

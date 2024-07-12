@@ -1,28 +1,81 @@
-import React, { useState } from 'react';
-import { GameSessionState,GameSessionParser, ConfidenceLevel } from '@righton/networking';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { GameSessionState, GameSessionParser, 
+  APIClients, Environment,
+  IGameSession,
+ } from '@righton/networking';
 import MockGameSession from '../mock/MockGameSession.json';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
-import sortMistakes from "../lib/HelperFunctions"
+import sortMistakes from '../lib/HelperFunctions';
 
 interface Player {
   answer: string; // answer chosen by this player
   isCorrect: boolean; // true iff the chosen answer is the correct answer
-  name: string; // this player's name
+  name: string; 
 }
 
 interface ConfidenceOption {
   confidence: string; // the confidence option (i.e. 'NOT_RATED', 'NOT_AT_ALL', 'KINDA', etc.)
-  correct: number; // number of teams who selected this option and answered correctly
+  correct: number; 
   incorrect: number; // number of players who selected tgis option and answered incorrectly
   players: Player[]; // an array of the players that selected this option
 }
 
-export default function GameSessionContainer() {
-  
-  const gameSession = GameSessionParser.gameSessionFromAWSGameSession({...MockGameSession, 
-    currentState: MockGameSession.currentState as GameSessionState}); 
+interface GameSessionContainerProps {
+  apiClients: APIClients;
+}
+
+export default function GameSessionContainer({apiClients}: GameSessionContainerProps) {
+  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
+  // const gameSessionId = '0bcbd26e-17fb-414d-a63e-22ed5033a042';
+  const gameSessionId = '943e7133-e09a-4695-8933-a8bd9e271470';
+
+  useEffect(() => {
+    // Fetch game session data from AWS DynamoDB using the provided gameId
+    const fetchGameSession = async () => {
+      try {
+        const response = await apiClients.gameSession.getGameSession(gameSessionId);
+        setGameSession(response); // Set the game session data in state
+      } catch (error) {
+        console.error('error fetching game session:', error);
+      }
+    };
+    
+    let gameSessionSubscription: any | null = null;
+    gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
+      gameSessionId,
+      (response) => {
+        setGameSession({...gameSession, ...response});
+      },
+    );
+    
+    // set up subscription for new teams joining
+    let createTeamSubscription: any | null = null;
+    createTeamSubscription = apiClients.team.subscribeCreateTeam(
+      gameSessionId,
+      (teamResponse) => {
+        if (teamResponse.gameSessionTeamsId === gameSessionId) {
+          setGameSession((prevState) => {
+            const newState = JSON.parse(JSON.stringify(prevState));
+            newState.teams.push(teamResponse);
+            return newState;
+          });
+        }
+      },
+    );
+
+    fetchGameSession();
+    return () => {
+      gameSessionSubscription?.unsubscribe();
+      createTeamSubscription?.unsubscribe();
+    };
+
+  }, [apiClients]); // eslint-disable-line
+
+
+
 
   const samplePlayerOne: Player = {
     answer: 'C',
@@ -85,11 +138,9 @@ export default function GameSessionContainer() {
   const phaseTwoTime = 180;
   const hasRejoined = false;
   const currentTimer = 90;
-
-  const totalTime =
-    gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
-      ? phaseOneTime
-      : phaseTwoTime;
+  const totalTime = gameSession && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+    ? phaseOneTime
+    : phaseTwoTime;
 
   const [shortAnswerResponses, setShortAnswerResponses] = useState<ShortAnswerResponse[]>([ // eslint-disable-line
     {
@@ -139,21 +190,28 @@ export default function GameSessionContainer() {
      [shortAnswerResponses, isPopularMode]
   ));
 
-  switch (gameSession.currentState){
-    case GameSessionState.TEAMS_JOINING:
-      return (
-        <StartGame
-          teams={gameSession.teams ?? []}
-          questions={gameSession.questions}
-          title={gameSession.title ?? ''}
-          gameCode={gameSession.gameCode}
-        />
-      );
+  const handleDeleteTeam = (id: string) => {
+    try {
+      apiClients.team.deleteTeam(id).then((response) => {
+        setGameSession((prevState) => {
+          if (!prevState) return prevState;
+          const updatedTeams = prevState.teams.filter((team) => team.id !== id);
+          return { ...prevState, teams: updatedTeams };
+        });
+      });
+    } catch (error) {
+      console.error('error deleting team:', error);
+
+    }
+  }
+
+
+  switch (gameSession?.currentState){
+ 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
-    default:
       return (
         <GameInProgress
-          totalQuestions={gameSession.questions.length ?? 0}
+          totalQuestions={gameSession?.questions.length ?? 0}
           currentQuestionIndex={currentQuestionIndex}
           isCorrect={isCorrect}
           isIncorrect={isIncorrect}
@@ -169,5 +227,16 @@ export default function GameSessionContainer() {
           setIsPopularMode={setIsPopularMode}
         />
       );
+      case GameSessionState.TEAMS_JOINING:
+        default:
+        return (
+          <StartGame
+            teams={gameSession?.teams ?? []}
+            questions={gameSession?.questions ?? []}
+            title={gameSession?.title ?? ''}
+            gameCode={gameSession?.gameCode ?? 0}
+            handleDeleteTeam={handleDeleteTeam}
+          />
+        );
   }
 }

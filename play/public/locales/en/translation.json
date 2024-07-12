@@ -52,7 +52,7 @@
       "teamsjoining": "Answer the Question",
       "choosecorrectanswer": "Answer the Question",
       "choosetrickiestanswer": "Pick the Trickiest!",
-      "phase1discuss": "Answer Explanations",
+      "phase1discuss": "Review the Answer",
       "phase2discuss": "Answer Explanations",
       "phase2start": "Answer Explanations",
       "phase1results": "Phase 1 Results",
@@ -63,7 +63,7 @@
       "incorrect": "Nice Try!"
     },
     "general": {
-      "swipealert": "Swipe left to answer the question."
+      "swipealert": "Swipe left to answer the question"
     },
     "chooseanswer": {
       "answerthankyou1": "Thank you for submitting!",
@@ -100,7 +100,7 @@
       "hintcardplaceholder": "Enter your explanation..."
     },
     "discussanswer": {
-      "questionanswercolumn": "Question and Correct Answer",
+      "questionanswercolumn": "Question and Correct Answers",
       "incorrectanswercolumn": "Incorrect Answers",
       "correcttext": "Correct!",
       "nicetrytext": "Nice try",
