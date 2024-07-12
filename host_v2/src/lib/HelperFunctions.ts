@@ -43,7 +43,7 @@ export const extractAnswersByTeam =  (teams: ITeam[], currentState: GameSessionS
 export const getNextGameSessionState = (currentState: GameSessionState) => {
   const states = Object.values(GameSessionState);
   const currentIndex = states.indexOf(currentState);
-  if (currentIndex === 3) return states[currentIndex + 3];
+  if (currentIndex === 3) return states[currentIndex + 2];
   if (currentIndex === 7) return states[currentIndex + 2];
   return states[currentIndex + 1];
 };

@@ -270,16 +270,16 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return "";
   }
 
-  private incrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
-    let noResponse = [];
-    if (teamAnswersQuestion[phase] && teamAnswersQuestion[phase].responses){
-      noResponse = teamAnswersQuestion[phase]?.responses?.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
-      if (noResponse) {
-        noResponse.count += 1;
-        noResponse.teams.push(teamName);
-      }
-    }
-  }
+  // private incrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
+  //   let noResponse = [];
+  //   if (teamAnswersQuestion[phase] && teamAnswersQuestion[phase].responses){
+  //     noResponse = teamAnswersQuestion[phase]?.responses?.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
+  //     if (noResponse) {
+  //       noResponse.count += 1;
+  //       noResponse.teams.push(teamName);
+  //     }
+  //   }
+  // }
 
   private decrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
     const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
@@ -339,14 +339,14 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
   }
 
-  private buildEmptyHostTeamAnswerMultiChoice(question: IQuestion) {
+  private buildEmptyHostTeamAnswerMultiChoice(question: IQuestion, teamsCount: number) {
     const emptyMultiChoiceTeamAnswer = {
       phase1: {
           responses: [
             {
               normAnswer: [],
               rawAnswer: this.noResponseCharacter,
-              count: 0,
+              count: teamsCount,
               isCorrect: false,
               multiChoiceCharacter: this.noResponseCharacter,
               teams: []
@@ -370,7 +370,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
             {
               normAnswer: [],
               rawAnswer: this.noResponseCharacter,
-              count: 0,
+              count: teamsCount,
               isCorrect: false,
               multiChoiceCharacter: this.noResponseCharacter,
               teams: []
@@ -407,17 +407,15 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (gameSession.questions.length > 0) {
       teamAnswers.questions = gameSession.questions.map((question) => ({
         questionId: question.id,
-        ...question.isShortAnswerEnabled ? this.buildEmptyHostTeamAnswerShortAnswer() : this.buildEmptyHostTeamAnswerMultiChoice(question)
+        ...question.isShortAnswerEnabled ? this.buildEmptyHostTeamAnswerShortAnswer() : this.buildEmptyHostTeamAnswerMultiChoice(question, this.gameSession?.teams.length ?? 0)
       }));
     }
-
+    const numTeams = gameSession.teams.length;
     // this is populating existing answers into the hostTeamAnswers object
     // for each question in the object we just built, loop through all the team answers and populate the object if they apply
     teamAnswers.questions.forEach((question) => {
       gameSession.teams.forEach((team) => {
         team.teamMembers.forEach((teamMember) => {
-            let answeredPhase1 = false;
-            let answeredPhase2 = false;
             teamMember.answers?.forEach((answer) => {
               if (answer?.questionId === question.questionId) {
                 const phase: IPhase = answer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? IPhase.ONE : IPhase.TWO;
@@ -425,33 +423,41 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
                 question[phase].responses = this.processAnswer(answer, question, phase, team.name);
                 // step two: if we're in phase one, check if the player has also provided a confidence and update data accordingly
                 if (phase === IPhase.ONE){
-                  answeredPhase1 = true;
                   if (answer?.confidenceLevel)
                     question[phase].confidences = this.processConfidenceLevel(answer, question, team.name);
                 }
                 // step three: if we're in phase two, check if the player has also provided a hint and update data accordingly
                 if (answer?.hint && phase === IPhase.TWO){
-                  answeredPhase2 = true;
                   if (answer?.hint)
                     question[phase].hints = this.processHint(answer, question);
                 }
               }
             });
-            // step four: adjust noResponseCount values in response graphs
-            if (!answeredPhase1) {
-              this.incrementNoResponseCount(question, IPhase.ONE, team.name);
-            }
-            if (!answeredPhase2) {
-              this.incrementNoResponseCount(question, IPhase.TWO, team.name);
-            }
           });
         });
+
+        Object.values(IPhase).forEach((phase) => {
+          const numSubmittedAnswers = question[phase].responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
+          const numNoResponses = numTeams - numSubmittedAnswers;
+          const noResponses = question[phase].responses.find((response: any) => response.multiChoiceCharacter === '–');
+          if (noResponses) {
+            noResponses.count = numNoResponses ?? 0;
+          }
+        });
+
       });
     return teamAnswers;
   }
 
   getHostTeamAnswers() {
     return this.hostTeamAnswers
+  }
+
+  initHostTeamAnswers() {
+    if (this.gameSession)
+      this.hostTeamAnswers = this.buildHostTeamAnswers(this.gameSession);
+    console.log(this.hostTeamAnswers);
+    return this.hostTeamAnswers;
   }
 
   private updateHostTeamAnswerResponses(teamAnswer: BackendAnswer, currentResponses: IHostTeamAnswersResponse[], currentQuestion: IHostTeamAnswersQuestion, phase: IPhase): IHostTeamAnswersResponse[] {

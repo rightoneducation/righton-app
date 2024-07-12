@@ -1,10 +1,8 @@
 import React, { useReducer, useEffect } from 'react';
-import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers, IHostTeamAnswersHint, ModelHelper} from '@righton/networking';
+import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
-import { useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
-import { getNextGameSessionState } from '../lib/HelperFunctions';
 import GameInProgress from '../pages/GameInProgress';
 import StartGame from '../pages/StartGame';
 
@@ -26,7 +24,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
     apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
   };
-
+  console.log(localGameSession.currentState);
   useEffect(() => {
     dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
   }, [backendGameSession]);
@@ -64,6 +62,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           title={localGameSession.title }
           gameCode={localGameSession.gameCode}
           handleDeleteTeam={handleDeleteTeam}
+          setLocalHostTeamAnswers={setLocalHostTeamAnswers}
         />
       );
       break;

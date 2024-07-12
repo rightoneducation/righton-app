@@ -5,6 +5,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import {
   ITeam,
   IQuestion,
+  IHostTeamAnswers,
   GameSessionState
 } from '@righton/networking';
 import { ScreenSize } from '../lib/HostModels';
@@ -40,6 +41,7 @@ interface StartGameProps {
   title: string
   gameCode: number
   handleDeleteTeam: (id: string) => void;
+  setLocalHostTeamAnswers: (value: IHostTeamAnswers) => void;
 }  
 
 function StartGame({teams,
@@ -47,6 +49,7 @@ function StartGame({teams,
   title,
   gameCode,
   handleDeleteTeam,
+  setLocalHostTeamAnswers
   }: StartGameProps) {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -58,6 +61,7 @@ function StartGame({teams,
           <FooterStartGame 
             teamsLength={teams ? teams.length : 0}
             screenSize={screenSize}
+            setLocalHostTeamAnswers={setLocalHostTeamAnswers}
           />
         </SafeAreaStyled>
     )

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GameSessionState } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswers } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBar from './ProgressBarGroup';
 import { ScreenSize } from '../lib/HostModels';
@@ -10,6 +10,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { set } from 'lodash';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -73,11 +74,13 @@ const PlayerCountTypography = styled(Typography)({
 interface FootStartGameProps {
   teamsLength: number;
   screenSize: ScreenSize;
+  setLocalHostTeamAnswers: (value: IHostTeamAnswers) => void;
 }
 
 function FooterStartGame({ 
   teamsLength,
-  screenSize
+  screenSize,
+  setLocalHostTeamAnswers,
 }: FootStartGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
@@ -85,8 +88,12 @@ function FooterStartGame({
 
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState);
-    dispatch({type: 'advance_game_phase', payload: {nextState}});
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
+    const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
+    if (updateNoResponses)
+      setLocalHostTeamAnswers(updateNoResponses);
+    
+    dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
   };
   return (
     <FooterContainer>

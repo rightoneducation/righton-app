@@ -6,7 +6,6 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
   const [backendGameSession, setBackendGameSession] = useState<IGameSession | null>(null);
   const [backendHostTeamAnswers, setBackendHostTeamAnswers] = useState<IHostTeamAnswers>({questions: []});
-  console.log(backendGameSession);
   useEffect(() => {
 
     try {

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { GameSessionState } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersPerPhase } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -64,12 +64,14 @@ const InnerFooterContainer = styled(Box)({
 
 interface FootStartGameProps {
   currentState: GameSessionState;
+  submittedAnswers: number;
   teamsLength: number;
   screenSize: ScreenSize;
 }
 
 function FooterStartGame({ 
   currentState,
+  submittedAnswers,
   teamsLength,
   screenSize
 }: FootStartGameProps) {
@@ -109,7 +111,7 @@ function FooterStartGame({
           />
         )}
         { (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
-          <ProgressBarGroup teamsLength={teamsLength} />
+          <ProgressBarGroup submittedAnswers={submittedAnswers} teamsLength={teamsLength} />
         }
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>{buttonText}</ButtonStyled>
       </InnerFooterContainer>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import { IGameSession, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase } from '@righton/networking';
+import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
 import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
@@ -28,6 +28,9 @@ interface GameInProgressContentProps {
   isPopularMode: boolean;
   setIsPopularMode: (value: boolean) => void;
   screenSize: ScreenSize;
+  currentQuestion: IQuestion;
+  currentPhase: IPhase;
+  currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
 } // eslint-disable-line
 
 export default function GameInProgressContent({
@@ -41,11 +44,12 @@ export default function GameInProgressContent({
   setSortedMistakes,
   isPopularMode,
   setIsPopularMode,
-  screenSize
+  screenSize,
+  currentQuestion,
+  currentPhase,
+  currentPhaseTeamAnswers,
 }: GameInProgressContentProps) {
-  const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-  const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? IPhase.ONE : IPhase.TWO;
-  const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase];
+
   // currentResponses are used for the Real Time Responses Victory Graph
   const currentResponses = currentPhaseTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
   // currentConfidences are used for the Confidence Meter Victory Graph
@@ -60,7 +64,7 @@ export default function GameInProgressContent({
     prevPhaseConfidences = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.confidences ?? [] as IHostTeamAnswersConfidence[];
   }
   // these booleans turn on and off the respective feature cards in the render function below
-  const {isConfidenceEnabled, isHintEnabled, isShortAnswerEnabled} = localGameSession.questions[localGameSession.currentQuestionIndex];
+  const {isConfidenceEnabled, isHintEnabled, isShortAnswerEnabled} = currentQuestion;
 
   const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {

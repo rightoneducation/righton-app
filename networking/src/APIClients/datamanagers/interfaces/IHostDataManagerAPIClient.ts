@@ -4,6 +4,7 @@ import { IPlayDataManagerAPIClient } from "./IPlayDataManagerAPIClient";
 export interface IHostDataManagerAPIClient extends IPlayDataManagerAPIClient {
   init(gameSessionId: string): Promise<void>;
   cleanupSubscription(): void;
+  initHostTeamAnswers(): IHostTeamAnswers;
   getHostTeamAnswers(): IHostTeamAnswers;
   subscribeToUpdateGameSession(gameSessionId: string, callback: (gameSession: IGameSession) => void): Promise<IGameSession>;
   subscribeToCreateTeam(callback: (updatedGameSession: IGameSession) => void): Promise<void>;
