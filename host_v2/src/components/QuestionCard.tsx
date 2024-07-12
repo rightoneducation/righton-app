@@ -35,8 +35,14 @@ export default function QuestionCard({
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
+      {/* <Typography
+          variant="subtitle1"
+          sx={{ width: '100%', textAlign: 'left' }}
+        >
+          {t('gamesession.questionCard.title')}
+        </Typography> */}
         <TitleTypography>
-          {t('Question ')} {index + 1}         
+        {`${t('gamesession.questionCard.title')} ${index + 1}`}       
         </TitleTypography>
         {imageUrl === undefined ? null : (
           <img
