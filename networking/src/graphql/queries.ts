@@ -808,12 +808,15 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
             answers {
               items {
                 id
+                isCorrect
                 isSubmitted
                 isShortAnswerEnabled
                 currentState
                 currentQuestionIndex
                 questionId
                 teamMemberAnswersId
+                teamAnswersId
+                teamName
                 text
                 answer
                 confidenceLevel
@@ -931,12 +934,15 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
               answers {
                 items {
                   id
+                  isCorrect
                   isSubmitted
                   isShortAnswerEnabled
                   currentState
                   currentQuestionIndex
                   questionId
                   teamMemberAnswersId
+                  teamAnswersId
+                  teamName
                   text
                   answer
                   confidenceLevel
@@ -1115,12 +1121,15 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
         answers {
           items {
             id
+            isCorrect
             isSubmitted
             isShortAnswerEnabled
             currentState
             currentQuestionIndex
             questionId
             teamMemberAnswersId
+            teamAnswersId
+            teamName
             text
             answer
             confidenceLevel
@@ -1189,12 +1198,15 @@ export const listTeams = /* GraphQL */ `query ListTeams(
           answers {
             items {
               id
+              isCorrect
               isSubmitted
               isShortAnswerEnabled
               currentState
               currentQuestionIndex
               questionId
               teamMemberAnswersId
+              teamAnswersId
+              teamName
               text
               answer
               confidenceLevel
@@ -1237,12 +1249,15 @@ export const getTeamMember = /* GraphQL */ `query GetTeamMember($id: ID!) {
     answers {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
@@ -1277,12 +1292,15 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
       answers {
         items {
           id
+          isCorrect
           isSubmitted
           isShortAnswerEnabled
           currentState
           currentQuestionIndex
           questionId
           teamMemberAnswersId
+          teamAnswersId
+          teamName
           text
           answer
           confidenceLevel
@@ -1311,12 +1329,15 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
 export const getTeamAnswer = /* GraphQL */ `query GetTeamAnswer($id: ID!) {
   getTeamAnswer(id: $id) {
     id
+    isCorrect
     isSubmitted
     isShortAnswerEnabled
     currentState
     currentQuestionIndex
     questionId
     teamMemberAnswersId
+    teamAnswersId
+    teamName
     text
     answer
     confidenceLevel
@@ -1338,12 +1359,15 @@ export const listTeamAnswers = /* GraphQL */ `query ListTeamAnswers(
   listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -3357,12 +3381,15 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
               answers {
                 items {
                   id
+                  isCorrect
                   isSubmitted
                   isShortAnswerEnabled
                   currentState
                   currentQuestionIndex
                   questionId
                   teamMemberAnswersId
+                  teamAnswersId
+                  teamName
                   text
                   answer
                   confidenceLevel
@@ -3491,12 +3518,15 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
               answers {
                 items {
                   id
+                  isCorrect
                   isSubmitted
                   isShortAnswerEnabled
                   currentState
                   currentQuestionIndex
                   questionId
                   teamMemberAnswersId
+                  teamAnswersId
+                  teamName
                   text
                   answer
                   confidenceLevel
