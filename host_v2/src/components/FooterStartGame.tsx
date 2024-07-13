@@ -10,7 +10,6 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
-import { set } from 'lodash';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
