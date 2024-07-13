@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.12.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.1.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -90,84 +90,6 @@
             },
             "API_MOBILE_GRAPHQLAPIKEYOUTPUT": {
               "Ref": "apimobileGraphQLAPIKeyOutput"
-            },
-            "API_MOBILE_GAMETEMPLATETABLE_NAME": {
-              "Fn::ImportValue": {
-                "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:GameTemplateTable:Name"
-              }
-            },
-            "API_MOBILE_GAMETEMPLATETABLE_ARN": {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:aws:dynamodb:",
-                  {
-                    "Ref": "AWS::Region"
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId"
-                  },
-                  ":table/",
-                  {
-                    "Fn::ImportValue": {
-                      "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:GameTemplateTable:Name"
-                    }
-                  }
-                ]
-              ]
-            },
-            "API_MOBILE_QUESTIONTEMPLATETABLE_NAME": {
-              "Fn::ImportValue": {
-                "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:QuestionTemplateTable:Name"
-              }
-            },
-            "API_MOBILE_QUESTIONTEMPLATETABLE_ARN": {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:aws:dynamodb:",
-                  {
-                    "Ref": "AWS::Region"
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId"
-                  },
-                  ":table/",
-                  {
-                    "Fn::ImportValue": {
-                      "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:QuestionTemplateTable:Name"
-                    }
-                  }
-                ]
-              ]
-            },
-            "API_MOBILE_GAMESESSIONTABLE_NAME": {
-              "Fn::ImportValue": {
-                "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:GameSessionTable:Name"
-              }
-            },
-            "API_MOBILE_GAMESESSIONTABLE_ARN": {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:aws:dynamodb:",
-                  {
-                    "Ref": "AWS::Region"
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId"
-                  },
-                  ":table/",
-                  {
-                    "Fn::ImportValue": {
-                      "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:GameSessionTable:Name"
-                    }
-                  }
-                ]
-              ]
             }
           }
         },
@@ -188,12 +110,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "mobileLambdaRole6ac023ed",
+            "mobileLambdaRoleb39ff59c",
             {
               "Fn::Join": [
                 "",
                 [
-                  "mobileLambdaRole6ac023ed",
+                  "mobileLambdaRoleb39ff59c",
                   "-",
                   {
                     "Ref": "env"
@@ -324,47 +246,12 @@
                       "/types/Mutation/*"
                     ]
                   ]
-                }
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:Get*",
-                "dynamodb:BatchGetItem",
-                "dynamodb:List*",
-                "dynamodb:Describe*",
-                "dynamodb:Scan",
-                "dynamodb:Query",
-                "dynamodb:PartiQLSelect"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:GameTemplateTable:Name"
-                        }
-                      }
-                    ]
-                  ]
                 },
                 {
                   "Fn::Join": [
                     "",
                     [
-                      "arn:aws:dynamodb:",
+                      "arn:aws:appsync:",
                       {
                         "Ref": "AWS::Region"
                       },
@@ -372,124 +259,11 @@
                       {
                         "Ref": "AWS::AccountId"
                       },
-                      ":table/",
+                      ":apis/",
                       {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:GameTemplateTable:Name"
-                        }
+                        "Ref": "apimobileGraphQLAPIIdOutput"
                       },
-                      "/index/*"
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:Get*",
-                "dynamodb:BatchGetItem",
-                "dynamodb:List*",
-                "dynamodb:Describe*",
-                "dynamodb:Scan",
-                "dynamodb:Query",
-                "dynamodb:PartiQLSelect"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:QuestionTemplateTable:Name"
-                        }
-                      }
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:QuestionTemplateTable:Name"
-                        }
-                      },
-                      "/index/*"
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:Put*",
-                "dynamodb:Create*",
-                "dynamodb:BatchWriteItem",
-                "dynamodb:PartiQLInsert"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:GameSessionTable:Name"
-                        }
-                      }
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apimobileGraphQLAPIIdOutput}:GetAtt:GameSessionTable:Name"
-                        }
-                      },
-                      "/index/*"
+                      "/types/Subscription/*"
                     ]
                   ]
                 }

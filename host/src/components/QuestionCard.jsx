@@ -84,7 +84,7 @@ export default function QuestionCard({ question, image }) {
   };
 
   return (
-    <Grid container className={classes.centerContent}>
+    <Grid container className={classes.centerContent} style= {{paddingBottom: '0px'}}>
       <Card
         className={classes.questionCard}
         style={{ width: '100%', borderRadius: '18px', padding: 0 }}

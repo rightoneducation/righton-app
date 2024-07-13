@@ -246,7 +246,7 @@ export default function ChooseAnswer({
             >
               {answerContents}
             </SwiperSlide>
-            { isSubmitted && isSmallDevice &&
+            { isSubmitted && isSmallDevice && isConfidenceEnabled &&
          
                 <SwiperSlide
                   style={{
