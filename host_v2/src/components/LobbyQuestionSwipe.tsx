@@ -31,7 +31,6 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
             sx={{
               marginBottom: '0',
               borderBottom: `1px solid ${theme.palette.divider}`,
-              // paddingBottom: theme.spacing(2),
               width: '100%',
             }}
           >
