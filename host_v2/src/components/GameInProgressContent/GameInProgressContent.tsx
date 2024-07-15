@@ -59,7 +59,7 @@ export default function GameInProgressContent({
   
   let prevPhaseResponses = [] as IHostTeamAnswersResponse[];
   let prevPhaseConfidences = [] as IHostTeamAnswersConfidence[];
-  if (localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) {
+  if (localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START) {
     prevPhaseResponses= localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [] as IHostTeamAnswersResponse[];
     prevPhaseConfidences = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.confidences ?? [] as IHostTeamAnswersConfidence[];
   }
@@ -131,7 +131,7 @@ export default function GameInProgressContent({
             <SwiperSlide>
               {leftCardsColumn}
             </SwiperSlide>
-            { isShortAnswerEnabled &&
+            {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
               <SwiperSlide>
                 {midCardsColumn}
               </SwiperSlide>
@@ -182,7 +182,7 @@ export default function GameInProgressContent({
       return (
         <BodyContentAreaTripleColumnStyled container>
           {leftCardsColumn}
-          { localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
+          { (localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
             midCardsColumn
           }
           {rightCardsColumn}

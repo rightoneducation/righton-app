@@ -72,12 +72,14 @@ const PlayerCountTypography = styled(Typography)({
 interface FootStartGameProps {
   teamsLength: number;
   screenSize: ScreenSize;
-  setLocalHostTeamAnswers: (value: IHostTeamAnswers) => void;
+  currentQuestionIndex: number | null;
+  setLocalHostTeamAnswers?: (value: IHostTeamAnswers) => void;
 }
 
 function FooterStartGame({ 
   teamsLength,
   screenSize,
+  currentQuestionIndex,
   setLocalHostTeamAnswers,
 }: FootStartGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -86,12 +88,17 @@ function FooterStartGame({
 
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState);
-    const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-    if (updateNoResponses)
-      setLocalHostTeamAnswers(updateNoResponses);
-    
-    dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
+    if (currentQuestionIndex === null){
+      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
+      if (updateNoResponses && setLocalHostTeamAnswers)
+        setLocalHostTeamAnswers(updateNoResponses);
+      dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
+      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
+    } else {
+      const nextQuestionIndex = currentQuestionIndex + 1;
+      dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
+      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
+    }
   };
   return (
     <FooterContainer>
@@ -99,12 +106,14 @@ function FooterStartGame({
         <PaginationContainerStyled className="swiper-pagination-container" />
       }
       <InnerFooterContainer>
-        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
-          <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
-          <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
-            {teamsLength === 1 ? "player has joined" : "players have joined"}
-          </PlayerCountTypography>
-        </Box>
+        { currentQuestionIndex &&
+          <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
+            <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
+            <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
+              {teamsLength === 1 ? "player has joined" : "players have joined"}
+            </PlayerCountTypography>
+          </Box>
+        }
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>

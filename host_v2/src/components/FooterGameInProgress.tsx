@@ -92,7 +92,7 @@ function FooterStartGame({
       case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
         return 'End Answering';
       case GameSessionState.PHASE_2_START:
-        return 'Moving to Phase Two';
+        return 'Continue to Phase Two';
       case GameSessionState.PHASE_1_DISCUSS:
       case GameSessionState.PHASE_2_DISCUSS:
         return 'Continue';

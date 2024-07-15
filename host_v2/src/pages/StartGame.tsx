@@ -36,10 +36,11 @@ const SafeAreaStyled = styled(Box)({
 });
 
 interface StartGameProps {
-  teams: ITeam[]
-  questions:IQuestion[]
-  title: string
-  gameCode: number
+  teams: ITeam[];
+  questions:IQuestion[];
+  title: string;
+  gameCode: number;
+  currentQuestionIndex: number;
   handleDeleteTeam: (id: string) => void;
   setLocalHostTeamAnswers: (value: IHostTeamAnswers) => void;
 }  
@@ -48,6 +49,7 @@ function StartGame({teams,
   questions,
   title,
   gameCode,
+  currentQuestionIndex,
   handleDeleteTeam,
   setLocalHostTeamAnswers
   }: StartGameProps) {
@@ -57,10 +59,18 @@ function StartGame({teams,
     return (
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
-          <HostBody teams={teams} questions={questions} title={title} handleDeleteTeam={handleDeleteTeam} screenSize={screenSize}/>
+          <HostBody 
+            teams={teams} 
+            questions={questions} 
+            title={title} 
+            currentQuestionIndex={currentQuestionIndex}
+            handleDeleteTeam={handleDeleteTeam} 
+            screenSize={screenSize}
+          />
           <FooterStartGame 
             teamsLength={teams ? teams.length : 0}
             screenSize={screenSize}
+            currentQuestionIndex={null}
             setLocalHostTeamAnswers={setLocalHostTeamAnswers}
           />
         </SafeAreaStyled>

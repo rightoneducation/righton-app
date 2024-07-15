@@ -23,8 +23,8 @@ export default styled(Box)(({ theme }) => ({
   '-ms-overflow-style': 'none', // IE and Edge
 }));
 
-export const StartGameScrollBoxStyled = styled(Box)(({ theme }) => ({
-  height: `calc(100vh - 217px - 126px - 56px)`,
+export const StartGameScrollBoxStyled = styled(Box)(({ theme, currentQuestionIndex }) => ({
+  height: currentQuestionIndex === null ? `calc(100vh - 217px - 126px - 56px)` : `calc(100vh - ${theme.sizing.headerHeight}px - ${theme.sizing.footerHeight}px)`,
   display: 'flex',
   flexDirection: 'column',
   gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px )`,

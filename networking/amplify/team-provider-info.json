@@ -28,11 +28,11 @@
         "mobile6060603cPostConfirmation": {
           "GROUP": "Teacher_Auth",
           "deploymentBucketName": "amplify-mobile-dev-130906-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-33445469506f34495552-build.zip"
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
         "createGame": {
           "deploymentBucketName": "amplify-mobile-dev-130906-deployment",
-          "s3Key": "amplify-builds/createGame-2b786b68505a41313141-build.zip"
+          "s3Key": "amplify-builds/createGame-3573313230526d5a416a-build.zip"
         }
       },
       "api": {

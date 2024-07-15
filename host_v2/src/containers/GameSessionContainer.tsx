@@ -5,6 +5,7 @@ import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
 import GameInProgress from '../pages/GameInProgress';
 import StartGame from '../pages/StartGame';
+import Leaderboard from '../pages/Leaderboard';
 
 interface GameSessionContainerProps {
   apiClients: APIClients;
@@ -28,13 +29,14 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   useEffect(() => {
     dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
   }, [backendGameSession]);
-
+  
   let renderContent;
   switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
+    case GameSessionState.PHASE_2_START:
       renderContent = (
         <GameInProgress 
           isCorrect={false}
@@ -56,14 +58,23 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     case GameSessionState.TEAMS_JOINING:
     default:
       renderContent = (
-        <StartGame
-          teams={localGameSession.teams}
-          questions={localGameSession.questions}
-          title={localGameSession.title }
-          gameCode={localGameSession.gameCode}
-          handleDeleteTeam={handleDeleteTeam}
-          setLocalHostTeamAnswers={setLocalHostTeamAnswers}
-        />
+        localGameSession.currentQuestionIndex === null 
+        ? <StartGame
+            teams={localGameSession.teams}
+            questions={localGameSession.questions}
+            title={localGameSession.title }
+            gameCode={localGameSession.gameCode}
+            currentQuestionIndex={localGameSession.currentQuestionIndex}
+            handleDeleteTeam={handleDeleteTeam}
+            setLocalHostTeamAnswers={setLocalHostTeamAnswers}
+          /> 
+        : <Leaderboard 
+            teams={localGameSession.teams}
+            questions={localGameSession.questions}
+            currentQuestionIndex={localGameSession.currentQuestionIndex}
+            title={localGameSession.title}
+            handleDeleteTeam={handleDeleteTeam}
+          />
       );
       break;
   }
