@@ -88,12 +88,16 @@ function FooterStartGame({
 
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState);
+    const currentEpochTime = Date.now().toString(); // get the current time when host onclicks
+    console.log(currentEpochTime);
+    // start of game
     if (currentQuestionIndex === null){
       const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
       if (updateNoResponses && setLocalHostTeamAnswers)
         setLocalHostTeamAnswers(updateNoResponses);
       dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
+      // CHANGE THiS LINE TO INCLUDE STARTTIME
+      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: currentEpochTime})
     } else {
       const nextQuestionIndex = currentQuestionIndex + 1;
       dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
