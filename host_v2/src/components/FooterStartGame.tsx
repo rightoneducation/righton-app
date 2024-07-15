@@ -58,8 +58,6 @@ const InnerFooterContainer = styled(Box)({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '92px',
-  gap: '16px',
 });
 
 const PlayerCountTypography = styled(Typography)({
@@ -85,6 +83,7 @@ function FooterStartGame({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
+  const buttonText = currentQuestionIndex === null ? 'Start Game' : 'Next Question';
 
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState);
@@ -102,9 +101,9 @@ function FooterStartGame({
   };
   return (
     <FooterContainer>
-      {screenSize === ScreenSize.SMALL &&
-        <PaginationContainerStyled className="swiper-pagination-container" />
-      }
+          {screenSize === ScreenSize.SMALL &&
+          <PaginationContainerStyled className="swiper-pagination-container" />
+        }
       <InnerFooterContainer>
         { currentQuestionIndex &&
           <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
@@ -114,7 +113,8 @@ function FooterStartGame({
             </PlayerCountTypography>
           </Box>
         }
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
+        
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}> {buttonText} </ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );

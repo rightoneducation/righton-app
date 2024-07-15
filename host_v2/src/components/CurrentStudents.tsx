@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { ITeam, ModelHelper } from '@righton/networking';
 import { StartGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
@@ -37,13 +37,11 @@ const MenuItemStyled = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  margin: 'auto',
-  marginBottom: '8px',
   borderRadius: '8px',
   height: '40px',
-  width: '100%',
   background: '#063772',
   padding: '4px',
+  paddingLeft: '8px',
   gap: '4px',
 });
 
@@ -64,13 +62,13 @@ const BoxStyled = styled(Box)({
 });
 
 function CurrentStudents({ teams, currentQuestionIndex, handleDeleteTeam }: CurrentStudentProps) {
+  const theme = useTheme();
   const sortedTeams = currentQuestionIndex === null 
     ? [...teams].sort((a, b) => a.name.localeCompare(b.name))
     : ModelHelper.teamSorter(teams, teams.length);
 
   return (
-    <StartGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex}>
-      <BoxStyled>
+    <StartGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%', paddingLeft: `${theme.sizing.mdPadding}px`}}>
         {sortedTeams && sortedTeams.map((team) => (
           <MenuItemStyled key={uuidv4()}>
             <MonsterIcon index={team.selectedAvatarIndex} />
@@ -85,7 +83,6 @@ function CurrentStudents({ teams, currentQuestionIndex, handleDeleteTeam }: Curr
             </Box>
           </MenuItemStyled>
         ))}
-      </BoxStyled>
     </StartGameScrollBoxStyled>
   );
 }
