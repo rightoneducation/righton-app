@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IAPIClients,
   isNullOrUndefined,
@@ -25,6 +25,7 @@ interface GameInProgressContainerProps {
 export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const { apiClients } = props;
   const [retry, setRetry] = useState<number>(0);
+  const [currentTime, setCurrentTime] = useState<number>(0);
   // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
   const handleRetry = () => {
     setRetry(retry + 1);
@@ -53,23 +54,42 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
       allottedTime = phaseTwoTime;
     }
   }
+
+  useEffect(() => {
+    const handleVisibilityChange= () =>{
+      if (!document.hidden) {
+        console.log("in !document");
+        const getStartTime = subscription.gameSession?.startTime;
+        console.log(subscription.gameSession?.startTime);
+        console.log(Date.now());
+        let isoTimeMillis: number | null = null;
+        let difference: number | null = null;
+        if (getStartTime) {
+          isoTimeMillis = new Date(getStartTime).getTime();
+          console.log("isoTimeMillies");
+          console.log(isoTimeMillis);
+          difference = Date.now() - isoTimeMillis;
+          console.log("difference");
+          console.log(difference);
+          if (difference >= allottedTime * 1000){
+            setCurrentTime(-1);
+            console.log("-1");
+          }
+          else{
+            // currentTime = difference / 1000
+            setCurrentTime(allottedTime - Math.trunc(difference / 1000));
+            console.log("not -1");
+            console.log(currentTime);
+          }
+        }
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => { document.removeEventListener('visibilitychange', handleVisibilityChange); };
+  },[subscription]); // eslint-disable-line
   // if date.now - the starttime > allotted time then timeer is 0 question is done
-  const getStartTime = subscription.gameSession?.startTime;
-  let isoTimeMillis: number | null = null;
-  let difference: number | null = null;
-  let currentTime = -1;
-  if (getStartTime) {
-    isoTimeMillis = new Date(getStartTime).getTime();
-    difference = Math.abs(isoTimeMillis - Date.now());
-    if (difference >= allottedTime * 1000){
-      currentTime = -1;
-    }
-    else{
-      // currentTime = difference / 1000
-      currentTime = allottedTime - Math.trunc(difference / 1000);
-      console.log(currentTime);
-    }
-  }
+  console.log("outside CurrentTime");
+  console.log(currentTime);
   // const playTime = Date.now();
   // if 
   // else currenTime = date.now - the startTime
@@ -125,10 +145,11 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     // if waiting for teacher, display waiting message on How to Play page
     return <Lobby mode={LobbyMode.READY} />;
   }
+  console.log("right before return");
+  console.log(currentTime);
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
-      // currentTimer={localModel.currentTimer}
       currentTimer={currentTime}
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}

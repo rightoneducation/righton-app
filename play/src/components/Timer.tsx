@@ -49,8 +49,14 @@ export default function Timer({
   handleTimerIsFinished,
   localModel,
 }: TimerProps) {
+  console.log("currentTime in the beginning of timer");
+  console.log(currentTimer);
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
+  // I think our issue is here... currentTime is only calced at the beginning
+  // this is the value that's actually showing up on the countdown
   const currentTime = Math.trunc(currentTimeMilli / 1000);
+  console.log("currenttime but like just hte current time");
+  console.log(currentTime);
   const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
 
   const animationRef = useRef<number | null>(null);
@@ -61,6 +67,7 @@ export default function Timer({
   // updates the current time as well as the localstorage in case of page reset
   // recursive countdown timer function using requestAnimationFrame
   function updateTimer(timestamp: number) {
+
     if (!isPausedRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
