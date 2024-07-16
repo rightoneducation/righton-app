@@ -41,6 +41,41 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.hasRejoined,
     localModel?.teamId,
   );
+  // check which phase to get the right allotttted time
+  let allottedTime = 0; // Initialize to default value
+
+  if (subscription && subscription.gameSession) {
+    const { currentState, phaseOneTime, phaseTwoTime } = subscription.gameSession;
+
+    if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+      allottedTime = phaseOneTime;
+    } else if (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+      allottedTime = phaseTwoTime;
+    }
+  }
+  // if date.now - the starttime > allotted time then timeer is 0 question is done
+  const getStartTime = subscription.gameSession?.startTime;
+  let isoTimeMillis: number | null = null;
+  let difference: number | null = null;
+  let currentTime = -1;
+  if (getStartTime) {
+    isoTimeMillis = new Date(getStartTime).getTime();
+    difference = Math.abs(isoTimeMillis - Date.now());
+    if (difference >= allottedTime * 1000){
+      currentTime = -1;
+    }
+    else{
+      // currentTime = difference / 1000
+      currentTime = allottedTime - Math.trunc(difference / 1000);
+      console.log(currentTime);
+    }
+  }
+  // const playTime = Date.now();
+  // if 
+  // else currenTime = date.now - the startTime
+  // put the above in the const below. but put it in a pretty ternary
+  // const currentTime = subscription.gameSession?.startTime
+
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
 
@@ -93,7 +128,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
-      currentTimer={localModel.currentTimer}
+      // currentTimer={localModel.currentTimer}
+      currentTimer={currentTime}
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}
       gameSession={subscription.gameSession}
