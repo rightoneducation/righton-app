@@ -308,7 +308,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         incorrect: []
       });
     }
-    console.log(confidenceArray);
     return confidenceArray;
   };
 

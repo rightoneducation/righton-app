@@ -25,7 +25,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
     apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
   };
-  console.log(localGameSession.currentState);
   useEffect(() => {
     dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
   }, [backendGameSession]);

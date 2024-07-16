@@ -86,7 +86,7 @@ function FooterStartGame({
   const buttonText = currentQuestionIndex === null ? 'Start Game' : 'Next Question';
 
   const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState);
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     if (currentQuestionIndex === null){
       const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
       if (updateNoResponses && setLocalHostTeamAnswers)
@@ -96,7 +96,7 @@ function FooterStartGame({
     } else {
       const nextQuestionIndex = currentQuestionIndex + 1;
       dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
+      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: nextQuestionIndex, currentState: nextState})
     }
   };
   return (

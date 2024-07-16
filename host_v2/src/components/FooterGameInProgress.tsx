@@ -82,7 +82,7 @@ function FooterStartGame({
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
 
   const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState);
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     dispatch({type: 'advance_game_phase', payload: {nextState}});
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
   };
