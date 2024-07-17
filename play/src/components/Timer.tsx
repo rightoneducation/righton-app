@@ -51,33 +51,36 @@ export default function Timer({
 }: TimerProps) {
   console.log("currentTime in the beginning of timer");
   console.log(currentTimer);
+  console.log(isFinished);
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
-  // I think our issue is here... currentTime is only calced at the beginning
-  // this is the value that's actually showing up on the countdown
   const currentTime = Math.trunc(currentTimeMilli / 1000);
+  // const currentTime = currentTimer;
   console.log("currenttime but like just hte current time");
   console.log(currentTime);
+
   const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
 
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
-  let originalTime: number;
+  const originalTimeRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(isPaused);
 
   // updates the current time as well as the localstorage in case of page reset
   // recursive countdown timer function using requestAnimationFrame
   function updateTimer(timestamp: number) {
-
     if (!isPausedRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
         setCurrentTimeMilli((prevTime) => prevTime - delta);
-      } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
-      if (currentTimeMilli - (timestamp - originalTime) >= 0) {
+      } else {
+        originalTimeRef.current = timestamp;
+      }
+      if (currentTimeMilli <= 0) {
+        console.log("handleTimerisFiniished");
+        handleTimerIsFinished();
+      } else {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
-      } else {
-        handleTimerIsFinished();
       }
     }
   }
@@ -104,14 +107,26 @@ export default function Timer({
     return getTimerString(currentTime);
   }, [currentTime, localModel]);
 
+  useEffect(() => {
+    if (localModel.hasRejoined && localModel.currentTimer) {
+      setCurrentTimeMilli(localModel.currentTimer * 1000);
+    } else {
+      setCurrentTimeMilli(currentTimer * 1000);
+    }
+    
+  }, [localModel, currentTimer]);
+
   // useEffect to start off timer
   useEffect(() => {
-    if (!isPaused && !isFinished)
+    if (!isPaused) {
       animationRef.current = requestAnimationFrame(updateTimer);
-    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }
+    console.log("cancelAnimation");
+    // ADDED THIS
+   return () => cancelAnimationFrame(animationRef.current ?? 0);
+  }, [isPaused, isFinished]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Update the isPausedRef when the isPaused prop changes
+  // pdate the isPausedRef when the isPaused prop changes
   useEffect(() => {
     isPausedRef.current = isPaused;
   }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps

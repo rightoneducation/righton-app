@@ -54,42 +54,48 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
       allottedTime = phaseTwoTime;
     }
   }
+  const calculateCurrentTime = () => {
+    if (subscription && subscription.gameSession) {
+      const getStartTime = subscription.gameSession?.startTime;
+      if (getStartTime) {
+        const isoTimeMillis = new Date(getStartTime).getTime();
+        const difference = Date.now() - isoTimeMillis;
 
-  useEffect(() => {
-    const handleVisibilityChange= () =>{
-      if (!document.hidden) {
-        console.log("in !document");
-        const getStartTime = subscription.gameSession?.startTime;
-        console.log(subscription.gameSession?.startTime);
-        console.log(Date.now());
-        let isoTimeMillis: number | null = null;
-        let difference: number | null = null;
-        if (getStartTime) {
-          isoTimeMillis = new Date(getStartTime).getTime();
-          console.log("isoTimeMillies");
-          console.log(isoTimeMillis);
-          difference = Date.now() - isoTimeMillis;
-          console.log("difference");
-          console.log(difference);
-          if (difference >= allottedTime * 1000){
-            setCurrentTime(-1);
-            console.log("-1");
-          }
-          else{
-            // currentTime = difference / 1000
-            setCurrentTime(allottedTime - Math.trunc(difference / 1000));
-            console.log("not -1");
-            console.log(currentTime);
-          }
-        }
+        if (difference >= allottedTime * 1000) {
+          // setCurrentTime(-1);
+          return -1;
+        } 
+        const remainingTime = allottedTime - Math.trunc(difference / 1000);
+        // setCurrentTime(remainingTime);
+        // window.localStorage.setItem('currentTime', remainingTime.toString());
+        return remainingTime;
       }
     }
+    return 0;
+  };
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        setCurrentTime(calculateCurrentTime());
+      }
+    };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => { document.removeEventListener('visibilitychange', handleVisibilityChange); };
-  },[subscription]); // eslint-disable-line
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [subscription]); // eslint-disable-line
+
   // if date.now - the starttime > allotted time then timeer is 0 question is done
   console.log("outside CurrentTime");
   console.log(currentTime);
+  
+  useEffect(() => {
+    if (subscription.hasRejoined) {
+      setCurrentTime(calculateCurrentTime());
+    }
+  }, [subscription, subscription.hasRejoined]); // eslint-disable-line
+
   // const playTime = Date.now();
   // if 
   // else currenTime = date.now - the startTime
@@ -147,6 +153,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   }
   console.log("right before return");
   console.log(currentTime);
+  console.log(localModel.currentTimer);
+  console.log(localModel.currentTime);
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
