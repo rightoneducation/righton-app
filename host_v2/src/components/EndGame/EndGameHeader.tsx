@@ -13,12 +13,16 @@ const UpperStyled = styled(Box)(({theme}) => ({
   display: 'flex',
   position: 'sticky',
   flexDirection: 'column',
-  justifyContent: 'space-between', 
+  justifyContent: 'flex-start',
+  alignItems: 'center', 
   gap: '16px', /* this is for Header / Lobby */
-  height: '170px', 
+  height: '86px', 
+  width: '100%',
   padding: '0px 16px 0px 16px', 
   boxSizing: 'border-box', /* got rid of width, added the display, flexdir, justify content */
   zIndex: 2,
+  maxWidth: `${theme.breakpoints.values.lg}px`,
+  marginBottom: '16px',
 }));
 
 const TopLineStyled = styled(Box)({
@@ -66,7 +70,6 @@ const handleCloseClick = () => {
 function GameEndedHostHeader({ gameCode }: GameEndedHostHeaderProps) {
   return (
     <UpperStyled>
-      <Container maxWidth="md">
       <TopLineStyled>
         <GameLobbyTypographyStyled>Game End Lobby </GameLobbyTypographyStyled>
         <IconsContainer>    
@@ -75,7 +78,6 @@ function GameEndedHostHeader({ gameCode }: GameEndedHostHeaderProps) {
         </IconsContainer>
       </TopLineStyled>
       <GameEndedGameCode gameCode={gameCode} />
-      </Container>
     </UpperStyled>
   );
 }

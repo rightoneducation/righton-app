@@ -83,8 +83,25 @@ function FooterStartGame({
 }: FootStartGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
-  const buttonText = localGameSession.currentQuestionIndex === null ? 'Start Game' : 'Next Question';
+  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);    
+  let buttonText;
+  switch (localGameSession.currentState) {
+    case GameSessionState.TEAMS_JOINING:
+      buttonText = 
+        (localGameSession.currentQuestionIndex === null)
+          ? 'Start Game' 
+          : 'Next Question';
+      break;
+    case GameSessionState.FINAL_RESULTS:
+      buttonText = 'End Game';
+      break;
+    default:
+      buttonText = 
+        (selectedSuggestedGame === null) 
+          ? 'Exit to RightOn Central' 
+          : 'Play Selected Game';
+  }
+
   useEffect(()=> {
     apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8').then((gameTemplates) => {
       console.log(gameTemplates);
@@ -94,28 +111,41 @@ function FooterStartGame({
   },[]) // eslint-disable-line
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    console.log('button click');
-    console.log(localGameSession.currentState);
-    if (localGameSession.currentQuestionIndex === null){
-      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-      if (updateNoResponses && setLocalHostTeamAnswers)
-        setLocalHostTeamAnswers(updateNoResponses);
-      dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
-    } else {
-      console.log(localGameSession.currentQuestionIndex);
-      const nextQuestionIndex =localGameSession.currentQuestionIndex + 1;
-      if (localGameSession.currentState === GameSessionState.FINAL_RESULTS){
+    switch(localGameSession.currentState){
+      case(GameSessionState.TEAMS_JOINING):
+        if (localGameSession.currentQuestionIndex === null){
+          const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
+          if (updateNoResponses && setLocalHostTeamAnswers)
+            setLocalHostTeamAnswers(updateNoResponses);
+          dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
+          apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
+        } else {
+          const nextQuestionIndex = localGameSession.currentQuestionIndex + 1;
+          dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
+          apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: nextQuestionIndex, currentState: nextState})
+        }
+      break;
+      case(GameSessionState.FINAL_RESULTS):{
         const currentGrade = localGameSession.questions[localGameSession.currentQuestionIndex].grade;
-        console.log(currentGrade);
         apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, currentGrade).then((gameTemplates) => {
-          console.log(gameTemplates);
-          if (gameTemplates && setSuggestedGameTemplates)
-            setSuggestedGameTemplates(gameTemplates.gameTemplates);
+        if (gameTemplates && setSuggestedGameTemplates)
+          setSuggestedGameTemplates(gameTemplates.gameTemplates);
         });
+        dispatch({type: 'advance_game_phase', payload: {nextState}});
+        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
       }
-      dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: nextQuestionIndex, currentState: nextState})
+      break;
+      case(GameSessionState.FINISHED):
+      default: {
+        if (selectedSuggestedGame === null){
+          dispatch({type: 'exit_to_central'});
+          // TODO: get this in once routing is fixed
+        }
+        else {
+          dispatch({type: 'play_selected_game', payload: {selectedSuggestedGame}});
+          // TODO: similar once routing is fixed
+        }
+      }
     }
   };
   return (
@@ -133,7 +163,9 @@ function FooterStartGame({
           </Box>
         }
         
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}> {buttonText} </ButtonStyled>
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
+          { buttonText }
+        </ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );

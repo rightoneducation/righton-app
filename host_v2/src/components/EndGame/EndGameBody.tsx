@@ -39,27 +39,25 @@ export default function GameEndedHostBody({ teams, setSelectedSuggestedGame, sel
         return (
           <BodyStyled>
             <Swiper
-                  modules={[Pagination]}
-                  slidesPerView="auto"
-                  pagination={{
-                    el: '.swiper-pagination-container',
-                    bulletClass: 'swiper-pagination-bullet',
-                    bulletActiveClass: 'swiper-pagination-bullet-active',
-                    clickable: true,
-                    renderBullet(index: number, className: string,) {
-                      return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
-                    },
-                  }}
-                  style={{display: 'flex', alignItems:'center', justifyContent: 'center', marginRight: '0px',boxSizing: 'border-box',}}
-                  ref={swiperRef}
-                > 
+              modules={[Pagination]}
+              slidesPerView="auto"
+              pagination={{
+                el: '.swiper-pagination-container',
+                bulletClass: 'swiper-pagination-bullet',
+                bulletActiveClass: 'swiper-pagination-bullet-active',
+                clickable: true,
+                renderBullet(index: number, className: string,) {
+                  return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
+                },
+              }}
+              style={{display: 'flex', alignItems:'center', justifyContent: 'center', marginRight: '0px',boxSizing: 'border-box',}}
+              ref={swiperRef}
+            > 
               <SwiperSlide style={{ alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', marginRight: '0px', boxSizing: 'border-box'}}>
                 {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
               </SwiperSlide>
               <SwiperSlide>
-                <Typography style={{ marginTop: '48px' }}>
-                  <SuggestedGames gameTemplates = {gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame}/>
-                </Typography>
+                <SuggestedGames gameTemplates = {gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame}/>
               </SwiperSlide>
             </Swiper>
           </BodyStyled>

@@ -12,5 +12,4 @@ export const EndGameContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => 
   overflow: 'hidden',
   margin: 'auto',
   zIndex: 2,
-  paddingTop: `${theme.sizing.mdPadding}px`,
 }));

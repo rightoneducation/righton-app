@@ -33,6 +33,7 @@ const SafeAreaStyled = styled(Box)({
   height: '100vh',
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
   background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
@@ -47,6 +48,7 @@ function EndGameLobby({teams,
     const theme = useTheme();
     const [selectedSuggestedGame, setSelectedSuggestedGame] = useState<number | null>(null);
     const [suggestedGameTemplates, setSuggestedGameTemplates] = useState<IGameTemplate[]>([]);
+    const [isGameListLoading, setIsGameListLoading] = useState<boolean>(true);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
     return (
@@ -58,6 +60,7 @@ function EndGameLobby({teams,
           teamsLength={teams ? teams.length : 0}
           setSuggestedGameTemplates={setSuggestedGameTemplates}
           selectedSuggestedGame= {selectedSuggestedGame}
+          setIsGameListLoading={setIsGameListLoading}
         />
       </SafeAreaStyled>
     )

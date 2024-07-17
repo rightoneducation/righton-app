@@ -14,10 +14,8 @@ const GameCodeCard = styled(Box)({
     width: '151px',
     height: '34px',
     gap: '8px', 
-    margin: 'auto', /* added this */
     boxSizing: 'border-box',
     display: 'flex', 
-    flexdirection: 'row',
     justifyContent: 'center',
     alignItems:'center'
 });
@@ -42,10 +40,8 @@ const GameCodeParagraph = styled(Typography)({
 function GameEndedGameCode({ gameCode }: GameEndedGameCodeProps) {
   return (
     <GameCodeCard container>
-      {/* <div style={{ textAlign: 'center' }}> */}
         <GameCodeParagraph>Game Code</GameCodeParagraph>
         <GameCodeText>{gameCode}</GameCodeText>
-      {/* </div> */}
     </GameCodeCard>
   );
 }

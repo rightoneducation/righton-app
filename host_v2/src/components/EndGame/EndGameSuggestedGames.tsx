@@ -145,7 +145,6 @@ const OuterBoxStyled = styled(Box)({
   gap: '12px',
   paddingLeft: '12px',
   paddingRight: '12px',
-  paddingTop: '16px',
   width: '100%',
   boxSizing: 'border-box'
 });
@@ -175,7 +174,9 @@ function SuggestedGames ({ teams, selectedSuggestedGame, setSelectedSuggestedGam
       }
       return null;
     };
-    console.log(selectedSuggestedGame);
+    
+
+
     return (
         <OuterBoxStyled>
             <SearchStyled>
