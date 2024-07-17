@@ -13,8 +13,8 @@ interface Team {
 
 interface SuggestedGamesProps {
   teams: Team[] | null;
-  setIsGameSelected: (value: boolean) => void; 
-  isGameSelected: boolean
+  setIsSuggestedGameSelected: (value: boolean) => void; 
+  isSuggestedGameSelected: boolean
   gameTemplates: IGameTemplate[] | null
 }
 
@@ -216,7 +216,7 @@ const OuterBoxStyled = styled(Box)({
 });
 
 
-function SuggestedGames ({ teams, setIsGameSelected, isGameSelected, gameTemplates }: SuggestedGamesProps) {
+function SuggestedGames ({ teams, setIsSuggestedGameSelected, isSuggestedGameSelected, gameTemplates }: SuggestedGamesProps) {
     const renderGradeTypography = (gametemplate: IGameTemplate) => {
       const { grade, domain, cluster, standard } = gametemplate;
   
@@ -258,7 +258,7 @@ function SuggestedGames ({ teams, setIsGameSelected, isGameSelected, gameTemplat
             {/* <HrStyled/> */}
             {gameTemplates && gameTemplates.map((gameTemplate) => (
               
-                <MenuItemStyled key = {uuidv4()} onClick={()=> setIsGameSelected(!isGameSelected)}>
+                <MenuItemStyled key = {uuidv4()} onClick={()=> setIsSuggestedGameSelected(!isSuggestedGameSelected)}>
                   <LeftBox>
                     <TopBox>
                       {gameTemplate.grade === 'Mashup' ? (<TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>Mashup</TopBoxText1>) : null}

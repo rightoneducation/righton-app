@@ -70,7 +70,6 @@ function StartGame({teams,
           <FooterStartGame 
             teamsLength={teams ? teams.length : 0}
             screenSize={screenSize}
-            currentQuestionIndex={null}
             setLocalHostTeamAnswers={setLocalHostTeamAnswers}
           />
         </SafeAreaStyled>

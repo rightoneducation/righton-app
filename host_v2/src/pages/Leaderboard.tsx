@@ -55,7 +55,6 @@ export default function Leaderboard({
         <FooterStartGame 
           teamsLength={teams ? teams.length : 0}
           screenSize={screenSize}
-          currentQuestionIndex={currentQuestionIndex}
         />
     </SafeAreaStyled>
   );

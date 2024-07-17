@@ -10,7 +10,7 @@ import {
 import { ScreenSize } from '../lib/HostModels';
 import EndGameHeader from '../components/EndGame/EndGameHeader';
 import EndGameBody from '../components/EndGame/EndGameBody';
-import EndGameFooter from '../components/EndGame/EndGameFooter';
+import EndGameFooter from '../components/FooterStartGame';
 
 interface EndGameLobbyProps {
   gameTemplates: IGameTemplate[] | null;
@@ -45,17 +45,20 @@ function EndGameLobby({teams,
   handleDeleteTeam,
   }: EndGameLobbyProps) {
     const theme = useTheme();
-    const [isGameSelected, setIsGameSelected] = useState(false)
+    const [isSuggestedGameSelected, setIsSuggestedGameSelected] = useState(false);
+    const [suggestedGameTemplates, setSuggestedGameTemplates] = useState<IGameTemplate[]>([]);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
+    console.log(suggestedGameTemplates);
     return (
       <SafeAreaStyled>
         <EndGameHeader gameCode = {gameCode} />
-        <EndGameBody screenSize={screenSize} gameTemplates={gameTemplates} teams={teams} isGameSelected={isGameSelected} setIsGameSelected={setIsGameSelected} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>
+        <EndGameBody screenSize={screenSize} gameTemplates={suggestedGameTemplates} teams={teams} isSuggestedGameSelected={isSuggestedGameSelected} setIsSuggestedGameSelected={setIsSuggestedGameSelected} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>
         <EndGameFooter 
           screenSize={screenSize}
           teamsLength={teams ? teams.length : 0}
-          isGameSelected = {isGameSelected}
+          setSuggestedGameTemplates={setSuggestedGameTemplates}
+          isSuggestedGameSelected = {isSuggestedGameSelected}
         />
       </SafeAreaStyled>
     )

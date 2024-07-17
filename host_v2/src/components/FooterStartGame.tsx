@@ -1,9 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswers } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
-import ProgressBar from './ProgressBarGroup';
 import { ScreenSize } from '../lib/HostModels';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -70,31 +69,51 @@ const PlayerCountTypography = styled(Typography)({
 interface FootStartGameProps {
   teamsLength: number;
   screenSize: ScreenSize;
-  currentQuestionIndex: number | null;
+  isSuggestedGameSelected?: boolean;
+  setSuggestedGameTemplates?: (gameTemplates: IGameTemplate[]) => void;
   setLocalHostTeamAnswers?: (value: IHostTeamAnswers) => void;
 }
 
 function FooterStartGame({ 
   teamsLength,
   screenSize,
-  currentQuestionIndex,
+  isSuggestedGameSelected,
+  setSuggestedGameTemplates,
   setLocalHostTeamAnswers,
 }: FootStartGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
-  const buttonText = currentQuestionIndex === null ? 'Start Game' : 'Next Question';
-
+  const buttonText = localGameSession.currentQuestionIndex === null ? 'Start Game' : 'Next Question';
+  useEffect(()=> {
+    apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8').then((gameTemplates) => {
+      console.log(gameTemplates);
+      if (gameTemplates && setSuggestedGameTemplates)
+        setSuggestedGameTemplates(gameTemplates.gameTemplates);
+    });
+  },[]) // eslint-disable-line
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    if (currentQuestionIndex === null){
+    console.log('button click');
+    console.log(localGameSession.currentState);
+    if (localGameSession.currentQuestionIndex === null){
       const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
       if (updateNoResponses && setLocalHostTeamAnswers)
         setLocalHostTeamAnswers(updateNoResponses);
       dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
     } else {
-      const nextQuestionIndex = currentQuestionIndex + 1;
+      console.log(localGameSession.currentQuestionIndex);
+      const nextQuestionIndex =localGameSession.currentQuestionIndex + 1;
+      if (localGameSession.currentState === GameSessionState.FINAL_RESULTS){
+        const currentGrade = localGameSession.questions[localGameSession.currentQuestionIndex].grade;
+        console.log(currentGrade);
+        apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, currentGrade).then((gameTemplates) => {
+          console.log(gameTemplates);
+          if (gameTemplates && setSuggestedGameTemplates)
+            setSuggestedGameTemplates(gameTemplates.gameTemplates);
+        });
+      }
       dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: nextQuestionIndex, currentState: nextState})
     }
@@ -105,7 +124,7 @@ function FooterStartGame({
           <PaginationContainerStyled className="swiper-pagination-container" />
         }
       <InnerFooterContainer>
-        { currentQuestionIndex &&
+        { localGameSession.currentQuestionIndex &&
           <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
             <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
             <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>

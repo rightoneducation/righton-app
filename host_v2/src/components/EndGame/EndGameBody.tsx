@@ -22,16 +22,16 @@ const BodyStyled = styled(Box)({
 });
 
 interface GameEndedHostBodyProps{
-  setIsGameSelected: (value: boolean) => void;
+  setIsSuggestedGameSelected: (value: boolean) => void;
   teams: ITeam[];
-  isGameSelected: boolean;
+  isSuggestedGameSelected: boolean;
   gameTemplates: IGameTemplate[] | null;
   currentQuestionIndex: number;
   screenSize: ScreenSize;
   handleDeleteTeam: (id: string) => void;
 }
 
-export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSelected, gameTemplates, currentQuestionIndex, screenSize, handleDeleteTeam }: GameEndedHostBodyProps ) {
+export default function GameEndedHostBody({ teams, setIsSuggestedGameSelected, isSuggestedGameSelected, gameTemplates, currentQuestionIndex, screenSize, handleDeleteTeam }: GameEndedHostBodyProps ) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);   
     switch(screenSize){
@@ -58,7 +58,7 @@ export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSele
               </SwiperSlide>
               <SwiperSlide>
                 <Typography style={{ marginTop: '48px' }}>
-                  <SuggestedGames gameTemplates = {gameTemplates} teams={teams} isGameSelected = {isGameSelected} setIsGameSelected={setIsGameSelected}/>
+                  <SuggestedGames gameTemplates = {gameTemplates} teams={teams} isSuggestedGameSelected = {isSuggestedGameSelected} setIsSuggestedGameSelected={setIsSuggestedGameSelected}/>
                 </Typography>
               </SwiperSlide>
             </Swiper>
@@ -72,7 +72,7 @@ export default function GameEndedHostBody({ teams, setIsGameSelected, isGameSele
                 {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
-              <SuggestedGames gameTemplates = {gameTemplates} teams={teams} isGameSelected = {isGameSelected} setIsGameSelected={setIsGameSelected}/>
+              <SuggestedGames gameTemplates = {gameTemplates} teams={teams} isSuggestedGameSelected = {isSuggestedGameSelected} setIsSuggestedGameSelected={setIsSuggestedGameSelected}/>
             </Grid>
           </EndGameContentAreaDoubleColumnStyled>
         );

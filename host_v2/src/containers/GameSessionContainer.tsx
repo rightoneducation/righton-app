@@ -56,12 +56,29 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
         />
       );
       break;
-    case GameSessionState.TEAMS_JOINING:
+    case GameSessionState.FINAL_RESULTS:
       renderContent = (
-        <EndGameLobby teams={localGameSession.teams} gameTemplates={gameTemplates} gameCode={localGameSession.gameCode} currentQuestionIndex={localGameSession.currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>
+        <Leaderboard 
+            teams={localGameSession.teams}
+            questions={localGameSession.questions}
+            currentQuestionIndex={localGameSession.currentQuestionIndex}
+            title={localGameSession.title}
+            handleDeleteTeam={handleDeleteTeam}
+        />
       );
       break;
-    case GameSessionState.FINAL_RESULTS:
+    case GameSessionState.FINISHED:
+      renderContent = (
+        <EndGameLobby 
+        teams={localGameSession.teams} 
+        gameTemplates={gameTemplates} 
+        gameCode={localGameSession.gameCode} 
+        currentQuestionIndex={localGameSession.currentQuestionIndex} 
+        handleDeleteTeam={handleDeleteTeam}
+      />
+      );
+      break;
+    case GameSessionState.TEAMS_JOINING:
     default:
       renderContent = (
         localGameSession.currentQuestionIndex === null 
