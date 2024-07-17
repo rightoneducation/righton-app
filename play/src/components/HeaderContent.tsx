@@ -65,7 +65,6 @@ export default function HeaderContent({
     if (isIncorrectForCheck) return t('gameinprogress.header.incorrect');
     return stateMap[currentStateForCheck];
   };
-
   return (
     <HeaderContainer>
       <Typography variant="h1">

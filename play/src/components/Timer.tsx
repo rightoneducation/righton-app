@@ -49,14 +49,8 @@ export default function Timer({
   handleTimerIsFinished,
   localModel,
 }: TimerProps) {
-  console.log("currentTime in the beginning of timer");
-  console.log(currentTimer);
-  console.log(isFinished);
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
   const currentTime = Math.trunc(currentTimeMilli / 1000);
-  // const currentTime = currentTimer;
-  console.log("currenttime but like just hte current time");
-  console.log(currentTime);
 
   const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
 
@@ -68,6 +62,8 @@ export default function Timer({
   // updates the current time as well as the localstorage in case of page reset
   // recursive countdown timer function using requestAnimationFrame
   function updateTimer(timestamp: number) {
+    console.log(currentTimeMilli);
+    console.log(timestamp);
     if (!isPausedRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
@@ -76,7 +72,6 @@ export default function Timer({
         originalTimeRef.current = timestamp;
       }
       if (currentTimeMilli <= 0) {
-        console.log("handleTimerisFiniished");
         handleTimerIsFinished();
       } else {
         prevTimeRef.current = timestamp;
@@ -108,23 +103,16 @@ export default function Timer({
   }, [currentTime, localModel]);
 
   useEffect(() => {
-    if (localModel.hasRejoined && localModel.currentTimer) {
-      setCurrentTimeMilli(localModel.currentTimer * 1000);
-    } else {
-      setCurrentTimeMilli(currentTimer * 1000);
-    }
-    
-  }, [localModel, currentTimer]);
+    setCurrentTimeMilli(currentTimer * 1000);
+  }, [ currentTimer]);
 
   // useEffect to start off timer
   useEffect(() => {
     if (!isPaused) {
       animationRef.current = requestAnimationFrame(updateTimer);
     }
-    console.log("cancelAnimation");
-    // ADDED THIS
    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, [isPaused, isFinished]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isPaused, isFinished, currentTimeMilli]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // pdate the isPausedRef when the isPaused prop changes
   useEffect(() => {
