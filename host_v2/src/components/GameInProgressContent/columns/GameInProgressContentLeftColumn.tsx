@@ -41,7 +41,7 @@ export default function GameInProgressContentLeftColumn ({
           responses={responses}
           statePosition={0}
           graphClickInfo={graphClickInfo}
-          isShortAnswerEnabled={false}
+          isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
           handleGraphClick={handleGraphClick}
         />
         { isConfidenceEnabled &&

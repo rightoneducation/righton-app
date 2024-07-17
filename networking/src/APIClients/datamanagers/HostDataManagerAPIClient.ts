@@ -151,6 +151,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
   private processAnswer(ans: any, teamAnswersQuestion: any, phase: IPhase, teamName: string) {
     const answerObj = this.createAnswerFromBackendData(ans.answer);
+    console.log(answerObj);
     let newResponses = [...teamAnswersQuestion[phase].responses];
     if (answerObj) {
       answerObj.normalizeAnswer(answerObj.rawAnswer);
@@ -160,28 +161,28 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         }
         return answerObj.isEqualTo(response.normAnswer as string[]);
       });
-    if (existingAnswer) {
-      newResponses = newResponses.map((response: any) => {
-        if (response === existingAnswer) {
-          return {
-            ...response,
-            count: response.count + 1,
-            teams: [...response.teams, teamName]
-          };
-        }
-        return response;
-      });
-    } else {
-      const newAnswer = {
-        normAnswer: answerObj.normAnswer as string[] | number[],
-        rawAnswer: answerObj.rawAnswer,
-        count: 1,
-        isCorrect: ans.isCorrect,
-        multiChoiceCharacter: this.isAnswerMultiChoice(answerObj) ? answerObj.multiChoiceCharacter : '',
-        teams: [teamName]
-      };
-      newResponses.push(newAnswer);
-    }
+      if (existingAnswer) {
+        newResponses = newResponses.map((response: any) => {
+          if (response === existingAnswer) {
+            return {
+              ...response,
+              count: response.count + 1,
+              teams: [...response.teams, teamName]
+            };
+          }
+          return response;
+        });
+      } else {
+        const newAnswer = {
+          normAnswer: answerObj.normAnswer as string[] | number[],
+          rawAnswer: answerObj.rawAnswer,
+          count: 1,
+          isCorrect: ans.isCorrect,
+          multiChoiceCharacter: this.isAnswerMultiChoice(answerObj) ? answerObj.multiChoiceCharacter : '',
+          teams: [teamName]
+        };
+        newResponses.push(newAnswer);
+      }
       if (this.isAnswerMultiChoice(answerObj))
         newResponses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
       else{
@@ -311,13 +312,13 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return confidenceArray;
   };
 
-  private buildEmptyHostTeamAnswerShortAnswer() {
+  private buildEmptyHostTeamAnswerShortAnswer(teamsCount: number) {
     return {
       phase1: {
           responses: [{
           normAnswer: [],
           rawAnswer: 'No response',
-          count: 0,
+          count: teamsCount,
           isCorrect: false,
           multiChoiceCharacter: this.noResponseCharacter,
           teams: []
@@ -328,7 +329,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           responses: [{
           normAnswer: [],
           rawAnswer: 'No response',
-          count: 0,
+          count: teamsCount,
           isCorrect: false,
           multiChoiceCharacter: this.noResponseCharacter,
           teams: []
@@ -406,7 +407,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (gameSession.questions.length > 0) {
       teamAnswers.questions = gameSession.questions.map((question) => ({
         questionId: question.id,
-        ...question.isShortAnswerEnabled ? this.buildEmptyHostTeamAnswerShortAnswer() : this.buildEmptyHostTeamAnswerMultiChoice(question, this.gameSession?.teams.length ?? 0)
+        ...question.isShortAnswerEnabled ? this.buildEmptyHostTeamAnswerShortAnswer(this.gameSession?.teams.length ?? 0) : this.buildEmptyHostTeamAnswerMultiChoice(question, this.gameSession?.teams.length ?? 0)
       }));
     }
     const numTeams = gameSession.teams.length;
@@ -434,7 +435,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
             });
           });
         });
-
         Object.values(IPhase).forEach((phase) => {
           const numSubmittedAnswers = question[phase].responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
           const numNoResponses = numTeams - numSubmittedAnswers;
