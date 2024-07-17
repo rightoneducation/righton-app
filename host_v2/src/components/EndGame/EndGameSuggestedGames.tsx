@@ -1,22 +1,10 @@
-import React from 'react';
-import { Grid, MenuItem, Divider, Typography, Box, TextField  } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import React, { useState, useCallback } from 'react';
+import { CircularProgress, Grid, MenuItem, Divider, Typography, Box, TextField  } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import { IGameTemplate } from '@righton/networking';
-
+import { IGameTemplate, ITeam } from '@righton/networking';
 import SearchIcon from '../../images/SearchIcon.svg';
 import RightOnPlaceHolder from '../../images/RightOnLogo.png';
-
-interface Team {
-  name: string;
-}
-
-interface SuggestedGamesProps {
-  teams: Team[] | null;
-  selectedSuggestedGame: number | null;
-  setSelectedSuggestedGame: (value: number) => void; 
-  gameTemplates: IGameTemplate[] | null
-}
 
 const PStyled = styled(Typography)({
   color: 'rgba(255, 255, 255, 1)',
@@ -146,10 +134,40 @@ const OuterBoxStyled = styled(Box)({
   paddingLeft: '12px',
   paddingRight: '12px',
   width: '100%',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
 });
 
-function SuggestedGames ({ teams, selectedSuggestedGame, setSelectedSuggestedGame, gameTemplates }: SuggestedGamesProps) {
+const StyledGameContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'column',
+  gap: '12px',
+  paddingLeft: '12px',
+  paddingRight: '12px',
+  width: '100%',
+  height: '100%',
+  boxSizing: 'border-box',
+  overflow: 'hidden'
+});
+
+interface SuggestedGamesProps {
+  gameTemplates: IGameTemplate[];
+  teams: ITeam[] | null;
+  selectedSuggestedGame: string | null;
+  setSelectedSuggestedGame: (value: string) => void;
+  searchText: string;
+  handleUpdateSearchText: (value: string) => void;
+}
+
+function SuggestedGames ({ 
+  gameTemplates,
+  teams, 
+  selectedSuggestedGame,
+  setSelectedSuggestedGame, 
+  searchText,
+  handleUpdateSearchText,
+}: SuggestedGamesProps) {
+    const theme = useTheme();
     const renderGradeTypography = (gametemplate: IGameTemplate) => {
       const { grade, domain, cluster, standard } = gametemplate;
   
@@ -174,8 +192,6 @@ function SuggestedGames ({ teams, selectedSuggestedGame, setSelectedSuggestedGam
       }
       return null;
     };
-    
-
 
     return (
         <OuterBoxStyled>
@@ -185,14 +201,25 @@ function SuggestedGames ({ teams, selectedSuggestedGame, setSelectedSuggestedGam
               </SearchIconStyled>
               <InputInputStyled 
                 placeholder = "Search outside suggestions"
+                value={searchText}
+                onChange={(e: any) => handleUpdateSearchText(e.target.value)}
               />
             </SearchStyled>
             <BoxStyled>
                 <PStyled>Continue your current session with our suggested games:</PStyled>
             </BoxStyled>
-            {gameTemplates && gameTemplates.map((gameTemplate, index) => (
-                <MenuItemStyled isSelected={index === selectedSuggestedGame} key={uuidv4()} onClick={() => setSelectedSuggestedGame(index)}>
-                  <LeftBox isSelected={index === selectedSuggestedGame}>
+            {gameTemplates.length === 0 && 
+              <>
+                <CircularProgress style={{color:`${theme.palette.primary.circularProgress}`}}/>
+                <Typography variant='h4' color={`${theme.palette.primary.main}`}>
+                  Suggested games are loading ...
+                </Typography>
+              </>
+            }
+            <StyledGameContainer>
+            {gameTemplates.length > 0 && gameTemplates.map((gameTemplate) => (
+                <MenuItemStyled isSelected={gameTemplate.id === selectedSuggestedGame} key={uuidv4()} onClick={() => setSelectedSuggestedGame(gameTemplate.id)}>
+                  <LeftBox isSelected={gameTemplate.id === selectedSuggestedGame}>
                     <TopBox>
                       {gameTemplate.grade === 'Mashup' ? (<TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>Mashup</TopBoxText1>) : null}
                       {renderGradeTypography(gameTemplate)}
@@ -214,8 +241,8 @@ function SuggestedGames ({ teams, selectedSuggestedGame, setSelectedSuggestedGam
                   {gameTemplate.imageUrl ? <RightBox src={gameTemplate.imageUrl} alt="Game Template" /> :
                   <RightBox src={RightOnPlaceHolder} alt="Placeholder"/>}
                 </MenuItemStyled>
-              
             ))}
+            </StyledGameContainer>
         </OuterBoxStyled>
     )
 }

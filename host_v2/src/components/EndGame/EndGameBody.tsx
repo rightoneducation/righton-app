@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Box, Typography, Grid } from '@mui/material';
+import { CircularProgress, Box, Typography, Grid } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -22,16 +22,28 @@ const BodyStyled = styled(Box)({
 });
 
 interface GameEndedHostBodyProps{
-  selectedSuggestedGame: number | null;
-  setSelectedSuggestedGame: (value: number) => void;
+  selectedSuggestedGame: string | null;
+  setSelectedSuggestedGame: (value: string) => void;
   teams: ITeam[];
-  gameTemplates: IGameTemplate[] | null;
+  gameTemplates: IGameTemplate[];
   currentQuestionIndex: number;
   screenSize: ScreenSize;
   handleDeleteTeam: (id: string) => void;
+  searchText: string;
+  handleUpdateSearchText: (value: string) => void;
 }
 
-export default function GameEndedHostBody({ teams, setSelectedSuggestedGame, selectedSuggestedGame, gameTemplates, currentQuestionIndex, screenSize, handleDeleteTeam }: GameEndedHostBodyProps ) {
+export default function GameEndedHostBody({ 
+  teams, 
+  setSelectedSuggestedGame, 
+  selectedSuggestedGame, 
+  gameTemplates, 
+  currentQuestionIndex, 
+  screenSize, 
+  handleDeleteTeam,
+  searchText,
+  handleUpdateSearchText
+}: GameEndedHostBodyProps ) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);   
     switch(screenSize){
@@ -57,7 +69,7 @@ export default function GameEndedHostBody({ teams, setSelectedSuggestedGame, sel
                 {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
               </SwiperSlide>
               <SwiperSlide>
-                <SuggestedGames gameTemplates = {gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame}/>
+                <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
               </SwiperSlide>
             </Swiper>
           </BodyStyled>
@@ -70,7 +82,7 @@ export default function GameEndedHostBody({ teams, setSelectedSuggestedGame, sel
                 {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
-              <SuggestedGames gameTemplates = {gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame}/>
+               <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
             </Grid>
           </EndGameContentAreaDoubleColumnStyled>
         );

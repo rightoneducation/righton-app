@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Paper } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import {debounce} from 'lodash';
 import {
-  IQuestion,
+  GameSessionState,
   IGameTemplate,
   ITeam
 } from '@righton/networking';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { ScreenSize } from '../lib/HostModels';
 import EndGameHeader from '../components/EndGame/EndGameHeader';
 import EndGameBody from '../components/EndGame/EndGameBody';
@@ -46,21 +51,66 @@ function EndGameLobby({teams,
   handleDeleteTeam,
   }: EndGameLobbyProps) {
     const theme = useTheme();
-    const [selectedSuggestedGame, setSelectedSuggestedGame] = useState<number | null>(null);
+    const [selectedSuggestedGame, setSelectedSuggestedGame] = useState<string | null>(null);
     const [suggestedGameTemplates, setSuggestedGameTemplates] = useState<IGameTemplate[]>([]);
-    const [isGameListLoading, setIsGameListLoading] = useState<boolean>(true);
+    const [searchText, setSearchText] = useState<string>('');
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
+    const apiClients = useTSAPIClientsContext(APIClientsContext);
+    const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+    const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);   
+
+    useEffect(()=> {
+      apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8').then((response) => {
+        if (response && setSuggestedGameTemplates)
+          setSuggestedGameTemplates(response.gameTemplates);
+      });
+    },[]) // eslint-disable-line
+
+    const handleButtonClick = () => {
+      if (selectedSuggestedGame === null){
+        dispatch({type: 'exit_to_central'});
+        // TODO: get this in once routing is fixed
+      }
+      else {
+        dispatch({type: 'play_selected_game', payload: {selectedSuggestedGame}});
+        // TODO: similar once routing is fixed
+      }
+    };
+
+    const debouncedGameTemplateSearch = debounce((search: string) => {
+      apiClients.gameTemplate.listGameTemplates(5, null, null, search).then((response) => {
+        if (response && setSuggestedGameTemplates)
+          setSuggestedGameTemplates(response.gameTemplates);
+      });
+    }, 2000);
+
+    const handleUpdateSearchText = (value: string) => {
+      setSuggestedGameTemplates([]);
+      debouncedGameTemplateSearch(value);
+      setSearchText(value);
+    }
+
     return (
       <SafeAreaStyled>
         <EndGameHeader gameCode = {gameCode} />
-        <EndGameBody screenSize={screenSize} gameTemplates={suggestedGameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>
+        <EndGameBody 
+          screenSize={screenSize} 
+          gameTemplates={suggestedGameTemplates} 
+          teams={teams} 
+          selectedSuggestedGame={selectedSuggestedGame} 
+          setSelectedSuggestedGame={setSelectedSuggestedGame} 
+          currentQuestionIndex={currentQuestionIndex} 
+          handleDeleteTeam={handleDeleteTeam}
+          searchText={searchText}
+          handleUpdateSearchText={handleUpdateSearchText}
+        />
         <EndGameFooter 
+          localGameSession={localGameSession}
           screenSize={screenSize}
           teamsLength={teams ? teams.length : 0}
-          setSuggestedGameTemplates={setSuggestedGameTemplates}
-          selectedSuggestedGame= {selectedSuggestedGame}
-          setIsGameListLoading={setIsGameListLoading}
+          selectedSuggestedGame={selectedSuggestedGame}
+          handleButtonClick={handleButtonClick}
         />
       </SafeAreaStyled>
     )

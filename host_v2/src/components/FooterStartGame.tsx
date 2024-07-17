@@ -1,14 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
+import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import { ScreenSize } from '../lib/HostModels';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
-import { getNextGameSessionState } from '../lib/HelperFunctions';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -67,23 +62,21 @@ const PlayerCountTypography = styled(Typography)({
 });
 
 interface FootStartGameProps {
+  localGameSession: IGameSession;
   teamsLength: number;
   screenSize: ScreenSize;
-  selectedSuggestedGame?: number | null;
-  setSuggestedGameTemplates?: (gameTemplates: IGameTemplate[]) => void;
-  setLocalHostTeamAnswers?: (value: IHostTeamAnswers) => void;
+  selectedSuggestedGame?: string | null;
+  handleButtonClick: () => void;
 }
 
 function FooterStartGame({ 
+  localGameSession,
   teamsLength,
   screenSize,
   selectedSuggestedGame,
-  setSuggestedGameTemplates,
-  setLocalHostTeamAnswers,
+  handleButtonClick
 }: FootStartGameProps) {
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);    
+ 
   let buttonText;
   switch (localGameSession.currentState) {
     case GameSessionState.TEAMS_JOINING:
@@ -101,58 +94,12 @@ function FooterStartGame({
           ? 'Exit to RightOn Central' 
           : 'Play Selected Game';
   }
-
-  useEffect(()=> {
-    apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8').then((gameTemplates) => {
-      console.log(gameTemplates);
-      if (gameTemplates && setSuggestedGameTemplates)
-        setSuggestedGameTemplates(gameTemplates.gameTemplates);
-    });
-  },[]) // eslint-disable-line
-  const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    switch(localGameSession.currentState){
-      case(GameSessionState.TEAMS_JOINING):
-        if (localGameSession.currentQuestionIndex === null){
-          const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-          if (updateNoResponses && setLocalHostTeamAnswers)
-            setLocalHostTeamAnswers(updateNoResponses);
-          dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-          apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
-        } else {
-          const nextQuestionIndex = localGameSession.currentQuestionIndex + 1;
-          dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
-          apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: nextQuestionIndex, currentState: nextState})
-        }
-      break;
-      case(GameSessionState.FINAL_RESULTS):{
-        const currentGrade = localGameSession.questions[localGameSession.currentQuestionIndex].grade;
-        apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, currentGrade).then((gameTemplates) => {
-        if (gameTemplates && setSuggestedGameTemplates)
-          setSuggestedGameTemplates(gameTemplates.gameTemplates);
-        });
-        dispatch({type: 'advance_game_phase', payload: {nextState}});
-        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
-      }
-      break;
-      case(GameSessionState.FINISHED):
-      default: {
-        if (selectedSuggestedGame === null){
-          dispatch({type: 'exit_to_central'});
-          // TODO: get this in once routing is fixed
-        }
-        else {
-          dispatch({type: 'play_selected_game', payload: {selectedSuggestedGame}});
-          // TODO: similar once routing is fixed
-        }
-      }
-    }
-  };
+  
   return (
     <FooterContainer>
-          {screenSize === ScreenSize.SMALL &&
-          <PaginationContainerStyled className="swiper-pagination-container" />
-        }
+      {screenSize === ScreenSize.SMALL &&
+        <PaginationContainerStyled className="swiper-pagination-container" />
+      }
       <InnerFooterContainer>
         { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING &&
           <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
@@ -162,7 +109,6 @@ function FooterStartGame({
             </PlayerCountTypography>
           </Box>
         }
-        
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
           { buttonText }
         </ButtonStyled>

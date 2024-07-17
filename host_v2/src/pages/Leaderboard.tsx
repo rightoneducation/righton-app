@@ -3,6 +3,11 @@ import { Box } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme, styled } from '@mui/material/styles';
 import { ITeam, IQuestion } from '@righton/networking';
+import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
 import LeaderboardHeader from '../components/LeaderboardHeader';
@@ -41,6 +46,17 @@ export default function Leaderboard({
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);  
+
+  const handleButtonClick = () => {
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
+    dispatch({type: 'advance_game_phase', payload: {nextState}});
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
+  };
+
+
     return(
       <SafeAreaStyled>
         <LeaderboardHeader />
@@ -53,8 +69,10 @@ export default function Leaderboard({
           handleDeleteTeam={handleDeleteTeam}
         />
         <FooterStartGame 
+          localGameSession={localGameSession}
           teamsLength={teams ? teams.length : 0}
           screenSize={screenSize}
+          handleButtonClick={handleButtonClick}
         />
     </SafeAreaStyled>
   );
