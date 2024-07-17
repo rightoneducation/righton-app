@@ -69,7 +69,7 @@ const PlayerCountTypography = styled(Typography)({
 interface FootStartGameProps {
   teamsLength: number;
   screenSize: ScreenSize;
-  isSuggestedGameSelected?: boolean;
+  selectedSuggestedGame?: number | null;
   setSuggestedGameTemplates?: (gameTemplates: IGameTemplate[]) => void;
   setLocalHostTeamAnswers?: (value: IHostTeamAnswers) => void;
 }
@@ -77,7 +77,7 @@ interface FootStartGameProps {
 function FooterStartGame({ 
   teamsLength,
   screenSize,
-  isSuggestedGameSelected,
+  selectedSuggestedGame,
   setSuggestedGameTemplates,
   setLocalHostTeamAnswers,
 }: FootStartGameProps) {
@@ -124,7 +124,7 @@ function FooterStartGame({
           <PaginationContainerStyled className="swiper-pagination-container" />
         }
       <InnerFooterContainer>
-        { localGameSession.currentQuestionIndex &&
+        { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING &&
           <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
             <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
             <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>

@@ -13,70 +13,37 @@ interface Team {
 
 interface SuggestedGamesProps {
   teams: Team[] | null;
-  setIsSuggestedGameSelected: (value: boolean) => void; 
-  isSuggestedGameSelected: boolean
+  selectedSuggestedGame: number | null;
+  setSelectedSuggestedGame: (value: number) => void; 
   gameTemplates: IGameTemplate[] | null
 }
 
-const GridStyled = styled(Grid)({
-
-  color: 'rgba(255, 255, 255, 1)',
-  fontWeight: 'bold',
-  fontSize: '72px',
-  textAlign: 'center',
-  marginTop: '4%',
-  // border: '1px solid black',
-
-})
-
-const HrStyled = styled(Divider)({
-  
-  marginTop: '30px',
-  marginBottom: '25px',
-  width: '266px',
-  height: '1px',
-  borderRadius: '1.54px',
-  border: '0',
-  // borderTop: '1px solid rgba(255, 255, 255, 0.25)',
-
-})
-
 const PStyled = styled(Typography)({
-
   color: 'rgba(255, 255, 255, 1)',
   textAlign: 'center',
-  // margin: 'auto',
   fontSize: '16px',
-  // width: '292px',
-  // border: '1px solid black',
   width: '100%',
   boxSizing: 'border-box'
 })
 
-const MenuItemStyled = styled(Box)({
-
-  // margin: 'auto',
-  // marginBottom: '15px',
+const MenuItemStyled = styled(Box)(({isSelected}) => ({
+  border: `${isSelected ? '4px solid  #0094FF' : '0px solid transparent'}`,
+  padding: `${isSelected ? '0px' : '4px'}`,
   borderRadius: '14px',
   width: '100%',
-  // height: '62px',
-
   backgroundColor: 'white',
   cursor: 'default',
-  // background: 'rgba(255, 255, 255, 0.25)',
-  // color: 'rgba(255, 255, 255, 1)',
   fontSize: '24px',
   display: 'flex',
   alignItems: 'stretch',
   gap: '8px',
-  // border: '1px solid yellow',
-  justifyContent: 'flex-end'
+  justifyContent: 'flex-end',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
+}))
 
-})
-
-const LeftBox = styled(Box)({
+const LeftBox = styled(Box)(({isSelected}) => ({
   display: 'flex',
-  // border: '1px solid green',
   flexDirection: 'column',
   alignItems: 'flex-start',
   gap: '2px',
@@ -85,99 +52,70 @@ const LeftBox = styled(Box)({
   paddingTop: '12px',
   paddingBottom: '12px',
   width: '100%',
-  // borderRadius: '14px',
-  borderTopLeftRadius: '14px', 
-  borderBottomLeftRadius: '14px', 
-})
+  objectFit: 'cover',
+}))
 
-const RightBox = styled(Box)({
+const RightBox = styled('img')({
   display: 'flex',
-  // border: '1px solid green',
   alignItems: 'center',
   justifyContent: "center",
-  width: '25%',
   backgroundColor: "#C4C4C4",
-  borderTopRightRadius: '14px', 
-  borderBottomRightRadius: '14px', 
-  // border: '1px solid green',
   maxWidth: '110px',
+  objectFit: 'cover',
+  boxSizing: 'border-box',
+  margin: '-4px',
 })
 
 
 const TopBox = styled(Box)({
   display: 'flex',
-  // border: '1px solid black',
   flexDirection: 'row',
   width: '100%',
-  // flexWrap: 'wrap'
-    // flexShrink: 1, // Allow the text to grow to fill the available space
   justifyContent: 'space-between'
 })
 const TopBoxText1 = styled(Typography)({
   fontSize:"12px",
   fontWeight:700, 
   lineHeight:'18px',
-  // border: '1px solid green',
-  // width: '100%',
-  // flexShrink: 1, // Allow the text to grow to fill the available space
-  // flexWrap: 'wrap'
 })
 
 const TopBoxText2 = styled(Typography)({
   fontSize:"12px",
   fontWeight:700, 
   lineHeight:'18px',
-  // textAlign: 'right',
   color: '#159EFA',
-  // width: '100%',
-  // border: '1px solid blue',
-  flexShrink: 1, // Allow the text to grow to fill the available space
-
-  // fontWeight: 700,
-  // color: '#159EFA',
-  // textAlign: 'right',
-  // marginRight: '15px',
-  // width: '90%',
+  flexShrink: 1,
 })
 
 const TitleStyled = styled(Typography)({
   fontSize:"14px",
   fontWeight: 700,
   lineHeight: '21px',
-  // border: '1px solid black',
   fontFamily: 'Poppins, sans-serif',
   color: '#384466',
-  width: '100%'
-  // fontWeight: 700,
-  // height: '80%',
-  // color: '#384466',
-  // display: '-webkit-box',
-  // WebkitBoxOrient: 'vertical',
-  // WebkitLineClamp: 2,
-  // overflow: 'hidden',
-  // textOverflow: 'ellipsis',
-  // maxWidth: '95%',
+  width: '100%',
+  wordWrap: 'break-word', whiteSpace: "normal", 
+  textOverflow: "ellipsis",
+  display: '-webkit-box',
+  WebkitBoxOrient: 'vertical',
+  WebkitLineClamp: 1,
+  overflow: 'hidden',
 })
 
 const BoxStyled = styled(Box)({
   margin: 'auto',
-  // border: '1px solid black',
-
 })
 
 const SearchStyled = styled(Box)({
   minHeight: '30px',
-  // width: '292px',
   height: "36px",
   borderRadius: '18px',
-  // border: '2px solid #B1BACB', 
   display: 'flex',
   justifyContent: 'flexStart',
   alignItems:'center',
   background: 'white',
   gap: '4px',
   paddingLeft: '6px',
-  // border: '1px solid yellow',
   width: '100%',
   boxSizing: 'border-box'
 })
@@ -188,12 +126,9 @@ const SearchIconStyled = styled(Box)({
   height: '32px',
   width: '32px',
   color: '#87B8DB',
-  // border: '1px solid blue', 
-
 })
 
 const InputInputStyled = styled(TextField)({
-
   color: 'inherit',
   width: '100%',
   '& .MuiInputBase-root': {
@@ -215,8 +150,7 @@ const OuterBoxStyled = styled(Box)({
   boxSizing: 'border-box'
 });
 
-
-function SuggestedGames ({ teams, setIsSuggestedGameSelected, isSuggestedGameSelected, gameTemplates }: SuggestedGamesProps) {
+function SuggestedGames ({ teams, selectedSuggestedGame, setSelectedSuggestedGame, gameTemplates }: SuggestedGamesProps) {
     const renderGradeTypography = (gametemplate: IGameTemplate) => {
       const { grade, domain, cluster, standard } = gametemplate;
   
@@ -241,7 +175,7 @@ function SuggestedGames ({ teams, setIsSuggestedGameSelected, isSuggestedGameSel
       }
       return null;
     };
-
+    console.log(selectedSuggestedGame);
     return (
         <OuterBoxStyled>
             <SearchStyled>
@@ -249,22 +183,19 @@ function SuggestedGames ({ teams, setIsSuggestedGameSelected, isSuggestedGameSel
                 <img src={SearchIcon} alt="Search Icon" />
               </SearchIconStyled>
               <InputInputStyled 
-              placeholder = "Search outside suggestions"
+                placeholder = "Search outside suggestions"
               />
             </SearchStyled>
             <BoxStyled>
                 <PStyled>Continue your current session with our suggested games:</PStyled>
             </BoxStyled>
-            {/* <HrStyled/> */}
-            {gameTemplates && gameTemplates.map((gameTemplate) => (
-              
-                <MenuItemStyled key = {uuidv4()} onClick={()=> setIsSuggestedGameSelected(!isSuggestedGameSelected)}>
-                  <LeftBox>
+            {gameTemplates && gameTemplates.map((gameTemplate, index) => (
+                <MenuItemStyled isSelected={index === selectedSuggestedGame} key={uuidv4()} onClick={() => setSelectedSuggestedGame(index)}>
+                  <LeftBox isSelected={index === selectedSuggestedGame}>
                     <TopBox>
                       {gameTemplate.grade === 'Mashup' ? (<TopBoxText1 style={{ fontWeight: 700, color: '#9139F8' }}>Mashup</TopBoxText1>) : null}
                       {renderGradeTypography(gameTemplate)}
-                      {/* <TopBoxText1>{gametemplate.grade}</TopBoxText1> */}
-                      <TopBoxText2>18 Questions</TopBoxText2>
+                      <TopBoxText2>{gameTemplate.questionTemplates && gameTemplate.questionTemplates?.length > 1 ? `${gameTemplate.questionTemplates?.length} questions` : `${gameTemplate.questionTemplates?.length} question`}</TopBoxText2>
                     </TopBox>
                     <TitleStyled>{gameTemplate.title}</TitleStyled>
                     <Box style ={{width: '100%'}}>
@@ -279,66 +210,12 @@ function SuggestedGames ({ teams, setIsSuggestedGameSelected, isSuggestedGameSel
                       </Typography>    
                     </Box>
                   </LeftBox>
-                  <RightBox>
-                    <img src={RightOnPlaceHolder} alt="Placeholder"/>
-                  </RightBox>
+                  {gameTemplate.imageUrl ? <RightBox src={gameTemplate.imageUrl} alt="Game Template" /> :
+                  <RightBox src={RightOnPlaceHolder} alt="Placeholder"/>}
                 </MenuItemStyled>
               
             ))}
         </OuterBoxStyled>
     )
 }
-
-// const useStyles = makeStyles((theme) => ({
-//     studentCount: {
-//       color: 'rgba(255, 255, 255, 1)',
-//       fontWeight: 'bold',
-//       fontSize: '72px',
-//       textAlign: 'center',
-//       marginTop: '4%',
-//     },
-
-//     inSessionDiv: {
-//       width: '80px',
-//       height: '40px',
-//       margin: 'auto',
-//     },
-
-//     inSession: {
-//       color: 'rgba(255, 255, 255, 1)',
-//       textAlign: 'center',
-//       margin: 'auto',
-//       fontSize: '16px',
-//     },
-
-//     studentCards: {
-//       margin: 'auto',
-//       marginBottom: '15px',
-//       borderRadius: '14px',
-//       width: '311px',
-//       height: '62px',
-//       background: 'rgba(255, 255, 255, 0.25)',
-//       color: 'rgba(255, 255, 255, 1)',
-//       fontSize: '24px',
-//     },
-//     name: {
-//       fontWeight: 'bold',
-//     },
-//     removeStudent: {
-//       color: 'white',
-//       fontWeight: 'bold',
-//       position: 'absolute',
-//       right: '-10px',
-//     },
-//     hr: {
-//       marginTop: '30px',
-//       marginBottom: '25px',
-//       width: '266px',
-//       height: '1px',
-//       borderRadius: '1.54px',
-//       border: '0',
-//       borderTop: '1px solid rgba(255, 255, 255, 0.25)',
-//     },
-//   }));
-
 export default SuggestedGames;
