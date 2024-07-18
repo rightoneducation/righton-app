@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
-import { LocalModel, StorageKey } from '../lib/PlayModels';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -38,7 +37,6 @@ interface TimerProps {
   isPaused: boolean;
   isFinished: boolean;
   handleTimerIsFinished: () => void;
-  localModel: LocalModel;
 }
 
 export default function Timer({
@@ -47,7 +45,6 @@ export default function Timer({
   isPaused,
   isFinished,
   handleTimerIsFinished,
-  localModel,
 }: TimerProps) {
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
   const currentTime = Math.trunc(currentTimeMilli / 1000);
@@ -91,16 +88,16 @@ export default function Timer({
         if (sec === 60) sec = 0;
         secStr = sec < 10 ? `0${sec}` : `${sec}`;
       }
-      const storageObject: LocalModel = {
-        ...localModel,
-        currentTimer: currentTimeInput,
-        hasRejoined: true,
-      };
-      window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+      // const storageObject: LocalModel = {
+      //   ...localModel,
+      //   currentTimer: currentTimeInput,
+      //   hasRejoined: true,
+      // };
+      // window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
       return `${min}:${secStr}`;
     };
     return getTimerString(currentTime);
-  }, [currentTime, localModel]);
+  }, [currentTime]);
 
   useEffect(() => {
     setCurrentTimeMilli(currentTimer * 1000);
@@ -108,16 +105,19 @@ export default function Timer({
 
   // useEffect to start off timer
   useEffect(() => {
+
+    isPausedRef.current = isPaused;
+
     if (!isPaused) {
       animationRef.current = requestAnimationFrame(updateTimer);
     }
    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, [isPaused, isFinished, currentTimeMilli]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isPaused, isFinished, currentTimer, currentTimeMilli]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // pdate the isPausedRef when the isPaused prop changes
-  useEffect(() => {
-    isPausedRef.current = isPaused;
-  }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
+  // useEffect(() => {
+  //   isPausedRef.current = isPaused;
+  // }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">

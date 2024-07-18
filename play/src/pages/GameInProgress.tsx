@@ -320,7 +320,6 @@ export default function GameInProgress({
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
-          localModel={localModel}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
