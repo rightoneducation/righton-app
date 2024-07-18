@@ -38,6 +38,7 @@ export default function GameInProgressContentMidColumn ({
     <ScrollBoxStyled>
       {isShortAnswerEnabled ?
         <FeaturedMistakes
+          currentQuestion={currentQuestion}
           responses={responses}
           featuredMistakesSelectionValue={featuredMistakesSelectionValue}
         /> 

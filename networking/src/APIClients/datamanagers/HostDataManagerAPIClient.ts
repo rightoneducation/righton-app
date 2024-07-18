@@ -7,6 +7,7 @@ import { IGameSessionAPIClient } from '../interfaces';
 import { IGameSession } from '../../Models/IGameSession';
 import { BackendAnswer, Answer, NumericAnswer, MultiChoiceAnswer, AnswerFactory, AnswerType } from '../../Models/AnswerClasses';
 import { GameSessionState, ConfidenceLevel } from '../../AWSMobileApi';
+import { nullDependencies } from 'mathjs';
 
 export enum HTTP {
   Post = "POST",
@@ -271,17 +272,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return "";
   }
 
-  // private incrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
-  //   let noResponse = [];
-  //   if (teamAnswersQuestion[phase] && teamAnswersQuestion[phase].responses){
-  //     noResponse = teamAnswersQuestion[phase]?.responses?.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
-  //     if (noResponse) {
-  //       noResponse.count += 1;
-  //       noResponse.teams.push(teamName);
-  //     }
-  //   }
-  // }
-
   private decrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
     const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
     if (noResponse) {
@@ -321,9 +311,10 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           count: teamsCount,
           isCorrect: false,
           multiChoiceCharacter: this.noResponseCharacter,
-          teams: []
+          teams: [],
+          isSelected: false,
           }],
-          confidences: this.buildEmptyHostTeamAnswerConfidences(),
+          confidences: this.buildEmptyHostTeamAnswerConfidences()
       },
       phase2: {
           responses: [{
@@ -332,7 +323,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           count: teamsCount,
           isCorrect: false,
           multiChoiceCharacter: this.noResponseCharacter,
-          teams: []
+          teams: [],
+          isSelected: false,
           }],
           hints: []
       }
@@ -349,7 +341,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
               count: teamsCount,
               isCorrect: false,
               multiChoiceCharacter: this.noResponseCharacter,
-              teams: []
+              teams: [],
             },
             ...question.choices.map((choice: IChoice, index: number) => {
               return {
@@ -358,7 +350,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
                 count: 0,
                 isCorrect: choice.isAnswer,
                 multiChoiceCharacter: String.fromCharCode(65 + index),
-                teams: []
+                teams: [],
               }
             })
           ],
@@ -447,6 +439,24 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
       });
     return teamAnswers;
+  }
+
+  private getTeamAnswerResponses (currentQuestion: IQuestion){
+    const question = this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id);
+    return question?.phase1?.responses ?? [];
+  }
+
+  updateHostTeamAnswersSelectedMistakes(currentAnswer: IHostTeamAnswersResponse, currentQuestion: IQuestion){
+    const responses = [...this.getTeamAnswerResponses(currentQuestion)];
+    if (this.hostTeamAnswers.questions && this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id) && this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses){
+      const responses = [...this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1?.responses] ?? [];
+      if (responses)
+        responses.forEach((response) => {
+          if (response === currentAnswer)
+            response.isSelected = !response.isSelected;
+        });
+      this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id).phase1.responses = responses;
+    }
   }
 
   getHostTeamAnswers() {

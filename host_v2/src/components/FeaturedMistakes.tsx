@@ -8,17 +8,12 @@ import {
   Radio,
   Box
 } from '@mui/material';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { IHostTeamAnswersResponse } from "@righton/networking";
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import {Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
-
-
-// Need to remove featuredMistakesSelectionValue. Duplicate of isPopularMode.
-interface FeaturedMistakesProps {
-  responses: IHostTeamAnswersResponse[];
-  featuredMistakesSelectionValue: string;
-}
 
 const BackgroundStyled = styled(Paper)({
   display: 'flex',
@@ -54,7 +49,14 @@ const RadioLabelStyled = styled(FormControlLabel)({
   },
 });
 
+interface FeaturedMistakesProps {
+  currentQuestion: IQuestion,
+  responses: IHostTeamAnswersResponse[];
+  featuredMistakesSelectionValue: string;
+}
+
 export default function FeaturedMistakes({
+  currentQuestion,
   responses,
   featuredMistakesSelectionValue,
 }: FeaturedMistakesProps) {
@@ -66,6 +68,8 @@ export default function FeaturedMistakes({
   const radioButtonText2 = 'Manually pick the options';
   const numOfPopularMistakes = 3;
   const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+
   // TODO move all this logic to hostTeamAnswersDataManager
   const buildMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
     const mistakes = responses
