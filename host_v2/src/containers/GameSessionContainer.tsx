@@ -45,10 +45,8 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           totalTime={100}
           hasRejoined={false}
           currentTimer={100}
-          sampleConfidenceData={[]}
           localModelMock={{hasRejoined: false, currentTimer: 100}}
           onSelectMistake={() => {}}
-          sortedMistakes={[]}
           setSortedMistakes={() => {}}
           isPopularMode={false}
           setIsPopularMode={() => {}}

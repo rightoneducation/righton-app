@@ -187,8 +187,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         newResponses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
       else{
         newResponses.sort((a: any, b: any) => a.rawAnswer.localeCompare(b.rawAnswer));
-        const noResponse = newResponses.filter((response: any) => response.rawAnswer === this.noResponseCharacter);
-        const otherResponses = newResponses.filter((response: any) => response.rawAnswer !== this.noResponseCharacter);
+        const noResponse = newResponses.filter((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
+        const otherResponses = newResponses.filter((response: any) => response.multiChoiceCharacter !== this.noResponseCharacter);
         newResponses = [...otherResponses, ...noResponse];
       }
     }
@@ -410,6 +410,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         ...question.isShortAnswerEnabled ? this.buildEmptyHostTeamAnswerShortAnswer(this.gameSession?.teams.length ?? 0) : this.buildEmptyHostTeamAnswerMultiChoice(question, this.gameSession?.teams.length ?? 0)
       }));
     }
+    console.log(teamAnswers);
     const numTeams = gameSession.teams.length;
     // this is populating existing answers into the hostTeamAnswers object
     // for each question in the object we just built, loop through all the team answers and populate the object if they apply

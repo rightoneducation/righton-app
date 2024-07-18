@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import {
   Paper,
@@ -8,17 +8,15 @@ import {
   Radio,
   Box
 } from '@mui/material';
+import { IHostTeamAnswersResponse } from "@righton/networking";
 import {Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 
+
 // Need to remove featuredMistakesSelectionValue. Duplicate of isPopularMode.
 interface FeaturedMistakesProps {
-  onSelectMistake: (answer: string, isSelected: boolean) => void;
-  sortedMistakes: Mistake[];
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
+  responses: IHostTeamAnswersResponse[];
   featuredMistakesSelectionValue: string;
 }
 
@@ -57,23 +55,46 @@ const RadioLabelStyled = styled(FormControlLabel)({
 });
 
 export default function FeaturedMistakes({
-  onSelectMistake,
-  sortedMistakes,
-  setSortedMistakes,
-  isPopularMode,
-  setIsPopularMode,
+  responses,
   featuredMistakesSelectionValue,
 }: FeaturedMistakesProps) {
+  const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
   const title = 'Featured Mistakes';
   const subtitle =
     'Selected responses will be presented to players as options for popular incorrect answers.';
   const radioButtonText1 = 'Use the top 3 answers by popularity';
   const radioButtonText2 = 'Manually pick the options';
   const numOfPopularMistakes = 3;
+  const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  // TODO move all this logic to hostTeamAnswersDataManager
+  const buildMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
+    const mistakes = responses
+    .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
+    .map((response) => ({
+      answer: response.rawAnswer,
+      percent: (response.count/totalAnswers)*100,
+      isSelected: false
+      }));
+    const sortedMistakes = mistakes.sort((a: any, b: any) => b.percent - a.percent) ?? [];
+    let finalMistakes = sortedMistakes;
+    if (isPopularMode)
+      finalMistakes = sortedMistakes.map((mistake, index) => {
+        if (index < numOfPopularMistakes) {
+          return { ...mistake, isSelected: true };
+        }
+        return { ...mistake, isSelected: false };
+      }); 
+    return finalMistakes;
+  };
+  const [sortedMistakes, setSortedMistakes] = useState<Mistake[]>(buildMistakes(responses));
+
+  useEffect(()=> {
+    setSortedMistakes(buildMistakes(responses));
+  }, [responses]); // eslint-disable-line
+
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < numOfPopularMistakes) {
-        onSelectMistake(mistake.answer, true);
         return { ...mistake, isSelected: true };
       }
       return { ...mistake, isSelected: false };
@@ -90,7 +111,6 @@ export default function FeaturedMistakes({
   };
 
   const handleSelectMistake = (index: number) => {
-    onSelectMistake(sortedMistakes[index].answer, false);
     const newMistakes = [...sortedMistakes];
     newMistakes[index].isSelected = !newMistakes[index].isSelected;
     setSortedMistakes([...newMistakes]);

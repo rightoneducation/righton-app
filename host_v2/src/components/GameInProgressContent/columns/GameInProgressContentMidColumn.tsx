@@ -11,11 +11,6 @@ import Responses from '../../ResponsesGraph/ResponsesCard';
 interface GameInProgressContentMidColumnProps {
   currentQuestion: IQuestion;
   responses: IHostTeamAnswersResponse[];
-  onSelectMistake: (answer: string, isSelected: boolean) => void;
-  sortedMistakes: Mistake[];
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
   featuredMistakesSelectionValue: string;
   isShortAnswerEnabled: boolean;
   isHintEnabled: boolean;
@@ -29,11 +24,6 @@ interface GameInProgressContentMidColumnProps {
 export default function GameInProgressContentMidColumn ({ 
     currentQuestion,
     responses,
-    onSelectMistake,
-    sortedMistakes,
-    setSortedMistakes,
-    isPopularMode,
-    setIsPopularMode,
     featuredMistakesSelectionValue,
     isShortAnswerEnabled,
     isHintEnabled,
@@ -48,11 +38,7 @@ export default function GameInProgressContentMidColumn ({
     <ScrollBoxStyled>
       {isShortAnswerEnabled ?
         <FeaturedMistakes
-          sortedMistakes={sortedMistakes}
-          setSortedMistakes={setSortedMistakes}
-          isPopularMode={isPopularMode}
-          setIsPopularMode={setIsPopularMode}
-          onSelectMistake={onSelectMistake}
+          responses={responses}
           featuredMistakesSelectionValue={featuredMistakesSelectionValue}
         /> 
         :
@@ -65,7 +51,7 @@ export default function GameInProgressContentMidColumn ({
           handleGraphClick={handleGraphClick}
         />
       }
-      {isHintEnabled &&
+      {isHintEnabled && 
         <HintsCard 
           hints={currentHints}
           numPlayers={numPlayers}
