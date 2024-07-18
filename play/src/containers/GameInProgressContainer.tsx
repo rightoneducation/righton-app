@@ -57,6 +57,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const calculateCurrentTime = () => {
     if (subscription && subscription.gameSession) {
       const getStartTime = subscription.gameSession?.startTime;
+      console.log("starttime from play gipcontainer");
+      console.log(getStartTime);
       if (getStartTime) {
         const isoTimeMillis = new Date(getStartTime).getTime();
         const difference = Date.now() - isoTimeMillis;
@@ -68,11 +70,13 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
         const remainingTime = allottedTime - Math.trunc(difference / 1000);
         // setCurrentTime(remainingTime);
         // window.localStorage.setItem('currentTime', remainingTime.toString());
+        console.log(remainingTime);
         return remainingTime;
       }
     }
     return 0;
   };
+  
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (!document.hidden) {
@@ -96,11 +100,6 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     }
   }, [subscription, subscription.hasRejoined]); // eslint-disable-line
 
-  // const playTime = Date.now();
-  // if 
-  // else currenTime = date.now - the startTime
-  // put the above in the const below. but put it in a pretty ternary
-  // const currentTime = subscription.gameSession?.startTime
 
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
@@ -151,10 +150,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     // if waiting for teacher, display waiting message on How to Play page
     return <Lobby mode={LobbyMode.READY} />;
   }
-  console.log("right before return");
-  console.log(currentTime);
-  console.log(localModel.currentTimer);
-  console.log(localModel.currentTime);
+
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch

@@ -59,8 +59,6 @@ export default function Timer({
   // updates the current time as well as the localstorage in case of page reset
   // recursive countdown timer function using requestAnimationFrame
   function updateTimer(timestamp: number) {
-    console.log(currentTimeMilli);
-    console.log(timestamp);
     if (!isPausedRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
@@ -88,23 +86,18 @@ export default function Timer({
         if (sec === 60) sec = 0;
         secStr = sec < 10 ? `0${sec}` : `${sec}`;
       }
-      // const storageObject: LocalModel = {
-      //   ...localModel,
-      //   currentTimer: currentTimeInput,
-      //   hasRejoined: true,
-      // };
-      // window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
       return `${min}:${secStr}`;
     };
     return getTimerString(currentTime);
   }, [currentTime]);
 
-  useEffect(() => {
-    setCurrentTimeMilli(currentTimer * 1000);
-  }, [ currentTimer]);
+  // useEffect(() => {
+  //   setCurrentTimeMilli(currentTimer * 1000);
+  // }, [ currentTimer]);
 
   // useEffect to start off timer
   useEffect(() => {
+    setCurrentTimeMilli(currentTimer * 1000);
 
     isPausedRef.current = isPaused;
 
@@ -112,12 +105,7 @@ export default function Timer({
       animationRef.current = requestAnimationFrame(updateTimer);
     }
    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, [isPaused, isFinished, currentTimer, currentTimeMilli]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // pdate the isPausedRef when the isPaused prop changes
-  // useEffect(() => {
-  //   isPausedRef.current = isPaused;
-  // }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isPaused, isFinished, currentTimer]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">

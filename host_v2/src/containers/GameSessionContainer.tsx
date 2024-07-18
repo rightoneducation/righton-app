@@ -29,7 +29,42 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   useEffect(() => {
     dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
   }, [backendGameSession]);
-  
+  // check which phase to get the right allotttted time
+  let allottedTime = 0; // Initialize to default value
+
+  if (localGameSession) {
+    const { currentState, phaseOneTime, phaseTwoTime } = localGameSession;
+    if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+      allottedTime = phaseOneTime;
+    } else if (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+      allottedTime = phaseTwoTime;
+    }
+    console.log("allotted time");
+    console.log(allottedTime);
+  }
+  const calculateCurrentTime = () => {
+    if (localGameSession) {
+      const getStartTime = localGameSession?.startTime;
+      console.log("starttime from host_v2 gamesessioncontainer");
+      console.log(getStartTime);
+      console.log(allottedTime);
+      if (getStartTime) {
+        const isoTimeMillis = new Date(getStartTime).getTime();
+        const difference = Date.now() - isoTimeMillis;
+
+        if (difference >= allottedTime * 1000) {
+          // setCurrentTime(-1);
+          return -1;
+        } 
+        const remainingTime = allottedTime - Math.trunc(difference / 1000);
+        // setCurrentTime(remainingTime);
+        // window.localStorage.setItem('currentTime', remainingTime.toString());
+        console.log(remainingTime);
+        return remainingTime;
+      }
+    }
+    return allottedTime;
+  };
   let renderContent;
   switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
@@ -41,9 +76,9 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
         <GameInProgress 
           isCorrect={false}
           isIncorrect={false}
-          totalTime={100}
+          totalTime={allottedTime}
           hasRejoined={false}
-          currentTimer={100}
+          currentTimer={calculateCurrentTime()}
           sampleConfidenceData={[]}
           localModelMock={{hasRejoined: false, currentTimer: 100}}
           onSelectMistake={() => {}}
