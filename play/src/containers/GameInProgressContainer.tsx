@@ -150,11 +150,21 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     // if waiting for teacher, display waiting message on How to Play page
     return <Lobby mode={LobbyMode.READY} />;
   }
-
+  console.log(currentTime);
+  console.log(subscription.hasRejoined);
+  console.log(allottedTime);
+  let passedTime = currentTime;
+  // if current time is -1, return 0
+  if (currentTime === -1) passedTime = -1;
+  // if current time is 0 and hasRejoined is true, then return allotted time
+  // this is an issue because when you refresh after the question is doen it will send 180 again
+  else if (currentTime === 0 && subscription.hasRejoined) passedTime = allottedTime;
+  // else return currentTime
+  console.log(passedTime);
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
-      currentTimer={currentTime}
+      currentTimer={passedTime}
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}
       gameSession={subscription.gameSession}

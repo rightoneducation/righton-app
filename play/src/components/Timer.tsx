@@ -55,20 +55,30 @@ export default function Timer({
   const prevTimeRef = useRef<number | null>(null);
   const originalTimeRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(isPaused);
-
+  console.log(currentTimer);
+  console.log(currentTime);
   // updates the current time as well as the localstorage in case of page reset
   // recursive countdown timer function using requestAnimationFrame
+  // if (currentTimeMilli === 180000 && currentTime <= 0) {
+  //   console.log("in here2");
+  //   handleTimerIsFinished();
+  // }
   function updateTimer(timestamp: number) {
     if (!isPausedRef.current) {
+      console.log(currentTimeMilli);
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
         setCurrentTimeMilli((prevTime) => prevTime - delta);
       } else {
         originalTimeRef.current = timestamp;
       }
+      console.log(currentTimeMilli);
+
       if (currentTimeMilli <= 0) {
+        console.log("in here");
         handleTimerIsFinished();
-      } else {
+      } 
+      else {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
       }
@@ -97,15 +107,34 @@ export default function Timer({
 
   // useEffect to start off timer
   useEffect(() => {
-    setCurrentTimeMilli(currentTimer * 1000);
 
-    isPausedRef.current = isPaused;
+    // setCurrentTimeMilli(currentTimer * 1000);
 
-    if (!isPaused) {
-      animationRef.current = requestAnimationFrame(updateTimer);
+    // isPausedRef.current = isPaused;
+
+    // if (!isPaused) {
+    //   animationRef.current = requestAnimationFrame(updateTimer);
+    // }
+    if (currentTime === 0) {
+      setCurrentTimeMilli(0);
+      cancelAnimationFrame(animationRef.current ?? 0);
+      console.log("what");
+      handleTimerIsFinished();
+    } else if(currentTimer === -1 && currentTimeMilli === 180000){
+      setCurrentTimeMilli(0);
+      cancelAnimationFrame(animationRef.current ?? 0);
+      console.log("bad");
+      handleTimerIsFinished();
+    }
+    else {
+      setCurrentTimeMilli(currentTimer * 1000);
+      isPausedRef.current = isPaused;
+      if (!isPaused) {
+        animationRef.current = requestAnimationFrame(updateTimer);
+      }
     }
    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, [isPaused, isFinished, currentTimer]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isPaused, isFinished, currentTimer, ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">
