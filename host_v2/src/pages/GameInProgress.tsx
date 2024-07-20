@@ -22,10 +22,6 @@ interface GameInProgressProps {
   hasRejoined: boolean,
   currentTimer: number,
   localModelMock: LocalModel,
-  onSelectMistake: (value: string, isBasedOnPopularity: boolean) => void;
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
   localHostTeamAnswers: IHostTeamAnswers;
 }
 
@@ -36,18 +32,12 @@ export default function GameInProgress({
   hasRejoined,
   currentTimer,
   localModelMock,
-  onSelectMistake, 
-  setSortedMistakes,
-  isPopularMode,
-  setIsPopularMode,
   localHostTeamAnswers,
 }: GameInProgressProps) {
     const theme = useTheme();
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-
-    console.log(localGameSession.currentQuestionIndex);
     const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS ? IPhase.ONE : IPhase.TWO;
     const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
     const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
@@ -83,10 +73,6 @@ export default function GameInProgress({
           currentPhaseTeamAnswers={currentPhaseTeamAnswers}
           localGameSession={localGameSession}
           localHostTeamAnswers={localHostTeamAnswers}
-          onSelectMistake={onSelectMistake}
-          setSortedMistakes={setSortedMistakes}
-          isPopularMode={isPopularMode}
-          setIsPopularMode={setIsPopularMode}
           screenSize={screenSize}
         />
       </BodyStackContainerStyled>

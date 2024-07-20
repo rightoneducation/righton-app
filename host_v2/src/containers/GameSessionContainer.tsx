@@ -1,12 +1,15 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
+import { LocalHostTeamAnswersContext, LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
+import { HostTeamAnswersReducer } from '../lib/reducer/HostTeamAnswersReducer';
 import GameInProgress from '../pages/GameInProgress';
 import StartGame from '../pages/StartGame';
 import Leaderboard from '../pages/Leaderboard';
 import EndGameLobby from '../pages/EndGameLobby';
+import PrepareGame from '../pages/PrepareGame';
 
 interface GameSessionContainerProps {
   apiClients: APIClients;
@@ -16,9 +19,10 @@ interface GameSessionContainerProps {
 
 export default function GameSessionContainer({apiClients, backendGameSession, backendHostTeamAnswers}: GameSessionContainerProps) {
   const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
-  const [localHostTeamAnswers, setLocalHostTeamAnswers] = React.useState<IHostTeamAnswers>(backendHostTeamAnswers);
+  const [localHostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer, backendHostTeamAnswers);
+  const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
   useEffect(() => {
-    setLocalHostTeamAnswers(backendHostTeamAnswers);
+    dispatchHostTeamAnswers({type: 'synch_local_hostTeamAnswers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
   }, [backendHostTeamAnswers]);
   const handleDeleteTeam = (teamId: string) => {
     // replace this with an integrated local + backendGameSession in the custom hook
@@ -32,6 +36,21 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const gameTemplates = null;
   
   let renderContent;
+
+  const teamsJoiningPages = [
+      !isGamePrepared 
+      ? <StartGame
+          teams={localGameSession.teams}
+          questions={localGameSession.questions}
+          title={localGameSession.title }
+          gameCode={localGameSession.gameCode}
+          currentQuestionIndex={localGameSession.currentQuestionIndex}
+          handleDeleteTeam={handleDeleteTeam}
+          setIsGamePrepared={setIsGamePrepared}
+        /> 
+        : <PrepareGame isGamePrepared={isGamePrepared}/>
+  ];
+
   switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
@@ -46,10 +65,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           hasRejoined={false}
           currentTimer={100}
           localModelMock={{hasRejoined: false, currentTimer: 100}}
-          onSelectMistake={() => {}}
-          setSortedMistakes={() => {}}
-          isPopularMode={false}
-          setIsPopularMode={() => {}}
           localHostTeamAnswers={localHostTeamAnswers}
         />
       );
@@ -80,15 +95,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     default:
       renderContent = (
         localGameSession.currentQuestionIndex === null 
-        ? <StartGame
-            teams={localGameSession.teams}
-            questions={localGameSession.questions}
-            title={localGameSession.title }
-            gameCode={localGameSession.gameCode}
-            currentQuestionIndex={localGameSession.currentQuestionIndex}
-            handleDeleteTeam={handleDeleteTeam}
-            setLocalHostTeamAnswers={setLocalHostTeamAnswers}
-          /> 
+        ? teamsJoiningPages
         : <Leaderboard 
             teams={localGameSession.teams}
             questions={localGameSession.questions}
@@ -102,11 +109,15 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
 
   return (
     <APIClientsContext.Provider value={apiClients}>
-      <LocalGameSessionContext.Provider value={localGameSession}>
-        <LocalGameSessionDispatchContext.Provider value={dispatch}>
-          {localGameSession && renderContent}
-        </LocalGameSessionDispatchContext.Provider>
-      </LocalGameSessionContext.Provider>
+      <LocalHostTeamAnswersContext.Provider value={localHostTeamAnswers}>
+        <LocalHostTeamAnswersDispatchContext.Provider value={dispatchHostTeamAnswers}>
+          <LocalGameSessionContext.Provider value={localGameSession}>
+            <LocalGameSessionDispatchContext.Provider value={dispatch}>
+              {localGameSession && localHostTeamAnswers && renderContent}
+            </LocalGameSessionDispatchContext.Provider>
+          </LocalGameSessionContext.Provider>
+        </LocalHostTeamAnswersDispatchContext.Provider>
+      </LocalHostTeamAnswersContext.Provider>
     </APIClientsContext.Provider>
   )
 }

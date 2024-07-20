@@ -7,7 +7,6 @@ import { IGameSessionAPIClient } from '../interfaces';
 import { IGameSession } from '../../Models/IGameSession';
 import { BackendAnswer, Answer, NumericAnswer, MultiChoiceAnswer, AnswerFactory, AnswerType } from '../../Models/AnswerClasses';
 import { GameSessionState, ConfidenceLevel } from '../../AWSMobileApi';
-import { nullDependencies } from 'mathjs';
 
 export enum HTTP {
   Post = "POST",
@@ -441,22 +440,27 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return teamAnswers;
   }
 
-  private getTeamAnswerResponses (currentQuestion: IQuestion){
-    const question = this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id);
-    return question?.phase1?.responses ?? [];
-  }
-
-  updateHostTeamAnswersSelectedMistakes(currentAnswer: IHostTeamAnswersResponse, currentQuestion: IQuestion){
-    const responses = [...this.getTeamAnswerResponses(currentQuestion)];
-    if (this.hostTeamAnswers.questions && this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id) && this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses){
-      const responses = [...this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1?.responses] ?? [];
-      if (responses)
-        responses.forEach((response) => {
-          if (response === currentAnswer)
-            response.isSelected = !response.isSelected;
-        });
-      this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id).phase1.responses = responses;
-    }
+  updateHostTeamAnswersSelectedMistakes(currentAnswer: IHostTeamAnswersResponse, currentQuestion: IQuestion) {
+    const updatedQuestions = this.hostTeamAnswers.questions.map((question) => {
+      if (question.questionId !== currentQuestion.id) {
+        return question;
+      }
+      const updatedResponses = question.phase1.responses.map((response) =>
+        response === currentAnswer ? { ...response, isSelected: !response.isSelected } : response
+      );
+      return {
+        ...question,
+        phase1: {
+          ...question.phase1,
+          responses: updatedResponses,
+        },
+      };
+    });
+  
+    this.hostTeamAnswers = {
+      ...this.hostTeamAnswers,
+      questions: updatedQuestions,
+    };
   }
 
   getHostTeamAnswers() {

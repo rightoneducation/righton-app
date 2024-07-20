@@ -8,9 +8,9 @@ import {
   Radio,
   Box
 } from '@mui/material';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { IHostTeamAnswersResponse } from "@righton/networking";
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { IHostTeamAnswersResponse, IQuestion } from "@righton/networking";
+import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useLocalHostTeamAnswersContext';
+import { LocalHostTeamAnswersContext, LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
 import {Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
@@ -68,7 +68,9 @@ export default function FeaturedMistakes({
   const radioButtonText2 = 'Manually pick the options';
   const numOfPopularMistakes = 3;
   const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  // const localHostTeamAnswers = useTSHostTeamAnswersContext(LocalHostTeamAnswersContext);
+  const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
+
 
   // TODO move all this logic to hostTeamAnswersDataManager
   const buildMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
@@ -105,6 +107,7 @@ export default function FeaturedMistakes({
     });
     setSortedMistakes(resetMistakes);
   };
+
   const handleModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === 'A') {
       resetMistakesToPopular();
@@ -115,6 +118,7 @@ export default function FeaturedMistakes({
   };
 
   const handleSelectMistake = (index: number) => {
+
     const newMistakes = [...sortedMistakes];
     newMistakes[index].isSelected = !newMistakes[index].isSelected;
     setSortedMistakes([...newMistakes]);

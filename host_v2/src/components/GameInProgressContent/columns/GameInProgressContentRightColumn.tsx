@@ -10,13 +10,11 @@ import AnswerCard from '../../AnswerCard';
 interface GameInProgressContentRightColumnProps {
   currentQuestion: IQuestion;
   localGameSession: IGameSession;
-  isShortAnswerEnabled: boolean;
 }
 
 export default function GameInProgressContentRightColumn({ 
     currentQuestion,
     localGameSession,
-    isShortAnswerEnabled,
   }: GameInProgressContentRightColumnProps
 ){
   const theme = useTheme();

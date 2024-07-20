@@ -16,32 +16,17 @@ import GameInProgressContentRightColumn from './columns/GameInProgressContentRig
 
 
 interface GameInProgressContentProps {
-  // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
-  // confidenceData: ConfidenceOption[];
-  // confidenceGraphClickIndex: number | null;
-  // handleConfidenceGraphClick: (selectedIndex: number | null) => void;
   localGameSession: IGameSession;
   localHostTeamAnswers: IHostTeamAnswers;
-  onSelectMistake: (answer: string, isSelected: boolean) => void;
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
   screenSize: ScreenSize;
   currentQuestion: IQuestion;
   currentPhase: IPhase;
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
-} // eslint-disable-line
+}
 
 export default function GameInProgressContent({
-  // confidenceData,
-  // confidenceGraphClickIndex,
-  // handleConfidenceGraphClick,
   localGameSession,
   localHostTeamAnswers,
-  onSelectMistake,
-  setSortedMistakes,
-  isPopularMode,
-  setIsPopularMode,
   screenSize,
   currentQuestion,
   currentPhase,
@@ -113,7 +98,6 @@ export default function GameInProgressContent({
     <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
-      isShortAnswerEnabled={isShortAnswerEnabled}
     />
   );
   

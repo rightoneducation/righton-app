@@ -73,6 +73,7 @@ export default function Leaderboard({
           teamsLength={teams ? teams.length : 0}
           screenSize={screenSize}
           handleButtonClick={handleButtonClick}
+          isGamePrepared={false}
         />
     </SafeAreaStyled>
   );

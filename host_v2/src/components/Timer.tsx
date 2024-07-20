@@ -29,7 +29,6 @@ interface TimerProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
-  localModel: LocalModel;
   localGameSession: IGameSession;
 }
 
@@ -38,7 +37,6 @@ export default function Timer({
   currentTimer,
   isPaused,
   isFinished,
-  localModel,
   localGameSession
 }: TimerProps) {
   const theme = useTheme();
@@ -82,16 +80,14 @@ export default function Timer({
         if (sec === 60) sec = 0;
         secStr = sec < 10 ? `0${sec}` : `${sec}`;
       }
-      const storageObject: LocalModel = {
-        ...localModel,
-        currentTimer: currentTimeInput,
+      const storageObject = {
         hasRejoined: true,
       };
       window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
       return `${min}:${secStr}`;
     };
     return getTimerString(currentTime);
-  }, [currentTime, localModel]);
+  }, [currentTime]);
 
   // useEffect to start off timer
   useEffect(() => {
