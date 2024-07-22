@@ -84,7 +84,7 @@ export default function Timer({
         const delta = timestamp - prevTimeRef.current;
         currentTimeMilli.current -= delta;
         timerString.current = getTimerString(currentTimeMilli.current);
-        console.log(timerString.current);
+        console.log(timerString.current); // <- this represents the timerstring in recursive function
       } else {
         originalTimeRef.current = timestamp;
         timerString.current = getTimerString(timestamp);
@@ -116,7 +116,7 @@ export default function Timer({
       <TimerBar value={progress} variant="determinate" />
       <TimerText maxWidth="sm">
         <Typography alignSelf="center" variant="caption">
-          {timerString.current}
+          {timerString.current} {/* this represents timerString in react state machine */}
         </Typography>
       </TimerText>
     </TimerContainer>
