@@ -95,7 +95,6 @@ export default function FeaturedMistakes({
         return { ...mistake, isSelectedMistake: false };
       }); 
     apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes(finalMistakes, currentQuestion);
-    console.log(finalMistakes);
     return finalMistakes;
   };
   const [sortedMistakes, setSortedMistakes] = useState<Mistake[]>(buildMistakes(responses));

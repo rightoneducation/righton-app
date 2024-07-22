@@ -53,7 +53,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     this.gameSession = await this.gameSessionAPIClient.getGameSession(this.gameSessionId).then(
       (gameSession: IGameSession) => {
         this.gameSession = gameSession;
-        this.hostTeamAnswers = this.buildHostTeamAnswers(gameSession);
         return gameSession;
       }
     );
@@ -310,7 +309,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           isCorrect: false,
           multiChoiceCharacter: this.noResponseCharacter,
           teams: [],
-          isSelected: false,
+          isSelectedMistake: false,
           }],
           confidences: this.buildEmptyHostTeamAnswerConfidences()
       },
@@ -322,7 +321,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           isCorrect: false,
           multiChoiceCharacter: this.noResponseCharacter,
           teams: [],
-          isSelected: false,
           }],
           hints: []
       }
@@ -433,19 +431,26 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
             noResponses.count = numNoResponses ?? 0;
           }
         });
-
       });
     return teamAnswers;
   }
 
   updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion) {
+    console.log(this.hostTeamAnswers);
     const updatedQuestions = this.hostTeamAnswers.questions.map((question) => {
       if (question.questionId !== currentQuestion.id) {
         return question;
       }
+      console.log(question);
+      console.log(currentMistakes);
       const updatedResponses = question.phase1.responses.map((response) => {
-        const matchingMistake = currentMistakes.find((mistake: any) => mistake.rawAnswer === response.rawAnswer);
-        return {...response, isSelectedMistake: matchingMistake.isSelectedMistake}
+        const matchingMistake = currentMistakes.find((mistake: any) => mistake.answer === response.rawAnswer);
+        console.log(matchingMistake);
+        console.log(response);
+        console.log(question.phase1.responses);
+        if (matchingMistake)
+          return {...response, isSelectedMistake: matchingMistake.isSelectedMistake}
+        return response;
         }
       );
       return {
@@ -466,6 +471,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   getHostTeamAnswers() {
     return this.hostTeamAnswers
   }
+
   getResponsesForQuestion(currentQuestionId: string, currentPhase: IPhase) {
     const currentQuestion = this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestionId);
     if (!currentQuestion) {
@@ -474,9 +480,9 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
     return currentQuestion[currentPhase].responses;
   }
-  initHostTeamAnswers() {
-    if (this.gameSession)
-      this.hostTeamAnswers = this.buildHostTeamAnswers(this.gameSession);
+
+  initHostTeamAnswers(inputGameSession: IGameSession) {
+      this.hostTeamAnswers = this.buildHostTeamAnswers(inputGameSession);
     return this.hostTeamAnswers;
   }
 
@@ -489,7 +495,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       console.error('Error: Invalid team answer');
       return newResponses;
     }
-    
     return newResponses;
   }
 

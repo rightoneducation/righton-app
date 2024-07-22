@@ -41,14 +41,16 @@ export default function PrepareGame( {isGamePrepared}: PrepareGameProps) {
           : ScreenSize.SMALL;
     const handleButtonClick = () => {
       const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-      if (updateNoResponses)
-        dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
       const questionUpdates = localGameSession.questions.map(async (question) => 
         apiClients.question.updateQuestion({id: question.id, order: question.order, gameSessionId: question.gameSessionId, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled})
       );
+      dispatch({type: 'synch_game_session', payload: {}});
       Promise.all(questionUpdates)
-      .then(() => {
+      .then((questions) => {
+        const updatedGameSession = {...localGameSession, questions};
+        const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(updatedGameSession);
+        if (updateNoResponses)
+          dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
         apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState });
         dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
       });
