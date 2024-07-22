@@ -171,6 +171,7 @@ export default function GameInProgress({
     currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
   const handleTimerIsFinished = () => {
+    console.log('handle timer is finsihed');
     setBackendAnswer((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
