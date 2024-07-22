@@ -76,7 +76,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     }
     return 0;
   };
-  
+  const startTimeProp = calculateCurrentTime();
+
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (!document.hidden) {

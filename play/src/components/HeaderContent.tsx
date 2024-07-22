@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { GameSessionState } from '@righton/networking';
+import { GameSessionState, IGameSession } from '@righton/networking';
 import Timer from './Timer';
 
 const HeaderContainer = styled('div')({
@@ -21,6 +21,7 @@ interface HeaderContentProps {
   handleTimerIsFinished: () => void;
   isCorrect: boolean;
   isIncorrect: boolean;
+  gameSession?: IGameSession;
 }
 
 export default function HeaderContent({
@@ -32,6 +33,7 @@ export default function HeaderContent({
   handleTimerIsFinished,
   isCorrect,
   isIncorrect,
+  gameSession,
 }: HeaderContentProps) {
   const { t } = useTranslation();
   const stateMap = {
@@ -78,6 +80,7 @@ export default function HeaderContent({
           isFinished={isFinished}
           isPaused={isPaused}
           handleTimerIsFinished={handleTimerIsFinished}
+          gameSession={gameSession}
         />
       ) }
     </HeaderContainer>
