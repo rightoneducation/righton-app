@@ -27,7 +27,7 @@ export default function GameInProgressContentRightColumn({
       currentQuestionIndex={localGameSession.currentQuestionIndex}
       currentState={localGameSession.currentState}
       />
-      { currentQuestion.choices.map((choice, index) => 
+      {currentQuestion.choices.map((choice, index) => 
         <AnswerCard 
           isCorrectAnswer={choice.isAnswer}
           answerIndex={index}

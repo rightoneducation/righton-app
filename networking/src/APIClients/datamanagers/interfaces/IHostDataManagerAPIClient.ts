@@ -1,4 +1,5 @@
-import { IGameSession, IHostTeamAnswers, IHostTeamAnswersHint } from "../../../Models";
+import { IGameSession, IHostTeamAnswers, IHostTeamAnswersHint, IQuestion, IHostTeamAnswersResponse } from "../../../Models";
+import { IPhase } from "../HostDataManagerAPIClient";
 import { IPlayDataManagerAPIClient } from "./IPlayDataManagerAPIClient";
 
 export interface IHostDataManagerAPIClient extends IPlayDataManagerAPIClient {
@@ -6,6 +7,8 @@ export interface IHostDataManagerAPIClient extends IPlayDataManagerAPIClient {
   cleanupSubscription(): void;
   initHostTeamAnswers(): IHostTeamAnswers;
   getHostTeamAnswers(): IHostTeamAnswers;
+  updateHostTeamAnswersSelectedMistakes(mistakes: any, currentQuestion: IQuestion): void;
+  getResponsesForQuestion(questionId: string, phase: IPhase): IHostTeamAnswersResponse[];
   subscribeToUpdateGameSession(gameSessionId: string, callback: (gameSession: IGameSession) => void): Promise<IGameSession>;
   subscribeToCreateTeam(callback: (updatedGameSession: IGameSession) => void): Promise<void>;
   deleteTeam(teamId: string, callback:(updatedGameSession: IGameSession) => void): Promise<void>;

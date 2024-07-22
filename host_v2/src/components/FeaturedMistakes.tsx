@@ -9,9 +9,11 @@ import {
   Box
 } from '@mui/material';
 import { IHostTeamAnswersResponse, IQuestion } from "@righton/networking";
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useLocalHostTeamAnswersContext';
 import { LocalHostTeamAnswersContext, LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
-import {Mistake } from "../lib/HostModels";
+import { Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 
@@ -68,6 +70,7 @@ export default function FeaturedMistakes({
   const radioButtonText2 = 'Manually pick the options';
   const numOfPopularMistakes = 3;
   const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
   // const localHostTeamAnswers = useTSHostTeamAnswersContext(LocalHostTeamAnswersContext);
   const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
 
@@ -79,17 +82,20 @@ export default function FeaturedMistakes({
     .map((response) => ({
       answer: response.rawAnswer,
       percent: (response.count/totalAnswers)*100,
-      isSelected: false
+      isSelectedMistake: false
       }));
+    
     const sortedMistakes = mistakes.sort((a: any, b: any) => b.percent - a.percent) ?? [];
     let finalMistakes = sortedMistakes;
     if (isPopularMode)
       finalMistakes = sortedMistakes.map((mistake, index) => {
         if (index < numOfPopularMistakes) {
-          return { ...mistake, isSelected: true };
+          return { ...mistake, isSelectedMistake: true };
         }
-        return { ...mistake, isSelected: false };
+        return { ...mistake, isSelectedMistake: false };
       }); 
+    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes(finalMistakes, currentQuestion);
+    console.log(finalMistakes);
     return finalMistakes;
   };
   const [sortedMistakes, setSortedMistakes] = useState<Mistake[]>(buildMistakes(responses));
@@ -118,9 +124,9 @@ export default function FeaturedMistakes({
   };
 
   const handleSelectMistake = (index: number) => {
-
     const newMistakes = [...sortedMistakes];
-    newMistakes[index].isSelected = !newMistakes[index].isSelected;
+    newMistakes[index].isSelectedMistake = !newMistakes[index].isSelectedMistake;
+    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...newMistakes], currentQuestion);
     setSortedMistakes([...newMistakes]);
   };
 
@@ -161,7 +167,7 @@ export default function FeaturedMistakes({
                 mistakeText={mistake.answer}
                 mistakePercent={mistake.percent}
                 isPopularMode={isPopularMode}
-                isSelected={mistake.isSelected}
+                isSelected={mistake.isSelectedMistake}
                 mistakeIndex={index}
                 handleSelectMistake={handleSelectMistake}
                 // style={{width:'100%'}}

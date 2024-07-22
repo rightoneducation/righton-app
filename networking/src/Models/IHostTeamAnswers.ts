@@ -7,7 +7,7 @@ export interface IHostTeamAnswersResponse {
   multiChoiceCharacter: string;
   isCorrect: boolean;
   teams: string[];
-  isSelected?: boolean;
+  isSelectedMistake?: boolean;
 }
 
 export interface IHostTeamAnswersConfidenceResponse {

@@ -52,6 +52,7 @@ const InnerFooterContainer = styled(Box)({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
+  gap: '16px'
 });
 
 const PlayerCountTypography = styled(Typography)({

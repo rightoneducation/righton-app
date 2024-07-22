@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswersPerPhase } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersPerPhase, IPhase } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -62,28 +62,36 @@ const InnerFooterContainer = styled(Box)({
   gap: 16
 });
 
-interface FootStartGameProps {
+interface FootGameInProgressProps {
   currentState: GameSessionState;
   submittedAnswers: number;
   teamsLength: number;
   screenSize: ScreenSize;
 }
 
-function FooterStartGame({ 
+function FooterGameInProgress({ 
   currentState,
   submittedAnswers,
   teamsLength,
   screenSize
-}: FootStartGameProps) {
+}: FootGameInProgressProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const { isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
+  const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
 
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     dispatch({type: 'advance_game_phase', payload: {nextState}});
+    console.log('supppp');
+    // when teacher is moving from CHOOSE_CORRECT_ANSWER and has selected the mistakes they want for phase two
+    if (nextState === GameSessionState.PHASE_1_DISCUSS && isShortAnswerEnabled) {
+      const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
+      console.log('currentResponses');
+      console.log(currentResponses);
+      apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
+    }
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
   };
   const GetButtonText =() => {
@@ -119,4 +127,4 @@ function FooterStartGame({
   );
 }
 
-export default FooterStartGame;
+export default FooterGameInProgress;

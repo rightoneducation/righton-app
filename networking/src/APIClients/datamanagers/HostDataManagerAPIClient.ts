@@ -151,7 +151,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
   private processAnswer(ans: any, teamAnswersQuestion: any, phase: IPhase, teamName: string) {
     const answerObj = this.createAnswerFromBackendData(ans.answer);
-    console.log(answerObj);
     let newResponses = [...teamAnswersQuestion[phase].responses];
     if (answerObj) {
       answerObj.normalizeAnswer(answerObj.rawAnswer);
@@ -401,7 +400,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         ...question.isShortAnswerEnabled ? this.buildEmptyHostTeamAnswerShortAnswer(this.gameSession?.teams.length ?? 0) : this.buildEmptyHostTeamAnswerMultiChoice(question, this.gameSession?.teams.length ?? 0)
       }));
     }
-    console.log(teamAnswers);
     const numTeams = gameSession.teams.length;
     // this is populating existing answers into the hostTeamAnswers object
     // for each question in the object we just built, loop through all the team answers and populate the object if they apply
@@ -440,13 +438,15 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return teamAnswers;
   }
 
-  updateHostTeamAnswersSelectedMistakes(currentAnswer: IHostTeamAnswersResponse, currentQuestion: IQuestion) {
+  updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion) {
     const updatedQuestions = this.hostTeamAnswers.questions.map((question) => {
       if (question.questionId !== currentQuestion.id) {
         return question;
       }
-      const updatedResponses = question.phase1.responses.map((response) =>
-        response === currentAnswer ? { ...response, isSelected: !response.isSelected } : response
+      const updatedResponses = question.phase1.responses.map((response) => {
+        const matchingMistake = currentMistakes.find((mistake: any) => mistake.rawAnswer === response.rawAnswer);
+        return {...response, isSelectedMistake: matchingMistake.isSelectedMistake}
+        }
       );
       return {
         ...question,
@@ -456,7 +456,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         },
       };
     });
-  
+    console.log(updatedQuestions);
     this.hostTeamAnswers = {
       ...this.hostTeamAnswers,
       questions: updatedQuestions,
@@ -466,11 +466,17 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   getHostTeamAnswers() {
     return this.hostTeamAnswers
   }
-
+  getResponsesForQuestion(currentQuestionId: string, currentPhase: IPhase) {
+    const currentQuestion = this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestionId);
+    if (!currentQuestion) {
+      console.error('Error: Invalid question id');
+      return [];
+    }
+    return currentQuestion[currentPhase].responses;
+  }
   initHostTeamAnswers() {
     if (this.gameSession)
       this.hostTeamAnswers = this.buildHostTeamAnswers(this.gameSession);
-    console.log(this.hostTeamAnswers);
     return this.hostTeamAnswers;
   }
 

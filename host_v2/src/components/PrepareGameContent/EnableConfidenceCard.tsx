@@ -4,16 +4,15 @@ import { useTheme, styled } from '@mui/material/styles';
 
 const StyledContainer = styled(Paper)(({theme})=>({
   display: 'flex',
+  padding: `${theme.sizing.smPadding}px`,
   flexDirection: 'column',
-  alignItems: 'center',
-  borderRadius: '24px',
+  alignItems: 'flex-start',
+  gap: `${theme.sizing.smPadding}px`,
+  alignSelf: 'stretch',
   backgroundColor: theme.palette.primary.darkBlueCardColor,
+  borderRadius: `${theme.sizing.mdPadding}px`,
   boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
-  width: '100%', 
-  gap: '16px',
-  boxSizing: 'border-box',
-  elevation: 0,
-  padding: '16px'
+  margin: `${theme.sizing.xSmPadding}px`,
 }));
 
 const TitleContainer = styled(Box)({
