@@ -47,20 +47,13 @@ export default function Timer({
   handleTimerIsFinished,
 }: TimerProps) {
 
-  // TODO: 
-  // 1. verify that this works ok, take a look at console.logs on start, refresh and tab 
-  // 2. fix timerstring so that UI of timer works correctly:
-  //   a. confirm that timerstring console.logs are accurate
-  //   b. identify why timerstring.current doesn't work in the render function [<-***]
-  // 3. Take out current timer in props and implement on your solution, moving calculation to this function and removing dummy zero value
-
+  const [timerString, setTimerString] = useState<string>('00:00');
+  const [progress, setProgress] = useState<number>(0);
   const currentTimeMilli = useRef<number>(currentTimer * 1000);
-  const progress = (currentTimeMilli.current / (totalTime * 1000)) * 100;
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
   const originalTimeRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(isPaused);
-  const timerString = useRef<string>('');
 
   const getTimerString = (currentTimeInput: number) => {
     console.log(currentTimeInput);
@@ -78,17 +71,14 @@ export default function Timer({
   };
 
   const updateTimer = (timestamp: number) => {
-    console.log(currentTimeMilli.current);
     if (!isPausedRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
         currentTimeMilli.current -= delta;
-        timerString.current = getTimerString(currentTimeMilli.current);
-        console.log(timerString.current); // <- this represents the timerstring in recursive function
+        setTimerString(getTimerString(currentTimeMilli.current));
+        setProgress((currentTimeMilli.current / (totalTime * 1000)) * 100);
       } else {
         originalTimeRef.current = timestamp;
-        timerString.current = getTimerString(timestamp);
-        console.log(timerString.current);
       }
       if (currentTimeMilli.current <= 0) {
         handleTimerIsFinished();
@@ -116,7 +106,7 @@ export default function Timer({
       <TimerBar value={progress} variant="determinate" />
       <TimerText maxWidth="sm">
         <Typography alignSelf="center" variant="caption">
-          {timerString.current} {/* this represents timerString in react state machine */}
+          {timerString}
         </Typography>
       </TimerText>
     </TimerContainer>
