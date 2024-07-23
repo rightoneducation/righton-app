@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { GameSessionState, IHostTeamAnswersHint, IHostTeamAnswersResponse, IQuestion } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersHint, IHostTeamAnswersResponse, IQuestion, IPhase } from '@righton/networking';
 import { Mistake, IGraphClickInfo } from "../../../lib/HostModels";
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
 import FeaturedMistakes from '../../FeaturedMistakes';
@@ -16,6 +16,7 @@ interface GameInProgressContentMidColumnProps {
   isHintEnabled: boolean;
   currentHints: IHostTeamAnswersHint[];
   numPlayers: number;
+  currentPhase: IPhase;
   graphClickInfo: IGraphClickInfo;
   handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
@@ -30,13 +31,14 @@ export default function GameInProgressContentMidColumn ({
     currentHints,
     numPlayers,
     graphClickInfo,
+    currentPhase,
     handleGraphClick
   }: GameInProgressContentMidColumnProps
 ){
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
     <ScrollBoxStyled>
-      {isShortAnswerEnabled ?
+      {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
         <FeaturedMistakes
           currentQuestion={currentQuestion}
           responses={responses}
@@ -46,7 +48,7 @@ export default function GameInProgressContentMidColumn ({
         <Responses 
           currentQuestion={currentQuestion}
           responses={responses}
-          statePosition={6}
+          statePosition={8}
           graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
           handleGraphClick={handleGraphClick}

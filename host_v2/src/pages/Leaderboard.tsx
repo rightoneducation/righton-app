@@ -49,32 +49,29 @@ export default function Leaderboard({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);  
-
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     dispatch({type: 'advance_game_phase', payload: {nextState}});
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex});
   };
-
-
-    return(
-      <SafeAreaStyled>
-        <LeaderboardHeader />
-        <HostBody 
-          teams={teams} 
-          questions={questions} 
-          title={title} 
-          currentQuestionIndex={currentQuestionIndex}
-          screenSize={screenSize}
-          handleDeleteTeam={handleDeleteTeam}
-        />
-        <FooterStartGame 
-          localGameSession={localGameSession}
-          teamsLength={teams ? teams.length : 0}
-          screenSize={screenSize}
-          handleButtonClick={handleButtonClick}
-          isGamePrepared={false}
-        />
+  return(
+    <SafeAreaStyled>
+      <LeaderboardHeader />
+      <HostBody 
+        teams={teams} 
+        questions={questions} 
+        title={title} 
+        currentQuestionIndex={currentQuestionIndex}
+        screenSize={screenSize}
+        handleDeleteTeam={handleDeleteTeam}
+      />
+      <FooterStartGame 
+        localGameSession={localGameSession}
+        teamsLength={teams ? teams.length : 0}
+        screenSize={screenSize}
+        handleButtonClick={handleButtonClick}
+        isGamePrepared={false}
+      />
     </SafeAreaStyled>
   );
 }

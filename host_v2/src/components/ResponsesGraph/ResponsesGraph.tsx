@@ -107,7 +107,7 @@ export default function ResponsesGraph({
   }
 
   return (
-     <ResponseGraphContainer>
+    <ResponseGraphContainer>
       <TitleContainer>
         <TitleText>Number of players</TitleText>
       </TitleContainer>
@@ -118,7 +118,7 @@ export default function ResponsesGraph({
           padding={{
             top: theme.sizing.smPadding,
             bottom: theme.sizing.xSmPadding,
-            left: (isShortAnswerEnabled && statePosition < 6) ? theme.sizing.xSmPadding : theme.sizing.defaultVictoryPadding,
+            left: (isShortAnswerEnabled) ? theme.sizing.xSmPadding : theme.sizing.defaultVictoryPadding,
             right: theme.sizing.xSmPadding,
           }}
           containerComponent={

@@ -24,7 +24,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   useEffect(() => {
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
   }, [backendHostTeamAnswers]);
-  console.log(localHostTeamAnswers);
   const handleDeleteTeam = (teamId: string) => {
     // replace this with an integrated local + backendGameSession in the custom hook
     const updatedTeams = localGameSession.teams.filter((team) => team.id !== teamId);
@@ -35,9 +34,8 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
   }, [backendGameSession]);
   const gameTemplates = null;
-  
   let renderContent;
-
+ 
   const teamsJoiningPages = [
       !isGamePrepared 
       ? <StartGame

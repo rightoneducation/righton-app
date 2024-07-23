@@ -38,7 +38,7 @@ export default function GameInProgress({
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-    const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS ? IPhase.ONE : IPhase.TWO;
+    const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
     const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
     const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {

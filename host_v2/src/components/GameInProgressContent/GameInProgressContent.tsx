@@ -49,7 +49,7 @@ export default function GameInProgressContent({
   let sortedMistakes: any = [];
   // in shortAnswerMode
   if (localGameSession.questions[localGameSession.currentQuestionIndex].isShortAnswerEnabled) {
-    const responses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [];
+    const responses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase].responses ?? [];
     const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
     const mistakes = responses.map((response) => !response.isCorrect && response.multiChoiceCharacter !== '–' ? {
       answer: response.rawAnswer,
@@ -91,6 +91,7 @@ export default function GameInProgressContent({
       numPlayers={localGameSession.teams.length}
       graphClickInfo={graphClickInfo}
       handleGraphClick={handleGraphClick}
+      currentPhase={currentPhase}
     />
   );
   
@@ -172,7 +173,7 @@ export default function GameInProgressContent({
       return (
         <BodyContentAreaTripleColumnStyled container>
           {leftCardsColumn}
-          { (localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+          { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
             midCardsColumn
           }
           {rightCardsColumn}

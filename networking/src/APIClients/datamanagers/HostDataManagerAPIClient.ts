@@ -436,18 +436,12 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion) {
-    console.log(this.hostTeamAnswers);
     const updatedQuestions = this.hostTeamAnswers.questions.map((question) => {
       if (question.questionId !== currentQuestion.id) {
         return question;
       }
-      console.log(question);
-      console.log(currentMistakes);
       const updatedResponses = question.phase1.responses.map((response) => {
         const matchingMistake = currentMistakes.find((mistake: any) => mistake.answer === response.rawAnswer);
-        console.log(matchingMistake);
-        console.log(response);
-        console.log(question.phase1.responses);
         if (matchingMistake)
           return {...response, isSelectedMistake: matchingMistake.isSelectedMistake}
         return response;
@@ -461,7 +455,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         },
       };
     });
-    console.log(updatedQuestions);
     this.hostTeamAnswers = {
       ...this.hostTeamAnswers,
       questions: updatedQuestions,

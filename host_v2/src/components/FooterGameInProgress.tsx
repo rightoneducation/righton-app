@@ -88,8 +88,6 @@ function FooterGameInProgress({
     // when teacher is moving from CHOOSE_CORRECT_ANSWER and has selected the mistakes they want for phase two
     if (nextState === GameSessionState.PHASE_1_DISCUSS && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
-      console.log('currentResponses');
-      console.log(currentResponses);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
     }
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})

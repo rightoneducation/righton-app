@@ -79,7 +79,7 @@ export default function HeaderContent({
           <Grid item>
             <QuestionIndicator
               totalQuestions={localGameSession.questions.length}
-              currentQuestionIndex={0}
+              currentQuestionIndex={localGameSession.currentQuestionIndex}
               statePosition={statePosition}
             />
           </Grid>

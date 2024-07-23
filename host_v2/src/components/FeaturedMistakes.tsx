@@ -71,13 +71,9 @@ export default function FeaturedMistakes({
   const numOfPopularMistakes = 3;
   const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  // const localHostTeamAnswers = useTSHostTeamAnswersContext(LocalHostTeamAnswersContext);
-  const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
-
-
   // TODO move all this logic to hostTeamAnswersDataManager
   const buildMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
-    const mistakes = responses
+    const mistakes = inputMistakes
     .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
     .map((response) => ({
       answer: response.rawAnswer,
