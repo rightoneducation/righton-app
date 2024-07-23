@@ -108,7 +108,11 @@ function FooterStartGame({
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: isoString});
     } else {
       const nextQuestionIndex = currentQuestionIndex + 1;
+      // Drew
+      // we need to update the localGameSessions' startTime via the dispatch as well as the backend gameSession?
       dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
+      // Drew
+      // do we need to also pass nextQuestion index into ln 115?
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: isoString});
     }
   };
