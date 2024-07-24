@@ -53,7 +53,6 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
       allottedTime = phaseTwoTime;
     }
   }
-  console.log(allottedTime);
   const calculateCurrentTime = () => {
     if (subscription && subscription.gameSession) {
       const getStartTime = subscription.gameSession?.startTime;

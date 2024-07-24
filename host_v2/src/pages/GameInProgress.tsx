@@ -53,8 +53,6 @@ export default function GameInProgress({
     const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS ? IPhase.ONE : IPhase.TWO;
     const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
     const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
-    console.log(currentPhaseTeamAnswers);
-    console.log(submittedAnswers);
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
       setConfidenceGraphClickIndex(selectedIndex);
     };

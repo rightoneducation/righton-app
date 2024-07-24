@@ -92,25 +92,20 @@ function FooterStartGame({
   const currentTimeMillis = Date.now(); 
   // Convert to seconds 
   const currentTimeSeconds = Math.floor(currentTimeMillis / 1000); 
-  console.log(`Current time in seconds from epoch: ${currentTimeSeconds}`); 
   // Create a new Date object using the milliseconds 
   const currentDate = new Date(currentTimeMillis); 
   // Convert to ISO-8601 string 
   const isoString = currentDate.toISOString(); 
-  console.log(`Current time in ISO-8601 format: ${isoString}`);    
     // start of game
     if (currentQuestionIndex === null){
       const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
       if (updateNoResponses && setLocalHostTeamAnswers)
         setLocalHostTeamAnswers(updateNoResponses);
       dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-      // CHANGE THiS LINE TO INCLUDE STARTTIME
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: isoString});
     } else {
       const nextQuestionIndex = currentQuestionIndex + 1;
-      // Drew
-      // we need to update the localGameSessions' startTime via the dispatch as well as the backend gameSession?
-      dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
+      dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex, startTime: isoString}});
       // Drew
       // do we need to also pass nextQuestion index into ln 115?
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: isoString});

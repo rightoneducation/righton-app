@@ -71,7 +71,6 @@ export default function HeaderContent({
   const handleTimerAddButtonClick = () => {
     console.log('TimerAddButton clicked!'); // eslint-disable-line
   };
-
   return (
     <HeaderStackContainerStyled>
       <Container maxWidth="md">
@@ -99,8 +98,6 @@ export default function HeaderContent({
         </Grid>
         <Grid item style={{display: 'flex', justifyItems: 'space-between', alignItems: 'center', gap: '24px', paddingTop: `${theme.sizing.xSmPadding}px`}}>
             {localModel ? (
-              // Drew
-              // verify currentTimer and totalTime here and trace back their origins
               <Timer
                 totalTime={totalTime}
                 currentTimer={currentTimer}
