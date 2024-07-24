@@ -89,9 +89,9 @@ export default function GameSessionSwitch({
           {...gameSession}
           apiClients={apiClients}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
+          teamId={localModel.teamId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
-          teamId={localModel.teamId}
           score={score}
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
@@ -107,9 +107,9 @@ export default function GameSessionSwitch({
           {...gameSession}
           apiClients={apiClients}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
+          teamId={localModel.teamId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
-          teamId={localModel.teamId}
           score={score}
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}

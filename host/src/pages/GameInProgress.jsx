@@ -208,6 +208,7 @@ export default function GameInProgress({
       });
       return;
     }
+    console.log(nextState);
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
