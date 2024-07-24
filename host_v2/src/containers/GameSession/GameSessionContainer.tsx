@@ -20,6 +20,7 @@ interface GameSessionContainerProps {
 export default function GameSessionContainer({apiClients, backendGameSession, backendHostTeamAnswers}: GameSessionContainerProps) {
   const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
   const [localHostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer, backendHostTeamAnswers);
+  const [isTimerVisible, setIsTimerVisible] = useState<boolean>(false);
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
   useEffect(() => {
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
@@ -47,7 +48,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           handleDeleteTeam={handleDeleteTeam}
           setIsGamePrepared={setIsGamePrepared}
         /> 
-        : <PrepareGame isGamePrepared={isGamePrepared}/>
+        : <PrepareGame isGamePrepared={isGamePrepared} setIsTimerVisible={setIsTimerVisible}/>
   ];
 
   switch (localGameSession.currentState) {
@@ -57,7 +58,9 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     case GameSessionState.PHASE_2_DISCUSS:
     case GameSessionState.PHASE_2_START:
       renderContent = (
-        <GameInProgress 
+        <GameInProgress
+          isTimerVisible={isTimerVisible}
+          setIsTimerVisible={setIsTimerVisible} 
           isCorrect={false}
           isIncorrect={false}
           totalTime={100}

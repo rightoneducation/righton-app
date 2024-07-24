@@ -20,9 +20,13 @@ import FooterStartGame from '../components/FooterStartGame';
 
 interface PrepareGameProps {
   isGamePrepared: boolean;
+  setIsTimerVisible: (isTimerVisible: boolean) => void;
 }
 
-export default function PrepareGame( {isGamePrepared}: PrepareGameProps) {
+export default function PrepareGame( {
+  isGamePrepared,
+  setIsTimerVisible
+}: PrepareGameProps) {
     const theme = useTheme();
     const [isShortAnswerEnabled, setIsShortAnswerEnabled] = React.useState<boolean>(false);
     const [isConfidenceEnabled, setIsConfidenceEnabled] = React.useState<boolean>(true);
@@ -53,6 +57,7 @@ export default function PrepareGame( {isGamePrepared}: PrepareGameProps) {
           dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
         apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState });
         dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
+        setIsTimerVisible(true);
       });
     };
     

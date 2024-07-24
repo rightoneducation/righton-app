@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint, IPhase } from '@righton/networking';
+import GameStartingModal from '../components/GameStartingModal';
 import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
@@ -16,6 +17,8 @@ import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionCon
 import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
 
 interface GameInProgressProps {
+  isTimerVisible: boolean,
+  setIsTimerVisible: (isTimerVisible: boolean) => void,
   isCorrect: boolean,
   isIncorrect: boolean,
   totalTime: number,
@@ -26,6 +29,8 @@ interface GameInProgressProps {
 }
 
 export default function GameInProgress({
+  isTimerVisible,
+  setIsTimerVisible,
   isCorrect,
   isIncorrect,
   totalTime,
@@ -54,6 +59,9 @@ export default function GameInProgress({
 
     return(
       <StackContainerStyled>
+      {isTimerVisible && 
+        <GameStartingModal isTimerVisible={isTimerVisible} setIsTimerVisible={setIsTimerVisible}/>
+      }
       <HeaderBackgroundStyled />
       <HeaderContent
         isCorrect={isCorrect}

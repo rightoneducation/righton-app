@@ -13,7 +13,8 @@ export default function LaunchContainer() {
           variant="h2" 
           sx={{
             position: 'absolute',
-            textAlign: 'center'
+            textAlign: 'center',
+            zIndex: 2
           }}
         > 
           Launching Game...
