@@ -3,19 +3,16 @@ import {
   useMatch
 } from 'react-router-dom';
 import { APIClients } from '@righton/networking';
-import useInitHostContainer from '../hooks/useInitHostContainer';
+import useInitHostContainer from '../../hooks/useInitHostContainer';
 import GameSessionContainer from './GameSessionContainer';
-import LaunchContainer from './LaunchContainer';
+import LoadingPage from '../../pages/LoadingPage';
 
-interface HostContainerProps {
+interface GameSessionWrapperProps {
   apiClients: APIClients;
 }
 
-export default function HostContainer({apiClients}: HostContainerProps) {
+export default function GameSessionWrapper({apiClients}: GameSessionWrapperProps) {
   const match = useMatch("/host/:gameSessionId");
-  const matchNew = useMatch("/new/:gameId");
-  
-  const gameId = matchNew?.params.gameId;
   const gameSessionId = match?.params.gameSessionId;
   let backendGameSession = null;
   let backendHostTeamAnswers = null;
@@ -26,21 +23,14 @@ export default function HostContainer({apiClients}: HostContainerProps) {
   } catch (error) {
     console.log(error);
   }
-
-  if (matchNew){
-    
-    return (
-        <LaunchContainer apiClients={apiClients} gameId={gameId ?? ''} />
-      )
-  }
-  if (match){
-  
+  if (backendGameSession && backendHostTeamAnswers){
     return (
       (backendGameSession && backendHostTeamAnswers)
         ? <GameSessionContainer apiClients={apiClients} backendGameSession={backendGameSession} backendHostTeamAnswers={backendHostTeamAnswers} />
         : null
     )  
   }
-  window.location.href = 'http://dev-central.rightoneducation.com/';
-  return null;
+  return (
+    <LoadingPage />
+  );
 }

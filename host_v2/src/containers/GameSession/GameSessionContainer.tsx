@@ -1,15 +1,15 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers } from '@righton/networking';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
-import { LocalHostTeamAnswersContext, LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
-import { HostTeamAnswersReducer } from '../lib/reducer/HostTeamAnswersReducer';
-import GameInProgress from '../pages/GameInProgress';
-import StartGame from '../pages/StartGame';
-import Leaderboard from '../pages/Leaderboard';
-import EndGameLobby from '../pages/EndGameLobby';
-import PrepareGame from '../pages/PrepareGame';
+import { APIClientsContext } from '../../lib/context/ApiClientsContext';
+import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../../lib/context/LocalGameSessionContext';
+import { GameSessionReducer } from '../../lib/reducer/GameSessionReducer';
+import { LocalHostTeamAnswersContext, LocalHostTeamAnswersDispatchContext } from '../../lib/context/LocalHostTeamAnswersContext';
+import { HostTeamAnswersReducer } from '../../lib/reducer/HostTeamAnswersReducer';
+import GameInProgress from '../../pages/GameInProgress';
+import StartGame from '../../pages/StartGame';
+import Leaderboard from '../../pages/Leaderboard';
+import EndGameLobby from '../../pages/EndGameLobby';
+import PrepareGame from '../../pages/PrepareGame';
 
 interface GameSessionContainerProps {
   apiClients: APIClients;
