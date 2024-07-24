@@ -44,7 +44,6 @@ const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
   bottom: '0',
   margin: 'auto',
-  // height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
   width: '100%',
   maxWidth: '700px',
   display: 'flex',

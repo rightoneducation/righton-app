@@ -33,7 +33,7 @@ const ButtonStyled = styled(Button)({
   },
 });
 
-const FooterContainer = styled(Box)({
+const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
@@ -42,8 +42,8 @@ const FooterContainer = styled(Box)({
   bottom: '0',
   width: '100%',
   gap: '16px',
-
-});
+  height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
+}));
 
 const InnerFooterContainer = styled(Box)({
   position: 'sticky',
