@@ -231,7 +231,8 @@ export default function GameInProgress({
       currentQuestionIndex ?? 0,
       currentQuestion.id,
       teamMemberAnswersId,
-      answerText
+      answerText,
+      teamAnswerId,
     )
     window.localStorage.setItem(
       StorageKeyAnswer,
@@ -286,11 +287,10 @@ export default function GameInProgress({
           isCorrect={false}
           isIncorrect={false}
           totalTime={totalTime}
-          currentTimer={hasRejoined ? currentTimer : totalTime}
+          currentTimer={currentTimer}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
-          localModel={localModel}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
