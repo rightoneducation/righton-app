@@ -75,11 +75,9 @@ export default function StudentViews({
     // Create a new Date object using the milliseconds 
     const currentDate = new Date(currentTimeMillis); 
     // Convert to ISO-8601 string 
-    console.log("in student views");
     const isoString = currentDate.toISOString();
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS) {
       // if they are on the last page a\nd need to advance to the next question
-      console.log(isoString);
       assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
       handleUpdateGameSession({
         currentState: nextStateFunc(currentState),

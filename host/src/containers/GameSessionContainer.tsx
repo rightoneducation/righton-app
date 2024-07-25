@@ -126,7 +126,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         const remainingTime = allottedTime - Math.trunc(difference / 1000);
         // setCurrentTime(remainingTime);
         // window.localStorage.setItem('currentTime', remainingTime.toString());
-        console.log(remainingTime);
         return remainingTime;
       }
     }
