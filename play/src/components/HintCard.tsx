@@ -122,6 +122,7 @@ export default function HintCard({
             handleSubmitAnswer={handleNormalizeAnswerOnSubmit}
             questionId={questionId}
             teamMemberAnswersId={teamMemberAnswersId}
+            currentTeam={currentTeam}
           />
         </Box>
       </BodyCardContainerStyled>
