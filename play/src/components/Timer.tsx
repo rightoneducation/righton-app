@@ -46,8 +46,7 @@ export default function Timer({
   isFinished,
   handleTimerIsFinished,
 }: TimerProps) {
-
-  const [timerString, setTimerString] = useState<string>('00:00');
+  const [timerString, setTimerString] = useState<string>('0:00');
   const [progress, setProgress] = useState<number>(0);
   const currentTimeMilli = useRef<number>(currentTimer * 1000);
   const animationRef = useRef<number | null>(null);

@@ -104,6 +104,37 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   };
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
+  let allottedTime = 0;
+  if(apiClients.gameSession){
+    if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+      allottedTime = gameSession?.phaseOneTime;
+    } else if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+      allottedTime = gameSession?.phaseTwoTime;
+    }
+  }
+  const calculateCurrentTime = () => {
+    if (gameSession) {
+      const getStartTime = gameSession?.startTime;
+      if (getStartTime) {
+        const isoTimeMillis = new Date(getStartTime).getTime();
+        const difference = Date.now() - isoTimeMillis;
+
+        if (difference >= allottedTime * 1000) {
+          // setCurrentTime(-1);
+          return 0;
+        } 
+        const remainingTime = allottedTime - Math.trunc(difference / 1000);
+        // setCurrentTime(remainingTime);
+        // window.localStorage.setItem('currentTime', remainingTime.toString());
+        console.log(remainingTime);
+        return remainingTime;
+      }
+    }
+    return allottedTime;
+  };
+
+
+
 
   // initial query for gameSessions and teams
   useEffect(() => {
@@ -366,7 +397,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
       }
     });
   }
-  const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>) => {
+  const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>, startTime?: number) => {
     // this will update the response object with confidence and selected mistakes values
     if (
       (isShortAnswerEnabled
@@ -409,8 +440,10 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
       setGptHints([]);
       setHints([]);
     }
+    // to include startTime
+    const updates = startTime ? { ...newUpdates, startTime } : newUpdates;
 
-    const response = await apiClients.gameSession.updateGameSession({ id: gameSessionId, ...newUpdates })
+    const response = await apiClients.gameSession.updateGameSession({ id: gameSessionId, ...updates })
     if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       setHeaderGameCurrentTime(response.phaseOneTime);
     } else if (
@@ -581,7 +614,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           {...gameSession}
           teamsArray={teamsArray}
           handleUpdateGameSession={handleUpdateGameSession}
-          headerGameCurrentTime={headerGameCurrentTime}
+          headerGameCurrentTime={calculateCurrentTime()}
           gameTimer={gameTimer}
           gameTimerZero={gameTimerZero}
           isLoadModalOpen={isLoadModalOpen}
@@ -622,7 +655,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           {...gameSession}
           teamsArray={teamsArray}
           handleUpdateGameSession={handleUpdateGameSession}
-          headerGameCurrentTime={headerGameCurrentTime}
+          headerGameCurrentTime={calculateCurrentTime()}
           gameTimer={gameTimer}
           gameTimerZero={gameTimerZero}
           isLoadModalOpen={isLoadModalOpen}
