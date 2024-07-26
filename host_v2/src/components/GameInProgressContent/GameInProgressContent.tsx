@@ -67,8 +67,8 @@ export default function GameInProgressContent({
     setGraphClickInfo({graph, selectedIndex })
   }
   
-  const leftCardsColumn = (
-    <GameInProgressContentLeftColumn 
+  const rightCardsColumn = (
+    <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
       confidences={currentPhase === IPhase.ONE ? currentConfidences : prevPhaseConfidences}
@@ -95,8 +95,8 @@ export default function GameInProgressContent({
     />
   );
   
-  const rightCardsColumn = (
-    <GameInProgressContentRightColumn 
+  const leftCardsColumn = (
+    <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
     />

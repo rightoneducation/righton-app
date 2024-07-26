@@ -13,7 +13,7 @@ import {
 import EnableShortAnswerCard from './EnableShortAnswerCard';
 import EnableConfidenceCard from './EnableConfidenceCard';
 import EnableHintsCard from './EnableHintsCard';
-import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentRightColumn';
+import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentLeftColumn';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
