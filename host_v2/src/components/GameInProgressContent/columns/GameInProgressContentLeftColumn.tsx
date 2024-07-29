@@ -27,16 +27,19 @@ export default function GameInProgressContentLeftColumn({
       currentQuestionIndex={localGameSession.currentQuestionIndex}
       currentState={localGameSession.currentState}
       />
-      {currentQuestion.choices.map((choice, index) => 
-        <AnswerCard 
-          isCorrectAnswer={choice.isAnswer}
-          answerIndex={index}
-          answerContent={choice.text}
-          instructions={currentQuestion.instructions}
-          answerReason={choice.reason}
-          key={uuidv4()}
-        />
-      )}
+      {currentQuestion.choices
+        .map((choice, index) => ({ ...choice, originalIndex: index }))
+        .sort((a, b) => (a.isAnswer ? 1 : 0) - (b.isAnswer ? 1 : 0))
+        .map((choice, index) => 
+          <AnswerCard 
+            isCorrectAnswer={choice.isAnswer}
+            answerIndex={choice.originalIndex}  // use og index so they get labelled correctly A-D
+            answerContent={choice.text}
+            instructions={currentQuestion.instructions}
+            answerReason={choice.reason}
+            key={uuidv4()}
+          />
+        )}
     </ScrollBoxStyled>
   </Grid>
   );

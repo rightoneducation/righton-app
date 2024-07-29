@@ -122,14 +122,14 @@ export default function GameInProgressContent({
             <SwiperSlide>
               {leftCardsColumn}
             </SwiperSlide>
+            <SwiperSlide>
+              {rightCardsColumn}
+            </SwiperSlide>
             {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
               <SwiperSlide>
                 {midCardsColumn}
               </SwiperSlide>
             }
-            <SwiperSlide>
-              {rightCardsColumn}
-            </SwiperSlide>
           </Swiper>
         </BodyContentAreaSingleColumnStyled>
       );
@@ -154,10 +154,10 @@ export default function GameInProgressContent({
                 {leftCardsColumn}
               </SwiperSlide>
               <SwiperSlide>
-                {midCardsColumn}
+                {rightCardsColumn}
               </SwiperSlide>
               <SwiperSlide>
-                {rightCardsColumn}
+                {midCardsColumn}
               </SwiperSlide>
             </Swiper>
           ) : (
@@ -173,10 +173,10 @@ export default function GameInProgressContent({
       return (
         <BodyContentAreaTripleColumnStyled container>
           {leftCardsColumn}
+          {rightCardsColumn}
           { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
             midCardsColumn
           }
-          {rightCardsColumn}
         </BodyContentAreaTripleColumnStyled>
       );
   }

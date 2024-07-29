@@ -22,7 +22,6 @@ const BackgroundStyled = styled(Paper)({
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '24px',
-  padding: `16px`,
   backgroundColor: 'rgba(0,0,0,0)',
   gap: 16,
 });
@@ -34,6 +33,7 @@ const TitleStyled = styled(Typography)({
   fontSize: '24px',
   fontWeight: 700,
   width: '100%',
+  lineHeight: '36px',
 });
 
 const SubtitleStyled = styled(Typography)({
@@ -63,7 +63,7 @@ export default function FeaturedMistakes({
   featuredMistakesSelectionValue,
 }: FeaturedMistakesProps) {
   const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
-  const title = 'Featured Mistakes';
+  const title = 'Common Mistakes';
   const subtitle =
     'Selected responses will be presented to players as options for popular incorrect answers.';
   const radioButtonText1 = 'Use the top 3 answers by popularity';
