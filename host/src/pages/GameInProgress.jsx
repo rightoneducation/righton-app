@@ -32,7 +32,9 @@ export default function GameInProgress({
   handleUpdateGameSession,
   headerGameCurrentTime,
   gameTimer,
+  handleCountdownIsFinished,
   gameTimerZero,
+  handleTimerIsFinished,
   isLoadModalOpen,
   setIsLoadModalOpen,
   showFooterButtonOnly,
@@ -200,14 +202,7 @@ export default function GameInProgress({
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
     // Get current time in milliseconds since epoch 
-    const currentTimeMillis = Date.now(); 
-    // Convert to seconds 
-    const currentTimeSeconds = Math.floor(currentTimeMillis / 1000); 
-    // Create a new Date object using the milliseconds 
-    const currentDate = new Date(currentTimeMillis); 
-    // Convert to ISO-8601 string 
-    
-    const isoString = currentDate.toISOString();
+    const currentTimeMillis = Date.now().toString(); 
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_DISCUSS) {
       // if they are on the last page a\nd need to advance to the next question
       assembleNavDictionary(false, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
@@ -220,7 +215,7 @@ export default function GameInProgress({
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
-      handleUpdateGameSession({startTime: isoString });
+      handleUpdateGameSession({startTime: currentTimeMillis });
       return;
     }
     if (nextState === GameSessionState.TEAMS_JOINING)
@@ -235,7 +230,7 @@ export default function GameInProgress({
         return;
       }
     }
-    handleUpdateGameSession({ currentState: nextState, startTime: isoString });
+    handleUpdateGameSession({ currentState: nextState, startTime: currentTimeMillis });
   };
 
   // used to determine which button text to show based on the dictionary above and whether all players have answered
@@ -290,6 +285,7 @@ export default function GameInProgress({
               ? phaseOneTime
               : phaseTwoTime
           }
+          handleTimerIsFinished={handleTimerIsFinished}
           gameTimer={gameTimer}
         />
         <div className={classes.contentContainer}>
