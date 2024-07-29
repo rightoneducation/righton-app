@@ -19,8 +19,7 @@ export default function GameInProgressContentLeftColumn({
 ){
   const theme = useTheme();
   const { questions, currentQuestionIndex } = localGameSession;
-  const { isShortAnswerEnabled } = questions[currentQuestionIndex];
-  console.log(isShortAnswerEnabled);
+  const isShortAnswerEnabled = questions[currentQuestionIndex]?.isShortAnswerEnabled ?? false;
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingRight: `${theme.sizing.mdPadding}px` }}>
     <ScrollBoxStyled>
