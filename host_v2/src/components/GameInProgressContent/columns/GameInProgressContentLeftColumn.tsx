@@ -18,6 +18,9 @@ export default function GameInProgressContentLeftColumn({
   }: GameInProgressContentLeftColumnProps
 ){
   const theme = useTheme();
+  const { questions, currentQuestionIndex } = localGameSession;
+  const { isShortAnswerEnabled } = questions[currentQuestionIndex];
+  console.log(isShortAnswerEnabled);
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingRight: `${theme.sizing.mdPadding}px` }}>
     <ScrollBoxStyled>
@@ -27,19 +30,34 @@ export default function GameInProgressContentLeftColumn({
       currentQuestionIndex={localGameSession.currentQuestionIndex}
       currentState={localGameSession.currentState}
       />
-      {currentQuestion.choices
-        .map((choice, index) => ({ ...choice, originalIndex: index }))
-        .sort((a, b) => (a.isAnswer ? 1 : 0) - (b.isAnswer ? 1 : 0))
-        .map((choice, index) => 
-          <AnswerCard 
-            isCorrectAnswer={choice.isAnswer}
-            answerIndex={choice.originalIndex}  // use og index so they get labelled correctly A-D
-            answerContent={choice.text}
-            instructions={currentQuestion.instructions}
-            answerReason={choice.reason}
-            key={uuidv4()}
-          />
-        )}
+      { isShortAnswerEnabled
+        ? currentQuestion.choices
+            .map((choice, index) => ({ ...choice, originalIndex: index }))
+            .sort((a, b) => (a.isAnswer ? 1 : 0) - (b.isAnswer ? 1 : 0))
+            .map((choice) => 
+              <AnswerCard 
+                isCorrectAnswer={choice.isAnswer}
+                answerIndex={choice.originalIndex}  // Use the original index here
+                answerContent={choice.text}
+                instructions={currentQuestion.instructions}
+                answerReason={choice.reason}
+                key={uuidv4()}
+                isShortAnswerEnabled={isShortAnswerEnabled}
+              />
+            )
+        : currentQuestion.choices.map((choice, index) => 
+            <AnswerCard 
+              isCorrectAnswer={choice.isAnswer}
+              answerIndex={index}
+              answerContent={choice.text}
+              instructions={currentQuestion.instructions}
+              answerReason={choice.reason}
+              key={uuidv4()}
+              isShortAnswerEnabled={isShortAnswerEnabled}
+            />
+          )
+      }
+      
     </ScrollBoxStyled>
   </Grid>
   );
