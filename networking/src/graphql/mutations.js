@@ -570,12 +570,15 @@ export const createTeamAnswer = /* GraphQL */ `
   ) {
     createTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -593,12 +596,15 @@ export const updateTeamAnswer = /* GraphQL */ `
   ) {
     updateTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -616,12 +622,15 @@ export const deleteTeamAnswer = /* GraphQL */ `
   ) {
     deleteTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel

@@ -357,12 +357,15 @@ export const getTeamAnswer = /* GraphQL */ `
   query GetTeamAnswer($id: ID!) {
     getTeamAnswer(id: $id) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -382,12 +385,15 @@ export const listTeamAnswers = /* GraphQL */ `
     listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel

@@ -589,12 +589,15 @@ export const onCreateTeamAnswer = /* GraphQL */ `
   ) {
     onCreateTeamAnswer(filter: $filter) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -611,12 +614,15 @@ export const onUpdateTeamAnswer = /* GraphQL */ `
   ) {
     onUpdateTeamAnswer(filter: $filter) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -633,12 +639,15 @@ export const onDeleteTeamAnswer = /* GraphQL */ `
   ) {
     onDeleteTeamAnswer(filter: $filter) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
