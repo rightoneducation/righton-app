@@ -56,7 +56,6 @@ export default function Timer({
   const isPausedRef = useRef<boolean>(isPaused);
 
   const getTimerString = (currentTimeInput: number) => {
-    console.log(currentTimeInput);
     const currentTime = Math.trunc(currentTimeInput / 1000);
     let sec = 0;
     let secStr = '00';
