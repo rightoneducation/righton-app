@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswersPerPhase } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersPerPhase, IPhase } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -44,7 +44,6 @@ const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
   bottom: '0',
   margin: 'auto',
-  // height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
   width: '100%',
   maxWidth: '700px',
   display: 'flex',
@@ -62,27 +61,27 @@ const InnerFooterContainer = styled(Box)({
   gap: 16
 });
 
-interface FootStartGameProps {
+interface FootGameInProgressProps {
   currentState: GameSessionState;
   submittedAnswers: number;
   teamsLength: number;
   screenSize: ScreenSize;
 }
 
-function FooterStartGame({ 
+function FooterGameInProgress({ 
   currentState,
   submittedAnswers,
   teamsLength,
   screenSize
-}: FootStartGameProps) {
+}: FootGameInProgressProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const { isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
+  const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
 
   const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState);
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     // Get current time in milliseconds since epoch 
     const currentTimeMillis = Date.now(); 
     // Convert to seconds 
@@ -129,4 +128,4 @@ function FooterStartGame({
   );
 }
 
-export default FooterStartGame;
+export default FooterGameInProgress;

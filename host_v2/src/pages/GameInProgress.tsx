@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint, IPhase } from '@righton/networking';
+import GameStartingModal from '../components/GameStartingModal';
 import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
@@ -16,41 +17,33 @@ import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionCon
 import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
 
 interface GameInProgressProps {
+  isTimerVisible: boolean,
+  setIsTimerVisible: (isTimerVisible: boolean) => void,
   isCorrect: boolean,
   isIncorrect: boolean,
   totalTime: number,
   hasRejoined: boolean,
   currentTimer: number,
-  sampleConfidenceData: ConfidenceOption[],
   localModelMock: LocalModel,
-  onSelectMistake: (value: string, isBasedOnPopularity: boolean) => void;
-  sortedMistakes: Mistake[]; 
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
   localHostTeamAnswers: IHostTeamAnswers;
 }
 
 export default function GameInProgress({
+  isTimerVisible,
+  setIsTimerVisible,
   isCorrect,
   isIncorrect,
   totalTime,
   hasRejoined,
   currentTimer,
-  sampleConfidenceData,
   localModelMock,
-  onSelectMistake, 
-  sortedMistakes,
-  setSortedMistakes,
-  isPopularMode,
-  setIsPopularMode,
   localHostTeamAnswers,
 }: GameInProgressProps) {
     const theme = useTheme();
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-    const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS ? IPhase.ONE : IPhase.TWO;
+    const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
     const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
     const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
@@ -66,6 +59,9 @@ export default function GameInProgress({
 
     return(
       <StackContainerStyled>
+      {isTimerVisible && 
+        <GameStartingModal isTimerVisible={isTimerVisible} setIsTimerVisible={setIsTimerVisible}/>
+      }
       <HeaderBackgroundStyled />
       <HeaderContent
         isCorrect={isCorrect}
@@ -85,11 +81,6 @@ export default function GameInProgress({
           currentPhaseTeamAnswers={currentPhaseTeamAnswers}
           localGameSession={localGameSession}
           localHostTeamAnswers={localHostTeamAnswers}
-          onSelectMistake={onSelectMistake}
-          sortedMistakes={sortedMistakes}
-          setSortedMistakes={setSortedMistakes}
-          isPopularMode={isPopularMode}
-          setIsPopularMode={setIsPopularMode}
           screenSize={screenSize}
         />
       </BodyStackContainerStyled>

@@ -35,7 +35,7 @@
   "gameinprogress": {
     "header": {
       "notstarted": "Answer the Question",
-      "teamsjoining": "Answer the Question",
+      "teamsjoining": "Prepare the Game",
       "choosecorrectanswer": "Answer the Question",
       "choosetrickiestanswer": "Pick the Trickiest!",
       "phase1discuss": "Answer Explanations",

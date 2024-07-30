@@ -29,7 +29,6 @@ interface TimerProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
-  localModel: LocalModel;
   localGameSession: IGameSession;
 }
 
@@ -38,7 +37,6 @@ export default function Timer({
   currentTimer,
   isPaused,
   isFinished,
-  localModel,
   localGameSession
 }: TimerProps) {
   const theme = useTheme();

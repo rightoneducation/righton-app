@@ -43,7 +43,6 @@ export default function Responses({
   isShortAnswerEnabled,
   handleGraphClick,
 }: ResponsesProps) {
-  console.log(responses);
   const correctChoiceIndex = currentQuestion.choices.findIndex((choice) => choice.isAnswer);
   const numPlayers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(null);

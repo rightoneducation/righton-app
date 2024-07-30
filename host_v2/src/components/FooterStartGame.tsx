@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswers } from '@righton/networking';
-import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
-import ProgressBar from './ProgressBarGroup';
-import { ScreenSize } from '../lib/HostModels';
+import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
+import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
+import { ScreenSize } from '../lib/HostModels';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -39,7 +39,7 @@ const ButtonStyled = styled(Button)({
   },
 });
 
-const FooterContainer = styled(Box)({
+const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
@@ -48,8 +48,8 @@ const FooterContainer = styled(Box)({
   bottom: '0',
   width: '100%',
   gap: '16px',
-
-});
+  height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
+}));
 
 const InnerFooterContainer = styled(Box)({
   position: 'sticky',
@@ -58,8 +58,7 @@ const InnerFooterContainer = styled(Box)({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '92px',
-  gap: '16px',
+  gap: '16px'
 });
 
 const PlayerCountTypography = styled(Typography)({
@@ -72,22 +71,45 @@ const PlayerCountTypography = styled(Typography)({
 interface FootStartGameProps {
   teamsLength: number;
   screenSize: ScreenSize;
-  currentQuestionIndex: number | null;
-  setLocalHostTeamAnswers?: (value: IHostTeamAnswers) => void;
+  selectedSuggestedGame?: string | null;
+  handleButtonClick: () => void;
+  isGamePrepared: boolean;
 }
 
 function FooterStartGame({ 
   teamsLength,
   screenSize,
-  currentQuestionIndex,
-  setLocalHostTeamAnswers,
+  selectedSuggestedGame,
+  isGamePrepared
 }: FootStartGameProps) {
+ 
+  let buttonText;
+
+  
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
+  const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
+
+  switch (localGameSession.currentState) {
+    case GameSessionState.TEAMS_JOINING:
+      buttonText = 
+        (localGameSession.currentQuestionIndex === null)
+          ? 'Start Game' 
+          : 'Next Question';
+      break;
+    case GameSessionState.FINAL_RESULTS:
+      buttonText = 'End Game';
+      break;
+    default:
+      buttonText = 
+        (selectedSuggestedGame === null) 
+          ? 'Exit to RightOn Central' 
+          : 'Play Selected Game';
+  }
 
   const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState);
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
 // Get current time in milliseconds since epoch 
   const currentTimeMillis = Date.now(); 
   // Convert to seconds 
@@ -97,17 +119,15 @@ function FooterStartGame({
   // Convert to ISO-8601 string 
   const isoString = currentDate.toISOString(); 
     // start of game
-    if (currentQuestionIndex === null){
-      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-      if (updateNoResponses && setLocalHostTeamAnswers)
-        setLocalHostTeamAnswers(updateNoResponses);
+    if (localGameSession.currentQuestionIndex === null){
+      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(localGameSession);
+        if (updateNoResponses)
+          dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
       dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: isoString});
     } else {
-      const nextQuestionIndex = currentQuestionIndex + 1;
+      const nextQuestionIndex = localGameSession.currentQuestionIndex + 1;
       dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex, startTime: isoString}});
-      // Drew
-      // do we need to also pass nextQuestion index into ln 115?
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: isoString});
     }
   };
@@ -117,7 +137,7 @@ function FooterStartGame({
         <PaginationContainerStyled className="swiper-pagination-container" />
       }
       <InnerFooterContainer>
-        { currentQuestionIndex &&
+        { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
           <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
             <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
             <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
@@ -125,7 +145,9 @@ function FooterStartGame({
             </PlayerCountTypography>
           </Box>
         }
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
+          { buttonText }
+        </ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );

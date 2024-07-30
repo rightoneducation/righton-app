@@ -8,10 +8,10 @@ import {
   IHostTeamAnswers,
   GameSessionState
 } from '@righton/networking';
+import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
 import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
-import GameCard from '../components/GameCard';
-import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
 
@@ -42,7 +42,7 @@ interface StartGameProps {
   gameCode: number;
   currentQuestionIndex: number;
   handleDeleteTeam: (id: string) => void;
-  setLocalHostTeamAnswers: (value: IHostTeamAnswers) => void;
+  setIsGamePrepared: (value: boolean) => void;
 }  
 
 function StartGame({teams,
@@ -51,11 +51,17 @@ function StartGame({teams,
   gameCode,
   currentQuestionIndex,
   handleDeleteTeam,
-  setLocalHostTeamAnswers
+  setIsGamePrepared
   }: StartGameProps) {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
+    const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+
+    const handleButtonClick = () => {
+      setIsGamePrepared(true);
+    }
+
     return (
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
@@ -68,10 +74,11 @@ function StartGame({teams,
             screenSize={screenSize}
           />
           <FooterStartGame 
+            localGameSession={localGameSession}
             teamsLength={teams ? teams.length : 0}
             screenSize={screenSize}
-            currentQuestionIndex={null}
-            setLocalHostTeamAnswers={setLocalHostTeamAnswers}
+            handleButtonClick={handleButtonClick}
+            isGamePrepared={false}
           />
         </SafeAreaStyled>
     )

@@ -97,16 +97,13 @@ export default function HeaderContent({
           </Typography>
         </Grid>
         <Grid item style={{display: 'flex', justifyItems: 'space-between', alignItems: 'center', gap: '24px', paddingTop: `${theme.sizing.xSmPadding}px`}}>
-            {localModel ? (
               <Timer
                 totalTime={totalTime}
                 currentTimer={currentTimer}
                 isFinished={isFinished}
                 isPaused={isPaused}
-                localModel={localModel}
                 localGameSession={localGameSession}
               />
-            ) : null}
             <TimerAddButton onClick={handleTimerAddButtonClick}>
               <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
                 {t('gamesession.addtime')}
