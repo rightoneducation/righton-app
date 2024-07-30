@@ -78,6 +78,7 @@ export class GameSessionAPIClient
     let variables: UpdateGameSessionMutationVariables = {
       input: gameSessionInput,
     };
+    console.log(variables);
     let result = await this.callGraphQL<UpdateGameSessionMutation>(
       updateGameSession,
       variables

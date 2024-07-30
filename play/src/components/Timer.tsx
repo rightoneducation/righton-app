@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
-import { LocalModel, StorageKey } from '../lib/PlayModels';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -38,7 +37,6 @@ interface TimerProps {
   isPaused: boolean;
   isFinished: boolean;
   handleTimerIsFinished: () => void;
-  localModel: LocalModel;
 }
 
 export default function Timer({
@@ -47,67 +45,61 @@ export default function Timer({
   isPaused,
   isFinished,
   handleTimerIsFinished,
-  localModel,
 }: TimerProps) {
-  const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
-  const currentTime = Math.trunc(currentTimeMilli / 1000);
-  const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
 
+  const [timerString, setTimerString] = useState<string>('00:00');
+  const [progress, setProgress] = useState<number>(0);
+  const currentTimeMilli = useRef<number>(currentTimer * 1000);
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
-  let originalTime: number;
+  const originalTimeRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(isPaused);
 
-  // updates the current time as well as the localstorage in case of page reset
-  // recursive countdown timer function using requestAnimationFrame
-  function updateTimer(timestamp: number) {
+  const getTimerString = (currentTimeInput: number) => {
+    console.log(currentTimeInput);
+    const currentTime = Math.trunc(currentTimeInput / 1000);
+    let sec = 0;
+    let secStr = '00';
+    let min = 0;
+    if (currentTime >= 0) {
+      min = Math.floor(currentTime / 60);
+      sec = Math.ceil(currentTime % 60);
+      if (sec === 60) sec = 0;
+      secStr = sec < 10 ? `0${sec}` : `${sec}`;
+    }
+    return `${min}:${secStr}`;
+  };
+
+  const updateTimer = (timestamp: number) => {
     if (!isPausedRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
-        setCurrentTimeMilli((prevTime) => prevTime - delta);
-      } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
-      if (currentTimeMilli - (timestamp - originalTime) >= 0) {
+        currentTimeMilli.current -= delta;
+        setTimerString(getTimerString(currentTimeMilli.current));
+        setProgress((currentTimeMilli.current / (totalTime * 1000)) * 100);
+      } else {
+        originalTimeRef.current = timestamp;
+      }
+      if (currentTimeMilli.current <= 0) {
+        handleTimerIsFinished();
+      } 
+      else {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
-      } else {
-        handleTimerIsFinished();
       }
     }
   }
 
-  const timerString = useMemo(() => {
-    const getTimerString = (currentTimeInput: number) => {
-      let sec = 0;
-      let secStr = '00';
-      let min = 0;
-      if (currentTimeInput >= 0) {
-        min = Math.floor(currentTimeInput / 60);
-        sec = Math.ceil(currentTimeInput % 60);
-        if (sec === 60) sec = 0;
-        secStr = sec < 10 ? `0${sec}` : `${sec}`;
+  useEffect(() => {
+    currentTimeMilli.current = currentTimer * 1000; 
+    if (currentTimer > 0) {
+      isPausedRef.current = isPaused;
+      if (!isPaused) {
+        animationRef.current = requestAnimationFrame(updateTimer);
       }
-      const storageObject: LocalModel = {
-        ...localModel,
-        currentTimer: currentTimeInput,
-        hasRejoined: true,
-      };
-      window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-      return `${min}:${secStr}`;
-    };
-    return getTimerString(currentTime);
-  }, [currentTime, localModel]);
-
-  // useEffect to start off timer
-  useEffect(() => {
-    if (!isPaused && !isFinished)
-      animationRef.current = requestAnimationFrame(updateTimer);
-    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Update the isPausedRef when the isPaused prop changes
-  useEffect(() => {
-    isPausedRef.current = isPaused;
-  }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
+    }
+   return () => cancelAnimationFrame(animationRef.current ?? 0);
+  }, [isPaused, isFinished, currentTimer]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">

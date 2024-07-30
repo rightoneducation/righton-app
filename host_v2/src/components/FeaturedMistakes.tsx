@@ -77,7 +77,7 @@ export default function FeaturedMistakes({
     .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
     .map((response) => ({
       answer: response.rawAnswer,
-      percent: (response.count/totalAnswers)*100,
+      percent: Math.trunc((response.count/totalAnswers)*100),
       isSelectedMistake: false
       }));
     

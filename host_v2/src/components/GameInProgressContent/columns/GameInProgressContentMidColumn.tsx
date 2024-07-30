@@ -54,7 +54,7 @@ export default function GameInProgressContentMidColumn ({
           handleGraphClick={handleGraphClick}
         />
       }
-      {isHintEnabled && 
+      {isHintEnabled && currentPhase === IPhase.TWO &&
         <HintsCard 
           hints={currentHints}
           numPlayers={numPlayers}

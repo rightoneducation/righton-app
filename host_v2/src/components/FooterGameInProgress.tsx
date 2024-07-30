@@ -44,7 +44,6 @@ const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
   bottom: '0',
   margin: 'auto',
-  // height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
   width: '100%',
   maxWidth: '700px',
   display: 'flex',
@@ -83,14 +82,18 @@ function FooterGameInProgress({
 
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
+    // Get current time in milliseconds since epoch 
+    const currentTimeMillis = Date.now(); 
+    // Convert to seconds 
+    const currentTimeSeconds = Math.floor(currentTimeMillis / 1000); 
+    console.log(`Current time in seconds from epoch: ${currentTimeSeconds}`); 
+    // Create a new Date object using the milliseconds 
+    const currentDate = new Date(currentTimeMillis); 
+    // Convert to ISO-8601 string 
+    const isoString = currentDate.toISOString(); 
+    console.log(`Current time in ISO-8601 format: ${isoString}`);
     dispatch({type: 'advance_game_phase', payload: {nextState}});
-    console.log('supppp');
-    // when teacher is moving from CHOOSE_CORRECT_ANSWER and has selected the mistakes they want for phase two
-    if (nextState === GameSessionState.PHASE_1_DISCUSS && isShortAnswerEnabled) {
-      const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
-      apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
-    }
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: isoString});
   };
   const GetButtonText =() => {
     switch(currentState) {

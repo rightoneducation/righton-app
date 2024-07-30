@@ -53,6 +53,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     this.gameSession = await this.gameSessionAPIClient.getGameSession(this.gameSessionId).then(
       (gameSession: IGameSession) => {
         this.gameSession = gameSession;
+        if (gameSession.currentState !== GameSessionState.TEAMS_JOINING)
+          this.initHostTeamAnswers(gameSession);
         return gameSession;
       }
     );

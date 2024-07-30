@@ -69,12 +69,10 @@ function EndGameLobby({teams,
 
     const handleButtonClick = () => {
       if (selectedSuggestedGame === null){
-        dispatch({type: 'exit_to_central'});
-        // TODO: get this in once routing is fixed
+        window.location.href = 'http://dev-central.rightoneducation.com/';
       }
       else {
-        dispatch({type: 'play_selected_game', payload: {selectedSuggestedGame}});
-        // TODO: similar once routing is fixed
+        window.location.href = `http://dev-host.rightoneducation.com/new/${selectedSuggestedGame}`;
       }
     };
 

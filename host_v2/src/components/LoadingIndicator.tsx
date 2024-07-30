@@ -5,7 +5,7 @@ interface LoadingIndicatorProps{
   theme: string[]; 
   radius: number;
   timerStartInSecond: number;
-  handleStartGameModalTimerFinished?: () => void;
+  setIsTimerVisible?: (isTimerVisible: boolean) => void;
   gameCreate: boolean;
 }
 
@@ -13,7 +13,7 @@ export default function LoadingIndicator({
   theme,
   radius,
   timerStartInSecond,
-  handleStartGameModalTimerFinished,
+  setIsTimerVisible,
   gameCreate,
 }:LoadingIndicatorProps) {
   const { cos, sin, PI } = Math;
@@ -108,13 +108,13 @@ export default function LoadingIndicator({
     }, timeInterval);
 
     if (remainingTimeInSecond <= 0) {
-      if (handleStartGameModalTimerFinished)
-        handleStartGameModalTimerFinished();
+      if (setIsTimerVisible)
+        setIsTimerVisible(false);
       setTimerFinished(true);
       clearInterval(refreshIntervalId);
     }
     return () => (clearInterval(refreshIntervalId));
-  }, [timerFinished, remainingTimeInSecond, colors, remainingSecondsInMilliSeconds, handleStartGameModalTimerFinished]);
+  }, [timerFinished, remainingTimeInSecond, colors, remainingSecondsInMilliSeconds, setIsTimerVisible]);
 
   return (
     <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
@@ -123,10 +123,11 @@ export default function LoadingIndicator({
         height={radius * 2}
         strokeWidth={7}
         viewBox='0 0 42 42'
+        style={{position: 'absolute', zIndex: 0}}
       >
         {Segments(21, 21, 15.91549430918954, colors)}
       </svg>
-      <Typography variant="h2" sx={{fontSize: '108px', textAlign: 'center'}}>
+      <Typography variant="h2" sx={{fontSize: '108px', textAlign: 'center', position: 'absolute'}}>
         {!gameCreate ? remainingTimeInSecond : null}
       </Typography>
     </Box>

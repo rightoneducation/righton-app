@@ -71,7 +71,6 @@ export default function HeaderContent({
   const handleTimerAddButtonClick = () => {
     console.log('TimerAddButton clicked!'); // eslint-disable-line
   };
-
   return (
     <HeaderStackContainerStyled>
       <Container maxWidth="md">
