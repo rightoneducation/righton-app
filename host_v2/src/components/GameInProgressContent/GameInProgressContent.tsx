@@ -67,8 +67,8 @@ export default function GameInProgressContent({
     setGraphClickInfo({graph, selectedIndex })
   }
   
-  const leftCardsColumn = (
-    <GameInProgressContentLeftColumn 
+  const rightCardsColumn = (
+    <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
       confidences={currentPhase === IPhase.ONE ? currentConfidences : prevPhaseConfidences}
@@ -95,8 +95,8 @@ export default function GameInProgressContent({
     />
   );
   
-  const rightCardsColumn = (
-    <GameInProgressContentRightColumn 
+  const leftCardsColumn = (
+    <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
     />
@@ -122,14 +122,14 @@ export default function GameInProgressContent({
             <SwiperSlide>
               {leftCardsColumn}
             </SwiperSlide>
+            <SwiperSlide>
+              {rightCardsColumn}
+            </SwiperSlide>
             {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
               <SwiperSlide>
                 {midCardsColumn}
               </SwiperSlide>
             }
-            <SwiperSlide>
-              {rightCardsColumn}
-            </SwiperSlide>
           </Swiper>
         </BodyContentAreaSingleColumnStyled>
       );
@@ -154,10 +154,10 @@ export default function GameInProgressContent({
                 {leftCardsColumn}
               </SwiperSlide>
               <SwiperSlide>
-                {midCardsColumn}
+                {rightCardsColumn}
               </SwiperSlide>
               <SwiperSlide>
-                {rightCardsColumn}
+                {midCardsColumn}
               </SwiperSlide>
             </Swiper>
           ) : (
@@ -173,10 +173,10 @@ export default function GameInProgressContent({
       return (
         <BodyContentAreaTripleColumnStyled container>
           {leftCardsColumn}
+          {rightCardsColumn}
           { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
             midCardsColumn
           }
-          {rightCardsColumn}
         </BodyContentAreaTripleColumnStyled>
       );
   }
