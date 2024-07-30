@@ -81,7 +81,7 @@ function FooterGameInProgress({
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
 
   const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState);
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     // Get current time in milliseconds since epoch 
     const currentTimeMillis = Date.now(); 
     // Convert to seconds 

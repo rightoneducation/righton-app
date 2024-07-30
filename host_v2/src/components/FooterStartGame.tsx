@@ -2,6 +2,12 @@ import React, { useContext, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
+import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
+import { getNextGameSessionState } from '../lib/HelperFunctions';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import { ScreenSize } from '../lib/HostModels';
 
@@ -63,7 +69,6 @@ const PlayerCountTypography = styled(Typography)({
 });
 
 interface FootStartGameProps {
-  localGameSession: IGameSession;
   teamsLength: number;
   screenSize: ScreenSize;
   selectedSuggestedGame?: string | null;
@@ -72,15 +77,20 @@ interface FootStartGameProps {
 }
 
 function FooterStartGame({ 
-  localGameSession,
   teamsLength,
   screenSize,
   selectedSuggestedGame,
-  handleButtonClick,
   isGamePrepared
 }: FootStartGameProps) {
  
   let buttonText;
+
+  
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
+  const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
+
   switch (localGameSession.currentState) {
     case GameSessionState.TEAMS_JOINING:
       buttonText = 
@@ -97,13 +107,9 @@ function FooterStartGame({
           ? 'Exit to RightOn Central' 
           : 'Play Selected Game';
   }
-  
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
 
   const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState);
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
 // Get current time in milliseconds since epoch 
   const currentTimeMillis = Date.now(); 
   // Convert to seconds 
@@ -113,17 +119,15 @@ function FooterStartGame({
   // Convert to ISO-8601 string 
   const isoString = currentDate.toISOString(); 
     // start of game
-    if (currentQuestionIndex === null){
-      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-      if (updateNoResponses && setLocalHostTeamAnswers)
-        setLocalHostTeamAnswers(updateNoResponses);
+    if (localGameSession.currentQuestionIndex === null){
+      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(localGameSession);
+        if (updateNoResponses)
+          dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
       dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: isoString});
     } else {
-      const nextQuestionIndex = currentQuestionIndex + 1;
+      const nextQuestionIndex = localGameSession.currentQuestionIndex + 1;
       dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex, startTime: isoString}});
-      // Drew
-      // do we need to also pass nextQuestion index into ln 115?
       apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: isoString});
     }
   };

@@ -89,7 +89,6 @@ export default function PrepareGame( {
       </BodyStackContainerStyled>
       <FooterBackgroundStyled >
         <FooterStartGame
-          localGameSession={localGameSession}
           teamsLength={localGameSession.teams.length} 
           screenSize={screenSize}
           handleButtonClick={handleButtonClick}
