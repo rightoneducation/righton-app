@@ -66,7 +66,6 @@ export default function Leaderboard({
         handleDeleteTeam={handleDeleteTeam}
       />
       <FooterStartGame 
-        localGameSession={localGameSession}
         teamsLength={teams ? teams.length : 0}
         screenSize={screenSize}
         handleButtonClick={handleButtonClick}

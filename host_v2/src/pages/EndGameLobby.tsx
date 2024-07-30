@@ -104,7 +104,6 @@ function EndGameLobby({teams,
           handleUpdateSearchText={handleUpdateSearchText}
         />
         <EndGameFooter 
-          localGameSession={localGameSession}
           screenSize={screenSize}
           teamsLength={teams ? teams.length : 0}
           selectedSuggestedGame={selectedSuggestedGame}

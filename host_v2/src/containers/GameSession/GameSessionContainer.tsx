@@ -22,6 +22,8 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const [localHostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer, backendHostTeamAnswers);
   const [isTimerVisible, setIsTimerVisible] = useState<boolean>(false);
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
+  const [currentTimer, setCurrentTimer] = useState<number>(0);
+  const [totalTime, setTotalTime] = useState<number>(0);
   useEffect(() => {
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
   }, [backendHostTeamAnswers]);
@@ -31,7 +33,33 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
     apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
   };
+
+  const calculateCurrentTime = (gameSession: IGameSession) => {
+    let initialTime = 0;
+    if (gameSession) {
+      if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+        initialTime = gameSession?.phaseOneTime;
+      } else if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+        initialTime = gameSession?.phaseTwoTime;
+      }
+      setTotalTime(initialTime);
+      const getStartTime = Number(gameSession?.startTime);
+      if (getStartTime) {
+        const difference = Date.now() - getStartTime;
+        if (difference >= initialTime * 1000) {
+          return 0;
+        } 
+        const remainingTime = initialTime - Math.trunc(difference / 1000);
+        return remainingTime;
+      }
+    }
+    return initialTime;
+  };
+
   useEffect(() => {
+    if (backendGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || backendGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+      setCurrentTimer(calculateCurrentTime(backendGameSession));
+    }
     dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
   }, [backendGameSession]);
   const gameTemplates = null;
@@ -45,32 +73,8 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     } else if (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
       allottedTime = phaseTwoTime;
     }
-    console.log("allotted time");
-    console.log(allottedTime);
   }
-  const calculateCurrentTime = () => {
-    if (localGameSession) {
-      const getStartTime = localGameSession?.startTime;
-      console.log("starttime from host_v2 gamesessioncontainer");
-      console.log(getStartTime);
-      console.log(allottedTime);
-      if (getStartTime) {
-        const isoTimeMillis = new Date(getStartTime).getTime();
-        const difference = Date.now() - isoTimeMillis;
 
-        if (difference >= allottedTime * 1000) {
-          // setCurrentTime(-1);
-          return -1;
-        } 
-        const remainingTime = allottedTime - Math.trunc(difference / 1000);
-        // setCurrentTime(remainingTime);
-        // window.localStorage.setItem('currentTime', remainingTime.toString());
-        console.log(remainingTime);
-        return remainingTime;
-      }
-    }
-    return allottedTime;
-  };
   let renderContent;
  
   const teamsJoiningPages = [
@@ -94,13 +98,13 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     case GameSessionState.PHASE_2_DISCUSS:
     case GameSessionState.PHASE_2_START:
       renderContent = (
-        <GameInProgress
+      <GameInProgress
           isTimerVisible={isTimerVisible}
           setIsTimerVisible={setIsTimerVisible} 
-          currentTimer={calculateCurrentTime()}
+          currentTimer={currentTimer}
           isCorrect={false}
           isIncorrect={false}
-          totalTime={100}
+          totalTime={totalTime}
           hasRejoined={false}
           localModelMock={{hasRejoined: false, currentTimer: 100}}
           localHostTeamAnswers={localHostTeamAnswers}

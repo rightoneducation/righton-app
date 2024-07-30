@@ -70,7 +70,6 @@ export default function GameInProgress({
         currentTimer={currentTimer}
         isPaused={false}
         isFinished={false}
-        localModel={localModelMock}
       />
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />

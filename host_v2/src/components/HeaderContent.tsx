@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameSessionState } from '@righton/networking';
+import { GameSessionState, IGameSession } from '@righton/networking';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,6 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
 import HostPlayerIconContainer from '../lib/styledcomponents/HostPlayerIconContainer';
-import { LocalModel } from '../lib/HostModels';
 import Timer from './Timer';
 import TimerAddButton from '../lib/styledcomponents/TimerAddButton';
 import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
@@ -21,7 +20,6 @@ interface HeaderContentProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
-  localModel?: LocalModel;
 } // eslint-disable-line
 
 export default function HeaderContent({
@@ -31,7 +29,6 @@ export default function HeaderContent({
   currentTimer,
   isPaused,
   isFinished,
-  localModel,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();

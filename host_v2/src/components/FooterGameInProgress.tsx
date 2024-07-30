@@ -82,18 +82,9 @@ function FooterGameInProgress({
 
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    // Get current time in milliseconds since epoch 
-    const currentTimeMillis = Date.now(); 
-    // Convert to seconds 
-    const currentTimeSeconds = Math.floor(currentTimeMillis / 1000); 
-    console.log(`Current time in seconds from epoch: ${currentTimeSeconds}`); 
-    // Create a new Date object using the milliseconds 
-    const currentDate = new Date(currentTimeMillis); 
-    // Convert to ISO-8601 string 
-    const isoString = currentDate.toISOString(); 
-    console.log(`Current time in ISO-8601 format: ${isoString}`);
+    const currentTimeMillis = Date.now().toString(); 
     dispatch({type: 'advance_game_phase', payload: {nextState}});
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: isoString});
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: currentTimeMillis});
   };
   const GetButtonText =() => {
     switch(currentState) {

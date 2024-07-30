@@ -2,12 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
-import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import { ScreenSize } from '../lib/HostModels';
 
@@ -80,16 +76,12 @@ function FooterStartGame({
   teamsLength,
   screenSize,
   selectedSuggestedGame,
-  isGamePrepared
+  isGamePrepared,
+  handleButtonClick
 }: FootStartGameProps) {
  
   let buttonText;
-
-  
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
-  const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
 
   switch (localGameSession.currentState) {
     case GameSessionState.TEAMS_JOINING:
@@ -107,30 +99,6 @@ function FooterStartGame({
           ? 'Exit to RightOn Central' 
           : 'Play Selected Game';
   }
-
-  const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-// Get current time in milliseconds since epoch 
-  const currentTimeMillis = Date.now(); 
-  // Convert to seconds 
-  const currentTimeSeconds = Math.floor(currentTimeMillis / 1000); 
-  // Create a new Date object using the milliseconds 
-  const currentDate = new Date(currentTimeMillis); 
-  // Convert to ISO-8601 string 
-  const isoString = currentDate.toISOString(); 
-    // start of game
-    if (localGameSession.currentQuestionIndex === null){
-      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(localGameSession);
-        if (updateNoResponses)
-          dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
-      dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: isoString});
-    } else {
-      const nextQuestionIndex = localGameSession.currentQuestionIndex + 1;
-      dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex, startTime: isoString}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: isoString});
-    }
-  };
   return (
     <FooterContainer>
       {screenSize === ScreenSize.SMALL &&
