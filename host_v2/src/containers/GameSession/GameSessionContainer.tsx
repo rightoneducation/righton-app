@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers } from '@righton/networking';
+import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers, HostDataManagerAPIClient } from '@righton/networking';
 import { APIClientsContext } from '../../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../../lib/reducer/GameSessionReducer';
@@ -56,6 +56,14 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     return initialTime;
   };
 
+  const handleAddTime = () => {
+    const newTime = currentTimer + 30;
+    const newStartTime = Number(localGameSession.startTime) + 30000;
+    console.log(newTime);
+    setCurrentTimer(newTime);
+    apiClients?.hostDataManager?.updateTime(newStartTime);
+  }
+
   useEffect(() => {
     if (backendGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || backendGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
       setCurrentTimer(calculateCurrentTime(backendGameSession));
@@ -76,7 +84,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   }
 
   let renderContent;
- 
+
   const teamsJoiningPages = [
       !isGamePrepared 
       ? <StartGame
@@ -108,6 +116,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           hasRejoined={false}
           localModelMock={{hasRejoined: false, currentTimer: 100}}
           localHostTeamAnswers={localHostTeamAnswers}
+          handleAddTime={handleAddTime}
         />
       );
       break;

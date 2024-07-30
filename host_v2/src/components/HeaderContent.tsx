@@ -20,6 +20,7 @@ interface HeaderContentProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
+  handleAddTime?: () => void;
 } // eslint-disable-line
 
 export default function HeaderContent({
@@ -29,6 +30,7 @@ export default function HeaderContent({
   currentTimer,
   isPaused,
   isFinished,
+  handleAddTime,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
@@ -64,10 +66,7 @@ export default function HeaderContent({
     if (isIncorrectForCheck) return t('gameinprogress.header.incorrect');
     return stateMap[currentStateForCheck];
   };
-
-  const handleTimerAddButtonClick = () => {
-    console.log('TimerAddButton clicked!'); // eslint-disable-line
-  };
+  
   return (
     <HeaderStackContainerStyled>
       <Container maxWidth="md">
@@ -101,7 +100,7 @@ export default function HeaderContent({
                 isPaused={isPaused}
                 localGameSession={localGameSession}
               />
-            <TimerAddButton onClick={handleTimerAddButtonClick}>
+            <TimerAddButton onClick={handleAddTime} disabled={currentTimer <= 0}>
               <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
                 {t('gamesession.addtime')}
               </Typography>

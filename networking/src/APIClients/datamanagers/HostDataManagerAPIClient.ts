@@ -114,6 +114,19 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     }
   }
 
+  async updateTime(newTime: number) {
+    if (this.gameSession && this.gameSessionId && this.gameSession.startTime){
+      try {  
+        console.log(this.gameSession.startTime);
+        await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, startTime: newTime.toString()}).then((gameSession: IGameSession) => {
+          this.gameSession = gameSession;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   async deleteTeam(teamId: string, callback: (gameSession: IGameSession) => void) {
     try {
       await this.teamAPIClient.deleteTeam(teamId).then(() => {
