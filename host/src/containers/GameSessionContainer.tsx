@@ -105,37 +105,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   };
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
-  let allottedTime = 0;
-  if(apiClients.gameSession){
-    if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      allottedTime = gameSession?.phaseOneTime;
-    } else if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-      allottedTime = gameSession?.phaseTwoTime;
-    }
-  }
-  const calculateCurrentTime = () => {
-    if (gameSession) {
-      const getStartTime = gameSession?.startTime;
-      if (getStartTime) {
-        const isoTimeMillis = new Date(getStartTime).getTime();
-        const difference = Date.now() - isoTimeMillis;
-
-        if (difference >= allottedTime * 1000) {
-          // setCurrentTime(-1);
-          return 0;
-        } 
-        const remainingTime = allottedTime - Math.trunc(difference / 1000);
-        // setCurrentTime(remainingTime);
-        // window.localStorage.setItem('currentTime', remainingTime.toString());
-        return remainingTime;
-      }
-    }
-    return allottedTime;
-  };
-
-
-
-
+  
   // initial query for gameSessions and teams
   useEffect(() => {
     try{
@@ -357,22 +327,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     }
   }, [isLoadModalOpen]);
 
-  // headerGame timer, 1 second interval, update localstorage in case page resets
-  useEffect(() => {
-    if (gameTimer && !gameTimerZero) {
-      let refreshIntervalId = setInterval(() => {
-        if (headerGameCurrentTime > 0) {
-          setHeaderGameCurrentTime(headerGameCurrentTime - 1);
-          localStorage.setItem(
-            'currentGameTimeStore',
-            headerGameCurrentTime - 1,
-          );
-        } else setGameTimerZero(true);
-      }, 1000);
-      return () => clearInterval(refreshIntervalId);
-    }
-  }, [gameTimer, gameTimerZero, headerGameCurrentTime]);
-
   // handles confidence switch changes on Question Config
   const handleConfidenceSwitchChange = (event) => {
     setIsConfidenceEnabled(event.target.checked);
@@ -442,16 +396,36 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     }
     // to include startTime
     const updates = startTime ? { ...newUpdates, startTime } : newUpdates;
-
     const response = await apiClients.gameSession.updateGameSession({ id: gameSessionId, ...updates })
-    if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+    if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) 
       setHeaderGameCurrentTime(response.phaseOneTime);
-    } else if (
-      response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-    )
+    else if (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
       setHeaderGameCurrentTime(response.phaseTwoTime);
     setGameSession(response);
     checkGameTimer(response);
+  };
+
+  const calculateCurrentTime = (gameSession) => {
+    let initialTime = 0;
+    if (gameSession) {
+      if(apiClients.gameSession){
+        if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+          initialTime = gameSession?.phaseOneTime;
+        } else if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+          initialTime = gameSession?.phaseTwoTime;
+        }
+      }
+      const getStartTime = Number(gameSession?.startTime);
+      if (getStartTime) {
+        const difference = Date.now() - getStartTime;
+        if (difference >= initialTime * 1000) {
+          return 0;
+        } 
+        const remainingTime = initialTime - Math.trunc(difference / 1000);
+        return remainingTime;
+      }
+    }
+    return initialTime;
   };
 
   const checkGameTimer = (gameSession) => {
@@ -461,10 +435,24 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     ) {
       setGameTimer(false);
     } else {
+      const elapsedTime = calculateCurrentTime(gameSession);
+      if (elapsedTime > 0) {
+        setHeaderGameCurrentTime(elapsedTime);
+      } 
       setGameTimer(true);
     }
     setGameTimerZero(false);
   };
+
+  const handleTimerIsFinished = () => {
+    setGameTimer(false);
+    setGameTimerZero(true);
+  };
+
+  const handleCountdownIsFinished = () => {
+    checkGameTimer(gameSession);
+  }
+
   const handleStartGame = () => {
     handleUpdateGameSession({ currentQuestionIndex: 0 });
   };
@@ -501,7 +489,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
               gameSession.phaseOneTime,
             );
             setHeaderGameCurrentTime(gameSession.phaseOneTime);
-            checkGameTimer(response);
             setGameSession(response);
             const teamDataRequests = response.teams.map(async (team) => {
               return apiClients.team.getTeam(team.id);
@@ -614,9 +601,11 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           {...gameSession}
           teamsArray={teamsArray}
           handleUpdateGameSession={handleUpdateGameSession}
-          headerGameCurrentTime={calculateCurrentTime()}
+          headerGameCurrentTime={headerGameCurrentTime}
           gameTimer={gameTimer}
           gameTimerZero={gameTimerZero}
+          handleCountdownIsFinished={handleCountdownIsFinished}
+          handleTimerIsFinished={handleTimerIsFinished}
           isLoadModalOpen={isLoadModalOpen}
           setIsLoadModalOpen={setIsLoadModalOpen}
           showFooterButtonOnly={gameSession.currentQuestionIndex > 0 ? true : false}
@@ -655,8 +644,11 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           {...gameSession}
           teamsArray={teamsArray}
           handleUpdateGameSession={handleUpdateGameSession}
-          headerGameCurrentTime={calculateCurrentTime()}
+          handleCountdownIsFinished={handleCountdownIsFinished}
+          handleTimerIsFinished={handleTimerIsFinished}
+          headerGameCurrentTime={headerGameCurrentTime}
           gameTimer={gameTimer}
+          setGameTimer={setGameTimer}
           gameTimerZero={gameTimerZero}
           isLoadModalOpen={isLoadModalOpen}
           setIsLoadModalOpen={setIsLoadModalOpen}
@@ -690,6 +682,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         <StudentViews
           {...gameSession}
           gameTimer={gameTimer}
+          handleTimerIsFinished={handleTimerIsFinished}
           handleUpdateGameSession={handleUpdateGameSession}
           showFooterButtonOnly={true}
           setIsConfidenceEnabled={setIsConfidenceEnabled}

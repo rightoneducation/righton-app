@@ -16,6 +16,7 @@ export default function StudentViews({
   phaseOneTime,
   phaseTwoTime,
   gameTimer,
+  handleTimerIsFinished,
   handleUpdateGameSession,
   showFooterButtonOnly,
   setIsConfidenceEnabled,
@@ -69,26 +70,20 @@ export default function StudentViews({
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = () => {
     // Get current time in milliseconds since epoch 
-    const currentTimeMillis = Date.now(); 
-    // Convert to seconds 
-    const currentTimeSeconds = Math.floor(currentTimeMillis / 1000); 
-    // Create a new Date object using the milliseconds 
-    const currentDate = new Date(currentTimeMillis); 
-    // Convert to ISO-8601 string 
-    const isoString = currentDate.toISOString();
+    const currentTimeMillis = Date.now().toString(); 
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS) {
       // if they are on the last page a\nd need to advance to the next question
       assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
       handleUpdateGameSession({
         currentState: nextStateFunc(currentState),
         currentQuestionIndex: currentQuestionIndex + 1,
-        startTime: isoString,
+        startTime: currentTimeMillis,
       });
       return;
     }
     if (currentState === GameSessionState.PHASE_2_START)
       assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled,  isConfidenceEnabled, isHintEnabled, GameSessionState.CHOOSE_TRICKIEST_ANSWER);
-    handleUpdateGameSession({ currentState: nextStateFunc(currentState), startTime: isoString });
+    handleUpdateGameSession({ currentState: nextStateFunc(currentState), startTime: currentTimeMillis });
   };
 
   return (
@@ -114,6 +109,7 @@ export default function StudentViews({
             (statePosition =
               Object.keys(GameSessionState).indexOf(currentState))
           }
+          handleTimerIsFinished={handleTimerIsFinished}
         />
         <div className={classes.studentViewsCont}>
           <div className={classes.headText}> Current Student View: </div>

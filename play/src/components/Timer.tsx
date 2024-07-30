@@ -102,7 +102,15 @@ export default function Timer({
 
   return (
     <TimerContainer maxWidth="sm">
-      <TimerBar value={progress} variant="determinate" />
+      <TimerBar 
+        sx={{
+          "& .MuiLinearProgress-bar": {
+            transition: "none"
+          }
+        }} 
+        value={progress} 
+        variant="determinate" 
+      />
       <TimerText maxWidth="sm">
         <Typography alignSelf="center" variant="caption">
           {timerString}

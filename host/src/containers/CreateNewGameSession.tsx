@@ -17,7 +17,6 @@ const CreateNewGameSession = ({apiClients}:CreateNewGameSessionProps) => {
       if (!response) {
         return;
       }
-      console.log(response);
       apiClients.gameSession
         .updateGameSession({
           id: response,
