@@ -67,7 +67,7 @@ export default function GameInProgress({
         isCorrect={isCorrect}
         isIncorrect={isIncorrect}
         totalTime={totalTime}
-        currentTimer={hasRejoined ? currentTimer : totalTime}
+        currentTimer={currentTimer}
         isPaused={false}
         isFinished={false}
         localModel={localModelMock}

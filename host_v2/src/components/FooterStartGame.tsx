@@ -98,6 +98,35 @@ function FooterStartGame({
           : 'Play Selected Game';
   }
   
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
+
+  const handleButtonClick = () => {
+    const nextState = getNextGameSessionState(localGameSession.currentState);
+// Get current time in milliseconds since epoch 
+  const currentTimeMillis = Date.now(); 
+  // Convert to seconds 
+  const currentTimeSeconds = Math.floor(currentTimeMillis / 1000); 
+  // Create a new Date object using the milliseconds 
+  const currentDate = new Date(currentTimeMillis); 
+  // Convert to ISO-8601 string 
+  const isoString = currentDate.toISOString(); 
+    // start of game
+    if (currentQuestionIndex === null){
+      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
+      if (updateNoResponses && setLocalHostTeamAnswers)
+        setLocalHostTeamAnswers(updateNoResponses);
+      dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
+      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: isoString});
+    } else {
+      const nextQuestionIndex = currentQuestionIndex + 1;
+      dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex, startTime: isoString}});
+      // Drew
+      // do we need to also pass nextQuestion index into ln 115?
+      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: isoString});
+    }
+  };
   return (
     <FooterContainer>
       {screenSize === ScreenSize.SMALL &&
