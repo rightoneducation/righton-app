@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
 import { GameSessionState } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
@@ -36,9 +36,21 @@ export default function DiscussAnswerCard({
   const correctCard =
     answerStatus === AnswerState.CORRECT ||
     answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
+  const AnswerTitleTypography = styled(Typography)({
+    lineHeight: '28px',
+    fontFamily: 'Karla',
+    fontWeight: '800',
+    fontSize: '24px',
+    color: 'black',
+    marginBottom: '16px',
+  });
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
+      {correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
+               <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>)}
+      {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
+               <AnswerTitleTypography> Incorrect Answer </AnswerTitleTypography>)}
         {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
           <Box sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}>
             <Typography

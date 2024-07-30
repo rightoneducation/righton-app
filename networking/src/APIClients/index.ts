@@ -7,7 +7,7 @@ export * from './GameSessionAPIClient';
 export * from './GameTemplateAPIClient';
 export * from './QuestionAPIClient';
 export * from './QuestionTemplateAPIClient';
-export * from './TeamAPIClient';
 export * from './TeamAnswerAPIClient';
+export * from './TeamAPIClient';
 export * from './TeamMemberAPIClient';
 export * from './interfaces';

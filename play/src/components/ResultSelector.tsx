@@ -88,8 +88,10 @@ export default function ResultSelector({
           variant="h5"
           sx={{
             paddingLeft: '1px',
-            paddingTop: '2px',
-            opacity: 0.5,
+            color: '#4700B2',
+            fontWeight: '800',
+            fontSize: '16px',
+            lineHeight: '22px',
           }}
         >
           {String.fromCharCode(letterCode)}
