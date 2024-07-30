@@ -67,6 +67,7 @@ export default function HeaderGame({
   headerGameCurrentTime,
   totalRoundTime,
   gameTimer,
+  handleTimerIsFinished
 }) {
   const classes = useStyles();
 
@@ -95,8 +96,11 @@ export default function HeaderGame({
           <Typography className={classes.phases}>{label[statePosition]}</Typography>
           <div style={{ opacity: gameTimer ? '1' : '0.4' }}>
             <Timer
-              headerGameCurrentTime={gameTimer ? headerGameCurrentTime : 0}
+              headerGameCurrentTime={headerGameCurrentTime}
+              isFinished={!gameTimer}
+              isPaused={!gameTimer}
               totalRoundTime={totalRoundTime}
+              handleTimerIsFinished={handleTimerIsFinished}
             />
           </div>
         </>
