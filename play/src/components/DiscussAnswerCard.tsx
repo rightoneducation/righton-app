@@ -17,6 +17,7 @@ interface DiscussAnswerCardProps {
   answerIndex: number;
   answerReason?: string;
   currentState: GameSessionState;
+  isShortAnswerEnabled: boolean;
 }
 
 export default function DiscussAnswerCard({
@@ -27,6 +28,7 @@ export default function DiscussAnswerCard({
   answerIndex,
   answerReason,
   currentState,
+  isShortAnswerEnabled,
 }: DiscussAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -68,6 +70,9 @@ export default function DiscussAnswerCard({
           answerStatus={answerStatus}
           index={answerIndex}
           answerText={answerText}
+          currentState={currentState}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          correctCard = {correctCard}
         />
         <Stack
           spacing={1}

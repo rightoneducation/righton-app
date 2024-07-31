@@ -62,7 +62,7 @@ export default function DiscussAnswer({
   //     )
   //   : correctAnswer?.text === selectedAnswer?.text;
   //   console.log(selectedAnswer?.text);
-  const isPlayerCorrect = true;
+  const isPlayerCorrect = false;
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>
@@ -78,6 +78,8 @@ export default function DiscussAnswer({
           answerText={correctAnswer?.text ?? ''}
           answerIndex={correctIndex ?? 0}
           currentState={currentState}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+
         />
       </Stack>
       {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
@@ -89,7 +91,7 @@ export default function DiscussAnswer({
             opacity: 0.5,
           }}
         >
-          {t('gameinprogress.general.swipealert')}
+            Swipe left to see the correct answer
         </Typography>
       )}
     </ScrollBoxStyled>
@@ -98,18 +100,6 @@ export default function DiscussAnswer({
       <ScrollBoxStyled>
         <Stack spacing={2}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-          {/* <DiscussAnswerCard
-            isPlayerCorrect={isPlayerCorrect}
-            instructions={instructions}
-            answerStatus={
-              isPlayerCorrect
-                ? AnswerState.PLAYER_SELECTED_CORRECT
-                : AnswerState.CORRECT
-            }
-            answerText={correctAnswer?.text ?? ''}
-            answerIndex={correctIndex ?? 0}
-            currentState={currentState}
-          /> */}
           {answerChoices?.map(
             (answer, index) =>
               !answer.isAnswer && (
@@ -126,6 +116,7 @@ export default function DiscussAnswer({
                   answerReason={answer.reason ?? ''}
                   currentState={currentState}
                   key={uuidv4()}
+                  isShortAnswerEnabled={isShortAnswerEnabled}
                 />
               )
           )}
@@ -139,7 +130,7 @@ export default function DiscussAnswer({
               opacity: 0.5,
             }}
           >
-            {t('gameinprogress.general.swipealert')}
+            Swipe left to see the correct answer
           </Typography>
         )}
       </ScrollBoxStyled>
@@ -158,28 +149,9 @@ export default function DiscussAnswer({
             answerText={correctAnswer?.text ?? ''}
             answerIndex={correctIndex ?? 0}
             currentState={currentState}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+
           />
-        {/* <Stack spacing={2}>
-          {answerChoices?.map(
-            (answer, index) =>
-              !answer.isAnswer && (
-                <DiscussAnswerCard
-                  isPlayerCorrect={isPlayerCorrect}
-                  instructions={instructions ?? ''}
-                  answerStatus={
-                    answer.text === selectedAnswer?.text
-                      ? AnswerState.SELECTED
-                      : AnswerState.DEFAULT
-                  }
-                  answerText={answer.text}
-                  answerIndex={index}
-                  answerReason={answer.reason ?? ''}
-                  currentState={currentState}
-                  key={uuidv4()}
-                />
-              )
-          )}
-        </Stack> */}
       </ScrollBoxStyled>
   );
 

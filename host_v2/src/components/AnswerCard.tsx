@@ -86,6 +86,7 @@ export default function AnswerCard({
                 : theme.palette.primary.lightGrey,
             }}
           >
+            
             <Typography
               sx={{
                 marginRight: `${theme.sizing.extraSmallPadding}px`,
