@@ -43,8 +43,7 @@ export const extractAnswersByTeam =  (teams: ITeam[], currentState: GameSessionS
 export const getNextGameSessionState = (currentState: GameSessionState, numQuestions: number, currentQuestionIndex: number) => {
   const states = Object.values(GameSessionState);
   const currentIndex = states.indexOf(currentState);
-  if (currentState === GameSessionState.PHASE_2_DISCUSS && (numQuestions -1) !== currentQuestionIndex){
+  if (currentState === GameSessionState.PHASE_2_DISCUSS && (numQuestions - 1) !== currentQuestionIndex)
     return GameSessionState.TEAMS_JOINING;
-  }
   return states[currentIndex + 1];
 };

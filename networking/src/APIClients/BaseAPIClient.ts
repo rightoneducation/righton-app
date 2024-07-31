@@ -100,7 +100,11 @@ export abstract class BaseAPIClient {
     ): Promise<QueryResult<T> | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type };
       if (filterString != null) {
-        queryParameters.filter = { title: { contains: filterString } };
+        if (queryName === "gameTemplatesByGrade") {
+          queryParameters.grade = { eq: filterString };
+        } else {
+          queryParameters.filter = { title: { contains: filterString } };
+        }
       }
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;

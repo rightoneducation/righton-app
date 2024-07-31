@@ -6,6 +6,7 @@ import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
 import GameInProgress from '../pages/GameInProgress';
 import StartGame from '../pages/StartGame';
 import Leaderboard from '../pages/Leaderboard';
+import EndGameLobby from '../pages/EndGameLobby';
 
 interface GameSessionContainerProps {
   apiClients: APIClients;
@@ -28,6 +29,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   useEffect(() => {
     dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
   }, [backendGameSession]);
+  const gameTemplates = null;
   
   let renderContent;
   switch (localGameSession.currentState) {
@@ -52,6 +54,28 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           setIsPopularMode={() => {}}
           localHostTeamAnswers={localHostTeamAnswers}
         />
+      );
+      break;
+    case GameSessionState.FINAL_RESULTS:
+      renderContent = (
+        <Leaderboard 
+            teams={localGameSession.teams}
+            questions={localGameSession.questions}
+            currentQuestionIndex={localGameSession.currentQuestionIndex}
+            title={localGameSession.title}
+            handleDeleteTeam={handleDeleteTeam}
+        />
+      );
+      break;
+    case GameSessionState.FINISHED:
+      renderContent = (
+        <EndGameLobby 
+        teams={localGameSession.teams} 
+        gameTemplates={gameTemplates} 
+        gameCode={localGameSession.gameCode} 
+        currentQuestionIndex={localGameSession.currentQuestionIndex} 
+        handleDeleteTeam={handleDeleteTeam}
+      />
       );
       break;
     case GameSessionState.TEAMS_JOINING:

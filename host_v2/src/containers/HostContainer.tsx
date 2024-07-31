@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
-  useParams,
   Route,
-  Routes,
   RouterProvider,
 } from 'react-router-dom';
-import { GameSessionState, APIClients, IGameSession, IAPIClients} from '@righton/networking';
+import { APIClients } from '@righton/networking';
 import useInitHostContainer from '../hooks/useInitHostContainer';
 import GameSessionContainer from './GameSessionContainer';
 import LaunchContainer from './LaunchContainer';
@@ -17,7 +15,7 @@ interface HostContainerProps {
 }
 
 export default function HostContainer({apiClients}: HostContainerProps) {
-  const gameSessionId = '307ffd86-a9a7-451d-9f35-64caaa9131f4';
+  const gameSessionId = '49f8171d-32db-4358-8b1d-f612a6feaade';
   const {backendGameSession, backendHostTeamAnswers} = useInitHostContainer(apiClients, gameSessionId);
   const router = createBrowserRouter(
     createRoutesFromElements(

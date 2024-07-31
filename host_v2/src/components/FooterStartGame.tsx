@@ -1,15 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswers } from '@righton/networking';
+import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
-import ProgressBar from './ProgressBarGroup';
 import { ScreenSize } from '../lib/HostModels';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
-import { getNextGameSessionState } from '../lib/HelperFunctions';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -68,44 +62,46 @@ const PlayerCountTypography = styled(Typography)({
 });
 
 interface FootStartGameProps {
+  localGameSession: IGameSession;
   teamsLength: number;
   screenSize: ScreenSize;
-  currentQuestionIndex: number | null;
-  setLocalHostTeamAnswers?: (value: IHostTeamAnswers) => void;
+  selectedSuggestedGame?: string | null;
+  handleButtonClick: () => void;
 }
 
 function FooterStartGame({ 
+  localGameSession,
   teamsLength,
   screenSize,
-  currentQuestionIndex,
-  setLocalHostTeamAnswers,
+  selectedSuggestedGame,
+  handleButtonClick
 }: FootStartGameProps) {
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
-  const buttonText = currentQuestionIndex === null ? 'Start Game' : 'Next Question';
-
-  const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    if (currentQuestionIndex === null){
-      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-      if (updateNoResponses && setLocalHostTeamAnswers)
-        setLocalHostTeamAnswers(updateNoResponses);
-      dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
-    } else {
-      const nextQuestionIndex = currentQuestionIndex + 1;
-      dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: nextQuestionIndex, currentState: nextState})
-    }
-  };
+ 
+  let buttonText;
+  switch (localGameSession.currentState) {
+    case GameSessionState.TEAMS_JOINING:
+      buttonText = 
+        (localGameSession.currentQuestionIndex === null)
+          ? 'Start Game' 
+          : 'Next Question';
+      break;
+    case GameSessionState.FINAL_RESULTS:
+      buttonText = 'End Game';
+      break;
+    default:
+      buttonText = 
+        (selectedSuggestedGame === null) 
+          ? 'Exit to RightOn Central' 
+          : 'Play Selected Game';
+  }
+  
   return (
     <FooterContainer>
-          {screenSize === ScreenSize.SMALL &&
-          <PaginationContainerStyled className="swiper-pagination-container" />
-        }
+      {screenSize === ScreenSize.SMALL &&
+        <PaginationContainerStyled className="swiper-pagination-container" />
+      }
       <InnerFooterContainer>
-        { currentQuestionIndex &&
+        { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING &&
           <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
             <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
             <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
@@ -113,8 +109,9 @@ function FooterStartGame({
             </PlayerCountTypography>
           </Box>
         }
-        
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}> {buttonText} </ButtonStyled>
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
+          { buttonText }
+        </ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );
