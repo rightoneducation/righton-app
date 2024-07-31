@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
+  useMatch
 } from 'react-router-dom';
 import { APIClients } from '@righton/networking';
 import useInitHostContainer from '../hooks/useInitHostContainer';
@@ -15,28 +12,35 @@ interface HostContainerProps {
 }
 
 export default function HostContainer({apiClients}: HostContainerProps) {
-  const gameSessionId = '49f8171d-32db-4358-8b1d-f612a6feaade';
-  const {backendGameSession, backendHostTeamAnswers} = useInitHostContainer(apiClients, gameSessionId);
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <>
-        {backendGameSession && gameSessionId && 
-          <Route
-            path="/"
-            element={<GameSessionContainer apiClients={apiClients} backendGameSession={backendGameSession} backendHostTeamAnswers={backendHostTeamAnswers}/>}
-          />
-        }
-        {!backendGameSession &&
-          <Route
-            path="*"
-            element={<LaunchContainer />}
-          />
-        }
-      </>
-    ),
-  );
+  const match = useMatch("/host/:gameSessionId");
+  const matchNew = useMatch("/new/:gameId");
+  
+  const gameId = matchNew?.params.gameId;
+  const gameSessionId = match?.params.gameSessionId;
+  let backendGameSession = null;
+  let backendHostTeamAnswers = null;
+  try {
+    const initResponse = useInitHostContainer(apiClients, gameSessionId ?? '');
+    backendGameSession = initResponse.backendGameSession;
+    backendHostTeamAnswers = initResponse.backendHostTeamAnswers;
+  } catch (error) {
+    console.log(error);
+  }
 
-  return (
-    <RouterProvider router={router} />
-  )
+  if (matchNew){
+    
+    return (
+        <LaunchContainer apiClients={apiClients} gameId={gameId ?? ''} />
+      )
+  }
+  if (match){
+  
+    return (
+      (backendGameSession && backendHostTeamAnswers)
+        ? <GameSessionContainer apiClients={apiClients} backendGameSession={backendGameSession} backendHostTeamAnswers={backendHostTeamAnswers} />
+        : null
+    )  
+  }
+  window.location.href = 'http://dev-central.rightoneducation.com/';
+  return null;
 }

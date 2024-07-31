@@ -111,6 +111,7 @@ function EndGameLobby({teams,
           teamsLength={teams ? teams.length : 0}
           selectedSuggestedGame={selectedSuggestedGame}
           handleButtonClick={handleButtonClick}
+          isGamePrepared={false}
         />
       </SafeAreaStyled>
     )

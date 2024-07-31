@@ -8,15 +8,10 @@ import {
   IHostTeamAnswers,
   GameSessionState
 } from '@righton/networking';
-import { getNextGameSessionState } from '../lib/HelperFunctions';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
+import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
 import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
-import GameCard from '../components/GameCard';
-import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
 
@@ -47,7 +42,7 @@ interface StartGameProps {
   gameCode: number;
   currentQuestionIndex: number;
   handleDeleteTeam: (id: string) => void;
-  setLocalHostTeamAnswers: (value: IHostTeamAnswers) => void;
+  setIsGamePrepared: (value: boolean) => void;
 }  
 
 function StartGame({teams,
@@ -56,28 +51,15 @@ function StartGame({teams,
   gameCode,
   currentQuestionIndex,
   handleDeleteTeam,
-  setLocalHostTeamAnswers
+  setIsGamePrepared
   }: StartGameProps) {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
-    const apiClients = useTSAPIClientsContext(APIClientsContext);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-    const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);   
 
     const handleButtonClick = () => {
-      const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-      if (localGameSession.currentQuestionIndex === null){
-        const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-        if (updateNoResponses && setLocalHostTeamAnswers)
-          setLocalHostTeamAnswers(updateNoResponses);
-        dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
-      } else {
-        const nextQuestionIndex = localGameSession.currentQuestionIndex + 1;
-        dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
-        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: nextQuestionIndex, currentState: nextState})
-      }
+      setIsGamePrepared(true);
     }
 
     return (
@@ -96,6 +78,7 @@ function StartGame({teams,
             teamsLength={teams ? teams.length : 0}
             screenSize={screenSize}
             handleButtonClick={handleButtonClick}
+            isGamePrepared={false}
           />
         </SafeAreaStyled>
     )

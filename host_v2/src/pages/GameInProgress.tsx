@@ -21,13 +21,7 @@ interface GameInProgressProps {
   totalTime: number,
   hasRejoined: boolean,
   currentTimer: number,
-  sampleConfidenceData: ConfidenceOption[],
   localModelMock: LocalModel,
-  onSelectMistake: (value: string, isBasedOnPopularity: boolean) => void;
-  sortedMistakes: Mistake[]; 
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
   localHostTeamAnswers: IHostTeamAnswers;
 }
 
@@ -37,21 +31,14 @@ export default function GameInProgress({
   totalTime,
   hasRejoined,
   currentTimer,
-  sampleConfidenceData,
   localModelMock,
-  onSelectMistake, 
-  sortedMistakes,
-  setSortedMistakes,
-  isPopularMode,
-  setIsPopularMode,
   localHostTeamAnswers,
 }: GameInProgressProps) {
     const theme = useTheme();
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
-    console.log(localGameSession.currentQuestionIndex);
-    const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS ? IPhase.ONE : IPhase.TWO;
+    const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
     const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
     const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
@@ -86,11 +73,6 @@ export default function GameInProgress({
           currentPhaseTeamAnswers={currentPhaseTeamAnswers}
           localGameSession={localGameSession}
           localHostTeamAnswers={localHostTeamAnswers}
-          onSelectMistake={onSelectMistake}
-          sortedMistakes={sortedMistakes}
-          setSortedMistakes={setSortedMistakes}
-          isPopularMode={isPopularMode}
-          setIsPopularMode={setIsPopularMode}
           screenSize={screenSize}
         />
       </BodyStackContainerStyled>

@@ -52,6 +52,7 @@ const InnerFooterContainer = styled(Box)({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
+  gap: '16px'
 });
 
 const PlayerCountTypography = styled(Typography)({
@@ -67,6 +68,7 @@ interface FootStartGameProps {
   screenSize: ScreenSize;
   selectedSuggestedGame?: string | null;
   handleButtonClick: () => void;
+  isGamePrepared: boolean;
 }
 
 function FooterStartGame({ 
@@ -74,7 +76,8 @@ function FooterStartGame({
   teamsLength,
   screenSize,
   selectedSuggestedGame,
-  handleButtonClick
+  handleButtonClick,
+  isGamePrepared
 }: FootStartGameProps) {
  
   let buttonText;
@@ -101,7 +104,7 @@ function FooterStartGame({
         <PaginationContainerStyled className="swiper-pagination-container" />
       }
       <InnerFooterContainer>
-        { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING &&
+        { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
           <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
             <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
             <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>

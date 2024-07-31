@@ -13,14 +13,14 @@ export const sortMistakes = (
    .map(shortAnswerResponse => ({ 
      answer: shortAnswerResponse.rawAnswer, 
      percent: Math.round((shortAnswerResponse.count / totalAnswers) * 100), 
-     isSelected: shortAnswerResponse.isSelectedMistake ?? false
+     isSelectedMistake: shortAnswerResponse.isSelectedMistake ?? false
    }));
   const orderedMistakes = extractedMistakes.sort((a, b) => b.percent - a.percent);
   if (isPopularMode) {
     orderedMistakes.forEach((mistake, index) => {
       if (index < numOfPopularMistakes)
-        mistake.isSelected = true; // eslint-disable-line
-      else mistake.isSelected = false; // eslint-disable-line
+        mistake.isSelectedMistake = true; // eslint-disable-line
+      else mistake.isSelectedMistake = false; // eslint-disable-line
     });
   }
   return orderedMistakes;

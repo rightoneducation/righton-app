@@ -29,6 +29,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   const confidenceCardRef = React.useRef(null);
   const featuredMistakesRef = React.useRef(null);
   const hintCardRef = React.useRef(null);
+  const [isGamePrepared, setIsGamePrepared] = React.useState<boolean>(false);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
   // we're going to set this default condition to a query to the question object

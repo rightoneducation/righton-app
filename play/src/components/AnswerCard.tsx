@@ -43,6 +43,7 @@ export default function AnswerCard({
   handleSelectAnswer,
 }: AnswerCardProps) {
   console.log(selectedAnswer === '')
+  console.log(answers);
   const theme = useTheme();
   const { t } = useTranslation();
   const correctText = (

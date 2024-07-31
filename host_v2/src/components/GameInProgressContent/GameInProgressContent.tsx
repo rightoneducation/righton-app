@@ -16,34 +16,17 @@ import GameInProgressContentRightColumn from './columns/GameInProgressContentRig
 
 
 interface GameInProgressContentProps {
-  // props for Confidence Card (see Team, Answer, Player, and ConfidenceOption interfaces above)
-  // confidenceData: ConfidenceOption[];
-  // confidenceGraphClickIndex: number | null;
-  // handleConfidenceGraphClick: (selectedIndex: number | null) => void;
   localGameSession: IGameSession;
   localHostTeamAnswers: IHostTeamAnswers;
-  onSelectMistake: (answer: string, isSelected: boolean) => void;
-  sortedMistakes: Mistake[];
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
   screenSize: ScreenSize;
   currentQuestion: IQuestion;
   currentPhase: IPhase;
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
-} // eslint-disable-line
+}
 
 export default function GameInProgressContent({
-  // confidenceData,
-  // confidenceGraphClickIndex,
-  // handleConfidenceGraphClick,
   localGameSession,
   localHostTeamAnswers,
-  onSelectMistake,
-  sortedMistakes,
-  setSortedMistakes,
-  isPopularMode,
-  setIsPopularMode,
   screenSize,
   currentQuestion,
   currentPhase,
@@ -63,6 +46,19 @@ export default function GameInProgressContent({
     prevPhaseResponses= localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [] as IHostTeamAnswersResponse[];
     prevPhaseConfidences = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.confidences ?? [] as IHostTeamAnswersConfidence[];
   }
+  let sortedMistakes: any = [];
+  // in shortAnswerMode
+  if (localGameSession.questions[localGameSession.currentQuestionIndex].isShortAnswerEnabled) {
+    const responses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase].responses ?? [];
+    const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+    const mistakes = responses.map((response) => !response.isCorrect && response.multiChoiceCharacter !== '–' ? {
+      answer: response.rawAnswer,
+      percent: (response.count/totalAnswers)*100,
+      isSelected: false
+    } : null).filter((mistake) => mistake !== null
+  );
+    sortedMistakes = mistakes.sort((a: any, b: any) => b.percent - a.percent);
+  }
   // these booleans turn on and off the respective feature cards in the render function below
   const {isConfidenceEnabled, isHintEnabled, isShortAnswerEnabled} = currentQuestion;
 
@@ -70,7 +66,7 @@ export default function GameInProgressContent({
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
   }
-
+  
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
@@ -87,12 +83,7 @@ export default function GameInProgressContent({
   const midCardsColumn = (
     <GameInProgressContentMidColumn
       currentQuestion={currentQuestion}
-      onSelectMistake={onSelectMistake}
       responses={currentResponses}
-      sortedMistakes={sortedMistakes}
-      setSortedMistakes={setSortedMistakes}
-      isPopularMode={isPopularMode}
-      setIsPopularMode={setIsPopularMode}
       featuredMistakesSelectionValue={featuredMistakesSelectionValue}
       isShortAnswerEnabled={isShortAnswerEnabled}
       isHintEnabled={isHintEnabled}
@@ -100,6 +91,7 @@ export default function GameInProgressContent({
       numPlayers={localGameSession.teams.length}
       graphClickInfo={graphClickInfo}
       handleGraphClick={handleGraphClick}
+      currentPhase={currentPhase}
     />
   );
   
@@ -107,7 +99,6 @@ export default function GameInProgressContent({
     <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
-      isShortAnswerEnabled={isShortAnswerEnabled}
     />
   );
   
@@ -182,7 +173,7 @@ export default function GameInProgressContent({
       return (
         <BodyContentAreaTripleColumnStyled container>
           {leftCardsColumn}
-          { (localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+          { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
             midCardsColumn
           }
           {rightCardsColumn}
