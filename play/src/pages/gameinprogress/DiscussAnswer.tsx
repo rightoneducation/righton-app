@@ -55,13 +55,14 @@ export default function DiscussAnswer({
     currentQuestion,
     currentState
   );
-  const isPlayerCorrect = isShortAnswerEnabled
-    ? ModelHelper.isShortAnswerResponseCorrect(
-        currentQuestion.responses ?? [],
-        currentTeam
-      )
-    : correctAnswer?.text === selectedAnswer?.text;
-    console.log(selectedAnswer?.text);
+  // const isPlayerCorrect = isShortAnswerEnabled
+  //   ? ModelHelper.isShortAnswerResponseCorrect(
+  //       currentQuestion.responses ?? [],
+  //       currentTeam
+  //     )
+  //   : correctAnswer?.text === selectedAnswer?.text;
+  //   console.log(selectedAnswer?.text);
+  const isPlayerCorrect = true;
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>
