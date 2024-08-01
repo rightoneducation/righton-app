@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { motion } from 'framer-motion';
 import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
 import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
 import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
@@ -70,6 +71,7 @@ interface FootStartGameProps {
   selectedSuggestedGame?: string | null;
   handleButtonClick: () => void;
   isGamePrepared: boolean;
+  scope4?: React.RefObject<HTMLDivElement>;
 }
 
 function FooterStartGame({ 
@@ -77,7 +79,8 @@ function FooterStartGame({
   screenSize,
   selectedSuggestedGame,
   isGamePrepared,
-  handleButtonClick
+  handleButtonClick,
+  scope4
 }: FootStartGameProps) {
  
   let buttonText;
@@ -113,9 +116,11 @@ function FooterStartGame({
             </PlayerCountTypography>
           </Box>
         }
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
-          { buttonText }
-        </ButtonStyled>
+        <motion.div ref={scope4} exit={{ y: 0, opacity: 0}}>
+          <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
+            { buttonText }
+          </ButtonStyled>
+        </motion.div>
       </InnerFooterContainer>
     </FooterContainer>
   );

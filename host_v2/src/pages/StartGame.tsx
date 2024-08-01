@@ -1,19 +1,12 @@
 import React from 'react';
-import {Box, Paper, Typography} from '@mui/material';
+import {Box, Paper } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
+import { useAnimate, motion } from 'framer-motion';
 import {
   ITeam,
   IQuestion,
-  IHostTeamAnswers,
-  GameSessionState
 } from '@righton/networking';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
-import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
 import FooterStartGame from '../components/FooterStartGame';
@@ -60,14 +53,36 @@ function StartGame({teams,
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
-    
+
+    // framer-motion transition animation
+    // first half is on startGame (exit out components)
+    // second half is on prepareGame (enter in components)
+    const [scope, animate] = useAnimate();
+    const [scope2, animate2] = useAnimate();
+    const [scope3, animate3] = useAnimate();
+    const [scope4, animate4] = useAnimate();
+
     const handleButtonClick = () => {
-      setIsGamePrepared(true);
+      const exitAnimation = () => {
+        // Start all animations concurrently and return a promise that resolves when all animations are complete
+        return Promise.all([
+          // animate(scope.current, { y: 'calc(-100vh + 250px)', zIndex: -1, position: 'relative'}, { duration: 1 }),
+         // animate2(scope2.current, { y: '-100vh', opacity: 0, position: 'relative'}, { duration: 1 }),
+          animate3(scope3.current, { opacity: 0, position: 'relative'}, { duration: 0.1 }),
+          animate4(scope4.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
+        ]);
+      };
+      exitAnimation().then(() => {
+        setIsGamePrepared(true);
+      });
+      
     }
 
     return (
         <SafeAreaStyled>
-          <HostHeader gameCode = {gameCode} />
+          <motion.div ref={scope2} exit={{opacity: 0}} >
+            <HostHeader gameCode = {gameCode} />
+          </motion.div>
           <HostBody 
             teams={teams} 
             questions={questions} 
@@ -76,12 +91,15 @@ function StartGame({teams,
             handleDeleteTeam={handleDeleteTeam} 
             screenSize={screenSize}
           />
-          <FooterStartGame 
-            teamsLength={teams ? teams.length : 0}
-            screenSize={screenSize}
-            handleButtonClick={handleButtonClick}
-            isGamePrepared={false}
-          />
+          <motion.div ref={scope3} exit={{opacity: 0}}>
+            <FooterStartGame 
+              teamsLength={teams ? teams.length : 0}
+              screenSize={screenSize}
+              handleButtonClick={handleButtonClick}
+              isGamePrepared={false}
+              scope4={scope4}
+            />
+          </motion.div>
         </SafeAreaStyled>
     )
   }
