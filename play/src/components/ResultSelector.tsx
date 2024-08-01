@@ -39,7 +39,8 @@ interface ResultSelectorProps {
   answerText: string;
   percentageText?: string;
   currentState?: GameSessionState;
-  stars?: boolean;
+  isShortAnswerEnabled?: boolean;
+  correctCard?: boolean;
 }
 
 export default function ResultSelector({
@@ -48,7 +49,8 @@ export default function ResultSelector({
   answerText,
   percentageText,
   currentState,
-  stars,
+  isShortAnswerEnabled,
+  correctCard,
 }: ResultSelectorProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
@@ -65,7 +67,6 @@ export default function ResultSelector({
   const handleContextMenu: MouseEventHandler<HTMLElement> = (event) => {
     event.preventDefault();
   };
-
   const image = (
     <img
       src={imageMap[answerStatus]}
@@ -86,16 +87,21 @@ export default function ResultSelector({
   const resultContents = (
     <>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        <Typography
-          variant="h5"
-          sx={{
-            paddingLeft: '1px',
-            paddingTop: '2px',
-            opacity: 0.5,
-          }}
-        >
-          {String.fromCharCode(letterCode)}
-        </Typography>
+        {!(isShortAnswerEnabled && currentState === GameSessionState.PHASE_1_DISCUSS) && !(isShortAnswerEnabled && correctCard) && (
+          <Typography
+            variant="h5"
+            sx={{
+              paddingLeft: '1px',
+              color: correctCard ? '#384466' : '#4700B2',
+              fontWeight: '800',
+              fontSize: '16px',
+              lineHeight: '22px',
+              opacity: correctCard ? '.5' : '1',
+            }}
+          >
+            {String.fromCharCode(letterCode)}
+          </Typography>
+        )}
         <Typography
           variant="body2"
           sx={{
@@ -140,7 +146,6 @@ export default function ResultSelector({
       </Box>
     </>
   );
-
   switch (answerStatus) {
     case AnswerState.CORRECT:
       return (
@@ -151,25 +156,25 @@ export default function ResultSelector({
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
         <Box sx={{ width: '100%' }}>
-            {stars && (
-              <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
-                <CorrectStarsStyled
-                  src={CorrectStars}
-                  alt="Stars icon that denotes player is correct"
-                  style={{ top: -5, left: 0 }}
-                />
-                <CorrectStarsStyled
-                  src={CorrectStars}
-                  alt="Stars icon that denotes player is correct"
-                  style={{ top: -5, right: 10 }}
-                />
-                <CorrectStarsStyled
-                  src={CorrectStars_Mirrored}
-                  alt="Stars icon that denotes player is correct"
-                  style={{ top: 30, right: 0 }}
-                />
-              </Box>
-            )}
+          {currentState === GameSessionState.PHASE_1_DISCUSS && (
+            <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
+              <CorrectStarsStyled
+                src={CorrectStars}
+                alt="Stars icon that denotes player is correct"
+                style={{ top: -5, left: 0 }}
+              />
+              <CorrectStarsStyled
+                src={CorrectStars}
+                alt="Stars icon that denotes player is correct"
+                style={{ top: -5, right: 10 }}
+              />
+              <CorrectStarsStyled
+                src={CorrectStars_Mirrored}
+                alt="Stars icon that denotes player is correct"
+                style={{ top: 30, right: 0 }}
+              />
+            </Box>
+          )}
           <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
         </Box>
       );
