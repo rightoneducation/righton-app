@@ -22,6 +22,7 @@ import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
+import DACScoreIndicator from '../../components/DACScoreIndicator';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -67,6 +68,7 @@ export default function DiscussAnswer({
     <ScrollBoxStyled>
       <Stack spacing={2}>
         <QuestionCard questionText={questionText} imageUrl={questionUrl} />
+        <DACScoreIndicator newPoints={5} score={0} />
         <DiscussAnswerCard
           isPlayerCorrect={isPlayerCorrect}
           instructions={instructions}
