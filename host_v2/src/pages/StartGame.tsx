@@ -60,25 +60,8 @@ function StartGame({teams,
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
-    const apiClients = useTSAPIClientsContext(APIClientsContext);
-    const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-    const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
-    const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
-
+    
     const handleButtonClick = () => {
-      const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-      const currentTimeMillis = Date.now().toString(); 
-      if (localGameSession.currentQuestionIndex === null){
-        const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(localGameSession);
-          if (updateNoResponses)
-            dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
-        dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: currentTimeMillis});
-      } else {
-        const nextQuestionIndex = localGameSession.currentQuestionIndex + 1;
-        dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex, startTime: currentTimeMillis}});
-        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: currentTimeMillis});
-      }
       setIsGamePrepared(true);
     }
 

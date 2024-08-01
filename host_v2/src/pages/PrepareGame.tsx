@@ -44,6 +44,7 @@ export default function PrepareGame( {
           ? ScreenSize.MEDIUM 
           : ScreenSize.SMALL;
     const handleButtonClick = () => {
+      const currentTimeMillis = Date.now().toString(); 
       const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
       const questionUpdates = localGameSession.questions.map(async (question) => 
         apiClients.question.updateQuestion({id: question.id, order: question.order, gameSessionId: question.gameSessionId, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled})
@@ -55,8 +56,8 @@ export default function PrepareGame( {
         const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(updatedGameSession);
         if (updateNoResponses)
           dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
-        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState });
-        dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
+        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: currentTimeMillis});
+        dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0, startTime: currentTimeMillis}});
         setIsTimerVisible(true);
       });
     };

@@ -65,7 +65,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
       addedStartTime = totalTime * 1000 - currentTimer * 1000;
     }
     const newStartTime = Number(localGameSession.startTime) + addedStartTime;
-    console.log(newTime);
     setCurrentTimer(newTime);
     apiClients?.hostDataManager?.updateTime(newStartTime);
   }
