@@ -8,6 +8,7 @@ import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import ResultSelector from './ResultSelector';
+import DACScoreIndicator from './DACScoreIndicator';
 
 interface DiscussAnswerCardProps {
   isPlayerCorrect: boolean;
@@ -18,6 +19,7 @@ interface DiscussAnswerCardProps {
   answerReason?: string;
   currentState: GameSessionState;
   isShortAnswerEnabled: boolean;
+  newPoints: number | undefined;
 }
 
 export default function DiscussAnswerCard({
@@ -29,6 +31,7 @@ export default function DiscussAnswerCard({
   answerReason,
   currentState,
   isShortAnswerEnabled,
+  newPoints,
 }: DiscussAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -64,6 +67,11 @@ export default function DiscussAnswerCard({
             <Typography variant="body1">
               {t('gameinprogress.discussanswer.correctanswertext')}
             </Typography>
+          </Box>
+        )}
+        {currentState === GameSessionState.PHASE_1_DISCUSS &&(
+          <Box style={{ marginLeft: '416px'}}>
+            <DACScoreIndicator newPoints={newPoints} score={0} />
           </Box>
         )}
         <ResultSelector

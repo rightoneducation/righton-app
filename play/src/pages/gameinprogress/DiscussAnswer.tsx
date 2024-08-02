@@ -26,6 +26,7 @@ import {
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import ResultsCard from '../../components/ResultsCard';
+import DACScoreIndicator from '../../components/DACScoreIndicator';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -38,6 +39,7 @@ interface DiscussAnswerProps {
   currentQuestion: IQuestion;
   isShortAnswerEnabled: boolean;
   gameSession: IGameSession;
+  newPoints: number | undefined;
 }
 
 const ColumnHeader = styled(Typography)({
@@ -62,6 +64,7 @@ export default function DiscussAnswer({
   currentQuestion,
   isShortAnswerEnabled,
   gameSession,
+  newPoints,
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -74,14 +77,14 @@ export default function DiscussAnswer({
     currentQuestion,
     currentState
   );
-  // const isPlayerCorrect = isShortAnswerEnabled
-  //   ? ModelHelper.isShortAnswerResponseCorrect(
-  //       currentQuestion.responses ?? [],
-  //       currentTeam
-  //     )
-  //   : correctAnswer?.text === selectedAnswer?.text;
-  //   console.log(selectedAnswer?.text);
-  const isPlayerCorrect = false;
+  const isPlayerCorrect = isShortAnswerEnabled
+    ? ModelHelper.isShortAnswerResponseCorrect(
+        currentQuestion.responses ?? [],
+        currentTeam
+      )
+    : correctAnswer?.text === selectedAnswer?.text;
+    console.log(selectedAnswer?.text);
+  // const isPlayerCorrect = true;
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>
@@ -98,7 +101,7 @@ export default function DiscussAnswer({
           answerIndex={correctIndex ?? 0}
           currentState={currentState}
           isShortAnswerEnabled={isShortAnswerEnabled}
-
+          newPoints={newPoints}
         />
       </Stack>
       {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
@@ -136,6 +139,7 @@ export default function DiscussAnswer({
                   currentState={currentState}
                   key={uuidv4()}
                   isShortAnswerEnabled={isShortAnswerEnabled}
+                  newPoints={newPoints}
                 />
               )
           )}
@@ -169,7 +173,7 @@ export default function DiscussAnswer({
             answerIndex={correctIndex ?? 0}
             currentState={currentState}
             isShortAnswerEnabled={isShortAnswerEnabled}
-
+            newPoints={newPoints}
           />
       </ScrollBoxStyled>
   );
@@ -179,7 +183,7 @@ export default function DiscussAnswer({
       container
       spacing={isSmallDevice ? 0 : 2}
     >
-      <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%', padding: '0px' }}>
+      <Grid item xs={12} sm={4} style={{ width: `100%`, height: '100%', padding: '0px' }}>
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
@@ -221,22 +225,10 @@ export default function DiscussAnswer({
       <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
         {questionRightColumnContents}
       </Grid>
-      <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%', padding: '0px' }}>
-        <ColumnHeader>Your Answer </ColumnHeader>
-        <ThreeColumnScrollBox>
-          <ResultsCard
-            gameSession={gameSession}
-            answers={answerChoices ?? []}
-            selectedAnswer={selectedAnswer ?? null}
-            currentState={currentState}
-            currentQuestionId={currentQuestion.id}
-          />
-        </ThreeColumnScrollBox>
-      </Grid>
     </BodyContentAreaTripleColumnStyled>
   ) : (
     <BodyContentAreaSingleColumnStyled>
-      <Box sx={{ width: '100%', height: '100%' }}>
+      <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
         {P1LeftColumnContents}
       </Box>
     </BodyContentAreaSingleColumnStyled>
