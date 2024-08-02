@@ -53,7 +53,6 @@ export default function ConfidenceResponsesGraph({
   graphClickIndex,
   handleGraphClick,
 }: GraphProps) {
-  console.log(confidences);
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();  
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 }); // eslint-disable-line

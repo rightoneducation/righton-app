@@ -41,7 +41,6 @@ export default function GameInProgressContentMidColumn ({
       {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
         <FeaturedMistakes
           currentQuestion={currentQuestion}
-          responses={responses}
           featuredMistakesSelectionValue={featuredMistakesSelectionValue}
         /> 
         :

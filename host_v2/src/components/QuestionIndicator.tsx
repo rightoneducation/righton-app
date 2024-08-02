@@ -18,10 +18,7 @@ export default function QuestionIndicator({
   currentQuestionIndex,
   statePosition,
 }: QuestionIndicatorProps) {
-  console.log(statePosition);
   const indicators = Array.from({ length: totalQuestions ?? 0 }, (_, index) => {
-    console.log(index);
-    console.log(currentQuestionIndex);
     if (currentQuestionIndex != null && index < currentQuestionIndex) {
       return <PlayedQuestionBox key={index}>{index + 1}</PlayedQuestionBox>;
     }
@@ -41,6 +38,5 @@ export default function QuestionIndicator({
       </CurrentQuestionBoxPhase2>
     );
   });
-  console.log(indicators);
   return <QuestionIndicatorContainer>{indicators}</QuestionIndicatorContainer>;
 }
