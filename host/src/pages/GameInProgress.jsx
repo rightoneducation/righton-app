@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Box, Typography } from '@material-ui/core';
 import FooterGame from '../components/FooterGame';
 import HeaderGame from '../components/HeaderGame';
 import CheckMark from '../images/Union.png';
@@ -7,6 +7,8 @@ import GameModal from '../components/GameModal';
 import GameLoadModal from '../components/GameLoadModal';
 import { GameSessionState } from '@righton/networking';
 import GameInProgressContentSwitch from '../components/GameInProgressContentSwitch';
+
+
 import {
   getTotalAnswers,
   getQuestionChoices,
@@ -60,22 +62,23 @@ export default function GameInProgress({
   multipleChoiceText
 }) {
   const classes = useStyles();
+
   const footerButtonTextDictionary = {
-    //dictionary used to assign button text based on the next state
-    1: 'Begin Question',
-    2: 'Continue',
-    3: 'Go to Results',
-    4: 'Go to Phase 2',
-    5: 'Start Phase 2 Question',
-    6: 'Continue',
-    7: 'Go to Results',
-    8: 'Go to Next Question',
-    9: 'Proceed to RightOn Central',
+    1: 'Begin Question', // TEAMS_JOINING
+    2: 'Continue', // PHASE_1_DISCUSS
+    3: 'Go to Phase 2', // SKIPPED PHASE_1_RESULTS
+    4: 'Start Phase 2 Question', // PHASE_2_START
+    5: 'Continue', // phase 2 start to PHASE_2_DISCUSS
+    6: 'Go to Next Question', // SKIPPED PHASE_2_RESULTS
+    9: 'Proceed to RightOn Central', // CHOOSE_CORRECT_ANSWER
   };
   const numPlayers = teams.length;
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+  // for the nextstate func. added
+    let isLastQuestion =
+    (currentQuestionIndex + 1) === questions.length;
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answers = useMemo(
@@ -163,9 +166,19 @@ export default function GameInProgress({
 
   let [modalOpen, setModalOpen] = useState(false);
   const nextStateFunc = (currentState) => {
-    let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
-    return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
+    const stateKeys = Object.keys(GameSessionState);
+    let currentIndex = stateKeys.indexOf(currentState);
+  
+    if (currentIndex === -1) {
+      throw new Error(`Unknown state: ${currentState}`);
+    }
+    if (currentState === GameSessionState.PHASE_2_DISCUSS && !isLastQuestion) {
+      return GameSessionState.TEAMS_JOINING;
+    }
+    let nextIndex = currentIndex + 1; 
+    return GameSessionState[stateKeys[nextIndex]];
   };
+
 
   // handles closing the modal by clicking outside of it or with the "Im done" text
   const handleModalClose = (modalOpen) => {
@@ -186,6 +199,15 @@ export default function GameInProgress({
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
+    if (!isLastQuestion && currentState === GameSessionState.PHASE_2_DISCUSS) {
+      // if they are on the last page a\nd need to advance to the next question
+      assembleNavDictionary(false, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
+      handleUpdateGameSession({
+        currentState: nextStateFunc(currentState),
+        currentQuestionIndex: currentQuestionIndex + 1,
+      });
+      return;
+    }
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
@@ -208,11 +230,15 @@ export default function GameInProgress({
 
   // used to determine which button text to show based on the dictionary above and whether all players have answered
   const getFooterText = (numPlayers, totalAnswers, statePosition) => {
-    if (statePosition === 2 || statePosition === 6) {
+    console.log(statePosition);
+    console.log(currentState);
+    if (statePosition === 2 || statePosition === 5) {
       if (totalAnswers < numPlayers && gameTimerZero === false)
         return 'End Answering';
       else return footerButtonTextDictionary[statePosition];
     }
+    if (statePosition === 6 && isLastQuestion)
+        return 'See Leaderboard';
     return footerButtonTextDictionary[statePosition];
   };
   return (
@@ -392,5 +418,9 @@ const useStyles = makeStyles((theme) => ({
     },
     scrollbarWidth: 'none', // Firefox
     '-ms-overflow-style': 'none', // IE and Edge
+    paddingLeft: '24px',
+    paddingRight: '24px',
+    paddingTop: '0px',
+    boxSizing: 'border-box',
   },
 }));

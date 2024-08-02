@@ -60,22 +60,6 @@ Phase2Discuss.args = {
   handleTimerIsFinished,
 };
 
-export const Phase1Results = Template.bind({});
-Phase1Results.args = {
-  currentState: GameSessionState.PHASE_1_RESULTS,
-  totalTime: 5,
-  isPaused: false,
-  handleTimerIsFinished,
-};
-
-export const Phase2Results = Template.bind({});
-Phase2Results.args = {
-  currentState: GameSessionState.PHASE_2_RESULTS,
-  totalTime: 5,
-  isPaused: false,
-  handleTimerIsFinished,
-};
-
 export const Correct = Template.bind({});
 Correct.args = {
   isCorrect: true,

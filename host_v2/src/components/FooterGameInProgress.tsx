@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { GameSessionState } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersPerPhase } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -64,12 +64,14 @@ const InnerFooterContainer = styled(Box)({
 
 interface FootStartGameProps {
   currentState: GameSessionState;
+  submittedAnswers: number;
   teamsLength: number;
   screenSize: ScreenSize;
 }
 
 function FooterStartGame({ 
   currentState,
+  submittedAnswers,
   teamsLength,
   screenSize
 }: FootStartGameProps) {
@@ -80,10 +82,25 @@ function FooterStartGame({
   const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
 
   const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState);
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     dispatch({type: 'advance_game_phase', payload: {nextState}});
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
   };
+  const GetButtonText =() => {
+    switch(currentState) {
+      case GameSessionState.CHOOSE_CORRECT_ANSWER:
+      case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+        return 'End Answering';
+      case GameSessionState.PHASE_2_START:
+        return 'Continue to Phase Two';
+      case GameSessionState.PHASE_1_DISCUSS:
+      case GameSessionState.PHASE_2_DISCUSS:
+        return 'Continue';
+      default:
+        return 'Start Game';
+    }
+  }
+  const buttonText = GetButtonText();
   return (
     <FooterContainer>
       <InnerFooterContainer>
@@ -94,9 +111,9 @@ function FooterStartGame({
           />
         )}
         { (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
-          <ProgressBarGroup teamsLength={teamsLength} />
+          <ProgressBarGroup submittedAnswers={submittedAnswers} teamsLength={teamsLength} />
         }
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>{buttonText}</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );

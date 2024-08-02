@@ -325,6 +325,9 @@ export class AnswerFactory {
       case AnswerType.EXPRESSION:
         return new ExpressionAnswer(rawAnswer, answerType);
       case AnswerType.MULTICHOICE:
+        console.log(rawAnswer);
+        console.log(answerType);
+        console.log(multiChoiceCharacter);
         return new MultiChoiceAnswer(rawAnswer, answerType, multiChoiceCharacter || '');
       case AnswerType.STRING:
       default:

@@ -39,6 +39,7 @@ interface ResultSelectorProps {
   answerText: string;
   percentageText?: string;
   currentState?: GameSessionState;
+  stars?: boolean;
 }
 
 export default function ResultSelector({
@@ -47,6 +48,7 @@ export default function ResultSelector({
   answerText,
   percentageText,
   currentState,
+  stars,
 }: ResultSelectorProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
@@ -105,7 +107,7 @@ export default function ResultSelector({
         </Typography>
       </Box>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        {currentState === GameSessionState.PHASE_2_RESULTS && ( // if in phase 2, display percentage text
+        {currentState === GameSessionState.PHASE_2_DISCUSS && ( 
           <Typography
             variant="body2"
             sx={{
@@ -149,23 +151,25 @@ export default function ResultSelector({
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
         <Box sx={{ width: '100%' }}>
-          <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
-            <CorrectStarsStyled
-              src={CorrectStars}
-              alt="Stars icon that denotes player is correct"
-              style={{ top: -5, left: 0 }}
-            />
-            <CorrectStarsStyled
-              src={CorrectStars}
-              alt="Stars icon that denotes player is correct"
-              style={{ top: -5, right: 10 }}
-            />
-            <CorrectStarsStyled
-              src={CorrectStars_Mirrored}
-              alt="Stars icon that denotes player is correct"
-              style={{ top: 30, right: 0 }}
-            />
-          </Box>
+            {stars && (
+              <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
+                <CorrectStarsStyled
+                  src={CorrectStars}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: -5, left: 0 }}
+                />
+                <CorrectStarsStyled
+                  src={CorrectStars}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: -5, right: 10 }}
+                />
+                <CorrectStarsStyled
+                  src={CorrectStars_Mirrored}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: 30, right: 0 }}
+                />
+              </Box>
+            )}
           <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
         </Box>
       );

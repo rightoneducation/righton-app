@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Grid, Stack, Box } from '@mui/material';
 import {
   GameSessionState,
@@ -7,6 +7,7 @@ import {
   ITeam,
   IQuestion,
   IChoice,
+  IGameSession,
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -16,12 +17,15 @@ import { AnswerState } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
+import ThreeColumnScrollBox from '../../lib/styledcomponents/layout/ThreeColumnScrollBox';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import {
+  BodyContentAreaTripleColumnStyled,
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
+import ResultsCard from '../../components/ResultsCard';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -33,7 +37,19 @@ interface DiscussAnswerProps {
   currentTeam: ITeam;
   currentQuestion: IQuestion;
   isShortAnswerEnabled: boolean;
+  gameSession: IGameSession;
 }
+
+const ColumnHeader = styled(Typography)({
+  marginTop: `16px`,
+  marginBottom: `16px`,
+  textAlign: 'center',
+  fontFamily: 'Karla',
+  fontWeight: '800',
+  fontSize: '16px',
+  lineHeight: '18.7px',
+  color: 'white',
+});
 
 export default function DiscussAnswer({
   isSmallDevice,
@@ -45,11 +61,14 @@ export default function DiscussAnswer({
   currentTeam,
   currentQuestion,
   isShortAnswerEnabled,
+  gameSession,
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
   const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
+  
+  
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
@@ -64,17 +83,10 @@ export default function DiscussAnswer({
 
   const questionCorrectAnswerContents = (
     <>
-      <Typography
-        variant="h2"
-        sx={{
-          marginTop: `${theme.sizing.smallPadding}px`,
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-        }}
-      >
-        {t('gameinprogress.discussanswer.questionanswercolumn')}
-      </Typography>
-      <ScrollBoxStyled>
+      <ColumnHeader>
+      {t('gameinprogress.discussanswer.questionanswercolumn')}
+      </ColumnHeader>
+      <ThreeColumnScrollBox>
         <Stack spacing={2}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
           <DiscussAnswerCard
@@ -89,6 +101,19 @@ export default function DiscussAnswer({
             answerIndex={correctIndex ?? 0}
             currentState={currentState}
           />
+          {isSmallDevice && currentState === GameSessionState.PHASE_1_DISCUSS && (
+          <Typography
+            variant="body1"
+            sx={{
+              textAlign: 'center',
+              marginTop: `${theme.sizing.largePadding}px`,
+              opacity: 0.5,
+              whiteSpace: 'pre-line'
+            }}
+          >
+              {'Swipe to the left to see your\nanswer'}
+          </Typography>
+        )}
         </Stack>
         {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
           <Typography
@@ -97,28 +122,22 @@ export default function DiscussAnswer({
               textAlign: 'center',
               marginTop: `${theme.sizing.largePadding}px`,
               opacity: 0.5,
+              whiteSpace: 'pre-line'
             }}
           >
-            {t('gameinprogress.general.swipealert')}
+              {'Swipe to the left to see\nexplanations and results'}
           </Typography>
         )}
-      </ScrollBoxStyled>
+      </ThreeColumnScrollBox>
     </>
   );
 
   const incorrectAnswerContents = (
     <>
-      <Typography
-        variant="h2"
-        sx={{
-          marginTop: `${theme.sizing.smallPadding}px`,
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-        }}
-      >
+      <ColumnHeader>
         {t('gameinprogress.discussanswer.incorrectanswercolumn')}
-      </Typography>
-      <ScrollBoxStyled>
+      </ColumnHeader>
+      <ThreeColumnScrollBox>
         <Stack spacing={2}>
           {answerChoices?.map(
             (answer, index) =>
@@ -140,16 +159,16 @@ export default function DiscussAnswer({
               )
           )}
         </Stack>
-      </ScrollBoxStyled>
+      </ThreeColumnScrollBox>
     </>
   );
 
   return currentState === GameSessionState.PHASE_2_DISCUSS ? (
-    <BodyContentAreaDoubleColumnStyled
+    <BodyContentAreaTripleColumnStyled
       container
       spacing={isSmallDevice ? 0 : 2}
     >
-      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%', padding: '0px' }}>
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
@@ -181,22 +200,111 @@ export default function DiscussAnswer({
                 height: '100%',
               }}
             >
-              {incorrectAnswerContents}
+              {incorrectAnswerContents} 
+            </SwiperSlide>
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              <ColumnHeader>Your Answer</ColumnHeader>
+             <ThreeColumnScrollBox>
+              <ResultsCard
+                gameSession={gameSession}
+                answers={answerChoices ?? []}
+                selectedAnswer={selectedAnswer ?? null}
+                currentState={currentState}
+                currentQuestionId={currentQuestion.id}
+            />
+            </ThreeColumnScrollBox>
             </SwiperSlide>
           </Swiper>
         ) : (
           questionCorrectAnswerContents
         )}
       </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%',padding: '0px' }}>
         {incorrectAnswerContents}
       </Grid>
-    </BodyContentAreaDoubleColumnStyled>
+      <Grid item xs={12} sm={4} style={{ width: '100%', height: '100%', padding: '0px' }}>
+        <ColumnHeader>Your Answer </ColumnHeader>
+        <ThreeColumnScrollBox>
+          <ResultsCard
+            gameSession={gameSession}
+            answers={answerChoices ?? []}
+            selectedAnswer={selectedAnswer ?? null}
+            currentState={currentState}
+            currentQuestionId={currentQuestion.id}
+          />
+        </ThreeColumnScrollBox>
+      </Grid>
+    </BodyContentAreaTripleColumnStyled>
   ) : (
-    <BodyContentAreaSingleColumnStyled>
-      <Box sx={{ width: '100%', height: '100%' }}>
-        {questionCorrectAnswerContents}
-      </Box>
-    </BodyContentAreaSingleColumnStyled>
+    <BodyContentAreaDoubleColumnStyled
+      container
+      spacing={isSmallDevice ? 0 : 2}
+    >
+      <Grid item xs={12} sm={6} style={{ width: '100%', height: '100%', padding: '0px' }}>
+        {isSmallDevice ? (
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={4}
+            centeredSlides
+            slidesPerView="auto"
+            pagination={{
+              el: '.swiper-pagination-container',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              clickable: true,
+              renderBullet(index, className) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+              },
+            }}
+            style={{ height: '100%' }}
+          >
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {questionCorrectAnswerContents}
+            </SwiperSlide>
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              <ColumnHeader> Your Answer</ColumnHeader>
+                <ThreeColumnScrollBox>
+              <ResultsCard
+                gameSession={gameSession}
+                answers={answerChoices ?? []}
+                selectedAnswer={selectedAnswer ?? null}
+                currentState={currentState}
+                currentQuestionId={currentQuestion.id}
+            />
+            </ThreeColumnScrollBox>
+            </SwiperSlide>
+          </Swiper>
+        ) : (
+          questionCorrectAnswerContents
+        )}
+      </Grid>
+      <Grid item xs={0} sm={6} style={{ width: '100%', height: '100%', padding: '0px' }}>
+        <ColumnHeader>Your Answer</ColumnHeader>
+      <ThreeColumnScrollBox>
+              <ResultsCard
+                gameSession={gameSession}
+                answers={answerChoices ?? []}
+                selectedAnswer={selectedAnswer ?? null}
+                currentState={currentState}
+                currentQuestionId={currentQuestion.id}
+            />
+            </ThreeColumnScrollBox>
+      </Grid>
+    </BodyContentAreaDoubleColumnStyled>
   );
 }

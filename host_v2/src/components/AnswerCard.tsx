@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
@@ -32,6 +33,7 @@ export default function AnswerCard({
           alignItems: 'flex-start',
           marginTop: `${theme.sizing.xSmPadding}px`,
         }}
+        key={uuidv4()}
       >
         <Typography
           sx={{
