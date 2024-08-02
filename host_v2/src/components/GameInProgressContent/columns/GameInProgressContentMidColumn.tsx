@@ -1,13 +1,16 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { GameSessionState, IHostTeamAnswersHint } from '@righton/networking';
-import { Mistake } from "../../../lib/HostModels";
+import { GameSessionState, IHostTeamAnswersHint, IHostTeamAnswersResponse, IQuestion } from '@righton/networking';
+import { Mistake, IGraphClickInfo } from "../../../lib/HostModels";
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
 import FeaturedMistakes from '../../FeaturedMistakes';
 import HintsCard from '../../HintsGraph/HintsCard';
+import Responses from '../../ResponsesGraph/ResponsesCard';
 
 
 interface GameInProgressContentMidColumnProps {
+  currentQuestion: IQuestion;
+  responses: IHostTeamAnswersResponse[];
   onSelectMistake: (answer: string, isSelected: boolean) => void;
   sortedMistakes: Mistake[];
   setSortedMistakes: (value: Mistake[]) => void;
@@ -18,10 +21,14 @@ interface GameInProgressContentMidColumnProps {
   isHintEnabled: boolean;
   currentHints: IHostTeamAnswersHint[];
   numPlayers: number;
+  graphClickInfo: IGraphClickInfo;
+  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 
 export default function GameInProgressContentMidColumn ({ 
+    currentQuestion,
+    responses,
     onSelectMistake,
     sortedMistakes,
     setSortedMistakes,
@@ -31,13 +38,15 @@ export default function GameInProgressContentMidColumn ({
     isShortAnswerEnabled,
     isHintEnabled,
     currentHints,
-    numPlayers
+    numPlayers,
+    graphClickInfo,
+    handleGraphClick
   }: GameInProgressContentMidColumnProps
 ){
   return (
-    <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+    <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
     <ScrollBoxStyled>
-      {isShortAnswerEnabled &&
+      {isShortAnswerEnabled ?
         <FeaturedMistakes
           sortedMistakes={sortedMistakes}
           setSortedMistakes={setSortedMistakes}
@@ -46,6 +55,15 @@ export default function GameInProgressContentMidColumn ({
           onSelectMistake={onSelectMistake}
           featuredMistakesSelectionValue={featuredMistakesSelectionValue}
         /> 
+        :
+        <Responses 
+          currentQuestion={currentQuestion}
+          responses={responses}
+          statePosition={6}
+          graphClickInfo={graphClickInfo}
+          isShortAnswerEnabled={false}
+          handleGraphClick={handleGraphClick}
+        />
       }
       {isHintEnabled &&
         <HintsCard 

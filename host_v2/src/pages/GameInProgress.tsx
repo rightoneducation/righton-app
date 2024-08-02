@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint } from '@righton/networking';
+import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint, IPhase } from '@righton/networking';
 import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
@@ -49,6 +49,12 @@ export default function GameInProgress({
     const theme = useTheme();
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
     const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
+    const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
+    const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS ? IPhase.ONE : IPhase.TWO;
+    const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
+    const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
+    console.log(currentPhaseTeamAnswers);
+    console.log(submittedAnswers);
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
       setConfidenceGraphClickIndex(selectedIndex);
     };
@@ -76,6 +82,9 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <GameInProgressContent
+          currentQuestion={currentQuestion}
+          currentPhase={currentPhase}
+          currentPhaseTeamAnswers={currentPhaseTeamAnswers}
           localGameSession={localGameSession}
           localHostTeamAnswers={localHostTeamAnswers}
           onSelectMistake={onSelectMistake}
@@ -88,7 +97,8 @@ export default function GameInProgress({
       </BodyStackContainerStyled>
       <FooterBackgroundStyled >
         <FooterGameInProgress 
-          teamsLength={5} 
+          submittedAnswers={submittedAnswers}
+          teamsLength={localGameSession.teams.length} 
           currentState={localGameSession.currentState}
           screenSize={screenSize}
         />

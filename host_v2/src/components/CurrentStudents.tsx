@@ -9,6 +9,7 @@ import { ReactComponent as MonsterIndex4 } from '../images/MonsterIndex4.svg';
 import { ReactComponent as MonsterIndex3 } from '../images/MonsterIndex3.svg';
 import { ReactComponent as MonsterIndex5 } from '../images/MonsterIndex5.svg';
 import { ReactComponent as MonsterIndex2 } from '../images/MonsterIndex2.svg';
+import { StartGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
 
 
 interface Team {
@@ -137,15 +138,17 @@ function CurrentStudents({ teams, handleDeleteTeam }: CurrentStudentProps) {
   };
 
   return (
-    <BoxStyled>
-      {sortedTeams.map((team) => (
-        <MenuItemStyled key={uuidv4()}>
-          {renderMonsterContainer(team.selectedAvatarIndex)}
-          <GridNameStyled>{team.name}</GridNameStyled>
-          <CloseSvg onClick={() => handleDeleteTeam(team.id)} />
-        </MenuItemStyled>
-      ))}
-    </BoxStyled>
+    <StartGameScrollBoxStyled>
+      <BoxStyled>
+        {sortedTeams.map((team) => (
+          <MenuItemStyled key={uuidv4()}>
+            {renderMonsterContainer(team.selectedAvatarIndex)}
+            <GridNameStyled>{team.name}</GridNameStyled>
+            <CloseSvg onClick={() => handleDeleteTeam(team.id)} />
+          </MenuItemStyled>
+        ))}
+      </BoxStyled>
+    </StartGameScrollBoxStyled>
   );
 }
 export default CurrentStudents;

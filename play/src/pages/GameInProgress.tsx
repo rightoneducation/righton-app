@@ -206,7 +206,6 @@ export default function GameInProgress({
         }
         if (isAnswerMultiChoice(answer.answer)){
           answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line
-          answer.answer.rawAnswer = multiChoiceCharacter; // eslint-disable-line
         }
       }
       

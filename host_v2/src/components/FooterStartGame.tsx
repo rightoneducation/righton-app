@@ -1,14 +1,16 @@
 import React, { useContext } from 'react';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GameSessionState } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswers } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBar from './ProgressBarGroup';
+import { ScreenSize } from '../lib/HostModels';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { set } from 'lodash';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -59,16 +61,26 @@ const InnerFooterContainer = styled(Box)({
   alignItems: 'center',
   width: '100%',
   height: '92px',
-  gap: '8px',
+  gap: '16px',
+});
 
+const PlayerCountTypography = styled(Typography)({
+  fontFamily: 'Rubik',
+  color: "#FFF",
+  fontSize: '24px',
+  fontWeight: 700
 });
 
 interface FootStartGameProps {
   teamsLength: number;
+  screenSize: ScreenSize;
+  setLocalHostTeamAnswers: (value: IHostTeamAnswers) => void;
 }
 
 function FooterStartGame({ 
-  teamsLength
+  teamsLength,
+  screenSize,
+  setLocalHostTeamAnswers,
 }: FootStartGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
@@ -76,15 +88,25 @@ function FooterStartGame({
 
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState);
-    dispatch({type: 'advance_game_phase', payload: {nextState}});
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
+    const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
+    if (updateNoResponses)
+      setLocalHostTeamAnswers(updateNoResponses);
+    
+    dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
   };
-
   return (
     <FooterContainer>
-      <PaginationContainerStyled className="swiper-pagination-container" />
+      {screenSize === ScreenSize.SMALL &&
+        <PaginationContainerStyled className="swiper-pagination-container" />
+      }
       <InnerFooterContainer>
-        <ProgressBar teamsLength={teamsLength} />
+        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
+          <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
+          <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
+            {teamsLength === 1 ? "player has joined" : "players have joined"}
+          </PlayerCountTypography>
+        </Box>
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
