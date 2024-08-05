@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
-import { isNullOrUndefined } from '@righton/networking';
 
 const ScorePill = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: `58px`,
+  width: '58px',
   height: '22px',
   borderRadius: '23px',
   background: `${theme.palette.primary.highlightGradient}`,
@@ -39,70 +38,58 @@ const ScoreAnimation = styled('div', {
   },
 }));
 
-const NewPointsPill = styled(ScorePill)(({ theme }) => ({
-  background: `${theme.palette.primary.altHighlightGradient}`,
+const NewPointsPill = styled(ScorePill)({
   zIndex: 2,
-}));
+});
 
 const NewPointsAnimation = styled('div')({
-  opacity: 0,
-  position: 'absolute',
+  opacity: 1, // Ensures it stays visible
   zIndex: 2,
   animation: `
-   newScoreUpWiggle 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-   newScoreUpFadeDown 1000ms ease-in-out 1500ms
+   newScoreUpWiggle 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms
   `,
   '@keyframes newScoreUpWiggle': {
     '0%': {
-      transform: 'translateY(70%) rotate(0deg) scale(1.0)',
+      transform: 'rotate(0deg) scale(1.0)',
     },
     '10%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.2)',
+      transform: 'rotate(0deg) scale(1.2)',
     },
     '15%, 45%, 75%': {
       opacity: 1,
-      transform: ' translateY(70%) rotate(-12deg) scale(1.2)',
+      transform: 'rotate(-12deg) scale(1.2)',
     },
     '30%, 60%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(12deg) scale(1.2)',
+      transform: 'rotate(12deg) scale(1.2)',
     },
     '90%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.2)',
+      transform: 'rotate(0deg) scale(1.2)',
     },
     '100%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.0)',
-    },
-  },
-  '@keyframes newScoreUpFadeDown': {
-    '0%': {
-      opacity: 1,
-      transform: 'translateY(70%)',
-    },
-    '100%': {
-      transform: 'translateY(100%)',
+      transform: 'rotate(0deg) scale(1.0)',
     },
   },
 });
 
-interface DACScoreIndicatorProps {
+interface DACP2ScoreIndicatorProps {
   newPoints?: number;
   score: number;
 }
 
-export default function DACScoreIndicator({
+export default function DACP2ScoreIndicator({
   newPoints,
   score,
-}: DACScoreIndicatorProps) {
+}: DACP2ScoreIndicatorProps) {
   const [newScore, setNewScore] = useState(score);
   const [startScoreAnimation, setStartScoreAnimation] = useState(false);
 
   const handlePointsAnimationEnd = (event: React.AnimationEvent) => {
     if (
-      event.animationName === 'newScoreUpFadeDown' &&
+      event.animationName === 'newScoreUpWiggle' &&
       newPoints &&
       newPoints > 0
     ) {
@@ -112,7 +99,7 @@ export default function DACScoreIndicator({
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', width:'200px' }}>
+    <Box sx={{ display: 'flex'}}>
       {newPoints && newPoints > 0 ? (
         <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd}>
           <NewPointsPill>
