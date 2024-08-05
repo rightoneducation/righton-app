@@ -99,18 +99,18 @@ export abstract class ModelHelper {
                 teamMember.answers.length === 0) {
                 return previousVal
             };
-            console.log(teamMember);
+            
             const answersToQuestion = teamMember.answers.find((answer) => {
                 return !isNullOrUndefined(answer) &&
                     !isNullOrUndefined(answer!.questionId) &&
                     answer.questionId === questionId &&
-                    
-                    answer!.text === answerText
+                    this.isAnswerFromPhaseOne(answer) &&
+                    answer!.answer.rawAnswer === answerText
             });
             
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0)
-        console.log(totalNoChosenAnswer);
+        
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
     static isShortAnswerResponseCorrect(shortAnswerResponses: IResponse[], team: ITeam){
