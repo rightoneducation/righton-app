@@ -79,7 +79,7 @@ export default function DiscussAnswer({
         currentQuestion.responses ?? [],
         currentTeam
       )
-    : correctAnswer?.text === selectedAnswer?.text;
+    : correctAnswer?.text === selectedAnswer?.answer.rawAnswer;
 
   const questionCorrectAnswerContents = (
     <>

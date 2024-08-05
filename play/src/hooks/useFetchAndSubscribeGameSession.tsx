@@ -46,7 +46,7 @@ export default function useFetchAndSubscribeGameSession(
       return;
     }
 
-    // added so we can update th score for the discuss page. (previously implemented in results pages we got rid of)
+    // added so we can update the score for the discuss page. (previously implemented in results pages we got rid of)
     const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
       try {
         await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
