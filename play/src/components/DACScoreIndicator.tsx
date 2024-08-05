@@ -54,33 +54,33 @@ const NewPointsAnimation = styled('div')({
   `,
   '@keyframes newScoreUpWiggle': {
     '0%': {
-      transform: 'translateY(70%) rotate(0deg) scale(1.0)',
+      transform: 'rotate(0deg) scale(1.0)',
     },
     '10%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.2)',
+      transform: 'rotate(0deg) scale(1.2)',
     },
     '15%, 45%, 75%': {
       opacity: 1,
-      transform: ' translateY(70%) rotate(-12deg) scale(1.2)',
+      transform: 'rotate(-12deg) scale(1.2)',
     },
     '30%, 60%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(12deg) scale(1.2)',
+      transform: 'rotate(12deg) scale(1.2)',
     },
     '90%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.2)',
+      transform: 'rotate(0deg) scale(1.2)',
     },
     '100%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.0)',
+      transform: 'rotate(0deg) scale(1.0)',
     },
   },
   '@keyframes newScoreUpFadeDown': {
     '0%': {
       opacity: 1,
-      transform: 'translateY(70%)',
+      transform: 'translateY(0%)',
     },
     '100%': {
       transform: 'translateY(100%)',
