@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers, HostDataManagerAPIClient } from '@righton/networking';
+import { useAnimate } from "framer-motion";
 import { APIClientsContext } from '../../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../../lib/reducer/GameSessionReducer';
@@ -24,6 +25,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
   const [currentTimer, setCurrentTimer] = useState<number>(0);
   const [totalTime, setTotalTime] = useState<number>(0);
+  const [gameSessionState, setGameSessionState] = useState<GameSessionState>(GameSessionState.TEAMS_JOINING);
   useEffect(() => {
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
   }, [backendHostTeamAnswers]);
@@ -89,10 +91,33 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   }
 
   let renderContent;
+  const [scope, animate] = useAnimate();
+  const [scope2, animate2] = useAnimate();
+  const [scope3, animate3] = useAnimate();
+  const [scope4, animate4] = useAnimate();
 
+  const handleStartGame = () =>{
+    const exitAnimation = () => {
+      // Start all animations concurrently and return a promise that resolves when all animations are complete
+      return Promise.all([
+        animate(scope.current, { y: 'calc(-100vh + 250px)', zIndex: -1, position: 'relative'}, { duration: 1 }),
+        animate2(scope2.current, { y: '-100vh', opacity: 0, position: 'relative'}, { duration: 1 }),
+        animate3(scope3.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
+        animate4(scope4.current, { opacity: 0, position: 'relative'}, { duration: 0.1 }),
+      ]);
+    };
+    exitAnimation().then(() => {
+      setIsGamePrepared(true);
+    });
+  }
   const teamsJoiningPages = [
       !isGamePrepared 
       ? <StartGame
+          scope={scope}
+          scope2={scope2}
+          scope3={scope3}
+          scope4={scope4}
+          handleStartGame={handleStartGame}
           teams={localGameSession.teams}
           questions={localGameSession.questions}
           title={localGameSession.title }
@@ -103,7 +128,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
         /> 
         : <PrepareGame isGamePrepared={isGamePrepared} setIsTimerVisible={setIsTimerVisible}/>
   ];
-
+  
   switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
