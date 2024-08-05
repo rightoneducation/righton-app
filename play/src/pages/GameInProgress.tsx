@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -146,6 +146,7 @@ export default function GameInProgress({
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
   const [backendAnswer, setBackendAnswer] = useState<BackendAnswer>(() => {
+    console.log(localModel);
     const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
       localModel,
       hasRejoined,
@@ -188,7 +189,7 @@ export default function GameInProgress({
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
       setTeamAnswerId(response.id ?? '');
       setBackendAnswer(answer);
       setDisplaySubmitted(true);
