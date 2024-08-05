@@ -83,6 +83,7 @@ export default function ChooseAnswer({
   const theme = useTheme();
   const { t } = useTranslation();
   const swiperRef = useRef<SwiperRef>(null);
+  
   useEffect(() => {
     if (isSubmitted && isSmallDevice && swiperRef?.current?.swiper.activeIndex !== 0 && 
       ((isConfidenceEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER)
