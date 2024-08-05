@@ -367,6 +367,7 @@ export default function GameInProgress({
             currentQuestion={currentQuestion}
             isShortAnswerEnabled={isShortAnswerEnabled}
             gameSession={gameSession}
+            newPoints={newPoints}
           />
         )}
       </BodyStackContainerStyled>
