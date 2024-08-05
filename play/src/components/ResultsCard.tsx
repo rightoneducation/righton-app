@@ -36,8 +36,6 @@ export default function CardResults({
     if (answer?.isAnswer) return AnswerState.CORRECT;
     return AnswerState.DEFAULT;
   };
-  console.log(answers);
-  console.log(selectedAnswer);
   return (
     <BodyCardStyled
       elevation={10}

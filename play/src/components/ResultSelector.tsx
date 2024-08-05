@@ -52,9 +52,6 @@ export default function ResultSelector({
 }: ResultSelectorProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
-  console.log(percentageText);
-  console.log(answerStatus);
-  console.log(index)
   const imageMap = {
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,

@@ -146,7 +146,6 @@ export default function GameInProgress({
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
   const [backendAnswer, setBackendAnswer] = useState<BackendAnswer>(() => {
-    console.log(localModel);
     const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
       localModel,
       hasRejoined,

@@ -216,7 +216,7 @@ export default function DiscussAnswer({
                 selectedAnswer={selectedAnswer ?? null}
                 currentState={currentState}
                 currentQuestionId={currentQuestion.id}
-              />
+            />
             </ThreeColumnScrollBox>
             </SwiperSlide>
           </Swiper>
