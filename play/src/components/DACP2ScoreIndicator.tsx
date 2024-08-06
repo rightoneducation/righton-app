@@ -56,22 +56,30 @@ const NewPointsAnimation = styled('div')({
       opacity: 1,
       transform: 'rotate(0deg) scale(1.2)',
     },
-    '15%, 45%, 75%': {
-      opacity: 1,
-      transform: 'rotate(-12deg) scale(1.2)',
-    },
-    '30%, 60%': {
-      opacity: 1,
-      transform: 'rotate(12deg) scale(1.2)',
-    },
-    '90%': {
-      opacity: 1,
-      transform: 'rotate(0deg) scale(1.2)',
-    },
-    '100%': {
-      opacity: 1,
-      transform: 'rotate(0deg) scale(1.0)',
-    },
+    '15%': {
+        opacity: 1,
+        transform: 'rotate(-12deg) scale(1.2)',
+      },
+      '30%': {
+        opacity: 1,
+        transform: 'rotate(12deg) scale(1.2)',
+      },
+      '45%, 75%': {
+        opacity: 1,
+        transform: 'rotate(-8deg) scale(1.2)',
+      },
+      '60%': {
+        opacity: 1,
+        transform: 'rotate(8deg) scale(1.2)',
+      },
+      '90%': {
+        opacity: 1,
+        transform: 'rotate(0deg) scale(1.2)',
+      },
+      '100%': {
+        opacity: 1,
+        transform: 'rotate(0deg) scale(1.0)',
+      },
   },
 });
 

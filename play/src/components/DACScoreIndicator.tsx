@@ -54,36 +54,44 @@ const NewPointsAnimation = styled('div')({
   `,
   '@keyframes newScoreUpWiggle': {
     '0%': {
-      transform: 'rotate(0deg) scale(1.0)',
+      transform: 'translateY(100%) rotate(0deg) scale(1.0)',
     },
     '10%': {
       opacity: 1,
-      transform: 'rotate(0deg) scale(1.2)',
+      transform: 'translateY(100%) rotate(0deg) scale(1.2)',
     },
-    '15%, 45%, 75%': {
+    '15%': {
       opacity: 1,
-      transform: 'rotate(-12deg) scale(1.2)',
+      transform: 'translateY(100%) rotate(-12deg) scale(1.2)',
     },
-    '30%, 60%': {
+    '30%': {
       opacity: 1,
-      transform: 'rotate(12deg) scale(1.2)',
+      transform: 'translateY(100%) rotate(12deg) scale(1.2)',
+    },
+    '45%, 75%': {
+      opacity: 1,
+      transform: 'translateY(100%) rotate(-8deg) scale(1.2)',
+    },
+    '60%': {
+      opacity: 1,
+      transform: 'translateY(100%) rotate(8deg) scale(1.2)',
     },
     '90%': {
       opacity: 1,
-      transform: 'rotate(0deg) scale(1.2)',
+      transform: 'translateY(100%) rotate(0deg) scale(1.2)',
     },
     '100%': {
       opacity: 1,
-      transform: 'rotate(0deg) scale(1.0)',
+      transform: 'translateY(100%) rotate(0deg) scale(1.0)',
     },
   },
   '@keyframes newScoreUpFadeDown': {
     '0%': {
       opacity: 1,
-      transform: 'translateY(0%)',
+      transform: 'translateY(100%)',
     },
     '100%': {
-      transform: 'translateY(100%)',
+      transform: 'translateY(200%)',
     },
   },
 });
