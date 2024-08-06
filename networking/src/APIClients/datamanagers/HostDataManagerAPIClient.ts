@@ -450,6 +450,21 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return teamAnswers;
   }
 
+  // ensures that featured mistakes that the teacher has selected (sometimes sorted by popularity)
+  // are randomized when displayed to students in O(n)
+  // Fisher-Yates shuffle per: https://bost.ocks.org/mike/shuffle/
+  shuffleSelectedMistakes(updatedResponses: IHostTeamAnswersResponse[]){
+    let length = updatedResponses.length, t, i;
+
+    while (length){
+      i = Math.floor(Math.random() * length--);
+      t = updatedResponses[length];
+      updatedResponses[length] = updatedResponses[i];
+      updatedResponses[i] = t;
+    }
+    return updatedResponses;
+  }
+
   updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion) {
     const updatedQuestions = this.hostTeamAnswers.questions.map((question) => {
       if (question.questionId !== currentQuestion.id) {
@@ -486,7 +501,10 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       console.error('Error: Invalid question id');
       return [];
     }
-    return currentQuestion[currentPhase].responses;
+    let responses = currentQuestion[currentPhase].responses; 
+    if (currentPhase === IPhase.ONE)
+      responses = this.shuffleSelectedMistakes(responses);
+    return responses;
   }
 
   initHostTeamAnswers(inputGameSession: IGameSession) {

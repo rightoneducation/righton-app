@@ -120,6 +120,7 @@ export default function FeaturedMistakes({
     apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...newMistakes], currentQuestion);
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: apiClients.hostDataManager?.getHostTeamAnswers()}});
   };
+  
   return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
