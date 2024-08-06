@@ -98,19 +98,16 @@ export abstract class ModelHelper {
             if (isNullOrUndefined(teamMember.answers) ||
                 teamMember.answers.length === 0) {
                 return previousVal
-            }
-
+            };
             const answersToQuestion = teamMember.answers.find((answer) => {
                 return !isNullOrUndefined(answer) &&
                     !isNullOrUndefined(answer!.questionId) &&
                     answer.questionId === questionId &&
                     this.isAnswerFromPhaseOne(answer) &&
-                    answer!.text === answerText
-            })
-
+                    answer!.answer.rawAnswer === answerText
+            });
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0)
-
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
     static isShortAnswerResponseCorrect(shortAnswerResponses: IResponse[], team: ITeam){
@@ -125,7 +122,6 @@ export abstract class ModelHelper {
             console.error("No team member exists for the specified team")
             throw new Error("No team member exists for the specified team")
         }
-        
         const answers = this.getBasicTeamMemberAnswersToQuestionId(team, question.id)
         if (isNullOrUndefined(answers) ||
             answers.length === 0) {
@@ -135,14 +131,13 @@ export abstract class ModelHelper {
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
         let submittedTrickAnswer = answers.find(answer => (!this.isAnswerFromPhaseOne(answer)) && answer?.questionId === currentQuestion.id)
-
         if (submittedTrickAnswer){
-            return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
+            return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.answer.rawAnswer ?? '', currentQuestion.id)
         } else {
     
 
             // changed this from PHASE_1_RESULTS to PHASE_1_DISCUSS
-            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_DISCUSS)){
+            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.answer.rawAnswer === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_DISCUSS)){
                 return this.correctAnswerScore;
             } else {
                 const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses
