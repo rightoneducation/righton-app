@@ -1,6 +1,5 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers, HostDataManagerAPIClient } from '@righton/networking';
-import { useAnimate } from "framer-motion";
 import { APIClientsContext } from '../../lib/context/ApiClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../../lib/context/LocalGameSessionContext';
 import { GameSessionReducer } from '../../lib/reducer/GameSessionReducer';
@@ -17,7 +16,6 @@ interface GameSessionContainerProps {
   backendGameSession: IGameSession;
   backendHostTeamAnswers: IHostTeamAnswers;
 }
-
 export default function GameSessionContainer({apiClients, backendGameSession, backendHostTeamAnswers}: GameSessionContainerProps) {
   const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
   const [localHostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer, backendHostTeamAnswers);
@@ -25,7 +23,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
   const [currentTimer, setCurrentTimer] = useState<number>(0);
   const [totalTime, setTotalTime] = useState<number>(0);
-  const [gameSessionState, setGameSessionState] = useState<GameSessionState>(GameSessionState.TEAMS_JOINING);
   useEffect(() => {
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
   }, [backendHostTeamAnswers]);
@@ -35,7 +32,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
     apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
   };
-
   const calculateCurrentTime = (gameSession: IGameSession) => {
     let initialTime = 0;
     if (gameSession) {
@@ -50,14 +46,13 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
         const difference = Date.now() - getStartTime;
         if (difference >= initialTime * 1000) {
           return 0;
-        } 
+        }
         const remainingTime = initialTime - Math.trunc(difference / 1000);
         return remainingTime;
       }
     }
     return initialTime;
   };
-
   const handleAddTime = () => {
     const addedTime = 30;
     let addedStartTime = addedTime * 1000;
@@ -70,7 +65,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     setCurrentTimer(newTime);
     apiClients?.hostDataManager?.updateTime(newStartTime);
   }
-
   useEffect(() => {
     if (backendGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || backendGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
       setCurrentTimer(calculateCurrentTime(backendGameSession));
@@ -80,7 +74,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const gameTemplates = null;
   // check which phase to get the right allotttted time
   let allottedTime = 0; // Initialize to default value
-
   if (localGameSession) {
     const { currentState, phaseOneTime, phaseTwoTime } = localGameSession;
     if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
@@ -89,35 +82,10 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
       allottedTime = phaseTwoTime;
     }
   }
-
   let renderContent;
-  const [scope, animate] = useAnimate();
-  const [scope2, animate2] = useAnimate();
-  const [scope3, animate3] = useAnimate();
-  const [scope4, animate4] = useAnimate();
-
-  const handleStartGame = () =>{
-    const exitAnimation = () => {
-      // Start all animations concurrently and return a promise that resolves when all animations are complete
-      return Promise.all([
-        animate(scope.current, { y: 'calc(-100vh + 250px)', zIndex: -1, position: 'relative'}, { duration: 1 }),
-        animate2(scope2.current, { y: '-100vh', opacity: 0, position: 'relative'}, { duration: 1 }),
-        animate3(scope3.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
-        animate4(scope4.current, { opacity: 0, position: 'relative'}, { duration: 0.1 }),
-      ]);
-    };
-    exitAnimation().then(() => {
-      setIsGamePrepared(true);
-    });
-  }
   const teamsJoiningPages = [
-      !isGamePrepared 
+      !isGamePrepared
       ? <StartGame
-          scope={scope}
-          scope2={scope2}
-          scope3={scope3}
-          scope4={scope4}
-          handleStartGame={handleStartGame}
           teams={localGameSession.teams}
           questions={localGameSession.questions}
           title={localGameSession.title }
@@ -125,10 +93,9 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           currentQuestionIndex={localGameSession.currentQuestionIndex}
           handleDeleteTeam={handleDeleteTeam}
           setIsGamePrepared={setIsGamePrepared}
-        /> 
+        />
         : <PrepareGame isGamePrepared={isGamePrepared} setIsTimerVisible={setIsTimerVisible}/>
   ];
-  
   switch (localGameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
@@ -138,7 +105,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
       renderContent = (
       <GameInProgress
           isTimerVisible={isTimerVisible}
-          setIsTimerVisible={setIsTimerVisible} 
+          setIsTimerVisible={setIsTimerVisible}
           currentTimer={currentTimer}
           isCorrect={false}
           isIncorrect={false}
@@ -152,7 +119,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
       break;
     case GameSessionState.FINAL_RESULTS:
       renderContent = (
-        <Leaderboard 
+        <Leaderboard
             teams={localGameSession.teams}
             questions={localGameSession.questions}
             currentQuestionIndex={localGameSession.currentQuestionIndex}
@@ -163,11 +130,11 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
       break;
     case GameSessionState.FINISHED:
       renderContent = (
-        <EndGameLobby 
-        teams={localGameSession.teams} 
-        gameTemplates={gameTemplates} 
-        gameCode={localGameSession.gameCode} 
-        currentQuestionIndex={localGameSession.currentQuestionIndex} 
+        <EndGameLobby
+        teams={localGameSession.teams}
+        gameTemplates={gameTemplates}
+        gameCode={localGameSession.gameCode}
+        currentQuestionIndex={localGameSession.currentQuestionIndex}
         handleDeleteTeam={handleDeleteTeam}
       />
       );
@@ -175,9 +142,9 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     case GameSessionState.TEAMS_JOINING:
     default:
       renderContent = (
-        localGameSession.currentQuestionIndex === null 
+        localGameSession.currentQuestionIndex === null
         ? teamsJoiningPages
-        : <Leaderboard 
+        : <Leaderboard
             teams={localGameSession.teams}
             questions={localGameSession.questions}
             currentQuestionIndex={localGameSession.currentQuestionIndex}
@@ -187,7 +154,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
       );
       break;
   }
-
   return (
     <APIClientsContext.Provider value={apiClients}>
       <LocalHostTeamAnswersContext.Provider value={localHostTeamAnswers}>
