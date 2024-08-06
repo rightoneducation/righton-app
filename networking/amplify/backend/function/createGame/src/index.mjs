@@ -197,14 +197,30 @@ async function createAndSignRequest(query, variables) {
     const gameSessionJson = await gameSessionResponse.json(); 
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
 
+    // Fisher-Yates Shuffle per: https://bost.ocks.org/mike/shuffle/
+    const shuffleQuestions = (choicesArray) => {
+      let length = choicesArray.length, t, i;
+
+      while (length){
+        i = Math.floor(Math.random() * length--);
+        t = choicesArray[length];
+        choicesArray[length] = choicesArray[i];
+        choicesArray[i] = t;
+      }
+      return choicesArray;
+    }
+
     // createQuestions
     const promises = questions.map(async (question, index) => {
-      const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
+      const {owner, version, createdAt, title, updatedAt, gameId, __typename, choices, ...trimmedQuestion} = question;
+      const choicesParsed = choices ? JSON.parse(choices) : [];
+      const shuffledChoices = shuffleQuestions(choicesParsed);
       const questionRequest = await createAndSignRequest(createQuestion, {
         input: {    
           ...trimmedQuestion,
           id: uuidv4(),
           text: title,
+          choices: JSON.stringify(shuffledChoices),
           answerSettings: question.answerSettings,
           gameSessionId: gameSessionParsed.id,
           isConfidenceEnabled: false,
