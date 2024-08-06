@@ -12,16 +12,6 @@ import HostHeader from '../components/HostHeader';
 import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
 
-const BackgroundStyled = styled(Paper)({
-  position: 'absolute', // Position it absolutely within StartGameContainer
-  top: 0,
-  left: 0,
-  width: '100%', // Stretch across the entire container
-  height: '100vh', // Cover the full height of the container
-  display: 'flex',
-  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
-  zIndex: -1, // Ensure it stays behind the content
-})
 const SafeAreaStyled = styled(Box)({
   paddingTop: '47px',
   paddingBottom: '34px',
@@ -31,11 +21,21 @@ const SafeAreaStyled = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  // background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
-  gap: '16px',
+  gap: '16px'
 });
+
+const BackgroundStyled = styled(Paper)({
+  position: 'absolute', // Position it absolutely within StartGameContainer
+  top: 0,
+  left: 0,
+  width: '100vw', // Stretch across the entire container
+  height: '100vh', // Cover the full height of the container
+  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  zIndex: -1, // Ensure it stays behind the content
+})
+
 interface StartGameProps {
   teams: ITeam[];
   questions:IQuestion[];
@@ -67,8 +67,11 @@ function StartGame({teams,
       const exitAnimation = () => {
         // Start all animations concurrently and return a promise that resolves when all animations are complete
         return Promise.all([
-          animate4(scope.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
-         // animate2(scope2.current, { y: '-100vh', opacity: 0, position: 'relative'}, { duration: 1 }),
+          animate(scope.current, { 
+            y: 'calc(-100vh + 200px)', // this to be adjusted to actually match the Figma (I just guessed at 200px)
+            x:0
+          }, { duration: 1 }),
+          // animate2(scope2.current, { y: '-100vh', opacity: 0, position: 'relative'}, { duration: 1 }),
           animate3(scope3.current, { opacity: 0, position: 'relative'}, { duration: 0.1 }),
           animate4(scope4.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
         ]);
@@ -79,7 +82,7 @@ function StartGame({teams,
     }
     return (
         <SafeAreaStyled>
-          <motion.div ref={scope}>
+          <motion.div ref={scope} style={{width: '100%'}}>
             <BackgroundStyled/>
           </motion.div>
           <motion.div ref={scope2} exit={{opacity: 0}} >
