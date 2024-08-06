@@ -75,13 +75,12 @@ export default function FeaturedMistakes({
   const totalAnswers = hostTeamAnswerResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
     const mistakes = inputMistakes
-    .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
-    .map((response) => ({
-      answer: response.rawAnswer,
-      percent: Math.trunc((response.count/totalAnswers)*100),
-      isSelectedMistake: response.isSelectedMistake ?? false,
-      }));
-    
+      .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
+      .map((response) => ({
+        answer: response.rawAnswer,
+        percent: Math.trunc((response.count/totalAnswers)*100),
+        isSelectedMistake: response.isSelectedMistake ?? false,
+        }));
     const sortedMistakes = mistakes.sort((a: any, b: any) => b.percent - a.percent) ?? [];
     let finalMistakes = sortedMistakes;
     if (isPopularMode)
@@ -91,6 +90,7 @@ export default function FeaturedMistakes({
         }
         return { ...mistake, isSelectedMistake: false };
       }); 
+    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...finalMistakes], currentQuestion);
     return finalMistakes;
   };
   const sortedMistakes = buildFeaturedMistakes(hostTeamAnswerResponses);

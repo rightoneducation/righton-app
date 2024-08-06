@@ -82,7 +82,7 @@ function FooterGameInProgress({
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     const currentTimeMillis = Date.now().toString(); 
-    if (nextState === GameSessionState.PHASE_1_DISCUSS && isShortAnswerEnabled) {
+    if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
     }
