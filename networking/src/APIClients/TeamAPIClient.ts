@@ -9,7 +9,7 @@ import {
   CreateTeamMutationVariables,
   DeleteTeamMutationVariables,
   DeleteTeamMutation,
-  OnCreateTeamSubscription,
+  OnTeamCreateByGameSessionIdSubscription,
   OnDeleteTeamSubscription,
   UpdateTeamInput,
   UpdateTeamMutation,
@@ -19,7 +19,7 @@ import {
   getTeam,
   createTeam,
   deleteTeam,
-  onCreateTeam,
+  onTeamCreateByGameSessionId,
   onDeleteTeam,
   updateTeam,
 } from "../graphql";
@@ -108,14 +108,14 @@ export class TeamAPIClient
 
 
   subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
-    return this.subscribeGraphQL<OnCreateTeamSubscription>(
+    return this.subscribeGraphQL<OnTeamCreateByGameSessionIdSubscription>(
       {
-        query: onCreateTeam,
+        query: onTeamCreateByGameSessionId,
         variables: {
-          id: id,
+          gameSessionTeamsId: id,
         },
       },
-      (value: OnCreateTeamSubscription) => {
+      (value: OnTeamCreateByGameSessionIdSubscription) => {
         let team = this.mapOnCreateTeamSubscription(value);
         callback(team);
       }
@@ -138,7 +138,7 @@ export class TeamAPIClient
   }
 
   private mapOnCreateTeamSubscription(
-    subscription: OnCreateTeamSubscription
+    subscription: OnTeamCreateByGameSessionIdSubscription
   ): ITeam {
     return TeamParser.teamFromCreateTeamSubscription(subscription);
   }
