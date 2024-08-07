@@ -13,7 +13,7 @@ import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
 
 const SafeAreaStyled = styled(Box)({
-  paddingTop: '47px',
+  // paddingTop: '47px',
   paddingBottom: '34px',
   position: 'relative',
   width: '100%',
@@ -24,6 +24,11 @@ const SafeAreaStyled = styled(Box)({
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
   gap: '16px'
+});
+
+
+const HeaderAreaStyled = styled(Box)({
+  marginTop: '47px',
 });
 
 const BackgroundStyled = styled(Paper)({
@@ -63,21 +68,22 @@ function StartGame({teams,
     const [scope2, animate2] = useAnimate();
     const [scope3, animate3] = useAnimate();
     const [scope4, animate4] = useAnimate();
+    const [scope5, animate5] = useAnimate();
+
     const handleButtonClick = () => {
       const exitAnimation = () => {
+        const scaleFactor = 225 / window.innerHeight;
         // Start all animations concurrently and return a promise that resolves when all animations are complete
         return Promise.all([
-          animate(scope.current, { 
-            y: 'calc(-100vh + 200px)', // this to be adjusted to actually match the Figma (I just guessed at 200px)
-            x:0
-          }, { duration: 1 }),
-          // animate2(scope2.current, { y: '-100vh', opacity: 0, position: 'relative'}, { duration: 1 }),
-          animate3(scope3.current, { opacity: 0, position: 'relative'}, { duration: 0.1 }),
-          animate4(scope4.current, { y: '-100vh', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
+          animate(scope.current, { scaleY: scaleFactor, x: 0, zIndex: -1 }, { duration: 1 }), // Animate to final value over 1 second
+          animate2(scope2.current, {opacity: 0, position: 'relative'}, { duration: 1 }),
+          animate3(scope3.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
+          animate5(scope5.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
+          animate4(scope4.current, { y: 'calc(-100vh + 225px)', opacity: 0, zIndex: -1, position: 'relative'}, { duration: 1 }),
         ]);
       };
       exitAnimation().then(() => {
-        // setIsGamePrepared(true);
+        setIsGamePrepared(true);
       });
     }
     return (
@@ -85,19 +91,23 @@ function StartGame({teams,
           <motion.div ref={scope} style={{width: '100%'}}>
             <BackgroundStyled/>
           </motion.div>
+          <HeaderAreaStyled>
           <motion.div ref={scope2} exit={{opacity: 0}} >
             <HostHeader gameCode = {gameCode} />
           </motion.div>
-          <HostBody
-            teams={teams}
-            questions={questions}
-            title={title}
-            currentQuestionIndex={currentQuestionIndex}
-            handleDeleteTeam={handleDeleteTeam}
-            screenSize={screenSize}
-          />
-          <motion.div ref={scope3} exit={{opacity: 0}}>
-            <FooterStartGame
+          </HeaderAreaStyled>
+      <motion.div ref={scope5} style={{ width: '100%',  overflow: 'hidden'}}>
+        <HostBody
+          teams={teams}
+          questions={questions}
+          title={title}
+          currentQuestionIndex={currentQuestionIndex}
+          handleDeleteTeam={handleDeleteTeam}
+          screenSize={screenSize}
+        />
+      </motion.div>
+          <motion.div ref={scope3} style={{width: '100%'}}>           
+           <FooterStartGame
               teamsLength={teams ? teams.length : 0}
               screenSize={screenSize}
               handleButtonClick={handleButtonClick}
