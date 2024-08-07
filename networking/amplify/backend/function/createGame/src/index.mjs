@@ -54,7 +54,6 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   };
   return gameTemplate;
 };
- 
 
 async function createAndSignRequest(query, variables) {
   const endpoint = new URL(GRAPHQL_ENDPOINT ?? '');
@@ -83,6 +82,21 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
+  const listGameSessions = /* GraphQL */ `query ListGameSessions(
+    $filter: ModelGameSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        gameCode
+      }
+      nextToken
+      __typename
+    }
+  }
+  `;
   const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     getGameTemplate(id: $id) {
       id
@@ -182,7 +196,23 @@ async function createAndSignRequest(query, variables) {
   }
   `
   let statusCode = 200;
-  let responseBody ={};
+  let responseBody = {};
+
+  const generateUniqueGameCode = async () => {
+    let gameCodeIsUnique = false;
+    let gameCode = 0;
+    while (!gameCodeIsUnique){
+      gameCode = Math.floor(Math.random() * 9000) + 1000;
+      const matchingGameSessionsRequest = await createAndSignRequest(listGameSessions, { filter: { gameCode: { eq: gameCode } } });
+      const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
+      const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
+      const numOfMatches = matchingGameSessionsResponseParsed.data.listGameSessions.items.length;
+      if (numOfMatches === 0)
+        gameCodeIsUnique = true;
+    }
+    return gameCode;
+  }
+
   try {
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
@@ -190,9 +220,9 @@ async function createAndSignRequest(query, variables) {
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json());
     const { questionTemplates: questions, ...game } = gameTemplateParsed;
-
+    const uniqueGameCode = await generateUniqueGameCode();
     // createGameSession
-    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
+    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game, gameCode: uniqueGameCode }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
