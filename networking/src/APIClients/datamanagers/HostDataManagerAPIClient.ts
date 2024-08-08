@@ -535,10 +535,15 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         return;
       }
       const questionIndex = this.hostTeamAnswers.questions.findIndex((question: any) => question.questionId === teamAnswer.questionId);
+      console.log(questionIndex);
       const currentQuestion = this.hostTeamAnswers.questions[questionIndex];
+      console.log(currentQuestion);
       const phase = teamAnswer.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? IPhase.ONE : IPhase.TWO;
+      console.log(phase);
       const currentPhase = this.hostTeamAnswers.questions[questionIndex][phase];
+      console.log(currentPhase);
       const currentResponses = this.hostTeamAnswers.questions[questionIndex][phase].responses;
+      console.log(currentResponses);
       const newResponses = this.updateHostTeamAnswerResponses(teamAnswer, currentResponses, currentQuestion, phase);
 
       // explicitly working with copies of objects to preserve immutability

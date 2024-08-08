@@ -21,6 +21,7 @@ interface HeaderContentProps {
   isPaused: boolean;
   isFinished: boolean;
   handleAddTime?: () => void;
+  isAddTime?: boolean;
 } // eslint-disable-line
 
 export default function HeaderContent({
@@ -31,6 +32,7 @@ export default function HeaderContent({
   isPaused,
   isFinished,
   handleAddTime,
+  isAddTime,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
@@ -98,6 +100,7 @@ export default function HeaderContent({
                 currentTimer={currentTimer}
                 isFinished={isFinished}
                 isPaused={isPaused}
+                isAddTime={isAddTime}
                 localGameSession={localGameSession}
               />
             <TimerAddButton onClick={handleAddTime} disabled={currentTimer <= 0}>

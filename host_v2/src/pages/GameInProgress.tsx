@@ -27,6 +27,7 @@ interface GameInProgressProps {
   localModelMock: LocalModel,
   localHostTeamAnswers: IHostTeamAnswers;
   handleAddTime: () => void;
+  isAddTime: boolean;
 }
 
 export default function GameInProgress({
@@ -39,7 +40,8 @@ export default function GameInProgress({
   currentTimer,
   localModelMock,
   localHostTeamAnswers,
-  handleAddTime
+  handleAddTime,
+  isAddTime,
 }: GameInProgressProps) {
     const theme = useTheme();
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
@@ -73,6 +75,7 @@ export default function GameInProgress({
         currentTimer={currentTimer}
         isPaused={false}
         isFinished={false}
+        isAddTime={isAddTime}
       />
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />

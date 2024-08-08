@@ -29,6 +29,7 @@ interface TimerProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
+  isAddTime?: boolean;
   localGameSession: IGameSession;
 }
 
@@ -37,13 +38,14 @@ export default function Timer({
   currentTimer,
   isPaused,
   isFinished,
+  isAddTime,
   localGameSession
 }: TimerProps) {
+  console.log(currentTimer);
   const theme = useTheme();
   const isTimerActive = 
     localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
     localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER;
-  
   const [timerString, setTimerString] = useState<string>('0:00');
   const [progress, setProgress] = useState<number>(0);
   const currentTimeMilli = useRef<number>(currentTimer * 1000);
@@ -86,7 +88,14 @@ export default function Timer({
     }
   }
   useEffect(() => {
-    currentTimeMilli.current = currentTimer * 1000; 
+    // if ( localGameSession.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
+    //   && localGameSession.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER
+    // ) {
+    //   isPausedRef.current = true;
+    //   currentTimeMilli.current = 0;
+    // } else {
+      currentTimeMilli.current = currentTimer * 1000;
+    // }
     if (currentTimer > 0) {
       isPausedRef.current = isPaused;
       if (!isPaused) {
@@ -94,7 +103,7 @@ export default function Timer({
       }
     }
    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, [isPaused, isFinished, currentTimer]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isPaused, isFinished, isAddTime, currentTimer, localGameSession.currentState]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <TimerContainer style={{opacity: isTimerActive ? 1 : 0.4}}>
       <TimerBar value={progress} variant="determinate"/>

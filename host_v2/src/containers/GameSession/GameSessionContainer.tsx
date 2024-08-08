@@ -24,6 +24,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
   const [currentTimer, setCurrentTimer] = useState<number>(0);
   const [totalTime, setTotalTime] = useState<number>(0);
+  const [isAddTime, setIsAddTime] = useState<boolean>(false);
   useEffect(() => {
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
   }, [backendHostTeamAnswers]);
@@ -58,17 +59,14 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
 
   const handleAddTime = () => {
     const addedTime = 30;
-    let addedStartTime = addedTime * 1000;
-    let newTime = currentTimer + addedTime;
-    if (newTime > totalTime) {
-      newTime = totalTime;
-      addedStartTime = totalTime * 1000 - currentTimer * 1000;
-    }
-    const newStartTime = Number(localGameSession.startTime) + addedStartTime;
-    setCurrentTimer(newTime);
+    const addedStartTime = addedTime * 1000;
+    const isOverMaxTime = (Number(localGameSession.startTime) + addedStartTime) > Date.now();
+    const newStartTime = isOverMaxTime ? Date.now() : Number(localGameSession.startTime) + addedStartTime;
+    setIsAddTime((prev)=> !prev);
     apiClients?.hostDataManager?.updateTime(newStartTime);
+    setCurrentTimer(calculateCurrentTime({...backendGameSession, startTime: newStartTime.toString()}));
+    dispatch({type: 'update_start_time', payload: {startTime: newStartTime}});
   }
-
   useEffect(() => {
     if (backendGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || backendGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
       setCurrentTimer(calculateCurrentTime(backendGameSession));
@@ -122,6 +120,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           localModelMock={{hasRejoined: false, currentTimer: 100}}
           localHostTeamAnswers={localHostTeamAnswers}
           handleAddTime={handleAddTime}
+          isAddTime={isAddTime}
         />
       );
       break;
