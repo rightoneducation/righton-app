@@ -13,7 +13,6 @@ import FooterStartGame from '../components/FooterStartGame';
 import HostBody from '../components/HostBody';
 
 const SafeAreaStyled = styled(Box)({
-  // paddingTop: '47px',
   paddingBottom: '34px',
   position: 'relative',
   width: '100%',
@@ -96,7 +95,7 @@ function StartGame({teams,
             <HostHeader gameCode = {gameCode} />
           </motion.div>
           </HeaderAreaStyled>
-      <motion.div ref={scope5} style={{ width: '100%',  overflow: 'hidden'}}>
+      <motion.div ref={scope5} style={{ display: 'flex', width: '100%',  overflow: 'hidden', justifyContent: 'center'}}>
         <HostBody
           teams={teams}
           questions={questions}
