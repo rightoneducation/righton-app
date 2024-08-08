@@ -207,6 +207,7 @@ async function createAndSignRequest(query, variables) {
       const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
       const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
       const numOfMatches = matchingGameSessionsResponseParsed.data.listGameSessions.items.length;
+      console.log(matchingGameSessionsResponseParsed);
       if (numOfMatches === 0)
         gameCodeIsUnique = true;
     }

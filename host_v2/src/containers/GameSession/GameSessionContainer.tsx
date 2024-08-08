@@ -25,6 +25,7 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const [currentTimer, setCurrentTimer] = useState<number>(0);
   const [totalTime, setTotalTime] = useState<number>(0);
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
+  
   useEffect(() => {
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
   }, [backendHostTeamAnswers]);
@@ -74,17 +75,6 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
     dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
   }, [backendGameSession]);
   const gameTemplates = null;
-  // check which phase to get the right allotttted time
-  let allottedTime = 0; // Initialize to default value
-
-  if (localGameSession) {
-    const { currentState, phaseOneTime, phaseTwoTime } = localGameSession;
-    if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      allottedTime = phaseOneTime;
-    } else if (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-      allottedTime = phaseTwoTime;
-    }
-  }
 
   let renderContent;
 

@@ -85,11 +85,12 @@ function FooterGameInProgress({
     if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
+      apiClients?.hostDataManager?.updateTime(Date.now());
     }
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: currentTimeMillis});
     dispatch({type: 'advance_game_phase', payload: {nextState}});
   };
-  const GetButtonText =() => {
+  const GetButtonText = () => {
     switch(currentState) {
       case GameSessionState.CHOOSE_CORRECT_ANSWER:
       case GameSessionState.CHOOSE_TRICKIEST_ANSWER:

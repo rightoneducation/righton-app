@@ -88,14 +88,14 @@ export default function Timer({
     }
   }
   useEffect(() => {
-    // if ( localGameSession.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
-    //   && localGameSession.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER
-    // ) {
-    //   isPausedRef.current = true;
-    //   currentTimeMilli.current = 0;
-    // } else {
+    if ( localGameSession.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
+      && localGameSession.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER
+    ) {
+      isPausedRef.current = true;
+      currentTimeMilli.current = 0;
+    } else {
       currentTimeMilli.current = currentTimer * 1000;
-    // }
+    }
     if (currentTimer > 0) {
       isPausedRef.current = isPaused;
       if (!isPaused) {
