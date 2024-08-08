@@ -12,7 +12,6 @@ import { ScreenSize } from '../lib/HostModels';
 const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'isAnimating',
 })(({ theme, isAnimating }) => ({
-  disableRipple: true,
   border: !isAnimating? '2px solid #159EFA' : 'none',
   borderRadius: '22px',
   width: '300px',
@@ -27,7 +26,7 @@ const ButtonStyled = styled(Button, {
   backgroundSize: '200% 100%',
   transition: '1s ease-in-out', // Smooth gradient transition
   '&:disabled': {
-    background: 'linear-gradient(#032563, #032563)',
+    background:'#032563',
     border: '2px solid #159EFA',
     borderRadius: '22px',
     width: '300px',
@@ -95,7 +94,6 @@ function FooterStartGame({
   const [buttonText, setButtonText] = useState<string>('Start Game');
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  console.log(isAnimating);
   const getButtonText = () => {
     switch (localGameSession.currentState) {
       case GameSessionState.TEAMS_JOINING:
@@ -115,11 +113,9 @@ function FooterStartGame({
     setIsAnimating(true);
   };
   const handleAnimationEnd = (event: React.AnimationEvent) => {
-    console.log(event.animationName);
     if (
       event.animationName === 'gradientAnimation'
     ) {
-      console.log(event);
       setIsAnimating(false);
       handleButtonClick();
     } 
