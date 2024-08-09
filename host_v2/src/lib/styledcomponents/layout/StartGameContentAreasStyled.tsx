@@ -12,10 +12,4 @@ export const StartGameContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) =
   overflow: 'hidden',
   zIndex: 2,
   paddingTop: `${theme.sizing.mdPadding}px`,
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none', // IE and Edge
 }));
