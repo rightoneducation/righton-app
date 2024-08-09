@@ -22,7 +22,8 @@ const SafeAreaStyled = styled(Box)({
   alignItems: 'center',
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
-  gap: '16px'
+  gap: '16px',
+  overflow: 'hidden'
 });
 
 
@@ -38,6 +39,7 @@ const BackgroundStyled = styled(Paper)(({ theme }) => ({
   height: '100vh', // Cover the full height of the container
   background: theme.palette.primary.backgroundGradient,
   zIndex: -1, // Ensure it stays behind the content
+  overflow: 'hidden',
 }));
 const Shadow = styled(Box)(({theme}) => ({
   position: 'absolute', // Position it absolutely within StartGameContainer
@@ -84,7 +86,7 @@ function StartGame({teams,
         const scaleFactor = 225 / window.innerHeight;
         // Start all animations concurrently and return a promise that resolves when all animations are complete
         return Promise.all([
-          animate(scope.current, { scaleY: scaleFactor, x: 0, zIndex: -1 }, { duration: 1 }), // Animate to final value over 1 second
+          animate(scope.current, { opacity: .85, scaleY: scaleFactor, x: 0, zIndex: -1 }, { duration: 1 }), // Animate to final value over 1 second
           animateShadow(shadowScope.current, { y: 'calc(-100vh + 210px)' }, { duration: 1 }),
           animate2(scope2.current, {opacity: 0, position: 'relative'}, { duration: 1 }),
           animate3(scope3.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
@@ -98,7 +100,7 @@ function StartGame({teams,
     }
     return (
         <SafeAreaStyled>
-          <motion.div ref={scope} style={{width: '100%'}}>
+          <motion.div ref={scope} initial={{ opacity: 1 }} style={{width: '100%'}}>
             <BackgroundStyled/>
           </motion.div>
           <motion.div ref={shadowScope} style={{ width: '100%' }}>
@@ -109,7 +111,9 @@ function StartGame({teams,
             <HostHeader gameCode = {gameCode} />
           </motion.div>
           </HeaderAreaStyled>
-      <motion.div ref={scope5} style={{ display: 'flex', width: '100%',  overflow: 'hidden', justifyContent: 'center'}}>
+      <motion.div ref={scope5} style={{ display: 'flex', width: '100%',  overflow: 'hidden', justifyContent: 'center',
+        
+      }}>
         <HostBody
           teams={teams}
           questions={questions}

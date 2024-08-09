@@ -65,7 +65,14 @@ export default function PrepareGame( {
     
     return (
       <StackContainerStyled>
+        <motion.div
+          initial={{ opacity: .85 }}   // Start fully transparent
+          animate={{ opacity: 1 }}   // Animate to fully visible
+          transition={{ duration: 1, ease: "easeIn" }}  // Use "easeIn" easing function for a smooth fade-in
+        >
+
         <HeaderBackgroundStyled />  
+        </motion.div>
         <motion.div
           initial={{ x: '100%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
