@@ -3,10 +3,10 @@ import { IHostTeamAnswers } from '@righton/networking';
 import { IAction } from '../../lib/reducer/IHostTeamAnswersReducer';
 
 export const useTSHostTeamAnswersContext = (context: Context<IHostTeamAnswers | undefined>) => {
-  const localHostTeamAnswersContext = useContext( context );
-  if (!localHostTeamAnswersContext)
+  const HostTeamAnswersContext = useContext( context );
+  if (!HostTeamAnswersContext)
     throw new Error ("No HostTeamAnswersContext found");
-  return localHostTeamAnswersContext;
+  return HostTeamAnswersContext;
 }
 
 export const useTSDispatchContext = (context: Context<Dispatch<IAction> | undefined>) => {

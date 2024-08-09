@@ -17,7 +17,7 @@ import GameInProgressContentRightColumn from './columns/GameInProgressContentRig
 
 interface GameInProgressContentProps {
   localGameSession: IGameSession;
-  localHostTeamAnswers: IHostTeamAnswers;
+  hostTeamAnswers: IHostTeamAnswers;
   screenSize: ScreenSize;
   currentQuestion: IQuestion;
   currentPhase: IPhase;
@@ -26,7 +26,7 @@ interface GameInProgressContentProps {
 
 export default function GameInProgressContent({
   localGameSession,
-  localHostTeamAnswers,
+  hostTeamAnswers,
   screenSize,
   currentQuestion,
   currentPhase,
@@ -39,17 +39,17 @@ export default function GameInProgressContent({
   const currentConfidences = currentPhaseTeamAnswers?.confidences ?? [] as IHostTeamAnswersConfidence[];
   // currentHints are used for the Hints Progress Bar (Pre-GPT)
   const currentHints = currentPhaseTeamAnswers?.hints ?? [] as IHostTeamAnswersHint[];
-  
+  console.log(currentResponses);
   let prevPhaseResponses = [] as IHostTeamAnswersResponse[];
   let prevPhaseConfidences = [] as IHostTeamAnswersConfidence[];
   if (localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START) {
-    prevPhaseResponses= localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [] as IHostTeamAnswersResponse[];
-    prevPhaseConfidences = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.confidences ?? [] as IHostTeamAnswersConfidence[];
+    prevPhaseResponses= hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [] as IHostTeamAnswersResponse[];
+    prevPhaseConfidences = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.confidences ?? [] as IHostTeamAnswersConfidence[];
   }
   let sortedMistakes: any = [];
   // in shortAnswerMode
   if (localGameSession.questions[localGameSession.currentQuestionIndex].isShortAnswerEnabled) {
-    const responses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase].responses ?? [];
+    const responses = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase].responses ?? [];
     const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
     const mistakes = responses.map((response) => !response.isCorrect && response.multiChoiceCharacter !== '–' ? {
       answer: response.rawAnswer,

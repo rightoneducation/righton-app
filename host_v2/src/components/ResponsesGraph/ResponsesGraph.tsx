@@ -6,6 +6,7 @@ import {
   VictoryAxis,
   VictoryBar,
   VictoryContainer,
+  Bar
 } from 'victory';
 import { ITeam, IHostTeamAnswersResponse } from '@righton/networking';
 import { IGraphClickInfo } from '../../lib/HostModels';
@@ -105,7 +106,10 @@ export default function ResponsesGraph({
       />
     );
   }
-
+  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+  console.log("Date");
+  console.log(data);
+  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
   return (
     <ResponseGraphContainer>
       <TitleContainer>
@@ -163,16 +167,21 @@ export default function ResponsesGraph({
             x={isShortAnswerEnabled ? "rawAnswer" : "multiChoiceCharacter"}
             horizontal
             standalone={false}
+            animate={{
+              onLoad: { duration: 200 },
+              duration: 200,
+              animationWhitelist: ["data"],
+            }}
             cornerRadius={{ topLeft: 4, topRight: 4 }}
-            labels={({ datum }) => `${datum.count}`}
-            barWidth={({ datum }) =>
-              datum.count !== 0 ? theme.sizing.barThicknessResponses : theme.sizing.barThicknessZeroResponses
-            }
             style={{ 
               data: { 
                 fill: ({ index }: any) => index === numAnswers-1 ? 'transparent' : '#FFF'
               } 
             }}
+            barWidth={({ datum }) =>
+              datum.count !== 0 ? theme.sizing.barThicknessResponses : theme.sizing.barThicknessZeroResponses
+            }
+            labels={({ datum }) => `${datum.count}`}
             dataComponent={
               <CustomBar 
                 data={data}

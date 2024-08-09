@@ -11,8 +11,8 @@ import {
 import { IHostTeamAnswersResponse, IQuestion } from "@righton/networking";
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useLocalHostTeamAnswersContext';
-import { LocalHostTeamAnswersContext, LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
+import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useHostTeamAnswersContext';
+import { HostTeamAnswersContext, HostTeamAnswersDispatchContext } from '../lib/context/HostTeamAnswersContext';
 import { Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
@@ -69,8 +69,8 @@ export default function FeaturedMistakes({
   const numOfPopularMistakes = 3;
 
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localHostTeamAnswers = useTSHostTeamAnswersContext(LocalHostTeamAnswersContext);
-  const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
+  const localHostTeamAnswers = useTSHostTeamAnswersContext(HostTeamAnswersContext);
+  const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
   const hostTeamAnswerResponses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [];
   const totalAnswers = hostTeamAnswerResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {

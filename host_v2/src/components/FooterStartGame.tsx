@@ -2,8 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
-import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import { ScreenSize } from '../lib/HostModels';
 
@@ -81,7 +81,7 @@ function FooterStartGame({
 }: FootStartGameProps) {
  
   let buttonText;
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
 
   switch (localGameSession.currentState) {
     case GameSessionState.TEAMS_JOINING:

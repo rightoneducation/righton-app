@@ -1,39 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient, ITeam } from '@righton/networking';
-import { set } from 'lodash';
+import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
+import { HostTeamAnswersReducer } from '../lib/reducer/HostTeamAnswersReducer';
 
-export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { backendGameSession: IGameSession | null, backendHostTeamAnswers: IHostTeamAnswers } {
+export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { gameSession: IGameSession | null, hostTeamAnswers: IHostTeamAnswers | null, dispatch: any, dispatchHostTeamAnswers: any } {
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
-  const [backendGameSession, setBackendGameSession] = useState<IGameSession | null>(null);
-  const [backendHostTeamAnswers, setBackendHostTeamAnswers] = useState<IHostTeamAnswers>({questions: []});
+  const [gameSession, dispatch] = useReducer(GameSessionReducer, null);
+  const [hostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer ,null);
+  console.log(gameSession);
   useEffect(() => {
-
     try {
       dataManager.init(gameSessionId).then(() => {
-        const gameSession = dataManager.getGameSession();
-        const hostTeamAnswers = dataManager.getHostTeamAnswers();
-        setBackendGameSession(gameSession);
-        setBackendHostTeamAnswers(hostTeamAnswers);
+        const initGameSession = dataManager.getGameSession(); // eslint-disable-line
+        const initHostTeamAnswers = dataManager.getHostTeamAnswers(); // eslint-disable-line
+        console.log('gameSession:', initGameSession);
+        dispatch({type: 'synch_local_gameSession', payload: {...initGameSession}}); 
+        console.log('hostTeamAnswers:', initHostTeamAnswers);
+        dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...initHostTeamAnswers}});
       });
 
-      dataManager.subscribeToUpdateGameSession(gameSessionId, setBackendGameSession)
+      dataManager.subscribeToUpdateGameSession(gameSessionId)
         .then((updatedGameSession: IGameSession) => {
-          setBackendGameSession((prev) => {return {...updatedGameSession}});
+          dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession}}); 
       });
 
-      dataManager.subscribeToCreateTeam(setBackendGameSession);
-
-      dataManager.subscribeToCreateTeamAnswer((teamAnswers) => {
-        const updatedHostTeamAnswers = dataManager.getHostTeamAnswers();
-        setBackendHostTeamAnswers((prev) => {return {...updatedHostTeamAnswers}});
-        console.log("Team Answer Created", teamAnswers);
+      dataManager.subscribeToCreateTeam()
+        .then((updatedGameSession: IGameSession | null) => {
+          console.log('updatedGameSession in custom hook:', updatedGameSession);
+          dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession}});
       });
 
-      dataManager.subscribeToUpdateTeamAnswer((teamAnswers) => {
-        const updatedHostTeamAnswers = dataManager.getHostTeamAnswers();
-        setBackendHostTeamAnswers((prev) => {return {...updatedHostTeamAnswers}});
-        console.log("Team Answer Created", teamAnswers);
+      dataManager.subscribeToCreateTeamAnswer()
+        .then((updatedHostTeamAnswers: IHostTeamAnswers | null) => {
+          console.log('updatedHostTeamAnswers in custom hook:', updatedHostTeamAnswers);
+         dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...updatedHostTeamAnswers}});
       });
+
+      dataManager.subscribeToUpdateTeamAnswer()
+        .then((updatedHostTeamAnswers: IHostTeamAnswers | null) => {
+        dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...updatedHostTeamAnswers}});
+      });
+
     } catch (error) {
       console.log('Error:', error);
     }
@@ -43,6 +50,6 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
       dataManager.cleanupSubscription();
     };
   }, []); // eslint-disable-line
-
-  return { backendGameSession, backendHostTeamAnswers };
+  console.log(gameSession, hostTeamAnswers);
+  return { gameSession, hostTeamAnswers, dispatch, dispatchHostTeamAnswers };
 }
