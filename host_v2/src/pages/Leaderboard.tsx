@@ -6,8 +6,8 @@ import { ITeam, IQuestion } from '@righton/networking';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
+import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
 import LeaderboardHeader from '../components/LeaderboardHeader';
@@ -47,8 +47,8 @@ export default function Leaderboard({
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);  
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
+  const dispatch = useTSDispatchContext(GameSessionDispatchContext);  
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     dispatch({type: 'advance_game_phase', payload: {nextState}});

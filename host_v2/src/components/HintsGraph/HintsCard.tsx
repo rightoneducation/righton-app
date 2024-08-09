@@ -10,8 +10,8 @@ import HintsGraph from './HintsGraph';
 import SelectedHints from './SelectedHints';
 import { APIClientsContext } from '../../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext } from '../../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext } from '../../hooks/context/useLocalGameSessionContext';
+import { GameSessionContext } from '../../lib/context/GameSessionContext';
+import { useTSGameSessionContext } from '../../hooks/context/useGameSessionContext';
 
 
 const BackgroundStyled = styled(Paper)({
@@ -64,7 +64,7 @@ export default function Hints({
   const [isHintEmpty, setIsHintEmpty] = useState<boolean>(true);
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
 
   const handleProcessHints = async (inputHints: IHostTeamAnswersHint[]) => {
     setIsHintLoading(true);

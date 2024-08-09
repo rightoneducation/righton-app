@@ -203,7 +203,9 @@ async function createAndSignRequest(query, variables) {
     let gameCode = 0;
     while (!gameCodeIsUnique){
       gameCode = Math.floor(Math.random() * 9000) + 1000;
+      console.log(gameCode);
       const matchingGameSessionsRequest = await createAndSignRequest(listGameSessions, { filter: { gameCode: { eq: gameCode } } });
+      console.log(matchingGameSessionsRequest);
       const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
       const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
       const numOfMatches = matchingGameSessionsResponseParsed.data.listGameSessions.items.length;

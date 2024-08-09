@@ -13,8 +13,8 @@ import GameInProgressContent from '../components/GameInProgressContent/GameInPro
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
 import FooterGameInProgress from '../components/FooterGameInProgress';
-import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
-import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
 
 interface GameInProgressProps {
   isTimerVisible: boolean,
@@ -25,7 +25,7 @@ interface GameInProgressProps {
   hasRejoined: boolean,
   currentTimer: number,
   localModelMock: LocalModel,
-  localHostTeamAnswers: IHostTeamAnswers;
+  hostTeamAnswers: IHostTeamAnswers;
   handleAddTime: () => void;
   isAddTime: boolean;
 }
@@ -39,16 +39,18 @@ export default function GameInProgress({
   hasRejoined,
   currentTimer,
   localModelMock,
-  localHostTeamAnswers,
+  hostTeamAnswers,
   handleAddTime,
   isAddTime,
 }: GameInProgressProps) {
     const theme = useTheme();
+    console.log(hostTeamAnswers);
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
-    const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
+    const localGameSession = useTSGameSessionContext(GameSessionContext); 
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
     const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
-    const currentPhaseTeamAnswers = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
+    const currentPhaseTeamAnswers = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
+    console.log(currentPhaseTeamAnswers);
     const submittedAnswers = currentPhaseTeamAnswers?.responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
     const handleConfidenceGraphClick = (selectedIndex: number | null) => {
       setConfidenceGraphClickIndex(selectedIndex);
@@ -85,7 +87,7 @@ export default function GameInProgress({
           currentPhase={currentPhase}
           currentPhaseTeamAnswers={currentPhaseTeamAnswers}
           localGameSession={localGameSession}
-          localHostTeamAnswers={localHostTeamAnswers}
+          hostTeamAnswers={hostTeamAnswers}
           screenSize={screenSize}
         />
       </BodyStackContainerStyled>

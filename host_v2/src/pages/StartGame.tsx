@@ -5,15 +5,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import {
   ITeam,
   IQuestion,
-  IHostTeamAnswers,
-  GameSessionState
 } from '@righton/networking';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
-import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { ScreenSize } from '../lib/HostModels';
 import HostHeader from '../components/HostHeader';
 import FooterStartGame from '../components/FooterStartGame';

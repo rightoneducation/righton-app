@@ -3,6 +3,12 @@ import {
   useMatch
 } from 'react-router-dom';
 import { APIClients } from '@righton/networking';
+import { APIClientsContext } from '../../lib/context/ApiClientsContext';
+import { GameSessionContext, GameSessionDispatchContext } from '../../lib/context/GameSessionContext';
+import { GameSessionReducer } from '../../lib/reducer/GameSessionReducer';
+import { HostTeamAnswersContext, HostTeamAnswersDispatchContext } from '../../lib/context/HostTeamAnswersContext';
+import { useTSDispatchContext } from '../../hooks/context/useGameSessionContext';
+import { HostTeamAnswersReducer } from '../../lib/reducer/HostTeamAnswersReducer';
 import useInitHostContainer from '../../hooks/useInitHostContainer';
 import GameSessionContainer from './GameSessionContainer';
 import LoadingPage from '../../pages/LoadingPage';
@@ -14,20 +20,22 @@ interface GameSessionWrapperProps {
 export default function GameSessionWrapper({apiClients}: GameSessionWrapperProps) {
   const match = useMatch("/host/:gameSessionId");
   const gameSessionId = match?.params.gameSessionId;
-  let backendGameSession = null;
-  let backendHostTeamAnswers = null;
-  try {
-    const initResponse = useInitHostContainer(apiClients, gameSessionId ?? '');
-    backendGameSession = initResponse.backendGameSession;
-    backendHostTeamAnswers = initResponse.backendHostTeamAnswers;
-  } catch (error) {
-    console.log(error);
-  }
-  if (backendGameSession && backendHostTeamAnswers){
+  const { gameSession, hostTeamAnswers, dispatch, dispatchHostTeamAnswers } = useInitHostContainer(apiClients, gameSessionId ?? '');
+  console.log('gameSession:', gameSession);
+  console.log('hostTeamAnswers:', hostTeamAnswers);
+  if (gameSession && hostTeamAnswers && Object.keys(gameSession).length !== 0 && Object.keys(hostTeamAnswers).length !== 0) {
     return (
-      (backendGameSession && backendHostTeamAnswers)
-        ? <GameSessionContainer apiClients={apiClients} backendGameSession={backendGameSession} backendHostTeamAnswers={backendHostTeamAnswers} />
-        : null
+        <APIClientsContext.Provider value={apiClients}>
+        <HostTeamAnswersContext.Provider value={hostTeamAnswers}>
+          <HostTeamAnswersDispatchContext.Provider value={dispatchHostTeamAnswers}>
+            <GameSessionContext.Provider value={gameSession}>
+              <GameSessionDispatchContext.Provider value={dispatch}>
+            <GameSessionContainer apiClients={apiClients} gameSession={gameSession} hostTeamAnswers={hostTeamAnswers} />
+          </GameSessionDispatchContext.Provider>
+            </GameSessionContext.Provider>
+          </HostTeamAnswersDispatchContext.Provider>
+        </HostTeamAnswersContext.Provider>
+      </APIClientsContext.Provider>
     )  
   }
   return (

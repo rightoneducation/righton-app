@@ -1,12 +1,15 @@
 import { IHostTeamAnswers, IQuestion } from "@righton/networking";
 import { IAction } from "./IHostTeamAnswersReducer";
 
-export function HostTeamAnswersReducer(hostTeamAnswers: IHostTeamAnswers, action: IAction): IHostTeamAnswers{
-  switch(action.type){
+export function HostTeamAnswersReducer(hostTeamAnswers: IHostTeamAnswers | null, action: IAction): IHostTeamAnswers | null{
+  const { type, payload } = action;
+  
+  switch(type){
     case 'synch_local_host_team_answers':
-      return {...action.payload.hostTeamAnswers};
+      return {...hostTeamAnswers, ...payload};
     case 'update_host_team_answers':
-      return {...action.payload.hostTeamAnswers};
+      console.log('payload:', payload);
+      return {...hostTeamAnswers, ...payload};
     default:
       return hostTeamAnswers;
   }

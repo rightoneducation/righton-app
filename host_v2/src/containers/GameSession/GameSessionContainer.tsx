@@ -1,9 +1,10 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers, HostDataManagerAPIClient } from '@righton/networking';
 import { APIClientsContext } from '../../lib/context/ApiClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../../lib/context/LocalGameSessionContext';
+import { GameSessionContext, GameSessionDispatchContext } from '../../lib/context/GameSessionContext';
 import { GameSessionReducer } from '../../lib/reducer/GameSessionReducer';
-import { LocalHostTeamAnswersContext, LocalHostTeamAnswersDispatchContext } from '../../lib/context/LocalHostTeamAnswersContext';
+import { HostTeamAnswersContext, HostTeamAnswersDispatchContext } from '../../lib/context/HostTeamAnswersContext';
+import { useTSDispatchContext } from '../../hooks/context/useGameSessionContext';
 import { HostTeamAnswersReducer } from '../../lib/reducer/HostTeamAnswersReducer';
 import GameInProgress from '../../pages/GameInProgress';
 import StartGame from '../../pages/StartGame';
@@ -13,39 +14,35 @@ import PrepareGame from '../../pages/PrepareGame';
 
 interface GameSessionContainerProps {
   apiClients: APIClients;
-  backendGameSession: IGameSession;
-  backendHostTeamAnswers: IHostTeamAnswers;
+  gameSession: IGameSession;
+  hostTeamAnswers: IHostTeamAnswers;
 }
 
-export default function GameSessionContainer({apiClients, backendGameSession, backendHostTeamAnswers}: GameSessionContainerProps) {
-  const [localGameSession, dispatch] = useReducer(GameSessionReducer, backendGameSession);
-  const [localHostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer, backendHostTeamAnswers);
+export default function GameSessionContainer({apiClients, gameSession, hostTeamAnswers}: GameSessionContainerProps) {
   const [isTimerVisible, setIsTimerVisible] = useState<boolean>(false);
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
   const [currentTimer, setCurrentTimer] = useState<number>(0);
   const [totalTime, setTotalTime] = useState<number>(0);
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
-  
-  useEffect(() => {
-    dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: backendHostTeamAnswers}});
-  }, [backendHostTeamAnswers]);
+  const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
+  const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
+  console.log(gameSession, hostTeamAnswers);
   const handleDeleteTeam = (teamId: string) => {
     // replace this with an integrated local + backendGameSession in the custom hook
-    const updatedTeams = localGameSession.teams.filter((team) => team.id !== teamId);
+    const updatedTeams = gameSession.teams.filter((team) => team.id !== teamId);
     dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
     apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
   };
-
-  const calculateCurrentTime = (gameSession: IGameSession) => {
+  const calculateCurrentTime = (inputGameSession: IGameSession) => {
     let initialTime = 0;
-    if (gameSession) {
-      if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-        initialTime = gameSession?.phaseOneTime;
-      } else if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-        initialTime = gameSession?.phaseTwoTime;
+    if (inputGameSession) {
+      if (inputGameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+        initialTime = inputGameSession?.phaseOneTime;
+      } else if (inputGameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+        initialTime = inputGameSession?.phaseTwoTime;
       }
       setTotalTime(initialTime);
-      const getStartTime = Number(gameSession?.startTime);
+      const getStartTime = Number(inputGameSession?.startTime);
       if (getStartTime) {
         const difference = Date.now() - getStartTime;
         if (difference >= initialTime * 1000) {
@@ -61,44 +58,56 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
   const handleAddTime = () => {
     const addedTime = 30;
     const addedStartTime = addedTime * 1000;
-    const isOverMaxTime = (Number(localGameSession.startTime) + addedStartTime) > Date.now();
-    const newStartTime = isOverMaxTime ? Date.now() : Number(localGameSession.startTime) + addedStartTime;
+    const isOverMaxTime = (Number(gameSession.startTime) + addedStartTime) > Date.now();
+    const newStartTime = isOverMaxTime ? Date.now() : Number(gameSession.startTime) + addedStartTime;
     setIsAddTime((prev)=> !prev);
     apiClients?.hostDataManager?.updateTime(newStartTime);
-    setCurrentTimer(calculateCurrentTime({...backendGameSession, startTime: newStartTime.toString()}));
+    setCurrentTimer(calculateCurrentTime({...gameSession, startTime: newStartTime.toString()}));
     dispatch({type: 'update_start_time', payload: {startTime: newStartTime}});
   }
-  useEffect(() => {
-    if (backendGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || backendGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-      setCurrentTimer(calculateCurrentTime(backendGameSession));
-    }
-    dispatch({type: 'synch_local_gameSession', payload: {gameSession: backendGameSession}});
-  }, [backendGameSession]);
   const gameTemplates = null;
 
   let renderContent;
 
   const teamsJoiningPages = [
-      !isGamePrepared 
-      ? <StartGame
-          teams={localGameSession.teams}
-          questions={localGameSession.questions}
-          title={localGameSession.title }
-          gameCode={localGameSession.gameCode}
-          currentQuestionIndex={localGameSession.currentQuestionIndex}
-          handleDeleteTeam={handleDeleteTeam}
-          setIsGamePrepared={setIsGamePrepared}
-        /> 
-        : <PrepareGame isGamePrepared={isGamePrepared} setIsTimerVisible={setIsTimerVisible}/>
+    <>
+   
+        </>
   ];
+  let teamsJoiningContent = null;
+  if (gameSession.currentQuestionIndex === null) {
+    teamsJoiningContent = !isGamePrepared ? (
+      <StartGame
+        teams={gameSession.teams}
+        questions={gameSession.questions}
+        title={gameSession.title}
+        gameCode={gameSession.gameCode}
+        currentQuestionIndex={gameSession.currentQuestionIndex}
+        handleDeleteTeam={handleDeleteTeam}
+        setIsGamePrepared={setIsGamePrepared}
+      />
+    ) : (
+      <PrepareGame isGamePrepared={isGamePrepared} setIsTimerVisible={setIsTimerVisible} />
+    );
+  } else {
+    teamsJoiningContent = (
+      <Leaderboard
+        teams={gameSession.teams}
+        questions={gameSession.questions}
+        currentQuestionIndex={gameSession.currentQuestionIndex}
+        title={gameSession.title}
+        handleDeleteTeam={handleDeleteTeam}
+      />
+    );
+  }
 
-  switch (localGameSession.currentState) {
+  switch (gameSession.currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
     case GameSessionState.PHASE_2_START:
-      renderContent = (
+      return (
       <GameInProgress
           isTimerVisible={isTimerVisible}
           setIsTimerVisible={setIsTimerVisible} 
@@ -108,61 +117,33 @@ export default function GameSessionContainer({apiClients, backendGameSession, ba
           totalTime={totalTime}
           hasRejoined={false}
           localModelMock={{hasRejoined: false, currentTimer: 100}}
-          localHostTeamAnswers={localHostTeamAnswers}
+          hostTeamAnswers={hostTeamAnswers}
           handleAddTime={handleAddTime}
           isAddTime={isAddTime}
         />
       );
-      break;
     case GameSessionState.FINAL_RESULTS:
-      renderContent = (
+      return (
         <Leaderboard 
-            teams={localGameSession.teams}
-            questions={localGameSession.questions}
-            currentQuestionIndex={localGameSession.currentQuestionIndex}
-            title={localGameSession.title}
+            teams={gameSession.teams}
+            questions={gameSession.questions}
+            currentQuestionIndex={gameSession.currentQuestionIndex}
+            title={gameSession.title}
             handleDeleteTeam={handleDeleteTeam}
         />
       );
-      break;
     case GameSessionState.FINISHED:
-      renderContent = (
+      return (
         <EndGameLobby 
-        teams={localGameSession.teams} 
+        teams={gameSession.teams} 
         gameTemplates={gameTemplates} 
-        gameCode={localGameSession.gameCode} 
-        currentQuestionIndex={localGameSession.currentQuestionIndex} 
+        gameCode={gameSession.gameCode} 
+        currentQuestionIndex={gameSession.currentQuestionIndex} 
         handleDeleteTeam={handleDeleteTeam}
       />
       );
-      break;
     case GameSessionState.TEAMS_JOINING:
     default:
-      renderContent = (
-        localGameSession.currentQuestionIndex === null 
-        ? teamsJoiningPages
-        : <Leaderboard 
-            teams={localGameSession.teams}
-            questions={localGameSession.questions}
-            currentQuestionIndex={localGameSession.currentQuestionIndex}
-            title={localGameSession.title}
-            handleDeleteTeam={handleDeleteTeam}
-          />
-      );
-      break;
+      return teamsJoiningContent;
   }
-
-  return (
-    <APIClientsContext.Provider value={apiClients}>
-      <LocalHostTeamAnswersContext.Provider value={localHostTeamAnswers}>
-        <LocalHostTeamAnswersDispatchContext.Provider value={dispatchHostTeamAnswers}>
-          <LocalGameSessionContext.Provider value={localGameSession}>
-            <LocalGameSessionDispatchContext.Provider value={dispatch}>
-              {localGameSession && localHostTeamAnswers && renderContent}
-            </LocalGameSessionDispatchContext.Provider>
-          </LocalGameSessionContext.Provider>
-        </LocalHostTeamAnswersDispatchContext.Provider>
-      </LocalHostTeamAnswersContext.Provider>
-    </APIClientsContext.Provider>
-  )
 }

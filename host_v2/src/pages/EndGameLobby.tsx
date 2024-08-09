@@ -10,8 +10,6 @@ import {
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { ScreenSize } from '../lib/HostModels';
 import EndGameHeader from '../components/EndGame/EndGameHeader';
 import EndGameBody from '../components/EndGame/EndGameBody';
@@ -57,8 +55,6 @@ function EndGameLobby({teams,
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
     const apiClients = useTSAPIClientsContext(APIClientsContext);
-    const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-    const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);   
 
     useEffect(()=> {
       apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8').then((response) => {

@@ -41,7 +41,6 @@ export default function Timer({
   isAddTime,
   localGameSession
 }: TimerProps) {
-  console.log(currentTimer);
   const theme = useTheme();
   const isTimerActive = 
     localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
@@ -99,7 +98,7 @@ export default function Timer({
     if (currentTimer > 0) {
       isPausedRef.current = isPaused;
       if (!isPaused) {
-        animationRef.current = requestAnimationFrame(updateTimer);
+        // animationRef.current = requestAnimationFrame(updateTimer);
       }
     }
    return () => cancelAnimationFrame(animationRef.current ?? 0);

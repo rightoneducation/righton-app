@@ -3,10 +3,10 @@ import { IGameSession} from '@righton/networking';
 import { IAction } from '../../lib/reducer/IGameSessionReducer';
 
 export const useTSGameSessionContext = (context: Context<IGameSession | undefined>) => {
-  const localGameSessionContext = useContext( context );
-  if (!localGameSessionContext)
+  const gameSessionContext = useContext( context );
+  if (!gameSessionContext)
     throw new Error ("No GameSessionContext found");
-  return localGameSessionContext;
+  return gameSessionContext;
 }
 
 export const useTSDispatchContext = (context: Context<Dispatch<IAction> | undefined>) => {

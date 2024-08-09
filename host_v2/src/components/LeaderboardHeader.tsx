@@ -6,13 +6,13 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
 import HostPlayerIconContainer from '../lib/styledcomponents/HostPlayerIconContainer';
-import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
-import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
 
 export default function LeaderboardHeader() {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
 
   return (
     <HeaderStackContainerStyled>
