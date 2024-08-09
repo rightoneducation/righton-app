@@ -30,15 +30,24 @@ const HeaderAreaStyled = styled(Box)({
   marginTop: '47px',
 });
 
-const BackgroundStyled = styled(Paper)({
+const BackgroundStyled = styled(Paper)(({ theme }) => ({
   position: 'absolute', // Position it absolutely within StartGameContainer
   top: 0,
   left: 0,
   width: '100vw', // Stretch across the entire container
   height: '100vh', // Cover the full height of the container
-  background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  background: theme.palette.primary.backgroundGradient,
   zIndex: -1, // Ensure it stays behind the content
-})
+}));
+const Shadow = styled(Box)(({theme}) => ({
+  position: 'absolute', // Position it absolutely within StartGameContainer
+  top: 0,
+  left: 0,
+  width: '100vw', // Stretch across the entire container
+  height: '100vh', // Cover the full height of the container
+  boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
+  zIndex: -1,
+}));
 
 interface StartGameProps {
   teams: ITeam[];
@@ -68,6 +77,7 @@ function StartGame({teams,
     const [scope3, animate3] = useAnimate();
     const [scope4, animate4] = useAnimate();
     const [scope5, animate5] = useAnimate();
+    const [shadowScope, animateShadow] = useAnimate();
 
     const handleButtonClick = () => {
       const exitAnimation = () => {
@@ -75,6 +85,7 @@ function StartGame({teams,
         // Start all animations concurrently and return a promise that resolves when all animations are complete
         return Promise.all([
           animate(scope.current, { scaleY: scaleFactor, x: 0, zIndex: -1 }, { duration: 1 }), // Animate to final value over 1 second
+          animateShadow(shadowScope.current, { y: 'calc(-100vh + 210px)' }, { duration: 1 }),
           animate2(scope2.current, {opacity: 0, position: 'relative'}, { duration: 1 }),
           animate3(scope3.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
           animate5(scope5.current, { opacity: 0, y: 'calc(-100vh + 225px)',x:0, zIndex: 2 }, { duration: 1 }),
@@ -89,6 +100,9 @@ function StartGame({teams,
         <SafeAreaStyled>
           <motion.div ref={scope} style={{width: '100%'}}>
             <BackgroundStyled/>
+          </motion.div>
+          <motion.div ref={shadowScope} style={{ width: '100%' }}>
+            <Shadow />
           </motion.div>
           <HeaderAreaStyled>
           <motion.div ref={scope2} exit={{opacity: 0}} >

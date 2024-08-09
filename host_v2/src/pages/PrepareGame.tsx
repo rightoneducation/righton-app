@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { motion } from 'framer-motion'; 
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
@@ -62,40 +63,53 @@ export default function PrepareGame( {
       });
     };
     
-    return(
+    return (
       <StackContainerStyled>
-      <HeaderBackgroundStyled />
-      <HeaderContent
-        isCorrect={false}
-        isIncorrect={false}
-        totalTime={0}
-        currentTimer={0}
-        isPaused={false}
-        isFinished={false}
-      />
-      <BodyStackContainerStyled>
-        <BodyBoxUpperStyled />
-        <BodyBoxLowerStyled />
-        <PrepareGameContent
-          currentQuestion={currentQuestion}
-          localGameSession={localGameSession}
-          screenSize={screenSize}
-          isShortAnswerEnabled={isShortAnswerEnabled}
-          setIsShortAnswerEnabled={setIsShortAnswerEnabled}
-          isConfidenceEnabled={isConfidenceEnabled}
-          setIsConfidenceEnabled={setIsConfidenceEnabled}
-          isHintEnabled={isHintEnabled}
-          setIsHintEnabled={setIsHintEnabled}
-        />
-      </BodyStackContainerStyled>
-      <FooterBackgroundStyled >
-        <FooterStartGame
-          teamsLength={localGameSession.teams.length} 
-          screenSize={screenSize}
-          handleButtonClick={handleButtonClick}
-          isGamePrepared={isGamePrepared}
-        />
-      </FooterBackgroundStyled>
-    </StackContainerStyled>
-  );
-}
+        <HeaderBackgroundStyled />  
+        <motion.div
+          initial={{ x: '100%', opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeIn' }}
+        >
+          <HeaderContent
+            isCorrect={false}
+            isIncorrect={false}
+            totalTime={0}
+            currentTimer={0}
+            isPaused={false}
+            isFinished={false}
+          />
+        </motion.div>
+
+          <BodyStackContainerStyled>
+            <BodyBoxUpperStyled />
+            <BodyBoxLowerStyled />
+          <PrepareGameContent
+            currentQuestion={currentQuestion}
+            localGameSession={localGameSession}
+            screenSize={screenSize}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+            setIsShortAnswerEnabled={setIsShortAnswerEnabled}
+            isConfidenceEnabled={isConfidenceEnabled}
+            setIsConfidenceEnabled={setIsConfidenceEnabled}
+            isHintEnabled={isHintEnabled}
+            setIsHintEnabled={setIsHintEnabled}
+          />
+          </BodyStackContainerStyled>  
+        <motion.div
+          initial={{ x: '100%', opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeIn' }}
+        >
+          <FooterBackgroundStyled>
+            <FooterStartGame
+              teamsLength={localGameSession.teams.length}
+              screenSize={screenSize}
+              handleButtonClick={handleButtonClick}
+              isGamePrepared={isGamePrepared}
+            />
+          </FooterBackgroundStyled>
+        </motion.div>
+      </StackContainerStyled>
+    );
+  }
