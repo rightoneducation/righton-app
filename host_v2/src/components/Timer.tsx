@@ -98,7 +98,7 @@ export default function Timer({
     if (currentTimer > 0) {
       isPausedRef.current = isPaused;
       if (!isPaused) {
-        // animationRef.current = requestAnimationFrame(updateTimer);
+        animationRef.current = requestAnimationFrame(updateTimer);
       }
     }
    return () => cancelAnimationFrame(animationRef.current ?? 0);

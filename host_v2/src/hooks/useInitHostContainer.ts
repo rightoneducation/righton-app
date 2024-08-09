@@ -7,15 +7,12 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
   const [gameSession, dispatch] = useReducer(GameSessionReducer, null);
   const [hostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer ,null);
-  console.log(gameSession);
   useEffect(() => {
     try {
       dataManager.init(gameSessionId).then(() => {
         const initGameSession = dataManager.getGameSession(); // eslint-disable-line
         const initHostTeamAnswers = dataManager.getHostTeamAnswers(); // eslint-disable-line
-        console.log('gameSession:', initGameSession);
         dispatch({type: 'synch_local_gameSession', payload: {...initGameSession}}); 
-        console.log('hostTeamAnswers:', initHostTeamAnswers);
         dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...initHostTeamAnswers}});
       });
 
@@ -24,21 +21,37 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
           dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession}}); 
       });
 
-      dataManager.subscribeToCreateTeam()
-        .then((updatedGameSession: IGameSession | null) => {
-          console.log('updatedGameSession in custom hook:', updatedGameSession);
-          dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession}});
+      dataManager.subscribeToCreateTeam((updatedGameSession: IGameSession | null) => {
+        if (updatedGameSession) {
+          dispatch({
+            type: 'synch_local_gameSession',
+            payload: { ...updatedGameSession }
+          });
+        } else {
+          console.error('Received null or undefined updatedGameSession');
+        }
       });
 
-      dataManager.subscribeToCreateTeamAnswer()
-        .then((updatedHostTeamAnswers: IHostTeamAnswers | null) => {
-          console.log('updatedHostTeamAnswers in custom hook:', updatedHostTeamAnswers);
-         dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...updatedHostTeamAnswers}});
+      dataManager.subscribeToCreateTeamAnswer((createdHostTeamAnswers: IHostTeamAnswers | null) => {
+        if (createdHostTeamAnswers) {
+          dispatchHostTeamAnswers({
+            type: 'synch_local_host_team_answers',
+            payload: { ...createdHostTeamAnswers }
+          });
+        } else {
+          console.error('Received null or undefined updatedHostTeamAnswers');
+        }
       });
 
-      dataManager.subscribeToUpdateTeamAnswer()
-        .then((updatedHostTeamAnswers: IHostTeamAnswers | null) => {
-        dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...updatedHostTeamAnswers}});
+      dataManager.subscribeToUpdateTeamAnswer((updatedHostTeamAnswers: IHostTeamAnswers | null) => {
+        if (updatedHostTeamAnswers) {
+          dispatchHostTeamAnswers({
+            type: 'synch_local_host_team_answers',
+            payload: { ...updatedHostTeamAnswers }
+          });
+        } else {
+          console.error('Received null or undefined updatedHostTeamAnswers');
+        }
       });
 
     } catch (error) {
@@ -50,6 +63,5 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
       dataManager.cleanupSubscription();
     };
   }, []); // eslint-disable-line
-  console.log(gameSession, hostTeamAnswers);
   return { gameSession, hostTeamAnswers, dispatch, dispatchHostTeamAnswers };
 }

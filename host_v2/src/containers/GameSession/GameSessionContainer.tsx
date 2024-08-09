@@ -1,11 +1,8 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers, HostDataManagerAPIClient } from '@righton/networking';
-import { APIClientsContext } from '../../lib/context/ApiClientsContext';
-import { GameSessionContext, GameSessionDispatchContext } from '../../lib/context/GameSessionContext';
-import { GameSessionReducer } from '../../lib/reducer/GameSessionReducer';
-import { HostTeamAnswersContext, HostTeamAnswersDispatchContext } from '../../lib/context/HostTeamAnswersContext';
+import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers } from '@righton/networking';
+import { GameSessionDispatchContext } from '../../lib/context/GameSessionContext';
+import { HostTeamAnswersDispatchContext } from '../../lib/context/HostTeamAnswersContext';
 import { useTSDispatchContext } from '../../hooks/context/useGameSessionContext';
-import { HostTeamAnswersReducer } from '../../lib/reducer/HostTeamAnswersReducer';
 import GameInProgress from '../../pages/GameInProgress';
 import StartGame from '../../pages/StartGame';
 import Leaderboard from '../../pages/Leaderboard';
@@ -26,7 +23,6 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
   const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
-  console.log(gameSession, hostTeamAnswers);
   const handleDeleteTeam = (teamId: string) => {
     // replace this with an integrated local + backendGameSession in the custom hook
     const updatedTeams = gameSession.teams.filter((team) => team.id !== teamId);
@@ -66,14 +62,6 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
     dispatch({type: 'update_start_time', payload: {startTime: newStartTime}});
   }
   const gameTemplates = null;
-
-  let renderContent;
-
-  const teamsJoiningPages = [
-    <>
-   
-        </>
-  ];
   let teamsJoiningContent = null;
   if (gameSession.currentQuestionIndex === null) {
     teamsJoiningContent = !isGamePrepared ? (

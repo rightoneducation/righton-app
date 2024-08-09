@@ -106,10 +106,6 @@ export default function ResponsesGraph({
       />
     );
   }
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-  console.log("Date");
-  console.log(data);
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
   return (
     <ResponseGraphContainer>
       <TitleContainer>
