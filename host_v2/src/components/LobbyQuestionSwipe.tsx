@@ -15,10 +15,8 @@ interface QuestionListProps {
 }
 
 const BoxStyled = styled(Box)({
-  width: '90%',
-  height: '100%',
+  width: '100%',
   boxSizing: 'border-box',
-  margin: 'auto',
 });
 
 export default function QuestionList({ questions, title }: QuestionListProps) {

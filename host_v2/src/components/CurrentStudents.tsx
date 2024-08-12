@@ -68,7 +68,7 @@ function CurrentStudents({ teams, currentQuestionIndex, handleDeleteTeam }: Curr
     : ModelHelper.teamSorter(teams, teams.length);
 
   return (
-    <StartGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%', paddingLeft: `${theme.sizing.mdPadding}px`}}>
+    <StartGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%'}}>
         {sortedTeams && sortedTeams.map((team) => (
           <MenuItemStyled key={uuidv4()}>
             <MonsterIcon index={team.selectedAvatarIndex} />

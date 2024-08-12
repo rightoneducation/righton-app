@@ -14,25 +14,11 @@ import {
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const BodyStyled = styled(Box)(({theme}) => ({
-  position: 'absolute',
-  top: '0',
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-  maxWidth: `${theme.breakpoints.values.md})px`,
-  width: '100%',
-  height: '100%',
-  overflow: 'hidden',
-  zIndex: 2,
-  paddingTop: `${theme.sizing.mdPadding}px`,
-}));
-
  const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: `${theme.breakpoints.values.lg}px`,
+  maxWidth: `200px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',
@@ -74,7 +60,8 @@ export default function HostBody({
         <BodyContentAreaSingleColumnStyled>
           <Swiper
                 modules={[Pagination]}
-                slidesPerView={1.1}
+                slidesPerView='auto'
+                spaceBetween='24px'
                 pagination={{
                   el: '.swiper-pagination-container',
                   bulletClass: 'swiper-pagination-bullet',
@@ -85,12 +72,12 @@ export default function HostBody({
                   },
                 }}
                 ref={swiperRef}
-                style={{height: '100%'}}
+                style={{height: '100%', paddingLeft: '48px', paddingRight: '48px'}}
               > 
-            <SwiperSlide style={{width: '100%', height: '100%' }}>
+            <SwiperSlide style={{width: '100%', height: '100%'}}>
               {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
             </SwiperSlide>
-            <SwiperSlide style={{width: '100%', height: '100%' }}>
+            <SwiperSlide style={{width: '100%', height: '100%'  }}>
               <QuestionList questions={questions} title ={title}/> 
             </SwiperSlide>
           </Swiper>
@@ -99,11 +86,11 @@ export default function HostBody({
     case ScreenSize.LARGE:
       default:
         return (
-          <StartGameContentAreaDoubleColumnStyled container>
-            <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
+          <StartGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+            <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
                 {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
             </Grid>
-            <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
+            <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
               <QuestionList questions={questions} title ={title}/> 
             </Grid>
           </StartGameContentAreaDoubleColumnStyled>

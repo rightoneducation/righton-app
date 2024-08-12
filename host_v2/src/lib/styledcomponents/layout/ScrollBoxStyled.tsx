@@ -25,6 +25,7 @@ export const StartGameScrollBoxStyled = styled(Box)(({ theme, currentQuestionInd
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'flex-start',
   gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px )`,
   paddingBottom: `${theme.sizing.mdPadding}px`, // added so box shadow shows around edge of card
   overflow: 'auto',
