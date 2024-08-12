@@ -131,8 +131,6 @@ const OuterBoxStyled = styled(Box)({
   alignItems: 'center',
   flexDirection: 'column',
   gap: '12px',
-  paddingLeft: '12px',
-  paddingRight: '12px',
   width: '100%',
   boxSizing: 'border-box',
 });
@@ -142,8 +140,6 @@ const StyledGameContainer = styled(Box)({
   alignItems: 'center',
   flexDirection: 'column',
   gap: '12px',
-  paddingLeft: '12px',
-  paddingRight: '12px',
   width: '100%',
   height: '100%',
   boxSizing: 'border-box',
