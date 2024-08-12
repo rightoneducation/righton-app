@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
@@ -32,7 +33,7 @@ export default function GameInProgressContent({
   currentPhase,
   currentPhaseTeamAnswers,
 }: GameInProgressContentProps) {
-
+  const theme = useTheme();
   // currentResponses are used for the Real Time Responses Victory Graph
   const currentResponses = currentPhaseTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
   // currentConfidences are used for the Confidence Meter Victory Graph
@@ -105,7 +106,7 @@ export default function GameInProgressContent({
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
-        <BodyContentAreaSingleColumnStyled>
+        <BodyContentAreaSingleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
           <Swiper
             modules={[Pagination]}
             pagination={{
@@ -117,7 +118,9 @@ export default function GameInProgressContent({
                 return `<span class="${className}" style="width:20px; height:6px; border-radius:0;"></span>`;
               },
             }}
-            slidesPerView={1.1}
+            slidesPerView='auto'
+            spaceBetween={`${theme.sizing.mdPadding}px`}
+            style={{height: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
           >
             <SwiperSlide>
               {leftCardsColumn}
@@ -135,8 +138,7 @@ export default function GameInProgressContent({
       );
     case (ScreenSize.MEDIUM):
       return (
-        <BodyContentAreaDoubleColumnStyled>
-          {isShortAnswerEnabled ? (
+        <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             <Swiper
               modules={[Pagination]}
               pagination={{
@@ -149,29 +151,27 @@ export default function GameInProgressContent({
                 },
               }}
               slidesPerView={2.1}
+              spaceBetween={`${theme.sizing.mdPadding}px`}
+              style={{height: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
             >
               <SwiperSlide>
                 {leftCardsColumn}
               </SwiperSlide>
+              {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
               <SwiperSlide>
                 {midCardsColumn}
               </SwiperSlide>
+            }
               <SwiperSlide>
                 {rightCardsColumn}
               </SwiperSlide>
             </Swiper>
-          ) : (
-            <>
-              {leftCardsColumn}
-              {rightCardsColumn}
-            </>
-          )}
         </BodyContentAreaDoubleColumnStyled>
       );
     case (ScreenSize.LARGE):
     default:
       return (
-        <BodyContentAreaTripleColumnStyled container>
+        <BodyContentAreaTripleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
           {leftCardsColumn}
           { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
             midCardsColumn

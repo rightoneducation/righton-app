@@ -34,7 +34,7 @@ export default function GameInProgressContentLeftColumn ({
 ){
   const theme = useTheme();
   return (
-    <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
+    <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
       <ScrollBoxStyled>
         <Responses 
           currentQuestion={currentQuestion}
