@@ -46,6 +46,7 @@ const BodyContentAreaSingleColumnStyled = styled(
 )(({ theme }) => ({
   justifyContent: 'center',
   maxWidth: `${theme.breakpoints.values.md}px`,
+  flexGrow: 1,
 }));
 
 interface HostBodyProps {
@@ -84,6 +85,7 @@ export default function HostBody({
                   },
                 }}
                 ref={swiperRef}
+                style={{height: '100%'}}
               > 
             <SwiperSlide style={{width: '100%', height: '100%' }}>
               {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}

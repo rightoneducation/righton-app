@@ -16,6 +16,7 @@ interface QuestionListProps {
 
 const BoxStyled = styled(Box)({
   width: '90%',
+  height: '100%',
   boxSizing: 'border-box',
   margin: 'auto',
 });
@@ -34,7 +35,7 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
               width: '100%',
             }}
           >
-        <TitleQuestionCard title ={title} questions={questions}/>          
+          <TitleQuestionCard title ={title} questions={questions}/>          
         </Box>
         </BoxStyled>
       {questions.map((question, index) => (

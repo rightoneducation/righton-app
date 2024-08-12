@@ -36,12 +36,10 @@ const ButtonStyled = styled(Button)({
 });
 
 const FooterContainer = styled(Box)(({theme}) => ({
-  position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  bottom: '0',
   width: '100%',
   gap: '16px',
   height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
