@@ -19,7 +19,7 @@ export default function GameInProgressContentRightColumn({
 ){
   const theme = useTheme();
   return (
-    <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingRight: `${theme.sizing.mdPadding}px` }}>
+    <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
     <ScrollBoxStyled>
       <QuestionCard 
       questionText={currentQuestion.text}

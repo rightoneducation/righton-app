@@ -41,9 +41,8 @@ export default function PrepareGameContent({
   setIsHintEnabled,
 }: PrepareGameContentProps) {
   const theme = useTheme();
-  console.log(currentQuestion);
   const leftCardsColumn = (
-    <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
+    <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
       <ScrollBoxStyled>
         <EnableShortAnswerCard
           isShortAnswerEnabled={isShortAnswerEnabled}
@@ -83,7 +82,9 @@ export default function PrepareGameContent({
                 return `<span class="${className}" style="width:20px; height:6px; border-radius:0;"></span>`;
               },
             }}
-            slidesPerView={1.1}
+            slidesPerView='auto'
+            spaceBetween={`${theme.sizing.mdPadding}px`}
+            style={{height: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
           >
             <SwiperSlide>
               {leftCardsColumn}
@@ -98,7 +99,7 @@ export default function PrepareGameContent({
     case (ScreenSize.LARGE):
     default:
       return (
-        <BodyContentAreaDoubleColumnStyled>
+        <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
           {leftCardsColumn}
           {rightCardsColumn}
         </BodyContentAreaDoubleColumnStyled>

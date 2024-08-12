@@ -61,7 +61,6 @@ export default function HostBody({
           <Swiper
                 modules={[Pagination]}
                 slidesPerView='auto'
-                spaceBetween='24px'
                 pagination={{
                   el: '.swiper-pagination-container',
                   bulletClass: 'swiper-pagination-bullet',
@@ -72,7 +71,8 @@ export default function HostBody({
                   },
                 }}
                 ref={swiperRef}
-                style={{height: '100%', paddingLeft: '48px', paddingRight: '48px'}}
+                spaceBetween={`${theme.sizing.mdPadding}px`}
+                style={{height: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
               > 
             <SwiperSlide style={{width: '100%', height: '100%'}}>
               {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
