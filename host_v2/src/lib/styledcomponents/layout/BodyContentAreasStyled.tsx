@@ -39,6 +39,7 @@ export const BodyContentAreaSingleColumnStyled = styled(
 )(({ theme }) => ({
   justifyContent: 'center',
   maxWidth: `${theme.breakpoints.values.md}px`,
+  flexGrow: 1
 }));
 
 // content area of body that floats above background layers above - Phase Results Page

@@ -84,7 +84,7 @@ export default function PrepareGameContent({
             }}
             slidesPerView='auto'
             spaceBetween={`${theme.sizing.mdPadding}px`}
-            style={{height: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+            style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
           >
             <SwiperSlide>
               {leftCardsColumn}

@@ -3,6 +3,7 @@ import { CircularProgress, Grid, MenuItem, Divider, Typography, Box, TextField  
 import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { IGameTemplate, ITeam } from '@righton/networking';
+import { StartEndGameScrollBoxStyled } from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import SearchIcon from '../../images/SearchIcon.svg';
 import RightOnPlaceHolder from '../../images/RightOnLogo.png';
 
@@ -28,6 +29,7 @@ const MenuItemStyled = styled(Box)(({isSelected}) => ({
   justifyContent: 'flex-end',
   boxSizing: 'border-box',
   overflow: 'hidden',
+  minHeight: '110px',
 }))
 
 const LeftBox = styled(Box)(({isSelected}) => ({
@@ -126,15 +128,6 @@ const InputInputStyled = styled(TextField)({
   },
 });
 
-const OuterBoxStyled = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  flexDirection: 'column',
-  gap: '12px',
-  width: '100%',
-  boxSizing: 'border-box',
-});
-
 const StyledGameContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
@@ -142,8 +135,7 @@ const StyledGameContainer = styled(Box)({
   gap: '12px',
   width: '100%',
   height: '100%',
-  boxSizing: 'border-box',
-  overflow: 'hidden'
+  boxSizing: 'border-box'
 });
 
 interface SuggestedGamesProps {
@@ -190,7 +182,7 @@ function SuggestedGames ({
     };
 
     return (
-        <OuterBoxStyled>
+        <StartEndGameScrollBoxStyled>
             <SearchStyled>
               <SearchIconStyled>
                 <img src={SearchIcon} alt="Search Icon" />
@@ -239,7 +231,7 @@ function SuggestedGames ({
                 </MenuItemStyled>
             ))}
             </StyledGameContainer>
-        </OuterBoxStyled>
+        </StartEndGameScrollBoxStyled>
     )
 }
 export default SuggestedGames;

@@ -108,7 +108,7 @@ function FooterGameInProgress({
   return (
     <FooterContainer>
       <InnerFooterContainer>
-        { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && isShortAnswerEnabled)) && (
+        { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS))) && (
           <PaginationContainerStyled
             className="swiper-pagination-container"
             style={{ paddingTop: `${theme.sizing.xxSmPadding}px`, zIndex: 2 }}

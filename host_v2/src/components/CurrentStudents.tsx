@@ -3,7 +3,7 @@ import { Grid, Typography, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { ITeam, ModelHelper } from '@righton/networking';
-import { StartGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
+import { StartEndGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import CloseIcon from '../images/Close.svg';
 import MonsterIcon from './MonsterIcon';
 
@@ -34,6 +34,7 @@ const CloseSvg = styled('img')({
 });
 
 const MenuItemStyled = styled(Box)({
+  width: '100%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-start',
@@ -43,6 +44,7 @@ const MenuItemStyled = styled(Box)({
   padding: '4px',
   paddingLeft: '8px',
   gap: '4px',
+  boxSizing: 'border-box',
 });
 
 const GridNameStyled = styled(Grid)({
@@ -68,7 +70,7 @@ function CurrentStudents({ teams, currentQuestionIndex, handleDeleteTeam }: Curr
     : ModelHelper.teamSorter(teams, teams.length);
 
   return (
-    <StartGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%'}}>
+    <StartEndGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%', width: '100%'}}>
         {sortedTeams && sortedTeams.map((team) => (
           <MenuItemStyled key={uuidv4()}>
             <MonsterIcon index={team.selectedAvatarIndex} />
@@ -83,7 +85,7 @@ function CurrentStudents({ teams, currentQuestionIndex, handleDeleteTeam }: Curr
             </Box>
           </MenuItemStyled>
         ))}
-    </StartGameScrollBoxStyled>
+    </StartEndGameScrollBoxStyled>
   );
 }
 

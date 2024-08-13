@@ -31,6 +31,7 @@ const BodyContentAreaSingleColumnStyled = styled(
   justifyContent: 'center',
   maxWidth: `${theme.breakpoints.values.md}px`,
   flexGrow: 1,
+  overflow: 'auto',
 }));
 
 interface GameEndedHostBodyProps{
@@ -76,12 +77,12 @@ export default function GameEndedHostBody({
               }}
               ref={swiperRef}
               spaceBetween={`${theme.sizing.mdPadding}px`}
-              style={{height: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+              style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
             > 
-              <SwiperSlide style={{ alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', marginRight: '0px', boxSizing: 'border-box'}}>
+              <SwiperSlide style={{width: '100%', height: '100%'}}>
                 {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
               </SwiperSlide>
-              <SwiperSlide>
+              <SwiperSlide style={{width: '100%', height: '100%'}}>
                 <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
               </SwiperSlide>
             </Swiper>

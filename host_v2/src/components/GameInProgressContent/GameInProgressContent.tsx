@@ -120,7 +120,7 @@ export default function GameInProgressContent({
             }}
             slidesPerView='auto'
             spaceBetween={`${theme.sizing.mdPadding}px`}
-            style={{height: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+            style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
           >
             <SwiperSlide>
               {leftCardsColumn}
@@ -152,7 +152,7 @@ export default function GameInProgressContent({
               }}
               slidesPerView={2.1}
               spaceBetween={`${theme.sizing.mdPadding}px`}
-              style={{height: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+              style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
             >
               <SwiperSlide>
                 {leftCardsColumn}
