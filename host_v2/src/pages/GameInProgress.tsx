@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint, IPhase } from '@righton/networking';
+import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint, IGameSession, IPhase } from '@righton/networking';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
+import { HostTeamAnswersDispatchContext } from '../lib/context/HostTeamAnswersContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import GameStartingModal from '../components/GameStartingModal';
 import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
@@ -13,21 +18,15 @@ import GameInProgressContent from '../components/GameInProgressContent/GameInPro
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
 import FooterGameInProgress from '../components/FooterGameInProgress';
-import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
-import { GameSessionContext } from '../lib/context/GameSessionContext';
 
 interface GameInProgressProps {
   isTimerVisible: boolean,
   setIsTimerVisible: (isTimerVisible: boolean) => void,
   isCorrect: boolean,
   isIncorrect: boolean,
-  totalTime: number,
   hasRejoined: boolean,
-  currentTimer: number,
   localModelMock: LocalModel,
   hostTeamAnswers: IHostTeamAnswers;
-  handleAddTime: () => void;
-  isAddTime: boolean;
 }
 
 export default function GameInProgress({
@@ -35,17 +34,17 @@ export default function GameInProgress({
   setIsTimerVisible,
   isCorrect,
   isIncorrect,
-  totalTime,
   hasRejoined,
-  currentTimer,
   localModelMock,
   hostTeamAnswers,
-  handleAddTime,
-  isAddTime,
 }: GameInProgressProps) {
     const theme = useTheme();
+    const [isAddTime, setIsAddTime] = useState<boolean>(false);
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
+    const apiClients = useTSAPIClientsContext(APIClientsContext);
     const localGameSession = useTSGameSessionContext(GameSessionContext); 
+    const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
+    const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
     const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
     const currentPhaseTeamAnswers = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
@@ -60,6 +59,7 @@ export default function GameInProgress({
         : isMediumScreen 
           ? ScreenSize.MEDIUM 
           : ScreenSize.SMALL;
+    const totalTime = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? localGameSession.phaseOneTime : localGameSession.phaseTwoTime;
 
     return(
       <StackContainerStyled>
@@ -68,13 +68,9 @@ export default function GameInProgress({
       }
       <HeaderBackgroundStyled />
       <HeaderContent
-        handleAddTime={handleAddTime}
         isCorrect={isCorrect}
         isIncorrect={isIncorrect}
         totalTime={totalTime}
-        currentTimer={currentTimer}
-        isPaused={false}
-        isFinished={false}
         isAddTime={isAddTime}
       />
       <BodyStackContainerStyled>

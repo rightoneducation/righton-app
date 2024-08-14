@@ -40,7 +40,6 @@ export default function GameInProgressContent({
   const currentConfidences = currentPhaseTeamAnswers?.confidences ?? [] as IHostTeamAnswersConfidence[];
   // currentHints are used for the Hints Progress Bar (Pre-GPT)
   const currentHints = currentPhaseTeamAnswers?.hints ?? [] as IHostTeamAnswersHint[];
-  console.log(currentResponses);
   let prevPhaseResponses = [] as IHostTeamAnswersResponse[];
   let prevPhaseConfidences = [] as IHostTeamAnswersConfidence[];
   if (localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START) {

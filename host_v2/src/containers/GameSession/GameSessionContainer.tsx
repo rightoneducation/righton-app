@@ -18,9 +18,6 @@ interface GameSessionContainerProps {
 export default function GameSessionContainer({apiClients, gameSession, hostTeamAnswers}: GameSessionContainerProps) {
   const [isTimerVisible, setIsTimerVisible] = useState<boolean>(false);
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
-  const [currentTimer, setCurrentTimer] = useState<number>(0);
-  const [totalTime, setTotalTime] = useState<number>(0);
-  const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
   const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
   const handleDeleteTeam = (teamId: string) => {
@@ -29,38 +26,7 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
     dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
     apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
   };
-  const calculateCurrentTime = (inputGameSession: IGameSession) => {
-    let initialTime = 0;
-    if (inputGameSession) {
-      if (inputGameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-        initialTime = inputGameSession?.phaseOneTime;
-      } else if (inputGameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-        initialTime = inputGameSession?.phaseTwoTime;
-      }
-      setTotalTime(initialTime);
-      const getStartTime = Number(inputGameSession?.startTime);
-      if (getStartTime) {
-        const difference = Date.now() - getStartTime;
-        if (difference >= initialTime * 1000) {
-          return 0;
-        } 
-        const remainingTime = initialTime - Math.trunc(difference / 1000);
-        return remainingTime;
-      }
-    }
-    return initialTime;
-  };
-
-  const handleAddTime = () => {
-    const addedTime = 30;
-    const addedStartTime = addedTime * 1000;
-    const isOverMaxTime = (Number(gameSession.startTime) + addedStartTime) > Date.now();
-    const newStartTime = isOverMaxTime ? Date.now() : Number(gameSession.startTime) + addedStartTime;
-    setIsAddTime((prev)=> !prev);
-    apiClients?.hostDataManager?.updateTime(newStartTime);
-    setCurrentTimer(calculateCurrentTime({...gameSession, startTime: newStartTime.toString()}));
-    dispatch({type: 'update_start_time', payload: {startTime: newStartTime}});
-  }
+  
   const gameTemplates = null;
   let teamsJoiningContent = null;
   if (gameSession.currentQuestionIndex === null) {
@@ -99,15 +65,11 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
       <GameInProgress
           isTimerVisible={isTimerVisible}
           setIsTimerVisible={setIsTimerVisible} 
-          currentTimer={currentTimer}
           isCorrect={false}
           isIncorrect={false}
-          totalTime={totalTime}
           hasRejoined={false}
           localModelMock={{hasRejoined: false, currentTimer: 100}}
           hostTeamAnswers={hostTeamAnswers}
-          handleAddTime={handleAddTime}
-          isAddTime={isAddTime}
         />
       );
     case GameSessionState.FINAL_RESULTS:

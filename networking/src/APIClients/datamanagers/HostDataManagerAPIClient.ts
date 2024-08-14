@@ -116,6 +116,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (this.gameSession && this.gameSessionId && this.gameSession.startTime){
       try {  
         await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, startTime: newTime.toString()}).then((gameSession: IGameSession) => {
+          console.log(newTime);
+          console.log(gameSession);
           this.gameSession = gameSession;
         });
       } catch (error) {

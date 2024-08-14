@@ -26,6 +26,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const { apiClients } = props;
   const [retry, setRetry] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [isAddTime, setIsAddTime] = useState<boolean>(false);
   // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
   const handleRetry = () => {
     setRetry(retry + 1);
@@ -70,6 +71,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   
   useEffect(() => {
     setCurrentTime(calculateCurrentTime());
+    setIsAddTime((prev) => !prev);
     const handleVisibilityChange = () => {
       if (!document.hidden) {
         setCurrentTime(calculateCurrentTime());
@@ -142,6 +144,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   return (
     <GameSessionSwitch
       currentTimer={currentTime}
+      isAddTime={isAddTime}
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}
       gameSession={subscription.gameSession}

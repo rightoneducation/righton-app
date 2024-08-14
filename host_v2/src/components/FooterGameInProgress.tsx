@@ -81,14 +81,13 @@ function FooterGameInProgress({
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
   const handleButtonClick = () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    const currentTimeMillis = Date.now().toString(); 
+    const startTime = Date.now(); 
     if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
-      apiClients?.hostDataManager?.updateTime(Date.now());
     }
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: currentTimeMillis});
-    dispatch({type: 'advance_game_phase', payload: {nextState}});
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: startTime.toString()});
+    dispatch({type: 'advance_game_phase', payload: {nextState, startTime}});
   };
   const GetButtonText = () => {
     switch(currentState) {

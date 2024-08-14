@@ -59,6 +59,7 @@ interface GameInProgressProps {
   isShortAnswerEnabled: boolean;
   gameSession: IGameSession;
   newPoints?: number;
+  isAddTime: boolean;
 }
 
 export default function GameInProgress({
@@ -77,6 +78,7 @@ export default function GameInProgress({
   answerChoices,
   hasRejoined,
   currentTimer,
+  isAddTime,
   localModel,
   isShortAnswerEnabled,
   gameSession,
@@ -316,6 +318,7 @@ export default function GameInProgress({
           isCorrect={false}
           isIncorrect={false}
           totalTime={totalTime}
+          isAddTime={isAddTime}
           currentTimer={currentTimer}
           isPaused={false}
           isFinished={false}

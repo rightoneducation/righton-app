@@ -20,6 +20,7 @@ interface GameSessionSwitchProps {
   currentTimer: number;
   hasRejoined: boolean;
   gameSession: IGameSession;
+  isAddTime: boolean;
   localModel: LocalModel;
   newPoints: number;
 }
@@ -29,6 +30,7 @@ export default function GameSessionSwitch({
   currentTimer,
   hasRejoined,
   gameSession,
+  isAddTime,
   localModel,
   newPoints,
 }: GameSessionSwitchProps) {
@@ -98,6 +100,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          isAddTime={isAddTime}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}
@@ -117,6 +120,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          isAddTime={isAddTime}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}
@@ -139,6 +143,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          isAddTime={isAddTime}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
           gameSession={gameSession}

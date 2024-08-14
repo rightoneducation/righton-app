@@ -68,9 +68,6 @@ export default function PrepareGame( {
         isCorrect={false}
         isIncorrect={false}
         totalTime={0}
-        currentTimer={0}
-        isPaused={false}
-        isFinished={false}
       />
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />

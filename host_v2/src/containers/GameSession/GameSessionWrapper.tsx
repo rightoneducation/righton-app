@@ -21,6 +21,7 @@ export default function GameSessionWrapper({apiClients}: GameSessionWrapperProps
   const match = useMatch("/host/:gameSessionId");
   const gameSessionId = match?.params.gameSessionId;
   const { gameSession, hostTeamAnswers, dispatch, dispatchHostTeamAnswers } = useInitHostContainer(apiClients, gameSessionId ?? '');
+  console.log(gameSession?.startTime);
   if (gameSession && hostTeamAnswers && Object.keys(gameSession).length !== 0 && Object.keys(hostTeamAnswers).length !== 0) {
     return (
         <APIClientsContext.Provider value={apiClients}>
