@@ -99,7 +99,14 @@ export default function PrepareGameContent({
     case (ScreenSize.LARGE):
     default:
       return (
-        <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+        <BodyContentAreaDoubleColumnStyled 
+          container 
+          gap={`${theme.sizing.mdPadding}px`} 
+          style={{  
+            paddingLeft: `${theme.sizing.xLgPadding}px`,
+            paddingRight: `${theme.sizing.xLgPadding}px`
+          }}
+        >
           {leftCardsColumn}
           {rightCardsColumn}
         </BodyContentAreaDoubleColumnStyled>

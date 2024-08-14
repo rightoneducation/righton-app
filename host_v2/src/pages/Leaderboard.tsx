@@ -32,7 +32,7 @@ const SafeAreaStyled = styled(Box)((theme) => ({
   background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   backgroundAttachment: 'fixed',
   boxSizing: 'border-box',
-  gap: '16px',
+  gap: '16px'
 }));
 
 export default function Leaderboard({
@@ -53,7 +53,11 @@ export default function Leaderboard({
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex});
   };
   return(
-    <SafeAreaStyled>
+    <SafeAreaStyled style={{ 
+      paddingLeft: `${theme.sizing.xLgPadding}px`,
+      paddingRight: `${theme.sizing.xLgPadding}px`
+      }}
+    >
       <LeaderboardHeader />
       <HostBody 
         teams={teams} 

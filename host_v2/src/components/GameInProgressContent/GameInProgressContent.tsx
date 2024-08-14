@@ -137,7 +137,7 @@ export default function GameInProgressContent({
       );
     case (ScreenSize.MEDIUM):
       return (
-        <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+        <BodyContentAreaDoubleColumnStyled container >
             <Swiper
               modules={[Pagination]}
               pagination={{
@@ -149,7 +149,12 @@ export default function GameInProgressContent({
                   return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
                 },
               }}
-              slidesPerView={2.1}
+              slidesPerView={
+                (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) ?
+                  2.1
+                  : 
+                  2.0
+              }
               spaceBetween={`${theme.sizing.mdPadding}px`}
               style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
             >
@@ -157,10 +162,10 @@ export default function GameInProgressContent({
                 {leftCardsColumn}
               </SwiperSlide>
               {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
-              <SwiperSlide>
-                {midCardsColumn}
-              </SwiperSlide>
-            }
+                <SwiperSlide>
+                  {midCardsColumn}
+                </SwiperSlide>
+              }
               <SwiperSlide>
                 {rightCardsColumn}
               </SwiperSlide>

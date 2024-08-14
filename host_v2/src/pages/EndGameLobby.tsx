@@ -84,7 +84,10 @@ function EndGameLobby({teams,
     }
 
     return (
-      <SafeAreaStyled>
+      <SafeAreaStyled style={{ 
+        paddingLeft: `${theme.sizing.xLgPadding}px`,
+        paddingRight: `${theme.sizing.xLgPadding}px`
+        }}>
         <EndGameHeader gameCode = {gameCode} />
         <EndGameBody 
           screenSize={screenSize} 
