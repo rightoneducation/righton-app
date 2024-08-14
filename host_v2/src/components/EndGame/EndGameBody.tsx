@@ -41,7 +41,6 @@ interface GameEndedHostBodyProps{
   gameTemplates: IGameTemplate[];
   currentQuestionIndex: number;
   screenSize: ScreenSize;
-  handleDeleteTeam: (id: string) => void;
   searchText: string;
   handleUpdateSearchText: (value: string) => void;
 }
@@ -53,7 +52,6 @@ export default function GameEndedHostBody({
   gameTemplates, 
   currentQuestionIndex, 
   screenSize, 
-  handleDeleteTeam,
   searchText,
   handleUpdateSearchText
 }: GameEndedHostBodyProps ) {
@@ -80,7 +78,7 @@ export default function GameEndedHostBody({
               style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
             > 
               <SwiperSlide style={{width: '100%', height: '100%'}}>
-                {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
+                {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
               </SwiperSlide>
               <SwiperSlide style={{width: '100%', height: '100%'}}>
                 <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
@@ -93,7 +91,7 @@ export default function GameEndedHostBody({
         return (
           <EndGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
+                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
                <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>

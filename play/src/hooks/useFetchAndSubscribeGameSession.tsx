@@ -4,9 +4,11 @@ import {
   isNullOrUndefined,
   IAPIClients,
   IGameSession,
+  ITeam,
   ModelHelper,
   GameSessionState,
 } from '@righton/networking';
+import { StorageKey, StorageKeyAnswer} from '../lib/PlayModels';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -34,6 +36,7 @@ export default function useFetchAndSubscribeGameSession(
   useEffect(() => {
     let ignore = false;
     let gameSessionSubscription: any;
+    let teamsSubscription: any;
 
     if (retry > 0) {
       setIsLoading(true);
@@ -76,7 +79,6 @@ export default function useFetchAndSubscribeGameSession(
             }
             if (!ignore) setHasRejoined(false);
             setGameSession((prevGame) => ({ ...prevGame, ...response }));
-            
             // updates team score in the phase 1 and 2 discuss states
             if (response.currentState === GameSessionState.PHASE_1_DISCUSS || response.currentState === GameSessionState.PHASE_2_DISCUSS) {
               setNewPoints(0);
@@ -106,6 +108,16 @@ export default function useFetchAndSubscribeGameSession(
             }
           }
         );
+
+        teamsSubscription = apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => { 
+          if (deletedTeam.id === teamId) {
+            setHasRejoined(false);
+            window.localStorage.removeItem(StorageKey);
+            window.localStorage.removeItem(StorageKeyAnswer);
+            teamsSubscription.unsubscribe();
+            window.location.replace((`https://play.rightoneducation.com`));
+          }
+      })
       })
       .catch((e) => {
         setIsLoading(false);
@@ -117,6 +129,9 @@ export default function useFetchAndSubscribeGameSession(
       ignore = true;
       if (gameSessionSubscription && gameSessionSubscription.unsubscribe) {
         gameSessionSubscription.unsubscribe();
+      }
+      if (teamsSubscription && teamsSubscription.unsubscribe) {
+        teamsSubscription.unsubscribe();
       }
     };
   }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]);

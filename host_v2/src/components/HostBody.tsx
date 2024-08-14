@@ -41,7 +41,6 @@ interface HostBodyProps {
   title: string, 
   currentQuestionIndex: number, 
   screenSize: ScreenSize
-  handleDeleteTeam: (id: string) => void, 
 }
 
 export default function HostBody({ 
@@ -50,7 +49,6 @@ export default function HostBody({
   title, 
   currentQuestionIndex, 
   screenSize,
-  handleDeleteTeam, 
 }: HostBodyProps) {
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
@@ -75,7 +73,7 @@ export default function HostBody({
                 style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
               > 
             <SwiperSlide style={{width: '100%', height: '100%'}}>
-              {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
+              {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex}/>}
             </SwiperSlide>
             <SwiperSlide style={{width: '100%', height: '100%'  }}>
               <QuestionList questions={questions} title ={title}/> 
@@ -88,7 +86,7 @@ export default function HostBody({
         return (
           <StartGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
+                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
             <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
               <QuestionList questions={questions} title ={title}/> 

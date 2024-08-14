@@ -37,7 +37,6 @@ interface StartGameProps {
   title: string;
   gameCode: number;
   currentQuestionIndex: number;
-  handleDeleteTeam: (id: string) => void;
   setIsGamePrepared: (value: boolean) => void;
 }  
 
@@ -46,7 +45,6 @@ function StartGame({teams,
   title,
   gameCode,
   currentQuestionIndex,
-  handleDeleteTeam,
   setIsGamePrepared
   }: StartGameProps) {
     const theme = useTheme();
@@ -65,7 +63,6 @@ function StartGame({teams,
             questions={questions} 
             title={title} 
             currentQuestionIndex={currentQuestionIndex}
-            handleDeleteTeam={handleDeleteTeam} 
             screenSize={screenSize}
           />
           <FooterStartGame 

@@ -18,15 +18,7 @@ interface GameSessionContainerProps {
 export default function GameSessionContainer({apiClients, gameSession, hostTeamAnswers}: GameSessionContainerProps) {
   const [isTimerVisible, setIsTimerVisible] = useState<boolean>(false);
   const [isGamePrepared, setIsGamePrepared] = useState<boolean>(false);
-  const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
-  const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
-  const handleDeleteTeam = (teamId: string) => {
-    // replace this with an integrated local + backendGameSession in the custom hook
-    const updatedTeams = gameSession.teams.filter((team) => team.id !== teamId);
-    dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
-    apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
-  };
-  
+
   const gameTemplates = null;
   let teamsJoiningContent = null;
   if (gameSession.currentQuestionIndex === null) {
@@ -37,7 +29,6 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
         title={gameSession.title}
         gameCode={gameSession.gameCode}
         currentQuestionIndex={gameSession.currentQuestionIndex}
-        handleDeleteTeam={handleDeleteTeam}
         setIsGamePrepared={setIsGamePrepared}
       />
     ) : (
@@ -50,7 +41,6 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
         questions={gameSession.questions}
         currentQuestionIndex={gameSession.currentQuestionIndex}
         title={gameSession.title}
-        handleDeleteTeam={handleDeleteTeam}
       />
     );
   }
@@ -79,18 +69,16 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
             questions={gameSession.questions}
             currentQuestionIndex={gameSession.currentQuestionIndex}
             title={gameSession.title}
-            handleDeleteTeam={handleDeleteTeam}
         />
       );
     case GameSessionState.FINISHED:
       return (
         <EndGameLobby 
-        teams={gameSession.teams} 
-        gameTemplates={gameTemplates} 
-        gameCode={gameSession.gameCode} 
-        currentQuestionIndex={gameSession.currentQuestionIndex} 
-        handleDeleteTeam={handleDeleteTeam}
-      />
+          teams={gameSession.teams} 
+          gameTemplates={gameTemplates} 
+          gameCode={gameSession.gameCode} 
+          currentQuestionIndex={gameSession.currentQuestionIndex} 
+        />
       );
     case GameSessionState.TEAMS_JOINING:
     default:

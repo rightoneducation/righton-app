@@ -13,7 +13,8 @@ export function GameSessionReducer(gameSession: IGameSession | null, action: IAc
       console.log('synch_local_gameSession', payload);
       return payload ? { ...gameSession, ...payload } : gameSession;
     case 'update_teams':
-      return gameSession ? { ...gameSession, teams: payload.teams } : null;
+      console.log('update_teams', payload);
+      return payload ? { ...gameSession, ...payload } : gameSession;
     default:
       return gameSession;
   }

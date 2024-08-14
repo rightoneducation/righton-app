@@ -19,7 +19,6 @@ interface LeaderboardProps {
   questions:IQuestion[];
   currentQuestionIndex: number;
   title: string;
-  handleDeleteTeam: (id: string) => void, 
 }
 
 const SafeAreaStyled = styled(Box)((theme) => ({
@@ -40,8 +39,7 @@ export default function Leaderboard({
  teams,
  questions,
  currentQuestionIndex,
- title,
- handleDeleteTeam
+ title
 }: LeaderboardProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -63,7 +61,6 @@ export default function Leaderboard({
         title={title} 
         currentQuestionIndex={currentQuestionIndex}
         screenSize={screenSize}
-        handleDeleteTeam={handleDeleteTeam}
       />
       <FooterStartGame 
         teamsLength={teams ? teams.length : 0}
