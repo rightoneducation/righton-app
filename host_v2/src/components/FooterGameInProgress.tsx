@@ -66,22 +66,33 @@ interface FootGameInProgressProps {
   submittedAnswers: number;
   teamsLength: number;
   screenSize: ScreenSize;
+  GIPOnClick: () => void;
+  GIPEndGameOnClick: () => void;
 }
 
-function FooterGameInProgress({ 
+function FooterGameInProgress({
   currentState,
   submittedAnswers,
   teamsLength,
-  screenSize
+  screenSize,
+  GIPOnClick,
+  GIPEndGameOnClick,
 }: FootGameInProgressProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    const currentTimeMillis = Date.now().toString(); 
+    if (nextState === GameSessionState.TEAMS_JOINING) {
+      await GIPOnClick(); // wait for GIPOnClick to complete (phase 2 discuss animation)
+    }
+    if (nextState === GameSessionState.FINAL_RESULTS){
+      // call a function that slides everything to the left
+      await GIPEndGameOnClick();
+    }
+    const currentTimeMillis = Date.now().toString();
     if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
@@ -89,7 +100,7 @@ function FooterGameInProgress({
     }
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: currentTimeMillis});
     dispatch({type: 'advance_game_phase', payload: {nextState}});
-  };
+ };
   const GetButtonText = () => {
     switch(currentState) {
       case GameSessionState.CHOOSE_CORRECT_ANSWER:

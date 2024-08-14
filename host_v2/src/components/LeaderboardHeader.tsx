@@ -16,7 +16,7 @@ export default function LeaderboardHeader() {
 
   return (
     <HeaderStackContainerStyled>
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <QuestionIndicator

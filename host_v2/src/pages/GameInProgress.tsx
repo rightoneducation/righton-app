@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { useAnimate, motion } from 'framer-motion';
 import { IHostTeamAnswers, GameSessionState, IHostTeamAnswersHint, IPhase } from '@righton/networking';
 import GameStartingModal from '../components/GameStartingModal';
 import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
@@ -45,7 +46,7 @@ export default function GameInProgress({
 }: GameInProgressProps) {
     const theme = useTheme();
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
-    const localGameSession = useTSGameSessionContext(GameSessionContext); 
+    const localGameSession = useTSGameSessionContext(GameSessionContext);
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
     const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
     const currentPhaseTeamAnswers = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase] ?? null;
@@ -56,17 +57,45 @@ export default function GameInProgress({
     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const screenSize = isLargeScreen  // eslint-disable-line
-        ? ScreenSize.LARGE 
-        : isMediumScreen 
-          ? ScreenSize.MEDIUM 
+        ? ScreenSize.LARGE
+        : isMediumScreen
+          ? ScreenSize.MEDIUM
           : ScreenSize.SMALL;
+    const [scope, animate] = useAnimate();
+    const [scope2, animate2] = useAnimate();
+    const [scope3, animate3] = useAnimate();
 
+
+    const GIPOnClick = () => {
+      const exitAnimation = () => {
+        const scaleFactor = 225 / window.innerHeight;
+        // Start all animations concurrently and return a promise that resolves when all animations are complete
+        return Promise.all([
+          animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' })
+        ]);
+      };
+      return exitAnimation();
+      };
+    const GIPEndGameOnClick = () => {
+      const exitAnimation = () => {
+        const scaleFactor = 225 / window.innerHeight;
+        // Start all animations concurrently and return a promise that resolves when all animations are complete
+        return Promise.all([
+          animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
+          animate2(scope2.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
+          animate3(scope3.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' })
+
+        ]);
+      };
+      return exitAnimation();
+      };
     return(
       <StackContainerStyled>
-      {isTimerVisible && 
+      {isTimerVisible &&
         <GameStartingModal isTimerVisible={isTimerVisible} setIsTimerVisible={setIsTimerVisible}/>
       }
       <HeaderBackgroundStyled />
+      <motion.div ref={scope2} >
       <HeaderContent
         handleAddTime={handleAddTime}
         isCorrect={isCorrect}
@@ -77,6 +106,7 @@ export default function GameInProgress({
         isFinished={false}
         isAddTime={isAddTime}
       />
+      </motion.div>
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
@@ -87,15 +117,20 @@ export default function GameInProgress({
           localGameSession={localGameSession}
           hostTeamAnswers={hostTeamAnswers}
           screenSize={screenSize}
+          scope={scope}
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled >
-        <FooterGameInProgress 
+      <motion.div ref={scope3} >
+        <FooterGameInProgress
           submittedAnswers={submittedAnswers}
-          teamsLength={localGameSession.teams.length} 
+          teamsLength={localGameSession.teams.length}
           currentState={localGameSession.currentState}
           screenSize={screenSize}
+          GIPOnClick = {GIPOnClick}
+          GIPEndGameOnClick = {GIPEndGameOnClick}
         />
+        </motion.div>
       </FooterBackgroundStyled>
     </StackContainerStyled>
   );

@@ -6,6 +6,7 @@ import { useTSDispatchContext } from '../../hooks/context/useGameSessionContext'
 import GameInProgress from '../../pages/GameInProgress';
 import StartGame from '../../pages/StartGame';
 import Leaderboard from '../../pages/Leaderboard';
+import InterimLeaderboard from '../../pages/InterimLeaderboard';
 import EndGameLobby from '../../pages/EndGameLobby';
 import PrepareGame from '../../pages/PrepareGame';
 
@@ -79,7 +80,7 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
     );
   } else {
     teamsJoiningContent = (
-      <Leaderboard
+      <InterimLeaderboard
         teams={gameSession.teams}
         questions={gameSession.questions}
         currentQuestionIndex={gameSession.currentQuestionIndex}
