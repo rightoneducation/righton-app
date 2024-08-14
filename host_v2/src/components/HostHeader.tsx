@@ -74,7 +74,10 @@ function HostHeader({ gameCode }: HostHeaderProps) {
         <HelpModal isHelpDisplayed={isHelpDisplayed} setIsHelpDisplayed={setIsHelpDisplayed}/>
       }
       <TopLineStyled>
-        <GameLobbyTypographyStyled>Game Lobby </GameLobbyTypographyStyled>
+        <Box>
+          <Typography variant="body1" style={{fontSize: 10, color: 'white'}}>QA Version 1.0</Typography>
+          <GameLobbyTypographyStyled>Game Lobby </GameLobbyTypographyStyled> 
+        </Box>
         <IconsContainer>
         <Tooltip
               title="Help"

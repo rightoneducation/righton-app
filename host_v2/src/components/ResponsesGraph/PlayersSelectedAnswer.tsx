@@ -77,8 +77,9 @@ const PhaseTwoCountText = styled(Typography)({
 
 const TextContainer = styled(Box)({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   justifyContent: 'space-between',
+  gap: '8px',
 });
 
 const NumberContainer = styled(Box)({
@@ -123,12 +124,13 @@ export default function PlayersSelectedAnswer({
   const theme = useTheme();
   const { count } = data[graphClickIndex];
   const percentage = (count / numPlayers) * 100;
+  console.log(data);
   const teamsWithSelectedAnswer = data[graphClickIndex].teams.map((team: string) => team);
   return (
     <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding}}>
       <TextContainer>
         <TitleText>
-        { statePosition < 6 ? `Players who picked this answer` : `Players who think this is the trickest answer`}
+        { statePosition < 6 ? `Players who picked this answer` : `Players who think this is the trickiest answer`}
         </TitleText>
         <NumberContainer>
           <CountText>

@@ -12,6 +12,11 @@ import LaunchWrapper from './containers/Launcher/LaunchWrapper';
 import GameSessionWrapper from './containers/GameSession/GameSessionWrapper';
 import Theme from './lib/Theme';
 
+function RedirectToCentralIfMissing() {
+  window.location.href = 'http://dev-central.rightoneducation.com/';
+  return null;
+}
+
 function App() {
   const apiClients = new APIClients(Environment.Developing, AppType.HOST);
   const router = createBrowserRouter(
@@ -19,6 +24,7 @@ function App() {
       <>
         <Route path="/new/:gameId" element={<LaunchWrapper apiClients={apiClients}/>} />
         <Route path="/host/:gameSessionId" element={<GameSessionWrapper apiClients={apiClients}/>} />
+        <Route path="*" element={<RedirectToCentralIfMissing />} />
       </>
     ));
 
