@@ -26,6 +26,7 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
   const [scope, animate] = useAnimate();
   const [scope2, animate2] = useAnimate();
   const [scope3, animate3] = useAnimate();
+  const [isAnimate, setIsAnimate] = useState<boolean>(false);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
   const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
   const handleDeleteTeam = (teamId: string) => {
@@ -92,6 +93,7 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
         handleDeleteTeam={handleDeleteTeam}
         scope={scope}
         animate={animate}
+        setIsAnimate={setIsAnimate}
       />
     );
   }

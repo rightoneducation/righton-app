@@ -26,6 +26,7 @@ interface GameInProgressContentProps {
   currentPhase: IPhase;
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
   scope?: React.RefObject<HTMLDivElement>;
+  isAnimate: boolean;
 }
 
 export default function GameInProgressContent({
@@ -36,6 +37,7 @@ export default function GameInProgressContent({
   currentPhase,
   currentPhaseTeamAnswers,
   scope,
+  isAnimate
 }: GameInProgressContentProps) {
   const theme = useTheme();
 
@@ -113,6 +115,7 @@ export default function GameInProgressContent({
         <BodyContentAreaSingleColumnStyled>
           <motion.div
           ref={scope}
+          initial={{ x: isAnimate ? '100%' : '0%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
