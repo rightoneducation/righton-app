@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Paper } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme, styled } from '@mui/material/styles';
-import { ITeam, IQuestion } from '@righton/networking';
+import { ITeam, IQuestion, GameSessionState } from '@righton/networking';
 import {motion} from 'framer-motion';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
@@ -20,7 +20,7 @@ interface LeaderboardProps {
   questions:IQuestion[];
   currentQuestionIndex: number;
   title: string;
-  handleDeleteTeam: (id: string) => void, 
+  handleDeleteTeam: (id: string) => void,
 }
 const Shadow = styled(Box)(({theme}) => ({
   position: 'absolute', // Position it absolutely within StartGameContainer
@@ -72,7 +72,7 @@ export default function Leaderboard({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);  
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentQuestionIndex:  localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex, currentState: nextState}});
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex});

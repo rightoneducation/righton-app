@@ -3,7 +3,7 @@ import { Box, Stack } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme, styled } from '@mui/material/styles';
 import { useAnimate, motion } from 'framer-motion';
-import { ITeam, IQuestion } from '@righton/networking';
+import { ITeam, IQuestion, GameSessionState } from '@righton/networking';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -20,6 +20,8 @@ interface InterimLeaderboardProps {
   currentQuestionIndex: number;
   title: string;
   handleDeleteTeam: (id: string) => void, 
+  scope: any;
+  animate: any;
 }
 
 const SafeAreaStyled = styled(Box)(({ theme }) => ({
@@ -53,6 +55,8 @@ export default function InterimLeaderboard({
  currentQuestionIndex,
  title,
  handleDeleteTeam,
+ scope,
+ animate
 }: InterimLeaderboardProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -60,7 +64,7 @@ export default function InterimLeaderboard({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);  
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentQuestionIndex:  localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex, currentState: nextState}});
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex});

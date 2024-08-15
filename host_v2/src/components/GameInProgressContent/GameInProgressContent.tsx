@@ -72,23 +72,7 @@ export default function GameInProgressContent({
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
   }
-  const [scope4, animate4] = useAnimate();
-  // animate4(scope4.current, { x: ['100vw', 0], opacity: 1 }, { duration: 1, ease: 'easeIn' });
-
-  React.useEffect(() => {
-    console.log("here1");
-    if (scope4.current) {
-      console.log("here2");
-
-      animate4(scope4.current, { x: ['100vw', 0], opacity: 1 }, { duration: 1, ease: 'easeIn' });
-    }
-  }, [scope4, animate4]);
-   
-  let animationBool = false;
-  if (localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-    animationBool = true;
-  }
-  console.log(animationBool);
+  
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
@@ -123,13 +107,12 @@ export default function GameInProgressContent({
       localGameSession={localGameSession}
     />
   );
-  
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
         <BodyContentAreaSingleColumnStyled>
           <motion.div
-          ref={animationBool ? scope4 : scope}
+          ref={scope}
           animate={{ x: 0, opacity: 1 }}
           style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
@@ -165,7 +148,7 @@ export default function GameInProgressContent({
       return (
         <BodyContentAreaDoubleColumnStyled>
           <motion.div
-          ref={animationBool ? scope4 : scope}
+          ref={scope}
           animate={{ x: 0, opacity: 1 }}
           style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
@@ -207,7 +190,7 @@ export default function GameInProgressContent({
       return (
         <Phase2DiscussLargeBox>
           <motion.div
-          ref={animationBool ? scope4 : scope}
+          ref={scope}
           exit={{ y: 0, opacity: 0 }}
           style={{ display: 'inline-block' }}
         >

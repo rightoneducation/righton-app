@@ -29,6 +29,12 @@ interface GameInProgressProps {
   hostTeamAnswers: IHostTeamAnswers;
   handleAddTime: () => void;
   isAddTime: boolean;
+  scope: any;
+  animate: any;
+  scope2: any;
+  animate2: any;
+  scope3: any;
+  animate3: any;
 }
 
 export default function GameInProgress({
@@ -43,6 +49,12 @@ export default function GameInProgress({
   hostTeamAnswers,
   handleAddTime,
   isAddTime,
+  scope,
+  animate,
+  scope2,
+  animate2,
+  scope3,
+  animate3
 }: GameInProgressProps) {
     const theme = useTheme();
     const [confidenceGraphClickIndex, setConfidenceGraphClickIndex] = useState<number | null>(null);
@@ -61,34 +73,7 @@ export default function GameInProgress({
         : isMediumScreen
           ? ScreenSize.MEDIUM
           : ScreenSize.SMALL;
-    const [scope, animate] = useAnimate();
-    const [scope2, animate2] = useAnimate();
-    const [scope3, animate3] = useAnimate();
-
-
-    const GIPOnClick = () => {
-      const exitAnimation = () => {
-        const scaleFactor = 225 / window.innerHeight;
-        // Start all animations concurrently and return a promise that resolves when all animations are complete
-        return Promise.all([
-          animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' })
-        ]);
-      };
-      return exitAnimation();
-      };
-    const GIPEndGameOnClick = () => {
-      const exitAnimation = () => {
-        const scaleFactor = 225 / window.innerHeight;
-        // Start all animations concurrently and return a promise that resolves when all animations are complete
-        return Promise.all([
-          animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
-          animate2(scope2.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
-          animate3(scope3.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' })
-
-        ]);
-      };
-      return exitAnimation();
-      };
+    
     return(
       <StackContainerStyled>
       {isTimerVisible &&
@@ -127,8 +112,12 @@ export default function GameInProgress({
           teamsLength={localGameSession.teams.length}
           currentState={localGameSession.currentState}
           screenSize={screenSize}
-          GIPOnClick = {GIPOnClick}
-          GIPEndGameOnClick = {GIPEndGameOnClick}
+          scope={scope}
+          animate={animate}
+          scope2={scope2}
+          animate2={animate2}
+          scope3={scope3}
+          animate3={animate3}
         />
         </motion.div>
       </FooterBackgroundStyled>
