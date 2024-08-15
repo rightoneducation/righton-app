@@ -131,9 +131,9 @@ export default function Leaderboard({
         initial={{ y: '-100vh', opacity: 0 }}
         animate={{ y: '0', opacity: 1 }}
         transition={{ duration: 1.5, delay: .5 }}
-        style={{ width: '100%', zIndex: 0 , display: 'flex', justifyContent: 'center',}}
+        style={{ bottom: '0', width: '100%', zIndex: 0 , display: 'flex', justifyContent: 'center',position: 'fixed'}}
       >
-        <Box style={{bottom: '0', marginTop: 'auto'}}>
+        <Box style={{bottom: '0', marginTop: 'auto', }}>
         <FooterInterim
           teamsLength={teams ? teams.length : 0}
           screenSize={screenSize}

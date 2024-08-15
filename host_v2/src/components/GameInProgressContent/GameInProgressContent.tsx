@@ -26,7 +26,6 @@ interface GameInProgressContentProps {
   currentPhase: IPhase;
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
   scope?: React.RefObject<HTMLDivElement>;
-  isAnimate: boolean;
 }
 
 export default function GameInProgressContent({
@@ -37,7 +36,6 @@ export default function GameInProgressContent({
   currentPhase,
   currentPhaseTeamAnswers,
   scope,
-  isAnimate
 }: GameInProgressContentProps) {
   const theme = useTheme();
 
@@ -109,14 +107,17 @@ export default function GameInProgressContent({
       localGameSession={localGameSession}
     />
   );
+  
+  const needAnimate = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && localGameSession.currentQuestionIndex !== 0;
+  console.log(needAnimate);
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
         <BodyContentAreaSingleColumnStyled>
           <motion.div
           ref={scope}
-          initial={{ x: isAnimate ? '100%' : '0%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: needAnimate ? 0 : 0}}
           style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
           <Swiper
@@ -152,7 +153,8 @@ export default function GameInProgressContent({
         <BodyContentAreaDoubleColumnStyled>
           <motion.div
           ref={scope}
-          animate={{ x: 0, opacity: 1 }}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: needAnimate ? 0 : 0}}
           style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
           {isShortAnswerEnabled ? (
@@ -194,7 +196,9 @@ export default function GameInProgressContent({
         <Phase2DiscussLargeBox>
           <motion.div
           ref={scope}
-          exit={{ y: 0, opacity: 0 }}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: needAnimate ? 0 : 0}}
+          exit={{ x: 0, y: 0,  }}
           style={{ display: 'inline-block' }}
         >
          <Grid container style={{width: '100%', maxWidth: `${theme.breakpoints.values.lg}px`}}>
