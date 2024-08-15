@@ -51,7 +51,7 @@ export default function GameInProgressContentLeftColumn ({
         <Responses 
           currentQuestion={currentQuestion}
           responses={responses}
-          statePosition={8}
+          statePosition={currentPhase === IPhase.ONE ? 0 : 8}
           graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
           handleGraphClick={handleGraphClick}

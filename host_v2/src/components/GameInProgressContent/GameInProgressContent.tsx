@@ -107,8 +107,6 @@ export default function GameInProgressContent({
     />
   );
   
- 
-  
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
