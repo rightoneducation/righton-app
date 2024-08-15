@@ -61,7 +61,7 @@ export default function FeaturedMistakes({
   featuredMistakesSelectionValue,
 }: FeaturedMistakesProps) {
   const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
-  const title = 'Featured Mistakes';
+  const title = 'Common Mistakes';
   const subtitle =
     'Selected responses will be presented to players as options for popular incorrect answers.';
   const radioButtonText1 = 'Use the top 3 answers by popularity';

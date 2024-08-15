@@ -68,17 +68,12 @@ export default function GameInProgressContent({
   }
   
   const leftCardsColumn = (
-    <GameInProgressContentLeftColumn 
+    <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
-      responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
-      confidences={currentPhase === IPhase.ONE ? currentConfidences : prevPhaseConfidences}
-      graphClickInfo={graphClickInfo}
-      isConfidenceEnabled={isConfidenceEnabled}
-      isShortAnswerEnabled={isShortAnswerEnabled}
-      screenSize={screenSize}
-      handleGraphClick={handleGraphClick}
+      localGameSession={localGameSession}
     />
   );
+
 
   const midCardsColumn = (
     <GameInProgressContentMidColumn
@@ -86,21 +81,33 @@ export default function GameInProgressContent({
       responses={currentResponses}
       featuredMistakesSelectionValue={featuredMistakesSelectionValue}
       isShortAnswerEnabled={isShortAnswerEnabled}
+      isConfidenceEnabled={isConfidenceEnabled}
       isHintEnabled={isHintEnabled}
       currentHints={currentHints}
+      confidences={currentConfidences}
       numPlayers={localGameSession.teams.length}
       graphClickInfo={graphClickInfo}
       handleGraphClick={handleGraphClick}
       currentPhase={currentPhase}
     />
   );
-  
+
   const rightCardsColumn = (
-    <GameInProgressContentRightColumn 
+    <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
-      localGameSession={localGameSession}
+      currentPhase={currentPhase}
+      responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
+      confidences={currentPhase === IPhase.ONE ? currentConfidences : prevPhaseConfidences}
+      graphClickInfo={graphClickInfo}
+      isConfidenceEnabled={isConfidenceEnabled}
+      isShortAnswerEnabled={isShortAnswerEnabled}
+      screenSize={screenSize}
+      featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+      handleGraphClick={handleGraphClick}
     />
   );
+  
+ 
   
   switch(screenSize) {
     case (ScreenSize.SMALL):
