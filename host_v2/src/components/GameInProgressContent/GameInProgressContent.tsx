@@ -117,7 +117,8 @@ export default function GameInProgressContent({
           <motion.div
           ref={scope}
           initial={{ x: needAnimate ? '100vw' : '0%',}}
-          animate={{x: needAnimate ? 0 : 0}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
           style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
           <Swiper
@@ -154,7 +155,8 @@ export default function GameInProgressContent({
           <motion.div
           ref={scope}
           initial={{ x: needAnimate ? '100vw' : '0%',}}
-          animate={{x: needAnimate ? 0 : 0}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
           style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
         >
           {isShortAnswerEnabled ? (
@@ -197,7 +199,8 @@ export default function GameInProgressContent({
           <motion.div
           ref={scope}
           initial={{ x: needAnimate ? '100vw' : '0%',}}
-          animate={{x: needAnimate ? 0 : 0}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
           exit={{ x: 0, y: 0,  }}
           style={{ display: 'inline-block' }}
         >
