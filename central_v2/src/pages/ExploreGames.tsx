@@ -2,6 +2,7 @@ import React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import StyledGameCard from '../components/GameCard';
 
 interface ExploreGamesProps {
   sampleProp: string;
@@ -20,6 +21,7 @@ export default function ExploreGames({ sampleProp }: ExploreGamesProps) {
   const { t } = useTranslation();
   return (
     <ExploreGamesContainer>
+      <StyledGameCard/>
       <Typography variant="h1"> 🎠 carousel to go here 🎠 </Typography>
     </ExploreGamesContainer>
   );
