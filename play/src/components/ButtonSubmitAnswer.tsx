@@ -70,6 +70,10 @@ export default function ButtonSubmitAnswer({
           teamMemberAnswersId,
           currentTeam?.id ?? '',
           currentTeam?.name ?? '',
+          selectedAnswer ?? '',
+          false,
+          null,
+          null
         );
 
         handleSubmitAnswer(submitAnswer);

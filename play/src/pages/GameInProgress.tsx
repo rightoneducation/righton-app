@@ -15,6 +15,9 @@ import {
   AnswerFactory,
   AnswerType,
   IAnswerSettings,
+  Answer,
+  NumericAnswer,
+  MultiChoiceAnswer,
   IGameSession,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
@@ -41,12 +44,13 @@ interface GameInProgressProps {
   teams: ITeam[];
   currentState: GameSessionState;
   teamMemberAnswersId: string;
+  teamId: string;
+  teamName: string;
   teamAvatar: number;
   phaseOneTime: number;
   phaseTwoTime: number;
   questions: IQuestion[];
   currentQuestionIndex: number;
-  teamId: string;
   score: number;
   answerChoices: IChoice[];
   hasRejoined: boolean;
@@ -62,12 +66,13 @@ export default function GameInProgress({
   teams,
   currentState,
   teamMemberAnswersId,
+  teamId,
+  teamName,
   teamAvatar,
   questions,
   phaseOneTime,
   phaseTwoTime,
   currentQuestionIndex,
-  teamId,
   score,
   answerChoices,
   hasRejoined,
@@ -100,6 +105,7 @@ export default function GameInProgress({
       currentQuestion.id
     ) ?? [];
   }
+  const [multiChoiceCharacter, setMultiChoiceCharacter] = useState('');
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
   // second, if there isn't a question mark, it looks for the last period and cuts the question from the proceeding period to the end of the string
@@ -184,9 +190,29 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
+  function isAnswerNumeric (answer: Answer): answer is NumericAnswer {
+    return answer instanceof NumericAnswer;
+  }
+
+  function isAnswerMultiChoice (answer: Answer): answer is MultiChoiceAnswer {
+    return answer instanceof MultiChoiceAnswer;
+  }
+
   // creates new team answer when student submits
   const handleSubmitAnswer = async (answer: BackendAnswer) => {
     try {
+      const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)?.text ?? null;
+      if (correctAnswer){
+        if (isAnswerNumeric(answer.answer))
+          answer.isCorrect = answer.answer.isEqualTo([Number(correctAnswer)]) as boolean; // eslint-disable-line 
+        else {
+          answer.isCorrect = answer.answer.isEqualTo([correctAnswer]) as boolean; // eslint-disable-line 
+        }
+        if (isAnswerMultiChoice(answer.answer)){
+          answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line
+        }
+      }
+      
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
@@ -222,17 +248,20 @@ export default function GameInProgress({
     }
   };
 
-  const handleSelectAnswer = (answerText: string) => {
+  const handleSelectAnswer = (answerText: string, currentMultiChoiceCharacter: string) => {
+    setMultiChoiceCharacter(currentMultiChoiceCharacter);
     const answer = new BackendAnswer(
-      AnswerFactory.createAnswer(answerText, AnswerType.MULTICHOICE),
+      AnswerFactory.createAnswer(answerText, AnswerType.MULTICHOICE, undefined, currentMultiChoiceCharacter),
       false,
       false,
       currentState,
       currentQuestionIndex ?? 0,
       currentQuestion.id,
       teamMemberAnswersId,
+      teamId,
+      teamName,
       answerText,
-      teamAnswerId,
+      false
     )
     window.localStorage.setItem(
       StorageKeyAnswer,
@@ -281,7 +310,7 @@ export default function GameInProgress({
         errorText=""
         handleRetry={handleRetry}
       />
-      <HeaderStackContainerStyled>
+    <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
@@ -338,6 +367,7 @@ export default function GameInProgress({
             currentQuestion={currentQuestion}
             isShortAnswerEnabled={isShortAnswerEnabled}
             gameSession={gameSession}
+            newPoints={newPoints}
           />
         )}
       </BodyStackContainerStyled>

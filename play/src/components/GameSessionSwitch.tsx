@@ -53,12 +53,13 @@ export default function GameSessionSwitch({
   (isShortAnswerEnabled
     ? currentQuestion?.responses?.reduce(
         (acc: IChoice[], response: IResponse) => {
+          console.log(response);
           const shouldAddResponse = 
             (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
             currentState !== GameSessionState.PHASE_1_DISCUSS) 
               ? (response.isSelectedMistake || response.isCorrect) 
               : true;
-        
+          console.log(shouldAddResponse);
           if (shouldAddResponse) {
             acc.push({
               id: uuidv4(),
@@ -90,6 +91,7 @@ export default function GameSessionSwitch({
           apiClients={apiClients}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamId={localModel.teamId}
+          teamName={localModel.teamName}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
           score={score}
@@ -108,6 +110,7 @@ export default function GameSessionSwitch({
           apiClients={apiClients}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamId={localModel.teamId}
+          teamName={localModel.teamName}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
           score={score}
@@ -127,6 +130,7 @@ export default function GameSessionSwitch({
           // adding a key here to trigger a rerender of the component, resetting backendAnswer after answering phases
           key={uuidv4()}
           apiClients={apiClients}
+          teamName={localModel.teamName}
           teamMemberAnswersId={localModel.teamMemberAnswersId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}

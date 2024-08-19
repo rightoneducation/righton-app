@@ -8,7 +8,6 @@ interface UseLaunchGameProps {
 export default function useLaunchGame({apiClients, gameId}: UseLaunchGameProps): void{
   useEffect(() => {
     apiClients.gameSession.createGameSessionFromTemplate(gameId).then((createResponse) => {
-      console.log(createResponse);
       if (!createResponse) {
         return;
       }

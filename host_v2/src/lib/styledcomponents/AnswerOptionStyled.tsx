@@ -6,5 +6,6 @@ export default styled(Box)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'flex-start',
   borderRadius: `${theme.sizing.answerOptionBorderRadius}px`,
-  padding: `${theme.sizing.smallPadding}px`,
+  padding: `10px 16px 10px 16px`,
+  marginTop: '16px',
 }));

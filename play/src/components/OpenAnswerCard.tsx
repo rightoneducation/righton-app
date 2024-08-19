@@ -102,6 +102,8 @@ export default function OpenAnswerCard({
       teamMemberAnswersId,
       currentTeam?.id ?? '',
       currentTeam?.name ?? '',
+      currentAnswer,
+      false
     );
     window.localStorage.setItem(
       StorageKeyAnswer,
@@ -124,6 +126,7 @@ export default function OpenAnswerCard({
       currentTeam?.id ?? '',
       currentTeam?.name ?? '',
       currentContents,
+      false
     );
     handleSubmitAnswer(packagedAnswer);
   };

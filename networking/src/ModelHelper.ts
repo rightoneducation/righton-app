@@ -139,11 +139,8 @@ export abstract class ModelHelper {
         if (submittedTrickAnswer){
             return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
         } else {
-    
-
-            // changed this from PHASE_1_RESULTS to PHASE_1_DISCUSS
-            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_DISCUSS)){
-                return this.correctAnswerScore;
+            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id)){
+                return this.correctAnswerScore
             } else {
                 const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses
                 if (isNullOrUndefined(teamResponses)){

@@ -1,18 +1,15 @@
 import React from 'react';
 import { Grid, Typography, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
+import { ITeam, ModelHelper } from '@righton/networking';
+import { StartGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import CloseIcon from '../images/Close.svg';
 import MonsterIcon from './MonsterIcon';
 
-interface Team {
-  name: string;
-  id: string;
-  selectedAvatarIndex: number;
-}
-
 interface CurrentStudentProps {
-  teams: Team[] | null;
+  teams: ITeam[];
+  currentQuestionIndex: number;
   handleDeleteTeam: (id: string) => void;
 }
 
@@ -39,14 +36,12 @@ const CloseSvg = styled('img')({
 const MenuItemStyled = styled(Box)({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
-  margin: 'auto',
-  marginBottom: '8px',
+  justifyContent: 'flex-start',
   borderRadius: '8px',
   height: '40px',
-  width: '82.6%',
   background: '#063772',
   padding: '4px',
+  paddingLeft: '8px',
   gap: '4px',
 });
 
@@ -58,23 +53,37 @@ const GridNameStyled = styled(Grid)({
   fontSize: '14px',
 });
 
+const GridScoreStyled = styled(GridNameStyled)({
+  paddingRight: '8px'
+});
+
 const BoxStyled = styled(Box)({
   padding: '16px 12px 16px 12px',
 });
 
-function CurrentStudents({ teams, handleDeleteTeam }: CurrentStudentProps) {
-  const sortedTeams = teams ? [...teams].sort((a, b) => a.name.localeCompare(b.name)) : [];
+function CurrentStudents({ teams, currentQuestionIndex, handleDeleteTeam }: CurrentStudentProps) {
+  const theme = useTheme();
+  const sortedTeams = currentQuestionIndex === null 
+    ? [...teams].sort((a, b) => a.name.localeCompare(b.name))
+    : ModelHelper.teamSorter(teams, teams.length);
 
   return (
-    <BoxStyled>
-      {sortedTeams.map((team) => (
-        <MenuItemStyled key={uuidv4()}>
-          <MonsterIcon index={team.selectedAvatarIndex} />
-          <GridNameStyled>{team.name}</GridNameStyled>
-          <CloseSvg src={CloseIcon} alt="Close" onClick={() => handleDeleteTeam(team.id)} />
-        </MenuItemStyled>
-      ))}
-    </BoxStyled>
+    <StartGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%', paddingLeft: `${theme.sizing.mdPadding}px`}}>
+        {sortedTeams && sortedTeams.map((team) => (
+          <MenuItemStyled key={uuidv4()}>
+            <MonsterIcon index={team.selectedAvatarIndex} />
+            <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+              <GridNameStyled>{team.name}</GridNameStyled>  
+              { currentQuestionIndex !== null && 
+                <GridScoreStyled>{team.score}</GridScoreStyled>
+              }
+              { currentQuestionIndex === null &&
+                <CloseSvg src={CloseIcon} alt="Close" onClick={() => handleDeleteTeam(team.id)} />
+              }
+            </Box>
+          </MenuItemStyled>
+        ))}
+    </StartGameScrollBoxStyled>
   );
 }
 
