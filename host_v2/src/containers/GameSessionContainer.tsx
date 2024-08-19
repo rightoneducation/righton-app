@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { GameSessionState, GameSessionParser, 
-  APIClients, Environment,
-  IGameSession,
- } from '@righton/networking';
-import MockGameSession from '../mock/MockGameSession.json';
+import React, { useState } from 'react';
+import { GameSessionState, APIClients, IGameSession} from '@righton/networking';
+import useInitHostContainer from '../hooks/useInitHostContainer';
 import StartGame from '../pages/StartGame';
 import GameInProgress from '../pages/GameInProgress';
 import { ShortAnswerResponse, LocalModel } from '../lib/HostModels';
@@ -24,7 +20,7 @@ interface ConfidenceOption {
 }
 
 interface GameSessionContainerProps {
-  apiClients: APIClients;
+  backendGameSession: IGameSession;
 }
 
 export default function GameSessionContainer({apiClients}: GameSessionContainerProps) {
@@ -210,33 +206,13 @@ export default function GameSessionContainer({apiClients}: GameSessionContainerP
  
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return (
-        <GameInProgress
-          totalQuestions={gameSession?.questions.length ?? 0}
-          currentQuestionIndex={currentQuestionIndex}
-          isCorrect={isCorrect}
-          isIncorrect={isIncorrect}
-          totalTime={totalTime}
-          hasRejoined={hasRejoined}
-          currentTimer={currentTimer}
-          sampleConfidenceData={sampleConfidenceData}
-          localModelMock={localModelMock}
-          onSelectMistake={onSelectMistake}
-          sortedMistakes={sortedMistakes}
-          setSortedMistakes={setSortedMistakes}
-          isPopularMode={isPopularMode}
-          setIsPopularMode={setIsPopularMode}
+        <StartGame
+          teams={localGameSession.teams}
+          questions={localGameSession.questions}
+          title={localGameSession.title }
+          gameCode={localGameSession.gameCode}
+          handleDeleteTeam={handleDeleteTeam}
         />
       );
-      case GameSessionState.TEAMS_JOINING:
-        default:
-        return (
-          <StartGame
-            teams={gameSession?.teams ?? []}
-            questions={gameSession?.questions ?? []}
-            title={gameSession?.title ?? ''}
-            gameCode={gameSession?.gameCode ?? 0}
-            handleDeleteTeam={handleDeleteTeam}
-          />
-        );
   }
 }

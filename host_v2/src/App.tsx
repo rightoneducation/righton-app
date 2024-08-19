@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
-import {APIClients, Environment} from '@righton/networking';
-import GameSessionContainer from './containers/GameSessionContainer';
+import {APIClients, Environment, AppType} from '@righton/networking';
+import HostContainer from './containers/HostContainer';
 import Theme from './lib/Theme';
 
 function RedirectToPlayIfMissing() {
@@ -28,10 +22,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  const apiClients = new APIClients(Environment.Developing, AppType.HOST);
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>
-        <RouterProvider router={router} />
+        <HostContainer apiClients={apiClients} />
       </ThemeProvider>
     </StyledEngineProvider>
   );
