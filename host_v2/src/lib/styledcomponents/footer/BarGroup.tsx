@@ -5,7 +5,7 @@ export default styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-evenly',
-  gap: `${theme.sizing.extraExtraSmallPadding}px`,
+  gap: `${theme.sizing.xxSmPadding}px`,
   width: '100%',
-  marginTop: `${theme.sizing.extraExtraSmallPadding}px`,
+  marginTop: `${theme.sizing.xxSmPadding}px`,
 }));

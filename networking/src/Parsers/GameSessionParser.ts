@@ -41,21 +41,19 @@ export class GameSessionParser {
         if (!isNullOrUndefined(awsGameSession?.questions) && !isNullOrUndefined(awsGameSession?.questions.items)) {
             questions = GameSessionParser.mapQuestions(awsGameSession.questions.items);    
         }
-        console.log("Aws game session:");
-        console.log(awsGameSession);
       const {
           id,
           gameId,
           startTime = awsGameSession?.startTime ?? '',
           phaseOneTime,
           phaseTwoTime,
-          currentQuestionIndex = awsGameSession.currentQuestionIndex ?? 0,
+          currentQuestionIndex = awsGameSession?.currentQuestionIndex ?? 0,
           currentState,
           gameCode,
-          currentTimer = awsGameSession.currentTimer ?? 120,
+          currentTimer = awsGameSession?.currentTimer ?? 120,
           updatedAt,
           createdAt,
-          title = awsGameSession.title ?? '',
+          title = awsGameSession?.title ?? '',
           isAdvancedMode,
       } = awsGameSession || {}
       if (

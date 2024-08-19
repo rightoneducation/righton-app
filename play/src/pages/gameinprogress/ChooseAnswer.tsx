@@ -33,7 +33,7 @@ interface ChooseAnswerProps {
   displaySubmitted: boolean;
   handleSubmitAnswer: (answer: BackendAnswer) => void;
   currentState: GameSessionState;
-  handleSelectAnswer: (answer: string) => void;
+  handleSelectAnswer: (answer: string, multiChoiceCharacter: string) => void;
   isConfidenceEnabled: boolean;
   selectedConfidenceOption: string;
   handleSelectConfidence: (confidence: ConfidenceLevel) => void;
@@ -138,6 +138,7 @@ export default function ChooseAnswer({
           handleSubmitAnswer={handleSubmitAnswer}
           questionId={questionId}
           teamMemberAnswersId={teamMemberAnswersId}
+          currentTeam={currentTeam}
         />
       ) : (
         <AnswerCard
@@ -151,6 +152,7 @@ export default function ChooseAnswer({
           handleSelectAnswer={handleSelectAnswer}
           questionId={questionId}
           teamMemberAnswersId={teamMemberAnswersId}
+          currentTeam={currentTeam}
         />
       )}
       {isSubmitted && !isSmallDevice ? (

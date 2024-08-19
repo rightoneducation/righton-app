@@ -6,7 +6,7 @@ import { Card, Box, Button, Link, Typography, Menu, MenuItem, Grid } from '@mate
 import { MoreVert, ArrowBack } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import MoreCircle from './../images/MoreCircularIcon.png';
-import CCSS from './CCSS';
+import CCSS from './CCSSText';
 
 
 const useStyles = makeStyles(theme => ({
@@ -171,7 +171,7 @@ function GameLaunch({ loading, game, gameId, saveGame, deleteQuestion, handleDel
   if (loading) return <Skeleton variant="rect" height={500} />;
   const questions = game?.questionTemplates || [];
   const questionCount = game?.questionTemplates.length || 0;
-  const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${game.id}`;
+  const LAUNCH_GAME_URL = `http://host.rightoneducation.com/new/${game.id}`;
 
   return (
     <Box className={classes.root}>

@@ -31,6 +31,7 @@ export const createGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -61,6 +62,7 @@ export const updateGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -91,6 +93,7 @@ export const deleteGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -567,12 +570,15 @@ export const createTeamAnswer = /* GraphQL */ `
   ) {
     createTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -590,12 +596,15 @@ export const updateTeamAnswer = /* GraphQL */ `
   ) {
     updateTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -613,12 +622,15 @@ export const deleteTeamAnswer = /* GraphQL */ `
   ) {
     deleteTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -652,6 +664,7 @@ export const createGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -705,6 +718,7 @@ export const updateGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -758,6 +772,7 @@ export const deleteGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
