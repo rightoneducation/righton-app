@@ -13,6 +13,9 @@ import EnableHintCard from "./EnableHintCard";
 import FeaturedMistakes from "./FeaturedMistakes";
 import PlayerThinking from "./PlayerThinking/PlayerThinking";
 import PlayerThinkingSelectedAnswer from './PlayerThinking/PlayerThinkingSelectedAnswer';
+import Leaderboard from './Leaderboard/Leaderboard';
+import p1studentview from '../images/p1studentview.svg';
+import p2studentview from '../images/p2studentview.svg';
 
 export default function GameInProgressContentSwitch({
   questions,
@@ -47,7 +50,9 @@ export default function GameInProgressContentSwitch({
   gptHints,
   hintsError,
   isHintLoading,
-  handleProcessHints
+  handleProcessHints,
+  teams,
+  setSelectedMistakes
 }) {
   const classes = useStyles();
   const graphClickRenderSwitch = (graphClickInfo) => {
@@ -142,6 +147,22 @@ export default function GameInProgressContentSwitch({
       {graphClickInfo.graph === null ? (
         <>
           <div id="questioncard-scrollbox" ref={questionCardRef}>
+          {currentState === GameSessionState.PHASE_1_DISCUSS && (
+          <Box style={{display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          alignContent: 'center', paddingBottom: '24px'}}>
+            <Typography style ={{color: 'white',fontWeight: '700',fontFamily: 'Poppins',size: '16px',lineHeight: '24px',}}>Current Student View</Typography>
+            <img src={p1studentview} style={{width:'100%'}} alt="About Icon" /> </Box>
+        )}
+        {currentState === GameSessionState.PHASE_2_DISCUSS && (
+          <Box style={{display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          alignContent: 'center', paddingBottom: '24px'}}>
+            <Typography style ={{color: 'white',fontWeight: '700',fontFamily: 'Poppins',size: '16px',lineHeight: '24px',}}>Current Student View</Typography>
+            <img src={p2studentview} style={{width:'100%'}} alt="About Icon" /> </Box>
+        )}
             <QuestionCard
               question={questions[currentQuestionIndex].text}
               image={questions[currentQuestionIndex].imageUrl}
@@ -183,6 +204,7 @@ export default function GameInProgressContentSwitch({
                 shortAnswerResponses={shortAnswerResponses}
                 totalAnswers={totalAnswers}
                 onSelectMistake={onSelectMistake}
+                setSelectedMistakes={setSelectedMistakes}
                 numPlayers={numPlayers}
               />
             </div>
@@ -234,10 +256,14 @@ export default function GameInProgressContentSwitch({
       ) : (
         graphClickRenderSwitch(graphClickInfo)
       )
-      };
+      }
     </Box>,
   ];
-
+  const leaderboardComponents = [
+    <Box className={classes.configContainer}>
+      <Leaderboard teams={teams} />
+    </Box>
+  ];
   const questionCofigurationComponents = [
     <Box className={classes.configContainer}>
       <div id="responses-scrollbox" ref={responsesRef} style={{width:'100%'}}>
@@ -272,7 +298,9 @@ export default function GameInProgressContentSwitch({
 
   return currentState !== GameSessionState.TEAMS_JOINING
     ? gameplayComponents
-    : questionCofigurationComponents;
+    : currentQuestionIndex === 0 
+      ? questionCofigurationComponents 
+      : leaderboardComponents;
 }
 
 const useStyles = makeStyles({
@@ -289,6 +317,6 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     gap: '24px',
     width: '100%',
-    maxWidth: "500px"
+    maxWidth: "500px",
   }
 });

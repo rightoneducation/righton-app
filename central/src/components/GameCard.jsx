@@ -12,7 +12,7 @@ import {
   MenuItem
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CCSS from './CCSS';
+import CCSS from './CCSSText';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 export default function GameCard({ 
   game,

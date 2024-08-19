@@ -1,7 +1,8 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { ITeam } from '@righton/networking';
+import { styled, useTheme } from '@mui/material/styles';
+import { IHostTeamAnswersResponse } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
 
 const TitleText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'statePosition',
@@ -45,6 +46,7 @@ const NameText = styled(Typography)({
   fontFamily: 'Rubik',
   fontSize: '14px',
   fontWeight: '400',
+  color: 'white'
 });
 
 const PhaseTwoTitleText = styled(Typography)({
@@ -76,6 +78,7 @@ const PhaseTwoCountText = styled(Typography)({
 const TextContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'space-between',
 });
 
 const NumberContainer = styled(Box)({
@@ -97,15 +100,14 @@ const StyledRect = styled(Box)({
   fontSize: '16px',
   padding: '10px 16px',
   borderRadius: '8px',
-  marginBottom: '8px',
   maxWidth: '500px',
   boxSizing: 'border-box'
 });
 
 
 interface PlayersSelectedAnswerProps {
-    data: {answerCount: number, answerCorrect: boolean, answerChoice: string, answerText: string, answerTeams: ITeam[]}[];
-    graphClickInfo: any;
+    data: IHostTeamAnswersResponse[];
+    graphClickIndex: number;
     numPlayers: number;
     statePosition: number;
     isShortAnswerEnabled: boolean;
@@ -113,53 +115,34 @@ interface PlayersSelectedAnswerProps {
 
 export default function PlayersSelectedAnswer({
   data, 
-  graphClickInfo, 
+  graphClickIndex, 
   numPlayers, 
   statePosition, 
   isShortAnswerEnabled
 }: PlayersSelectedAnswerProps) {
-
-  const answerCount = data[graphClickInfo.selectedIndex].answerCount;
-  const percentage = (answerCount / numPlayers) * 100;
-  const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].answerTeams.map((team: ITeam) => team.name);
-
+  const theme = useTheme();
+  const { count } = data[graphClickIndex];
+  const percentage = (count / numPlayers) * 100;
+  const teamsWithSelectedAnswer = data[graphClickIndex].teams.map((team: string) => team);
   return (
-    <Box>
+    <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding}}>
       <TextContainer>
         <TitleText>
-          Players who picked this answer
+        { statePosition < 6 ? `Players who picked this answer` : `Players who think this is the trickest answer`}
         </TitleText>
         <NumberContainer>
           <CountText>
-            {/* count from stateposition === 6 saved and displayed here for stateposition === 6 */}
-            {answerCount}
+            {count}
           </CountText>
           <PercentageText>
-            {/* percentage from  stateposition === 6saved and displayed here for stateposition === 6 */}
             ({Math.round(percentage)}%)
           </PercentageText>
         </NumberContainer>
       </TextContainer>
-      {statePosition === 6 && (
-        <TextContainer>
-          <PhaseTwoTitleText>
-            Players who think this is the trickest
-            <br /> answer
-          </PhaseTwoTitleText>
-          <PhaseTwoNumberContainer>
-            <PhaseTwoCountText>
-              {answerCount}
-            </PhaseTwoCountText>
-            <PhaseTwoPercentageText>
-              ({Math.round(percentage)}%)
-            </PhaseTwoPercentageText>
-          </PhaseTwoNumberContainer>
-        </TextContainer>
-      )}
-      {teamsWithSelectedAnswer.map((teamChoice: any, index: number) => (
-        <StyledRect key={index} >
+      {teamsWithSelectedAnswer.map((team: string) => (
+        <StyledRect key={uuidv4()} >
           <NameText>
-            {teamChoice}
+            {team}
           </NameText>
         </StyledRect>
       ))}

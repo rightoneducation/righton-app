@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Button } from '@mui/material';
 
 // content container inside of card
-export default styled(Box)(({ theme }) => ({
+export default styled(Button)(({ theme }) => ({
   display: 'flex',
   width: '75px',
   height: '30px',
@@ -12,5 +12,9 @@ export default styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   cursor: 'pointer',
-  marginLeft: `-${theme.sizing.extraExtraLargePadding}px`,
+  textTransform: 'none',
+  "&:disabled": {
+    background: theme.palette.primary.extraDarkGrey,
+    boxShadow: '0px 5px 22px 0px rgba(0,0,0, 0.1)',
+  }
 }));
