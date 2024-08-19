@@ -43,8 +43,8 @@ const FooterContainer = styled(Box)(({theme}) => ({
   alignItems: 'center',
   bottom: '0',
   width: '100%',
+  paddingBottom: '24px',
   gap: '16px',
-  height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
 }));
 
 const InnerFooterContainer = styled(Box)({
@@ -64,21 +64,24 @@ const PlayerCountTypography = styled(Typography)({
   fontWeight: 700
 });
 
-interface FootStartGameProps {
+interface FooterInterimProps {
   teamsLength: number;
   screenSize: ScreenSize;
   selectedSuggestedGame?: string | null;
   handleButtonClick: () => void;
   isGamePrepared: boolean;
+  PostLeaderboard?: () => void;
+
 }
 
-function FooterStartGame({ 
+function FooterInterim({ 
   teamsLength,
   screenSize,
   selectedSuggestedGame,
   isGamePrepared,
-  handleButtonClick
-}: FootStartGameProps) {
+  handleButtonClick,
+  PostLeaderboard
+}: FooterInterimProps) {
  
   let buttonText;
   const localGameSession = useTSGameSessionContext(GameSessionContext);
@@ -121,4 +124,4 @@ function FooterStartGame({
   );
 }
 
-export default FooterStartGame;
+export default FooterInterim;

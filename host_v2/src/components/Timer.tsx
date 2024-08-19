@@ -41,7 +41,6 @@ export default function Timer({
   isAddTime,
   localGameSession
 }: TimerProps) {
-  console.log(currentTimer);
   const theme = useTheme();
   const isTimerActive = 
     localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||

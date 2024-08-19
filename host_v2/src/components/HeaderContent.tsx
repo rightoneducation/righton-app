@@ -9,8 +9,8 @@ import playerIcon from '../img/playerIcon.svg';
 import HostPlayerIconContainer from '../lib/styledcomponents/HostPlayerIconContainer';
 import Timer from './Timer';
 import TimerAddButton from '../lib/styledcomponents/TimerAddButton';
-import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
-import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
 
 
 interface HeaderContentProps {
@@ -36,7 +36,7 @@ export default function HeaderContent({
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
 
   const statePosition = Object.keys(GameSessionState).indexOf(localGameSession.currentState);
   const stateMap = {

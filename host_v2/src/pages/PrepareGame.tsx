@@ -3,9 +3,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
-import { LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
+import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
+import { HostTeamAnswersDispatchContext } from '../lib/context/HostTeamAnswersContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
@@ -32,9 +32,9 @@ export default function PrepareGame( {
     const [isConfidenceEnabled, setIsConfidenceEnabled] = React.useState<boolean>(true);
     const [isHintEnabled, setIsHintEnabled] = React.useState<boolean>(false);
     const apiClients = useTSAPIClientsContext(APIClientsContext);
-    const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);   
-    const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
-    const localGameSession = useTSGameSessionContext(LocalGameSessionContext); 
+    const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
+    const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
+    const localGameSession = useTSGameSessionContext(GameSessionContext); 
     const currentQuestion = localGameSession.questions[0];
     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -47,17 +47,16 @@ export default function PrepareGame( {
       const currentTimeMillis = Date.now().toString(); 
       const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
       const questionUpdates = localGameSession.questions.map(async (question) => 
-        apiClients.question.updateQuestion({id: question.id, order: question.order, gameSessionId: question.gameSessionId, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled})
+        apiClients.question.updateQuestion({id: question.id, order: question.order, gameSessionId: question.gameSessionId, isConfidenceEnabled: isConfidenceEnabled, isHintEnabled: isHintEnabled, isShortAnswerEnabled: isShortAnswerEnabled}) // eslint-disable-line
       );
-      dispatch({type: 'synch_game_session', payload: {}});
       Promise.all(questionUpdates)
       .then((questions) => {
         const updatedGameSession = {...localGameSession, questions};
         const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(updatedGameSession);
         if (updateNoResponses)
-          dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {hostTeamAnswers: updateNoResponses}});
-        apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: currentTimeMillis});
-        dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0, startTime: currentTimeMillis}});
+          dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {...updateNoResponses}});
+        apiClients.gameSession.updateGameSession({id: updatedGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: currentTimeMillis});
+        dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis}});
         setIsTimerVisible(true);
       });
     };
