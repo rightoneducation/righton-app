@@ -6,8 +6,8 @@ import PaginationContainerStyled from '../lib/styledcomponents/PaginationContain
 import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
+import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
 import { ScreenSize } from '../lib/HostModels';
 
@@ -66,32 +66,63 @@ interface FootGameInProgressProps {
   submittedAnswers: number;
   teamsLength: number;
   screenSize: ScreenSize;
+  scope: any;
+  animate: any;
+  scope2: any;
+  animate2: any;
+  scope3: any;
+  animate3: any;
 }
 
-function FooterGameInProgress({ 
+function FooterGameInProgress({
   currentState,
   submittedAnswers,
   teamsLength,
-  screenSize
+  screenSize,
+  scope,
+  animate,
+  scope2,
+  animate2,
+  scope3,
+  animate3
 }: FootGameInProgressProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
   const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
-
-  const handleButtonClick = () => {
+  const dispatch = useTSDispatchContext(GameSessionDispatchContext);
+  const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    dispatch({type: 'advance_game_phase', payload: {nextState}});
-    console.log('supppp');
-    // when teacher is moving from CHOOSE_CORRECT_ANSWER and has selected the mistakes they want for phase two
-    if (nextState === GameSessionState.PHASE_1_DISCUSS && isShortAnswerEnabled) {
+    console.log('nextState');
+    console.log(nextState);
+    switch (nextState) {
+      case GameSessionState.FINAL_RESULTS:{
+        const animations = () => {
+          return Promise.all([
+            animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
+            animate2(scope2.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
+            animate3(scope3.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' })
+          ]);
+        };
+        await animations();
+        break;
+      }
+      case GameSessionState.TEAMS_JOINING:
+        await animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' });
+        break;
+      default:
+        break;
+    }
+    const currentTimeMillis = Date.now().toString();
+    if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
+      apiClients?.hostDataManager?.updateTime(Date.now());
     }
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
-  };
-  const GetButtonText =() => {
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: currentTimeMillis});
+    dispatch({type: 'advance_game_phase', payload: {nextState}});
+ };
+  const GetButtonText = () => {
     switch(currentState) {
       case GameSessionState.CHOOSE_CORRECT_ANSWER:
       case GameSessionState.CHOOSE_TRICKIEST_ANSWER:

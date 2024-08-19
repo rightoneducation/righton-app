@@ -32,7 +32,9 @@ export default function GameInProgress({
   handleUpdateGameSession,
   headerGameCurrentTime,
   gameTimer,
+  handleCountdownIsFinished,
   gameTimerZero,
+  handleTimerIsFinished,
   isLoadModalOpen,
   setIsLoadModalOpen,
   showFooterButtonOnly,
@@ -199,11 +201,13 @@ export default function GameInProgress({
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
+    // Get current time in milliseconds since epoch 
+    const currentTimeMillis = Date.now().toString(); 
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_DISCUSS) {
       // if they are on the last page a\nd need to advance to the next question
       assembleNavDictionary(false, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
       handleUpdateGameSession({
-        currentState: nextStateFunc(currentState),
+      currentState: nextStateFunc(currentState),
         currentQuestionIndex: currentQuestionIndex + 1,
       });
       return;
@@ -211,6 +215,7 @@ export default function GameInProgress({
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       assembleNavDictionary(multipleChoiceText, isShortAnswerEnabled, isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
+      handleUpdateGameSession({startTime: currentTimeMillis });
       return;
     }
     if (nextState === GameSessionState.TEAMS_JOINING)
@@ -225,13 +230,11 @@ export default function GameInProgress({
         return;
       }
     }
-    handleUpdateGameSession({ currentState: nextState });
+    handleUpdateGameSession({ currentState: nextState, startTime: currentTimeMillis });
   };
 
   // used to determine which button text to show based on the dictionary above and whether all players have answered
   const getFooterText = (numPlayers, totalAnswers, statePosition) => {
-    console.log(statePosition);
-    console.log(currentState);
     if (statePosition === 2 || statePosition === 5) {
       if (totalAnswers < numPlayers && gameTimerZero === false)
         return 'End Answering';
@@ -282,6 +285,7 @@ export default function GameInProgress({
               ? phaseOneTime
               : phaseTwoTime
           }
+          handleTimerIsFinished={handleTimerIsFinished}
           gameTimer={gameTimer}
         />
         <div className={classes.contentContainer}>
