@@ -53,12 +53,13 @@ export default function GameSessionSwitch({
   (isShortAnswerEnabled
     ? currentQuestion?.responses?.reduce(
         (acc: IChoice[], response: IResponse) => {
+          console.log(response);
           const shouldAddResponse = 
             (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
             currentState !== GameSessionState.PHASE_1_DISCUSS) 
               ? (response.isSelectedMistake || response.isCorrect) 
               : true;
-        
+          console.log(shouldAddResponse);
           if (shouldAddResponse) {
             acc.push({
               id: uuidv4(),
@@ -83,7 +84,7 @@ export default function GameSessionSwitch({
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isGameFirstStarting ? (
-        <PregameCountdown setIsPregameCountdown={setIsPregameCountdown} />
+        <PregameCountdown setIsPregameCountdown={setIsPregameCountdown} currentTimer={currentTimer}/>
       ) : (
         <GameInProgress
           {...gameSession}

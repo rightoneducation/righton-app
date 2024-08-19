@@ -73,7 +73,7 @@ input QuestionTemplateInput {
 type GameSession @model {
   id: ID!
   gameId: ID!
-  startTime: AWSDateTime
+  startTime: String
   phaseOneTime: Int!
   phaseTwoTime: Int!
   teams: [Team] @hasMany

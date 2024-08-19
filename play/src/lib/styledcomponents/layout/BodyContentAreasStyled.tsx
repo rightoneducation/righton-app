@@ -34,7 +34,7 @@ export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled
 )(({ theme }) => ({
   justifyContent: 'center',
-  maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`,
+  
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
 }));

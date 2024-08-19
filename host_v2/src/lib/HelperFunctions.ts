@@ -13,14 +13,14 @@ export const sortMistakes = (
    .map(shortAnswerResponse => ({ 
      answer: shortAnswerResponse.rawAnswer, 
      percent: Math.round((shortAnswerResponse.count / totalAnswers) * 100), 
-     isSelected: shortAnswerResponse.isSelectedMistake ?? false
+     isSelectedMistake: shortAnswerResponse.isSelectedMistake ?? false
    }));
   const orderedMistakes = extractedMistakes.sort((a, b) => b.percent - a.percent);
   if (isPopularMode) {
     orderedMistakes.forEach((mistake, index) => {
       if (index < numOfPopularMistakes)
-        mistake.isSelected = true; // eslint-disable-line
-      else mistake.isSelected = false; // eslint-disable-line
+        mistake.isSelectedMistake = true; // eslint-disable-line
+      else mistake.isSelectedMistake = false; // eslint-disable-line
     });
   }
   return orderedMistakes;
@@ -43,8 +43,7 @@ export const extractAnswersByTeam =  (teams: ITeam[], currentState: GameSessionS
 export const getNextGameSessionState = (currentState: GameSessionState, numQuestions: number, currentQuestionIndex: number) => {
   const states = Object.values(GameSessionState);
   const currentIndex = states.indexOf(currentState);
-  if (currentState === GameSessionState.PHASE_2_DISCUSS && (numQuestions -1) !== currentQuestionIndex){
+  if (currentState === GameSessionState.PHASE_2_DISCUSS && (numQuestions - 1) !== currentQuestionIndex)
     return GameSessionState.TEAMS_JOINING;
-  }
   return states[currentIndex + 1];
 };

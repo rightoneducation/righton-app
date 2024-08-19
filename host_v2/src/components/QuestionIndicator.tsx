@@ -20,15 +20,12 @@ export default function QuestionIndicator({
 }: QuestionIndicatorProps) {
   const indicators = Array.from({ length: totalQuestions ?? 0 }, (_, index) => {
     if (currentQuestionIndex != null && index < currentQuestionIndex) {
-      // eslint-disable-line
       return <PlayedQuestionBox key={index}>{index + 1}</PlayedQuestionBox>;
     }
-    if (currentQuestionIndex != null && index > currentQuestionIndex) {
-      // eslint-disable-line
+    if ((currentQuestionIndex != null && index > currentQuestionIndex)|| (currentQuestionIndex == null && index > 0)) {
       return <UnplayedQuestionBox key={index}>{index + 1}</UnplayedQuestionBox>;
     }
     if (statePosition != null && statePosition < 5) {
-      // eslint-disable-line
       return (
         <CurrentQuestionIndicator key={index}>
           {index + 1}
@@ -41,6 +38,5 @@ export default function QuestionIndicator({
       </CurrentQuestionBoxPhase2>
     );
   });
-
   return <QuestionIndicatorContainer>{indicators}</QuestionIndicatorContainer>;
 }

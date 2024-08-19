@@ -42,7 +42,7 @@ export interface ShortAnswerResponse {
 export interface Mistake {
   answer: string;
   percent: number;
-  isSelected: boolean;
+  isSelectedMistake: boolean;
 }
 
 

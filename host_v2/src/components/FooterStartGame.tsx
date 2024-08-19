@@ -1,19 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GameSessionState, IHostTeamAnswers } from '@righton/networking';
+import { motion } from 'framer-motion';
+import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
-import ProgressBar from './ProgressBarGroup';
 import { ScreenSize } from '../lib/HostModels';
-import { APIClientsContext } from '../lib/context/ApiClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
-import { getNextGameSessionState } from '../lib/HelperFunctions';
 
-const ButtonStyled = styled(Button)({
-  border: '2px solid #159EFA',
-  background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
+
+const ButtonStyled = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'isAnimating',
+})(({ theme, isAnimating }) => ({
+  border: !isAnimating? '2px solid #159EFA' : 'none',
   borderRadius: '22px',
   width: '300px',
   height: '48px',
@@ -23,8 +22,11 @@ const ButtonStyled = styled(Button)({
   lineHeight: '30px',
   textTransform: 'none',
   boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
+  background: !isAnimating? 'linear-gradient(to right, #159EFA 0%,#19BCFB 100%)' : 'linear-gradient(90deg, #0F7DBB 0%, #085CA4 50%, #0F7DBB 100%)',
+  backgroundSize: '200% 100%',
+  transition: '1s ease-in-out', // Smooth gradient transition
   '&:disabled': {
-    background: '#032563',
+    background:'#032563',
     border: '2px solid #159EFA',
     borderRadius: '22px',
     width: '300px',
@@ -37,9 +39,16 @@ const ButtonStyled = styled(Button)({
     cursor: 'not-allowed',
     boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
   },
-});
+  animation: isAnimating ? 'gradientAnimation 2s ease-in-out' : 'none',
 
-const FooterContainer = styled(Box)({
+  '@keyframes gradientAnimation': {
+    '0%': { backgroundPosition: '100% 50%' },  // Start with the light part on the right
+    '50%': { backgroundPosition: '0% 50%' },   // Move the light part to the left
+    '100%': { backgroundPosition: '100% 50%' }, // Move it back to the right
+  }
+  
+}));
+const FooterContainer = styled(Box)(({ theme }) => ({
   position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
@@ -48,9 +57,8 @@ const FooterContainer = styled(Box)({
   bottom: '0',
   width: '100%',
   gap: '16px',
-
-});
-
+  height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
+}));
 const InnerFooterContainer = styled(Box)({
   position: 'sticky',
   display: 'flex',
@@ -58,66 +66,92 @@ const InnerFooterContainer = styled(Box)({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
+  gap: '16px',
 });
-
 const PlayerCountTypography = styled(Typography)({
   fontFamily: 'Rubik',
   color: "#FFF",
   fontSize: '24px',
-  fontWeight: 700
+  fontWeight: 700,
 });
-
 interface FootStartGameProps {
   teamsLength: number;
   screenSize: ScreenSize;
-  currentQuestionIndex: number | null;
-  setLocalHostTeamAnswers?: (value: IHostTeamAnswers) => void;
+  selectedSuggestedGame?: string | null;
+  handleButtonClick: () => void;
+  isGamePrepared: boolean;
+  scope4?: React.RefObject<HTMLDivElement>;
 }
-
-function FooterStartGame({ 
+function FooterStartGame({
   teamsLength,
   screenSize,
-  currentQuestionIndex,
-  setLocalHostTeamAnswers,
+  selectedSuggestedGame,
+  isGamePrepared,
+  handleButtonClick,
+  scope4
 }: FootStartGameProps) {
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
-  const buttonText = currentQuestionIndex === null ? 'Start Game' : 'Next Question';
+  let buttonText;
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
 
-  const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    if (currentQuestionIndex === null){
-      const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers();
-      if (updateNoResponses && setLocalHostTeamAnswers)
-        setLocalHostTeamAnswers(updateNoResponses);
-      dispatch({type: 'begin_game', payload: {nextState, currentQuestionIndex: 0}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: 0, currentState: nextState})
-    } else {
-      const nextQuestionIndex = currentQuestionIndex + 1;
-      dispatch({type: 'advance_game_phase', payload: {nextState, currentQuestionIndex: nextQuestionIndex}});
-      apiClients.gameSession.updateGameSession({id: localGameSession.id, currentQuestionIndex: nextQuestionIndex, currentState: nextState})
+  switch (localGameSession.currentState) {
+    case GameSessionState.TEAMS_JOINING:
+      buttonText = 
+        (localGameSession.currentQuestionIndex === null)
+          ? 'Start Game' 
+          : 'Next Question';
+      case GameSessionState.FINAL_RESULTS:
+        return 'End Game';
+      default:
+        return selectedSuggestedGame === null
+          ? 'Exit to RightOn Central'
+          : 'Play Selected Game';
     }
   };
+  const handleButtonColorClick = () => {
+    setButtonText('Starting Game...');
+    setIsAnimating(true);
+  };
+  const handleAnimationEnd = (event: React.AnimationEvent) => {
+    if (
+      event.animationName === 'gradientAnimation'
+    ) {
+      setIsAnimating(false);
+      handleButtonClick();
+    } 
+
+  };
+  
   return (
     <FooterContainer>
-          {screenSize === ScreenSize.SMALL &&
-          <PaginationContainerStyled className="swiper-pagination-container" />
-        }
+      {screenSize === ScreenSize.SMALL &&
+        <PaginationContainerStyled className="swiper-pagination-container" />
+      }
       <InnerFooterContainer>
-        { currentQuestionIndex &&
-          <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
-            <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
-            <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
+        {localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
+          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400 }}>
+            <PlayerCountTypography> {teamsLength} </PlayerCountTypography>
+            <PlayerCountTypography style={{ fontSize: '18px', fontWeight: '400' }}>
               {teamsLength === 1 ? "player has joined" : "players have joined"}
             </PlayerCountTypography>
           </Box>
         }
-        
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}> {buttonText} </ButtonStyled>
+        <motion.div
+          ref={scope4}
+          exit={{ y: 0, opacity: 0 }}
+          style={{ display: 'inline-block' }}
+        >
+          <ButtonStyled
+            disabled={teamsLength <= 0}
+            isAnimating={isAnimating}
+            onClick={handleButtonColorClick}
+            onAnimationEnd={handleAnimationEnd}
+            className='animate'
+          >
+            {buttonText}
+          </ButtonStyled>
+        </motion.div>
       </InnerFooterContainer>
     </FooterContainer>
   );
 }
-
 export default FooterStartGame;
