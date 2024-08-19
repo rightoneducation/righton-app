@@ -24,7 +24,9 @@ const TitleBoxStyled = styled(Paper)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  margin: '6px', // added this to look like the rest
+  marginLeft: '6px',
+  marginRight: '6px',
+  marginBottom: '6px',
   borderRadius: '18px',
   padding: '16px 18px 20px 18px',
   gap: '2px',

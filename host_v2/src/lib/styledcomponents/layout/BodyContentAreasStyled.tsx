@@ -25,7 +25,7 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: `${theme.breakpoints.values.lg})px`,
+  maxWidth: `${theme.breakpoints.values.lg}px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',

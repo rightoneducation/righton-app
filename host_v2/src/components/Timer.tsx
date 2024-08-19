@@ -29,7 +29,7 @@ interface TimerProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
-  localModel: LocalModel;
+  isAddTime?: boolean;
   localGameSession: IGameSession;
 }
 
@@ -38,73 +38,71 @@ export default function Timer({
   currentTimer,
   isPaused,
   isFinished,
-  localModel,
+  isAddTime,
   localGameSession
 }: TimerProps) {
   const theme = useTheme();
   const isTimerActive = 
     localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
     localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER;
-  const [currentTimeMilli, setCurrentTimeMilli] = useState(isTimerActive ? currentTimer * 1000 : 0); // millisecond updates to smooth out progress bar
-  const currentTime = Math.trunc(currentTimeMilli / 1000);
-  const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
-
+  const [timerString, setTimerString] = useState<string>('0:00');
+  const [progress, setProgress] = useState<number>(0);
+  const currentTimeMilli = useRef<number>(currentTimer * 1000);
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
-  let originalTime: number;
+  const originalTimeRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(isPaused);
 
-  // updates the current time as well as the localstorage in case of page reset
-  // recursive countdown timer function using requestAnimationFrame
-  function updateTimer(timestamp: number) {
+  const getTimerString = (currentTimeInput: number) => {
+    const currentTime = Math.trunc(currentTimeInput / 1000);
+    let sec = 0;
+    let secStr = '00';
+    let min = 0;
+    if (currentTime >= 0) {
+      min = Math.floor(currentTime / 60);
+      sec = Math.ceil(currentTime % 60);
+      if (sec === 60) sec = 0;
+      secStr = sec < 10 ? `0${sec}` : `${sec}`;
+    }
+    return `${min}:${secStr}`;
+  };
+
+  const updateTimer = (timestamp: number) => {
     if (!isPausedRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
-        setCurrentTimeMilli((prevTime) => prevTime - delta);
-      } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
-      if (currentTimeMilli - (timestamp - originalTime) >= 0) {
+        currentTimeMilli.current -= delta;
+        setTimerString(getTimerString(currentTimeMilli.current));
+        setProgress((currentTimeMilli.current / (totalTime * 1000)) * 100);
+      } else {
+        originalTimeRef.current = timestamp;
+      }
+      if (currentTimeMilli.current <= 0) {
+        // dont do anything if less than 0
+      } 
+      else {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
-      } else {
-        //  handleTimerIsFinished();
       }
     }
   }
-
-  const timerString = useMemo(() => {
-    const getTimerString = (currentTimeInput: number) => {
-      let sec = 0;
-      let secStr = '00';
-      let min = 0;
-      if (currentTimeInput >= 0) {
-        min = Math.floor(currentTimeInput / 60);
-        sec = Math.ceil(currentTimeInput % 60);
-        if (sec === 60) sec = 0;
-        secStr = sec < 10 ? `0${sec}` : `${sec}`;
+  useEffect(() => {
+    if ( localGameSession.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
+      && localGameSession.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER
+    ) {
+      isPausedRef.current = true;
+      currentTimeMilli.current = 0;
+    } else {
+      currentTimeMilli.current = currentTimer * 1000;
+    }
+    if (currentTimer > 0) {
+      isPausedRef.current = isPaused;
+      if (!isPaused) {
+        animationRef.current = requestAnimationFrame(updateTimer);
       }
-      const storageObject: LocalModel = {
-        ...localModel,
-        currentTimer: currentTimeInput,
-        hasRejoined: true,
-      };
-      window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-      return `${min}:${secStr}`;
-    };
-    return getTimerString(currentTime);
-  }, [currentTime, localModel]);
-
-  // useEffect to start off timer
-  useEffect(() => {
-    if (!isPaused && !isFinished)
-      animationRef.current = requestAnimationFrame(updateTimer);
-    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Update the isPausedRef when the isPaused prop changes
-  useEffect(() => {
-    isPausedRef.current = isPaused;
-  }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
-
+    }
+   return () => cancelAnimationFrame(animationRef.current ?? 0);
+  }, [isPaused, isFinished, isAddTime, currentTimer, localGameSession.currentState]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <TimerContainer style={{opacity: isTimerActive ? 1 : 0.4}}>
       <TimerBar value={progress} variant="determinate"/>

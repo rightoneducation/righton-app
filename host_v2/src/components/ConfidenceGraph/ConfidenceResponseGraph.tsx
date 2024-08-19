@@ -17,7 +17,7 @@ import Legend from './ConfidenceResponseLegend';
 import CustomBar from './CustomBar';
 
 interface GraphProps {
-  currentConfidences: IHostTeamAnswersConfidence[];
+  confidences: IHostTeamAnswersConfidence[];
   graphClickIndex: number | null;
   handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
@@ -49,7 +49,7 @@ const CenteredContainer = styled(Box)({
 });
 
 export default function ConfidenceResponsesGraph({
-  currentConfidences,
+  confidences,
   graphClickIndex,
   handleGraphClick,
 }: GraphProps) {
@@ -57,26 +57,24 @@ export default function ConfidenceResponsesGraph({
   const { t } = useTranslation();  
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 }); // eslint-disable-line
   const graphRef = useRef<HTMLDivElement>(null);
-  const correctConfidencesArray = currentConfidences.map(confidence => {
+  const correctConfidencesArray = confidences.map(confidence => {
     return {
         level: confidence.level,
         label: confidence.label,
         correct: confidence.correct
     };
   });
-  const incorrectConfidencesArray = currentConfidences.map(confidence => {
+  const incorrectConfidencesArray = confidences.map(confidence => {
     return {
         level: confidence.level,
         label: confidence.label,
         incorrect: confidence.incorrect
     };
   });
-
   const currentCorrectConfidences = correctConfidencesArray.map((confidence, index) => ({
     x: confidence.label,
     y: confidence.correct.length,
   }));
-
   const currentIncorrectConfidences = incorrectConfidencesArray.map((confidence, index) => ({
     x: confidence.label,
     y: confidence.incorrect.length,
@@ -125,6 +123,7 @@ export default function ConfidenceResponsesGraph({
             {currentIncorrectConfidences.length > 0 &&
               <VictoryBar
                 name='incorrect'
+                style={{data: {fill: 'transparent'}}}
                 data={currentIncorrectConfidences}
                 cornerRadius={({ index }) =>
                   (index !== undefined && currentCorrectConfidences[Number(index)].y === 0)
@@ -152,6 +151,7 @@ export default function ConfidenceResponsesGraph({
             {currentCorrectConfidences.length > 0 &&
               <VictoryBar
                 name='correct'
+                style={{data: {fill: '#FFF'}}}
                 data={currentCorrectConfidences}
                 cornerRadius={5}
                 labels={({ index }) =>

@@ -29,6 +29,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   const confidenceCardRef = React.useRef(null);
   const featuredMistakesRef = React.useRef(null);
   const hintCardRef = React.useRef(null);
+  const [isGamePrepared, setIsGamePrepared] = React.useState<boolean>(false);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
   // we're going to set this default condition to a query to the question object
@@ -104,7 +105,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
   };
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
-
+  
   // initial query for gameSessions and teams
   useEffect(() => {
     try{
@@ -326,22 +327,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     }
   }, [isLoadModalOpen]);
 
-  // headerGame timer, 1 second interval, update localstorage in case page resets
-  useEffect(() => {
-    if (gameTimer && !gameTimerZero) {
-      let refreshIntervalId = setInterval(() => {
-        if (headerGameCurrentTime > 0) {
-          setHeaderGameCurrentTime(headerGameCurrentTime - 1);
-          localStorage.setItem(
-            'currentGameTimeStore',
-            headerGameCurrentTime - 1,
-          );
-        } else setGameTimerZero(true);
-      }, 1000);
-      return () => clearInterval(refreshIntervalId);
-    }
-  }, [gameTimer, gameTimerZero, headerGameCurrentTime]);
-
   // handles confidence switch changes on Question Config
   const handleConfidenceSwitchChange = (event) => {
     setIsConfidenceEnabled(event.target.checked);
@@ -366,7 +351,7 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
       }
     });
   }
-  const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>) => {
+  const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>, startTime?: number) => {
     // this will update the response object with confidence and selected mistakes values
     if (
       (isShortAnswerEnabled
@@ -409,16 +394,38 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
       setGptHints([]);
       setHints([]);
     }
-
-    const response = await apiClients.gameSession.updateGameSession({ id: gameSessionId, ...newUpdates })
-    if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+    // to include startTime
+    const updates = startTime ? { ...newUpdates, startTime } : newUpdates;
+    const response = await apiClients.gameSession.updateGameSession({ id: gameSessionId, ...updates })
+    if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) 
       setHeaderGameCurrentTime(response.phaseOneTime);
-    } else if (
-      response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-    )
+    else if (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
       setHeaderGameCurrentTime(response.phaseTwoTime);
     setGameSession(response);
     checkGameTimer(response);
+  };
+
+  const calculateCurrentTime = (gameSession) => {
+    let initialTime = 0;
+    if (gameSession) {
+      if(apiClients.gameSession){
+        if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+          initialTime = gameSession?.phaseOneTime;
+        } else if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+          initialTime = gameSession?.phaseTwoTime;
+        }
+      }
+      const getStartTime = Number(gameSession?.startTime);
+      if (getStartTime) {
+        const difference = Date.now() - getStartTime;
+        if (difference >= initialTime * 1000) {
+          return 0;
+        } 
+        const remainingTime = initialTime - Math.trunc(difference / 1000);
+        return remainingTime;
+      }
+    }
+    return initialTime;
   };
 
   const checkGameTimer = (gameSession) => {
@@ -428,10 +435,24 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
     ) {
       setGameTimer(false);
     } else {
+      const elapsedTime = calculateCurrentTime(gameSession);
+      if (elapsedTime > 0) {
+        setHeaderGameCurrentTime(elapsedTime);
+      } 
       setGameTimer(true);
     }
     setGameTimerZero(false);
   };
+
+  const handleTimerIsFinished = () => {
+    setGameTimer(false);
+    setGameTimerZero(true);
+  };
+
+  const handleCountdownIsFinished = () => {
+    checkGameTimer(gameSession);
+  }
+
   const handleStartGame = () => {
     handleUpdateGameSession({ currentQuestionIndex: 0 });
   };
@@ -468,7 +489,6 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
               gameSession.phaseOneTime,
             );
             setHeaderGameCurrentTime(gameSession.phaseOneTime);
-            checkGameTimer(response);
             setGameSession(response);
             const teamDataRequests = response.teams.map(async (team) => {
               return apiClients.team.getTeam(team.id);
@@ -584,6 +604,8 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           headerGameCurrentTime={headerGameCurrentTime}
           gameTimer={gameTimer}
           gameTimerZero={gameTimerZero}
+          handleCountdownIsFinished={handleCountdownIsFinished}
+          handleTimerIsFinished={handleTimerIsFinished}
           isLoadModalOpen={isLoadModalOpen}
           setIsLoadModalOpen={setIsLoadModalOpen}
           showFooterButtonOnly={gameSession.currentQuestionIndex > 0 ? true : false}
@@ -622,8 +644,11 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
           {...gameSession}
           teamsArray={teamsArray}
           handleUpdateGameSession={handleUpdateGameSession}
+          handleCountdownIsFinished={handleCountdownIsFinished}
+          handleTimerIsFinished={handleTimerIsFinished}
           headerGameCurrentTime={headerGameCurrentTime}
           gameTimer={gameTimer}
+          setGameTimer={setGameTimer}
           gameTimerZero={gameTimerZero}
           isLoadModalOpen={isLoadModalOpen}
           setIsLoadModalOpen={setIsLoadModalOpen}
@@ -652,13 +677,12 @@ const GameSessionContainer = ({apiClients}: GameSessionContainerProps) => {
         />
       );
 
-    case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
-    case GameSessionState.PHASE_2_RESULTS:
       return (
         <StudentViews
           {...gameSession}
           gameTimer={gameTimer}
+          handleTimerIsFinished={handleTimerIsFinished}
           handleUpdateGameSession={handleUpdateGameSession}
           showFooterButtonOnly={true}
           setIsConfidenceEnabled={setIsConfidenceEnabled}

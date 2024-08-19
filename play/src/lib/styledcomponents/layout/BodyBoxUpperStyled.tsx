@@ -10,3 +10,4 @@ export default styled(Box)(({ theme }) => ({
   boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
   zIndex: 1,
 }));
+

@@ -1,53 +1,59 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { GameSessionState, IHostTeamAnswersHint } from '@righton/networking';
-import { Mistake } from "../../../lib/HostModels";
+import { GameSessionState, IHostTeamAnswersHint, IHostTeamAnswersResponse, IQuestion, IPhase } from '@righton/networking';
+import { Mistake, IGraphClickInfo } from "../../../lib/HostModels";
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
 import FeaturedMistakes from '../../FeaturedMistakes';
 import HintsCard from '../../HintsGraph/HintsCard';
+import Responses from '../../ResponsesGraph/ResponsesCard';
 
 
 interface GameInProgressContentMidColumnProps {
-  onSelectMistake: (answer: string, isSelected: boolean) => void;
-  sortedMistakes: Mistake[];
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
+  currentQuestion: IQuestion;
+  responses: IHostTeamAnswersResponse[];
   featuredMistakesSelectionValue: string;
   isShortAnswerEnabled: boolean;
   isHintEnabled: boolean;
   currentHints: IHostTeamAnswersHint[];
   numPlayers: number;
+  currentPhase: IPhase;
+  graphClickInfo: IGraphClickInfo;
+  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 
 export default function GameInProgressContentMidColumn ({ 
-    onSelectMistake,
-    sortedMistakes,
-    setSortedMistakes,
-    isPopularMode,
-    setIsPopularMode,
+    currentQuestion,
+    responses,
     featuredMistakesSelectionValue,
     isShortAnswerEnabled,
     isHintEnabled,
     currentHints,
-    numPlayers
+    numPlayers,
+    graphClickInfo,
+    currentPhase,
+    handleGraphClick
   }: GameInProgressContentMidColumnProps
 ){
   return (
-    <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+    <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
     <ScrollBoxStyled>
-      {isShortAnswerEnabled &&
+      {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
         <FeaturedMistakes
-          sortedMistakes={sortedMistakes}
-          setSortedMistakes={setSortedMistakes}
-          isPopularMode={isPopularMode}
-          setIsPopularMode={setIsPopularMode}
-          onSelectMistake={onSelectMistake}
+          currentQuestion={currentQuestion}
           featuredMistakesSelectionValue={featuredMistakesSelectionValue}
         /> 
+        :
+        <Responses 
+          currentQuestion={currentQuestion}
+          responses={responses}
+          statePosition={8}
+          graphClickInfo={graphClickInfo}
+          isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
+          handleGraphClick={handleGraphClick}
+        />
       }
-      {isHintEnabled &&
+      {isHintEnabled && currentPhase === IPhase.TWO &&
         <HintsCard 
           hints={currentHints}
           numPlayers={numPlayers}

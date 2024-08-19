@@ -50,8 +50,8 @@ export abstract class ModelHelper {
         const findSelectedAnswer = (answers: (BackendAnswer | null)[]) => {
             const selectedAnswer = answers.find((teamAnswer: BackendAnswer | null) => 
                 this.isAnswerFromPhaseOne(teamAnswer)
-                    ? currentState === GameSessionState.PHASE_1_RESULTS || currentState === GameSessionState.PHASE_1_DISCUSS
-                    : currentState === GameSessionState.PHASE_2_RESULTS || currentState === GameSessionState.PHASE_2_DISCUSS
+                    ? currentState === GameSessionState.PHASE_1_DISCUSS
+                    : currentState === GameSessionState.PHASE_2_DISCUSS
             );
             return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
         };
@@ -129,7 +129,7 @@ export abstract class ModelHelper {
         const answers = this.getBasicTeamMemberAnswersToQuestionId(team, question.id)
         if (isNullOrUndefined(answers) ||
             answers.length === 0) {
-            return 0
+                return 0;
         }
 
         const correctAnswer = this.getCorrectAnswer(question)
@@ -137,16 +137,19 @@ export abstract class ModelHelper {
         let submittedTrickAnswer = answers.find(answer => (!this.isAnswerFromPhaseOne(answer)) && answer?.questionId === currentQuestion.id)
 
         if (submittedTrickAnswer){
-          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
+            return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
         } else {
-            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
+            if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id)){
                 return this.correctAnswerScore
             } else {
                 const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses
-                if (isNullOrUndefined(teamResponses))
-                    return 0
-                if (ModelHelper.isShortAnswerResponseCorrect(teamResponses, team))
-                    return this.correctAnswerScore 
+                if (isNullOrUndefined(teamResponses)){
+                    return 0;
+                }
+                if (ModelHelper.isShortAnswerResponseCorrect(teamResponses, team)){
+                    return this.correctAnswerScore;
+
+                }
             }
             return 0;
         }

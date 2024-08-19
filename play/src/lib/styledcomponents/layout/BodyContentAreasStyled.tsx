@@ -9,19 +9,32 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  maxWidth: '824px',
+  maxWidth: '848px',
   width: '100%',
   height: '100%',
   overflow: 'hidden',
   zIndex: 2,
+  marginLeft: '0px',
 });
-
+export const BodyContentAreaTripleColumnStyled = styled(Grid)({
+  position: 'absolute',
+  top: '0',
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  maxWidth: '1024px',
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  zIndex: 2,
+  marginLeft: '0px',
+});
 // content area of body that floats above background layers above - Single Column Page
 export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled
 )(({ theme }) => ({
   justifyContent: 'center',
-  maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`,
+  
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
 }));
