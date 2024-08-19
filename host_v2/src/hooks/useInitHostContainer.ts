@@ -1,40 +1,18 @@
 import { useState, useEffect } from 'react';
-import { APIClients, IGameSession } from '@righton/networking';
+import { APIClients, IGameSession, IHostSubscriptionManagerAPIClient } from '@righton/networking';
 
 export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): IGameSession | null{
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
   useEffect(() => {
-    let gameSessionSubscription: any;
-
-    apiClients.gameSession
-      .getGameSession(gameSessionId)
-      .then((fetchedGame: IGameSession) => {
-        if (!fetchedGame || !fetchedGame.id) {
-          console.log('error')
-          return;
-        }
-        setGameSession(fetchedGame);
-        gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
-          fetchedGame.id,
-          (response: IGameSession) => {
-            if (!response) {
-              console.log('error')
-              return;
-            }
-            setGameSession((prevGame) => ({ ...prevGame, ...response }));
-          }
-        );
+    const subscriptionManager = apiClients.subscriptionManager as IHostSubscriptionManagerAPIClient; //eslint-disable-line
+    subscriptionManager.initSubscription(gameSessionId, setGameSession)
+      .then((initialSession: IGameSession) => {
+        setGameSession(initialSession); 
       })
-      .catch((e) => {
-        if (e instanceof Error) console.log(e.message);
-      });
     // eslint-disable-next-line consistent-return
     return () => {
-      if (gameSessionSubscription && gameSessionSubscription.unsubscribe) {
-        gameSessionSubscription.unsubscribe();
-      }
+      subscriptionManager.cleanupSubscription();
     };
   }, [apiClients, gameSessionId]);
-  console.log(gameSession);
   return gameSession;
 }
