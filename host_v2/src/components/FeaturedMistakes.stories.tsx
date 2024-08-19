@@ -5,7 +5,7 @@ import { I18nextProvider } from 'react-i18next';
 import FeaturedMistakes from './FeaturedMistakes';
 import Theme from '../lib/Theme';
 import i18n from '../i18n.mock';
-import sortMistakes from "../lib/HelperFunctions"
+import { sortMistakes } from "../lib/HelperFunctions"
 import { ShortAnswerResponse } from '../lib/HostModels';
 
 export default {
@@ -81,9 +81,6 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
       <I18nextProvider i18n={i18n}>
         <FeaturedMistakes
           {...args}
-          setIsPopularMode={setIsPopularMode}
-          setSortedMistakes={setSortedMistakes}
-          onSelectMistake={onSelectMistake}
         />
       </I18nextProvider>
     </ThemeProvider>
@@ -92,24 +89,10 @@ const Template: StoryFn<typeof FeaturedMistakes> = function CardTemplate(args) {
 
 export const Top3Answers = Template.bind({});
 Top3Answers.args = {
-  sortedMistakes: [
-    { answer: '4x^4 - x^3 + 7x^2 - 6x', percent: 100, isSelected: true },
-    { answer: '2x^4 + 6x^2 - 3x', percent: 80, isSelected: true },
-    { answer: 'No Idea', percent: 40, isSelected: true },
-    { answer: 'x^2 - 4x - 12', percent: 20, isSelected: false },
-  ],
-  isPopularMode: true,
   featuredMistakesSelectionValue: 'A',
 };
 
 export const Manual = Template.bind({});
 Manual.args = {
-  sortedMistakes: [
-    { answer: '4x^4 - x^3 + 7x^2 - 6x', percent: 100, isSelected: true },
-    { answer: '2x^4 + 6x^2 - 3x', percent: 80, isSelected: true },
-    { answer: 'No Idea', percent: 40, isSelected: true },
-    { answer: 'x^2 - 4x - 12', percent: 20, isSelected: false },
-  ],
-  isPopularMode: false,
   featuredMistakesSelectionValue: 'B',
 };

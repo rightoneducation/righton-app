@@ -1,70 +1,156 @@
-import React from 'react';
-import {Button, Box} from '@mui/material';
+import React, { useState } from 'react';
+import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { motion } from 'framer-motion';
+import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
+import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
+import { ScreenSize } from '../lib/HostModels';
 
 
-interface FootStartGameProps{
-    teamsLength: number;
-}
-
-const ButtonStyled = styled(Button)({
-
-  border: '4px solid #159EFA',
-  background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
-  borderRadius: '34px',
+const ButtonStyled = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'isAnimating',
+})(({ theme, isAnimating }) => ({
+  border: !isAnimating? '2px solid #159EFA' : 'none',
+  borderRadius: '22px',
   width: '300px',
   height: '48px',
   color: 'white',
   fontSize: '20px',
-  bottom: '0',
   fontWeight: '700',
   lineHeight: '30px',
   textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px #47D9FF4D',
+  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
+  background: !isAnimating? 'linear-gradient(to right, #159EFA 0%,#19BCFB 100%)' : 'linear-gradient(90deg, #0F7DBB 0%, #085CA4 50%, #0F7DBB 100%)',
+  backgroundSize: '200% 100%',
+  transition: '1s ease-in-out', // Smooth gradient transition
   '&:disabled': {
-    background: 'transparent',
-    border: '4px solid #159EFA',
-    borderRadius: '34px',
+    background:'#032563',
+    border: '2px solid #159EFA',
+    borderRadius: '22px',
     width: '300px',
     height: '48px',
     color: '#159EFA',
     fontSize: '20px',
     fontWeight: '700',
     lineHeight: '30px',
-    opacity: '25%',
+    opacity: '100%',
     cursor: 'not-allowed',
+    boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
   },
-
-})
-
-const BottomNavigationStyled = styled(Box)({
-
+  animation: isAnimating ? 'gradientAnimation 2s ease-in-out' : 'none',
+  '@keyframes gradientAnimation': {
+    '0%': { backgroundPosition: '100% 50%' },  // Start with the light part on the right
+    '50%': { backgroundPosition: '0% 50%' },   // Move the light part to the left
+    '100%': { backgroundPosition: '100% 50%' }, // Move it back to the right
+  }
+  
+}));
+const FooterContainer = styled(Box)(({ theme }) => ({
   position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  bottom: '0',
   width: '100%',
-  height: '80px',
-  paddingTop: '80px',
-  paddingBottom: '50px',
-  background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
-
-})
-
-function FooterStartGame ({ teamsLength}: FootStartGameProps){    
-    return (
-        <BottomNavigationStyled>
-            <Box>
-                <ButtonStyled 
-                    disabled={teamsLength <= 0}
-                >
-                    Start Game    
-                </ButtonStyled>
-            </Box>
-        </BottomNavigationStyled>
-    );
+  gap: '16px',
+  height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
+}));
+const InnerFooterContainer = styled(Box)({
+  position: 'sticky',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  gap: '16px',
+});
+const PlayerCountTypography = styled(Typography)({
+  fontFamily: 'Rubik',
+  color: "#FFF",
+  fontSize: '24px',
+  fontWeight: 700,
+});
+interface FootStartGameProps {
+  teamsLength: number;
+  screenSize: ScreenSize;
+  selectedSuggestedGame?: string | null;
+  handleButtonClick: () => void;
+  isGamePrepared: boolean;
+  scope4?: React.RefObject<HTMLDivElement>;
 }
+function FooterStartGame({
+  teamsLength,
+  screenSize,
+  selectedSuggestedGame,
+  isGamePrepared,
+  handleButtonClick,
+  scope4
+}: FootStartGameProps) {
+  let buttonText;
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
+
+  switch (localGameSession.currentState) {
+    case GameSessionState.TEAMS_JOINING:
+      buttonText = 
+        (localGameSession.currentQuestionIndex === null)
+          ? 'Start Game' 
+          : 'Next Question';
+        break;
+      case GameSessionState.FINAL_RESULTS:
+        return 'End Game';
+      default:
+        return selectedSuggestedGame === null
+          ? 'Exit to RightOn Central'
+          : 'Play Selected Game';
+    }
+  };
+  const handleButtonColorClick = () => {
+    setButtonText('Starting Game...');
+    setIsAnimating(true);
+  };
+  const handleAnimationEnd = (event: React.AnimationEvent) => {
+    if (
+      event.animationName === 'gradientAnimation'
+    ) {
+      setIsAnimating(false);
+      handleButtonClick();
+    } 
+
+  };
   
-  export default FooterStartGame;
+  return (
+    <FooterContainer>
+      {screenSize === ScreenSize.SMALL &&
+        <PaginationContainerStyled className="swiper-pagination-container" />
+      }
+      <InnerFooterContainer>
+        {localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
+          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400 }}>
+            <PlayerCountTypography> {teamsLength} </PlayerCountTypography>
+            <PlayerCountTypography style={{ fontSize: '18px', fontWeight: '400' }}>
+              {teamsLength === 1 ? "player has joined" : "players have joined"}
+            </PlayerCountTypography>
+          </Box>
+        }
+        <motion.div
+          ref={scope4}
+          exit={{ y: 0, opacity: 0 }}
+          style={{ display: 'inline-block' }}
+        >
+          <ButtonStyled
+            disabled={teamsLength <= 0}
+            isAnimating={isAnimating}
+            onClick={handleButtonColorClick}
+            onAnimationEnd={handleAnimationEnd}
+            className='animate'
+          >
+            {buttonText}
+          </ButtonStyled>
+        </motion.div>
+      </InnerFooterContainer>
+    </FooterContainer>
+  );
+}
+export default FooterStartGame;

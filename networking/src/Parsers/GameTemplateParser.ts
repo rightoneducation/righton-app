@@ -1,7 +1,23 @@
 import { isNullOrUndefined } from "../global";
-import { IGameTemplate, IQuestionTemplate } from "../Models";
+import { IGameTemplate, IQuestionTemplate, IQuestionTemplateOrder } from "../Models";
 import { AWSGameTemplate } from "../Models/AWS";
 import { QuestionTemplateParser } from "./QuestionTemplateParser";
+
+const sortQuestionTemplatesByOrder = (questionTemplates: {questionTemplate: IQuestionTemplate, gameQuestionId: string}[], order: IQuestionTemplateOrder[]) => {
+    if (isNullOrUndefined(questionTemplates) || isNullOrUndefined(order)) return questionTemplates;
+    const orderMap = new Map<string, number>();
+    order.map((orderItem) => {
+      orderMap.set(orderItem.questionTemplateId, orderItem.index);
+    });
+  
+    return questionTemplates.sort((a, b) => {
+      const indexA = orderMap.get(a.questionTemplate.id);
+      const indexB = orderMap.get(b.questionTemplate.id);
+      if (indexA === undefined) return 1;
+      if (indexB === undefined) return -1;
+      return indexA - indexB;
+    });
+  }
 
 export class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
@@ -23,8 +39,9 @@ export class GameTemplateParser {
             // assign an empty array if questionTemplates is null
             questionTemplates = [];
         }
-
-      const {
+        const questionTemplatesOrder = awsGameTemplate.questionTemplatesOrder ? JSON.parse(awsGameTemplate.questionTemplatesOrder) : null;
+        const sortedQuestionTemplates = sortQuestionTemplatesByOrder(questionTemplates, questionTemplatesOrder);
+       const {
           id,
           title,
           owner,
@@ -35,7 +52,7 @@ export class GameTemplateParser {
           grade,
           standard,
           imageUrl,
-          questionTemplatesCount,
+          questionTemplatesCount
       } = awsGameTemplate || {}
 
         const createdAt = new Date(awsGameTemplate.createdAt ?? 0);
@@ -56,8 +73,9 @@ export class GameTemplateParser {
           phaseOneTime,
           phaseTwoTime,
           imageUrl,
-          questionTemplates,
+          questionTemplates: sortedQuestionTemplates,
           questionTemplatesCount,
+          questionTemplatesOrder,
           createdAt,
           updatedAt
       }

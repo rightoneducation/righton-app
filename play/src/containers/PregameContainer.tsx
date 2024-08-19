@@ -76,12 +76,12 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
         parseInt(inputGameCodeValue, 10)
       );
+      console.log(gameSessionResponse);
       if (isNullOrUndefined(gameSessionResponse)) {
         return false;
       }
       if (
-        gameSessionResponse.currentState === GameSessionState.FINISHED ||
-        gameSessionResponse.currentState === GameSessionState.NOT_STARTED
+        gameSessionResponse.currentState !== GameSessionState.TEAMS_JOINING
       ) {
         return false;
       }
@@ -101,7 +101,8 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       const team = await apiClients.team.addTeamToGameSessionId(
         gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         teamName,
-        null
+        null,
+        selectedAvatar
       );
       if (!team) {
         setIsAPIError(true);
@@ -139,8 +140,9 @@ export function PregameContainer({ apiClients }: PregameFinished) {
         const storageObject: LocalModel = {
           currentTime: new Date().getTime() / 60000,
           gameSessionId: gameSession.id,
-          teamId: teamInfo.teamId,
           teamMemberAnswersId: teamInfo.teamMemberAnswersId,
+          teamId: teamInfo.teamId,
+          teamName: `${firstName} ${lastName}`,
           selectedAvatar,
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,

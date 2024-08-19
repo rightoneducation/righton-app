@@ -4,7 +4,13 @@ import { makeStyles } from '@material-ui/core';
 export default function HeaderRanking() {
   const classes = useStyles();
   return (
-    <div>
+    <div style={{
+        top: 0,
+        padding: '16px',
+        boxSizing: 'border-box',
+        width: '100%',
+        maxWidth: '700px',
+    }}>
       <div className={classes.results}>
         <p>Final Results</p>
       </div>
@@ -17,7 +23,6 @@ export default function HeaderRanking() {
 
 const useStyles = makeStyles(() => ({
   results: {
-    paddingTop: '5%',
     fontFamily: 'Poppins',
     fontStyle: 'normal',
     fontWeight: '700',

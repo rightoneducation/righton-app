@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 export default styled(Box)(({ theme }) => ({
   display: 'flex',
   width: `${theme.sizing.nextStateButtonWidth}px`,
-  height: `${theme.sizing.extraLargePadding}px`,
+  height: `${theme.sizing.xLgPadding}px`,
   justifyContent: 'center',
   alignItems: 'center',
   borderRadius: '34px',

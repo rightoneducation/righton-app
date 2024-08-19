@@ -8,6 +8,9 @@ import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import ResultSelector from './ResultSelector';
+import DACScoreIndicator from './DACScoreIndicator';
+import DACP2ScoreIndicator from './DACP2ScoreIndicator';
+
 
 interface DiscussAnswerCardProps {
   isPlayerCorrect: boolean;
@@ -18,6 +21,7 @@ interface DiscussAnswerCardProps {
   answerReason?: string;
   currentState: GameSessionState;
   isShortAnswerEnabled: boolean;
+  newPoints: number | undefined;
 }
 
 export default function DiscussAnswerCard({
@@ -29,6 +33,7 @@ export default function DiscussAnswerCard({
   answerReason,
   currentState,
   isShortAnswerEnabled,
+  newPoints,
 }: DiscussAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -44,7 +49,6 @@ export default function DiscussAnswerCard({
     fontWeight: '800',
     fontSize: '24px',
     color: 'black',
-    marginBottom: '16px',
   });
   return (
     <BodyCardStyled elevation={10}>
@@ -52,7 +56,12 @@ export default function DiscussAnswerCard({
       {correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
                <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>)}
       {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
-               <AnswerTitleTypography> Incorrect Answer </AnswerTitleTypography>)}
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <AnswerTitleTypography>Incorrect Answer</AnswerTitleTypography>
+          {answerStatus === AnswerState.SELECTED &&(
+            <DACP2ScoreIndicator newPoints={newPoints} score={0} />)}
+        </Box>
+      )}
         {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
           <Box sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}>
             <Typography
@@ -64,6 +73,11 @@ export default function DiscussAnswerCard({
             <Typography variant="body1">
               {t('gameinprogress.discussanswer.correctanswertext')}
             </Typography>
+          </Box>
+        )}
+        {currentState === GameSessionState.PHASE_1_DISCUSS &&(
+          <Box style={{ marginLeft: '416px'}}>
+            <DACScoreIndicator newPoints={newPoints} score={0} />
           </Box>
         )}
         <ResultSelector

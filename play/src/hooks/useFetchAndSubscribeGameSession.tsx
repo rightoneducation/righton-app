@@ -4,7 +4,11 @@ import {
   isNullOrUndefined,
   IAPIClients,
   IGameSession,
+  ITeam,
+  ModelHelper,
+  GameSessionState,
 } from '@righton/networking';
+import { StorageKey, StorageKeyAnswer} from '../lib/PlayModels';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -13,11 +17,12 @@ import {
  * @param apiClient
  * @returns
  */
- export default function useFetchAndSubscribeGameSession(
+export default function useFetchAndSubscribeGameSession(
   gameSessionId: string,
   apiClients: IAPIClients,
   retry: number,
-  isInitialRejoin: boolean
+  isInitialRejoin: boolean,
+  teamId: string
 ) {
   const [gameSession, setGameSession] = useState<IGameSession>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -25,9 +30,13 @@ import {
   const [error, setError] = useState<string>('');
   const [hasRejoined, setHasRejoined] = useState<boolean>(isInitialRejoin);
 
+  const [isError, setIsError] = useState<{ error: boolean; withheldPoints: number }>({ error: false, withheldPoints: 0 });
+  const [newPoints, setNewPoints] = useState<number>(0);
+
   useEffect(() => {
     let ignore = false;
     let gameSessionSubscription: any;
+    let teamsSubscription: any;
 
     if (retry > 0) {
       setIsLoading(true);
@@ -39,6 +48,16 @@ import {
       setIsLoading(false);
       return;
     }
+
+    // added so we can update th score for the discuss page. (previously implemented in results pages we got rid of)
+    const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
+      try {
+        await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
+        setNewPoints(newScore);
+      } catch {
+        setIsError({ error: true, withheldPoints: newScore });
+      }
+    };
 
     apiClients.gameSession
       .getGameSession(gameSessionId)
@@ -53,14 +72,52 @@ import {
         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
+            console.log(response);
             if (!response) {
               setError(`${t('error.connect.subscriptionerror')}`);
               return;
             }
             if (!ignore) setHasRejoined(false);
             setGameSession((prevGame) => ({ ...prevGame, ...response }));
+            // updates team score in the phase 1 and 2 discuss states
+            if (response.currentState === GameSessionState.PHASE_1_DISCUSS || response.currentState === GameSessionState.PHASE_2_DISCUSS) {
+              setNewPoints(0);
+              const currentQuestionIndex = response.currentQuestionIndex ?? 0;
+              const currentQuestion = response.questions[currentQuestionIndex];
+              
+              const currentTeam = response.teams?.find((team) => team.id === teamId);
+              const currName = currentTeam?.name;
+              if (!currentTeam) {
+                console.error('Team not found');
+                return;
+              }
+              
+              const isShortAnswerEnabled = false; 
+
+              let calcNewScore = 0;
+              if (!hasRejoined) {
+                  calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
+                    response,
+                    currentQuestion,
+                    currentTeam,
+                    isShortAnswerEnabled
+                  );
+              }
+              const prevScore = currentTeam?.score ?? 0;
+              updateTeamScore(teamId, prevScore, calcNewScore); 
+            }
           }
         );
+
+        teamsSubscription = apiClients.team.subscribeDeleteTeam(gameSessionId, (deletedTeam: ITeam) => { 
+          if (deletedTeam.id === teamId) {
+            setHasRejoined(false);
+            window.localStorage.removeItem(StorageKey);
+            window.localStorage.removeItem(StorageKeyAnswer);
+            teamsSubscription.unsubscribe();
+            window.location.replace((`https://play.rightoneducation.com`));
+          }
+      })
       })
       .catch((e) => {
         setIsLoading(false);
@@ -73,7 +130,11 @@ import {
       if (gameSessionSubscription && gameSessionSubscription.unsubscribe) {
         gameSessionSubscription.unsubscribe();
       }
+      if (teamsSubscription && teamsSubscription.unsubscribe) {
+        teamsSubscription.unsubscribe();
+      }
     };
-  }, [gameSessionId, apiClients, t, retry, hasRejoined]);
-  return { isLoading, error, gameSession, hasRejoined };
+  }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]);
+
+  return { isLoading, error, gameSession, hasRejoined, newPoints };
 }

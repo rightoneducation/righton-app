@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
 import Timer from './Timer';
-import { LocalModel } from '../lib/PlayModels';
 
 const HeaderContainer = styled('div')({
   width: '100%',
@@ -19,10 +18,10 @@ interface HeaderContentProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
+  isAddTime?: boolean;
   handleTimerIsFinished: () => void;
   isCorrect: boolean;
   isIncorrect: boolean;
-  localModel?: LocalModel;
 }
 
 export default function HeaderContent({
@@ -31,10 +30,10 @@ export default function HeaderContent({
   currentTimer,
   isPaused,
   isFinished,
+  isAddTime,
   handleTimerIsFinished,
   isCorrect,
   isIncorrect,
-  localModel,
 }: HeaderContentProps) {
   const { t } = useTranslation();
   const stateMap = {
@@ -53,12 +52,7 @@ export default function HeaderContent({
       'gameinprogress.header.phase2discuss'
     ),
     [GameSessionState.PHASE_2_START]: t('gameinprogress.header.phase2start'),
-    [GameSessionState.PHASE_1_RESULTS]: t(
-      'gameinprogress.header.phase1results'
-    ),
-    [GameSessionState.PHASE_2_RESULTS]: t(
-      'gameinprogress.header.phase2results'
-    ),
+
     [GameSessionState.FINAL_RESULTS]: t('gameinprogress.header.finalresults'),
     [GameSessionState.FINISHED]: t('gameinprogress.header.finished'),
   };
@@ -79,16 +73,16 @@ export default function HeaderContent({
       </Typography>
       {(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
         currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
-      localModel ? (
+ (
         <Timer
           totalTime={totalTime}
           currentTimer={currentTimer}
           isFinished={isFinished}
           isPaused={isPaused}
+          isAddTime={isAddTime}
           handleTimerIsFinished={handleTimerIsFinished}
-          localModel={localModel}
         />
-      ) : null}
+      ) }
     </HeaderContainer>
   );
 }

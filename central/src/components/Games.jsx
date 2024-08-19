@@ -190,7 +190,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
-    overflow: 'auto',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     zIndex: 0,
   },
   contentGrid: {

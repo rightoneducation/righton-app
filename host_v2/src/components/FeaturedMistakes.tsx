@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import {
   Paper,
@@ -8,26 +8,20 @@ import {
   Radio,
   Box
 } from '@mui/material';
-import {Mistake } from "../lib/HostModels";
+import { IHostTeamAnswersResponse, IQuestion } from "@righton/networking";
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useHostTeamAnswersContext';
+import { HostTeamAnswersContext, HostTeamAnswersDispatchContext } from '../lib/context/HostTeamAnswersContext';
+import { Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
-
-// Need to remove featuredMistakesSelectionValue. Duplicate of isPopularMode.
-interface FeaturedMistakesProps {
-  onSelectMistake: (answer: string, isSelected: boolean) => void;
-  sortedMistakes: Mistake[];
-  setSortedMistakes: (value: Mistake[]) => void;
-  isPopularMode: boolean;
-  setIsPopularMode: (value: boolean) => void;
-  featuredMistakesSelectionValue: string;
-}
 
 const BackgroundStyled = styled(Paper)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '24px',
-  padding: `16px`,
   backgroundColor: 'rgba(0,0,0,0)',
   gap: 16,
 });
@@ -39,6 +33,7 @@ const TitleStyled = styled(Typography)({
   fontSize: '24px',
   fontWeight: 700,
   width: '100%',
+  lineHeight: '36px',
 });
 
 const SubtitleStyled = styled(Typography)({
@@ -56,30 +51,60 @@ const RadioLabelStyled = styled(FormControlLabel)({
   },
 });
 
+interface FeaturedMistakesProps {
+  currentQuestion: IQuestion,
+  featuredMistakesSelectionValue: string;
+}
+
 export default function FeaturedMistakes({
-  onSelectMistake,
-  sortedMistakes,
-  setSortedMistakes,
-  isPopularMode,
-  setIsPopularMode,
+  currentQuestion,
   featuredMistakesSelectionValue,
 }: FeaturedMistakesProps) {
-  const title = 'Featured Mistakes';
+  const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
+  const title = 'Common Mistakes';
   const subtitle =
     'Selected responses will be presented to players as options for popular incorrect answers.';
   const radioButtonText1 = 'Use the top 3 answers by popularity';
   const radioButtonText2 = 'Manually pick the options';
   const numOfPopularMistakes = 3;
+
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const localHostTeamAnswers = useTSHostTeamAnswersContext(HostTeamAnswersContext);
+  const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
+  const hostTeamAnswerResponses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [];
+  const totalAnswers = hostTeamAnswerResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
+    const mistakes = inputMistakes
+      .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
+      .map((response) => ({
+        answer: response.rawAnswer,
+        percent: Math.trunc((response.count/totalAnswers)*100),
+        isSelectedMistake: response.isSelectedMistake ?? false,
+        }));
+    const sortedMistakes = mistakes.sort((a: any, b: any) => b.percent - a.percent) ?? [];
+    let finalMistakes = sortedMistakes;
+    if (isPopularMode)
+      finalMistakes = sortedMistakes.map((mistake, index) => {
+        if (index < numOfPopularMistakes) {
+          return { ...mistake, isSelectedMistake: true };
+        }
+        return { ...mistake, isSelectedMistake: false };
+      }); 
+    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...finalMistakes], currentQuestion);
+    return finalMistakes;
+  };
+  const sortedMistakes = buildFeaturedMistakes(hostTeamAnswerResponses);
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < numOfPopularMistakes) {
-        onSelectMistake(mistake.answer, true);
         return { ...mistake, isSelected: true };
       }
       return { ...mistake, isSelected: false };
     });
-    setSortedMistakes(resetMistakes);
+    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...resetMistakes], currentQuestion);
+    dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: apiClients.hostDataManager?.getHostTeamAnswers()}});
   };
+
   const handleModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === 'A') {
       resetMistakesToPopular();
@@ -90,12 +115,12 @@ export default function FeaturedMistakes({
   };
 
   const handleSelectMistake = (index: number) => {
-    onSelectMistake(sortedMistakes[index].answer, false);
     const newMistakes = [...sortedMistakes];
-    newMistakes[index].isSelected = !newMistakes[index].isSelected;
-    setSortedMistakes([...newMistakes]);
+    newMistakes[index].isSelectedMistake = !newMistakes[index].isSelectedMistake;
+    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...newMistakes], currentQuestion);
+    dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: apiClients.hostDataManager?.getHostTeamAnswers()}});
   };
-
+  
   return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
@@ -133,7 +158,7 @@ export default function FeaturedMistakes({
                 mistakeText={mistake.answer}
                 mistakePercent={mistake.percent}
                 isPopularMode={isPopularMode}
-                isSelected={mistake.isSelected}
+                isSelected={mistake.isSelectedMistake}
                 mistakeIndex={index}
                 handleSelectMistake={handleSelectMistake}
                 // style={{width:'100%'}}

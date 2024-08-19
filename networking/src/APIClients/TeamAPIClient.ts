@@ -4,9 +4,12 @@ import { TeamParser } from "../Parsers/TeamParser";
 import { AWSTeam, ITeam } from "../Models";
 import {
   CreateTeamInput,
+  DeleteTeamInput,
   CreateTeamMutation,
   CreateTeamMutationVariables,
-  OnCreateTeamSubscription,
+  DeleteTeamMutationVariables,
+  DeleteTeamMutation,
+  OnTeamCreateByGameSessionIdSubscription,
   OnDeleteTeamSubscription,
   UpdateTeamInput,
   UpdateTeamMutation,
@@ -15,7 +18,8 @@ import {
 import {
   getTeam,
   createTeam,
-  onCreateTeam,
+  deleteTeam,
+  onTeamCreateByGameSessionId,
   onDeleteTeam,
   updateTeam,
 } from "../graphql";
@@ -56,12 +60,13 @@ export class TeamAPIClient
   async addTeamToGameSessionId(
     gameSessionId: string,
     name: string,
-    questionId: string | null
+    questionId: string | null,
+    selectedAvatarIndex: number,
   ): Promise<ITeam> {
     const input: CreateTeamInput = {
         name,
         score: 0,
-        selectedAvatarIndex: 0,
+        selectedAvatarIndex: selectedAvatarIndex,
         teamQuestionId: questionId,
         gameSessionTeamsId: gameSessionId,
         teamQuestionGameSessionId: gameSessionId,
@@ -80,15 +85,37 @@ export class TeamAPIClient
     return TeamParser.teamFromAWSTeam(team.data.createTeam as AWSTeam)
   }
 
+
+  async deleteTeam(
+    teamId: string,
+  ): Promise<ITeam> {
+    const input: DeleteTeamInput = {
+        id: teamId,
+    }
+    const variables: DeleteTeamMutationVariables = { input }
+    const team = await this.callGraphQL<DeleteTeamMutation>(
+        deleteTeam,
+        variables
+    )
+    if (
+        isNullOrUndefined(team.data) ||
+        isNullOrUndefined(team.data.deleteTeam)
+    ) {
+        throw new Error(`Failed to delete team`)
+    }
+    return TeamParser.teamFromAWSTeam(team.data.deleteTeam as AWSTeam)
+  }
+
+
   subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
-    return this.subscribeGraphQL<OnCreateTeamSubscription>(
+    return this.subscribeGraphQL<OnTeamCreateByGameSessionIdSubscription>(
       {
-        query: onCreateTeam,
+        query: onTeamCreateByGameSessionId,
         variables: {
-          id: id,
+          gameSessionTeamsId: id,
         },
       },
-      (value: OnCreateTeamSubscription) => {
+      (value: OnTeamCreateByGameSessionIdSubscription) => {
         let team = this.mapOnCreateTeamSubscription(value);
         callback(team);
       }
@@ -111,7 +138,7 @@ export class TeamAPIClient
   }
 
   private mapOnCreateTeamSubscription(
-    subscription: OnCreateTeamSubscription
+    subscription: OnTeamCreateByGameSessionIdSubscription
   ): ITeam {
     return TeamParser.teamFromCreateTeamSubscription(subscription);
   }

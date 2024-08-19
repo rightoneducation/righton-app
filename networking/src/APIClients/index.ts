@@ -10,4 +10,5 @@ export * from './QuestionTemplateAPIClient';
 export * from './TeamAnswerAPIClient';
 export * from './TeamAPIClient';
 export * from './TeamMemberAPIClient';
+export * from './datamanagers';
 export * from './interfaces';
