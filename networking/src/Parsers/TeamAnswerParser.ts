@@ -57,7 +57,6 @@ export class TeamAnswerParser {
             console.error("Error parsing answer:", error);
             throw new Error("Error parsing the 'answer' field.");
         }
-        console.log(awsTeamAnswer);
         const {
             id,
             isSubmitted = awsTeamAnswer.isSubmitted,
@@ -66,7 +65,10 @@ export class TeamAnswerParser {
             currentQuestionIndex = awsTeamAnswer.currentQuestionIndex,
             questionId = awsTeamAnswer.questionId,
             teamMemberAnswersId = awsTeamAnswer.teamMemberAnswersId,
+            teamAnswersId = awsTeamAnswer.teamAnswersId,
+            teamName = awsTeamAnswer.teamName ?? '',
             text = awsTeamAnswer.text ?? '',
+            isCorrect = awsTeamAnswer.isCorrect ?? false,
             confidenceLevel = awsTeamAnswer.confidenceLevel as ConfidenceLevel ?? ConfidenceLevel.NOT_RATED,
             hint = awsTeamAnswer.hint ?? '',
             createdAt = awsTeamAnswer.createdAt,
@@ -91,13 +93,15 @@ export class TeamAnswerParser {
             currentQuestionIndex,
             questionId,
             teamMemberAnswersId,
+            teamAnswersId,
+            teamName,
             text,
+            isCorrect,
             confidenceLevel,
             createdAt,
             updatedAt,
             hint
         } as BackendAnswer;
-        console.log(teamAnswer);
         return teamAnswer
     }
 }

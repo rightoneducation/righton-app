@@ -1,19 +1,19 @@
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
-export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme }) => ({
+export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme, isShortAnswerEnabled, isHintEnabled }) => ({
   position: 'absolute',
   top: '0',
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: '1236px',
+  maxWidth: isShortAnswerEnabled || isHintEnabled ? '1236px' : `${theme.breakpoints.values.lg}px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',
-  paddingTop: `${theme.sizing.smallPadding}px`,
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  paddingTop: `${theme.sizing.mdPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
   zIndex: 2,
 }));
 
@@ -25,11 +25,12 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: `${theme.breakpoints.values.lg})px`,
+  maxWidth: `${theme.breakpoints.values.lg}px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',
   zIndex: 2,
+  paddingTop: `${theme.sizing.mdPadding}px`,
 }));
 
 // content area of body that floats above background layers above - Single Column Page
@@ -58,8 +59,8 @@ export const BodyContentAreaLeaderboardStyled = styled(
   alignItems: 'center',
   justifyContent: 'flex-start',
   maxWidth: '500px',
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
   height: '100%',
   overflow: 'scroll',
   flexWrap: 'nowrap',

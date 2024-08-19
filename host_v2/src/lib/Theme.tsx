@@ -18,6 +18,7 @@ const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
 const questionGradient =
   'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator
+const circularProgress = '#159EFA';
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
@@ -37,6 +38,8 @@ const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of t
 const graphAccentColor = 'rgba(255, 255, 255, 0.2)'; // color of graph axis and bar outline on confidence card, responses card, etc.
 const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-cards in the player response dropdowns
 const answerBarBackgroundColor = 'rgba(8, 69, 143, 0.20)';
+const progressBarColor = '#08458F';
+const progressBarBackgroundColor = '#D0DAE7';
 const radialTimerArray = [
   'rgb(126, 90, 175)',
   'rgb(148, 98, 179)',
@@ -63,22 +66,105 @@ const xl = 1536;
 
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
 const fullHeaderHeight = 228;
-const headerHeight = 150;
-const footerHeight = 60;
+const headerHeight = 140;
+const footerHeight = 144;
 const answerBarHeight = 18;
 const nextStateButtonWidth = 300;
 const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
-const extraExtraSmallPadding = 4; //  used on question indicators
 const answerOptionBorderRadius = 22; // border radius of options on answer cards
-const extraSmallPadding = 8; // small icons, text positioning
-const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
-const mediumPadding = 24; // timer margin
-const largePadding = 32; // text spacing on answer selector, top margin on titles
-const extraLargePadding = 48; // spacing between card and edge of screen
-const extraExtraLargePadding = 64; // spacing between buttons and bottom of screen
+const xxSmPadding = 4; // positioning in Victory Graphs
+const xSmPadding = 8; // small icons, text positioning
+const smPadding = 16; // upper and lower margins on text, spacing of content in cards
+const mdPadding = 24; // timer margin
+const lgPadding = 32; // text spacing on answer selector, top margin on titles
+const xLgPadding = 48; // spacing between card and edge of screen
+const xxLgPadding = 64; // spacing between buttons and bottom of screen
 const barStrokeWidth = 2; // stroke width of the bar outlines on host graph cards
 const confidenceBarThickness = 55; // thickness of each bar component in confidence bar graph
 
+// Victory Graphs Theming
+
+// victory applies a default of 50px to the VictoryChart component
+// we intentionally set this so that we can reference it programmatically throughout the chart
+const defaultVictoryPadding = 50;
+
+// Responses Graph
+const barThicknessResponses = 18;
+const barThicknessZeroResponses = 26;
+const labelOffsetResponses = 3;
+
+// victory theme object that we pass into the component to style the graph
+// see: https://commerce.nearform.com/open-source/victory/guides/themes
+const customVictoryResponsesTheme = {
+  axis: {
+    style: {
+      axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+      grid: { stroke: 'transparent' },
+      tickLabels: {
+        padding: mdPadding,
+      },
+    },
+  },
+  dependentAxis: {
+    style: {
+      axis: { stroke: 'transparent' },
+      grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+      tickLabels: {
+        fill: 'rgba(255, 255, 255, 0.5)',
+        fontFamily: 'Rubik',
+        fontWeight: '400',
+        fontSize: '12px',
+      },
+    },
+  },
+  bar: {
+    style: {
+      data: {
+        stroke: '#FFF',
+        strokeWidth: 1,
+      },
+      labels: {
+        fill: ({ datum, index }: any) =>
+          index === 0 || datum.answerCount === 0
+            ? '#FFF'
+            : '#384466',
+        fontFamily: 'Rubik',
+        fontWeight: '400',
+        textAnchor: 'end',
+        fontSize: '12px',
+      },
+    },
+  },
+};
+
+const customVictoryConfidenceTheme = {
+  axis: {
+    style: {
+      axis: {
+        stroke: graphAccentColor,
+        strokeWidth: barStrokeWidth,
+      },
+      grid: { stroke: 'transparent' },
+      tickLabels: {
+        padding: xSmPadding,
+        fill: playerFeedbackLabelColor,
+        fontSize: '18px',
+      },
+    },
+  },
+  stack: {
+    colorScale: [ primaryTextColor, 'transparent'],
+    style: {
+      data: {
+        stroke: primaryTextColor,
+        strokeWidth: barStrokeWidth,
+      },
+    },
+  },
+  bar: {
+    barWidth: confidenceBarThickness,
+  },
+};
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
@@ -97,15 +183,90 @@ declare module '@mui/material/styles' {
       pregameMinColumnWidth: number;
       extraExtraSmallPadding: number;
       answerOptionBorderRadius: number;
-      extraSmallPadding: number;
-      smallPadding: number;
-      mediumPadding: number;
-      largePadding: number;
-      extraLargePadding: number;
-      extraExtraLargePadding: number;
+      xxSmPadding: number;
+      xSmPadding: number;
+      smPadding: number;
+      mdPadding: number;
+      lgPadding: number;
+      xLgPadding: number;
+      xxLgPadding: number;
       barStrokeWidth: number;
       confidenceBarThickness: number;
+      defaultVictoryPadding: number;
+      barThicknessResponses: number;
+      barThicknessZeroResponses: number;
+      labelOffsetResponses: number;
     };
+    victoryResponsesTheme: {
+      axis: {
+        style: {
+          axis: { stroke: string; strokeWidth: number };
+          grid: { stroke: string };
+          tickLabels: {
+            padding: number;
+          };
+        };
+      };
+      dependentAxis: {
+        style: {
+          axis: { stroke: string };
+          grid: { stroke: string; strokeWidth: number };
+          tickLabels: {
+            fill: string;
+            fontFamily: string;
+            fontWeight: string;
+            fontSize: string;
+          };
+        };
+      };
+      bar: {
+        style: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          labels: {
+            fontFamily: string;
+            fontWeight: string;
+            textAnchor: string;
+            fontSize: string;
+          };
+        };
+      };
+    };
+    victoryConfidenceTheme: {
+      axis: {
+        style: {
+          axis: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          grid: { stroke: string };
+          tickLabels: {
+            padding: number;
+            fill: string;
+            fontSize: string;
+          },
+        },
+      },
+      stack: {
+        colorScale: string[];
+        style: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          },
+        },
+      },
+      bar: {
+        style: {
+          data: {
+            fill: string;
+          },
+        },
+        barWidth: number;
+      },
+    }
   }
 
   interface ThemeOptions {
@@ -122,17 +283,91 @@ declare module '@mui/material/styles' {
       answerBarHeight?: number;
       nextStateButtonWidth?: number;
       pregameMinColumnWidth?: number;
-      extraExtraSmallPadding?: number;
       answerOptionBorderRadius?: number;
-      extraSmallPadding?: number;
-      smallPadding?: number;
-      mediumPadding?: number;
-      largePadding?: number;
-      extraLargePadding?: number;
-      extraExtraLargePadding?: number;
+      xxSmPadding: number;
+      xSmPadding: number;
+      smPadding: number;
+      mdPadding: number;
+      lgPadding: number;
+      xLgPadding: number;
+      xxLgPadding: number;
       barStrokeWidth?: number;
       confidenceBarThickness?: number;
+      defaultVictoryPadding?: number;
+      barThicknessResponses?: number;
+      barThicknessZeroResponses?: number;
+      labelOffsetResponses?: number;
     };
+    victoryResponsesTheme?: {
+      axis?: {
+        style?: {
+          axis?: { stroke: string; strokeWidth: number };
+          grid?: { stroke: string };
+          tickLabels?: {
+            padding: number;
+          };
+        };
+      };
+      dependentAxis?: {
+        style?: {
+          axis?: { stroke: string };
+          grid?: { stroke: string; strokeWidth: number };
+          tickLabels?: {
+            fill: string;
+            fontFamily: string;
+            fontWeight: string;
+            fontSize: string;
+          };
+        };
+      };
+      bar?: {
+        style?: {
+          data?: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          labels?: {
+            fontFamily: string;
+            fontWeight: string;
+            textAnchor: string;
+            fontSize: string;
+          };
+        };
+      };
+    };
+    victoryConfidenceTheme?: {
+      axis?: {
+        style?: {
+          axis?: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          grid?: { stroke: string };
+          tickLabels?: {
+            padding: number;
+            fill: string;
+            fontSize: string;
+          },
+        },
+      },
+      stack?: {
+        colorScale?: string[];
+        style?: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          },
+        },
+      },
+      bar?: {
+        style?: {
+          data?: {
+            fill: string;
+          },
+        },
+        barWidth: number;
+      },
+    }
   }
 
   interface PaletteColor {
@@ -144,6 +379,7 @@ declare module '@mui/material/styles' {
     highlightGradient: string;
     altHighlightGradient: string;
     questionGradient: string;
+    circularProgress: string;
     red: string;
     green: string;
     darkPurple: string;
@@ -153,11 +389,14 @@ declare module '@mui/material/styles' {
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    baseQuestionColor: string;
     playerFeedbackLabelColor: string;
     feedbackCardsInstructionsColor: string;
     graphAccentColor: string;
     dropdownInfoBackgroundColor: string;
     answerBarBackgroundColor: string;
+    progressBarColor: string;
+    progressBarBackgroundColor: string;
     countdownColor: string;
     radialTimerArray: string[];
   }
@@ -171,6 +410,7 @@ declare module '@mui/material/styles' {
     highlightGradient?: string;
     altHighlightGradient?: string;
     questionGradient?: string;
+    circularProgress?: string;
     red?: string;
     green?: string;
     darkPurple?: string;
@@ -187,6 +427,8 @@ declare module '@mui/material/styles' {
     graphAccentColor?: string;
     dropdownInfoBackgroundColor?: string;
     answerBarBackgroundColor?: string;
+    progressBarColor?: string;
+    progressBarBackgroundColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
   }
@@ -209,17 +451,23 @@ export default createTheme({
     answerBarHeight,
     nextStateButtonWidth,
     pregameMinColumnWidth,
-    extraExtraSmallPadding,
+    xxSmPadding,
+    xSmPadding,
+    smPadding,
+    mdPadding,
+    lgPadding,
+    xLgPadding,
+    xxLgPadding,
     answerOptionBorderRadius,
-    extraSmallPadding,
-    smallPadding,
-    mediumPadding,
-    largePadding,
-    extraLargePadding,
-    extraExtraLargePadding,
     barStrokeWidth,
     confidenceBarThickness,
+    defaultVictoryPadding,
+    barThicknessResponses,
+    barThicknessZeroResponses,
+    labelOffsetResponses,
   },
+  victoryResponsesTheme: customVictoryResponsesTheme,
+  victoryConfidenceTheme: customVictoryConfidenceTheme,
   palette: {
     primary: {
       main: mainColor,
@@ -231,6 +479,7 @@ export default createTheme({
       highlightGradient,
       altHighlightGradient,
       questionGradient,
+      circularProgress,
       red: redColor,
       green: greenColor,
       darkPurple: darkPurpleColor,
@@ -246,6 +495,8 @@ export default createTheme({
       graphAccentColor,
       dropdownInfoBackgroundColor,
       answerBarBackgroundColor,
+      progressBarColor,
+      progressBarBackgroundColor,
       countdownColor,
       radialTimerArray,
     },

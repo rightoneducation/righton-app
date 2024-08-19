@@ -75,6 +75,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -111,6 +112,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
             __typename
           }
           questionTemplatesCount
+          questionTemplatesOrder
           createdAt
           updatedAt
           type
@@ -152,6 +154,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -201,6 +204,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
       __typename
     }
     questionTemplatesCount
+    questionTemplatesOrder
     createdAt
     updatedAt
     type
@@ -269,6 +273,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -305,6 +310,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
             __typename
           }
           questionTemplatesCount
+          questionTemplatesOrder
           createdAt
           updatedAt
           type
@@ -346,6 +352,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -395,6 +402,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
       __typename
     }
     questionTemplatesCount
+    questionTemplatesOrder
     createdAt
     updatedAt
     type
@@ -463,6 +471,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -499,6 +508,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
             __typename
           }
           questionTemplatesCount
+          questionTemplatesOrder
           createdAt
           updatedAt
           type
@@ -540,6 +550,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -589,6 +600,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
       __typename
     }
     questionTemplatesCount
+    questionTemplatesOrder
     createdAt
     updatedAt
     type
@@ -657,6 +669,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -693,6 +706,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
             __typename
           }
           questionTemplatesCount
+          questionTemplatesOrder
           createdAt
           updatedAt
           type
@@ -734,6 +748,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -851,6 +866,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -887,6 +903,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
             __typename
           }
           questionTemplatesCount
+          questionTemplatesOrder
           createdAt
           updatedAt
           type
@@ -928,6 +945,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -1045,6 +1063,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -1081,6 +1100,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
             __typename
           }
           questionTemplatesCount
+          questionTemplatesOrder
           createdAt
           updatedAt
           type
@@ -1122,6 +1142,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -1222,12 +1243,15 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
             answers {
               items {
                 id
+                isCorrect
                 isSubmitted
                 isShortAnswerEnabled
                 currentState
                 currentQuestionIndex
                 questionId
                 teamMemberAnswersId
+                teamAnswersId
+                teamName
                 text
                 answer
                 confidenceLevel
@@ -1343,12 +1367,15 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
             answers {
               items {
                 id
+                isCorrect
                 isSubmitted
                 isShortAnswerEnabled
                 currentState
                 currentQuestionIndex
                 questionId
                 teamMemberAnswersId
+                teamAnswersId
+                teamName
                 text
                 answer
                 confidenceLevel
@@ -1464,12 +1491,15 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
             answers {
               items {
                 id
+                isCorrect
                 isSubmitted
                 isShortAnswerEnabled
                 currentState
                 currentQuestionIndex
                 questionId
                 teamMemberAnswersId
+                teamAnswersId
+                teamName
                 text
                 answer
                 confidenceLevel
@@ -1665,12 +1695,15 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
         answers {
           items {
             id
+            isCorrect
             isSubmitted
             isShortAnswerEnabled
             currentState
             currentQuestionIndex
             questionId
             teamMemberAnswersId
+            teamAnswersId
+            teamName
             text
             answer
             confidenceLevel
@@ -1740,12 +1773,15 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
         answers {
           items {
             id
+            isCorrect
             isSubmitted
             isShortAnswerEnabled
             currentState
             currentQuestionIndex
             questionId
             teamMemberAnswersId
+            teamAnswersId
+            teamName
             text
             answer
             confidenceLevel
@@ -1815,12 +1851,15 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
         answers {
           items {
             id
+            isCorrect
             isSubmitted
             isShortAnswerEnabled
             currentState
             currentQuestionIndex
             questionId
             teamMemberAnswersId
+            teamAnswersId
+            teamName
             text
             answer
             confidenceLevel
@@ -1866,12 +1905,15 @@ export const createTeamMember = /* GraphQL */ `mutation CreateTeamMember(
     answers {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
@@ -1904,12 +1946,15 @@ export const updateTeamMember = /* GraphQL */ `mutation UpdateTeamMember(
     answers {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
@@ -1942,12 +1987,15 @@ export const deleteTeamMember = /* GraphQL */ `mutation DeleteTeamMember(
     answers {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
@@ -1976,12 +2024,15 @@ export const createTeamAnswer = /* GraphQL */ `mutation CreateTeamAnswer(
 ) {
   createTeamAnswer(input: $input, condition: $condition) {
     id
+    isCorrect
     isSubmitted
     isShortAnswerEnabled
     currentState
     currentQuestionIndex
     questionId
     teamMemberAnswersId
+    teamAnswersId
+    teamName
     text
     answer
     confidenceLevel
@@ -2001,12 +2052,15 @@ export const updateTeamAnswer = /* GraphQL */ `mutation UpdateTeamAnswer(
 ) {
   updateTeamAnswer(input: $input, condition: $condition) {
     id
+    isCorrect
     isSubmitted
     isShortAnswerEnabled
     currentState
     currentQuestionIndex
     questionId
     teamMemberAnswersId
+    teamAnswersId
+    teamName
     text
     answer
     confidenceLevel
@@ -2026,12 +2080,15 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
 ) {
   deleteTeamAnswer(input: $input, condition: $condition) {
     id
+    isCorrect
     isSubmitted
     isShortAnswerEnabled
     currentState
     currentQuestionIndex
     questionId
     teamMemberAnswersId
+    teamAnswersId
+    teamName
     text
     answer
     confidenceLevel
@@ -2103,6 +2160,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2135,6 +2193,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2172,6 +2231,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2217,6 +2277,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -2272,6 +2333,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2304,6 +2366,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2341,6 +2404,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2458,6 +2522,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2490,6 +2555,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2527,6 +2593,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2572,6 +2639,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -2627,6 +2695,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2659,6 +2728,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2696,6 +2766,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2813,6 +2884,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2845,6 +2917,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2882,6 +2955,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2927,6 +3001,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -2982,6 +3057,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -3014,6 +3090,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -3051,6 +3128,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
