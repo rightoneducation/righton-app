@@ -310,17 +310,16 @@ export default function GameInProgress({
         errorText=""
         handleRetry={handleRetry}
       />
-      <HeaderStackContainerStyled>
+    <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
           isIncorrect={false}
           totalTime={totalTime}
-          currentTimer={hasRejoined ? currentTimer : totalTime}
+          currentTimer={currentTimer}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
-          localModel={localModel}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
@@ -368,6 +367,7 @@ export default function GameInProgress({
             currentQuestion={currentQuestion}
             isShortAnswerEnabled={isShortAnswerEnabled}
             gameSession={gameSession}
+            newPoints={newPoints}
           />
         )}
       </BodyStackContainerStyled>

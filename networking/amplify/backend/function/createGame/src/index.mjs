@@ -54,7 +54,6 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   };
   return gameTemplate;
 };
- 
 
 async function createAndSignRequest(query, variables) {
   const endpoint = new URL(GRAPHQL_ENDPOINT ?? '');
@@ -83,6 +82,21 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
+  const listGameSessions = /* GraphQL */ `query ListGameSessions(
+    $filter: ModelGameSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        gameCode
+      }
+      nextToken
+      __typename
+    }
+  }
+  `;
   const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     getGameTemplate(id: $id) {
       id
@@ -182,7 +196,26 @@ async function createAndSignRequest(query, variables) {
   }
   `
   let statusCode = 200;
-  let responseBody ={};
+  let responseBody = {};
+
+  const generateUniqueGameCode = async () => {
+    let gameCodeIsUnique = false;
+    let gameCode = 0;
+    while (!gameCodeIsUnique){
+      gameCode = Math.floor(Math.random() * 9000) + 1000;
+      console.log(gameCode);
+      const matchingGameSessionsRequest = await createAndSignRequest(listGameSessions, { filter: { gameCode: { eq: gameCode } } });
+      console.log(matchingGameSessionsRequest);
+      const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
+      const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
+      const numOfMatches = matchingGameSessionsResponseParsed.data.listGameSessions.items.length;
+      console.log(matchingGameSessionsResponseParsed);
+      if (numOfMatches === 0)
+        gameCodeIsUnique = true;
+    }
+    return gameCode;
+  }
+
   try {
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
@@ -190,28 +223,43 @@ async function createAndSignRequest(query, variables) {
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json());
     const { questionTemplates: questions, ...game } = gameTemplateParsed;
-
+    const uniqueGameCode = await generateUniqueGameCode();
     // createGameSession
-    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
+    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game, gameCode: uniqueGameCode }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
 
+    // Fisher-Yates Shuffle per: https://bost.ocks.org/mike/shuffle/
+    const shuffleQuestions = (choicesArray) => {
+      let length = choicesArray.length, t, i;
+      while (length){
+        i = Math.floor(Math.random() * length--);
+        t = choicesArray[length];
+        choicesArray[length] = choicesArray[i];
+        choicesArray[i] = t;
+      }
+      return choicesArray;
+    }
+
     // createQuestions
-    const promises = questions.map(async (question) => {
-      const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
+    const promises = questions.map(async (question, index) => {
+      const {owner, version, createdAt, title, updatedAt, gameId, __typename, choices, ...trimmedQuestion} = question;
+      const choicesParsed = choices ? JSON.parse(choices) : [];
+      const shuffledChoices = shuffleQuestions(choicesParsed);
       const questionRequest = await createAndSignRequest(createQuestion, {
         input: {    
           ...trimmedQuestion,
           id: uuidv4(),
           text: title,
+          choices: JSON.stringify(shuffledChoices),
           answerSettings: question.answerSettings,
           gameSessionId: gameSessionParsed.id,
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,
           isHintEnabled: true,
           responses: '[]',
-          order: 0
+          order: index
         }
       });
       const questionResponse = await fetch(questionRequest);
@@ -221,7 +269,7 @@ async function createAndSignRequest(query, variables) {
     });
     const questionsParsed = await Promise.all(promises);
     responseBody = gameSessionParsed.id;
-  } catch (error) {
+    } catch (error) {
     console.error("Error occurred:", error);
     // Log detailed error information
     if (error instanceof SyntaxError) {
@@ -237,6 +285,6 @@ async function createAndSignRequest(query, variables) {
         }
       ]
     };
-  }
+    }
   return responseBody;
 };

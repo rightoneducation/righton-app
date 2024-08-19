@@ -41,7 +41,6 @@ export default function GameInProgressContentMidColumn ({
       {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
         <FeaturedMistakes
           currentQuestion={currentQuestion}
-          responses={responses}
           featuredMistakesSelectionValue={featuredMistakesSelectionValue}
         /> 
         :
@@ -54,7 +53,7 @@ export default function GameInProgressContentMidColumn ({
           handleGraphClick={handleGraphClick}
         />
       }
-      {isHintEnabled && 
+      {isHintEnabled && currentPhase === IPhase.TWO &&
         <HintsCard 
           hints={currentHints}
           numPlayers={numPlayers}

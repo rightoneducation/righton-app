@@ -10,8 +10,6 @@ import {
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { ScreenSize } from '../lib/HostModels';
 import EndGameHeader from '../components/EndGame/EndGameHeader';
 import EndGameBody from '../components/EndGame/EndGameBody';
@@ -57,8 +55,6 @@ function EndGameLobby({teams,
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
     const apiClients = useTSAPIClientsContext(APIClientsContext);
-    const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-    const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);   
 
     useEffect(()=> {
       apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8').then((response) => {
@@ -69,12 +65,10 @@ function EndGameLobby({teams,
 
     const handleButtonClick = () => {
       if (selectedSuggestedGame === null){
-        dispatch({type: 'exit_to_central'});
-        // TODO: get this in once routing is fixed
+        window.location.href = 'http://dev-central.rightoneducation.com/';
       }
       else {
-        dispatch({type: 'play_selected_game', payload: {selectedSuggestedGame}});
-        // TODO: similar once routing is fixed
+        window.location.href = `http://dev-host.rightoneducation.com/new/${selectedSuggestedGame}`;
       }
     };
 
@@ -106,7 +100,6 @@ function EndGameLobby({teams,
           handleUpdateSearchText={handleUpdateSearchText}
         />
         <EndGameFooter 
-          localGameSession={localGameSession}
           screenSize={screenSize}
           teamsLength={teams ? teams.length : 0}
           selectedSuggestedGame={selectedSuggestedGame}
