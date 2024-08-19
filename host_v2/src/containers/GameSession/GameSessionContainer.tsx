@@ -48,14 +48,13 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
         const difference = Date.now() - getStartTime;
         if (difference >= initialTime * 1000) {
           return 0;
-        } 
+        }
         const remainingTime = initialTime - Math.trunc(difference / 1000);
         return remainingTime;
       }
     }
     return initialTime;
   };
-
   const handleAddTime = () => {
     const addedTime = 30;
     const addedStartTime = addedTime * 1000;
@@ -66,6 +65,7 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
     setCurrentTimer(calculateCurrentTime({...gameSession, startTime: newStartTime.toString()}));
     dispatch({type: 'update_start_time', payload: {startTime: newStartTime}});
   }
+
   const gameTemplates = null;
   let teamsJoiningContent = null;
   if (gameSession.currentQuestionIndex === null) {
@@ -105,7 +105,7 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
       return (
       <GameInProgress
           isTimerVisible={isTimerVisible}
-          setIsTimerVisible={setIsTimerVisible} 
+          setIsTimerVisible={setIsTimerVisible}
           currentTimer={currentTimer}
           isCorrect={false}
           isIncorrect={false}
