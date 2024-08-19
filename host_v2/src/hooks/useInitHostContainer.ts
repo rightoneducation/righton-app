@@ -1,31 +1,59 @@
-import { useState, useEffect } from 'react';
-import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient } from '@righton/networking';
+import { useState, useEffect, useReducer } from 'react';
+import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient, ITeam } from '@righton/networking';
+import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
+import { HostTeamAnswersReducer } from '../lib/reducer/HostTeamAnswersReducer';
 
-export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { backendGameSession: IGameSession | null, backendHostTeamAnswers: IHostTeamAnswers } {
-  const dataManager = apiClients.dataManager as IHostDataManagerAPIClient; //eslint-disable-line
-  const [backendGameSession, setBackendGameSession] = useState<IGameSession | null>(null);
-  const [backendHostTeamAnswers, setBackendHostTeamAnswers] = useState<IHostTeamAnswers>({questions: []});
-
+export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { gameSession: IGameSession | null, hostTeamAnswers: IHostTeamAnswers | null, dispatch: any, dispatchHostTeamAnswers: any } {
+  const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
+  const [gameSession, dispatch] = useReducer(GameSessionReducer, null);
+  const [hostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer ,null);
   useEffect(() => {
-
     try {
       dataManager.init(gameSessionId).then(() => {
-        const gameSession = dataManager.getGameSession();
-        const hostTeamAnswers = dataManager.getHostTeamAnswers();
-        setBackendGameSession(gameSession);
-        setBackendHostTeamAnswers(hostTeamAnswers);
+        const initGameSession = dataManager.getGameSession(); // eslint-disable-line
+        const initHostTeamAnswers = dataManager.getHostTeamAnswers(); // eslint-disable-line
+        dispatch({type: 'synch_local_gameSession', payload: {...initGameSession}}); 
+        dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...initHostTeamAnswers}});
       });
 
-      dataManager.subscribeToUpdateGameSession(gameSessionId, setBackendGameSession)
+      dataManager.subscribeToUpdateGameSession(gameSessionId)
         .then((updatedGameSession: IGameSession) => {
-          setBackendGameSession((prev) => {return {...updatedGameSession}});
+          dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession}}); 
       });
 
-      dataManager.subscribeToCreateTeamAnswer((teamAnswers) => {
-        const updatedHostTeamAnswers = dataManager.getHostTeamAnswers();
-        setBackendHostTeamAnswers((prev) => {return {...updatedHostTeamAnswers}});
-        console.log("Team Answer Created", teamAnswers);
+      dataManager.subscribeToCreateTeam((updatedGameSession: IGameSession | null) => {
+        if (updatedGameSession) {
+          dispatch({
+            type: 'synch_local_gameSession',
+            payload: { ...updatedGameSession }
+          });
+        } else {
+          console.error('Received null or undefined updatedGameSession');
+        }
       });
+
+      dataManager.subscribeToCreateTeamAnswer((createdHostTeamAnswers: IHostTeamAnswers | null) => {
+        if (createdHostTeamAnswers) {
+          dispatchHostTeamAnswers({
+            type: 'synch_local_host_team_answers',
+            payload: { ...createdHostTeamAnswers }
+          });
+        } else {
+          console.error('Received null or undefined updatedHostTeamAnswers');
+        }
+      });
+
+      dataManager.subscribeToUpdateTeamAnswer((updatedHostTeamAnswers: IHostTeamAnswers | null) => {
+        if (updatedHostTeamAnswers) {
+          dispatchHostTeamAnswers({
+            type: 'synch_local_host_team_answers',
+            payload: { ...updatedHostTeamAnswers }
+          });
+        } else {
+          console.error('Received null or undefined updatedHostTeamAnswers');
+        }
+      });
+
     } catch (error) {
       console.log('Error:', error);
     }
@@ -35,6 +63,5 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
       dataManager.cleanupSubscription();
     };
   }, []); // eslint-disable-line
-
-  return { backendGameSession, backendHostTeamAnswers };
+  return { gameSession, hostTeamAnswers, dispatch, dispatchHostTeamAnswers };
 }

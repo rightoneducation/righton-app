@@ -63,6 +63,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -99,6 +100,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
             __typename
           }
           questionTemplatesCount
+          questionTemplatesOrder
           createdAt
           updatedAt
           type
@@ -140,6 +142,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -189,6 +192,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
       __typename
     }
     questionTemplatesCount
+    questionTemplatesOrder
     createdAt
     updatedAt
     type
@@ -255,6 +259,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -287,6 +292,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -324,6 +330,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -369,6 +376,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -437,6 +445,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -473,6 +482,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
             __typename
           }
           questionTemplatesCount
+          questionTemplatesOrder
           createdAt
           updatedAt
           type
@@ -514,6 +524,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                   __typename
                 }
                 questionTemplatesCount
+                questionTemplatesOrder
                 createdAt
                 updatedAt
                 type
@@ -629,6 +640,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -661,6 +673,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -698,6 +711,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -1425,6 +1439,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -1457,6 +1472,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -1494,6 +1510,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -1539,6 +1556,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -1594,6 +1612,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -1626,6 +1645,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -1663,6 +1683,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -1776,6 +1797,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 __typename
               }
               questionTemplatesCount
+              questionTemplatesOrder
               createdAt
               updatedAt
               type
@@ -1820,6 +1842,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
           __typename
         }
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -1869,6 +1892,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 __typename
               }
               questionTemplatesCount
+              questionTemplatesOrder
               createdAt
               updatedAt
               type
@@ -1996,6 +2020,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2028,6 +2053,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2065,6 +2091,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2110,6 +2137,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -2189,6 +2217,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2221,6 +2250,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2258,6 +2288,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2303,6 +2334,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -2382,6 +2414,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2414,6 +2447,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2451,6 +2485,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2496,6 +2531,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -2575,6 +2611,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2607,6 +2644,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2644,6 +2682,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2689,6 +2728,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -2768,6 +2808,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2800,6 +2841,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -2837,6 +2879,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2961,6 +3004,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -2993,6 +3037,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -3030,6 +3075,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -3154,6 +3200,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type
@@ -3186,6 +3233,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
               __typename
             }
             questionTemplatesCount
+            questionTemplatesOrder
             createdAt
             updatedAt
             type
@@ -3223,6 +3271,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
                   phaseTwoTime
                   imageUrl
                   questionTemplatesCount
+                  questionTemplatesOrder
                   createdAt
                   updatedAt
                   type

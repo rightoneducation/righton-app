@@ -7,6 +7,7 @@ export interface IHostTeamAnswersResponse {
   multiChoiceCharacter: string;
   isCorrect: boolean;
   teams: string[];
+  isSelectedMistake?: boolean;
 }
 
 export interface IHostTeamAnswersConfidenceResponse {
@@ -22,6 +23,11 @@ export interface IHostTeamAnswersConfidence {
 }
 
 export interface IHostTeamAnswersHint {
+  rawHint: string;
+  team: string;
+}
+
+export interface IHostTeamAnswersGPTHint {
   themeText: string;
   teams: {
     name: string;
@@ -33,7 +39,14 @@ export interface IHostTeamAnswersHint {
 export interface IHostTeamAnswersPerPhase {
   responses: IHostTeamAnswersResponse[],
   confidences?: IHostTeamAnswersConfidence[],
-  hints?: IHostTeamAnswersHint[] 
+  hints?: IHostTeamAnswersHint[],
+  gptHints?: IHostTeamAnswersGPTHint[] 
+}
+
+export interface IHostTeamAnswersQuestion {
+  questionId: string,
+  phase1: IHostTeamAnswersPerPhase,
+  phase2: IHostTeamAnswersPerPhase,
 }
 
 /* 
@@ -45,9 +58,12 @@ export interface IHostTeamAnswersPerPhase {
  * hints -> Hints
  */
 export interface IHostTeamAnswers {
-  questions: {
-    questionId: string,
-    phase1: IHostTeamAnswersPerPhase,
-    phase2: IHostTeamAnswersPerPhase,
-  }[]
+  questions: IHostTeamAnswersQuestion[]
 }
+
+
+export interface IGPTHints {
+  themeText: string,
+  teams: string[],
+  teamCount: number
+}[]

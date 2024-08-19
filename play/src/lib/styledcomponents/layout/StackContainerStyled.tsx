@@ -7,4 +7,5 @@ export default styled(Stack)({
   height: '100%',
   position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
   width: '100%',
+  touchAction: 'none'
 });

@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import { Button, Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { GameSessionState } from '@righton/networking';
+import { styled, useTheme } from '@mui/material/styles';
+import { GameSessionState, IHostTeamAnswersPerPhase, IPhase } from '@righton/networking';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import ProgressBarGroup from './ProgressBarGroup';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
+import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
+import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
+import { ScreenSize } from '../lib/HostModels';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -42,8 +43,9 @@ const ButtonStyled = styled(Button)({
 const FooterContainer = styled(Box)(({theme}) => ({
   position: 'sticky',
   bottom: '0',
-  // height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
+  margin: 'auto',
   width: '100%',
+  maxWidth: '700px',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-end',
@@ -59,31 +61,98 @@ const InnerFooterContainer = styled(Box)({
   gap: 16
 });
 
-interface FootStartGameProps {
+interface FootGameInProgressProps {
+  currentState: GameSessionState;
+  submittedAnswers: number;
   teamsLength: number;
+  screenSize: ScreenSize;
+  scope: any;
+  animate: any;
+  scope2: any;
+  animate2: any;
+  scope3: any;
+  animate3: any;
 }
 
-function FooterStartGame({ 
-  teamsLength
-}: FootStartGameProps) {
+function FooterGameInProgress({
+  currentState,
+  submittedAnswers,
+  teamsLength,
+  screenSize,
+  scope,
+  animate,
+  scope2,
+  animate2,
+  scope3,
+  animate3
+}: FootGameInProgressProps) {
+  const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const dispatch = useTSDispatchContext(LocalGameSessionDispatchContext);
-
-  const handleButtonClick = () => {
-    const nextState = getNextGameSessionState(localGameSession.currentState);
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
+  const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
+  const dispatch = useTSDispatchContext(GameSessionDispatchContext);
+  const handleButtonClick = async () => {
+    const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
+    console.log('nextState');
+    console.log(nextState);
+    switch (nextState) {
+      case GameSessionState.FINAL_RESULTS:{
+        const animations = () => {
+          return Promise.all([
+            animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
+            animate2(scope2.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
+            animate3(scope3.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' })
+          ]);
+        };
+        await animations();
+        break;
+      }
+      case GameSessionState.TEAMS_JOINING:
+        await animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' });
+        break;
+      default:
+        break;
+    }
+    const currentTimeMillis = Date.now().toString();
+    if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
+      const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
+      apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
+      apiClients?.hostDataManager?.updateTime(Date.now());
+    }
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: currentTimeMillis});
     dispatch({type: 'advance_game_phase', payload: {nextState}});
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState})
-  };
-
+ };
+  const GetButtonText = () => {
+    switch(currentState) {
+      case GameSessionState.CHOOSE_CORRECT_ANSWER:
+      case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+        return 'End Answering';
+      case GameSessionState.PHASE_2_START:
+        return 'Continue to Phase Two';
+      case GameSessionState.PHASE_1_DISCUSS:
+      case GameSessionState.PHASE_2_DISCUSS:
+        return 'Continue';
+      default:
+        return 'Start Game';
+    }
+  }
+  const buttonText = GetButtonText();
   return (
     <FooterContainer>
       <InnerFooterContainer>
-        <ProgressBarGroup teamsLength={teamsLength} />
-        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>Start Game</ButtonStyled>
+        { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && isShortAnswerEnabled)) && (
+          <PaginationContainerStyled
+            className="swiper-pagination-container"
+            style={{ paddingTop: `${theme.sizing.xxSmPadding}px`, zIndex: 2 }}
+          />
+        )}
+        { (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
+          <ProgressBarGroup submittedAnswers={submittedAnswers} teamsLength={teamsLength} />
+        }
+        <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>{buttonText}</ButtonStyled>
       </InnerFooterContainer>
     </FooterContainer>
   );
 }
 
-export default FooterStartGame;
+export default FooterGameInProgress;
