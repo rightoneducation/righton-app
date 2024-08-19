@@ -1,6 +1,9 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { useAnimate, motion } from 'framer-motion';
+import { Grid } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
 import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
@@ -13,7 +16,7 @@ import 'swiper/css/pagination';
 import GameInProgressContentLeftColumn from './columns/GameInProgressContentLeftColumn';
 import GameInProgressContentMidColumn from './columns/GameInProgressContentMidColumn';
 import GameInProgressContentRightColumn from './columns/GameInProgressContentRightColumn';
-
+import { Phase2DiscussLargeBox } from '../../lib/styledcomponents/animateContainers/motionDivContainers';
 
 interface GameInProgressContentProps {
   localGameSession: IGameSession;
@@ -22,6 +25,7 @@ interface GameInProgressContentProps {
   currentQuestion: IQuestion;
   currentPhase: IPhase;
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
+  scope?: React.RefObject<HTMLDivElement>;
 }
 
 export default function GameInProgressContent({
@@ -31,7 +35,9 @@ export default function GameInProgressContent({
   currentQuestion,
   currentPhase,
   currentPhaseTeamAnswers,
+  scope,
 }: GameInProgressContentProps) {
+  const theme = useTheme();
 
   // currentResponses are used for the Real Time Responses Victory Graph
   const currentResponses = currentPhaseTeamAnswers?.responses ?? [] as IHostTeamAnswersResponse[];
@@ -102,10 +108,19 @@ export default function GameInProgressContent({
     />
   );
   
+  const needAnimate = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && localGameSession.currentQuestionIndex !== 0;
+  console.log(needAnimate);
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
         <BodyContentAreaSingleColumnStyled>
+          <motion.div
+          ref={scope}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
+          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+        >
           <Swiper
             modules={[Pagination]}
             pagination={{
@@ -131,11 +146,19 @@ export default function GameInProgressContent({
               {rightCardsColumn}
             </SwiperSlide>
           </Swiper>
+          </motion.div>
         </BodyContentAreaSingleColumnStyled>
       );
     case (ScreenSize.MEDIUM):
       return (
         <BodyContentAreaDoubleColumnStyled>
+          <motion.div
+          ref={scope}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
+          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+        >
           {isShortAnswerEnabled ? (
             <Swiper
               modules={[Pagination]}
@@ -166,18 +189,31 @@ export default function GameInProgressContent({
               {rightCardsColumn}
             </>
           )}
+          </motion.div>
         </BodyContentAreaDoubleColumnStyled>
       );
     case (ScreenSize.LARGE):
     default:
       return (
-        <BodyContentAreaTripleColumnStyled container>
+        <Phase2DiscussLargeBox>
+          <motion.div
+          ref={scope}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
+          exit={{ x: 0, y: 0,  }}
+          style={{ display: 'inline-block' }}
+        >
+         <Grid container style={{width: '100%', maxWidth: `${theme.breakpoints.values.lg}px`}}>
           {leftCardsColumn}
           { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
             midCardsColumn
           }
           {rightCardsColumn}
-        </BodyContentAreaTripleColumnStyled>
+          </Grid>
+          </motion.div>
+
+        </Phase2DiscussLargeBox>
       );
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useReducer, useEffect } from 'react';
+import { useAnimate } from 'framer-motion';
 import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers } from '@righton/networking';
 import { GameSessionDispatchContext } from '../../lib/context/GameSessionContext';
 import { HostTeamAnswersDispatchContext } from '../../lib/context/HostTeamAnswersContext';
@@ -6,6 +7,7 @@ import { useTSDispatchContext } from '../../hooks/context/useGameSessionContext'
 import GameInProgress from '../../pages/GameInProgress';
 import StartGame from '../../pages/StartGame';
 import Leaderboard from '../../pages/Leaderboard';
+import InterimLeaderboard from '../../pages/InterimLeaderboard';
 import EndGameLobby from '../../pages/EndGameLobby';
 import PrepareGame from '../../pages/PrepareGame';
 
@@ -21,6 +23,9 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
   const [currentTimer, setCurrentTimer] = useState<number>(0);
   const [totalTime, setTotalTime] = useState<number>(0);
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
+  const [scope, animate] = useAnimate();
+  const [scope2, animate2] = useAnimate();
+  const [scope3, animate3] = useAnimate();
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);   
   const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
   const handleDeleteTeam = (teamId: string) => {
@@ -79,12 +84,14 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
     );
   } else {
     teamsJoiningContent = (
-      <Leaderboard
+      <InterimLeaderboard
         teams={gameSession.teams}
         questions={gameSession.questions}
         currentQuestionIndex={gameSession.currentQuestionIndex}
         title={gameSession.title}
         handleDeleteTeam={handleDeleteTeam}
+        scope={scope}
+        animate={animate}
       />
     );
   }
@@ -108,6 +115,12 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
           hostTeamAnswers={hostTeamAnswers}
           handleAddTime={handleAddTime}
           isAddTime={isAddTime}
+          scope={scope}
+          animate={animate}
+          scope2={scope2}
+          animate2={animate2}
+          scope3={scope3}
+          animate3={animate3}
         />
       );
     case GameSessionState.FINAL_RESULTS:
