@@ -9,8 +9,8 @@ import playerIcon from '../img/playerIcon.svg';
 import HostPlayerIconContainer from '../lib/styledcomponents/HostPlayerIconContainer';
 import Timer from './Timer';
 import TimerAddButton from '../lib/styledcomponents/TimerAddButton';
-import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
-import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
 
 
 interface HeaderContentProps {
@@ -20,6 +20,8 @@ interface HeaderContentProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
+  handleAddTime?: () => void;
+  isAddTime?: boolean;
 } // eslint-disable-line
 
 export default function HeaderContent({
@@ -29,10 +31,12 @@ export default function HeaderContent({
   currentTimer,
   isPaused,
   isFinished,
+  handleAddTime,
+  isAddTime,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
 
   const statePosition = Object.keys(GameSessionState).indexOf(localGameSession.currentState);
   const stateMap = {
@@ -64,10 +68,7 @@ export default function HeaderContent({
     if (isIncorrectForCheck) return t('gameinprogress.header.incorrect');
     return stateMap[currentStateForCheck];
   };
-
-  const handleTimerAddButtonClick = () => {
-    console.log('TimerAddButton clicked!'); // eslint-disable-line
-  };
+  
   return (
     <HeaderStackContainerStyled>
       <Container maxWidth="md">
@@ -99,9 +100,10 @@ export default function HeaderContent({
                 currentTimer={currentTimer}
                 isFinished={isFinished}
                 isPaused={isPaused}
+                isAddTime={isAddTime}
                 localGameSession={localGameSession}
               />
-            <TimerAddButton onClick={handleTimerAddButtonClick}>
+            <TimerAddButton onClick={handleAddTime} disabled={currentTimer <= 0}>
               <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
                 {t('gamesession.addtime')}
               </Typography>
