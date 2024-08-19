@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
-import { GameSessionState } from '@righton/networking';
-import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
-import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
+import { GameSessionState, IGameSession, IHostTeamAnswers, IGameTemplate } from '@righton/networking';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import { ScreenSize } from '../lib/HostModels';
 
@@ -90,15 +90,14 @@ function FooterStartGame({
   handleButtonClick,
   scope4
 }: FootStartGameProps) {
-  
-  const [buttonText, setButtonText] = useState<string>('Start Game');
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
-  const getButtonText = () => {
-    switch (localGameSession.currentState) {
-      case GameSessionState.TEAMS_JOINING:
-        return localGameSession.currentQuestionIndex === null
-          ? 'Start Game'
+  let buttonText;
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
+
+  switch (localGameSession.currentState) {
+    case GameSessionState.TEAMS_JOINING:
+      buttonText = 
+        (localGameSession.currentQuestionIndex === null)
+          ? 'Start Game' 
           : 'Next Question';
       case GameSessionState.FINAL_RESULTS:
         return 'End Game';

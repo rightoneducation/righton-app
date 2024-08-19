@@ -2,16 +2,16 @@ import { isNullOrUndefined } from "../global";
 import { ITeam, ITeamMember } from "../Models";
 import { AWSTeam } from "../Models/AWS";
 import { 
-  OnCreateTeamSubscription, 
+OnTeamCreateByGameSessionIdSubscription, 
   OnDeleteTeamSubscription 
 } from "../AWSMobileApi";
 import { TeamMemberParser } from "./TeamMemberParser"
 
 export class TeamParser {
     static teamFromCreateTeamSubscription(
-        subscription: OnCreateTeamSubscription
+        subscription: OnTeamCreateByGameSessionIdSubscription
     ): ITeam {
-        const createTeam = subscription.onCreateTeam
+        const createTeam = subscription.onTeamCreateByGameSessionId
         if (isNullOrUndefined(createTeam)) {
             throw new Error(
                 "subscription.teamFromCreateTeamSubscription can't be null."

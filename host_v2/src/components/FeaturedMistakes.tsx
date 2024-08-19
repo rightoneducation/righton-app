@@ -11,8 +11,8 @@ import {
 import { IHostTeamAnswersResponse, IQuestion } from "@righton/networking";
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useLocalHostTeamAnswersContext';
-import { LocalHostTeamAnswersContext, LocalHostTeamAnswersDispatchContext } from '../lib/context/LocalHostTeamAnswersContext';
+import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useHostTeamAnswersContext';
+import { HostTeamAnswersContext, HostTeamAnswersDispatchContext } from '../lib/context/HostTeamAnswersContext';
 import { Mistake } from "../lib/HostModels";
 import MistakeSelector from "./MistakeSelector";
 import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
@@ -69,19 +69,18 @@ export default function FeaturedMistakes({
   const numOfPopularMistakes = 3;
 
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const localHostTeamAnswers = useTSHostTeamAnswersContext(LocalHostTeamAnswersContext);
-  const dispatchHostTeamAnswers = useTSDispatchContext(LocalHostTeamAnswersDispatchContext);
+  const localHostTeamAnswers = useTSHostTeamAnswersContext(HostTeamAnswersContext);
+  const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
   const hostTeamAnswerResponses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [];
   const totalAnswers = hostTeamAnswerResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
     const mistakes = inputMistakes
-    .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
-    .map((response) => ({
-      answer: response.rawAnswer,
-      percent: Math.trunc((response.count/totalAnswers)*100),
-      isSelectedMistake: response.isSelectedMistake ?? false,
-      }));
-    
+      .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
+      .map((response) => ({
+        answer: response.rawAnswer,
+        percent: Math.trunc((response.count/totalAnswers)*100),
+        isSelectedMistake: response.isSelectedMistake ?? false,
+        }));
     const sortedMistakes = mistakes.sort((a: any, b: any) => b.percent - a.percent) ?? [];
     let finalMistakes = sortedMistakes;
     if (isPopularMode)
@@ -91,6 +90,7 @@ export default function FeaturedMistakes({
         }
         return { ...mistake, isSelectedMistake: false };
       }); 
+    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...finalMistakes], currentQuestion);
     return finalMistakes;
   };
   const sortedMistakes = buildFeaturedMistakes(hostTeamAnswerResponses);
@@ -120,6 +120,7 @@ export default function FeaturedMistakes({
     apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...newMistakes], currentQuestion);
     dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: apiClients.hostDataManager?.getHostTeamAnswers()}});
   };
+  
   return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
