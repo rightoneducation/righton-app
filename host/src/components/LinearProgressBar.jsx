@@ -23,7 +23,7 @@ export default function LinearProgressBar({ inputNum, totalNum }) {
           style={{
             position: 'absolute',
             top: '0',
-            left: '0',
+            left: '5px',
             width: `${progressPercent - 2}%`,
             textAlign: 'right',
             fontFamily: 'Helvetica',

@@ -10,10 +10,51 @@ import {
 } from "@material-ui/core";
 import MistakeSelector from "./MistakeSelector";
 
+export function sortMistakes (shortAnswerResponses, totalAnswers, isPopularMode, numOfPopularMistakes, setSelectedMistakes){
+  console.log(shortAnswerResponses);
+  console.log(totalAnswers);
+  const extractedMistakes = shortAnswerResponses
+    .filter(shortAnswerResponse => !shortAnswerResponse.isCorrect)
+    .reduce((mistakes, shortAnswerResponse) => {
+      mistakes.push({ 
+        answer: shortAnswerResponse.rawAnswer, 
+        percent: Math.round((shortAnswerResponse.count/totalAnswers)*100),
+        answerType: shortAnswerResponse.answerType,
+        answerPrecision: shortAnswerResponse.answerPrecision,
+        isSelected: shortAnswerResponse.isSelectedMistake ?? false
+      })
+      return mistakes;
+    }, []);
+  let sortedMistakes = extractedMistakes.sort((a, b) => {
+    if (a.percent === b.percent) {
+      if (a.answerType === 0 && b.answerType === 0){
+        const aNum = parseFloat(a.answer);
+        const bNum = parseFloat(b.answer);
+        console.log(aNum, bNum);
+        if (aNum === bNum){
+          return a.answerPrecision - b.answerPrecision;
+        }
+        return parseFloat(a.answer) - parseFloat(b.answer);
+      }
+      return a.answer.localeCompare(b.answer);
+    }
+    return b.percent - a.percent;
+  });
+  if (isPopularMode) {
+    for (let i = 0; i < Math.min(sortedMistakes.length, numOfPopularMistakes); i++){
+      sortedMistakes[i].isSelected = true;
+    }
+  }
+  console.log(sortedMistakes);
+  setSelectedMistakes(sortedMistakes.filter(mistake => mistake.isSelected).map(mistake => mistake.answer));
+  return sortedMistakes;
+};
+
 export default function FeaturedMistakes({
   shortAnswerResponses,
   totalAnswers,
   onSelectMistake,
+  setSelectedMistakes
 }) {
   const classes = useStyles();
   const title = "Featured Mistakes";
@@ -22,29 +63,6 @@ export default function FeaturedMistakes({
   const radioButtonText2 = "Manually pick the options";
   const numOfPopularMistakes = 3;
   const [isPopularMode, setIsPopularMode] = useState(true);
-  const [selectedMistakes, setSelectedMistakes] = useState([]);
-  const sortMistakes = (shortAnswerResponses, totalAnswers) => {
-    const extractedMistakes = shortAnswerResponses
-      .filter(shortAnswerResponse => !shortAnswerResponse.isCorrect)
-      .reduce((mistakes, shortAnswerResponse) => {
-        mistakes.push({ 
-          answer: shortAnswerResponse.rawAnswer, 
-          percent: Math.round((shortAnswerResponse.count/totalAnswers)*100), 
-          isSelected: shortAnswerResponse.isSelectedMistake ?? false
-        })
-        return mistakes;
-      }, []);
-    let sortedMistakes = extractedMistakes.sort((a, b) => {
-      return b.percent - a.percent;
-    });
-    if (isPopularMode) {
-      for (let i = 0; i < Math.min(sortedMistakes.length, numOfPopularMistakes); i++){
-        sortedMistakes[i].isSelected = true;
-        onSelectMistake(sortedMistakes[i].answer, true);
-      }
-    }
-    return sortedMistakes;
-  };
   const [sortedMistakes, setSortedMistakes] = useState([]);
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
@@ -76,7 +94,7 @@ export default function FeaturedMistakes({
   };
 
   useEffect(() => {
-    setSortedMistakes(sortMistakes(shortAnswerResponses, totalAnswers));
+    setSortedMistakes(sortMistakes(shortAnswerResponses, totalAnswers, isPopularMode, numOfPopularMistakes, setSelectedMistakes));
   }, [shortAnswerResponses, totalAnswers]);
   return(
     <Paper className={classes.background} elevation={0}>

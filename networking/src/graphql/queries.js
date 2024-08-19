@@ -21,6 +21,7 @@ export const getGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -49,6 +50,7 @@ export const listGameTemplates = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -355,6 +357,7 @@ export const getTeamAnswer = /* GraphQL */ `
   query GetTeamAnswer($id: ID!) {
     getTeamAnswer(id: $id) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
@@ -382,6 +385,7 @@ export const listTeamAnswers = /* GraphQL */ `
     listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
@@ -423,6 +427,7 @@ export const getGameQuestions = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -504,6 +509,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -545,6 +551,7 @@ export const gameTemplatesByDate = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -586,6 +593,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -627,6 +635,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type

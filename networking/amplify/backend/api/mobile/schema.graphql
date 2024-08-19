@@ -73,7 +73,7 @@ input QuestionTemplateInput {
 type GameSession @model {
   id: ID!
   gameId: ID!
-  startTime: AWSDateTime
+  startTime: String
   phaseOneTime: Int!
   phaseTwoTime: Int!
   teams: [Team] @hasMany
@@ -94,11 +94,9 @@ enum GameSessionState {
   TEAMS_JOINING
   CHOOSE_CORRECT_ANSWER
   PHASE_1_DISCUSS
-  PHASE_1_RESULTS
   PHASE_2_START
   CHOOSE_TRICKIEST_ANSWER
   PHASE_2_DISCUSS
-  PHASE_2_RESULTS
   FINAL_RESULTS
   FINISHED
 }
@@ -150,12 +148,15 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
+  isCorrect: Boolean
   isSubmitted: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
   currentState: GameSessionState!
   currentQuestionIndex: Int!
   questionId: ID!
   teamMemberAnswersId: ID!
+  teamAnswersId: ID
+  teamName: String
   text: String!
   answer: AWSJSON!
   confidenceLevel: ConfidenceLevel

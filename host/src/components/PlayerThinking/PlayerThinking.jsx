@@ -26,7 +26,7 @@ export default function PlayerThinking({
     <Box className={classes.centerContent}>
       <Box style={{display: 'flex', aligntItems: 'center', justifyContent: 'space-between', width: '100%'}}>
         <Typography className={classes.titleStyle}>
-          Player Thinking
+          Student Hints
         </Typography>
       </Box>
       <Typography className={classes.infoText}>

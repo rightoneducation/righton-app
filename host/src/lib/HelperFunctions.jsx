@@ -300,6 +300,8 @@ export const buildShortAnswerResponses = (prevShortAnswer, correctAnswer, answer
     prevShortAnswer.push({
       rawAnswer: correctAnswerObj.rawAnswer,
       normAnswer: correctAnswerObj.normAnswer,
+      answerType: answerSettings.answerType,
+      answerPrecision: answerSettings.answerPrecision,
       isCorrect: true,
       isSelectedMistake: false,
       count: 0,
@@ -320,13 +322,14 @@ export const buildShortAnswerResponses = (prevShortAnswer, correctAnswer, answer
     prevShortAnswer.push({
       rawAnswer: newAnswer.answer.rawAnswer,
       normAnswer: newAnswer.answer.normAnswer,
+      answerType: answerSettings.answerType,
+      answerPrecision: answerSettings.answerPrecision,
       isCorrect: false,
       isSelectedMistake: false,
       count: 1,
       teams: [{name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
     });
   }
-  console.log(prevShortAnswer);
   return prevShortAnswer;
 };
 

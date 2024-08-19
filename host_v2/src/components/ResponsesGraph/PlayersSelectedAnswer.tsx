@@ -128,35 +128,17 @@ export default function PlayersSelectedAnswer({
     <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding}}>
       <TextContainer>
         <TitleText>
-          Players who picked this answer:
+        { statePosition < 6 ? `Players who picked this answer` : `Players who think this is the trickest answer`}
         </TitleText>
         <NumberContainer>
           <CountText>
-            {/* count from stateposition === 6 saved and displayed here for stateposition === 6 */}
             {count}
           </CountText>
           <PercentageText>
-            {/* percentage from  stateposition === 6saved and displayed here for stateposition === 6 */}
             ({Math.round(percentage)}%)
           </PercentageText>
         </NumberContainer>
       </TextContainer>
-      {statePosition === 6 && (
-        <TextContainer>
-          <PhaseTwoTitleText>
-            Players who think this is the trickest
-            <br /> answer
-          </PhaseTwoTitleText>
-          <PhaseTwoNumberContainer>
-            <PhaseTwoCountText>
-              {count}
-            </PhaseTwoCountText>
-            <PhaseTwoPercentageText>
-              ({Math.round(percentage)}%)
-            </PhaseTwoPercentageText>
-          </PhaseTwoNumberContainer>
-        </TextContainer>
-      )}
       {teamsWithSelectedAnswer.map((team: string) => (
         <StyledRect key={uuidv4()} >
           <NameText>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameSessionState } from '@righton/networking';
+import { GameSessionState, IGameSession } from '@righton/networking';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -7,11 +7,10 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
 import HostPlayerIconContainer from '../lib/styledcomponents/HostPlayerIconContainer';
-import { LocalModel } from '../lib/HostModels';
 import Timer from './Timer';
 import TimerAddButton from '../lib/styledcomponents/TimerAddButton';
-import { useTSGameSessionContext } from '../hooks/context/useLocalGameSessionContext';
-import { LocalGameSessionContext } from '../lib/context/LocalGameSessionContext';
+import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
+import { GameSessionContext } from '../lib/context/GameSessionContext';
 
 
 interface HeaderContentProps {
@@ -21,7 +20,8 @@ interface HeaderContentProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
-  localModel?: LocalModel;
+  handleAddTime?: () => void;
+  isAddTime?: boolean;
 } // eslint-disable-line
 
 export default function HeaderContent({
@@ -31,11 +31,12 @@ export default function HeaderContent({
   currentTimer,
   isPaused,
   isFinished,
-  localModel,
+  handleAddTime,
+  isAddTime,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
-  const localGameSession = useTSGameSessionContext(LocalGameSessionContext);
+  const localGameSession = useTSGameSessionContext(GameSessionContext);
 
   const statePosition = Object.keys(GameSessionState).indexOf(localGameSession.currentState);
   const stateMap = {
@@ -54,12 +55,6 @@ export default function HeaderContent({
       'gameinprogress.header.phase2discuss',
     ),
     [GameSessionState.PHASE_2_START]: t('gameinprogress.header.phase2start'),
-    [GameSessionState.PHASE_1_RESULTS]: t(
-      'gameinprogress.header.phase1results',
-    ),
-    [GameSessionState.PHASE_2_RESULTS]: t(
-      'gameinprogress.header.phase2results',
-    ),
     [GameSessionState.FINAL_RESULTS]: t('gameinprogress.header.finalresults'),
     [GameSessionState.FINISHED]: t('gameinprogress.header.finished'),
   };
@@ -73,11 +68,7 @@ export default function HeaderContent({
     if (isIncorrectForCheck) return t('gameinprogress.header.incorrect');
     return stateMap[currentStateForCheck];
   };
-
-  const handleTimerAddButtonClick = () => {
-    console.log('TimerAddButton clicked!'); // eslint-disable-line
-  };
-
+  
   return (
     <HeaderStackContainerStyled>
       <Container maxWidth="md">
@@ -104,17 +95,15 @@ export default function HeaderContent({
           </Typography>
         </Grid>
         <Grid item style={{display: 'flex', justifyItems: 'space-between', alignItems: 'center', gap: '24px', paddingTop: `${theme.sizing.xSmPadding}px`}}>
-            {localModel ? (
               <Timer
                 totalTime={totalTime}
                 currentTimer={currentTimer}
                 isFinished={isFinished}
                 isPaused={isPaused}
-                localModel={localModel}
+                isAddTime={isAddTime}
                 localGameSession={localGameSession}
               />
-            ) : null}
-            <TimerAddButton onClick={handleTimerAddButtonClick}>
+            <TimerAddButton onClick={handleAddTime} disabled={currentTimer <= 0}>
               <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
                 {t('gamesession.addtime')}
               </Typography>
