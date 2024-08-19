@@ -55,10 +55,9 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   }
   const calculateCurrentTime = () => {
     if (subscription && subscription.gameSession) {
-      const getStartTime = subscription.gameSession?.startTime;
+      const getStartTime = Number(subscription.gameSession?.startTime);
       if (getStartTime) {
-        const isoTimeMillis = new Date(getStartTime).getTime();
-        const difference = Date.now() - isoTimeMillis;
+        const difference = Date.now() - getStartTime;
         if (difference >= allottedTime * 1000) {
           return 0;
         } 

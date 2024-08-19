@@ -56,7 +56,6 @@ export default function Timer({
   const isPausedRef = useRef<boolean>(isPaused);
 
   const getTimerString = (currentTimeInput: number) => {
-    console.log(currentTimeInput);
     const currentTime = Math.trunc(currentTimeInput / 1000);
     let sec = 0;
     let secStr = '00';
@@ -103,7 +102,15 @@ export default function Timer({
 
   return (
     <TimerContainer maxWidth="sm">
-      <TimerBar value={progress} variant="determinate" />
+      <TimerBar 
+        sx={{
+          "& .MuiLinearProgress-bar": {
+            transition: "none"
+          }
+        }} 
+        value={progress} 
+        variant="determinate" 
+      />
       <TimerText maxWidth="sm">
         <Typography alignSelf="center" variant="caption">
           {timerString}

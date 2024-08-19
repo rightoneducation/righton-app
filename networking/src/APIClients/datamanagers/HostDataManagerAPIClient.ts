@@ -76,7 +76,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   // GameSession handling 
-  async subscribeToUpdateGameSession(gameSessionId: string, callback: (gameSession: IGameSession) => void): Promise<IGameSession> {
+  async subscribeToUpdateGameSession(gameSessionId: string): Promise<IGameSession> {
     try {
       this.gameSessionId = gameSessionId;
       const fetchedGame = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
@@ -86,7 +86,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         throw new Error('Invalid game session');
       }
       this.gameSession = fetchedGame;
-      this.subscribeToGameSessionUpdates(callback);
       return this.gameSession;
     } catch (error) {
       console.log(error);
@@ -95,22 +94,33 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   //subscribe to created teams, when players are joining in the lobby
-  async subscribeToCreateTeam(callback: (gameSession: IGameSession) => void) {
-    try {
-      if (!this.gameSessionId)
-        throw new Error('Error: Invalid game session id');
-      this.createTeamSubscription = await this.teamAPIClient.subscribeCreateTeam(this.gameSessionId, (team: ITeam) => {
-        if (!team) {
-          throw new Error ('Error: Invalid team')
-        }
-        const newGameSession = {...this.gameSession as IGameSession};
-        newGameSession.teams.push(team);
-        this.gameSession = newGameSession;
-        callback(newGameSession);
-      });
-    } catch (error) {
-      console.log(error);
-      throw new Error (`Error: ${error}`)
+  subscribeToCreateTeam(callback: (updatedGameSession: IGameSession | null) => void): void {
+    if (!this.gameSessionId) {
+      console.error('Error: Invalid game session id');
+      return;
+    }
+  
+    this.createTeamSubscription = this.teamAPIClient.subscribeCreateTeam(this.gameSessionId, (team: ITeam) => {
+      if (!team) {
+        console.error('Error: Invalid team');
+        return;
+      }
+      const newGameSession = { ...this.gameSession as IGameSession };
+      newGameSession.teams.push(team);
+      this.gameSession = newGameSession;
+      callback(newGameSession);
+    });
+  }
+
+  async updateTime(newTime: number) {
+    if (this.gameSession && this.gameSessionId && this.gameSession.startTime){
+      try {  
+        await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, startTime: newTime.toString()}).then((gameSession: IGameSession) => {
+          this.gameSession = gameSession;
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
@@ -437,6 +447,21 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return teamAnswers;
   }
 
+  // ensures that featured mistakes that the teacher has selected (sometimes sorted by popularity)
+  // are randomized when displayed to students in O(n)
+  // Fisher-Yates shuffle per: https://bost.ocks.org/mike/shuffle/
+  shuffleSelectedMistakes(updatedResponses: IHostTeamAnswersResponse[]){
+    let length = updatedResponses.length, t, i;
+
+    while (length){
+      i = Math.floor(Math.random() * length--);
+      t = updatedResponses[length];
+      updatedResponses[length] = updatedResponses[i];
+      updatedResponses[i] = t;
+    }
+    return updatedResponses;
+  }
+
   updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion) {
     const updatedQuestions = this.hostTeamAnswers.questions.map((question) => {
       if (question.questionId !== currentQuestion.id) {
@@ -473,7 +498,10 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       console.error('Error: Invalid question id');
       return [];
     }
-    return currentQuestion[currentPhase].responses;
+    let responses = currentQuestion[currentPhase].responses; 
+    if (currentPhase === IPhase.ONE)
+      responses = this.shuffleSelectedMistakes(responses);
+    return responses;
   }
 
   initHostTeamAnswers(inputGameSession: IGameSession) {
@@ -493,12 +521,12 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return newResponses;
   }
 
-  async subscribeToCreateTeamAnswer(callback: (hostTeamAnswers: IHostTeamAnswers) => void) {
+  subscribeToCreateTeamAnswer(callback: (createdHostTeamAnswers: IHostTeamAnswers | null) => void): void {
     if (!this.gameSessionId) {
       console.error('Error: Invalid game session id');
       return;
     }
-    this.createTeamAnswerSubscription = await this.teamAnswerAPIClient.subscribeCreateTeamAnswer(this.gameSessionId, (teamAnswer: BackendAnswer) => {
+    this.createTeamAnswerSubscription = this.teamAnswerAPIClient.subscribeCreateTeamAnswer(this.gameSessionId, (teamAnswer: BackendAnswer) => {
       if (!teamAnswer) {
         console.error('Error: Invalid team answer');
         return;
@@ -509,29 +537,31 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       const currentPhase = this.hostTeamAnswers.questions[questionIndex][phase];
       const currentResponses = this.hostTeamAnswers.questions[questionIndex][phase].responses;
       const newResponses = this.updateHostTeamAnswerResponses(teamAnswer, currentResponses, currentQuestion, phase);
-
-      // explicitly working with copies of objects to preserve immutability
+  
+      // Explicitly working with copies of objects to preserve immutability
       const updatedPhase: IHostTeamAnswersPerPhase = {
         ...currentPhase,
         responses: newResponses
       };
-      const updatedHostTeamAnswers = {
+  
+      const createdHostTeamAnswers = {
         ...this.hostTeamAnswers,
         questions: this.hostTeamAnswers.questions.map((question, index) => 
           index === questionIndex ? { ...question, [phase]: updatedPhase } : question
         )
       };
-      this.hostTeamAnswers = updatedHostTeamAnswers;
-      callback(this.hostTeamAnswers);
+      
+      this.hostTeamAnswers = createdHostTeamAnswers;
+      callback(createdHostTeamAnswers);
     });
   }
-
-  async subscribeToUpdateTeamAnswer(callback: (teamAnswer: any) => void) {
+  
+  subscribeToUpdateTeamAnswer(callback: (updatedHostTeamAnswers: IHostTeamAnswers) => void): void {
     if (!this.gameSessionId) {
       console.error('Error: Invalid game session id');
       return;
     }
-    this.updateTeamAnswerSubscription = await this.teamAnswerAPIClient.subscribeUpdateTeamAnswer(this.gameSessionId, (teamAnswer: BackendAnswer) => {
+    this.updateTeamAnswerSubscription = this.teamAnswerAPIClient.subscribeUpdateTeamAnswer(this.gameSessionId, (teamAnswer: BackendAnswer) => {
       if (!teamAnswer) {
         console.error('Error: Invalid team answer');
         return;
@@ -543,22 +573,21 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       let newConfidences = [];
       let newHints = [];
       let newPhase = currentPhase;
-      if (phase === IPhase.ONE){
+      if (phase === IPhase.ONE) {
         newConfidences = this.processConfidenceLevel(teamAnswer, currentQuestion, teamAnswer.teamName);
         newPhase = {...currentPhase, confidences: newConfidences};
-      }
-      else {
+      } else {
         newHints = this.processHint(teamAnswer, currentQuestion);
         newPhase = {...currentPhase, hints: newHints};
       }
       const updatedHostTeamAnswers = {
         ...this.hostTeamAnswers,
-        questions: this.hostTeamAnswers.questions.map((question, index) => 
+        questions: this.hostTeamAnswers.questions.map((question, index) =>
           index === questionIndex ? { ...question, [phase]: newPhase } : question
         )
       };
       this.hostTeamAnswers = updatedHostTeamAnswers;
-      callback(this.hostTeamAnswers);
+      callback(updatedHostTeamAnswers);
     });
   }
 }

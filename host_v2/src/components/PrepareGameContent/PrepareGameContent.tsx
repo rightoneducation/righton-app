@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import {motion} from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
@@ -14,6 +15,7 @@ import EnableShortAnswerCard from './EnableShortAnswerCard';
 import EnableConfidenceCard from './EnableConfidenceCard';
 import EnableHintsCard from './EnableHintsCard';
 import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentRightColumn';
+import { PrepGameLargeBox } from '../../lib/styledcomponents/animateContainers.tsx/motionDivContainers';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -72,6 +74,12 @@ export default function PrepareGameContent({
     case (ScreenSize.SMALL):
       return (
         <BodyContentAreaSingleColumnStyled>
+          <motion.div
+          initial={{ x: '100%', opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeIn' }}
+          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+        >
           <Swiper
             modules={[Pagination]}
             pagination={{
@@ -92,16 +100,26 @@ export default function PrepareGameContent({
               {rightCardsColumn}
             </SwiperSlide>
           </Swiper>
+          </motion.div>
         </BodyContentAreaSingleColumnStyled>
       );
     case (ScreenSize.MEDIUM):
     case (ScreenSize.LARGE):
     default:
       return (
-        <BodyContentAreaDoubleColumnStyled>
-          {leftCardsColumn}
-          {rightCardsColumn}
-        </BodyContentAreaDoubleColumnStyled>
+        <PrepGameLargeBox>
+          <motion.div
+          initial={{ x: '100%', opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeIn' }}
+          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          >
+            <Grid container style={{width: '100%', maxWidth: `${theme.breakpoints.values.lg}px`}}>
+              {leftCardsColumn}
+              {rightCardsColumn}
+            </Grid>
+          </motion.div>
+        </PrepGameLargeBox>
       );
   }
 }

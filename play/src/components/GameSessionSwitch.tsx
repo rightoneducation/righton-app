@@ -84,7 +84,7 @@ export default function GameSessionSwitch({
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isGameFirstStarting ? (
-        <PregameCountdown setIsPregameCountdown={setIsPregameCountdown} />
+        <PregameCountdown setIsPregameCountdown={setIsPregameCountdown} currentTimer={currentTimer}/>
       ) : (
         <GameInProgress
           {...gameSession}
