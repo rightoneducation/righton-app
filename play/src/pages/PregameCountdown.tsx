@@ -24,14 +24,15 @@ const TypographyStyled = styled(Typography)(({ theme }) => ({
 
 interface StartPhase2Props {
   setIsPregameCountdown: (isPregameCountdown: boolean) => void;
+  currentTimer: number;
 }
 
 export default function StartPhase2({
   setIsPregameCountdown,
+  currentTimer,
 }: StartPhase2Props) {
   const theme = useTheme();
   const { t } = useTranslation();
-
   return (
     <BackgroundContainerStyled data-testid="pregame-countdown">
       <StackContainer spacing={5}>
