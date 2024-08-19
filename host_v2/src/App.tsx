@@ -4,6 +4,23 @@ import {APIClients, Environment, AppType} from '@righton/networking';
 import HostContainer from './containers/HostContainer';
 import Theme from './lib/Theme';
 
+function RedirectToPlayIfMissing() {
+  window.location.href = 'http://central.rightoneducation.com/';
+  return null;
+}
+const apiClients = new APIClients(Environment.Developing);
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route
+        path="/"        
+        element={<GameSessionContainer apiClients={apiClients}/>}
+      />
+      <Route element={<RedirectToPlayIfMissing />} />
+    </>,
+  ),
+);
+
 function App() {
   const apiClients = new APIClients(Environment.Developing, AppType.HOST);
   return (

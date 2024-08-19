@@ -8,7 +8,6 @@ export default styled(Paper)(({ theme }) => ({
   alignItems: 'center',
   borderRadius: '24px',
   margin: '6px',
-  // padding: `${theme.sizing.smallPadding}px`,
   padding: '16px',
   gap: '16px',
   backgroundColor: theme.palette.primary.main,

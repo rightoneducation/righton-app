@@ -5,6 +5,7 @@ import {
   BackendAnswer,
   GameSessionState,
   IChoice,
+  ITeam,
   AnswerFactory,
   AnswerType
 } from '@righton/networking';
@@ -24,6 +25,7 @@ interface ButtonSubmitAnswerProps {
   currentQuestionIndex: number;
   questionId: string,
   teamMemberAnswersId: string,
+  currentTeam: ITeam | null,
   handleSubmitAnswer: (answer: BackendAnswer) => void;
 }
 
@@ -38,6 +40,7 @@ export default function ButtonSubmitAnswer({
   currentQuestionIndex,
   questionId,
   teamMemberAnswersId,
+  currentTeam,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
@@ -52,7 +55,7 @@ export default function ButtonSubmitAnswer({
       {isHint ? hintButtonText : buttonText}
     </Typography>
   );
-
+  console.log(isSelected);
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
@@ -65,9 +68,8 @@ export default function ButtonSubmitAnswer({
           currentQuestionIndex,
           questionId,
           teamMemberAnswersId,
-          selectedAnswer ?? '',
-          null,
-          null
+          currentTeam?.id ?? '',
+          currentTeam?.name ?? '',
         );
 
         handleSubmitAnswer(submitAnswer);

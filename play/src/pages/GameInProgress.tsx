@@ -14,7 +14,8 @@ import {
   IAnswerHint,
   AnswerFactory,
   AnswerType,
-  IAnswerSettings
+  IAnswerSettings,
+  IGameSession,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -52,6 +53,8 @@ interface GameInProgressProps {
   currentTimer: number;
   localModel: LocalModel;
   isShortAnswerEnabled: boolean;
+  gameSession: IGameSession;
+  newPoints?: number;
 }
 
 export default function GameInProgress({
@@ -71,6 +74,8 @@ export default function GameInProgress({
   currentTimer,
   localModel,
   isShortAnswerEnabled,
+  gameSession,
+  newPoints,
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
@@ -150,7 +155,6 @@ export default function GameInProgress({
     );
     return rejoinSubmittedAnswer;
   });
-
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(backendAnswer?.isSubmitted)
   );
@@ -189,7 +193,6 @@ export default function GameInProgress({
       setBackendAnswer(answer);
       setDisplaySubmitted(true);
     } catch (e) {
-      console.log(e);
       setIsAnswerError(true);
     }
   };
@@ -228,7 +231,8 @@ export default function GameInProgress({
       currentQuestionIndex ?? 0,
       currentQuestion.id,
       teamMemberAnswersId,
-      answerText
+      answerText,
+      teamAnswerId,
     )
     window.localStorage.setItem(
       StorageKeyAnswer,
@@ -283,11 +287,10 @@ export default function GameInProgress({
           isCorrect={false}
           isIncorrect={false}
           totalTime={totalTime}
-          currentTimer={hasRejoined ? currentTimer : totalTime}
+          currentTimer={currentTimer}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
-          localModel={localModel}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
@@ -334,6 +337,7 @@ export default function GameInProgress({
             currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
             currentQuestion={currentQuestion}
             isShortAnswerEnabled={isShortAnswerEnabled}
+            gameSession={gameSession}
           />
         )}
       </BodyStackContainerStyled>
@@ -345,6 +349,7 @@ export default function GameInProgress({
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           score={score}
+          newPoints={newPoints}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

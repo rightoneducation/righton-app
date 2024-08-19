@@ -19,12 +19,12 @@ export default function QuestionCard({
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
-        <Typography
+        {/* <Typography
           variant="subtitle1"
           sx={{ width: '100%', textAlign: 'left' }}
         >
           {t('gameinprogress.chooseanswer.questioncard')}
-        </Typography>
+        </Typography> */}
         <img
           style={{
             width: '75%',
