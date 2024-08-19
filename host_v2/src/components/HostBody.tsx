@@ -75,7 +75,8 @@ const BodyStyled = styled(Box)({
     justifyContent: 'center',
 });
 
-export default function HostBody({ teams, questions, title }: { teams: ITeam[], questions: IQuestion[], title: string}) {
+export default function HostBody({ teams, questions, title, handleDeleteTeam }: 
+    { teams: ITeam[], questions: IQuestion[], title: string, handleDeleteTeam: (id: string) => void}) {
     const swiperRef = useRef<SwiperRef>(null);
     return (
     <BodyStyled>
@@ -95,7 +96,7 @@ export default function HostBody({ teams, questions, title }: { teams: ITeam[], 
             ref={swiperRef}
           > 
         <SwiperSlide style={{ height: '100%', marginRight: '0px', boxSizing: 'border-box',}}>
-          {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} />}
+          {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} handleDeleteTeam={handleDeleteTeam}/>}
         </SwiperSlide>
         <SwiperSlide>
           <QuestionList questions={questions} title ={title}/> 

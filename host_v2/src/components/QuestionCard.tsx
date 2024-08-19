@@ -43,8 +43,6 @@ export default function QuestionCard({
             style={{
               width: '75%', // NOT on figma!! just there before
               height: 'auto',
-              // paddingTop: `${theme.sizing.smallPadding}px`,
-              // paddingBottom: `${theme.sizing.smallPadding}px`,
 
             }}
             src={imageUrl}
