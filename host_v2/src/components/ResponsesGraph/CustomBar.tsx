@@ -1,58 +1,46 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Bar } from 'victory';
-import { Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { ITeam } from '@righton/networking';
 
-const HighlightRectangle = styled(Box)({
+const HighlightRectangle = styled('rect')({
+  cursor: 'pointer', 
   '&:hover': {
     fill: 'rgba(255, 255, 255, 0.2)',
   },
 });
 
-interface CustomBarProps {
-  props: {
-    x: number;
-    y: number;
-    defaultVictoryPadding: number;
-    selectedWidth: number;
-    selectedHeight: number;
-    datum: {answerCount: number, answerCorrect: boolean, answerChoice: string, answerText: string, answerTeams: ITeam[]};
-    index: number;
-    graphClickInfo: any;
-    handleGraphClick: (value: any) => void;
-    isShortAnswerEnabled: boolean;
-  };
-}
-
-export default function CustomBar({
-  props
-}: CustomBarProps) {
+export function CustomBar(props: any) {
   const theme = useTheme();
-  const {
-    x,
-    y,
-    selectedWidth,
-    selectedHeight,
+  const { 
     datum,
+    y,
+    customBarSelectedWidth,
     index,
     graphClickInfo,
     handleGraphClick,
     isShortAnswerEnabled
-  } = props;
+   } = props;
+   // console.log(datum);
+   const height = (isShortAnswerEnabled ? 36 : 16) + theme.sizing.mdPadding - theme.sizing.xSmPadding / 2;
+   // wrapping this in a useMemo in an effort to avoid any additional renders
+   const isSelected = useMemo(() =>{
+      // ensure that 0 isn't treated as falsy
+      return graphClickInfo.selectedIndex !== null &&
+      graphClickInfo.selectedIndex !== undefined &&
+      graphClickInfo.selectedIndex === index &&
+      graphClickInfo.graph === 'realtime';
+   }, [graphClickInfo.selectedIndex, index, graphClickInfo.graph]);
   return (
     <g>
       <Bar {...props} />
-      {datum.answerCount > 0 && (
+      {datum.count > 0 && (
         <HighlightRectangle
-          x={isShortAnswerEnabled ? 0 : theme.sizing.defaultVictoryPadding - theme.sizing.xxSmPadding}
-          y={y - theme.sizing.smPadding}
-          width={selectedWidth + theme.sizing.defaultVictoryPadding}
-          height={selectedHeight + theme.sizing.smPadding - theme.sizing.xxSmPadding / 2}
+          x =  {isShortAnswerEnabled ? 0 : theme.sizing.defaultVictoryPadding - theme.sizing.xSmPadding}
+          y =  {isShortAnswerEnabled ? y - theme.sizing.xLgPadding + theme.sizing.xSmPadding : y - theme.sizing.smPadding}
+          width = {customBarSelectedWidth + theme.sizing.defaultVictoryPadding }
+          height = {height}
           fill={
-            graphClickInfo.selectedIndex &&
-            graphClickInfo.selectedIndex === index &&
-            graphClickInfo.graph === 'realtime'
+            isSelected
               ? 'rgba(255, 255, 255, 0.2)'
               : 'transparent'
           }
@@ -62,7 +50,6 @@ export default function CustomBar({
           onClick={() =>
             handleGraphClick({ graph: 'realtime', selectedIndex: index })
           }
-          style={{ cursor: 'pointer' }}
         />
       )}
     </g>

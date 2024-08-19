@@ -14,7 +14,7 @@ export default function ConfidenceResponseCard({
 
   return (
     <Box className={classes.centerContent}>
-      <Typography className={classes.headerText}>Confidence</Typography>
+      <Typography className={classes.headerText}>Confidence Meter</Typography>
       <Typography className={classes.infoText}>
         Players are asked how sure they are of their answer for this question.
       </Typography>

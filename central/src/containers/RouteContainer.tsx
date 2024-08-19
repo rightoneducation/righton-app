@@ -12,9 +12,11 @@ import {
   IAPIClients,
   IGameTemplate,
   IQuestionTemplate,
+  AWSGameTemplate,
   CreateGameTemplateInput,
   CreateQuestionTemplateInput,
-  isNullOrUndefined
+  isNullOrUndefined,
+  IQuestionTemplateOrder
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game } from '../API';
@@ -200,9 +202,11 @@ export const RouteContainer = ({
     let backendGame;
     // seperate out questionTemplates from gameTemplate object
     const {questionTemplates, ...rest} = updatedGame;
-    const gameTemplateUpdate = rest as IGameTemplate; 
-    const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()}
-    gameTemplateUpdateInput.questionTemplatesCount = gameTemplateUpdateInput.questionTemplates?.length ?? 0;
+    const gameTemplateUpdate = rest as IGameTemplate;
+    const awsGameTemplateUpdate = {...gameTemplateUpdate, questionTemplatesOrder: JSON.stringify(gameTemplateUpdate.questionTemplatesOrder)}  as AWSGameTemplate; 
+    const gameTemplateUpdateInput = {...awsGameTemplateUpdate, createdAt: awsGameTemplateUpdate.createdAt?.toString(), updatedAt: awsGameTemplateUpdate.updatedAt?.toString()}
+    gameTemplateUpdateInput.questionTemplatesCount = questionTemplates?.length ?? 0;
+
     if (isNullOrUndefined(existingGame))
     {
       backendGame = await createNewGameTemplate(gameTemplateUpdateInput);
@@ -213,17 +217,17 @@ export const RouteContainer = ({
     if (!isNullOrUndefined(updatedGame.questionTemplates) && updatedGame.questionTemplates.length > 0) {
       const newQuestionTemplates = updatedGame.questionTemplates.map((updatedQuestion) => {
         if (updatedQuestion.gameQuestionId === null)  {
-          handleCreateQuestionTemplate(updatedQuestion.questionTemplate);
+          return handleCreateQuestionTemplate(updatedQuestion.questionTemplate);
         }
       });
-      const newQuestions = await Promise.all(newQuestionTemplates);
+      await Promise.all(newQuestionTemplates);
       
       const newGameQuestionRequests = updatedGame.questionTemplates.map((question) => {
         if (question.gameQuestionId === null){ 
-          handleCreateGameQuestion(updatedGame.id, question.questionTemplate.id);
+          return handleCreateGameQuestion(updatedGame.id, question.questionTemplate.id);
         }
       });
-      const newGameQuestions = await Promise.all(newGameQuestionRequests);
+      Promise.all(newGameQuestionRequests);
       if (!isNullOrUndefined(existingGame) && !isNullOrUndefined(existingGame.questionTemplates)){
         // find question templates that were deleted (if gameQuestionId is present in existing but not in updated)
         const questionTemplatesToDelete = existingGame.questionTemplates.filter((existingQuestion) => {
@@ -231,9 +235,9 @@ export const RouteContainer = ({
               updatedQuestion.gameQuestionId === existingQuestion.gameQuestionId);
         });
         const newDeletedGameQuestionTemplates = questionTemplatesToDelete.map((question) => {
-          handleDeleteGameQuestion(question.gameQuestionId);
+          return handleDeleteGameQuestion(question.gameQuestionId);
         });
-        const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
+        await Promise.all(newDeletedGameQuestionTemplates);
       }
     }
     listQuerySettings.nextToken = null;
@@ -243,13 +247,15 @@ export const RouteContainer = ({
   };
 
     // update existing game template with changes from game maker
-    const editGameTemplate = async (newGame: { id: string, owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string, questionTemplates?: IQuestionTemplate[] }, questionIDSet: number[]) => {
+    const editGameTemplate = async (newGame: { id: string, owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string, questionTemplates?: IQuestionTemplate[], questionTemplatesOrder?: IQuestionTemplateOrder[] }, questionIDSet: number[]) => {
       setLoading(true);
       try {
         const {questionTemplates, ...rest} = newGame;
-        const gameTemplateUpdate = rest; 
+        const gameTemplateUpdate = rest as IGameTemplate;
+        const awsGameTemplateUpdate = {...gameTemplateUpdate, questionTemplatesOrder: JSON.stringify(gameTemplateUpdate.questionTemplatesOrder)}  as AWSGameTemplate; 
+        const gameTemplateUpdateInput = {...awsGameTemplateUpdate, createdAt: awsGameTemplateUpdate.createdAt?.toString(), updatedAt: awsGameTemplateUpdate.updatedAt?.toString()}
         const questionTemplatesUpdate = questionTemplates;
-        const game = await updateGameTemplate(apiClients, gameTemplateUpdate);
+        const game = await updateGameTemplate(apiClients, gameTemplateUpdateInput);
           
         if (game) {
           // ~~~~ add questions to game ~~~~~~ using , questionIDSet
@@ -364,8 +370,9 @@ export const RouteContainer = ({
         result.questionTemplate.gameTemplates.length >= 0
       ) {
         const {questionTemplates, ...restGame} = result.gameTemplate;
-        const gameTemplateUpdate = {...restGame, questionTemplatesCount: questionTemplates.length}; 
-        const gameTemplateUpdateInput = {...gameTemplateUpdate, createdAt: gameTemplateUpdate.createdAt?.toString(), updatedAt: gameTemplateUpdate.updatedAt?.toString()};
+        const awsGameTemplateUpdate = {...restGame, questionTemplatesOrder: JSON.stringify(restGame.questionTemplatesOrder)}  as AWSGameTemplate; 
+        const gameTemplateUpdateInput = {...awsGameTemplateUpdate, createdAt: awsGameTemplateUpdate.createdAt?.toString(), updatedAt: awsGameTemplateUpdate.updatedAt?.toString()}
+
         const {gameTemplates, ...restQuestion} = result.questionTemplate;
         const questionTemplateUpdate = {...restQuestion, gameTemplatesCount: gameTemplates.length};
         const questionTemplateUpdateInput = {...questionTemplateUpdate, createdAt: questionTemplateUpdate.createdAt?.toString(), updatedAt: questionTemplateUpdate.updatedAt?.toString()};

@@ -4,6 +4,12 @@
 export const StorageKey = 'rightOn';
 export const featuredMistakesSelectionValue = 'A';
 
+export enum ScreenSize {
+  SMALL,
+  MEDIUM,
+  LARGE
+}
+
 export interface LocalModel {
   hasRejoined: boolean;
   currentTimer: number;
@@ -36,5 +42,11 @@ export interface ShortAnswerResponse {
 export interface Mistake {
   answer: string;
   percent: number;
-  isSelected: boolean;
+  isSelectedMistake: boolean;
+}
+
+
+export interface IGraphClickInfo {
+  graph: string | null;
+  selectedIndex: number | null;
 }

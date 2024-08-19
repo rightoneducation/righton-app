@@ -31,6 +31,7 @@ type GameTemplate @model{
   imageUrl: String
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions") 
   questionTemplatesCount: Int! @default(value: "0")
+  questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
   type: String @default(value: "GameTemplate") @index(name: "gameTemplatesByDate", queryField: "gameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "gameTemplatesByGrade", queryField: "gameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "gameTemplatesByQuestionTemplatesCount", queryField: "gameTemplatesByQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
@@ -72,7 +73,7 @@ input QuestionTemplateInput {
 type GameSession @model {
   id: ID!
   gameId: ID!
-  startTime: AWSDateTime
+  startTime: String
   phaseOneTime: Int!
   phaseTwoTime: Int!
   teams: [Team] @hasMany
@@ -93,11 +94,9 @@ enum GameSessionState {
   TEAMS_JOINING
   CHOOSE_CORRECT_ANSWER
   PHASE_1_DISCUSS
-  PHASE_1_RESULTS
   PHASE_2_START
   CHOOSE_TRICKIEST_ANSWER
   PHASE_2_DISCUSS
-  PHASE_2_RESULTS
   FINAL_RESULTS
   FINISHED
 }
@@ -119,7 +118,7 @@ type Question @model(subscriptions: null, timestamps: null) {
   isConfidenceEnabled: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
   isHintEnabled: Boolean! @default(value: "true")
-  gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
+  gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["order"])
 }
 
 type Team @model {
@@ -149,6 +148,7 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
+  isCorrect: Boolean
   isSubmitted: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
   currentState: GameSessionState!

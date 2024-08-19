@@ -37,6 +37,7 @@ export class TeamAnswerAPIClient
       }
       const input: CreateTeamAnswerInput = {
           answer: JSON.stringify(inputAnswer.answer), 
+          isCorrect: inputAnswer.isCorrect,
           isSubmitted: inputAnswer.isSubmitted,
           isShortAnswerEnabled: inputAnswer.isShortAnswerEnabled,
           currentState: inputAnswer.currentState,
@@ -116,7 +117,6 @@ export class TeamAnswerAPIClient
     id: string,
     callback: (result: BackendAnswer) => void
   ) {
-    console.log("subscribeCreateTeamAnswer");
     return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>(
         {
             query: onCreateTeamAnswer,
@@ -126,8 +126,6 @@ export class TeamAnswerAPIClient
         },
         (value: OnCreateTeamAnswerSubscription) => {
             let teamAnswer = this.mapOnCreateTeamAnswerSubscription(value)
-            console.log("apiClient");
-            console.log(teamAnswer);
             callback(teamAnswer)
         }
     )
