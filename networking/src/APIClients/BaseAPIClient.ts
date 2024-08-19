@@ -63,9 +63,13 @@ export abstract class BaseAPIClient {
     //@ts-ignore
     return API.graphql(subscription).subscribe({
       next: (response: SubscriptionValue<T>) => {
+        console.log('baseapiclient');
         if (!isNullOrUndefined(response.value.errors)) {
           console.error(response.value.errors);
         }
+        console.log('baseapiclient');
+        console.log(response);
+        console.log(response.value.data);
         callback(response.value.data);
       },
       error: (error: any) => console.error(error),

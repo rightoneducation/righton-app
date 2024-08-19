@@ -11,6 +11,8 @@ export interface ITeamAPIClient {
 
   updateTeam(teamInput: UpdateTeamInput): Promise<ITeam>;
 
+  deleteTeam(teamId: string): Promise<ITeam>;
+
   subscribeDeleteTeam(
     id: string,
     callback: (result: ITeam) => void
@@ -19,6 +21,7 @@ export interface ITeamAPIClient {
   addTeamToGameSessionId(
     gameSessionId: string,
     name: string,
-    questionId: string | null
+    questionId: string | null,
+    selectedAvatarIndex: number,
   ): Promise<ITeam>;
 }

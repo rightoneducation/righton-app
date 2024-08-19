@@ -260,9 +260,9 @@ export default createTheme({
       color: primaryTextColor,
     },
     h2: {
-      // column titles
+      // launch game title
       fontWeight: '800',
-      fontSize: '20px',
+      fontSize: '72px',
       lineHeight: '30px',
       color: primaryTextColor,
     },

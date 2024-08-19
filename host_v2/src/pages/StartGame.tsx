@@ -16,6 +16,7 @@ interface StartGameProps {
   questions:IQuestion[]
   title: string
   gameCode: number
+  handleDeleteTeam: (id: string) => void;
 }  
 
 const BackgroundStyled = styled(Paper)({
@@ -41,11 +42,12 @@ function StartGame({teams,
   questions,
   title,
   gameCode,
+  handleDeleteTeam,
   }: StartGameProps) {
     return (
         <SafeAreaStyled>
           <HostHeader gameCode = {gameCode} />
-          <HostBody teams={teams}/>
+          <HostBody teams={teams} questions={questions} title={title} handleDeleteTeam={handleDeleteTeam}/>
           <FooterStartGame 
           teamsLength={teams ? teams.length : 0}
           />
