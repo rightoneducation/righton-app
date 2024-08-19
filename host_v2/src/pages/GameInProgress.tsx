@@ -7,6 +7,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
 import { HostTeamAnswersDispatchContext } from '../lib/context/HostTeamAnswersContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
+import { useAnimate, motion } from 'framer-motion';
 import GameStartingModal from '../components/GameStartingModal';
 import { ConfidenceOption, LocalModel, Mistake, ScreenSize } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
@@ -27,6 +28,12 @@ interface GameInProgressProps {
   hasRejoined: boolean,
   localModelMock: LocalModel,
   hostTeamAnswers: IHostTeamAnswers;
+  scope: any;
+  animate: any;
+  scope2: any;
+  animate2: any;
+  scope3: any;
+  animate3: any;
 }
 
 export default function GameInProgress({
@@ -37,6 +44,12 @@ export default function GameInProgress({
   hasRejoined,
   localModelMock,
   hostTeamAnswers,
+  scope,
+  animate,
+  scope2,
+  animate2,
+  scope3,
+  animate3
 }: GameInProgressProps) {
     const theme = useTheme();
     const [isAddTime, setIsAddTime] = useState<boolean>(false);
@@ -55,24 +68,26 @@ export default function GameInProgress({
     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const screenSize = isLargeScreen  // eslint-disable-line
-        ? ScreenSize.LARGE 
-        : isMediumScreen 
-          ? ScreenSize.MEDIUM 
+        ? ScreenSize.LARGE
+        : isMediumScreen
+          ? ScreenSize.MEDIUM
           : ScreenSize.SMALL;
     const totalTime = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? localGameSession.phaseOneTime : localGameSession.phaseTwoTime;
 
     return(
       <StackContainerStyled>
-      {isTimerVisible && 
+      {isTimerVisible &&
         <GameStartingModal isTimerVisible={isTimerVisible} setIsTimerVisible={setIsTimerVisible}/>
       }
       <HeaderBackgroundStyled />
+      <motion.div ref={scope2} >
       <HeaderContent
         isCorrect={isCorrect}
         isIncorrect={isIncorrect}
         totalTime={totalTime}
         isAddTime={isAddTime}
       />
+      </motion.div>
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
@@ -83,15 +98,24 @@ export default function GameInProgress({
           localGameSession={localGameSession}
           hostTeamAnswers={hostTeamAnswers}
           screenSize={screenSize}
+          scope={scope}
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled >
-        <FooterGameInProgress 
+      <motion.div ref={scope3} >
+        <FooterGameInProgress
           submittedAnswers={submittedAnswers}
-          teamsLength={localGameSession.teams.length} 
+          teamsLength={localGameSession.teams.length}
           currentState={localGameSession.currentState}
           screenSize={screenSize}
+          scope={scope}
+          animate={animate}
+          scope2={scope2}
+          animate2={animate2}
+          scope3={scope3}
+          animate3={animate3}
         />
+        </motion.div>
       </FooterBackgroundStyled>
     </StackContainerStyled>
   );

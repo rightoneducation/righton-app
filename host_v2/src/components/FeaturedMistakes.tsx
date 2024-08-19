@@ -22,7 +22,6 @@ const BackgroundStyled = styled(Paper)({
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '24px',
-  padding: `16px`,
   backgroundColor: 'rgba(0,0,0,0)',
   gap: 16,
 });
@@ -34,6 +33,7 @@ const TitleStyled = styled(Typography)({
   fontSize: '24px',
   fontWeight: 700,
   width: '100%',
+  lineHeight: '36px',
 });
 
 const SubtitleStyled = styled(Typography)({
