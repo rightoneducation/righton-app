@@ -1,7 +1,8 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Tooltip } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import GameCode from './GameCode';
+import HelpModal from './HelpModal';
 import { ReactComponent as HelpIcon } from '../images/Help.svg';
 import { ReactComponent as CloseIcon } from '../images/Close.svg';
 
@@ -57,24 +58,69 @@ const CloseSvg = styled(CloseIcon)({
   cursor: 'pointer', 
 });
 
-const handleHelpClick = () => {
-  console.log("Help Icon clicked");
-};
-
-const handleCloseClick = () => {
-  console.log("Close Icon clicked");
-};
-
-
 function HostHeader({ gameCode }: HostHeaderProps) {
   const theme = useTheme();
+  const [isHelpDisplayed, setIsHelpDisplayed] = useState<boolean>(false);
+  const handleHelpClick = () => {
+    setIsHelpDisplayed(true);
+  };
+  
+  const handleCloseClick = () => {
+    window.location.href = 'http://dev-central.rightoneducation.com/';
+  };
   return (
     <UpperStyled>
+        {isHelpDisplayed && 
+        <HelpModal isHelpDisplayed={isHelpDisplayed} setIsHelpDisplayed={setIsHelpDisplayed}/>
+      }
       <TopLineStyled>
-        <GameLobbyTypographyStyled>Game Lobby </GameLobbyTypographyStyled>
+        <Box>
+          <Typography variant="body1" style={{fontSize: 10, color: 'white'}}>Q A Version 1.0</Typography>
+          <GameLobbyTypographyStyled>Game Lobby </GameLobbyTypographyStyled> 
+        </Box>
         <IconsContainer>
+        <Tooltip
+              title="Help"
+              placement="top"
+              arrow
+              enterTouchDelay={0}
+              leaveTouchDelay={300}
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: 'offset',
+                      options: {
+                        offset: [0, -12],
+                      },
+                    },
+                  ],
+                },
+              }}
+            >
           <HelpSvg onClick={handleHelpClick}/>
+        </Tooltip>
+        <Tooltip
+              title="Return to Central"
+              placement="top"
+              arrow
+              enterTouchDelay={0}
+              leaveTouchDelay={300}
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: 'offset',
+                      options: {
+                        offset: [0, -12],
+                      },
+                    },
+                  ],
+                },
+              }}
+            >
           <CloseSvg onClick={handleCloseClick}/>
+        </Tooltip>
         </IconsContainer>
       </TopLineStyled>
       <GameCode gameCode={gameCode} />

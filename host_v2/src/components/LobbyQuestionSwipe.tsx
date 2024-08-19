@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { IQuestion } from '@righton/networking';
 import QuestionCard from './QuestionCard';
 import TitleQuestionCard from './TitleQuestionCard';
-import { StartGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
+import { StartEndGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
 
 interface QuestionListProps {
   questions: IQuestion[];
@@ -15,9 +15,8 @@ interface QuestionListProps {
 }
 
 const BoxStyled = styled(Box)({
-  width: '90%',
+  width: '100%',
   boxSizing: 'border-box',
-  margin: 'auto',
 });
 
 export default function QuestionList({ questions, title }: QuestionListProps) {
@@ -25,7 +24,7 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
   const { t } = useTranslation();
 
   return (
-    <StartGameScrollBoxStyled>
+    <StartEndGameScrollBoxStyled>
         <BoxStyled key={uuidv4()}>
           <Box
             sx={{
@@ -34,7 +33,7 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
               width: '100%',
             }}
           >
-        <TitleQuestionCard title ={title} questions={questions}/>          
+          <TitleQuestionCard title ={title} questions={questions}/>          
         </Box>
         </BoxStyled>
       {questions.map((question, index) => (
@@ -53,6 +52,6 @@ export default function QuestionList({ questions, title }: QuestionListProps) {
           </Box>
         </BoxStyled>
       ))}
-    </StartGameScrollBoxStyled>
+    </StartEndGameScrollBoxStyled>
   );
 }

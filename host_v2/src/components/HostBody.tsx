@@ -14,25 +14,11 @@ import {
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const BodyStyled = styled(Box)(({theme}) => ({
-  position: 'absolute',
-  top: '0',
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-  maxWidth: `${theme.breakpoints.values.md})px`,
-  width: '100%',
-  height: '100%',
-  overflow: 'hidden',
-  zIndex: 2,
-  paddingTop: `${theme.sizing.mdPadding}px`,
-}));
-
  const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: `${theme.breakpoints.values.lg}px`,
+  maxWidth: `200px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',
@@ -46,6 +32,7 @@ const BodyContentAreaSingleColumnStyled = styled(
 )(({ theme }) => ({
   justifyContent: 'center',
   maxWidth: `${theme.breakpoints.values.md}px`,
+  flexGrow: 1,
 }));
 
 interface HostBodyProps {
@@ -54,7 +41,6 @@ interface HostBodyProps {
   title: string, 
   currentQuestionIndex: number, 
   screenSize: ScreenSize
-  handleDeleteTeam: (id: string) => void, 
 }
 
 export default function HostBody({ 
@@ -63,7 +49,6 @@ export default function HostBody({
   title, 
   currentQuestionIndex, 
   screenSize,
-  handleDeleteTeam, 
 }: HostBodyProps) {
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
@@ -73,7 +58,7 @@ export default function HostBody({
         <BodyContentAreaSingleColumnStyled>
           <Swiper
                 modules={[Pagination]}
-                slidesPerView={1.1}
+                slidesPerView='auto'
                 pagination={{
                   el: '.swiper-pagination-container',
                   bulletClass: 'swiper-pagination-bullet',
@@ -84,11 +69,13 @@ export default function HostBody({
                   },
                 }}
                 ref={swiperRef}
+                spaceBetween={`${theme.sizing.mdPadding}px`}
+                style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
               > 
-            <SwiperSlide style={{width: '100%', height: '100%' }}>
-              {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
+            <SwiperSlide style={{width: '100%', height: '100%'}}>
+              {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex}/>}
             </SwiperSlide>
-            <SwiperSlide style={{width: '100%', height: '100%' }}>
+            <SwiperSlide style={{width: '100%', height: '100%'  }}>
               <QuestionList questions={questions} title ={title}/> 
             </SwiperSlide>
           </Swiper>
@@ -97,11 +84,11 @@ export default function HostBody({
     case ScreenSize.LARGE:
       default:
         return (
-          <StartGameContentAreaDoubleColumnStyled container>
-            <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
+          <StartGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+            <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
+                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
-            <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
+            <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
               <QuestionList questions={questions} title ={title}/> 
             </Grid>
           </StartGameContentAreaDoubleColumnStyled>

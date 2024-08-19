@@ -18,6 +18,7 @@ interface HeaderContentProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
+  isAddTime?: boolean;
   handleTimerIsFinished: () => void;
   isCorrect: boolean;
   isIncorrect: boolean;
@@ -29,6 +30,7 @@ export default function HeaderContent({
   currentTimer,
   isPaused,
   isFinished,
+  isAddTime,
   handleTimerIsFinished,
   isCorrect,
   isIncorrect,
@@ -77,6 +79,7 @@ export default function HeaderContent({
           currentTimer={currentTimer}
           isFinished={isFinished}
           isPaused={isPaused}
+          isAddTime={isAddTime}
           handleTimerIsFinished={handleTimerIsFinished}
         />
       ) }

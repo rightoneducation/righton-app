@@ -12,8 +12,6 @@ export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme, isShortA
   height: '100%',
   overflow: 'hidden',
   paddingTop: `${theme.sizing.mdPadding}px`,
-  paddingLeft: `${theme.sizing.mdPadding}px`,
-  paddingRight: `${theme.sizing.mdPadding}px`,
   zIndex: 2,
 }));
 
@@ -31,6 +29,7 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   overflow: 'hidden',
   zIndex: 2,
   paddingTop: `${theme.sizing.mdPadding}px`,
+
 }));
 
 // content area of body that floats above background layers above - Single Column Page
@@ -38,7 +37,10 @@ export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled,
 )(({ theme }) => ({
   justifyContent: 'center',
-  maxWidth: `${theme.breakpoints.values.md})px`,
+  maxWidth: `${theme.breakpoints.values.md}px`,
+  flexGrow: 1,
+  paddingLeft: `0px`,
+  paddingRight: `0px`,
 }));
 
 // content area of body that floats above background layers above - Phase Results Page

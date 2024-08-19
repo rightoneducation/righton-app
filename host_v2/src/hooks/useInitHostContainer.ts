@@ -1,5 +1,5 @@
 import { useState, useEffect, useReducer } from 'react';
-import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient, ITeam } from '@righton/networking';
+import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient, ITeam, GameSessionState } from '@righton/networking';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
 import { HostTeamAnswersReducer } from '../lib/reducer/HostTeamAnswersReducer';
 
@@ -7,6 +7,7 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
   const [gameSession, dispatch] = useReducer(GameSessionReducer, null);
   const [hostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer ,null);
+  console.log(gameSession?.teams);
   useEffect(() => {
     try {
       dataManager.init(gameSessionId).then(() => {
@@ -23,6 +24,7 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
 
       dataManager.subscribeToCreateTeam((updatedGameSession: IGameSession | null) => {
         if (updatedGameSession) {
+          console.log('updatedGameSession', updatedGameSession);
           dispatch({
             type: 'synch_local_gameSession',
             payload: { ...updatedGameSession }

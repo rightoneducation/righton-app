@@ -93,8 +93,7 @@ function FooterGameInProgress({
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
   const handleButtonClick = async () => {
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    console.log('nextState');
-    console.log(nextState);
+    const startTime = Date.now(); 
     switch (nextState) {
       case GameSessionState.FINAL_RESULTS:{
         const animations = () => {
@@ -113,15 +112,13 @@ function FooterGameInProgress({
       default:
         break;
     }
-    const currentTimeMillis = Date.now().toString();
     if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
-      apiClients?.hostDataManager?.updateTime(Date.now());
     }
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: currentTimeMillis});
-    dispatch({type: 'advance_game_phase', payload: {nextState}});
- };
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: startTime.toString()});
+    dispatch({type: 'advance_game_phase', payload: {nextState, startTime}});
+  };
   const GetButtonText = () => {
     switch(currentState) {
       case GameSessionState.CHOOSE_CORRECT_ANSWER:
@@ -140,7 +137,7 @@ function FooterGameInProgress({
   return (
     <FooterContainer>
       <InnerFooterContainer>
-        { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && isShortAnswerEnabled)) && (
+        { (screenSize === ScreenSize.SMALL || (screenSize === ScreenSize.MEDIUM && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS))) && (
           <PaginationContainerStyled
             className="swiper-pagination-container"
             style={{ paddingTop: `${theme.sizing.xxSmPadding}px`, zIndex: 2 }}

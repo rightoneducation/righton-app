@@ -40,7 +40,6 @@ const ButtonStyled = styled(Button, {
     boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
   },
   animation: isAnimating ? 'gradientAnimation 2s ease-in-out' : 'none',
-
   '@keyframes gradientAnimation': {
     '0%': { backgroundPosition: '100% 50%' },  // Start with the light part on the right
     '50%': { backgroundPosition: '0% 50%' },   // Move the light part to the left
@@ -54,7 +53,6 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  bottom: '0',
   width: '100%',
   gap: '16px',
   height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
@@ -99,6 +97,7 @@ function FooterStartGame({
         (localGameSession.currentQuestionIndex === null)
           ? 'Start Game' 
           : 'Next Question';
+        break;
       case GameSessionState.FINAL_RESULTS:
         return 'End Game';
       default:

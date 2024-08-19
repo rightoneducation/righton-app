@@ -20,7 +20,6 @@ interface EndGameLobbyProps {
   teams: ITeam[]
   gameCode: number,
   currentQuestionIndex: number,
-  handleDeleteTeam: (id: string) => void;
 }  
 
 const BackgroundStyled = styled(Paper)({
@@ -46,7 +45,6 @@ function EndGameLobby({teams,
   gameTemplates,
   gameCode,
   currentQuestionIndex,
-  handleDeleteTeam,
   }: EndGameLobbyProps) {
     const theme = useTheme();
     const [selectedSuggestedGame, setSelectedSuggestedGame] = useState<string | null>(null);
@@ -86,7 +84,10 @@ function EndGameLobby({teams,
     }
 
     return (
-      <SafeAreaStyled>
+      <SafeAreaStyled style={{ 
+        paddingLeft: `${theme.sizing.xLgPadding}px`,
+        paddingRight: `${theme.sizing.xLgPadding}px`
+        }}>
         <EndGameHeader gameCode = {gameCode} />
         <EndGameBody 
           screenSize={screenSize} 
@@ -95,7 +96,6 @@ function EndGameLobby({teams,
           selectedSuggestedGame={selectedSuggestedGame} 
           setSelectedSuggestedGame={setSelectedSuggestedGame} 
           currentQuestionIndex={currentQuestionIndex} 
-          handleDeleteTeam={handleDeleteTeam}
           searchText={searchText}
           handleUpdateSearchText={handleUpdateSearchText}
         />

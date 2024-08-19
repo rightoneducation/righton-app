@@ -19,7 +19,6 @@ interface InterimLeaderboardProps {
   questions:IQuestion[];
   currentQuestionIndex: number;
   title: string;
-  handleDeleteTeam: (id: string) => void, 
   scope: any;
   animate: any;
 }
@@ -54,7 +53,6 @@ export default function InterimLeaderboard({
  questions,
  currentQuestionIndex,
  title,
- handleDeleteTeam,
  scope,
  animate
 }: InterimLeaderboardProps) {
@@ -87,7 +85,6 @@ export default function InterimLeaderboard({
         title={title} 
         currentQuestionIndex={currentQuestionIndex}
         screenSize={screenSize}
-        handleDeleteTeam={handleDeleteTeam}
       />
       </motion.div>
       <Box style={{bottom: '0', marginTop: 'auto'}}>

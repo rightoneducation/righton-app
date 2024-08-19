@@ -11,6 +11,5 @@ export default styled(Paper)(({ theme }) => ({
   alignSelf: 'stretch',
   backgroundColor: theme.palette.primary.darkBlueCardColor,
   borderRadius: `${theme.sizing.mdPadding}px`,
-  boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
-  margin: `${theme.sizing.xSmPadding}px`,
+  boxShadow: '0px 4px 10px 0px rgba(15, 27, 40, 0.45)',
 }));

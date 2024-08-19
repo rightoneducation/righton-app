@@ -11,8 +11,7 @@ const StyledContainer = styled(Paper)(({theme})=>({
   alignSelf: 'stretch',
   backgroundColor: theme.palette.primary.darkBlueCardColor,
   borderRadius: `${theme.sizing.mdPadding}px`,
-  boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
-  margin: `${theme.sizing.xSmPadding}px`,
+  boxShadow: '0px 4px 10px 0px rgba(15, 27, 40, 0.45)',
 }));
 
 const TitleContainer = styled(Box)({
@@ -67,7 +66,7 @@ export default function EnableConfidenceCard({
   return (
     <StyledContainer>
       <TitleContainer>
-        <TitleTypography>Confidence Meter</TitleTypography>
+        <TitleTypography>Confidence</TitleTypography>
         <ConfidenceSwitch
           checked={isConfidenceEnabled}
           onChange={() => setIsConfidenceEnabled(!isConfidenceEnabled)}

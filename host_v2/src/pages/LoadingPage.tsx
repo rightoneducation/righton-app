@@ -14,7 +14,8 @@ export default function LaunchContainer() {
           sx={{
             position: 'absolute',
             textAlign: 'center',
-            zIndex: 2
+            zIndex: 2,
+            lineHeight: '1',
           }}
         > 
           Launching Game...

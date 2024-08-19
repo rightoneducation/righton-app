@@ -2,15 +2,19 @@ import React from 'react';
 import { Grid, Typography, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import { ITeam, ModelHelper } from '@righton/networking';
-import { StartGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
+import { ITeam, ModelHelper, IGameSession } from '@righton/networking';
+import { StartEndGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { GameSessionDispatchContext } from '../lib/context/GameSessionContext';
+import { useTSDispatchContext } from '../hooks/context/useGameSessionContext';
+
 import CloseIcon from '../images/Close.svg';
 import MonsterIcon from './MonsterIcon';
 
 interface CurrentStudentProps {
   teams: ITeam[];
   currentQuestionIndex: number;
-  handleDeleteTeam: (id: string) => void;
 }
 
 const GridStyled = styled(Grid)({
@@ -34,6 +38,7 @@ const CloseSvg = styled('img')({
 });
 
 const MenuItemStyled = styled(Box)({
+  width: '100%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-start',
@@ -43,6 +48,7 @@ const MenuItemStyled = styled(Box)({
   padding: '4px',
   paddingLeft: '8px',
   gap: '4px',
+  boxSizing: 'border-box',
 });
 
 const GridNameStyled = styled(Grid)({
@@ -61,14 +67,25 @@ const BoxStyled = styled(Box)({
   padding: '16px 12px 16px 12px',
 });
 
-function CurrentStudents({ teams, currentQuestionIndex, handleDeleteTeam }: CurrentStudentProps) {
+function CurrentStudents({ teams, currentQuestionIndex }: CurrentStudentProps) {
   const theme = useTheme();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const dispatch = useTSDispatchContext(GameSessionDispatchContext);
   const sortedTeams = currentQuestionIndex === null 
     ? [...teams].sort((a, b) => a.name.localeCompare(b.name))
     : ModelHelper.teamSorter(teams, teams.length);
 
+  const handleDeleteTeam = (teamId: string) => {
+    console.log(teams);
+    console.log(teamId);
+    const updatedTeams = teams.filter((team) => team.id !== teamId);
+    console.log(updatedTeams);
+    dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
+    apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
+  };
+    
   return (
-    <StartGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%', paddingLeft: `${theme.sizing.mdPadding}px`}}>
+    <StartEndGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%', width: '100%'}}>
         {sortedTeams && sortedTeams.map((team) => (
           <MenuItemStyled key={uuidv4()}>
             <MonsterIcon index={team.selectedAvatarIndex} />
@@ -83,7 +100,7 @@ function CurrentStudents({ teams, currentQuestionIndex, handleDeleteTeam }: Curr
             </Box>
           </MenuItemStyled>
         ))}
-    </StartGameScrollBoxStyled>
+    </StartEndGameScrollBoxStyled>
   );
 }
 

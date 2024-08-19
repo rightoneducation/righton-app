@@ -8,7 +8,7 @@ import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
 import HostPlayerIconContainer from '../lib/styledcomponents/HostPlayerIconContainer';
 import Timer from './Timer';
-import TimerAddButton from '../lib/styledcomponents/TimerAddButton';
+
 import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
 import { GameSessionContext } from '../lib/context/GameSessionContext';
 
@@ -17,10 +17,6 @@ interface HeaderContentProps {
   isCorrect: boolean;
   isIncorrect: boolean;
   totalTime: number;
-  currentTimer: number;
-  isPaused: boolean;
-  isFinished: boolean;
-  handleAddTime?: () => void;
   isAddTime?: boolean;
 } // eslint-disable-line
 
@@ -28,10 +24,6 @@ export default function HeaderContent({
   isCorrect,
   isIncorrect,
   totalTime,
-  currentTimer,
-  isPaused,
-  isFinished,
-  handleAddTime,
   isAddTime,
 }: HeaderContentProps) {
   const theme = useTheme(); // eslint-disable-line
@@ -94,20 +86,13 @@ export default function HeaderContent({
             {stateCheck(localGameSession.currentState, isCorrect, isIncorrect)}
           </Typography>
         </Grid>
-        <Grid item style={{display: 'flex', justifyItems: 'space-between', alignItems: 'center', gap: '24px', paddingTop: `${theme.sizing.xSmPadding}px`}}>
+        <Grid item style={{paddingTop: `${theme.sizing.xSmPadding}px`}}>
               <Timer
                 totalTime={totalTime}
-                currentTimer={currentTimer}
-                isFinished={isFinished}
-                isPaused={isPaused}
                 isAddTime={isAddTime}
                 localGameSession={localGameSession}
               />
-            <TimerAddButton onClick={handleAddTime} disabled={currentTimer <= 0}>
-              <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
-                {t('gamesession.addtime')}
-              </Typography>
-            </TimerAddButton>
+        
         </Grid>
       </Container>
     </HeaderStackContainerStyled>

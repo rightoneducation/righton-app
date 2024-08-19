@@ -12,14 +12,27 @@ import { EndGameContentAreaDoubleColumnStyled } from '../../lib/styledcomponents
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const BodyStyled = styled(Box)({
-    paddingLeft: '28px',
-    paddingRight: '32px',
-    overflowY: 'scroll', // Enable vertical scrolling if needed
-    flexGrow: 1,
-    scrollbarWidth: 'none',
-    justifyContent: 'center',
-});
+const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  maxWidth: `${theme.breakpoints.values.md}px`,
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  zIndex: 2,
+  paddingTop: `${theme.sizing.mdPadding}px`,
+}));
+
+// content area of body that floats above background layers above - Single Column Page
+const BodyContentAreaSingleColumnStyled = styled(
+  BodyContentAreaDoubleColumnStyled,
+)(({ theme }) => ({
+  justifyContent: 'center',
+  maxWidth: `${theme.breakpoints.values.md}px`,
+  flexGrow: 1,
+  overflow: 'auto',
+}));
 
 interface GameEndedHostBodyProps{
   selectedSuggestedGame: string | null;
@@ -28,7 +41,6 @@ interface GameEndedHostBodyProps{
   gameTemplates: IGameTemplate[];
   currentQuestionIndex: number;
   screenSize: ScreenSize;
-  handleDeleteTeam: (id: string) => void;
   searchText: string;
   handleUpdateSearchText: (value: string) => void;
 }
@@ -40,7 +52,6 @@ export default function GameEndedHostBody({
   gameTemplates, 
   currentQuestionIndex, 
   screenSize, 
-  handleDeleteTeam,
   searchText,
   handleUpdateSearchText
 }: GameEndedHostBodyProps ) {
@@ -49,7 +60,7 @@ export default function GameEndedHostBody({
     switch(screenSize){
       case ScreenSize.SMALL:
         return (
-          <BodyStyled>
+          <BodyContentAreaSingleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             <Swiper
               modules={[Pagination]}
               slidesPerView="auto"
@@ -62,26 +73,27 @@ export default function GameEndedHostBody({
                   return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
                 },
               }}
-              style={{display: 'flex', alignItems:'center', justifyContent: 'center', marginRight: '0px',boxSizing: 'border-box',}}
               ref={swiperRef}
+              spaceBetween={`${theme.sizing.mdPadding}px`}
+              style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
             > 
-              <SwiperSlide style={{ alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', marginRight: '0px', boxSizing: 'border-box'}}>
-                {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
+              <SwiperSlide style={{width: '100%', height: '100%'}}>
+                {teams.length === 0 ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
               </SwiperSlide>
-              <SwiperSlide>
+              <SwiperSlide style={{width: '100%', height: '100%'}}>
                 <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
               </SwiperSlide>
             </Swiper>
-          </BodyStyled>
+          </BodyContentAreaSingleColumnStyled>
         );
       case ScreenSize.LARGE || ScreenSize.MEDIUM:
       default:
         return (
-          <EndGameContentAreaDoubleColumnStyled container>
-            <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
-                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} handleDeleteTeam={handleDeleteTeam}/>}
+          <EndGameContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+            <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
+                {teams.length === 0 || !teams ? <NoPlayersLobby /> : <CurrentStudents teams={teams} currentQuestionIndex={currentQuestionIndex} />}
             </Grid>
-            <Grid item xs={12} sm sx={{ width: '100%', height: '100%', paddingLeft: `${theme.sizing.mdPadding}px` }}>
+            <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
                <SuggestedGames gameTemplates={gameTemplates} teams={teams} selectedSuggestedGame={selectedSuggestedGame} setSelectedSuggestedGame={setSelectedSuggestedGame} searchText={searchText} handleUpdateSearchText={handleUpdateSearchText}/>
             </Grid>
           </EndGameContentAreaDoubleColumnStyled>

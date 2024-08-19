@@ -6,7 +6,7 @@ export const EndGameContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => 
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  maxWidth: `${theme.breakpoints.values.lg}px`,
+  maxWidth: `${theme.breakpoints.values.md}px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',

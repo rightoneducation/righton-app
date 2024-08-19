@@ -105,6 +105,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team');
         return;
       }
+      console.log(this.getGameSession());
       const newGameSession = { ...this.gameSession as IGameSession };
       newGameSession.teams.push(team);
       this.gameSession = newGameSession;
@@ -116,6 +117,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (this.gameSession && this.gameSessionId && this.gameSession.startTime){
       try {  
         await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, startTime: newTime.toString()}).then((gameSession: IGameSession) => {
+          console.log(newTime);
+          console.log(gameSession);
           this.gameSession = gameSession;
         });
       } catch (error) {
@@ -129,6 +132,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       await this.teamAPIClient.deleteTeam(teamId).then(() => {
         if (this.gameSession)
           this.gameSessionAPIClient.getGameSession(this.gameSession.id).then((gameSession: IGameSession) => {
+            this.gameSession = gameSession;
             callback(gameSession);
           });
     });
