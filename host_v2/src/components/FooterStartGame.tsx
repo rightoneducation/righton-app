@@ -10,7 +10,6 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { LocalGameSessionContext, LocalGameSessionDispatchContext } from '../lib/context/LocalGameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useLocalGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
-import { set } from 'lodash';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -23,7 +22,7 @@ const ButtonStyled = styled(Button)({
   fontWeight: '700',
   lineHeight: '30px',
   textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px #47D9FF 30%',
+  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
   '&:disabled': {
     background: '#032563',
     border: '2px solid #159EFA',
@@ -36,8 +35,7 @@ const ButtonStyled = styled(Button)({
     lineHeight: '30px',
     opacity: '100%',
     cursor: 'not-allowed',
-    boxShadow: '0px 5px 22px 0px #47D9FF 30%',
-
+    boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
   },
 });
 

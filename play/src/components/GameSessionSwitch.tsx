@@ -11,7 +11,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { Navigate } from 'react-router-dom';
 import PregameCountdown from '../pages/PregameCountdown';
 import GameInProgress from '../pages/GameInProgress';
-import PhaseResults from '../pages/PhaseResults';
 import FinalResultsContainer from '../containers/FinalResultsContainer';
 import StartPhase2 from '../pages/StartPhase2';
 import { LocalModel } from '../lib/PlayModels';
@@ -22,6 +21,7 @@ interface GameSessionSwitchProps {
   hasRejoined: boolean;
   gameSession: IGameSession;
   localModel: LocalModel;
+  newPoints: number;
 }
 
 export default function GameSessionSwitch({
@@ -30,6 +30,7 @@ export default function GameSessionSwitch({
   hasRejoined,
   gameSession,
   localModel,
+  newPoints,
 }: GameSessionSwitchProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(
     !hasRejoined
@@ -52,7 +53,12 @@ export default function GameSessionSwitch({
   (isShortAnswerEnabled
     ? currentQuestion?.responses?.reduce(
         (acc: IChoice[], response: IResponse) => {
-          const shouldAddResponse = (response.isSelectedMistake || response.isCorrect);
+          const shouldAddResponse = 
+            (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
+            currentState !== GameSessionState.PHASE_1_DISCUSS) 
+              ? (response.isSelectedMistake || response.isCorrect) 
+              : true;
+        
           if (shouldAddResponse) {
             acc.push({
               id: uuidv4(),
@@ -93,11 +99,10 @@ export default function GameSessionSwitch({
           localModel={localModel}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
+          gameSession={gameSession}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
-    case GameSessionState.PHASE_1_DISCUSS:
-    case GameSessionState.PHASE_2_DISCUSS:
       return (
         <GameInProgress
           {...gameSession}
@@ -113,10 +118,36 @@ export default function GameSessionSwitch({
           localModel={localModel}
           currentQuestionIndex={gameSession.currentQuestionIndex}
           isShortAnswerEnabled={isShortAnswerEnabled}
+          gameSession={gameSession}
         />
       );
+    case GameSessionState.PHASE_1_DISCUSS:
+    case GameSessionState.PHASE_2_DISCUSS:
+      return (
+        <GameInProgress
+          {...gameSession}
+          // adding a key here to trigger a rerender of the component, resetting backendAnswer after answering phases
+          key={uuidv4()}
+          apiClients={apiClients}
+          teamName={localModel.teamName}
+          teamMemberAnswersId={localModel.teamMemberAnswersId}
+          teamAvatar={localModel.selectedAvatar}
+          answerChoices={answerChoices}
+          teamId={localModel.teamId}
+          score={score}
+          hasRejoined={hasRejoined}
+          currentTimer={currentTimer}
+          localModel={localModel}
+          currentQuestionIndex={gameSession.currentQuestionIndex}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          gameSession={gameSession}
+          newPoints={newPoints}
+        />
+      );
+
     case GameSessionState.PHASE_2_START:
-      return <StartPhase2 />;
+      return <StartPhase2 /> 
+
     case GameSessionState.FINAL_RESULTS:
       return (
         <FinalResultsContainer

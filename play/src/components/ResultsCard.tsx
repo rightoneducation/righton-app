@@ -50,7 +50,9 @@ export default function CardResults({
               index={index}
               answerText={answer.text}
               percentageText={
-                 `${ModelHelper.calculateBasicModeWrongAnswerScore(
+                currentState === GameSessionState.PHASE_1_DISCUSS
+                  ? ''
+                  : `${ModelHelper.calculateBasicModeWrongAnswerScore(
                       gameSession,
                       answer.text,
                       currentQuestionId
@@ -58,6 +60,7 @@ export default function CardResults({
               }
               currentState={currentState}
               key={uuidv4()}
+              stars
             />
           ))}
         </Stack>
