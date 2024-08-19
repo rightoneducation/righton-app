@@ -38,7 +38,8 @@ export class APIClients {
   team: ITeamAPIClient;
   teamMember: ITeamMemberAPIClient;
   teamAnswer: ITeamAnswerAPIClient;
-  dataManager: IPlayDataManagerAPIClient | IHostDataManagerAPIClient;
+  hostDataManager?: IHostDataManagerAPIClient;
+  playDataManager?: IPlayDataManagerAPIClient;
 
   constructor(env: Environment, appType: AppType) {
     this.configAmplify(awsconfig);
@@ -50,27 +51,13 @@ export class APIClients {
     this.team = new TeamAPIClient(env);
     this.teamMember = new TeamMemberAPIClient(env);
     this.teamAnswer = new TeamAnswerAPIClient(env);
-    this.dataManager = this.setDataManager(env, appType);
-  }
-
-  setDataManager(env: Environment, appType: AppType) {
     if (appType === AppType.PLAY) {
-      return new PlayDataManagerAPIClient(
-        env,
-        this.gameSession,
-      );
+      this.playDataManager = new PlayDataManagerAPIClient(env, this.gameSession);
     } else {
-      return new HostDataManagerAPIClient(
-        env,
-        this.gameSession,
-        this.question,
-        this.team,
-        this.teamMember,
-        this.teamAnswer
-      );
+      this.hostDataManager = new HostDataManagerAPIClient(env, this.gameSession, this.question, this.team, this.teamMember, this.teamAnswer);
     }
   }
-  
+    
   configAmplify(awsconfig: any) {
     Amplify.configure(awsconfig);
   }

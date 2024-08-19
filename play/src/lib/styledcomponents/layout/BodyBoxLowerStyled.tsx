@@ -8,4 +8,5 @@ export default styled(Box)(({ theme }) => ({
   width: '100vw',
   backgroundColor: theme.palette.primary.main,
   zIndex: 0,
+  
 }));

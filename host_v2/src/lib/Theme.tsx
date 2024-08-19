@@ -18,6 +18,7 @@ const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
 const questionGradient =
   'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator
+const circularProgress = '#159EFA';
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
@@ -94,7 +95,7 @@ const labelOffsetResponses = 3;
 
 // victory theme object that we pass into the component to style the graph
 // see: https://commerce.nearform.com/open-source/victory/guides/themes
-const customVictoryTheme = {
+const customVictoryResponsesTheme = {
   axis: {
     style: {
       axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
@@ -135,6 +136,35 @@ const customVictoryTheme = {
     },
   },
 };
+
+const customVictoryConfidenceTheme = {
+  axis: {
+    style: {
+      axis: {
+        stroke: graphAccentColor,
+        strokeWidth: barStrokeWidth,
+      },
+      grid: { stroke: 'transparent' },
+      tickLabels: {
+        padding: xSmPadding,
+        fill: playerFeedbackLabelColor,
+        fontSize: '18px',
+      },
+    },
+  },
+  stack: {
+    colorScale: [ primaryTextColor, 'transparent'],
+    style: {
+      data: {
+        stroke: primaryTextColor,
+        strokeWidth: barStrokeWidth,
+      },
+    },
+  },
+  bar: {
+    barWidth: confidenceBarThickness,
+  },
+};
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
@@ -167,7 +197,7 @@ declare module '@mui/material/styles' {
       barThicknessZeroResponses: number;
       labelOffsetResponses: number;
     };
-    victoryTheme: {
+    victoryResponsesTheme: {
       axis: {
         style: {
           axis: { stroke: string; strokeWidth: number };
@@ -204,6 +234,39 @@ declare module '@mui/material/styles' {
         };
       };
     };
+    victoryConfidenceTheme: {
+      axis: {
+        style: {
+          axis: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          grid: { stroke: string };
+          tickLabels: {
+            padding: number;
+            fill: string;
+            fontSize: string;
+          },
+        },
+      },
+      stack: {
+        colorScale: string[];
+        style: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          },
+        },
+      },
+      bar: {
+        style: {
+          data: {
+            fill: string;
+          },
+        },
+        barWidth: number;
+      },
+    }
   }
 
   interface ThemeOptions {
@@ -235,7 +298,7 @@ declare module '@mui/material/styles' {
       barThicknessZeroResponses?: number;
       labelOffsetResponses?: number;
     };
-    victoryTheme?: {
+    victoryResponsesTheme?: {
       axis?: {
         style?: {
           axis?: { stroke: string; strokeWidth: number };
@@ -272,6 +335,39 @@ declare module '@mui/material/styles' {
         };
       };
     };
+    victoryConfidenceTheme?: {
+      axis?: {
+        style?: {
+          axis?: {
+            stroke: string;
+            strokeWidth: number;
+          };
+          grid?: { stroke: string };
+          tickLabels?: {
+            padding: number;
+            fill: string;
+            fontSize: string;
+          },
+        },
+      },
+      stack?: {
+        colorScale?: string[];
+        style?: {
+          data: {
+            stroke: string;
+            strokeWidth: number;
+          },
+        },
+      },
+      bar?: {
+        style?: {
+          data?: {
+            fill: string;
+          },
+        },
+        barWidth: number;
+      },
+    }
   }
 
   interface PaletteColor {
@@ -283,6 +379,7 @@ declare module '@mui/material/styles' {
     highlightGradient: string;
     altHighlightGradient: string;
     questionGradient: string;
+    circularProgress: string;
     red: string;
     green: string;
     darkPurple: string;
@@ -292,6 +389,7 @@ declare module '@mui/material/styles' {
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    baseQuestionColor: string;
     playerFeedbackLabelColor: string;
     feedbackCardsInstructionsColor: string;
     graphAccentColor: string;
@@ -312,6 +410,7 @@ declare module '@mui/material/styles' {
     highlightGradient?: string;
     altHighlightGradient?: string;
     questionGradient?: string;
+    circularProgress?: string;
     red?: string;
     green?: string;
     darkPurple?: string;
@@ -367,7 +466,8 @@ export default createTheme({
     barThicknessZeroResponses,
     labelOffsetResponses,
   },
-  victoryTheme: customVictoryTheme,
+  victoryResponsesTheme: customVictoryResponsesTheme,
+  victoryConfidenceTheme: customVictoryConfidenceTheme,
   palette: {
     primary: {
       main: mainColor,
@@ -379,6 +479,7 @@ export default createTheme({
       highlightGradient,
       altHighlightGradient,
       questionGradient,
+      circularProgress,
       red: redColor,
       green: greenColor,
       darkPurple: darkPurpleColor,

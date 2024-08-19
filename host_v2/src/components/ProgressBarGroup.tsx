@@ -26,15 +26,16 @@ const LabelTypography = styled(Typography)({
 });
 
 interface ProgressBarProps {
+  submittedAnswers: number;
   teamsLength: number;
 }
 
-function ProgressBarGroup({ teamsLength }: ProgressBarProps) {
+function ProgressBarGroup({ submittedAnswers, teamsLength }: ProgressBarProps) {
   const theme = useTheme();
   return (
     <PBContainer>
       <LabelTypography style={{color: theme.palette.primary.darkBlue}}>Players who have answered</LabelTypography>
-      <ProgressBar inputNum={15} totalNum={20}/>
+      <ProgressBar inputNum={submittedAnswers} totalNum={teamsLength}/>
     </PBContainer>
   );
 }

@@ -2,13 +2,12 @@ import { styled } from '@mui/material/styles';
 import { Container } from '@mui/material';
 
 // container for the Swiperjs pagination bullets
-export default styled(Container)(({ theme }) => ({
-  // height: '24px',
+export default styled('div')(({ theme }) => ({
+  height: `${theme.sizing.xSmPadding}px`,
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  padding: '8px',
   '--swiper-pagination-color': `${theme.palette.primary.highlightGradient}`,
   '--swiper-pagination-bullet-inactive-color': `${theme.palette.primary.darkGrey}`,
   '--swiper-pagination-bullet-inactive-opacity': '1',

@@ -1,5 +1,4 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
-import { Answer } from "./AnswerClasses";
 
 export interface IHostTeamAnswersResponse {
   normAnswer: number[] | string[];
@@ -8,18 +7,27 @@ export interface IHostTeamAnswersResponse {
   multiChoiceCharacter: string;
   isCorrect: boolean;
   teams: string[];
+  isSelectedMistake?: boolean;
+}
+
+export interface IHostTeamAnswersConfidenceResponse {
+  team: string;
+  rawAnswer: string;
 }
 
 export interface IHostTeamAnswersConfidence {
   level: ConfidenceLevel;
-  responses: {
-    team: string;
-    answer: Answer;
-    isCorrect: boolean;
-  }[]
+  label: string;
+  correct: IHostTeamAnswersConfidenceResponse[];
+  incorrect: IHostTeamAnswersConfidenceResponse[];
 }
 
 export interface IHostTeamAnswersHint {
+  rawHint: string;
+  team: string;
+}
+
+export interface IHostTeamAnswersGPTHint {
   themeText: string;
   teams: {
     name: string;
@@ -27,6 +35,20 @@ export interface IHostTeamAnswersHint {
   }[];
   teamCount: number;
 }
+
+export interface IHostTeamAnswersPerPhase {
+  responses: IHostTeamAnswersResponse[],
+  confidences?: IHostTeamAnswersConfidence[],
+  hints?: IHostTeamAnswersHint[],
+  gptHints?: IHostTeamAnswersGPTHint[] 
+}
+
+export interface IHostTeamAnswersQuestion {
+  questionId: string,
+  phase1: IHostTeamAnswersPerPhase,
+  phase2: IHostTeamAnswersPerPhase,
+}
+
 /* 
  * IHostTeamAnswers
  * Interface that types the answer object required for host to
@@ -36,15 +58,12 @@ export interface IHostTeamAnswersHint {
  * hints -> Hints
  */
 export interface IHostTeamAnswers {
-  questions: {
-    questionId: string,
-    phase1: {
-      responses: IHostTeamAnswersResponse[],
-      confidences: IHostTeamAnswersConfidence[],
-    },
-    phase2: {
-      responses: IHostTeamAnswersResponse[],
-      hints: IHostTeamAnswersHint[] 
-    },
-  }[]
+  questions: IHostTeamAnswersQuestion[]
 }
+
+
+export interface IGPTHints {
+  themeText: string,
+  teams: string[],
+  teamCount: number
+}[]
