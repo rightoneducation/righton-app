@@ -4,8 +4,8 @@ import { styled } from '@mui/material/styles';
 import littleButton from '../images/littleButton.svg'
 import gym from '../images/gym.svg'
 import heart from '../images/heart.svg';
-import viewbutton from '../images/viewbutton.svg';
-import launchbutton from '../images/launchbutton.svg';
+import eyeball from '../images/eyeball.svg';
+import rocket from '../images/rocket.svg';
 
 const LittleButtonSVG = styled('img')({
     cursor: 'pointer',
@@ -18,7 +18,7 @@ const GymSVG = styled('img')({
   });
 const HeartSVG = styled('img')({
     cursor: 'pointer',
-    // marginLeft: 'auto',
+    marginLeft: '4px',
 });
 const ViewSVG = styled('img')({
     cursor: 'pointer',
@@ -55,18 +55,21 @@ const GameCard = styled(Box)(() => ({
     justifyContent: 'space-between',
   }));
   const TitleTextTypography = styled(Typography)(() => ({
-    width: '100%', 
+    width: '100%',
     lineHeight: '30px',
     gap: '8px',
-    fontFamily: 'Poppins', // check this
+    fontFamily: 'Poppins',
     fontWeight: '700',
     fontSize: '20px',
     color: '#384466',
-    // display: 'flex',
-    // flexDirection: 'column',
+    display: '-webkit-box',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 1, // Limits to 1 line
   }));
   const TextAndImageBox = styled(Box)(() => ({
-    width: '50%', 
+    flex: 1, 
     height: '136px',
     gap: '8px',
     display: 'flex',
@@ -84,19 +87,23 @@ const GameCard = styled(Box)(() => ({
     width: '100%', 
     height: '24px',
     gap: '4px',
+    marginTop: '9px',
     display: 'flex',
     flexDirection: 'row',
   }));
   const DescriptionText = styled(Typography)(() => ({
-    width: '199px', 
-    height: '104px',
+    flex: 1,
+    height: 'auto',
     fontFamily: 'Rubik',
     fontWeight: '400',
     fontSize: '16px',
     lineHeight: '18.96px',
-    color: '384466',
-    // display: 'flex',
-    // flexDirection: 'column',
+    color: '#384466',
+    display: '-webkit-box',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 5,
   }));
   const BottomButtonBox = styled(Box)(() => ({
     width: '100%', 
@@ -127,10 +134,10 @@ const GameCard = styled(Box)(() => ({
     color: '#FFFFFF',
     textTransform: 'none',
     fontFamily: 'Rubik',
-    fontSize: '14px',
-    fontWeight: 400,
-    lineHeight: '16.59px',
-    textAlign: 'center',
+  fontSize: '14px',
+  fontWeight: 400,
+  lineHeight: '16.59px',
+  textAlign: 'center',
   }));
 
 
@@ -140,12 +147,12 @@ const GameCard = styled(Box)(() => ({
       <GameCard>
         <TextContainer>
             <TitleContainer>
-                <TitleTextTypography> Pumping Up: Percents...</TitleTextTypography>
+                <TitleTextTypography> Pumping Up: Percents and Ratios</TitleTextTypography>
                 <HeartSVG src={heart} alt="Tag" />
             </TitleContainer>
             <SideBySideBox>
             <TextAndImageBox>
-                <DescriptionText>Use Proportional relationships to solve multi-step ration and percent problems. Examples: simple interes...</DescriptionText>
+                <DescriptionText>Use Proportional relationships to solve multi-step ration and percent problems. Examples: simple interesting facts</DescriptionText>
                 <SmallSideBySideBox>
                     <SecondaryButton> 8.NS </SecondaryButton>
                     <SecondaryButton> 8.RP </SecondaryButton>
@@ -157,8 +164,14 @@ const GameCard = styled(Box)(() => ({
             </SideBySideBox>
         </TextContainer>
         <BottomButtonBox>
-            <PrimaryButton1> View </PrimaryButton1>
-            <PrimaryButton1> Launch </PrimaryButton1>
+            <PrimaryButton1>
+              <ViewSVG src={eyeball} alt="Tag" />
+              View 
+            </PrimaryButton1>
+            <PrimaryButton1>
+              <LaunchSVG src={rocket} alt="Tag" />
+               Launch 
+            </PrimaryButton1>
         </BottomButtonBox>
       </GameCard>
     );
