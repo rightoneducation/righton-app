@@ -218,7 +218,7 @@ export default function GameMaker({
                   <Grid container item xs={12}>
                     <TextField
                       variant='outlined'
-                      label='Game Text'
+                      label='Game Description'
                       value={gameDetails.description}
                       onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }) }}
                       fullWidth
