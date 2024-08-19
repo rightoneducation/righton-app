@@ -50,7 +50,7 @@ export default function Responses({
     <HostDefaultCardStyled>
       <ResponseContainer>
         <TitleStyled>
-          { statePosition < 6 ? `Responses` : `Popular Mistakes` }
+          { statePosition < 6 ? `Phase 1 Responses` : `Popular Mistakes` }
         </TitleStyled>
         <ResponsesGraph
           data={responses}

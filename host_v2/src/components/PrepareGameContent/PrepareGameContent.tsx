@@ -15,7 +15,6 @@ import EnableShortAnswerCard from './EnableShortAnswerCard';
 import EnableConfidenceCard from './EnableConfidenceCard';
 import EnableHintsCard from './EnableHintsCard';
 import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentRightColumn';
-import { PrepGameLargeBox } from '../../lib/styledcomponents/animateContainers.tsx/motionDivContainers';
 import 'swiper/css';
 import 'swiper/css/pagination';
 

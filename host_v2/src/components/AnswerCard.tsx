@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
@@ -12,14 +12,22 @@ interface AnswerCardProps {
   answerContent: string;
   instructions: string[] | null;
   answerReason: string | null;
+  isShortAnswerEnabled: boolean | null;
 }
-
+const AnswerTitleTypography = styled(Typography)({
+  lineHeight: '28px',
+  fontFamily: 'Karla',
+  fontWeight: '800',
+  fontSize: '24px',
+  color: 'black',
+});
 export default function AnswerCard({
   isCorrectAnswer,
   answerIndex,
   answerContent,
   instructions,
   answerReason,
+  isShortAnswerEnabled,
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const letterCode = 'A'.charCodeAt(0) + answerIndex;
@@ -80,7 +88,10 @@ export default function AnswerCard({
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
-        <Box sx={{ width: '100%' }}>
+        <Box style={{ width: '100%', gap: '16px' }}>
+        {isCorrectAnswer
+              ? <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
+              : <AnswerTitleTypography> Incorrect Answer </AnswerTitleTypography>}
           <AnswerOptionStyled
             sx={{
               backgroundColor: isCorrectAnswer
@@ -88,7 +99,6 @@ export default function AnswerCard({
                 : theme.palette.primary.lightGrey,
             }}
           >
-            
             <Typography
               sx={{
                 marginRight: `${theme.sizing.xSmPadding}px`,
@@ -98,6 +108,7 @@ export default function AnswerCard({
             >
               {String.fromCharCode(letterCode)}
             </Typography>
+            )}
             <Typography>{answerContent}</Typography>
           </AnswerOptionStyled>
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
