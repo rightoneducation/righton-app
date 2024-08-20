@@ -9,12 +9,12 @@ import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaSingleColumnStyled,
-  BodyContentAreaDoubleColumnStyled,
+  BodyContentAreaDoubleColumnStyledNoSwiper,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import EnableShortAnswerCard from './EnableShortAnswerCard';
 import EnableConfidenceCard from './EnableConfidenceCard';
 import EnableHintsCard from './EnableHintsCard';
-import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentRightColumn';
+import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentLeftColumn';
 import { PrepGameLargeBox } from '../../lib/styledcomponents/animateContainers.tsx/motionDivContainers';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -72,12 +72,12 @@ export default function PrepareGameContent({
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
-        <BodyContentAreaSingleColumnStyled>
+        <BodyContentAreaSingleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
           <motion.div
           initial={{ x: '100%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
-          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center'  }}
         >
           <Swiper
             modules={[Pagination]}
@@ -108,19 +108,17 @@ export default function PrepareGameContent({
     case (ScreenSize.LARGE):
     default:
       return (
-        <PrepGameLargeBox>
           <motion.div
           initial={{ x: '100%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
-          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
           >
-            <Grid container style={{width: '100%', maxWidth: `${theme.breakpoints.values.lg}px`}}>
+            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
               {leftCardsColumn}
               {rightCardsColumn}
-            </Grid>
+              </BodyContentAreaDoubleColumnStyledNoSwiper>
           </motion.div>
-        </PrepGameLargeBox>
       );
   }
 }

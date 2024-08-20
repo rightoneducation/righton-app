@@ -8,6 +8,7 @@ import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamA
 import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
+  BodyContentAreaDoubleColumnStyledNoSwiper,
   BodyContentAreaTripleColumnStyled,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
@@ -26,6 +27,7 @@ interface GameInProgressContentProps {
   currentPhase: IPhase;
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
   scope?: React.RefObject<HTMLDivElement>;
+  isAnimating: boolean;
 }
 
 export default function GameInProgressContent({
@@ -36,6 +38,7 @@ export default function GameInProgressContent({
   currentPhase,
   currentPhaseTeamAnswers,
   scope,
+  isAnimating
 }: GameInProgressContentProps) {
   const theme = useTheme();
   // currentResponses are used for the Real Time Responses Victory Graph
@@ -71,8 +74,8 @@ export default function GameInProgressContent({
     setGraphClickInfo({graph, selectedIndex })
   }
   
-  const rightCardsColumn = (
-    <GameInProgressContentRightColumn 
+  const leftCardsColumn = (
+    <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
     />
@@ -96,8 +99,8 @@ export default function GameInProgressContent({
     />
   );
   
-  const leftCardsColumn = (
-    <GameInProgressContentLeftColumn 
+  const rightCardsColumn = (
+    <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       currentPhase={currentPhase}
       responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
@@ -121,7 +124,7 @@ export default function GameInProgressContent({
           initial={{ x: needAnimate ? '100vw' : '0%',}}
           animate={{x: 0}}
           transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
-          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center'  }}
           >
           <Swiper
             modules={[Pagination]}
@@ -141,14 +144,20 @@ export default function GameInProgressContent({
             <SwiperSlide>
               {leftCardsColumn}
             </SwiperSlide>
-            <SwiperSlide>
-              {rightCardsColumn}
-            </SwiperSlide>
-            {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
-              <SwiperSlide>
-                {midCardsColumn}
-              </SwiperSlide>
-            }
+            {!isAnimating && (
+              <>
+                <SwiperSlide>
+                  {rightCardsColumn}
+                </SwiperSlide>
+                {(isShortAnswerEnabled || 
+                  localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
+                  localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && (
+                    <SwiperSlide>
+                      {midCardsColumn}
+                    </SwiperSlide>
+                )}
+              </>
+            )}
           </Swiper>
           </motion.div>
         </BodyContentAreaSingleColumnStyled>
@@ -160,10 +169,10 @@ export default function GameInProgressContent({
           initial={{ x: needAnimate ? '100vw' : '0%',}}
           animate={{x: 0}}
           transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
-          style={{ width: '100%', height: '100%', position: 'absolute', top: '0' }}
+          style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
         >
-          <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
-            {isShortAnswerEnabled ? (
+          {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) ? (
+            <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
               <Swiper
                 modules={[Pagination]}
                 pagination={{
@@ -182,7 +191,7 @@ export default function GameInProgressContent({
                     2.0
                 }
                 spaceBetween={`${theme.sizing.mdPadding}px`}
-                style={{height: '100%', width: '100%'}}
+                style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
               >
                 <SwiperSlide>
                   {leftCardsColumn}
@@ -192,18 +201,20 @@ export default function GameInProgressContent({
                     {midCardsColumn}
                   </SwiperSlide>
                 }
-                <SwiperSlide>
-                  {midCardsColumn}
-                </SwiperSlide>
+                { !isAnimating &&
+                  <SwiperSlide>
+                    {midCardsColumn}
+                  </SwiperSlide>
+                }
               </Swiper>
-            ) : (
-              <>
-                {leftCardsColumn}
-                {rightCardsColumn}
-              </>
-            )}
             </BodyContentAreaDoubleColumnStyled>
-          </motion.div>
+          ) : (
+            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
+              {leftCardsColumn}
+              {rightCardsColumn}
+            </BodyContentAreaDoubleColumnStyledNoSwiper>
+          )}
+        </motion.div>
       );
     case (ScreenSize.LARGE):
     default:
@@ -222,7 +233,6 @@ export default function GameInProgressContent({
             { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
               midCardsColumn
             }
-            {rightCardsColumn}
           </BodyContentAreaTripleColumnStyled>
         </motion.div>
       );

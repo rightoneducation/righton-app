@@ -15,6 +15,12 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   overflow: 'hidden',
   zIndex: 2,
   paddingTop: `${theme.sizing.mdPadding}px`,
+}));
+
+
+// content area of body that floats above background layers above - Double Column Page
+// padding applied in container when not used with Swiper
+export const BodyContentAreaDoubleColumnStyledNoSwiper = styled(BodyContentAreaDoubleColumnStyled)(({ theme }) => ({
   paddingLeft: `${theme.sizing.xLgPadding}px`, 
   paddingRight: `${theme.sizing.xLgPadding}px`
 }));

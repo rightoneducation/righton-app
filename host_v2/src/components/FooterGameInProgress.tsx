@@ -72,6 +72,7 @@ interface FootGameInProgressProps {
   animate2: any;
   scope3: any;
   animate3: any;
+  setIsAnimating: (isAnimating: boolean) => void;
 }
 
 function FooterGameInProgress({
@@ -84,7 +85,8 @@ function FooterGameInProgress({
   scope2,
   animate2,
   scope3,
-  animate3
+  animate3, 
+  setIsAnimating
 }: FootGameInProgressProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -92,6 +94,7 @@ function FooterGameInProgress({
   const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
   const handleButtonClick = async () => {
+    setIsAnimating(true);
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     const startTime = Date.now(); 
     switch (nextState) {
@@ -118,6 +121,7 @@ function FooterGameInProgress({
     }
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: startTime.toString()});
     dispatch({type: 'advance_game_phase', payload: {nextState, startTime}});
+    setIsAnimating(false);
   };
   const GetButtonText = () => {
     switch(currentState) {
