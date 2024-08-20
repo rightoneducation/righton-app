@@ -1,7 +1,8 @@
 import { styled } from '@mui/material/styles';
 import { Grid, Box } from '@mui/material';
+import { motion } from 'framer-motion';
 
-export const Phase2DiscussLargeBox = styled(Box)(({ theme }) => ({
+export const GameInProgressContentMotionDiv = styled(motion.div)(({ theme }) => ({
 
     position: 'absolute',
     top:0,

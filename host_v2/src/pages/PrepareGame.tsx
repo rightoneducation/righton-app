@@ -69,8 +69,7 @@ export default function PrepareGame( {
           animate={{ opacity: 1 }}   // Animate to fully visible
           transition={{ duration: 1, ease: "easeIn" }}  // Use "easeIn" easing function for a smooth fade-in
         >
-
-        <HeaderBackgroundStyled />  
+          <HeaderBackgroundStyled />  
         </motion.div>
         <motion.div
           initial={{ x: '100%', opacity: 0 }}
@@ -83,10 +82,9 @@ export default function PrepareGame( {
             totalTime={0}
           />
         </motion.div>
-
-          <BodyStackContainerStyled>
-            <BodyBoxUpperStyled />
-            <BodyBoxLowerStyled />
+        <BodyStackContainerStyled>
+          <BodyBoxUpperStyled />
+          <BodyBoxLowerStyled />
           <PrepareGameContent
             currentQuestion={currentQuestion}
             localGameSession={localGameSession}
@@ -98,11 +96,15 @@ export default function PrepareGame( {
             isHintEnabled={isHintEnabled}
             setIsHintEnabled={setIsHintEnabled}
           />
-          </BodyStackContainerStyled>  
+        </BodyStackContainerStyled>  
         <motion.div
           initial={{ x: '100%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
+          style={{
+            zIndex: 1,
+            pointerEvents: 'auto',  
+          }}
         >
           <FooterBackgroundStyled>
             <FooterStartGame

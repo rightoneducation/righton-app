@@ -6,7 +6,7 @@ import {
   createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
-import { APIClients, Environment } from '@righton/networking';
+import { APIClients, Environment, AppType } from '@righton/networking';
 import { RouteContainer } from './containers/RouteContainer';
 import AlertContext, { Alert } from './context/AlertContext';
 
@@ -26,7 +26,7 @@ const theme = createTheme({
 
 function App() {
   const [alert, setAlert] = useState<Alert | null>(null);
-  const apiClients = new APIClients(Environment.Developing);
+  const apiClients = new APIClients(Environment.Developing, AppType.CENTRAL);
   const alertContext = {
     alert,
     setAlert,
