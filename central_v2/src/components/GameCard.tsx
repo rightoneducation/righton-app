@@ -29,8 +29,8 @@ const LaunchSVG = styled('img')({
     // marginLeft: 'auto',
 });
 const GameCard = styled(Box)(() => ({
-    width: '438px', // will probs be 100% in a carousal
-    height: '236px',
+    width: '100%', // will probs be 100% in a carousal
+    height: '100%',
     padding: '12px 16px 12px 16px',
     gap: '16px',
     borderRadius: '16px',
@@ -38,6 +38,7 @@ const GameCard = styled(Box)(() => ({
     background: '#FFFFFF',
     display: 'flex',
     flexDirection: 'column',
+    boxSizing: 'border-box',
   }));
 
   const TextContainer = styled(Box)(() => ({
