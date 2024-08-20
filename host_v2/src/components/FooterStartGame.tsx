@@ -88,25 +88,27 @@ function FooterStartGame({
   handleButtonClick,
   scope4
 }: FootStartGameProps) {
-  let buttonText;
+  
   const localGameSession = useTSGameSessionContext(GameSessionContext);
-
-  switch (localGameSession.currentState) {
-    case GameSessionState.TEAMS_JOINING:
-      buttonText = 
-        (localGameSession.currentQuestionIndex === null)
-          ? 'Start Game' 
-          : 'Next Question';
-        break;
+  const [isAnimating, setIsAnimating] = useState(false);
+  const fetchButtonText = (gameSession: IGameSession) => {
+    switch (gameSession.currentState) {
+      case GameSessionState.TEAMS_JOINING:
+        return (gameSession.currentQuestionIndex === null)
+            ? 'Start Game' 
+            : 'Next Question';
       case GameSessionState.FINAL_RESULTS:
         return 'End Game';
       default:
-        return selectedSuggestedGame === null
-          ? 'Exit to RightOn Central'
-          : 'Play Selected Game';
-    }
-  };
-  const handleButtonColorClick = () => {
+        return (selectedSuggestedGame === null)
+            ? 'Exit to RightOn Central'
+            : 'Play Selected Game';
+      }
+  }
+  const [buttonText, setButtonText] = useState(fetchButtonText(localGameSession));
+
+  
+  const handleButtonAnimationClick = () => {
     setButtonText('Starting Game...');
     setIsAnimating(true);
   };
@@ -119,7 +121,6 @@ function FooterStartGame({
     } 
 
   };
-  
   return (
     <FooterContainer>
       {screenSize === ScreenSize.SMALL &&
@@ -134,21 +135,31 @@ function FooterStartGame({
             </PlayerCountTypography>
           </Box>
         }
-        <motion.div
-          ref={scope4}
-          exit={{ y: 0, opacity: 0 }}
-          style={{ display: 'inline-block' }}
-        >
+        { !isGamePrepared ? 
+          <motion.div
+            ref={scope4}
+            exit={{ y: 0, opacity: 0 }}
+            style={{ display: 'inline-block' }}
+          >
+            <ButtonStyled
+              disabled={teamsLength <= 0}
+              isAnimating={isAnimating}
+              onClick={ handleButtonAnimationClick}
+              onAnimationEnd={handleAnimationEnd}
+              className='animate'
+            >
+              {buttonText}
+            </ButtonStyled>
+          </motion.div>
+        : 
           <ButtonStyled
             disabled={teamsLength <= 0}
-            isAnimating={isAnimating}
-            onClick={handleButtonColorClick}
-            onAnimationEnd={handleAnimationEnd}
-            className='animate'
+            isAnimating={false}
+            onClick={handleButtonClick}
           >
             {buttonText}
           </ButtonStyled>
-        </motion.div>
+        }
       </InnerFooterContainer>
     </FooterContainer>
   );
