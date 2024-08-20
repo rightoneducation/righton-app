@@ -25,21 +25,18 @@ const ExploreGamesContainer = styled(Box)(({ theme }) => ({
 export default function ExploreGames({ sampleProp }: ExploreGamesProps) {
   const theme = useTheme(); 
   const { t } = useTranslation();
-
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-    const screenSize = isLargeScreen  // eslint-disable-line
-        ? ScreenSize.LARGE 
-        : isMediumScreen 
-          ? ScreenSize.MEDIUM 
-          : ScreenSize.SMALL;
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const screenSize = isLargeScreen  // eslint-disable-line
+      ? ScreenSize.LARGE 
+      : isMediumScreen 
+        ? ScreenSize.MEDIUM 
+        : ScreenSize.SMALL;
 
   return (
     <ExploreGamesContainer>
       <GameCardCarousal screenSize = {screenSize} />
-      <PaginationContainerStyled className="swiper-pagination-container" />
-
-      {/* <StyledGameCard/> */}
+      <PaginationContainerStyled className="swiper-pagination-container" style={{ paddingTop: `${theme.sizing.mdPadding}px` }}/>
     </ExploreGamesContainer>
   );
 }

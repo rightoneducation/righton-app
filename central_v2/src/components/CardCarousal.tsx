@@ -40,19 +40,20 @@ const theme = useTheme();
                 }}
                 ref={swiperRef}
                 spaceBetween= '16px'
-                // centeredSlides // Center the current slide
-            breakpoints={{
-                375: {
-                    slidesPerView: 1.2, // Show partial next card on small screens
-                },
-                744: {
-                    slidesPerView: 2.3, // Show partial next card on medium screens
-                },
-                1500: {
-                    slidesPerView: 3.3, // Show partial next card on large screens
-                },
-            }}
-            navigation
+                centeredSlides // Center the current slide
+                loop
+                navigation
+                breakpoints={{
+                    375: {
+                        slidesPerView: 1.2, // Show partial next card on small screens
+                    },
+                    744: {
+                        slidesPerView: 2.3, // Show partial next card on medium screens
+                    },
+                    1500: {
+                        slidesPerView: 3.3, // Show partial next card on large screens
+                    },
+                }}
         >
             <SwiperSlide >
                 <StyledGameCard />
