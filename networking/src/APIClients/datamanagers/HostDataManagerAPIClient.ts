@@ -23,6 +23,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   protected teamMemberAPIClient: ITeamMemberAPIClient;
   protected teamAnswerAPIClient: ITeamAnswerAPIClient;
   protected createTeamSubscription: any;
+  protected updateTeamSubscription: any;
   private hostTeamAnswers: IHostTeamAnswers;
   private createTeamAnswerSubscription: any;
   private updateTeamAnswerSubscription: any;
@@ -67,6 +68,9 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (this.createTeamSubscription && this.createTeamSubscription.unsubscribe) {
       this.createTeamSubscription.unsubscribe();
     }
+    if (this.updateTeamSubscription && this.updateTeamSubscription.unsubscribe) {
+      this.updateTeamSubscription.unsubscribe();
+    }
     if (this.createTeamAnswerSubscription && this.createTeamAnswerSubscription.unsubscribe) {
       this.createTeamAnswerSubscription.unsubscribe();
     }
@@ -76,7 +80,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   }
 
   // GameSession handling 
-  async subscribeToUpdateGameSession(gameSessionId: string): Promise<IGameSession> {
+  async subscribeToUpdateGameSession(gameSessionId: string): Promise<void> {
     try {
       this.gameSessionId = gameSessionId;
       const fetchedGame = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
@@ -85,8 +89,9 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       if (!fetchedGame || !fetchedGame.id) {
         throw new Error('Invalid game session');
       }
-      this.gameSession = fetchedGame;
-      return this.gameSession;
+      // this.gameSession = fetchedGame;
+      // console.log(this.gameSession);
+      // return this.gameSession;
     } catch (error) {
       console.log(error);
       throw new Error (`Error: ${error}`)
@@ -113,12 +118,47 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     });
   }
 
+
+  //subscribe to updated teams, when players' scores are being assigned
+  subscribeToUpdateTeam(callback: (updatedGameSession: IGameSession | null) => void): void {
+    if (!this.gameSessionId) {
+      console.error('Error: Invalid game session id');
+      return;
+    }
+  
+    this.updateTeamSubscription = this.teamAPIClient.subscribeUpdateTeam(this.gameSessionId, (team: ITeam) => {
+      if (!team) {
+        console.error('Error: Invalid team');
+        return;
+      }
+      console.log(this.gameSession);
+      console.log(this.getGameSession());
+      const newGameSession = { ...this.gameSession as IGameSession };
+      newGameSession.teams[newGameSession.teams.findIndex((t) => t.id === team.id)] = team;
+      this.gameSession = newGameSession;
+      callback(newGameSession);
+    });
+  }
+
   async updateTime(newTime: number) {
     if (this.gameSession && this.gameSessionId && this.gameSession.startTime){
       try {  
         await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, startTime: newTime.toString()}).then((gameSession: IGameSession) => {
           console.log(newTime);
           console.log(gameSession);
+          this.gameSession = gameSession;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+
+  async updateGameSession(gameSessionUpdates: any) {
+    if (this.gameSession && this.gameSessionId){
+      try {  
+        await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, ...gameSessionUpdates }).then((gameSession: IGameSession) => {
           this.gameSession = gameSession;
         });
       } catch (error) {

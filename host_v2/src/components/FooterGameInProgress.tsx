@@ -119,8 +119,8 @@ function FooterGameInProgress({
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
     }
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: startTime.toString()});
-    dispatch({type: 'advance_game_phase', payload: {nextState, startTime}});
+    dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
+    apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime});
     setIsAnimating(false);
   };
   const GetButtonText = () => {
