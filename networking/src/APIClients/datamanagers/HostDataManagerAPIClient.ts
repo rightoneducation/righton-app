@@ -79,25 +79,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     } 
   }
 
-  // GameSession handling 
-  async subscribeToUpdateGameSession(gameSessionId: string): Promise<void> {
-    try {
-      this.gameSessionId = gameSessionId;
-      const fetchedGame = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
-      // const currentQuestion = fetchedGame.questions[fetchedGame.currentQuestionIndex];
-      // const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion) ?? null;
-      if (!fetchedGame || !fetchedGame.id) {
-        throw new Error('Invalid game session');
-      }
-      // this.gameSession = fetchedGame;
-      // console.log(this.gameSession);
-      // return this.gameSession;
-    } catch (error) {
-      console.log(error);
-      throw new Error (`Error: ${error}`)
-    }
-  }
-
   //subscribe to created teams, when players are joining in the lobby
   subscribeToCreateTeam(callback: (updatedGameSession: IGameSession | null) => void): void {
     if (!this.gameSessionId) {
@@ -480,11 +461,19 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           });
         });
         Object.values(IPhase).forEach((phase) => {
-          const numSubmittedAnswers = question[phase].responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
-          const numNoResponses = numTeams - numSubmittedAnswers;
+          const teamsAnswered = question[phase].responses
+            .reduce<string[]>((acc, response) => {
+              if (response.multiChoiceCharacter !== '–') {
+                acc.push(...response.teams);
+              }
+              return acc;
+            }, []);
+          const teamsUnanswered = gameSession.teams.map((team) => team.name).filter((team) => !teamsAnswered.includes(team));
+          const numNoResponses = numTeams - teamsAnswered.length;
           const noResponses = question[phase].responses.find((response: any) => response.multiChoiceCharacter === '–');
           if (noResponses) {
             noResponses.count = numNoResponses ?? 0;
+            noResponses.teams = teamsUnanswered;
           }
         });
       });
