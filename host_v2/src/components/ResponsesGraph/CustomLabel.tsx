@@ -9,12 +9,12 @@ export default function CustomLabel(props: any) {
   // done to prevent embedding a nested ternary in the render function
   const labelPadding = useCallback(() => {
     if (isShortAnswerEnabled){
-      if (datum.answerCorrect)
+      if (datum.isCorrect)
         return (theme.sizing.mdPadding - theme.sizing.xxSmPadding) * 2;
       return (theme.sizing.mdPadding - theme.sizing.xxSmPadding);
     }
     return theme.sizing.defaultVictoryPadding + theme.sizing.xxSmPadding;
-  }, [isShortAnswerEnabled, datum.answerCorrect, theme.sizing.mdPadding, theme.sizing.xxSmPadding, theme.sizing.defaultVictoryPadding]);
+  }, [isShortAnswerEnabled, datum.isCorrect, theme.sizing.mdPadding, theme.sizing.xxSmPadding, theme.sizing.defaultVictoryPadding]);
 
   return (
     <g>
