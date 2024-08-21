@@ -132,12 +132,12 @@ export default function FeaturedMistakes({
         >
           <RadioLabelStyled
             value="A"
-            control={<Radio />}
+            control={<Radio sx={{color: '#FFFFFF'}}/>}
             label={radioButtonText1}
           />
           <RadioLabelStyled
             value="B"
-            control={<Radio />}
+            control={<Radio sx={{color: '#FFFFFF'}}/>}
             label={radioButtonText2}
           />
         </RadioGroup>
