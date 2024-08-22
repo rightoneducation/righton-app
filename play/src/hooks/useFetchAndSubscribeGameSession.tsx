@@ -34,7 +34,6 @@ export default function useFetchAndSubscribeGameSession(
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const [newPoints, setNewPoints] = useState<number>(0);
 
-
   // timer functions
   const calculateCurrentTime = (response: IGameSession | null) => {
     let allottedTime = 0;
@@ -61,7 +60,7 @@ export default function useFetchAndSubscribeGameSession(
 
   const handleVisibilityChange = () => {
     if (!document.hidden) {
-      setCurrentTime(() => calculateCurrentTime(gameSession ?? null));
+      setCurrentTime(calculateCurrentTime(gameSession ?? null));
     }
   };
 
@@ -81,7 +80,6 @@ export default function useFetchAndSubscribeGameSession(
       setIsLoading(false);
       return;
     }
-
     // added so we can update th score for the discuss page. (previously implemented in results pages we got rid of)
     const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
       try {
@@ -102,6 +100,7 @@ export default function useFetchAndSubscribeGameSession(
         }
         if (!ignore) setGameSession(fetchedGame);
         setIsLoading(false);
+        setCurrentTime(calculateCurrentTime(fetchedGame));
         gameSessionSubscription = apiClients.gameSession.subscribeUpdateGameSession(
           fetchedGame.id,
           (response) => {
@@ -112,14 +111,13 @@ export default function useFetchAndSubscribeGameSession(
             }
             if (!ignore) setHasRejoined(false);
             // checks if host has added time via button
-            const prevTime = gameSession?.currentTimer ?? 0;
-            const newTime = response.currentTimer;
+            const prevTime = gameSession?.startTime ?? 0;
+            const newTime = response.startTime;
             if (newTime > prevTime) {
               setIsAddTime((prev) => !prev);
             }
             setGameSession((prevGame) => ({ ...prevGame, ...response }));
-            console.log(response);
-            setCurrentTime(()=> calculateCurrentTime(response));
+            setCurrentTime(calculateCurrentTime(response));
             // updates team score in the phase 1 and 2 discuss states
             if (response.currentState === GameSessionState.PHASE_1_DISCUSS || response.currentState === GameSessionState.PHASE_2_DISCUSS) {
               setNewPoints(0);
@@ -180,6 +178,5 @@ export default function useFetchAndSubscribeGameSession(
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
-  console.log(currentTime);
   return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime };
 }
