@@ -7,6 +7,10 @@ import StyledGameCard from '../components/GameCard';
 import GameCardCarousal from '../components/CardCarousal';
 import {ScreenSize } from '../lib/HostModels';
 import PaginationContainerStyled from '../lib/PaginationContainerStyled';
+import RecommendedGames from '../components/RecommendedGames';
+import ExploreGamesUpper from '../components/ExploreGamesUpper';
+import EGMostPopular from '../components/EGMostPopular';
+import EGHeader from '../components/EGHeader';
 
 interface ExploreGamesProps {
   sampleProp: string;
@@ -35,8 +39,9 @@ export default function ExploreGames({ sampleProp }: ExploreGamesProps) {
 
   return (
     <ExploreGamesContainer>
-      <GameCardCarousal screenSize = {screenSize} />
-      <PaginationContainerStyled className="swiper-pagination-container" style={{ paddingTop: `${theme.sizing.mdPadding}px` }}/>
+      <EGHeader screenSize={screenSize} />
+      <ExploreGamesUpper screenSize={screenSize} />
+      <EGMostPopular screenSize={screenSize} />
     </ExploreGamesContainer>
   );
 }
