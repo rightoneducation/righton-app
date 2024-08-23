@@ -96,7 +96,6 @@ export default function DACScoreIndicator({
   const [startScoreAnimation, setStartScoreAnimation] = useState(false);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-  console.log(isSmallScreen);
   const handlePointsAnimationEnd = (event: React.AnimationEvent) => {
     if (
       event.animationName === 'newScoreUpFadeDown' &&

@@ -11,8 +11,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
-import EnterGameCode from '../pages/pregame/EnterGameCode';
-import EnterPlayerName from '../pages/pregame/EnterPlayerName';
+import EnterCodeAndName from '../pages/pregame/EnterCodeAndName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
 import {
   PregameState,
@@ -29,6 +28,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMedDevice = useMediaQuery(theme.breakpoints.down('md'));
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
   );
@@ -86,7 +86,7 @@ export function PregameContainer({ apiClients }: PregameFinished) {
         return false;
       }
       setGameSession(gameSessionResponse);
-      setPregameState(PregameState.ENTER_NAME);
+      setPregameState(PregameState.SELECT_AVATAR);
       return true;
     } catch (error) {
       console.log(error);
@@ -169,21 +169,14 @@ export function PregameContainer({ apiClients }: PregameFinished) {
           setIsAPIError={setIsAPIError}
         />
       );
-    case PregameState.ENTER_NAME:
+    case PregameState.ENTER_GAME_CODE:
       return (
-        <EnterPlayerName
-          isSmallDevice={isSmallDevice}
+        <EnterCodeAndName
+          isMedDevice={isMedDevice}
           firstName={firstName}
           setFirstName={setFirstName}
           lastName={lastName}
           setLastName={setLastName}
-          setPregameState={setPregameState}
-        />
-      );
-    case PregameState.ENTER_GAME_CODE:
-      return (
-        <EnterGameCode
-          isSmallDevice={isSmallDevice}
           handleGameCodeClick={handleGameCodeClick}
         />
       );
