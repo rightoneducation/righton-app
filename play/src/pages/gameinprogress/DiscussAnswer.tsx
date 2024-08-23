@@ -17,15 +17,12 @@ import { AnswerState } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import ThreeColumnScrollBox from '../../lib/styledcomponents/layout/ThreeColumnScrollBox';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import {
   BodyContentAreaTripleColumnStyled,
-  BodyContentAreaDoubleColumnStyled,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import DACScoreIndicator from '../../components/DACScoreIndicator';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -40,17 +37,6 @@ interface DiscussAnswerProps {
   gameSession: IGameSession;
   newPoints: number | undefined;
 }
-
-const ColumnHeader = styled(Typography)({
-  marginTop: `16px`,
-  marginBottom: `16px`,
-  textAlign: 'center',
-  fontFamily: 'Karla',
-  fontWeight: '800',
-  fontSize: '16px',
-  lineHeight: '18.7px',
-  color: 'white',
-});
 
 export default function DiscussAnswer({
   isSmallDevice,
@@ -83,12 +69,10 @@ export default function DiscussAnswer({
       )
     : correctAnswer?.text === selectedAnswer?.text;
     console.log(selectedAnswer?.text);
-  // const isPlayerCorrect = true;
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>
         <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-        <DACScoreIndicator newPoints={5} score={0} />
         <DiscussAnswerCard
           isPlayerCorrect={isPlayerCorrect}
           instructions={instructions}
