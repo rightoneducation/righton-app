@@ -15,14 +15,13 @@ interface EGHeaderProps {
 }
  
 const EGHeaderContainer = styled(Box)(({ screenSize }: EGHeaderProps) => ({
-  height: screenSize === ScreenSize.SMALL ? '77px' : '94px', 
-  display: 'flex', 
-  justifyContent: 'center',
-  width: '100%',
-  flexDirection: 'column', 
-  alignItems: 'center', 
-  background: 'none',
-}));
+    height: screenSize === ScreenSize.SMALL ? '77px' : '94px', 
+    display: 'flex', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    background: 'none',
+  }));
 
 
 export default function EGHeader({ screenSize }: EGHeaderProps) {

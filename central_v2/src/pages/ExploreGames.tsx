@@ -17,14 +17,25 @@ interface ExploreGamesProps {
 }
 
 const ExploreGamesContainer = styled(Box)(({ theme }) => ({
-  height: '100vh', 
-  display: 'flex', 
-  justifyContent: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  backgroundColor: '#02215F',
+  overflow: 'auto',
+  height: '100vh',
   width: '100%',
-  flexDirection: 'column', 
-  alignItems: 'center', 
-  backgroundColor: '#02215F' 
 }));
+const HeaderContainer = styled(Box)(({ theme }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  zIndex: 1000,
+  backgroundColor: '#02215F',
+  width: '100%',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+}));
+
 
 export default function ExploreGames({ sampleProp }: ExploreGamesProps) {
   const theme = useTheme(); 
@@ -39,9 +50,13 @@ export default function ExploreGames({ sampleProp }: ExploreGamesProps) {
 
   return (
     <ExploreGamesContainer>
-      <EGHeader screenSize={screenSize} />
+      <HeaderContainer>
+        <EGHeader screenSize={screenSize} />
+      </HeaderContainer>
+      <Box mt={screenSize === ScreenSize.SMALL ? '77px' : '94px'} />
       <ExploreGamesUpper screenSize={screenSize} />
       <EGMostPopular screenSize={screenSize} />
     </ExploreGamesContainer>
   );
 }
+
