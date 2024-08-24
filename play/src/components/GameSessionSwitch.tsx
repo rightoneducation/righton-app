@@ -155,6 +155,7 @@ export default function GameSessionSwitch({
       return <StartPhase2 /> 
 
     case GameSessionState.FINAL_RESULTS:
+    case GameSessionState.TEAMS_JOINING:
       return (
         <FinalResultsContainer
           {...gameSession}

@@ -17,6 +17,7 @@ import {
   StorageKeyHint,
   ErrorType,
 } from '../lib/PlayModels';
+import { calculateCurrentTime } from '../lib/HelperFunctions';
 
 interface GameInProgressContainerProps {
   apiClients: IAPIClients;
@@ -44,13 +45,15 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.teamId,
   );
 
+
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
 
   // if gamesession is loading/errored/waiting for teacher to start game
   if (
     isNullOrUndefined(subscription.gameSession) ||
-    subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING
+    (subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING 
+      && subscription.gameSession.currentQuestionIndex === null)
   ) {
     // if player is rejoining, show lobby in rejoining mode
     if (

@@ -24,7 +24,9 @@ export default function FinalResultsContainer({
   teamId,
 }: FinalResultsContainerProps) {
   const [finalResultsState, setFinalResultsState] = useState(
-    FinalResultsState.CONGRATS
+    currentState === GameSessionState.FINAL_RESULTS 
+      ? FinalResultsState.CONGRATS
+      : FinalResultsState.LEADERBOARD
   );
 
   const isLeader = (inputTeams: ITeam[] | undefined, inputTeamID: string) => {

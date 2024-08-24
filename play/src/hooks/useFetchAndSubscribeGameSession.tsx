@@ -9,6 +9,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import { StorageKey, StorageKeyAnswer} from '../lib/PlayModels';
+import { calculateCurrentTime } from '../lib/HelperFunctions';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -34,35 +35,22 @@ export default function useFetchAndSubscribeGameSession(
   const [isAddTime, setIsAddTime] = useState<boolean>(false);
   const [newPoints, setNewPoints] = useState<number>(0);
 
-  // timer functions
-  const calculateCurrentTime = (response: IGameSession | null) => {
-    let allottedTime = 0;
-    console.log(response);
-    if (response){
-      if (response?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-        allottedTime = response?.phaseOneTime;
-      } else if (response?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-        allottedTime = response?.phaseTwoTime;
-      }
-
-      const getStartTime = Number(response?.startTime);
-      if (getStartTime) {
-        const difference = Date.now() - getStartTime;
-        if (difference >= allottedTime * 1000) {
-          return 0;
-        } 
-        const remainingTime = allottedTime - Math.trunc(difference / 1000);
-        return remainingTime;
-      }
-    }
-    return 0;
-  };
-
   const handleVisibilityChange = () => {
     if (!document.hidden) {
       setCurrentTime(calculateCurrentTime(gameSession ?? null));
     }
   };
+
+  /* we have this in a separate useEffect so that it avoids any closure
+   * issues with the gameSession object
+   */
+  useEffect(() => {
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [gameSession]); // eslint-disable-line react-hooks/exhaustive-deps
+  
 
   // useEffect to handle subscriptions
   useEffect(() => {
@@ -163,8 +151,6 @@ export default function useFetchAndSubscribeGameSession(
         if (e instanceof Error) setError(e.message);
         else setError(`${t('error.connect.gamesessionerror')}`);
       });
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // eslint-disable-next-line consistent-return
     return () => {
@@ -175,7 +161,6 @@ export default function useFetchAndSubscribeGameSession(
       if (teamsSubscription && teamsSubscription.unsubscribe) {
         teamsSubscription.unsubscribe();
       }
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
   return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime };
