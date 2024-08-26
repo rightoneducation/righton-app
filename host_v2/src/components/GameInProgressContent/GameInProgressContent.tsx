@@ -77,6 +77,7 @@ export default function GameInProgressContent({
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
+      isShortAnswerEnabled={isShortAnswerEnabled}
     />
   );
 

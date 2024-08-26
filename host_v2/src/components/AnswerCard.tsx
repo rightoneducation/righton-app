@@ -12,6 +12,7 @@ interface AnswerCardProps {
   answerContent: string;
   instructions: string[] | null;
   answerReason: string | null;
+  isShortAnswerEnabled: boolean;
 }
 const AnswerTitleTypography = styled(Typography)({
   lineHeight: '28px',
@@ -25,7 +26,8 @@ export default function AnswerCard({
   answerIndex,
   answerContent,
   instructions,
-  answerReason
+  answerReason,
+  isShortAnswerEnabled
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const letterCode = 'A'.charCodeAt(0) + answerIndex;
@@ -97,15 +99,17 @@ export default function AnswerCard({
                 : theme.palette.primary.lightGrey,
             }}
           >
-            <Typography
-              sx={{
-                marginRight: `${theme.sizing.xSmPadding}px`,
-                fontWeight: `${theme.typography.h5.fontWeight}`,
-                opacity: 0.5,
-              }}
-            >
-              {String.fromCharCode(letterCode)}
-            </Typography>
+            {!isShortAnswerEnabled && 
+              <Typography
+                sx={{
+                  marginRight: `${theme.sizing.xSmPadding}px`,
+                  fontWeight: `${theme.typography.h5.fontWeight}`,
+                  opacity: 0.5,
+                }}
+              >
+                {String.fromCharCode(letterCode)}
+              </Typography>
+            }
             <Typography>{answerContent}</Typography>
           </AnswerOptionStyled>
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
