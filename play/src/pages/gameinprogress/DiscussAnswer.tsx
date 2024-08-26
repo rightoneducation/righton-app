@@ -53,9 +53,10 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
-  const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
-  
+  const correctAnswer = currentQuestion.choices.find((answer) => answer.isAnswer);
+  const correctIndex = currentQuestion.choices.findIndex((answer) => answer.isAnswer);
+  console.log(answerChoices);
+  console.log(correctAnswer);
   
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion

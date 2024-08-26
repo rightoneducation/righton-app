@@ -40,24 +40,26 @@ export default function GameInProgressContentMidColumn ({
     handleGraphClick
   }: GameInProgressContentMidColumnProps
 ){
+  console.log('````')
+  console.log(isConfidenceEnabled);
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
     <ScrollBoxStyled>
-        <Responses 
-          currentQuestion={currentQuestion}
-          responses={responses}
-          statePosition={0}
+      <Responses 
+        currentQuestion={currentQuestion}
+        responses={responses}
+        statePosition={0}
+        graphClickInfo={graphClickInfo}
+        isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
+        handleGraphClick={handleGraphClick}
+      />
+      {isConfidenceEnabled && currentPhase === IPhase.ONE && 
+        <ConfidenceCard 
+          confidences={confidences}
           graphClickInfo={graphClickInfo}
-          isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
           handleGraphClick={handleGraphClick}
         />
-        {isConfidenceEnabled && currentPhase === IPhase.ONE && 
-            <ConfidenceCard 
-              confidences={confidences}
-              graphClickInfo={graphClickInfo}
-              handleGraphClick={handleGraphClick}
-            />
-        }
+      }
       {isHintEnabled && currentPhase === IPhase.TWO &&
         <HintsCard 
           hints={currentHints}

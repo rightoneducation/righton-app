@@ -41,30 +41,21 @@ export default function GameInProgressContentRightColumn ({
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
       <ScrollBoxStyled>
-      {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
-        <FeaturedMistakes
-          currentQuestion={currentQuestion}
-          featuredMistakesSelectionValue={featuredMistakesSelectionValue}
-        /> 
-        :
-        <>
-        <Responses 
-          currentQuestion={currentQuestion}
-          responses={responses}
-          statePosition={currentPhase === IPhase.ONE ? 0 : 8}
-          graphClickInfo={graphClickInfo}
-          isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
-          handleGraphClick={handleGraphClick}
-        />
-        {isConfidenceEnabled &&
-          <ConfidenceCard 
-            confidences={confidences}
+        {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
+          <FeaturedMistakes
+            currentQuestion={currentQuestion}
+            featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+          /> 
+          :
+          <Responses 
+            currentQuestion={currentQuestion}
+            responses={responses}
+            statePosition={currentPhase === IPhase.ONE ? 0 : 8}
             graphClickInfo={graphClickInfo}
+            isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
             handleGraphClick={handleGraphClick}
           />
         }
-        </>
-      }
       </ScrollBoxStyled>
     </Grid>
   );

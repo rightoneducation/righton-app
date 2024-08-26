@@ -74,9 +74,9 @@ export default function InterimLeaderboard({
       <LeaderboardHeader />
       <motion.div
           initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          animate={{ x: '0%', opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
-          style={{ width: '100%', height: '100%', overflow: 'hidden', flexGrow: 1}}
+          style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', flexGrow: 1 }}
       >
         <HostBody 
           teams={localGameSession.teams} 

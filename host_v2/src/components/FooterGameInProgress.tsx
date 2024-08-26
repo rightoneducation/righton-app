@@ -115,9 +115,10 @@ function FooterGameInProgress({
       default:
         break;
     }
-    if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
+    if ((GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
-      apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
+      if (currentResponses && currentResponses.length > 0)
+        await apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
     }
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
     apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime});

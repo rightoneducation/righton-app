@@ -146,13 +146,12 @@ export default function GameInProgressContent({
             {!isAnimating && (
               <>
                 <SwiperSlide>
-                  {rightCardsColumn}
+                  {midCardsColumn}
                 </SwiperSlide>
-                {(isShortAnswerEnabled || 
-                  localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
-                  localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && (
+                {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
+                   localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && (
                     <SwiperSlide>
-                      {midCardsColumn}
+                      {rightCardsColumn}
                     </SwiperSlide>
                 )}
               </>
@@ -195,22 +194,21 @@ export default function GameInProgressContent({
                 <SwiperSlide>
                   {leftCardsColumn}
                 </SwiperSlide>
-                {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+                <SwiperSlide>
+                  {midCardsColumn}
+                </SwiperSlide>
+                {(!isAnimating && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
+                   localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && 
                   <SwiperSlide>
-                    {midCardsColumn}
-                  </SwiperSlide>
-                }
-                { !isAnimating &&
-                  <SwiperSlide>
-                    {midCardsColumn}
-                  </SwiperSlide>
+                    {rightCardsColumn}
+                  </SwiperSlide>)
                 }
               </Swiper>
             </BodyContentAreaDoubleColumnStyled>
           ) : (
             <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
               {leftCardsColumn}
-              {rightCardsColumn}
+              {midCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>
           )}
         </motion.div>
@@ -228,9 +226,9 @@ export default function GameInProgressContent({
         >
           <BodyContentAreaTripleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             {leftCardsColumn}
-            {rightCardsColumn}
-            { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
-              midCardsColumn
+            {midCardsColumn}
+            {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+              rightCardsColumn
             }
           </BodyContentAreaTripleColumnStyled>
         </motion.div>
