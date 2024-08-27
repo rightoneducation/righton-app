@@ -7,6 +7,13 @@ import heart from '../images/heart.svg';
 import eyeball from '../images/eyeball.svg';
 import rocket from '../images/rocket.svg';
 
+
+interface StyledGameCardProps {
+  title: string;
+  description: string;
+  image: string;
+}
+
 const LittleButtonSVG = styled('img')({
     cursor: 'pointer',
     // marginLeft: 'auto',
@@ -139,28 +146,30 @@ const GameCard = styled(Box)(() => ({
   fontWeight: 400,
   lineHeight: '16.59px',
   textAlign: 'center',
+  // boxShadow: '0px 3px 12px 0px #95002366',
+
   }));
 
 
-  export default function StyledGameCard() {
+  export default function StyledGameCard({ title, description, image }: StyledGameCardProps) {
     
     return (
       <GameCard>
         <TextContainer>
             <TitleContainer>
-                <TitleTextTypography> Pumping Up: Percents and Ratios</TitleTextTypography>
+                <TitleTextTypography>{title}</TitleTextTypography>
                 <HeartSVG src={heart} alt="Tag" />
             </TitleContainer>
             <SideBySideBox>
             <TextAndImageBox>
-                <DescriptionText>Use Proportional relationships to solve multi-step ration and percent problems. Examples: simple interesting facts</DescriptionText>
+                <DescriptionText>{description}</DescriptionText>
                 <SmallSideBySideBox>
                     <SecondaryButton> 8.NS </SecondaryButton>
                     <SecondaryButton> 8.RP </SecondaryButton>
                 </SmallSideBySideBox>
             </TextAndImageBox>
             <TextAndImageBox>
-                <GymSVG src={gym} alt="Tag" />
+                <GymSVG src={image} alt="Tag" />
             </TextAndImageBox>
             </SideBySideBox>
         </TextContainer>

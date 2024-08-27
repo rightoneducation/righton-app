@@ -23,12 +23,13 @@ const SearchBarContainer = styled(TextField)(( { screenSize }: SearchBarProps) =
             padding: 0,  
             height: '38px', 
             lineHeight: '38px', 
-            fontFamily: 'Rubik', 
+            fontFamily: 'Rubik',             
             '&::placeholder': {
-                color: '#808FAE', // placeholder
+                color: '#02215F', // placeholder
                 fontWeight: 400, 
                 fontFamily: 'Rubik', 
                 fontSize: '16px',
+                
             },
         },
     },

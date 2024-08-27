@@ -1,5 +1,6 @@
 import React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { APIClients } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
@@ -12,6 +13,7 @@ import RecommendedGames from './RecommendedGames';
 
 interface ExploreGamesUpperProps {
   screenSize: ScreenSize;
+  apiClients?: APIClients;
 }
  
 const ExploreGamesUpperContainer = styled(Box)(({ screenSize }: ExploreGamesUpperProps) => ({
@@ -25,13 +27,13 @@ const ExploreGamesUpperContainer = styled(Box)(({ screenSize }: ExploreGamesUppe
 }));
 
 
-export default function ExploreGamesUpper({ screenSize }: ExploreGamesUpperProps) {
+export default function ExploreGamesUpper({ screenSize, apiClients }: ExploreGamesUpperProps) {
   const theme = useTheme(); 
 
   return (
     <ExploreGamesUpperContainer screenSize={screenSize}>
         <SearchAndFilter screenSize={screenSize}/>
-        <RecommendedGames screenSize={screenSize}/>
+        <RecommendedGames screenSize={screenSize} apiClients={apiClients}/>
     </ExploreGamesUpperContainer>
   );
 }

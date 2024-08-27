@@ -1,72 +1,72 @@
-import React, { useEffect, useRef } from 'react';
-import { Box, Grid} from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
-import { Swiper, SwiperSlide, SwiperRef} from 'swiper/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { APIClients } from '@righton/networking';
+import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { useTheme } from '@mui/material/styles';
 import StyledGameCard from './GameCard';
-import { ScreenSize } from '../lib/HostModels';
-import PaginationContainerStyled from '../lib/PaginationContainerStyled';
 
+interface GameCardCarouselProps {
+    apiClients?: APIClients;
+}
 
-function GameCardCarousal()
-    {
+export default function GameCardCarousel({ apiClients }: GameCardCarouselProps) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);
+    const [games, setGames] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (apiClients) {
+            apiClients.gameTemplate.listGameTemplates(12, null, null, null)
+                .then(response => {
+                    setGames(response?.gameTemplates || []);
+                })
+                .catch(error => {
+                    console.error('Error fetching games:', error);
+                });
+        }
+    }, [apiClients]);
+
     return (
         <Swiper
-            style = {{width:'100%'}}
+            style={{ width: '100%' }}
             modules={[Pagination]}
             pagination={{
                 el: '.swiper-pagination-container',
                 bulletClass: 'swiper-pagination-bullet',
                 bulletActiveClass: 'swiper-pagination-bullet-active',
                 clickable: true,
-                renderBullet(index: number, className: string,) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:2px" ></span>`;
+                renderBullet(index: number, className: string) {
+                    return `<span class="${className}" style="width:20px; height:6px; border-radius:2px"></span>`;
                 },
             }}
             ref={swiperRef}
-            spaceBetween={`${theme.sizing.smPadding}px`}
-            centeredSlides // center the current slide
+            spaceBetween={theme.sizing.smPadding}
+            centeredSlides
             loop
             navigation
             breakpoints={{
                 '375': {
-                    slidesPerView: 1.186, // Show partial next card on small screens
+                    slidesPerView: 1.186,
                 },
                 '744': {
-                    slidesPerView: 1.826, // Show partial next card on medium screens
+                    slidesPerView: 1.826,
                 },
                 '1500': {
-                    slidesPerView: 3.31, // Show partial next card on large screens
+                    slidesPerView: 3.31,
                 },
             }}
         >
-            <SwiperSlide >
-                <StyledGameCard />
-            </SwiperSlide>
-            <SwiperSlide >
-                <StyledGameCard />
-            </SwiperSlide>
-            <SwiperSlide >
-                <StyledGameCard />
-            </SwiperSlide>
-            <SwiperSlide >
-                <StyledGameCard />
-            </SwiperSlide>
-            <SwiperSlide >
-                <StyledGameCard />
-            </SwiperSlide>
-            <SwiperSlide >
-                <StyledGameCard />
-            </SwiperSlide>
-            <SwiperSlide >
-                <StyledGameCard />
-            </SwiperSlide>
+            {games.map((game) => (
+                <SwiperSlide key={game.id}>
+                    <StyledGameCard
+                        title={game.title || 'Untitled Game'}
+                        description={game.description || 'No description available'}
+                        image={game.imageUrl || 'No image url'}
+                    />
+                </SwiperSlide>
+            ))}
         </Swiper>
-    )
+    );
 }
-
-export default GameCardCarousal;

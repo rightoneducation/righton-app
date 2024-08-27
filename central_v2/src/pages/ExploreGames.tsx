@@ -1,5 +1,6 @@
 import React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { APIClients } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
@@ -13,7 +14,7 @@ import EGMostPopular from '../components/EGMostPopular';
 import EGHeader from '../components/EGHeader';
 
 interface ExploreGamesProps {
-  sampleProp: string;
+  apiClients: APIClients;
 }
 
 const ExploreGamesContainer = styled(Box)(({ theme }) => ({
@@ -37,7 +38,7 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
 }));
 
 
-export default function ExploreGames({ sampleProp }: ExploreGamesProps) {
+export default function ExploreGames({ apiClients }: ExploreGamesProps) {
   const theme = useTheme(); 
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -47,15 +48,21 @@ export default function ExploreGames({ sampleProp }: ExploreGamesProps) {
       : isMediumScreen 
         ? ScreenSize.MEDIUM 
         : ScreenSize.SMALL;
-
+  apiClients.gameTemplate. listGameTemplates(12,null, null, null).then(response => {
+    console.log(response) ;
+    const nextToken = response?.nextToken;
+    apiClients.gameTemplate.listGameTemplates(8, nextToken || null, null, null).then(response2 => {
+    console.log(response2);
+    })
+  });
   return (
     <ExploreGamesContainer>
       <HeaderContainer>
         <EGHeader screenSize={screenSize} />
       </HeaderContainer>
       <Box mt={screenSize === ScreenSize.SMALL ? '77px' : '94px'} />
-      <ExploreGamesUpper screenSize={screenSize} />
-      <EGMostPopular screenSize={screenSize} />
+      <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} />
+      <EGMostPopular screenSize={screenSize} apiClients={apiClients} />
     </ExploreGamesContainer>
   );
 }

@@ -24,10 +24,11 @@ const SearchAndFilterContainer = styled(Box)(( { screenSize }: SearchAndFilterPr
   backgroundColor: '#02215F' 
 }));
 
-const PrimaryButton2 = styled(Button)(() => ({
-    width: 'auto',
+const PrimaryButton2 = styled(Button)(( { screenSize }: SearchAndFilterProps ) => ({
+    width: screenSize === ScreenSize.SMALL ? 'auto' :'115px',
+    minWidth: '44px',
     height: '38px',
-    padding: '4px 12px',
+    padding: '4px 12px 4px 12px',
     gap: '8px',
     borderRadius: '54px',
     background: 'linear-gradient(90deg, #E81144 0%, #E31C5E 100%)',
@@ -51,7 +52,7 @@ export default function SearchAndFilter({ screenSize }: SearchAndFilterProps) {
   return (
     <SearchAndFilterContainer screenSize={screenSize}>
       <SearchBar screenSize={screenSize}/>
-      <PrimaryButton2> 
+      <PrimaryButton2 screenSize={screenSize}> 
         <img src={Filter} alt="Filter Icon" />
         {screenSize !== ScreenSize.SMALL && (
             <PrimaryButton2Text>Filter</PrimaryButton2Text> 

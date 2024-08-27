@@ -20,8 +20,8 @@ const EGHeaderContainer = styled(Box)(({ screenSize }: EGHeaderProps) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    background: 'none',
-  }));
+    background: 'linear-gradient(360deg, #02215F 0%, #0D68B1 100%)',
+}));
 
 
 export default function EGHeader({ screenSize }: EGHeaderProps) {

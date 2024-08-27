@@ -1,6 +1,7 @@
 import React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
+import { APIClients } from '@righton/networking';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import StyledGameCard from './GameCard';
@@ -10,6 +11,7 @@ import PaginationContainerStyled from '../lib/PaginationContainerStyled';
 
 interface RecommendedGamesProps {
   screenSize: ScreenSize;
+  apiClients?: APIClients;
 }
 
 const RecommendedGamesContainer = styled(Box)(({ screenSize }: RecommendedGamesProps) => ({
@@ -31,13 +33,13 @@ const Title = styled(Typography)<{ screenSize: ScreenSize }>(({ screenSize }) =>
   color: '#FFFFFF',
 }));
 
-export default function RecommendedGames({ screenSize }: RecommendedGamesProps) {
+export default function RecommendedGames({ screenSize, apiClients }: RecommendedGamesProps) {
   const theme = useTheme(); 
 
   return (
     <RecommendedGamesContainer screenSize={screenSize}>
       <Title screenSize={screenSize}>Recommended Games</Title>
-      <GameCardCarousal/>
+      <GameCardCarousal apiClients={apiClients}/>
       <PaginationContainerStyled className="swiper-pagination-container"/>
     </RecommendedGamesContainer>
   );
