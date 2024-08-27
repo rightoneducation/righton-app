@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import {motion} from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
@@ -8,12 +9,13 @@ import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaSingleColumnStyled,
-  BodyContentAreaDoubleColumnStyled,
+  BodyContentAreaDoubleColumnStyledNoSwiper,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import EnableShortAnswerCard from './EnableShortAnswerCard';
 import EnableConfidenceCard from './EnableConfidenceCard';
 import EnableHintsCard from './EnableHintsCard';
-import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentRightColumn';
+import GameInProgressContentRightColumn from '../GameInProgressContent/columns/GameInProgressContentLeftColumn';
+import { PrepGameLargeBox } from '../../lib/styledcomponents/animateContainers.tsx/motionDivContainers';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -70,7 +72,13 @@ export default function PrepareGameContent({
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
-        <BodyContentAreaSingleColumnStyled>
+        <BodyContentAreaSingleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+          <motion.div
+          initial={{ x: '100%', opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeIn' }}
+          style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center'  }}
+        >
           <Swiper
             modules={[Pagination]}
             pagination={{
@@ -93,23 +101,24 @@ export default function PrepareGameContent({
               {rightCardsColumn}
             </SwiperSlide>
           </Swiper>
+          </motion.div>
         </BodyContentAreaSingleColumnStyled>
       );
     case (ScreenSize.MEDIUM):
     case (ScreenSize.LARGE):
     default:
       return (
-        <BodyContentAreaDoubleColumnStyled 
-          container 
-          gap={`${theme.sizing.mdPadding}px`} 
-          style={{  
-            paddingLeft: `${theme.sizing.xLgPadding}px`,
-            paddingRight: `${theme.sizing.xLgPadding}px`
-          }}
-        >
-          {leftCardsColumn}
-          {rightCardsColumn}
-        </BodyContentAreaDoubleColumnStyled>
+          <motion.div
+          initial={{ x: '100%', opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeIn' }}
+          style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
+          >
+            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
+              {leftCardsColumn}
+              {rightCardsColumn}
+              </BodyContentAreaDoubleColumnStyledNoSwiper>
+          </motion.div>
       );
   }
 }

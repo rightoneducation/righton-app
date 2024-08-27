@@ -50,40 +50,51 @@ const NewPointsAnimation = styled('div')({
   zIndex: 2,
   animation: `
    newScoreUpWiggle 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-   newScoreUpFadeDown 1000ms ease-in-out 1500ms
+   newScoreUpBounce 300ms ease-in-out 1500ms, 
+   newScoreUpFadeDown 1000ms ease-in-out 1800ms
   `,
   '@keyframes newScoreUpWiggle': {
     '0%': {
-      transform: 'translateY(70%) rotate(0deg) scale(1.0)',
+      transform: 'translateY(-110%) rotate(0deg) scale(1.0)',
     },
     '10%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.2)',
+      transform: 'translateY(-110%) rotate(0deg) scale(1.2)',
     },
     '15%, 45%, 75%': {
       opacity: 1,
-      transform: ' translateY(70%) rotate(-12deg) scale(1.2)',
+      transform: 'translateY(-110%) rotate(-12deg) scale(1.2)',
     },
     '30%, 60%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(12deg) scale(1.2)',
+      transform: 'translateY(-110%) rotate(12deg) scale(1.2)',
     },
     '90%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.2)',
+      transform: 'translateY(-110%) rotate(0deg) scale(1.2)',
     },
     '100%': {
       opacity: 1,
-      transform: 'translateY(70%) rotate(0deg) scale(1.0)',
+      transform: 'translateY(-110%) rotate(0deg) scale(1.0)',
+    },
+  },
+  '@keyframes newScoreUpBounce': {
+    '0%, 100%': {
+      opacity: 1,
+      transform: 'translateY(-110%)',
+    },
+    '50%': {
+      opacity: 1,
+      transform: 'translateY(-130%)',
     },
   },
   '@keyframes newScoreUpFadeDown': {
     '0%': {
       opacity: 1,
-      transform: 'translateY(70%)',
+      transform: 'translateY(-110%)',
     },
     '100%': {
-      transform: 'translateY(100%)',
+      transform: 'translateY(0%)',
     },
   },
 });
@@ -112,7 +123,7 @@ export default function DACScoreIndicator({
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', width:'200px' }}>
+    <Box>
       {newPoints && newPoints > 0 ? (
         <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd}>
           <NewPointsPill>

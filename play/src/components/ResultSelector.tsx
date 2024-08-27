@@ -32,17 +32,7 @@ const CorrectStarsStyled = styled('img')({
   width: '16px',
   height: '16px',
 });
-const BlackBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: `58px`,
-  height: '22px',
-  borderRadius: '23px',
-  background: `#000000`,
-  zIndex: 5,
 
-}));
 interface ResultSelectorProps {
   answerStatus: AnswerState;
   index: number;
@@ -187,7 +177,6 @@ export default function ResultSelector({
             </Box>
           )}
           <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
-          <BlackBox/>
         </Box>
       );
     case AnswerState.SELECTED:

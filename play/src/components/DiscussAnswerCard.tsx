@@ -11,17 +11,6 @@ import ResultSelector from './ResultSelector';
 import DACScoreIndicator from './DACScoreIndicator';
 import DACP2ScoreIndicator from './DACP2ScoreIndicator';
 
-const BlackBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: `58px`,
-  height: '22px',
-  borderRadius: '23px',
-  background: `#000000`,
-  zIndex: 5,
-
-}));
 
 interface DiscussAnswerCardProps {
   isPlayerCorrect: boolean;
@@ -88,8 +77,7 @@ export default function DiscussAnswerCard({
         )}
         {currentState === GameSessionState.PHASE_1_DISCUSS &&(
           <Box style={{ marginLeft: '416px'}}>
-            {/* <DACScoreIndicator newPoints={5} score={0} /> */}
-            <BlackBox/>
+            <DACScoreIndicator newPoints={newPoints} score={0} />
           </Box>
         )}
         <ResultSelector

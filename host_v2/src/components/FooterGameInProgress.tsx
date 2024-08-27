@@ -66,28 +66,62 @@ interface FootGameInProgressProps {
   submittedAnswers: number;
   teamsLength: number;
   screenSize: ScreenSize;
+  scope: any;
+  animate: any;
+  scope2: any;
+  animate2: any;
+  scope3: any;
+  animate3: any;
+  setIsAnimating: (isAnimating: boolean) => void;
 }
 
-function FooterGameInProgress({ 
+function FooterGameInProgress({
   currentState,
   submittedAnswers,
   teamsLength,
-  screenSize
+  screenSize,
+  scope,
+  animate,
+  scope2,
+  animate2,
+  scope3,
+  animate3, 
+  setIsAnimating
 }: FootGameInProgressProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
+    setIsAnimating(true);
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     const startTime = Date.now(); 
+    switch (nextState) {
+      case GameSessionState.FINAL_RESULTS:{
+        const animations = () => {
+          return Promise.all([
+            animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
+            animate2(scope2.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
+            animate3(scope3.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' })
+          ]);
+        };
+        await animations();
+        break;
+      }
+      case GameSessionState.TEAMS_JOINING:
+        await animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' });
+        break;
+      default:
+        break;
+    }
     if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
     }
     apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: startTime.toString()});
     dispatch({type: 'advance_game_phase', payload: {nextState, startTime}});
+    setIsAnimating(false);
   };
   const GetButtonText = () => {
     switch(currentState) {

@@ -2,18 +2,21 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import { useAnimate, motion } from 'framer-motion';
+import { Grid } from '@mui/material';
 import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
 import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
   BodyContentAreaDoubleColumnStyled,
+  BodyContentAreaDoubleColumnStyledNoSwiper,
   BodyContentAreaTripleColumnStyled,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import 'swiper/css';
-import 'swiper/css/pagination';
 import GameInProgressContentLeftColumn from './columns/GameInProgressContentLeftColumn';
 import GameInProgressContentMidColumn from './columns/GameInProgressContentMidColumn';
 import GameInProgressContentRightColumn from './columns/GameInProgressContentRightColumn';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 
 interface GameInProgressContentProps {
@@ -23,6 +26,8 @@ interface GameInProgressContentProps {
   currentQuestion: IQuestion;
   currentPhase: IPhase;
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
+  scope?: React.RefObject<HTMLDivElement>;
+  isAnimating: boolean;
 }
 
 export default function GameInProgressContent({
@@ -32,6 +37,8 @@ export default function GameInProgressContent({
   currentQuestion,
   currentPhase,
   currentPhaseTeamAnswers,
+  scope,
+  isAnimating
 }: GameInProgressContentProps) {
   const theme = useTheme();
   // currentResponses are used for the Real Time Responses Victory Graph
@@ -68,7 +75,7 @@ export default function GameInProgressContent({
   }
   
   const leftCardsColumn = (
-    <GameInProgressContentRightColumn 
+    <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
     />
@@ -91,9 +98,9 @@ export default function GameInProgressContent({
       currentPhase={currentPhase}
     />
   );
-
+  
   const rightCardsColumn = (
-    <GameInProgressContentLeftColumn 
+    <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       currentPhase={currentPhase}
       responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
@@ -107,10 +114,18 @@ export default function GameInProgressContent({
     />
   );
   
+  const needAnimate = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && localGameSession.currentQuestionIndex !== 0;
   switch(screenSize) {
     case (ScreenSize.SMALL):
       return (
         <BodyContentAreaSingleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+          <motion.div
+          ref={scope}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
+          style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center'  }}
+          >
           <Swiper
             modules={[Pagination]}
             pagination={{
@@ -129,64 +144,97 @@ export default function GameInProgressContent({
             <SwiperSlide>
               {leftCardsColumn}
             </SwiperSlide>
-            {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
-              <SwiperSlide>
-                {midCardsColumn}
-              </SwiperSlide>
-            }
-            <SwiperSlide>
-              {rightCardsColumn}
-            </SwiperSlide>
+            {!isAnimating && (
+              <>
+                <SwiperSlide>
+                  {rightCardsColumn}
+                </SwiperSlide>
+                {(isShortAnswerEnabled || 
+                  localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
+                  localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && (
+                    <SwiperSlide>
+                      {midCardsColumn}
+                    </SwiperSlide>
+                )}
+              </>
+            )}
           </Swiper>
+          </motion.div>
         </BodyContentAreaSingleColumnStyled>
       );
     case (ScreenSize.MEDIUM):
       return (
-        <BodyContentAreaDoubleColumnStyled container >
-            <Swiper
-              modules={[Pagination]}
-              pagination={{
-                el: '.swiper-pagination-container',
-                bulletClass: 'swiper-pagination-bullet',
-                bulletActiveClass: 'swiper-pagination-bullet-active',
-                clickable: true,
-                renderBullet(index: number, className: string) {
-                  return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-                },
-              }}
-              slidesPerView={
-                (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) ?
-                  2.1
-                  : 
-                  2.0
-              }
-              spaceBetween={`${theme.sizing.mdPadding}px`}
-              style={{height: '100%', width: '100%', paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
-            >
-              <SwiperSlide>
-                {leftCardsColumn}
-              </SwiperSlide>
-              {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+        <motion.div
+          ref={scope}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
+          style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
+        >
+          {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) ? (
+            <BodyContentAreaDoubleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+              <Swiper
+                modules={[Pagination]}
+                pagination={{
+                  el: '.swiper-pagination-container',
+                  bulletClass: 'swiper-pagination-bullet',
+                  bulletActiveClass: 'swiper-pagination-bullet-active',
+                  clickable: true,
+                  renderBullet(index: number, className: string) {
+                    return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                  },
+                }}
+                slidesPerView={
+                  (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) ?
+                    2.1
+                    : 
+                    2.0
+                }
+                spaceBetween={`${theme.sizing.mdPadding}px`}
+                style={{height: '100%', width: '100%',  paddingLeft: `${theme.sizing.xLgPadding}px`, paddingRight: `${theme.sizing.xLgPadding}px`}}
+              >
                 <SwiperSlide>
-                  {midCardsColumn}
+                  {leftCardsColumn}
                 </SwiperSlide>
-              }
-              <SwiperSlide>
-                {rightCardsColumn}
-              </SwiperSlide>
-            </Swiper>
-        </BodyContentAreaDoubleColumnStyled>
+                {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+                  <SwiperSlide>
+                    {midCardsColumn}
+                  </SwiperSlide>
+                }
+                { !isAnimating &&
+                  <SwiperSlide>
+                    {midCardsColumn}
+                  </SwiperSlide>
+                }
+              </Swiper>
+            </BodyContentAreaDoubleColumnStyled>
+          ) : (
+            <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
+              {leftCardsColumn}
+              {rightCardsColumn}
+            </BodyContentAreaDoubleColumnStyledNoSwiper>
+          )}
+        </motion.div>
       );
     case (ScreenSize.LARGE):
     default:
       return (
-        <BodyContentAreaTripleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
-          {leftCardsColumn}
-          { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
-            midCardsColumn
-          }
-          {rightCardsColumn}
-        </BodyContentAreaTripleColumnStyled>
+        <motion.div
+          ref={scope}
+          initial={{ x: needAnimate ? '100vw' : '0%',}}
+          animate={{x: 0}}
+          transition={needAnimate ? { duration: 1, ease: 'easeIn' } : undefined}
+          exit={{ x: 0, y: 0,  }}
+          style={{ width: '100%', height: '100%', position: 'absolute', top: '0', display: 'flex', justifyContent: 'center'  }}
+        >
+          <BodyContentAreaTripleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
+            {leftCardsColumn}
+            {rightCardsColumn}
+            { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+              midCardsColumn
+            }
+          </BodyContentAreaTripleColumnStyled>
+        </motion.div>
       );
   }
 }
