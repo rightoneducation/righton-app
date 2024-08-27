@@ -11,6 +11,7 @@ export default styled(Box)(({ theme }) => ({
   paddingLeft: `${theme.sizing.smallPadding}px`,
   paddingRight: `${theme.sizing.smallPadding}px`,
   overflow: 'auto',
+  boxSizing: 'border-box',
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
   '&::-webkit-scrollbar': {
     // Chrome and Safari
