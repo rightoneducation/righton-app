@@ -9,7 +9,7 @@ export interface IHostDataManagerAPIClient extends IPlayDataManagerAPIClient {
   updateGameSession(gameSessionUpdates: any): Promise<void>;
   initHostTeamAnswers(inputGameSession: IGameSession): IHostTeamAnswers;
   getHostTeamAnswers(): IHostTeamAnswers;
-  updateHostTeamAnswersSelectedMistakes(mistakes: any, currentQuestion: IQuestion): void;
+  updateHostTeamAnswersSelectedMistakes(mistakes: any, currentQuestion: IQuestion): any;
   getResponsesForQuestion(questionId: string, phase: IPhase): IHostTeamAnswersResponse[];
   subscribeToCreateTeam(callback: (updatedGameSession: IGameSession | null) => void): void
   subscribeToUpdateTeam(callback: (updatedGameSession: IGameSession | null) => void): void;

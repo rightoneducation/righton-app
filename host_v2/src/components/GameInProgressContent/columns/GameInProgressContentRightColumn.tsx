@@ -20,6 +20,8 @@ interface GameInProgressContentRightColumnProps {
   isConfidenceEnabled: boolean;
   isShortAnswerEnabled: boolean;
   screenSize: ScreenSize; 
+  isPopularMode: boolean;
+  setIsPopularMode: (isPopularMode: boolean) => void;
   handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
@@ -34,7 +36,9 @@ export default function GameInProgressContentRightColumn ({
     isConfidenceEnabled,
     isShortAnswerEnabled, 
     screenSize, 
-    handleGraphClick 
+    handleGraphClick,
+    isPopularMode,
+    setIsPopularMode
   }: GameInProgressContentRightColumnProps
 ){
   const theme = useTheme();
@@ -45,6 +49,8 @@ export default function GameInProgressContentRightColumn ({
           <FeaturedMistakes
             currentQuestion={currentQuestion}
             featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+            isPopularMode={isPopularMode}
+            setIsPopularMode={setIsPopularMode}
           /> 
           :
           <Responses 

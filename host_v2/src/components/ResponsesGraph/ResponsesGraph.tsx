@@ -191,6 +191,7 @@ export default function ResponsesGraph({
               <CustomLabel
                 noResponseLabel={noResponseLabel}
                 isShortAnswerEnabled={isShortAnswerEnabled}
+                customBarSelectedWidth={customBarSelectedWidth}
               />
             }
           

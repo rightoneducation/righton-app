@@ -495,7 +495,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return updatedResponses;
   }
 
-  updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion) {
+  updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion): IHostTeamAnswers {
     const updatedQuestions = this.hostTeamAnswers.questions.map((question) => {
       if (question.questionId !== currentQuestion.id) {
         return question;
@@ -519,6 +519,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       ...this.hostTeamAnswers,
       questions: updatedQuestions,
     };
+    return this.hostTeamAnswers;
   }
 
   getHostTeamAnswers() {

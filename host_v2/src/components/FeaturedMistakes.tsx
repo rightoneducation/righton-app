@@ -54,13 +54,17 @@ const RadioLabelStyled = styled(FormControlLabel)({
 interface FeaturedMistakesProps {
   currentQuestion: IQuestion,
   featuredMistakesSelectionValue: string;
+  isPopularMode: boolean;
+  setIsPopularMode: (isPopularMode: boolean) => void;
 }
 
 export default function FeaturedMistakes({
   currentQuestion,
   featuredMistakesSelectionValue,
+  isPopularMode,
+  setIsPopularMode
 }: FeaturedMistakesProps) {
-  const [isPopularMode, setIsPopularMode] = useState<boolean>(true);
+
   const title = 'Common Mistakes';
   const subtitle =
     'Selected responses will be presented to players as options for popular incorrect answers.';
@@ -71,6 +75,7 @@ export default function FeaturedMistakes({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localHostTeamAnswers = useTSHostTeamAnswersContext(HostTeamAnswersContext);
   const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
+  console.log(localHostTeamAnswers);
   const hostTeamAnswerResponses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [];
   const totalAnswers = hostTeamAnswerResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
@@ -94,6 +99,7 @@ export default function FeaturedMistakes({
     return finalMistakes;
   };
   const sortedMistakes = buildFeaturedMistakes(hostTeamAnswerResponses);
+  console.log(sortedMistakes);
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < numOfPopularMistakes) {
@@ -101,8 +107,10 @@ export default function FeaturedMistakes({
       }
       return { ...mistake, isSelected: false };
     });
-    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...resetMistakes], currentQuestion);
-    dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: apiClients.hostDataManager?.getHostTeamAnswers()}});
+    const newHostTeamAnswers = apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...resetMistakes], currentQuestion);
+    console.log(newHostTeamAnswers);
+    if (newHostTeamAnswers)
+      dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...newHostTeamAnswers}});
   };
 
   const handleModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,8 +125,9 @@ export default function FeaturedMistakes({
   const handleSelectMistake = (index: number) => {
     const newMistakes = [...sortedMistakes];
     newMistakes[index].isSelectedMistake = !newMistakes[index].isSelectedMistake;
-    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...newMistakes], currentQuestion);
-    dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {hostTeamAnswers: apiClients.hostDataManager?.getHostTeamAnswers()}});
+    const newHostTeamAnswers = apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...newMistakes], currentQuestion);
+    if (newHostTeamAnswers)
+      dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...newHostTeamAnswers}});
   };
   
   return (

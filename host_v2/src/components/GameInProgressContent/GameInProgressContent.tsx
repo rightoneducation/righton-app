@@ -69,9 +69,11 @@ export default function GameInProgressContent({
   const {isConfidenceEnabled, isHintEnabled, isShortAnswerEnabled} = currentQuestion;
 
   const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
+  const [isPopularMode, setIsPopularMode] = React.useState<boolean>(true);
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
   }
+
   
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
@@ -111,6 +113,8 @@ export default function GameInProgressContent({
       screenSize={screenSize}
       featuredMistakesSelectionValue={featuredMistakesSelectionValue}
       handleGraphClick={handleGraphClick}
+      isPopularMode={isPopularMode}
+      setIsPopularMode={setIsPopularMode}
     />
   );
   

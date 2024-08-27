@@ -3,7 +3,6 @@ import { Grid } from '@mui/material';
 import { GameSessionState, IHostTeamAnswersHint, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IQuestion, IPhase } from '@righton/networking';
 import { Mistake, IGraphClickInfo } from "../../../lib/HostModels";
 import ScrollBoxStyled from '../../../lib/styledcomponents/layout/ScrollBoxStyled';
-import FeaturedMistakes from '../../FeaturedMistakes';
 import HintsCard from '../../HintsGraph/HintsCard';
 import Responses from '../../ResponsesGraph/ResponsesCard';
 import ConfidenceCard from '../../ConfidenceGraph/ConfidenceCard';
@@ -40,8 +39,6 @@ export default function GameInProgressContentMidColumn ({
     handleGraphClick
   }: GameInProgressContentMidColumnProps
 ){
-  console.log('````')
-  console.log(isConfidenceEnabled);
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
     <ScrollBoxStyled>
