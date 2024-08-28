@@ -8,10 +8,10 @@ import { Box } from '@mui/material';
 export default styled(Box)(({ theme }) => ({
   height: `100%`, // footer height & 8px grid spacing
   paddingBottom: `${theme.sizing.mediumPadding}px`, // added so box shadow shows around edge of card
-  paddingLeft: `${theme.sizing.smallPadding}px`,
-  paddingRight: `${theme.sizing.smallPadding}px`,
   overflow: 'auto',
   boxSizing: 'border-box',
+  paddingLeft: `${theme.sizing.smallPadding}px`,
+  paddingRight: `${theme.sizing.smallPadding}px`,
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
   '&::-webkit-scrollbar': {
     // Chrome and Safari

@@ -90,14 +90,7 @@ export default function ConfidenceMeterCard({
 
   const responseOption = (option: IConfidenceOption) => {
     return (
-      <Box
-        maxWidth={isSmallDevice ? `${theme.sizing.largePadding}px` : `${theme.sizing.extraLargePadding}px`}
-        sx={{
-          textAlign: 'center',
-          alignItems: 'center',
-          marginX: `${theme.sizing.extraSmallPadding}px`,
-        }}
-      >
+      <Box style={{width: '100%', maxWidth: `${theme.sizing.mediumPadding}px`, display: 'flex', justifyContent: 'center', textAlign: 'center', paddingLeft: '8px', paddingRight: '8px'}}>
         <FormControlLabel
           key={option.value}
           value={option.value}
@@ -120,7 +113,7 @@ export default function ConfidenceMeterCard({
             {option.text}
           </Typography>}
           labelPlacement="bottom"
-          sx={{ marginX: '0' }}
+          style={{width: '100%'}}
         />
       </Box>
     );
