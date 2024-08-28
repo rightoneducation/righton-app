@@ -142,7 +142,7 @@ export default function useFetchAndSubscribeGameSession(
             window.localStorage.removeItem(StorageKey);
             window.localStorage.removeItem(StorageKeyAnswer);
             teamsSubscription.unsubscribe();
-            window.location.replace((`https://play.rightoneducation.com`));
+            window.location.replace((`https://dev-play.rightoneducation.com`));
           }
       })
       })

@@ -500,6 +500,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       if (question.questionId !== currentQuestion.id) {
         return question;
       }
+      console.log(question);
       const updatedResponses = question.phase1.responses.map((response) => {
         const matchingMistake = currentMistakes.find((mistake: any) => mistake.answer === response.rawAnswer);
         if (matchingMistake)
@@ -507,6 +508,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         return response;
         }
       );
+      console.log(updatedResponses);
       return {
         ...question,
         phase1: {
@@ -519,6 +521,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       ...this.hostTeamAnswers,
       questions: updatedQuestions,
     };
+    console.log(this.hostTeamAnswers);
     return this.hostTeamAnswers;
   }
 

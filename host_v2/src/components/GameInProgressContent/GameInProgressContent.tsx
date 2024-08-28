@@ -117,7 +117,6 @@ export default function GameInProgressContent({
       setIsPopularMode={setIsPopularMode}
     />
   );
-  
   const needAnimate = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && localGameSession.currentQuestionIndex !== 0;
   switch(screenSize) {
     case (ScreenSize.SMALL):

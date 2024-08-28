@@ -75,7 +75,6 @@ export default function FeaturedMistakes({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localHostTeamAnswers = useTSHostTeamAnswersContext(HostTeamAnswersContext);
   const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
-  console.log(localHostTeamAnswers);
   const hostTeamAnswerResponses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [];
   const totalAnswers = hostTeamAnswerResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
@@ -95,11 +94,10 @@ export default function FeaturedMistakes({
         }
         return { ...mistake, isSelectedMistake: false };
       }); 
-    apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...finalMistakes], currentQuestion);
+      apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...finalMistakes], currentQuestion);
     return finalMistakes;
   };
   const sortedMistakes = buildFeaturedMistakes(hostTeamAnswerResponses);
-  console.log(sortedMistakes);
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < numOfPopularMistakes) {
@@ -108,14 +106,13 @@ export default function FeaturedMistakes({
       return { ...mistake, isSelected: false };
     });
     const newHostTeamAnswers = apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...resetMistakes], currentQuestion);
-    console.log(newHostTeamAnswers);
     if (newHostTeamAnswers)
       dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...newHostTeamAnswers}});
   };
 
   const handleModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    resetMistakesToPopular();
     if (event.target.value === 'A') {
-      resetMistakesToPopular();
       setIsPopularMode(true);
     } else {
       setIsPopularMode(false);

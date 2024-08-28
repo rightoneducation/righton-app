@@ -64,7 +64,8 @@ export default function GameInProgress({
           ? ScreenSize.MEDIUM
           : ScreenSize.SMALL;
     const totalTime = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? localGameSession.phaseOneTime : localGameSession.phaseTwoTime;
-
+    console.log('*******isAnimating*******');
+    console.log(isAnimating);
     return(
       <StackContainerStyled>
       {isTimerVisible &&
@@ -90,7 +91,7 @@ export default function GameInProgress({
           hostTeamAnswers={hostTeamAnswers}
           screenSize={screenSize}
           scope={scope}
-          isAnimating={isAnimating}
+          isAnimating={isAnimating ?? false}
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled >

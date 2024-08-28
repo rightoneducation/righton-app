@@ -94,11 +94,11 @@ function FooterGameInProgress({
   const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
   const handleButtonClick = async () => {
-    setIsAnimating(true);
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     const startTime = Date.now(); 
     switch (nextState) {
       case GameSessionState.FINAL_RESULTS:{
+        setIsAnimating(true);
         const animations = () => {
           return Promise.all([
             animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
@@ -107,10 +107,13 @@ function FooterGameInProgress({
           ]);
         };
         await animations();
+        setIsAnimating(false);
         break;
       }
       case GameSessionState.TEAMS_JOINING:
+        setIsAnimating(true);
         await animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' });
+        setIsAnimating(false);
         break;
       default:
         break;
@@ -122,7 +125,6 @@ function FooterGameInProgress({
     }
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
     apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime});
-    setIsAnimating(false);
   };
   const GetButtonText = () => {
     switch(currentState) {
