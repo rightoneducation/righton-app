@@ -12,6 +12,7 @@ import RecommendedGames from '../components/RecommendedGames';
 import ExploreGamesUpper from '../components/ExploreGamesUpper';
 import EGMostPopular from '../components/EGMostPopular';
 import EGHeader from '../components/EGHeader';
+import BasicInfiniteScroll from '../components/scrolltester';
 
 interface ExploreGamesProps {
   apiClients: APIClients;
@@ -63,6 +64,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
       <Box mt={screenSize === ScreenSize.SMALL ? '77px' : '94px'} />
       <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} />
       <EGMostPopular screenSize={screenSize} apiClients={apiClients} />
+      {/* <BasicInfiniteScroll/> */}
     </ExploreGamesContainer>
   );
 }

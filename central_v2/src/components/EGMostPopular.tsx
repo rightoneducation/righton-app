@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Typography, Box, styled } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClients } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid'; // Import UUID
 import StyledGameCard from './GameCard';
 import { ScreenSize } from '../lib/HostModels';
 
@@ -45,19 +47,32 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
 
 export default function EGMostPopular({ screenSize, apiClients }: EGMostPopularProps) {
   const [games, setGames] = useState<any[]>([]);
+  const [nextToken, setNextToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchMoreGames = async () => {
+    if (apiClients && !loading) {
+      setLoading(true);
+      const response = await apiClients.gameTemplate.listGameTemplates(8, nextToken, null, null);
+      if (response) {
+        setGames((prevGames) => [
+          ...prevGames,
+          ...(response.gameTemplates.map((game) => ({ ...game, id: uuidv4() })) || []),
+        ]);
+        setNextToken(response.nextToken || null);
+      }
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (apiClients) {
-      // first 12 games
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null).then(response => {
-        setGames(response?.gameTemplates || []);
-        const nextToken = response?.nextToken;
-
-        // if (nextToken) {
-        //   apiClients.gameTemplate.listGameTemplates(8, nextToken, null, null).then(response2 => {
-        //     setGames(prevGames => [...prevGames, ...(response2?.gameTemplates || [])]);
-        //   });
-        // }
+      // Load the first 12 games initially
+      apiClients.gameTemplate.listGameTemplates(12, null, null, null).then((response) => {
+        if (response) {
+          setGames(response.gameTemplates.map((game) => ({ ...game, id: uuidv4() })));
+          setNextToken(response.nextToken || null);
+        }
       });
     }
   }, [apiClients]);
@@ -67,23 +82,31 @@ export default function EGMostPopular({ screenSize, apiClients }: EGMostPopularP
       <MostPopularText screenSize={screenSize}>
         Most Popular
       </MostPopularText>
-      <Grid container spacing={2}>
-        {games.map((game) => (
-          <Grid
-            item
-            xs={12}
-            md={6} // 700
-            xl={4}
-            key={game.id} // Using the game ID as the key
-          >
-            <StyledGameCard
-              title={game.title}
-              description={game.description}
-              image={game.imageUrl}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      <InfiniteScroll
+        dataLength={games.length}
+        next={fetchMoreGames}
+        hasMore={!!nextToken}
+        loader={<h4>Loading more games...</h4>}
+        scrollableTarget="scrollableDiv"
+      >
+        <Grid container spacing={2} id="scrollableDiv" style={{ height: '80vh', overflow: 'auto' }}>
+          {games.map((game) => (
+            <Grid
+              item
+              xs={12}
+              md={6} // 700
+              xl={4}
+              key={game.id} // Using a unique ID for the key
+            >
+              <StyledGameCard
+                title={game.title}
+                description={game.description}
+                image={game.imageUrl}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </InfiniteScroll>
     </EGMostPopularContainer>
   );
 }

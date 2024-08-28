@@ -26,7 +26,8 @@ import awsconfig from "../aws-exports";
 
 export enum AppType {
   HOST,
-  PLAY
+  PLAY,
+  CENTRAL
 }
 
 export class APIClients {

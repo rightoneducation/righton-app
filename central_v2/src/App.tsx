@@ -6,7 +6,7 @@ import Theme from './lib/Theme';
 import './App.css';
 
 function App() {
-  const apiClients = new APIClients(Environment.Developing, AppType.HOST);
+  const apiClients = new APIClients(Environment.Developing, AppType.CENTRAL);
   return (
     <ThemeProvider theme={Theme}>
       <ExploreGames apiClients={apiClients} />
