@@ -20,7 +20,7 @@ interface GameInProgressContentMidColumnProps {
   currentPhase: IPhase;
   graphClickInfo: IGraphClickInfo;
   confidences: IHostTeamAnswersConfidence[];
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
+  setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 
@@ -36,7 +36,7 @@ export default function GameInProgressContentMidColumn ({
     graphClickInfo,
     currentPhase,
     confidences,
-    handleGraphClick
+    setGraphClickInfo
   }: GameInProgressContentMidColumnProps
 ){
   return (
@@ -48,13 +48,13 @@ export default function GameInProgressContentMidColumn ({
         statePosition={0}
         graphClickInfo={graphClickInfo}
         isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
-        handleGraphClick={handleGraphClick}
+        setGraphClickInfo={setGraphClickInfo}
       />
       {isConfidenceEnabled && currentPhase === IPhase.ONE && 
         <ConfidenceCard 
           confidences={confidences}
           graphClickInfo={graphClickInfo}
-          handleGraphClick={handleGraphClick}
+          setGraphClickInfo={setGraphClickInfo}
         />
       }
       {isHintEnabled && currentPhase === IPhase.TWO &&

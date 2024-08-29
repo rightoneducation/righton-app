@@ -17,7 +17,7 @@ export function CustomBar(props: any) {
     customBarSelectedWidth,
     index,
     graphClickInfo,
-    handleGraphClick,
+    setGraphClickInfo,
     isShortAnswerEnabled
    } = props;
    // console.log(datum);
@@ -48,7 +48,7 @@ export function CustomBar(props: any) {
           rx={8}
           ry={8}
           onClick={() =>
-            handleGraphClick({ graph: 'realtime', selectedIndex: index })
+            setGraphClickInfo({ graph: 'realtime', selectedIndex: index })
           }
         />
       )}

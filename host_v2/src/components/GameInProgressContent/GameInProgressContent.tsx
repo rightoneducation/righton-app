@@ -27,6 +27,8 @@ interface GameInProgressContentProps {
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
   scope?: React.RefObject<HTMLDivElement>;
   isAnimating: boolean;
+  graphClickInfo: IGraphClickInfo;
+  setGraphClickInfo: (graphClickInfo: IGraphClickInfo) => void;
 }
 
 export default function GameInProgressContent({
@@ -37,7 +39,9 @@ export default function GameInProgressContent({
   currentPhase,
   currentPhaseTeamAnswers,
   scope,
-  isAnimating
+  isAnimating,
+  graphClickInfo,
+  setGraphClickInfo,
 }: GameInProgressContentProps) {
   const theme = useTheme();
   // currentResponses are used for the Real Time Responses Victory Graph
@@ -68,7 +72,7 @@ export default function GameInProgressContent({
   // these booleans turn on and off the respective feature cards in the render function below
   const {isConfidenceEnabled, isHintEnabled, isShortAnswerEnabled} = currentQuestion;
 
-  const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
+
   const [isPopularMode, setIsPopularMode] = React.useState<boolean>(true);
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
@@ -96,7 +100,7 @@ export default function GameInProgressContent({
       confidences={currentConfidences}
       numPlayers={localGameSession.teams.length}
       graphClickInfo={graphClickInfo}
-      handleGraphClick={handleGraphClick}
+      setGraphClickInfo={setGraphClickInfo}
       currentPhase={currentPhase}
     />
   );
@@ -112,7 +116,7 @@ export default function GameInProgressContent({
       isShortAnswerEnabled={isShortAnswerEnabled}
       screenSize={screenSize}
       featuredMistakesSelectionValue={featuredMistakesSelectionValue}
-      handleGraphClick={handleGraphClick}
+      setGraphClickInfo={setGraphClickInfo}
       isPopularMode={isPopularMode}
       setIsPopularMode={setIsPopularMode}
     />

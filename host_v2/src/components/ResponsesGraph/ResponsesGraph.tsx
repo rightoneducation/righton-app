@@ -34,9 +34,9 @@ const TitleContainer = styled(Box)({
 interface ResponseGraphProps {
   data: IHostTeamAnswersResponse[];
   statePosition: number,
-  graphClickInfo: IGraphClickInfo, // eslint-disable-line
   isShortAnswerEnabled: boolean,
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
+  graphClickInfo: IGraphClickInfo, // eslint-disable-line
+  setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
   setGraphClickIndex: (index: number | null) => void;
 }
 
@@ -44,6 +44,8 @@ export default function ResponsesGraph({
   data,
   statePosition,
   isShortAnswerEnabled,
+  graphClickInfo,
+  setGraphClickInfo,
   setGraphClickIndex,
 }: ResponseGraphProps) {
   const theme = useTheme();
@@ -69,7 +71,6 @@ export default function ResponsesGraph({
       (_, index) => index * tickInterval,
     );
   };
-  const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
     setGraphClickIndex(selectedIndex);
@@ -183,7 +184,7 @@ export default function ResponsesGraph({
                 data={data}
                 customBarSelectedWidth={customBarSelectedWidth}
                 graphClickInfo={graphClickInfo}
-                handleGraphClick={handleGraphClick}
+                setGraphClickInfo={setGraphClickInfo}
                 isShortAnswerEnabled={isShortAnswerEnabled}
               />
             }

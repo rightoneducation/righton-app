@@ -6,7 +6,7 @@ import { IHostTeamAnswers, GameSessionState, IPhase } from '@righton/networking'
 import { GameSessionContext } from '../lib/context/GameSessionContext';
 import { useTSGameSessionContext } from '../hooks/context/useGameSessionContext';
 import GameStartingModal from '../components/GameStartingModal';
-import { LocalModel, ScreenSize } from '../lib/HostModels';
+import { LocalModel, ScreenSize, IGraphClickInfo } from '../lib/HostModels';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderBackgroundStyled from '../lib/styledcomponents/layout/HeaderBackgroundStyled';
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -51,6 +51,7 @@ export default function GameInProgress({
     const theme = useTheme();
     const [isAddTime, setIsAddTime] = useState<boolean>(false);
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
+    const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
     const localGameSession = useTSGameSessionContext(GameSessionContext); 
     const currentQuestion = localGameSession.questions[localGameSession.currentQuestionIndex];
     const currentPhase = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || localGameSession.currentState === GameSessionState.PHASE_1_DISCUSS || localGameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
@@ -64,8 +65,6 @@ export default function GameInProgress({
           ? ScreenSize.MEDIUM
           : ScreenSize.SMALL;
     const totalTime = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? localGameSession.phaseOneTime : localGameSession.phaseTwoTime;
-    console.log('*******isAnimating*******');
-    console.log(isAnimating);
     return(
       <StackContainerStyled>
       {isTimerVisible &&
@@ -92,6 +91,8 @@ export default function GameInProgress({
           screenSize={screenSize}
           scope={scope}
           isAnimating={isAnimating ?? false}
+          graphClickInfo={graphClickInfo}
+          setGraphClickInfo={setGraphClickInfo}
         />
       </BodyStackContainerStyled>
       <FooterBackgroundStyled >
@@ -108,6 +109,7 @@ export default function GameInProgress({
           animate2={animate2}
           scope3={scope3}
           animate3={animate3}
+          setGraphClickInfo={setGraphClickInfo}  
         />
         </motion.div>
       </FooterBackgroundStyled>

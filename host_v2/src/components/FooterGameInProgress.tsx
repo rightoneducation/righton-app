@@ -9,7 +9,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
-import { ScreenSize } from '../lib/HostModels';
+import { IGraphClickInfo, ScreenSize } from '../lib/HostModels';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -73,6 +73,7 @@ interface FootGameInProgressProps {
   scope3: any;
   animate3: any;
   setIsAnimating: (isAnimating: boolean) => void;
+  setGraphClickInfo: (graphClickInfo: IGraphClickInfo) => void;
 }
 
 function FooterGameInProgress({
@@ -86,7 +87,8 @@ function FooterGameInProgress({
   animate2,
   scope3,
   animate3, 
-  setIsAnimating
+  setIsAnimating,
+  setGraphClickInfo
 }: FootGameInProgressProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -118,11 +120,14 @@ function FooterGameInProgress({
       default:
         break;
     }
-    if ((GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && isShortAnswerEnabled) {
+    if ((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && isShortAnswerEnabled) {
       const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       if (currentResponses && currentResponses.length > 0)
         await apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
     }
+    console.log(currentState);
+    if (currentState === GameSessionState.PHASE_2_START)
+      setGraphClickInfo({graph: null, selectedIndex: null});
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
     apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime});
   };

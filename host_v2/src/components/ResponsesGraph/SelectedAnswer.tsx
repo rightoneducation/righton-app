@@ -108,7 +108,7 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
             </ChoiceContainer>
             }
             <TextContainer>
-              {data[graphClickIndex].rawAnswer}
+              {data[graphClickIndex]?.rawAnswer ? data[graphClickIndex].rawAnswer : null}
             </TextContainer>
             {showCustomTick && (
               <Tooltip

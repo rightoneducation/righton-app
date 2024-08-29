@@ -16,13 +16,13 @@ interface GameInProgressContentRightColumnProps {
   currentQuestion: IQuestion;
   responses: IHostTeamAnswersResponse[];
   confidences: IHostTeamAnswersConfidence[];
-  graphClickInfo: IGraphClickInfo;
   isConfidenceEnabled: boolean;
   isShortAnswerEnabled: boolean;
   screenSize: ScreenSize; 
   isPopularMode: boolean;
   setIsPopularMode: (isPopularMode: boolean) => void;
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
+  graphClickInfo: IGraphClickInfo;
+  setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 
@@ -32,11 +32,11 @@ export default function GameInProgressContentRightColumn ({
     currentQuestion, 
     responses, 
     confidences,
-    graphClickInfo, 
     isConfidenceEnabled,
     isShortAnswerEnabled, 
     screenSize, 
-    handleGraphClick,
+    graphClickInfo,
+    setGraphClickInfo,
     isPopularMode,
     setIsPopularMode
   }: GameInProgressContentRightColumnProps
@@ -57,9 +57,9 @@ export default function GameInProgressContentRightColumn ({
             currentQuestion={currentQuestion}
             responses={responses}
             statePosition={currentPhase === IPhase.ONE ? 0 : 8}
-            graphClickInfo={graphClickInfo}
             isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
-            handleGraphClick={handleGraphClick}
+            graphClickInfo={graphClickInfo}
+            setGraphClickInfo={setGraphClickInfo}
           />
         }
       </ScrollBoxStyled>
