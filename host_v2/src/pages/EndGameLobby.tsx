@@ -70,15 +70,20 @@ function EndGameLobby({teams,
       }
     };
 
-    const debouncedGameTemplateSearch = debounce((search: string) => {
-      apiClients.gameTemplate.listGameTemplates(5, null, null, search).then((response) => {
-        if (response && setSuggestedGameTemplates)
-          setSuggestedGameTemplates(response.gameTemplates);
-      });
-    }, 2000);
+    const debouncedGameTemplateSearch = useCallback( // eslint-disable-line
+      debounce((search: string) => {
+        console.log(search);
+        apiClients.gameTemplate.listGameTemplates(5, null, null, search).then((response) => {
+          console.log(response);
+          console.log(search);
+          if (response && setSuggestedGameTemplates)
+            setSuggestedGameTemplates(response.gameTemplates);
+        });
+      }, 1000),
+      [] 
+    );
 
     const handleUpdateSearchText = (value: string) => {
-      setSuggestedGameTemplates([]);
       debouncedGameTemplateSearch(value);
       setSearchText(value);
     }

@@ -16,7 +16,7 @@ export default function CustomBar( props: any ) {
     customBarSelectedWidth,
     index,
     graphClickIndex,
-    setGraphClickInfo
+    handleGraphClick
    } = props;
    const theme = useTheme();
    const height =  36 + theme.sizing.mdPadding - theme.sizing.xSmPadding / 2;
@@ -45,7 +45,7 @@ export default function CustomBar( props: any ) {
           rx={8}
           ry={8}
           onClick={() =>
-            setGraphClickInfo(index)
+            handleGraphClick(index)
           }
           style={{ 
             cursor: 'pointer',

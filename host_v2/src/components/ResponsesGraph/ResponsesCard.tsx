@@ -64,7 +64,7 @@ export default function Responses({
           data={responses}
           numPlayers={numPlayers}
           statePosition={statePosition}
-          graphClickIndex={graphClickIndex}
+          graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
           correctChoiceIndex={correctChoiceIndex}
         />

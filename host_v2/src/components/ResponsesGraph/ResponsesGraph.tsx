@@ -182,6 +182,7 @@ export default function ResponsesGraph({
             dataComponent={
               <CustomBar 
                 data={data}
+                statePosition={statePosition}
                 customBarSelectedWidth={customBarSelectedWidth}
                 graphClickInfo={graphClickInfo}
                 setGraphClickInfo={setGraphClickInfo}
