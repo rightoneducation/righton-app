@@ -309,7 +309,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   private decrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
     const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
     if (noResponse) {
-      noResponse.count -= 1;
+      noResponse.count = Math.max(noResponse.count - 1,0);
       noResponse.teams = noResponse.teams.filter((team: string) => team !== teamName);
     }
   }
