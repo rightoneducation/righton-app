@@ -62,11 +62,11 @@ export default function InterimLeaderboard({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);  
-
   const handleButtonClick = async () => {
+    const startTime = Date.now(); 
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
-    dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentQuestionIndex:  localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex, currentState: nextState}});
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex});
+    dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentQuestionIndex:  localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex, currentState: nextState, startTime}});
+    apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: localGameSession.questions.length > localGameSession.currentQuestionIndex ? localGameSession.currentQuestionIndex + 1 : localGameSession.currentQuestionIndex, startTime});
   };
   
   return(
@@ -75,26 +75,24 @@ export default function InterimLeaderboard({
       <LeaderboardHeader />
       <motion.div
           initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          animate={{ x: '0%', opacity: 1 }}
           transition={{ duration: 1, ease: 'easeIn' }}
-          style={{ width: '100%', display: 'flex', justifyContent: 'center'}}
-        >
-      <HostBody 
-        teams={teams} 
-        questions={questions} 
-        title={title} 
-        currentQuestionIndex={currentQuestionIndex}
-        screenSize={screenSize}
-      />
-      </motion.div>
-      <Box style={{bottom: '0', marginTop: 'auto'}}>
-        <FooterInterim
-          teamsLength={teams ? teams.length : 0}
+          style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', flexGrow: 1 }}
+      >
+        <HostBody 
+          teams={localGameSession.teams} 
+          questions={questions} 
+          title={title} 
+          currentQuestionIndex={currentQuestionIndex}
           screenSize={screenSize}
-          handleButtonClick={handleButtonClick}
-          isGamePrepared={false}
         />
-        </Box>
+      </motion.div>
+      <FooterInterim
+        teamsLength={teams ? teams.length : 0}
+        screenSize={screenSize}
+        handleButtonClick={handleButtonClick}
+        isGamePrepared={false}
+      />
     </SafeAreaStyled>
   );
 }

@@ -7,7 +7,7 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
   const [gameSession, dispatch] = useReducer(GameSessionReducer, null);
   const [hostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer ,null);
-  console.log(gameSession?.teams);
+  console.log(hostTeamAnswers);
   useEffect(() => {
     try {
       dataManager.init(gameSessionId).then(() => {
@@ -17,14 +17,21 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
         dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...initHostTeamAnswers}});
       });
 
-      dataManager.subscribeToUpdateGameSession(gameSessionId)
-        .then((updatedGameSession: IGameSession) => {
-          dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession}}); 
-      });
-
       dataManager.subscribeToCreateTeam((updatedGameSession: IGameSession | null) => {
         if (updatedGameSession) {
           console.log('updatedGameSession', updatedGameSession);
+          dispatch({
+            type: 'synch_local_gameSession',
+            payload: { ...updatedGameSession }
+          });
+        } else {
+          console.error('Received null or undefined updatedGameSession');
+        }
+      });
+
+      dataManager.subscribeToUpdateTeam((updatedGameSession: IGameSession | null) => {
+        if (updatedGameSession) {
+          console.log('updatedGameSession', updatedGameSession);  
           dispatch({
             type: 'synch_local_gameSession',
             payload: { ...updatedGameSession }

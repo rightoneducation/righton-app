@@ -16,11 +16,13 @@ interface GameInProgressContentRightColumnProps {
   currentQuestion: IQuestion;
   responses: IHostTeamAnswersResponse[];
   confidences: IHostTeamAnswersConfidence[];
-  graphClickInfo: IGraphClickInfo;
   isConfidenceEnabled: boolean;
   isShortAnswerEnabled: boolean;
   screenSize: ScreenSize; 
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
+  isPopularMode: boolean;
+  setIsPopularMode: (isPopularMode: boolean) => void;
+  graphClickInfo: IGraphClickInfo;
+  setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 
@@ -30,41 +32,36 @@ export default function GameInProgressContentRightColumn ({
     currentQuestion, 
     responses, 
     confidences,
-    graphClickInfo, 
     isConfidenceEnabled,
     isShortAnswerEnabled, 
     screenSize, 
-    handleGraphClick 
+    graphClickInfo,
+    setGraphClickInfo,
+    isPopularMode,
+    setIsPopularMode
   }: GameInProgressContentRightColumnProps
 ){
   const theme = useTheme();
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%' }}>
       <ScrollBoxStyled>
-      {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
-        <FeaturedMistakes
-          currentQuestion={currentQuestion}
-          featuredMistakesSelectionValue={featuredMistakesSelectionValue}
-        /> 
-        :
-        <>
-        <Responses 
-          currentQuestion={currentQuestion}
-          responses={responses}
-          statePosition={currentPhase === IPhase.ONE ? 0 : 8}
-          graphClickInfo={graphClickInfo}
-          isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
-          handleGraphClick={handleGraphClick}
-        />
-        {isConfidenceEnabled &&
-          <ConfidenceCard 
-            confidences={confidences}
+        {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
+          <FeaturedMistakes
+            currentQuestion={currentQuestion}
+            featuredMistakesSelectionValue={featuredMistakesSelectionValue}
+            isPopularMode={isPopularMode}
+            setIsPopularMode={setIsPopularMode}
+          /> 
+          :
+          <Responses 
+            currentQuestion={currentQuestion}
+            responses={responses}
+            statePosition={currentPhase === IPhase.ONE ? 0 : 8}
+            isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
             graphClickInfo={graphClickInfo}
-            handleGraphClick={handleGraphClick}
+            setGraphClickInfo={setGraphClickInfo}
           />
         }
-        </>
-      }
       </ScrollBoxStyled>
     </Grid>
   );

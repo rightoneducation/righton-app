@@ -8,6 +8,7 @@ import SelectedAnswer from '../img/SelectedAnswer.svg';
 import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import { AnswerState } from '../lib/PlayModels';
+import DACScoreIndicator from './DACScoreIndicator';
 
 const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   width: '100%',
@@ -41,6 +42,7 @@ interface ResultSelectorProps {
   currentState?: GameSessionState;
   isShortAnswerEnabled?: boolean;
   correctCard?: boolean;
+  newPoints?: number;
 }
 
 export default function ResultSelector({
@@ -51,6 +53,7 @@ export default function ResultSelector({
   currentState,
   isShortAnswerEnabled,
   correctCard,
+  newPoints
 }: ResultSelectorProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
@@ -156,27 +159,32 @@ export default function ResultSelector({
       );
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
-        <Box sx={{ width: '100%' }}>
-          {currentState === GameSessionState.PHASE_1_DISCUSS && (
-            <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
-              <CorrectStarsStyled
-                src={CorrectStars}
-                alt="Stars icon that denotes player is correct"
-                style={{ top: -5, left: 0 }}
-              />
-              <CorrectStarsStyled
-                src={CorrectStars}
-                alt="Stars icon that denotes player is correct"
-                style={{ top: -5, right: 10 }}
-              />
-              <CorrectStarsStyled
-                src={CorrectStars_Mirrored}
-                alt="Stars icon that denotes player is correct"
-                style={{ top: 30, right: 0 }}
-              />
-            </Box>
-          )}
-          <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
+        <Box sx={{width: '100%', display: 'flex', alignItems: 'center'}}>
+          <Box sx={{ width: '100%' }}>
+            {currentState === GameSessionState.PHASE_1_DISCUSS && (
+              <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
+                <CorrectStarsStyled
+                  src={CorrectStars}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: -5, left: 0 }}
+                />
+                <CorrectStarsStyled
+                  src={CorrectStars}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: -5, right: 10 }}
+                />
+                <CorrectStarsStyled
+                  src={CorrectStars_Mirrored}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: 30, right: 0 }}
+                />
+              </Box>
+            )}
+            <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
+          </Box>
+          <Box>
+            <DACScoreIndicator newPoints={newPoints} score={0} />
+          </Box>
         </Box>
       );
     case AnswerState.SELECTED:

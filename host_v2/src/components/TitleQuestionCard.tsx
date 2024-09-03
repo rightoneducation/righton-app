@@ -20,15 +20,17 @@ interface TitleQuestionCardProps {
   }[];
 }
 
-const TitleBoxStyled = styled(Paper)({
+const TitleBoxStyled = styled(Paper)(({theme}) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '18px',
+  marginLeft: `${theme.sizing.xSmPadding}px`,
+  marginRight: `${theme.sizing.xSmPadding}px`,
   padding: '16px 18px 20px 18px',
   gap: '2px',
   boxShadow: '0px 4px 10px 0px rgba(15, 27, 40, 0.3)',
-});
+}));
 
 const TitleBoxTopStyled = styled(Box)({
   display: 'flex',

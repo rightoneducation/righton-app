@@ -61,7 +61,6 @@ export default function GameSessionSwitch({
             currentState !== GameSessionState.PHASE_1_DISCUSS) 
               ? (response.isSelectedMistake || response.isCorrect) 
               : true;
-          console.log(shouldAddResponse);
           if (shouldAddResponse) {
             acc.push({
               id: uuidv4(),
@@ -69,7 +68,6 @@ export default function GameSessionSwitch({
               isAnswer: response.isCorrect,
             } as IChoice);
           }
-          
           return acc;
         },
         []
@@ -81,8 +79,9 @@ export default function GameSessionSwitch({
             text: choice.text,
             isAnswer: choice.isAnswer,
             reason: choice.reason ?? '',
-          } as IChoice)
-      )) ?? [];
+          } as IChoice) ?? []
+      )
+    );
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isGameFirstStarting ? (
@@ -155,6 +154,7 @@ export default function GameSessionSwitch({
       return <StartPhase2 /> 
 
     case GameSessionState.FINAL_RESULTS:
+    case GameSessionState.TEAMS_JOINING:
       return (
         <FinalResultsContainer
           {...gameSession}

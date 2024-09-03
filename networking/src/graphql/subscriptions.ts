@@ -317,6 +317,81 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
   APITypes.OnTeamDeleteByGameSessionIdSubscriptionVariables,
   APITypes.OnTeamDeleteByGameSessionIdSubscription
 >;
+export const onTeamUpdateByGameSessionId = /* GraphQL */ `subscription OnTeamUpdateByGameSessionId($gameSessionTeamsId: ID!) {
+  onTeamUpdateByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
+    id
+    name
+    question {
+      id
+      text
+      choices
+      answerSettings
+      responses
+      hints
+      imageUrl
+      instructions
+      standard
+      cluster
+      domain
+      grade
+      order
+      isConfidenceEnabled
+      isShortAnswerEnabled
+      isHintEnabled
+      gameSessionId
+      __typename
+    }
+    teamMembers {
+      items {
+        id
+        isFacilitator
+        answers {
+          items {
+            id
+            isCorrect
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
+            questionId
+            teamMemberAnswersId
+            teamAnswersId
+            teamName
+            text
+            answer
+            confidenceLevel
+            hint
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        deviceId
+        createdAt
+        updatedAt
+        teamTeamMembersId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    score
+    selectedAvatarIndex
+    createdAt
+    updatedAt
+    gameSessionTeamsId
+    teamQuestionId
+    teamQuestionOrder
+    teamQuestionGameSessionId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnTeamUpdateByGameSessionIdSubscriptionVariables,
+  APITypes.OnTeamUpdateByGameSessionIdSubscription
+>;
 export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemplate(
   $filter: ModelSubscriptionGameTemplateFilterInput
 ) {

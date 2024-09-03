@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { isNullOrUndefined } from '@righton/networking';
 
 const ScorePill = styled('div')(({ theme }) => ({
@@ -14,40 +15,23 @@ const ScorePill = styled('div')(({ theme }) => ({
   zIndex: 2,
 }));
 
-interface ScoreAnimationProps {
-  startAnimation: boolean;
-}
-const ScoreAnimation = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'startAnimation',
-})<ScoreAnimationProps>(({ startAnimation }) => ({
-  opacity: 1,
-  zIndex: 2,
-  animation: startAnimation
-    ? `
-   scoreGrow 1000ms ease-in-out 0ms
-  `
-    : ``,
-  '@keyframes scoreGrow': {
-    '0%, 100%': {
-      opacity: 1,
-      transform: ' scale(1.0)',
-    },
-    '50%': {
-      opacity: 1,
-      transform: ' scale(1.2)',
-    },
-  },
-}));
-
 const NewPointsPill = styled(ScorePill)(({ theme }) => ({
   background: `${theme.palette.primary.altHighlightGradient}`,
   zIndex: 2,
 }));
 
-const NewPointsAnimation = styled('div')({
+interface NewPointsAnimationProps {
+  isSmallScreen: boolean;
+}
+
+const NewPointsAnimation =  styled('div', {
+  shouldForwardProp: (prop) => prop !== 'isSmallScreen',
+})<NewPointsAnimationProps>(({ isSmallScreen }) => ({
   opacity: 0,
   position: 'absolute',
   zIndex: 2,
+  paddingLeft: !isSmallScreen ? '8px' : '0px',
+  right: !isSmallScreen ? '0px' : '58px',
   animation: `
    newScoreUpWiggle 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
    newScoreUpBounce 300ms ease-in-out 1500ms, 
@@ -97,7 +81,7 @@ const NewPointsAnimation = styled('div')({
       transform: 'translateY(0%)',
     },
   },
-});
+}));
 
 interface DACScoreIndicatorProps {
   newPoints?: number;
@@ -110,7 +94,8 @@ export default function DACScoreIndicator({
 }: DACScoreIndicatorProps) {
   const [newScore, setNewScore] = useState(score);
   const [startScoreAnimation, setStartScoreAnimation] = useState(false);
-
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const handlePointsAnimationEnd = (event: React.AnimationEvent) => {
     if (
       event.animationName === 'newScoreUpFadeDown' &&
@@ -123,9 +108,9 @@ export default function DACScoreIndicator({
   };
 
   return (
-    <Box>
+    <Box style={{height: '22px'}}>
       {newPoints && newPoints > 0 ? (
-        <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd}>
+        <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd} isSmallScreen={isSmallScreen}>
           <NewPointsPill>
             <Typography variant="overline">{`+${newPoints}`}</Typography>
           </NewPointsPill>

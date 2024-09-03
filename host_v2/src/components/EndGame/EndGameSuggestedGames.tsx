@@ -180,7 +180,7 @@ function SuggestedGames ({
       }
       return null;
     };
-
+    console.log(gameTemplates);
     return (
         <StartEndGameScrollBoxStyled>
             <SearchStyled>

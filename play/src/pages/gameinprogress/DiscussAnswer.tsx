@@ -17,15 +17,13 @@ import { AnswerState } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import ThreeColumnScrollBox from '../../lib/styledcomponents/layout/ThreeColumnScrollBox';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import {
   BodyContentAreaTripleColumnStyled,
-  BodyContentAreaDoubleColumnStyled,
+  BodyContentAreaTripleColumnStyledNoSwiper,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import DACScoreIndicator from '../../components/DACScoreIndicator';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -40,17 +38,6 @@ interface DiscussAnswerProps {
   gameSession: IGameSession;
   newPoints: number | undefined;
 }
-
-const ColumnHeader = styled(Typography)({
-  marginTop: `16px`,
-  marginBottom: `16px`,
-  textAlign: 'center',
-  fontFamily: 'Karla',
-  fontWeight: '800',
-  fontSize: '16px',
-  lineHeight: '18.7px',
-  color: 'white',
-});
 
 export default function DiscussAnswer({
   isSmallDevice,
@@ -67,9 +54,10 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
-  const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
-  
+  const correctAnswer = currentQuestion.choices.find((answer) => answer.isAnswer);
+  const correctIndex = currentQuestion.choices.findIndex((answer) => answer.isAnswer);
+  console.log(answerChoices);
+  console.log(correctAnswer);
   
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
@@ -82,13 +70,10 @@ export default function DiscussAnswer({
         currentTeam
       )
     : correctAnswer?.text === selectedAnswer?.text;
-    console.log(selectedAnswer?.text);
-  // const isPlayerCorrect = true;
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>
         <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-        <DACScoreIndicator newPoints={5} score={0} />
         <DiscussAnswerCard
           isPlayerCorrect={isPlayerCorrect}
           instructions={instructions}
@@ -178,59 +163,66 @@ export default function DiscussAnswer({
       </ScrollBoxStyled>
   );
 
-  return currentState === GameSessionState.PHASE_2_DISCUSS ? (
-    <BodyContentAreaTripleColumnStyled
-      container
-      spacing={isSmallDevice ? 0 : 2}
-    >
-      <Grid item xs={12} sm={4} style={{ width: `100%`, height: '100%', padding: '0px' }}>
-        {isSmallDevice ? (
-          <Swiper
-            modules={[Pagination]}
-            spaceBetween={4}
-            centeredSlides
-            slidesPerView="auto"
-            pagination={{
-              el: '.swiper-pagination-container',
-              bulletClass: 'swiper-pagination-bullet',
-              bulletActiveClass: 'swiper-pagination-bullet-active',
-              clickable: true,
-              renderBullet(index, className) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-              },
-            }}
-            style={{ height: '100%' }}
-          >
-            <SwiperSlide
-              style={{
-                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                height: '100%',
+  return currentState === GameSessionState.PHASE_2_DISCUSS ? ( // eslint-disable-line
+    isSmallDevice ? (
+      <BodyContentAreaTripleColumnStyled
+        container
+        gap='16px'
+      >
+        <Grid item xs={12} sm style={{ width: `100%`, height: '100%'}}>
+            <Swiper
+              modules={[Pagination]}
+              spaceBetween='8px'
+              centeredSlides
+              slidesPerView={1.2}
+              pagination={{
+                el: '.swiper-pagination-container',
+                bulletClass: 'swiper-pagination-bullet',
+                bulletActiveClass: 'swiper-pagination-bullet-active',
+                clickable: true,
+                renderBullet(index, className) {
+                  return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                },
               }}
+              style={{ height: '100%' }}
             >
-              {questionLeftColumnContents}
-            </SwiperSlide>
-            <SwiperSlide
-              style={{
-                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                height: '100%',
-              }}
-            >
-              {questionRightColumnContents}
-            </SwiperSlide>
-          </Swiper>
-        ) : (
-          questionLeftColumnContents
-        )}
-      </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
-        {questionRightColumnContents}
-      </Grid>
-    </BodyContentAreaTripleColumnStyled>
-  ) : (
-    <BodyContentAreaSingleColumnStyled>
-      <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
-        {P1LeftColumnContents}
-      </Box>
-    </BodyContentAreaSingleColumnStyled>
+              <SwiperSlide
+                style={{
+                  width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                  height: '100%',
+                }}
+              >
+                {questionLeftColumnContents}
+              </SwiperSlide>
+              <SwiperSlide
+                style={{
+                  width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                  height: '100%',
+                }}
+              >
+                {questionRightColumnContents}
+              </SwiperSlide>
+            </Swiper>
+        </Grid>
+        </BodyContentAreaTripleColumnStyled>
+      ):(
+        <BodyContentAreaTripleColumnStyledNoSwiper
+          container
+          gap='16px'
+        >
+          <Grid item xs={0} sm sx={{ width: '100%', height: '100%' }}>
+            {questionLeftColumnContents}
+          </Grid>
+          <Grid item xs={0} sm sx={{ width: '100%', height: '100%' }}>
+            {questionRightColumnContents}
+          </Grid>
+        </BodyContentAreaTripleColumnStyledNoSwiper>
+      )
+    ) : (
+      <BodyContentAreaSingleColumnStyled>
+        <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
+          {P1LeftColumnContents}
+        </Box>
+      </BodyContentAreaSingleColumnStyled>
   );
 }

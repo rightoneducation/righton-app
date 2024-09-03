@@ -3,7 +3,6 @@ import { useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { useAnimate, motion } from 'framer-motion';
-import { Grid } from '@mui/material';
 import { IGameSession, IQuestion, IHostTeamAnswers, GameSessionState, IHostTeamAnswersResponse, IHostTeamAnswersConfidence, IHostTeamAnswersHint, IPhase, IHostTeamAnswersPerPhase } from '@righton/networking';
 import { IGraphClickInfo, Mistake, featuredMistakesSelectionValue, ScreenSize } from '../../lib/HostModels';
 import {
@@ -28,6 +27,8 @@ interface GameInProgressContentProps {
   currentPhaseTeamAnswers: IHostTeamAnswersPerPhase | null;
   scope?: React.RefObject<HTMLDivElement>;
   isAnimating: boolean;
+  graphClickInfo: IGraphClickInfo;
+  setGraphClickInfo: (graphClickInfo: IGraphClickInfo) => void;
 }
 
 export default function GameInProgressContent({
@@ -38,7 +39,9 @@ export default function GameInProgressContent({
   currentPhase,
   currentPhaseTeamAnswers,
   scope,
-  isAnimating
+  isAnimating,
+  graphClickInfo,
+  setGraphClickInfo,
 }: GameInProgressContentProps) {
   const theme = useTheme();
   // currentResponses are used for the Real Time Responses Victory Graph
@@ -69,15 +72,18 @@ export default function GameInProgressContent({
   // these booleans turn on and off the respective feature cards in the render function below
   const {isConfidenceEnabled, isHintEnabled, isShortAnswerEnabled} = currentQuestion;
 
-  const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
+
+  const [isPopularMode, setIsPopularMode] = React.useState<boolean>(true);
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
   }
+
   
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
+      isShortAnswerEnabled={isShortAnswerEnabled}
     />
   );
 
@@ -94,7 +100,7 @@ export default function GameInProgressContent({
       confidences={currentConfidences}
       numPlayers={localGameSession.teams.length}
       graphClickInfo={graphClickInfo}
-      handleGraphClick={handleGraphClick}
+      setGraphClickInfo={setGraphClickInfo}
       currentPhase={currentPhase}
     />
   );
@@ -110,10 +116,11 @@ export default function GameInProgressContent({
       isShortAnswerEnabled={isShortAnswerEnabled}
       screenSize={screenSize}
       featuredMistakesSelectionValue={featuredMistakesSelectionValue}
-      handleGraphClick={handleGraphClick}
+      setGraphClickInfo={setGraphClickInfo}
+      isPopularMode={isPopularMode}
+      setIsPopularMode={setIsPopularMode}
     />
   );
-  
   const needAnimate = localGameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && localGameSession.currentQuestionIndex !== 0;
   switch(screenSize) {
     case (ScreenSize.SMALL):
@@ -147,13 +154,12 @@ export default function GameInProgressContent({
             {!isAnimating && (
               <>
                 <SwiperSlide>
-                  {rightCardsColumn}
+                  {midCardsColumn}
                 </SwiperSlide>
-                {(isShortAnswerEnabled || 
-                  localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
-                  localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && (
+                {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
+                   localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && (
                     <SwiperSlide>
-                      {midCardsColumn}
+                      {rightCardsColumn}
                     </SwiperSlide>
                 )}
               </>
@@ -196,22 +202,21 @@ export default function GameInProgressContent({
                 <SwiperSlide>
                   {leftCardsColumn}
                 </SwiperSlide>
-                {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+                <SwiperSlide>
+                  {midCardsColumn}
+                </SwiperSlide>
+                {(!isAnimating && (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || 
+                   localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) && 
                   <SwiperSlide>
-                    {midCardsColumn}
-                  </SwiperSlide>
-                }
-                { !isAnimating &&
-                  <SwiperSlide>
-                    {midCardsColumn}
-                  </SwiperSlide>
+                    {rightCardsColumn}
+                  </SwiperSlide>)
                 }
               </Swiper>
             </BodyContentAreaDoubleColumnStyled>
           ) : (
             <BodyContentAreaDoubleColumnStyledNoSwiper container gap={`${theme.sizing.mdPadding}px`}>
               {leftCardsColumn}
-              {rightCardsColumn}
+              {midCardsColumn}
             </BodyContentAreaDoubleColumnStyledNoSwiper>
           )}
         </motion.div>
@@ -229,9 +234,9 @@ export default function GameInProgressContent({
         >
           <BodyContentAreaTripleColumnStyled container gap={`${theme.sizing.mdPadding}px`}>
             {leftCardsColumn}
-            {rightCardsColumn}
-            { (isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
-              midCardsColumn
+            {midCardsColumn}
+            {(isShortAnswerEnabled || localGameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS) &&
+              rightCardsColumn
             }
           </BodyContentAreaTripleColumnStyled>
         </motion.div>

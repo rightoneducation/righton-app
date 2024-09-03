@@ -10,11 +10,13 @@ import AnswerCard from '../../AnswerCard';
 interface GameInProgressContentLeftColumnProps {
   currentQuestion: IQuestion;
   localGameSession: IGameSession;
+  isShortAnswerEnabled?: boolean;
 }
 
 export default function GameInProgressContentLeftColumn({ 
     currentQuestion,
     localGameSession,
+    isShortAnswerEnabled
   }: GameInProgressContentLeftColumnProps
 ){
   const theme = useTheme();
@@ -30,6 +32,7 @@ export default function GameInProgressContentLeftColumn({
       {currentQuestion.choices.map((choice, index) => 
         <AnswerCard 
           isCorrectAnswer={choice.isAnswer}
+          isShortAnswerEnabled={isShortAnswerEnabled ?? false}
           answerIndex={index}
           answerContent={choice.text}
           instructions={currentQuestion.instructions}

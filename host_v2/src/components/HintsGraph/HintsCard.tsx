@@ -92,7 +92,7 @@ export default function Hints({
 
   useEffect(() => {
     console.log(localGameSession.currentState);
-    if (localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS && hints) {
+    if (localGameSession.currentState === GameSessionState.PHASE_2_DISCUSS && hints && hints.length >= 3) {
       handleProcessHints(hints);
     }
   }, [localGameSession.currentState]); // eslint-disable-line
@@ -114,7 +114,10 @@ export default function Hints({
                 totalNum={numPlayers}
             />
              <SubtitleStyled style={{fontStyle: 'italic'}}>
-                Hints will be displayed in the next phase
+              { hints.length < 3
+                ? `A minimum of 3 submissions are required to generate hints`
+                : `Hints will be displayed in the next phase`
+              }
             </SubtitleStyled>
           </>
         ) : (
@@ -136,8 +139,8 @@ export default function Hints({
           ) : (
             <>
               {(isHintEmpty && !isHintLoading && !isHintError) && (
-                <Typography variant='h4' color={`${theme.palette.primary.main}`}>
-                  No players submitted hints.
+                <Typography variant='h4' color={`${theme.palette.primary.main}`} style={{ textAlign: 'center'}}>
+                  Not enough players submitted hints.
                 </Typography>
               )}
               {(isHintLoading && !isHintError) && (

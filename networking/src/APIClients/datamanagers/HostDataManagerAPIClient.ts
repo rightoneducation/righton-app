@@ -23,6 +23,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   protected teamMemberAPIClient: ITeamMemberAPIClient;
   protected teamAnswerAPIClient: ITeamAnswerAPIClient;
   protected createTeamSubscription: any;
+  protected updateTeamSubscription: any;
   private hostTeamAnswers: IHostTeamAnswers;
   private createTeamAnswerSubscription: any;
   private updateTeamAnswerSubscription: any;
@@ -67,30 +68,15 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (this.createTeamSubscription && this.createTeamSubscription.unsubscribe) {
       this.createTeamSubscription.unsubscribe();
     }
+    if (this.updateTeamSubscription && this.updateTeamSubscription.unsubscribe) {
+      this.updateTeamSubscription.unsubscribe();
+    }
     if (this.createTeamAnswerSubscription && this.createTeamAnswerSubscription.unsubscribe) {
       this.createTeamAnswerSubscription.unsubscribe();
     }
     if (this.updateTeamAnswerSubscription && this.updateTeamAnswerSubscription.unsubscribe) {
       this.updateTeamAnswerSubscription.unsubscribe();
     } 
-  }
-
-  // GameSession handling 
-  async subscribeToUpdateGameSession(gameSessionId: string): Promise<IGameSession> {
-    try {
-      this.gameSessionId = gameSessionId;
-      const fetchedGame = await this.gameSessionAPIClient.getGameSession(this.gameSessionId);
-      // const currentQuestion = fetchedGame.questions[fetchedGame.currentQuestionIndex];
-      // const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion) ?? null;
-      if (!fetchedGame || !fetchedGame.id) {
-        throw new Error('Invalid game session');
-      }
-      this.gameSession = fetchedGame;
-      return this.gameSession;
-    } catch (error) {
-      console.log(error);
-      throw new Error (`Error: ${error}`)
-    }
   }
 
   //subscribe to created teams, when players are joining in the lobby
@@ -113,12 +99,47 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     });
   }
 
+
+  //subscribe to updated teams, when players' scores are being assigned
+  subscribeToUpdateTeam(callback: (updatedGameSession: IGameSession | null) => void): void {
+    if (!this.gameSessionId) {
+      console.error('Error: Invalid game session id');
+      return;
+    }
+  
+    this.updateTeamSubscription = this.teamAPIClient.subscribeUpdateTeam(this.gameSessionId, (team: ITeam) => {
+      if (!team) {
+        console.error('Error: Invalid team');
+        return;
+      }
+      console.log(this.gameSession);
+      console.log(this.getGameSession());
+      const newGameSession = { ...this.gameSession as IGameSession };
+      newGameSession.teams[newGameSession.teams.findIndex((t) => t.id === team.id)] = team;
+      this.gameSession = newGameSession;
+      callback(newGameSession);
+    });
+  }
+
   async updateTime(newTime: number) {
     if (this.gameSession && this.gameSessionId && this.gameSession.startTime){
       try {  
         await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, startTime: newTime.toString()}).then((gameSession: IGameSession) => {
           console.log(newTime);
           console.log(gameSession);
+          this.gameSession = gameSession;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+
+  async updateGameSession(gameSessionUpdates: any) {
+    if (this.gameSession && this.gameSessionId){
+      try {  
+        await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, ...gameSessionUpdates }).then((gameSession: IGameSession) => {
           this.gameSession = gameSession;
         });
       } catch (error) {
@@ -440,11 +461,19 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           });
         });
         Object.values(IPhase).forEach((phase) => {
-          const numSubmittedAnswers = question[phase].responses.reduce((acc, response) => response.multiChoiceCharacter !== '–' ? acc + response.count : acc, 0) ?? 0;
-          const numNoResponses = numTeams - numSubmittedAnswers;
+          const teamsAnswered = question[phase].responses
+            .reduce<string[]>((acc, response) => {
+              if (response.multiChoiceCharacter !== '–') {
+                acc.push(...response.teams);
+              }
+              return acc;
+            }, []);
+          const teamsUnanswered = gameSession.teams.map((team) => team.name).filter((team) => !teamsAnswered.includes(team));
+          const numNoResponses = numTeams - teamsAnswered.length;
           const noResponses = question[phase].responses.find((response: any) => response.multiChoiceCharacter === '–');
           if (noResponses) {
             noResponses.count = numNoResponses ?? 0;
+            noResponses.teams = teamsUnanswered;
           }
         });
       });
@@ -466,11 +495,12 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return updatedResponses;
   }
 
-  updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion) {
+  updateHostTeamAnswersSelectedMistakes(currentMistakes: any, currentQuestion: IQuestion): IHostTeamAnswers {
     const updatedQuestions = this.hostTeamAnswers.questions.map((question) => {
       if (question.questionId !== currentQuestion.id) {
         return question;
       }
+      console.log(question);
       const updatedResponses = question.phase1.responses.map((response) => {
         const matchingMistake = currentMistakes.find((mistake: any) => mistake.answer === response.rawAnswer);
         if (matchingMistake)
@@ -478,6 +508,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         return response;
         }
       );
+      console.log(updatedResponses);
       return {
         ...question,
         phase1: {
@@ -490,6 +521,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       ...this.hostTeamAnswers,
       questions: updatedQuestions,
     };
+    console.log(this.hostTeamAnswers);
+    return this.hostTeamAnswers;
   }
 
   getHostTeamAnswers() {

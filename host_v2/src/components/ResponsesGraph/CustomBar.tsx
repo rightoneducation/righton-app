@@ -16,8 +16,9 @@ export function CustomBar(props: any) {
     y,
     customBarSelectedWidth,
     index,
+    statePosition,
     graphClickInfo,
-    handleGraphClick,
+    setGraphClickInfo,
     isShortAnswerEnabled
    } = props;
    // console.log(datum);
@@ -28,8 +29,8 @@ export function CustomBar(props: any) {
       return graphClickInfo.selectedIndex !== null &&
       graphClickInfo.selectedIndex !== undefined &&
       graphClickInfo.selectedIndex === index &&
-      graphClickInfo.graph === 'realtime';
-   }, [graphClickInfo.selectedIndex, index, graphClickInfo.graph]);
+      (statePosition < 6 ? graphClickInfo.graph === 'realtimephase1' : graphClickInfo.graph === 'realtimephase2');
+   }, [graphClickInfo.selectedIndex, index, graphClickInfo.graph, statePosition]);
   return (
     <g>
       <Bar {...props} />
@@ -48,7 +49,7 @@ export function CustomBar(props: any) {
           rx={8}
           ry={8}
           onClick={() =>
-            handleGraphClick({ graph: 'realtime', selectedIndex: index })
+            setGraphClickInfo({ graph: statePosition < 6 ? 'realtimephase1' : 'realtimephase2', selectedIndex: index })
           }
         />
       )}

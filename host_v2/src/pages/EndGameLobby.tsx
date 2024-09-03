@@ -13,7 +13,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/HostModels';
 import EndGameHeader from '../components/EndGame/EndGameHeader';
 import EndGameBody from '../components/EndGame/EndGameBody';
-import EndGameFooter from '../components/FooterStartGame';
+import FooterStartGame from '../components/FooterStartGame';
 
 interface EndGameLobbyProps {
   gameTemplates: IGameTemplate[] | null;
@@ -53,7 +53,7 @@ function EndGameLobby({teams,
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
     const apiClients = useTSAPIClientsContext(APIClientsContext);
-
+    
     useEffect(()=> {
       apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8').then((response) => {
         if (response && setSuggestedGameTemplates)
@@ -70,24 +70,26 @@ function EndGameLobby({teams,
       }
     };
 
-    const debouncedGameTemplateSearch = debounce((search: string) => {
-      apiClients.gameTemplate.listGameTemplates(5, null, null, search).then((response) => {
-        if (response && setSuggestedGameTemplates)
-          setSuggestedGameTemplates(response.gameTemplates);
-      });
-    }, 2000);
+    const debouncedGameTemplateSearch = useCallback( // eslint-disable-line
+      debounce((search: string) => {
+        console.log(search);
+        apiClients.gameTemplate.listGameTemplates(5, null, null, search).then((response) => {
+          console.log(response);
+          console.log(search);
+          if (response && setSuggestedGameTemplates)
+            setSuggestedGameTemplates(response.gameTemplates);
+        });
+      }, 1000),
+      [] 
+    );
 
     const handleUpdateSearchText = (value: string) => {
-      setSuggestedGameTemplates([]);
       debouncedGameTemplateSearch(value);
       setSearchText(value);
     }
 
     return (
-      <SafeAreaStyled style={{ 
-        paddingLeft: `${theme.sizing.xLgPadding}px`,
-        paddingRight: `${theme.sizing.xLgPadding}px`
-        }}>
+      <SafeAreaStyled>
         <EndGameHeader gameCode = {gameCode} />
         <EndGameBody 
           screenSize={screenSize} 
@@ -99,7 +101,7 @@ function EndGameLobby({teams,
           searchText={searchText}
           handleUpdateSearchText={handleUpdateSearchText}
         />
-        <EndGameFooter 
+        <FooterStartGame 
           screenSize={screenSize}
           teamsLength={teams ? teams.length : 0}
           selectedSuggestedGame={selectedSuggestedGame}

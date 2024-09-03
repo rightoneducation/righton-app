@@ -8064,6 +8064,82 @@ export type OnTeamDeleteByGameSessionIdSubscription = {
   } | null,
 };
 
+export type OnTeamUpdateByGameSessionIdSubscriptionVariables = {
+  gameSessionTeamsId: string,
+};
+
+export type OnTeamUpdateByGameSessionIdSubscription = {
+  onTeamUpdateByGameSessionId?:  {
+    __typename: "Team",
+    id: string,
+    name: string,
+    question?:  {
+      __typename: "Question",
+      id: string,
+      text: string,
+      choices?: string | null,
+      answerSettings?: string | null,
+      responses?: string | null,
+      hints?: string | null,
+      imageUrl?: string | null,
+      instructions?: string | null,
+      standard?: string | null,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      order: number,
+      isConfidenceEnabled: boolean,
+      isShortAnswerEnabled: boolean,
+      isHintEnabled: boolean,
+      gameSessionId: string,
+    } | null,
+    teamMembers?:  {
+      __typename: "ModelTeamMemberConnection",
+      items:  Array< {
+        __typename: "TeamMember",
+        id: string,
+        isFacilitator?: boolean | null,
+        answers?:  {
+          __typename: "ModelTeamAnswerConnection",
+          items:  Array< {
+            __typename: "TeamAnswer",
+            id: string,
+            isCorrect?: boolean | null,
+            isSubmitted: boolean,
+            isShortAnswerEnabled: boolean,
+            currentState: GameSessionState,
+            currentQuestionIndex: number,
+            questionId: string,
+            teamMemberAnswersId: string,
+            teamAnswersId?: string | null,
+            teamName?: string | null,
+            text: string,
+            answer: string,
+            confidenceLevel?: ConfidenceLevel | null,
+            hint?: string | null,
+            createdAt: string,
+            updatedAt: string,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
+        deviceId: string,
+        createdAt: string,
+        updatedAt: string,
+        teamTeamMembersId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    score: number,
+    selectedAvatarIndex: number,
+    createdAt: string,
+    updatedAt: string,
+    gameSessionTeamsId?: string | null,
+    teamQuestionId?: string | null,
+    teamQuestionOrder?: number | null,
+    teamQuestionGameSessionId?: string | null,
+  } | null,
+};
+
 export type OnCreateGameTemplateSubscriptionVariables = {
   filter?: ModelSubscriptionGameTemplateFilterInput | null,
 };

@@ -32,20 +32,20 @@ interface ResponsesProps {
   statePosition: number;
   graphClickInfo: IGraphClickInfo;
   isShortAnswerEnabled: boolean;
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
+  setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 export default function Responses({
   currentQuestion,
   responses,
   statePosition,
-  graphClickInfo,
   isShortAnswerEnabled,
-  handleGraphClick,
+  graphClickInfo,
+  setGraphClickInfo
 }: ResponsesProps) {
   const correctChoiceIndex = currentQuestion.choices.findIndex((choice) => choice.isAnswer);
   const numPlayers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
-  const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(null);
+  const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(graphClickInfo.selectedIndex);
   return (
     <HostDefaultCardStyled>
       <ResponseContainer>
@@ -55,16 +55,16 @@ export default function Responses({
         <ResponsesGraph
           data={responses}
           statePosition={statePosition}
-          graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={isShortAnswerEnabled}
-          handleGraphClick={handleGraphClick}
+          graphClickInfo={graphClickInfo}
+          setGraphClickInfo={setGraphClickInfo}
           setGraphClickIndex={setGraphClickIndex}
         />
         <SelectedAnswer 
           data={responses}
           numPlayers={numPlayers}
           statePosition={statePosition}
-          graphClickIndex={graphClickIndex}
+          graphClickInfo={graphClickInfo}
           isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
           correctChoiceIndex={correctChoiceIndex}
         />

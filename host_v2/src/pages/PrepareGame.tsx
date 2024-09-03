@@ -56,8 +56,8 @@ export default function PrepareGame( {
         const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(updatedGameSession);
         if (updateNoResponses)
           dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {...updateNoResponses}});
-        apiClients.gameSession.updateGameSession({id: updatedGameSession.id, currentQuestionIndex: 0, currentState: nextState, startTime: currentTimeMillis});
         dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis}});
+        apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis});
         setIsTimerVisible(true);
       });
     };

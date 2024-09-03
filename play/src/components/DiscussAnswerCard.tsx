@@ -8,7 +8,6 @@ import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import ResultSelector from './ResultSelector';
-import DACScoreIndicator from './DACScoreIndicator';
 import DACP2ScoreIndicator from './DACP2ScoreIndicator';
 
 
@@ -54,7 +53,7 @@ export default function DiscussAnswerCard({
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
       {correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
-               <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>)}
+        <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>)}
       {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <AnswerTitleTypography>Incorrect Answer</AnswerTitleTypography>
@@ -75,11 +74,6 @@ export default function DiscussAnswerCard({
             </Typography>
           </Box>
         )}
-        {currentState === GameSessionState.PHASE_1_DISCUSS &&(
-          <Box style={{ marginLeft: '416px'}}>
-            <DACScoreIndicator newPoints={newPoints} score={0} />
-          </Box>
-        )}
         <ResultSelector
           answerStatus={answerStatus}
           index={answerIndex}
@@ -87,6 +81,7 @@ export default function DiscussAnswerCard({
           currentState={currentState}
           isShortAnswerEnabled={isShortAnswerEnabled}
           correctCard = {correctCard}
+          newPoints={newPoints}
         />
         <Stack
           spacing={1}

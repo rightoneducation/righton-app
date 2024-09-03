@@ -1,9 +1,6 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAnimate } from 'framer-motion';
 import { GameSessionState, IGameSession, APIClients, IHostTeamAnswers } from '@righton/networking';
-import { GameSessionDispatchContext } from '../../lib/context/GameSessionContext';
-import { HostTeamAnswersDispatchContext } from '../../lib/context/HostTeamAnswersContext';
-import { useTSDispatchContext } from '../../hooks/context/useGameSessionContext';
 import GameInProgress from '../../pages/GameInProgress';
 import StartGame from '../../pages/StartGame';
 import Leaderboard from '../../pages/Leaderboard';
@@ -23,7 +20,6 @@ export default function GameSessionContainer({apiClients, gameSession, hostTeamA
   const [scope, animate] = useAnimate();
   const [scope2, animate2] = useAnimate();
   const [scope3, animate3] = useAnimate();
-
   const gameTemplates = null;
   let teamsJoiningContent = null;
   if (gameSession.currentQuestionIndex === null) {

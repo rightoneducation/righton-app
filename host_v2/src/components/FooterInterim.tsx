@@ -45,10 +45,10 @@ const FooterContainer = styled(Box)(({theme}) => ({
   width: '100%',
   paddingBottom: '24px',
   gap: '16px',
+  flexGrow: 1
 }));
 
 const InnerFooterContainer = styled(Box)({
-  position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',

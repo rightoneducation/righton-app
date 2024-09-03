@@ -9,6 +9,11 @@ export interface ITeamAPIClient {
     callback: (result: ITeam) => void
   ): Promise<any>;
 
+  subscribeUpdateTeam(
+    id: string,
+    callback: (result: ITeam) => void
+  ): Promise<any>;
+
   updateTeam(teamInput: UpdateTeamInput): Promise<ITeam>;
 
   deleteTeam(teamId: string): Promise<ITeam>;
