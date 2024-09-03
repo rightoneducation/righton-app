@@ -15,7 +15,7 @@
     "@types/node": "^16.18.80",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
-    "aws-amplify": "^6.0.16",
+    "aws-amplify": "^6.5.3",
     "lodash": "^4.17.21",
     "openai": "^4.28.0",
     "react": "^18.2.0",
