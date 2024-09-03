@@ -1,5 +1,6 @@
 import { IGameTemplate } from "../../Models";
 import { CreateGameTemplateInput, UpdateGameTemplateInput } from "../../AWSMobileApi";
+import { FilterTarget } from "../BaseAPIClient";
 
 export interface IGameTemplateAPIClient {
   createGameTemplate(
@@ -22,27 +23,31 @@ export interface IGameTemplateAPIClient {
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
-    filterString: string | null
+    filterString: string | null,
+    filterTargets: FilterTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByDate(
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
-    filterString: string | null
+    filterString: string | null,
+    filterTargets: FilterTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByGrade(
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
-    filterString: string | null
+    filterString: string | null,
+    filterTargets: FilterTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByQuestionTemplatesCount(
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
-    filterString: string | null
+    filterString: string | null,
+    filterTargets: FilterTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 }

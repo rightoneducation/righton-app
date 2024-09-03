@@ -10,6 +10,12 @@ export enum HTTPMethod {
   Post = "POST",
 }
 
+export enum FilterTarget {
+  TITLE,
+  DESCRIPTION,
+  GRADE
+}
+
 export interface GraphQLOptions {
   input?: object;
   variables?: object;
@@ -96,15 +102,24 @@ export abstract class BaseAPIClient {
       filterString: string | null,
       type: T, 
       query: any,
-      queryName: string
+      queryName: string,
+      filterTargets?: FilterTarget[] | null,
     ): Promise<QueryResult<T> | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type };
-      if (filterString != null) {
-        if (queryName === "gameTemplatesByGrade") {
-          queryParameters.grade = { eq: filterString };
-        } else {
-          queryParameters.filter = { title: { contains: filterString } };
-        }
+      if (filterString != null && filterTargets && filterTargets.length > 0) {
+          const filters: any[] = [];
+          const filterTargetMapping: { [key in FilterTarget]: string } = {
+            [FilterTarget.TITLE]: 'title',
+            [FilterTarget.DESCRIPTION]: 'description',
+            [FilterTarget.GRADE]: 'grade',
+          };
+          filterTargets.forEach((target) => {
+            const filterField = filterTargetMapping[target];
+            if (filterField) {
+              filters.push({ [filterField]: { contains: filterString } });
+            }
+          });
+          queryParameters.filter = { or: filters };
       }
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
