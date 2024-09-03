@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import check from '../../img/Pickedcheck_white.svg';
 
 export default function CustomLabel(props: any) {
-  const {x, y, datum, noResponseLabel, isShortAnswerEnabled, customBarSelectedWidth} = props;
+  const {x, y, datum, noResponseLabel, isShortAnswerEnabled, customBarSelectedWidth, statePosition} = props;
   const theme = useTheme();
   const finalText = datum.rawAnswer.length > 40 ? `${datum.rawAnswer.substring(0, 40)}...` : datum.rawAnswer;
   // done to prevent embedding a nested ternary in the render function
@@ -59,7 +59,8 @@ export default function CustomLabel(props: any) {
           fill:
             datum.count === 0 ||
             datum.multiChoiceCharacter === noResponseLabel ||
-            x <= 70
+            x <= 70 ||
+            statePosition > 6
               ? '#FFF'
               : '#384466',
         }}

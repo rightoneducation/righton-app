@@ -3,7 +3,7 @@ import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/material/styles';
 import { IHostTeamAnswersConfidence, IHostTeamAnswersConfidenceResponse } from '@righton/networking';
-import check from '../../images/correctAnswerCheck.png';
+import check from '../../img/Pickedcheck_white.svg';
 
 
 interface DropdownProps {

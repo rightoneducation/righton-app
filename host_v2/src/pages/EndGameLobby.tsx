@@ -55,7 +55,7 @@ function EndGameLobby({teams,
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     
     useEffect(()=> {
-      apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8').then((response) => {
+      apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8', []).then((response) => {
         if (response && setSuggestedGameTemplates)
           setSuggestedGameTemplates(response.gameTemplates);
       });
@@ -73,7 +73,7 @@ function EndGameLobby({teams,
     const debouncedGameTemplateSearch = useCallback( // eslint-disable-line
       debounce((search: string) => {
         console.log(search);
-        apiClients.gameTemplate.listGameTemplates(5, null, null, search).then((response) => {
+        apiClients.gameTemplate.listGameTemplates(5, null, null, search, []).then((response) => {
           console.log(response);
           console.log(search);
           if (response && setSuggestedGameTemplates)

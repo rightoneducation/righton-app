@@ -194,6 +194,7 @@ export default function ResponsesGraph({
                 noResponseLabel={noResponseLabel}
                 isShortAnswerEnabled={isShortAnswerEnabled}
                 customBarSelectedWidth={customBarSelectedWidth}
+                statePosition={statePosition}
               />
             }
           
