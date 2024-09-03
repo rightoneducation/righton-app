@@ -1,0 +1,89 @@
+{
+  "api": {
+    "wronganswerexp": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2025-04-02T15:36:34.761Z",
+              "apiKeyExpirationDays": 365,
+              "description": ""
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "function": {
+    "labeledits": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "regenwronganswerexp": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "wronganswerexp": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_labeledits_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "labeledits"
+        }
+      ]
+    },
+    "AMPLIFY_function_labeledits_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "labeledits"
+        }
+      ]
+    },
+    "AMPLIFY_function_regenwronganswerexp_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "regenwronganswerexp"
+        }
+      ]
+    },
+    "AMPLIFY_function_regenwronganswerexp_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "regenwronganswerexp"
+        }
+      ]
+    },
+    "AMPLIFY_function_wronganswerexp_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "wronganswerexp"
+        }
+      ]
+    },
+    "AMPLIFY_function_wronganswerexp_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "wronganswerexp"
+        }
+      ]
+    }
+  }
+}
