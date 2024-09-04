@@ -28,7 +28,7 @@ export default function Search(){
   const [count, setCount] = React.useState<number>(0);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerms(prev => event.target.value);
-    debouncedSearch(event.target.value, sortDirection, filterTargets);
+    debouncedSearch(event.target.value, sortDirection, filterTargets, sortType);
   };
   const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value as unknown as FilterTarget;;
@@ -70,7 +70,7 @@ export default function Search(){
         break;
     }
   }
-  const handleSearch = (search: string, sortDirection: SortDirection, filterTargets: FilterTarget[]) => {
+  const handleSearch = (search: string, sortDirection: SortDirection, filterTargets: FilterTarget[], sortType: SortType) => {
     setCount(prev => prev + 1);
     setIsSearching(true);
     switch(sortType){
@@ -127,8 +127,8 @@ export default function Search(){
   };
 
   const debouncedSearch = useCallback(
-    debounce((search: string, sortDirection: SortDirection, filterTargets: FilterTarget[]) => {
-      handleSearch(search, sortDirection, filterTargets);
+    debounce((search: string, sortDirection: SortDirection, filterTargets: FilterTarget[], sortType: SortType) => {
+      handleSearch(search, sortDirection, filterTargets, sortType);
     }, debounceInterval),
     [debounceInterval] 
   );
@@ -137,7 +137,7 @@ export default function Search(){
   return (
     <Box style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
       <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', textAlign: 'left', fontSize: '15px', lineHeight: '30px'}}>
-      Search Prototype
+      Search Prototype (v1.1)
       </Typography>
       <Box style={{display: 'flex', gap: '20px', paddingLeft: '20px'}}>
         <Box style={{display: 'flex', flexDirection: 'column'}}>

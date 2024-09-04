@@ -10,6 +10,7 @@ export interface IGameTemplate {
   cluster?: string | null | undefined,
   grade?: string | null | undefined,
   standard?: string | null | undefined,
+  ccss?: string | null | undefined,
   phaseOneTime: number,
   phaseTwoTime: number,
   imageUrl?: string | null | undefined,

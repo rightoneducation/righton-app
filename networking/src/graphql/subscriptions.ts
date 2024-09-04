@@ -401,6 +401,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
@@ -419,6 +420,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -437,6 +439,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -516,6 +519,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -598,6 +602,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
@@ -616,6 +621,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -634,6 +640,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -713,6 +720,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -795,6 +803,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
@@ -813,6 +822,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -831,6 +841,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -910,6 +921,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -1010,6 +1022,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -1028,6 +1041,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -1107,6 +1121,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -1206,6 +1221,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -1224,6 +1240,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -1303,6 +1320,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -1402,6 +1420,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -1420,6 +1439,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -1499,6 +1519,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -2379,6 +2400,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -2397,6 +2419,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2415,6 +2438,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2486,6 +2510,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2570,6 +2595,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2588,6 +2614,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2659,6 +2686,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2740,6 +2768,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -2758,6 +2787,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2776,6 +2806,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2847,6 +2878,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2931,6 +2963,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2949,6 +2982,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -3020,6 +3054,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -3101,6 +3136,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -3119,6 +3155,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -3137,6 +3174,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -3208,6 +3246,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -3292,6 +3331,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -3310,6 +3350,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -3381,6 +3422,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade

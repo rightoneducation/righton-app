@@ -22,6 +22,7 @@ type GameTemplate @model{
     )
   version: Int!
   description: String!
+  ccss: String
   domain: String
   cluster: String
   grade: String

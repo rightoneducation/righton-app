@@ -13,7 +13,7 @@ export enum HTTPMethod {
 export enum FilterTarget {
   TITLE,
   DESCRIPTION,
-  GRADE
+  CCSS
 }
 
 export interface GraphQLOptions {
@@ -111,7 +111,7 @@ export abstract class BaseAPIClient {
           const filterTargetMapping: { [key in FilterTarget]: string } = {
             [FilterTarget.TITLE]: 'title',
             [FilterTarget.DESCRIPTION]: 'description',
-            [FilterTarget.GRADE]: 'grade',
+            [FilterTarget.CCSS]: 'ccss',
           };
           filterTargets.forEach((target) => {
             const filterField = filterTargetMapping[target];
@@ -127,6 +127,7 @@ export abstract class BaseAPIClient {
       let result = (await API.graphql(
         graphqlOperation(query, queryParameters)
       )) as { data: any }
+      console.log(result);
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
       if (type === "GameTemplate") {

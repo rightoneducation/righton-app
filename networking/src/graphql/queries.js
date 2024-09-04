@@ -9,6 +9,7 @@ export const getGameTemplate = /* GraphQL */ `
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -42,6 +43,7 @@ export const listGameTemplates = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade
@@ -419,6 +421,7 @@ export const getGameQuestions = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade
@@ -501,6 +504,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade
@@ -543,6 +547,7 @@ export const gameTemplatesByDate = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade
@@ -585,6 +590,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade
@@ -627,6 +633,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade

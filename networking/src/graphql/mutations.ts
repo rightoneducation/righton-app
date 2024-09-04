@@ -27,6 +27,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
@@ -45,6 +46,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -63,6 +65,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -142,6 +145,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -225,6 +229,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
@@ -243,6 +248,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -261,6 +267,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -340,6 +347,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -423,6 +431,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
@@ -441,6 +450,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -459,6 +469,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -538,6 +549,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -639,6 +651,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -657,6 +670,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -736,6 +750,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -836,6 +851,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -854,6 +870,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -933,6 +950,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -1033,6 +1051,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
@@ -1051,6 +1070,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -1130,6 +1150,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
@@ -2116,6 +2137,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -2134,6 +2156,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2152,6 +2175,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2223,6 +2247,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2307,6 +2332,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2325,6 +2351,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2396,6 +2423,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2478,6 +2506,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -2496,6 +2525,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2514,6 +2544,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2585,6 +2616,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2669,6 +2701,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2687,6 +2720,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2758,6 +2792,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2840,6 +2875,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -2858,6 +2894,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -2876,6 +2913,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -2947,6 +2985,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -3031,6 +3070,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
@@ -3049,6 +3089,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
@@ -3120,6 +3161,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade

@@ -19,6 +19,7 @@ export const createGameTemplate = /* GraphQL */ `
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -50,6 +51,7 @@ export const updateGameTemplate = /* GraphQL */ `
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -81,6 +83,7 @@ export const deleteGameTemplate = /* GraphQL */ `
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
@@ -656,6 +659,7 @@ export const createGameQuestions = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade
@@ -710,6 +714,7 @@ export const updateGameQuestions = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade
@@ -764,6 +769,7 @@ export const deleteGameQuestions = /* GraphQL */ `
         owner
         version
         description
+        ccss
         domain
         cluster
         grade
