@@ -405,6 +405,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -424,6 +425,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -443,6 +445,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -523,6 +526,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -606,6 +610,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -625,6 +630,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -644,6 +650,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -724,6 +731,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -807,6 +815,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -826,6 +835,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -845,6 +855,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -925,6 +936,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1026,6 +1038,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -1045,6 +1058,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1125,6 +1139,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1225,6 +1240,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -1244,6 +1260,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1324,6 +1341,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1424,6 +1442,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -1443,6 +1462,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1523,6 +1543,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -2404,6 +2425,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2423,6 +2445,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2442,6 +2465,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2514,6 +2538,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2599,6 +2624,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2618,6 +2644,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2690,6 +2717,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2772,6 +2800,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2791,6 +2820,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2810,6 +2840,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2882,6 +2913,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2967,6 +2999,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2986,6 +3019,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3058,6 +3092,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3140,6 +3175,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -3159,6 +3195,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -3178,6 +3215,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3250,6 +3288,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3335,6 +3374,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -3354,6 +3394,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3426,6 +3467,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
