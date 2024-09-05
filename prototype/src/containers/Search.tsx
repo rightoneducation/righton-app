@@ -130,6 +130,8 @@ export default function Search(){
     }
   };
 
+  // note that all parameters are sent through as props
+  // this avoids stale state issues from the useCallback
   const debouncedSearch = useCallback(
     debounce((search: string, sortDirection: SortDirection, gradeTargets: GradeTarget[], sortType: SortType) => {
       handleSearch(search, sortDirection, gradeTargets, sortType);
