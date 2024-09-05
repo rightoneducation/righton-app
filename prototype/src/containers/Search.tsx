@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react';
-import { Box, Typography, CircularProgress, Slider } from '@mui/material';
-import { APIClients, Environment, AppType, IGameTemplate, FilterTarget } from '@righton/networking';
+import { Box, Typography, CircularProgress, Slider,MenuItem, InputLabel, FormControl } from '@mui/material';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { APIClients, Environment, AppType, IGameTemplate, GradeTarget } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import debounce from 'lodash/debounce';
-import { set } from 'lodash';
 
 enum SortType {
   listGameTemplates,
@@ -20,23 +20,27 @@ enum SortDirection {
 export default function Search(){
   const [searchTerms, setSearchTerms] = React.useState<string | null>(null);
   const [searchResults, setSearchResults] = React.useState<IGameTemplate[]>([]);
-  const [sortType, setSortType] = React.useState<SortType>(SortType.listGameTemplates);
-  const [sortDirection, setSortDirection] = React.useState<SortDirection>(SortDirection.ASC);
+  const [sortType, setSortType] = React.useState<SortType>(SortType.listGameTemplatesByDate);
+  const [sortDirection, setSortDirection] = React.useState<SortDirection>(SortDirection.DESC);
   const [isSearching, setIsSearching] = React.useState<boolean>(false);
-  const [filterTargets, setFilterTargets] = React.useState<FilterTarget[]>([]);
+  const [gradeTargets, setGradeTargets] = React.useState<GradeTarget[]>([]);
   const [debounceInterval, setDebounceInterval] = React.useState<number>(1000);
   const [count, setCount] = React.useState<number>(0);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerms(prev => event.target.value);
-    debouncedSearch(event.target.value, sortDirection, filterTargets, sortType);
+    debouncedSearch(event.target.value, sortDirection, gradeTargets, sortType);
   };
-  const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value as unknown as FilterTarget;;
-    if (event.target.checked){
-      setFilterTargets(prev => [...prev, value]);
-    } else {
-      setFilterTargets(prev => prev.filter((target) => target !== value));
-    }
+  const handleSelect = (event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+  
+    // Convert the selected values to an array of GradeTarget enums
+    const selectedGradeTargets = (typeof value === 'string' ? value.split(',') : value).map(
+      (gradeTarget) => gradeTarget as GradeTarget
+    );
+  
+    setGradeTargets(selectedGradeTargets);
   };
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     switch(event.target.value){
@@ -70,12 +74,12 @@ export default function Search(){
         break;
     }
   }
-  const handleSearch = (search: string, sortDirection: SortDirection, filterTargets: FilterTarget[], sortType: SortType) => {
+  const handleSearch = (search: string, sortDirection: SortDirection, gradeTargets: GradeTarget[], sortType: SortType) => {
     setCount(prev => prev + 1);
     setIsSearching(true);
     switch(sortType){
       case SortType.listGameTemplatesByDate:
-        apiClients.gameTemplate.listGameTemplatesByDate(null, null, sortDirection, search, filterTargets).then((response) => {
+        apiClients.gameTemplate.listGameTemplatesByDate(null, null, sortDirection, search, gradeTargets).then((response) => {
           setIsSearching(false);
           if (response){
             console.log('Search Terms:');
@@ -87,7 +91,7 @@ export default function Search(){
         });
         break;
       case SortType.listGameTemplatesByGrade:
-        apiClients.gameTemplate.listGameTemplatesByGrade(null, null, sortDirection, search, filterTargets).then((response) => {
+        apiClients.gameTemplate.listGameTemplatesByGrade(null, null, sortDirection, search, gradeTargets).then((response) => {
           setIsSearching(false);
           if (response){
             console.log('Search Terms:');
@@ -99,7 +103,7 @@ export default function Search(){
         });
         break;
       case SortType.listGameTemplatesByQuestionCount:
-        apiClients.gameTemplate.listGameTemplatesByQuestionTemplatesCount(null, null, sortDirection, search, filterTargets).then((response) => {
+        apiClients.gameTemplate.listGameTemplatesByQuestionTemplatesCount(null, null, sortDirection, search, gradeTargets).then((response) => {
           setIsSearching(false);
           if (response){
             console.log('Search Terms:');
@@ -112,7 +116,7 @@ export default function Search(){
         break;
       case SortType.listGameTemplates:
       default:
-        apiClients.gameTemplate.listGameTemplates(null, null, null, search, filterTargets).then((response) => {
+        apiClients.gameTemplate.listGameTemplates(null, null, null, search, gradeTargets).then((response) => {
           setIsSearching(false);
           if (response){
             console.log('Search Terms:');
@@ -127,24 +131,54 @@ export default function Search(){
   };
 
   const debouncedSearch = useCallback(
-    debounce((search: string, sortDirection: SortDirection, filterTargets: FilterTarget[], sortType: SortType) => {
-      handleSearch(search, sortDirection, filterTargets, sortType);
+    debounce((search: string, sortDirection: SortDirection, gradeTargets: GradeTarget[], sortType: SortType) => {
+      handleSearch(search, sortDirection, gradeTargets, sortType);
     }, debounceInterval),
     [debounceInterval] 
   );
 
   const apiClients = new APIClients(Environment.Developing, AppType.HOST);
+  const gradeTargetsList = Object.values(GradeTarget);
+  const gradeTargetsDictonary = {
+    [GradeTarget.KINDERGARTEN]: "Kindergarten",
+    [GradeTarget.GRADEONE]: "Grade One",
+    [GradeTarget.GRADETWO]: "Grade Two",
+    [GradeTarget.GRADETHREE]: "Grade Three",
+    [GradeTarget.GRADEFOUR]: "Grade Four",
+    [GradeTarget.GRADEFIVE]: "Grade Five",
+    [GradeTarget.GRADESIX]: "Grade Six",
+    [GradeTarget.GRADESEVEN]: "Grade Seven",
+    [GradeTarget.GRADEEIGHT]: "Grade Eight",
+    [GradeTarget.HIGHSCHOOL]: "High School"
+  } 
   return (
     <Box style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
       <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', textAlign: 'left', fontSize: '15px', lineHeight: '30px'}}>
-      Search Prototype (v1.1)
+      Search Prototype (v1.2)
       </Typography>
       <Box style={{display: 'flex', gap: '20px', paddingLeft: '20px'}}>
         <Box style={{display: 'flex', flexDirection: 'column'}}>
           <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', textAlign: 'left', fontSize: '15px', lineHeight: '30px'}}>
             Search (Filter)
           </Typography>
-          <Box style={{display: 'flex', gap: '20px'}}>
+          <Box style={{display: 'flex', gap: '20px', height: '40px'}}>
+            <FormControl size="small" style={{width: '200px'}}>
+              <InputLabel id="select-helper-label" >Grade Level</InputLabel>
+              <Select
+                multiple
+                labelId="select-helper-label"
+                label="Grade Level"
+                value={gradeTargets}
+                onChange={handleSelect}
+              >
+                {gradeTargetsList.map((target) => (
+                  <MenuItem key={uuidv4()} value={target}>
+                    {gradeTargetsDictonary[target]}
+                  </MenuItem>
+                ))
+                }
+              </Select>
+            </FormControl>
             <input 
               type='search'
               placeholder={`Enter search terms here...`}
@@ -152,14 +186,6 @@ export default function Search(){
               value={searchTerms || ''}
               style={{width: '400px'}}
             />
-          </Box>
-          <Box style={{display: 'flex', gap: '10px', paddingTop: '10px'}}>
-            <input type="checkbox" value={FilterTarget.TITLE} name="title" onChange={handleCheckBox}/> 
-            <label htmlFor="title"> Title </label>
-            <input type="checkbox" value={FilterTarget.DESCRIPTION} name="description" onChange={handleCheckBox}/> 
-            <label htmlFor="description"> Description </label>
-            <input type="checkbox" value={FilterTarget.CCSS} name="ccss" onChange={handleCheckBox}/>
-            <label htmlFor="ccss"> CCSS </label>
           </Box>
           <Box style={{display: 'flex', flexDirection: 'column', paddingTop: '10px'}}>
             <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', textAlign: 'left', fontSize: '12px', lineHeight: '20px', maxWidth: '50%'}}>
@@ -184,8 +210,7 @@ export default function Search(){
             Sort
           </Typography>
           <Box style={{display: 'flex', gap: '10px'}}>
-          <select name="Sort" onChange={handleSortChange}>
-            <option value=""> </option>
+          <select name="Sort" onChange={handleSortChange} style={{height: '40px'}}>
             <option value="Newest"> Newest </option>
             <option value="Oldest"> Oldest </option>
             <option value="Grade Level, Ascending"> Grade Level, Ascending </option>

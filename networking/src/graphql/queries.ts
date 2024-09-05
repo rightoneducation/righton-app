@@ -19,6 +19,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -38,6 +39,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -57,6 +59,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -137,6 +140,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -223,6 +227,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -242,6 +247,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -261,6 +267,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -333,6 +340,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -427,6 +435,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -446,6 +455,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -526,6 +536,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -629,6 +640,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -648,6 +660,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -720,6 +733,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1413,6 +1427,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -1432,6 +1447,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -1451,6 +1467,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1523,6 +1540,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1608,6 +1626,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -1627,6 +1646,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1699,6 +1719,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1784,6 +1805,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
@@ -1803,6 +1825,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               domain
               cluster
               grade
+              gradeFilter
               standard
               phaseOneTime
               phaseTwoTime
@@ -1899,6 +1922,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               domain
               cluster
               grade
+              gradeFilter
               standard
               phaseOneTime
               phaseTwoTime
@@ -2004,6 +2028,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2023,6 +2048,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2042,6 +2068,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2114,6 +2141,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2205,6 +2233,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2224,6 +2253,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2243,6 +2273,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2315,6 +2346,7 @@ export const gameTemplatesByDate = /* GraphQL */ `query GameTemplatesByDate(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2406,6 +2438,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2425,6 +2458,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2444,6 +2478,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2516,6 +2551,7 @@ export const gameTemplatesByGrade = /* GraphQL */ `query GameTemplatesByGrade(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2607,6 +2643,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2626,6 +2663,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2645,6 +2683,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2717,6 +2756,7 @@ export const gameTemplatesByQuestionTemplatesCount = /* GraphQL */ `query GameTe
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2826,6 +2866,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2845,6 +2886,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2917,6 +2959,7 @@ export const questionTemplatesByDate = /* GraphQL */ `query QuestionTemplatesByD
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3025,6 +3068,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -3044,6 +3088,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3116,6 +3161,7 @@ export const questionTemplatesByGrade = /* GraphQL */ `query QuestionTemplatesBy
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3224,6 +3270,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -3243,6 +3290,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3315,6 +3363,7 @@ export const questionTemplatesByGameTemplatesCount = /* GraphQL */ `query Questi
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime

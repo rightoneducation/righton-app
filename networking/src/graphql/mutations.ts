@@ -31,6 +31,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -50,6 +51,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -69,6 +71,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -149,6 +152,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -233,6 +237,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -252,6 +257,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -271,6 +277,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -351,6 +358,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -435,6 +443,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -454,6 +463,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -473,6 +483,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -553,6 +564,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -655,6 +667,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -674,6 +687,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -754,6 +768,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -855,6 +870,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -874,6 +890,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -954,6 +971,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1055,6 +1073,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -1074,6 +1093,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1154,6 +1174,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -2141,6 +2162,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2160,6 +2182,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2179,6 +2202,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2251,6 +2275,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2336,6 +2361,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2355,6 +2381,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2427,6 +2454,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2510,6 +2538,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2529,6 +2558,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2548,6 +2578,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2620,6 +2651,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2705,6 +2737,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2724,6 +2757,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2796,6 +2830,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2879,6 +2914,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2898,6 +2934,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2917,6 +2954,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2989,6 +3027,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3074,6 +3113,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -3093,6 +3133,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3165,6 +3206,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
