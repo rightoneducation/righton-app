@@ -70,6 +70,7 @@ export default function DiscussAnswer({
         currentTeam
       )
     : correctAnswer?.text === selectedAnswer?.text;
+  console.log(isPlayerCorrect);
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>

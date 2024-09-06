@@ -114,9 +114,11 @@ export abstract class ModelHelper {
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
     static isShortAnswerResponseCorrect(shortAnswerResponses: IResponse[], team: ITeam){
+        console.log(shortAnswerResponses);
+        console.log(team);
         return (shortAnswerResponses.some(response => 
             response.isCorrect 
-            && response.teams.some(teamAnswer => teamAnswer.id === team.id)
+            && response.teams.some(teamAnswer => teamAnswer === team.name)
         ))
     }
     static calculateBasicModeScoreForQuestion(gameSession: IGameSession, question: IQuestion, team: ITeam, isShortAnswerEnabled: boolean) {
@@ -135,9 +137,8 @@ export abstract class ModelHelper {
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
         let submittedTrickAnswer = answers.find(answer => (!this.isAnswerFromPhaseOne(answer)) && answer?.questionId === currentQuestion.id)
-
-        if (submittedTrickAnswer){
-            return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
+        if (submittedTrickAnswer || gameSession.currentState === GameSessionState.PHASE_2_DISCUSS) {
+            return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer?.text ?? '', currentQuestion.id)
         } else {
             if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id)){
                 return this.correctAnswerScore

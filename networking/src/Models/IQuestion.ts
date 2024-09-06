@@ -39,7 +39,7 @@ export interface IResponse {
     isCorrect: boolean
     isSelectedMistake: boolean
     count: number
-    teams: Array<IResponseTeam>
+    teams: string[]
 }
 
 export interface IResponseTeam {
