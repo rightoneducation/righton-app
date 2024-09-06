@@ -20,18 +20,9 @@ const NewPointsPill = styled(ScorePill)(({ theme }) => ({
   zIndex: 2,
 }));
 
-interface NewPointsAnimationProps {
-  isSmallScreen: boolean;
-}
-
-const NewPointsAnimation =  styled('div', {
-  shouldForwardProp: (prop) => prop !== 'isSmallScreen',
-})<NewPointsAnimationProps>(({ isSmallScreen }) => ({
-  opacity: 0,
-  position: 'absolute',
+const NewPointsAnimation =  styled('div')(({theme}) => ({
+  opacity: 1,
   zIndex: 2,
-  paddingLeft: !isSmallScreen ? '8px' : '0px',
-  right: !isSmallScreen ? '0px' : '58px',
   animation: `
    newScoreUpWiggle 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
    newScoreUpBounce 300ms ease-in-out 1500ms, 
@@ -95,7 +86,6 @@ export default function DACScoreIndicator({
   const [newScore, setNewScore] = useState(score);
   const [startScoreAnimation, setStartScoreAnimation] = useState(false);
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const handlePointsAnimationEnd = (event: React.AnimationEvent) => {
     if (
       event.animationName === 'newScoreUpFadeDown' &&
@@ -110,7 +100,7 @@ export default function DACScoreIndicator({
   return (
     <Box style={{height: '22px'}}>
       {newPoints && newPoints > 0 ? (
-        <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd} isSmallScreen={isSmallScreen}>
+        <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd}>
           <NewPointsPill>
             <Typography variant="overline">{`+${newPoints}`}</Typography>
           </NewPointsPill>

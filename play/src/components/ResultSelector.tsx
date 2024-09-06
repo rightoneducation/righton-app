@@ -182,9 +182,6 @@ export default function ResultSelector({
             )}
             <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
           </Box>
-          <Box>
-            <DACScoreIndicator newPoints={newPoints} score={0} />
-          </Box>
         </Box>
       );
     case AnswerState.SELECTED:

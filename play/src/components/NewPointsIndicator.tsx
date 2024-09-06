@@ -1,45 +1,24 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
+import { GameSessionState } from '@righton/networking';
 
-const ScorePill = styled('div')(({ theme }) => ({
+interface ScorePillInterface {
+  theme: any;
+  currentState: GameSessionState;
+}
+
+const ScorePill = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'currentState',
+})(({ theme, currentState }: ScorePillInterface) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   width: '58px',
   height: '22px',
   borderRadius: '23px',
-  background: `${theme.palette.primary.highlightGradient}`,
+  background: currentState === GameSessionState.PHASE_1_DISCUSS ? `${theme.palette.primary.altHighlightGradient}` : `${theme.palette.primary.highlightGradient}`,
   zIndex: 2,
-}));
-
-interface ScoreAnimationProps {
-  startAnimation: boolean;
-}
-const ScoreAnimation = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'startAnimation',
-})<ScoreAnimationProps>(({ startAnimation }) => ({
-  opacity: 1,
-  zIndex: 2,
-  animation: startAnimation
-    ? `
-   scoreGrow 1000ms ease-in-out 0ms
-  `
-    : ``,
-  '@keyframes scoreGrow': {
-    '0%': {
-      opacity: 1,
-      transform: ' scale(1.0)',
-    },
-    '50%': {
-      opacity: 1,
-      transform: ' scale(1.2)',
-    },
-    '100%': {
-      opacity: 0,
-      transform: ' scale(1.0)',
-    },
-  },
 }));
 
 const NewPointsPill = styled(ScorePill)({
@@ -86,15 +65,17 @@ const NewPointsAnimation = styled('div')({
   },
 });
 
-interface DACP2ScoreIndicatorProps {
+interface NewPointsIndicatorProps {
   newPoints?: number;
   score: number;
+  currentState: GameSessionState;
 }
 
-export default function DACP2ScoreIndicator({
+export default function NewPointsIndicator({
   newPoints,
   score,
-}: DACP2ScoreIndicatorProps) {
+  currentState,
+}: NewPointsIndicatorProps) {
   const [newScore, setNewScore] = useState(score);
   const [startScoreAnimation, setStartScoreAnimation] = useState(false);
 
@@ -113,7 +94,7 @@ export default function DACP2ScoreIndicator({
     <Box sx={{ display: 'flex'}}>
       {newPoints && newPoints > 0 ? (
         <NewPointsAnimation onAnimationEnd={handlePointsAnimationEnd}>
-          <NewPointsPill>
+          <NewPointsPill currentState={currentState}>
             <Typography variant="overline">{`+${newPoints}`}</Typography>
           </NewPointsPill>
         </NewPointsAnimation>
