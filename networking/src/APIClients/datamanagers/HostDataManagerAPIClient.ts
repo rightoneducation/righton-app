@@ -175,6 +175,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
   private createAnswerFromBackendData = (ans: any): Answer => {
     const { rawAnswer, answerType } = ans;
+    console.log(ans);
     switch (answerType) {
       case AnswerType.NUMBER:
         return AnswerFactory.createAnswer(rawAnswer, answerType, ans.answerPrecision);
@@ -186,6 +187,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   };
 
   private processAnswer(ans: any, teamAnswersQuestion: any, phase: IPhase, teamName: string) {
+    console.log(ans);
     const answerObj = this.createAnswerFromBackendData(ans.answer);
     let newResponses = [...teamAnswersQuestion[phase].responses];
     if (answerObj) {
@@ -564,6 +566,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       return;
     }
     this.createTeamAnswerSubscription = this.teamAnswerAPIClient.subscribeCreateTeamAnswer(this.gameSessionId, (teamAnswer: BackendAnswer) => {
+      console.log(teamAnswer);
       if (!teamAnswer) {
         console.error('Error: Invalid team answer');
         return;
