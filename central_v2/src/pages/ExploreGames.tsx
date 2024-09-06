@@ -47,6 +47,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const isXLScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const screenSize = isLargeScreen  // eslint-disable-line
       ? ScreenSize.LARGE 
       : isMediumScreen 
@@ -82,10 +83,11 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
     }
   }, [apiClients]);
 
+
   return (
     <ExploreGamesContainer id = "scrollableDiv">
       <HeaderContainer>
-        <EGHeader screenSize={screenSize} />
+        <EGHeader screenSize={screenSize} isXLScreen={isXLScreen} />
       </HeaderContainer>
       <InfiniteScroll
         dataLength={searchedGames.length}

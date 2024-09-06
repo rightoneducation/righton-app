@@ -12,9 +12,13 @@ import { ScreenSize } from '../lib/HostModels';
 
 interface EGHeaderProps {
   screenSize: ScreenSize;
+  isXLScreen: boolean;
 }
+interface EGHeaderContainerProps {
+    screenSize: ScreenSize;
+  }
 
-const EGHeaderContainer = styled(Box)(({ screenSize }: EGHeaderProps) => ({
+const EGHeaderContainer = styled(Box)(({ screenSize }: EGHeaderContainerProps) => ({
   height: screenSize === ScreenSize.SMALL ? '77px' : '94px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -28,7 +32,6 @@ const EGHeaderContainer = styled(Box)(({ screenSize }: EGHeaderProps) => ({
 const ImageContainer = styled(Box)(({ align }: { align: string }) => ({
   display: 'flex',
   justifyContent: align,
-  width: '33%',
 }));
 
 const TransparentButton = styled(Button)({
@@ -66,18 +69,20 @@ const PrimaryButton2Text = styled(Typography)(() => ({
     lineHeight: '30px',
     color: '#FFFFFF'
   }));
-export default function EGHeader({ screenSize }: EGHeaderProps) {
+export default function EGHeader({ screenSize, isXLScreen }: EGHeaderProps) {
   const theme = useTheme();
   const isLargeScreen = screenSize === ScreenSize.LARGE;
+  console.log(screenSize);
+  console.log(isLargeScreen);
 
   return (
     <EGHeaderContainer screenSize={screenSize}>
-      <ImageContainer align="flex-start">
+      <ImageContainer align="flex-start" style={{width: isXLScreen ? '210px' : 'auto'}}>
         <img src={rightonlogo} alt="Right On Logo" />
         </ImageContainer>
     <ImageContainer align="center">
-        {isLargeScreen ? (
-          <Box display="flex" gap="24px">
+        {isXLScreen ? (
+          <Box display="flex" gap="80px">
             <TransparentButton>
               <img src={dice} alt="" />
               Games
@@ -95,8 +100,8 @@ export default function EGHeader({ screenSize }: EGHeaderProps) {
           <img src={hamburger} alt="Hamburger Menu" />
         )}
       </ImageContainer>
-    <ImageContainer align="flex-end" style={{alignItems: 'center'}}>
-        {isLargeScreen ? (
+    <ImageContainer align="flex-end" style={{alignItems: 'center', width: isXLScreen ? 'auto' : '120px'}}>
+        {isXLScreen ? (
             <>
             <PrimaryButton2> 
                 <img src={plus} alt="Plus Icon" />

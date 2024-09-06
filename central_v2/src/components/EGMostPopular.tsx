@@ -53,9 +53,6 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
 }
 
 export default function EGMostPopular({ screenSize, apiClients, searchedGames }: EGMostPopularProps) {
-//   const [nextToken, setNextToken] = useState<string | null>(null);
-//   const [loading, setLoading] = useState(false);
-
 
   return (
     <EGMostPopularContainer screenSize={screenSize}>
