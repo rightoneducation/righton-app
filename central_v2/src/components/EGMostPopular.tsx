@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Typography, Box, styled } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { APIClients } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid'; // Import UUID
+import { APIClients, IGameTemplate } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid'; 
 import StyledGameCard from './GameCard';
 import { ScreenSize } from '../lib/HostModels';
+import placeHolder from '../images/placeHolder.svg';
+
 
 interface EGMostPopularProps {
   screenSize: ScreenSize;
-  apiClients?: APIClients;
+  apiClients: APIClients;
+  searchedGames: IGameTemplate[];
 }
 
-const MostPopularText = styled(Typography)(({ screenSize }: EGMostPopularProps) => ({
+interface MostPopularTextProps {
+    screenSize: ScreenSize;
+  }
+
+const MostPopularText = styled(Typography)(({ screenSize }: MostPopularTextProps) => ({
   lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
   fontFamily: 'Poppins',
   fontWeight: '700',
@@ -28,9 +35,9 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
   return (
     <Box
       sx={{
-        height: 'auto',
+        flexGrow: 1,
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         width: '100%',
         flexDirection: 'column',
         alignItems: 'center',
@@ -45,68 +52,36 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
   );
 }
 
-export default function EGMostPopular({ screenSize, apiClients }: EGMostPopularProps) {
-  const [games, setGames] = useState<any[]>([]);
-  const [nextToken, setNextToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+export default function EGMostPopular({ screenSize, apiClients, searchedGames }: EGMostPopularProps) {
+//   const [nextToken, setNextToken] = useState<string | null>(null);
+//   const [loading, setLoading] = useState(false);
 
-  const fetchMoreGames = async () => {
-    if (apiClients && !loading) {
-      setLoading(true);
-      const response = await apiClients.gameTemplate.listGameTemplates(8, nextToken, null, null);
-      if (response) {
-        setGames((prevGames) => [
-          ...prevGames,
-          ...(response.gameTemplates.map((game) => ({ ...game, id: uuidv4() })) || []),
-        ]);
-        setNextToken(response.nextToken || null);
-      }
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (apiClients) {
-      // Load the first 12 games initially
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null).then((response) => {
-        if (response) {
-          setGames(response.gameTemplates.map((game) => ({ ...game, id: uuidv4() })));
-          setNextToken(response.nextToken || null);
-        }
-      });
-    }
-  }, [apiClients]);
 
   return (
     <EGMostPopularContainer screenSize={screenSize}>
       <MostPopularText screenSize={screenSize}>
         Most Popular
       </MostPopularText>
-      <InfiniteScroll
-        dataLength={games.length}
-        next={fetchMoreGames}
-        hasMore={!!nextToken}
-        loader={<h4>Loading more games...</h4>}
-        scrollableTarget="scrollableDiv"
-      >
-        <Grid container spacing={2} id="scrollableDiv" style={{ height: '80vh', overflow: 'auto' }}>
-          {games.map((game) => (
+        <Grid container spacing={2} id="scrollableDiv" style={{ }}>
+          {searchedGames.map((game) => (
             <Grid
               item
               xs={12}
               md={6} // 700
               xl={4}
-              key={game.id} // Using a unique ID for the key
+              key={game.id} 
             >
               <StyledGameCard
+                game={game}
+                id={game.id}
                 title={game.title}
                 description={game.description}
-                image={game.imageUrl}
+                image={game.imageUrl || placeHolder}
+                apiClients={apiClients}
               />
             </Grid>
           ))}
         </Grid>
-      </InfiniteScroll>
     </EGMostPopularContainer>
   );
 }

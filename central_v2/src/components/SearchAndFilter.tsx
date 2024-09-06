@@ -16,10 +16,9 @@ interface SearchAndFilterProps {
 
 const SearchAndFilterContainer = styled(Box)(( { screenSize }: SearchAndFilterProps ) => ({
   height: screenSize === ScreenSize.SMALL ? '70px' : '88px',
-  width: '100vw', 
+  width: '100%', 
   display: 'flex', 
   justifyContent: 'center',
-  // flexDirection: 'column', 
   alignItems: 'center', 
   backgroundColor: '#02215F' 
 }));

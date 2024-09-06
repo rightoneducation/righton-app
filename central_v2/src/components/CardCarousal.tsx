@@ -1,32 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { APIClients } from '@righton/networking';
+import { APIClients, IGameTemplate } from '@righton/networking';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { useTheme } from '@mui/material/styles';
 import StyledGameCard from './GameCard';
+import placeHolder from '../images/placeHolder.svg';
+
 
 interface GameCardCarouselProps {
-    apiClients?: APIClients;
+    apiClients: APIClients;
+    recommendedGames: IGameTemplate[];
 }
 
-export default function GameCardCarousel({ apiClients }: GameCardCarouselProps) {
+export default function GameCardCarousel({ apiClients, recommendedGames }: GameCardCarouselProps) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);
-    const [games, setGames] = useState<any[]>([]);
 
-    useEffect(() => {
-        if (apiClients) {
-            apiClients.gameTemplate.listGameTemplates(12, null, null, null)
-                .then(response => {
-                    setGames(response?.gameTemplates || []);
-                })
-                .catch(error => {
-                    console.error('Error fetching games:', error);
-                });
-        }
-    }, [apiClients]);
 
     return (
         <Swiper
@@ -58,12 +49,15 @@ export default function GameCardCarousel({ apiClients }: GameCardCarouselProps) 
                 },
             }}
         >
-            {games.map((game) => (
+            {recommendedGames.map((game) => (
                 <SwiperSlide key={game.id}>
                     <StyledGameCard
+                        id={game.id || 'no id given'}
                         title={game.title || 'Untitled Game'}
                         description={game.description || 'No description available'}
-                        image={game.imageUrl || 'No image url'}
+                        image={game.imageUrl || placeHolder}
+                        apiClients={apiClients}
+                        game={game}
                     />
                 </SwiperSlide>
             ))}

@@ -1,24 +1,26 @@
 import React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { APIClients } from '@righton/networking';
+import { APIClients, IGameTemplate } from '@righton/networking';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
-import StyledGameCard from './GameCard';
 import GameCardCarousal from './CardCarousal';
 import {ScreenSize } from '../lib/HostModels';
 import PaginationContainerStyled from '../lib/PaginationContainerStyled';
 
 interface RecommendedGamesProps {
   screenSize: ScreenSize;
-  apiClients?: APIClients;
+  apiClients: APIClients;
+  recommendedGames: IGameTemplate[];
+}
+interface RecommendedGamesContainerProps {
+  screenSize: ScreenSize;
 }
 
-const RecommendedGamesContainer = styled(Box)(({ screenSize }: RecommendedGamesProps) => ({
+const RecommendedGamesContainer = styled(Box)(({ screenSize }: RecommendedGamesContainerProps) => ({
   height: screenSize === ScreenSize.SMALL ? '368px': '408px', 
   gap: '16px',
   display: 'flex', 
-  // justifyContent: 'center',
   width: '100%',
   flexDirection: 'column', 
   alignItems: 'center', 
@@ -33,13 +35,13 @@ const Title = styled(Typography)<{ screenSize: ScreenSize }>(({ screenSize }) =>
   color: '#FFFFFF',
 }));
 
-export default function RecommendedGames({ screenSize, apiClients }: RecommendedGamesProps) {
+export default function RecommendedGames({ screenSize, apiClients, recommendedGames }: RecommendedGamesProps) {
   const theme = useTheme(); 
 
   return (
     <RecommendedGamesContainer screenSize={screenSize}>
       <Title screenSize={screenSize}>Recommended Games</Title>
-      <GameCardCarousal apiClients={apiClients}/>
+      <GameCardCarousal apiClients={apiClients} recommendedGames={recommendedGames}/>
       <PaginationContainerStyled className="swiper-pagination-container"/>
     </RecommendedGamesContainer>
   );

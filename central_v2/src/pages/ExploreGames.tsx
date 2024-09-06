@@ -1,18 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { APIClients } from '@righton/networking';
+import { APIClients, IGameTemplate } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Box } from '@mui/material';
-import StyledGameCard from '../components/GameCard';
-import GameCardCarousal from '../components/CardCarousal';
-import {ScreenSize } from '../lib/HostModels';
-import PaginationContainerStyled from '../lib/PaginationContainerStyled';
-import RecommendedGames from '../components/RecommendedGames';
+import { Typography, Box, Button } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { ScreenSize } from '../lib/HostModels';
 import ExploreGamesUpper from '../components/ExploreGamesUpper';
 import EGMostPopular from '../components/EGMostPopular';
 import EGHeader from '../components/EGHeader';
-import BasicInfiniteScroll from '../components/scrolltester';
+import fetchMoreGames from "../lib/HelperFunctions";
 
 interface ExploreGamesProps {
   apiClients: APIClients;
@@ -21,14 +18,21 @@ interface ExploreGamesProps {
 const ExploreGamesContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   backgroundColor: '#02215F',
   overflow: 'auto',
-  height: '100vh',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  '-ms-overflow-style': 'none',
   width: '100%',
+  height: '100vh',
 }));
+
 const HeaderContainer = styled(Box)(({ theme }) => ({
-  position: 'fixed',
+  position: 'sticky',
   top: 0,
   left: 0,
   right: 0,
@@ -38,9 +42,8 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
 }));
 
-
 export default function ExploreGames({ apiClients }: ExploreGamesProps) {
-  const theme = useTheme(); 
+  const theme = useTheme();
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -49,23 +52,52 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
       : isMediumScreen 
         ? ScreenSize.MEDIUM 
         : ScreenSize.SMALL;
-  apiClients.gameTemplate. listGameTemplates(12,null, null, null).then(response => {
-    console.log(response) ;
-    const nextToken = response?.nextToken;
-    apiClients.gameTemplate.listGameTemplates(8, nextToken || null, null, null).then(response2 => {
-    console.log(response2);
-    })
-  });
+
+  const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
+  const [searchedGames, setSearchedGames] = useState<IGameTemplate[]>([]);
+  const [nextToken, setNextToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (apiClients) {
+      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
+        .then(response => {
+          setRecommendedGames(response?.gameTemplates || []);
+          setNextToken(response?.nextToken || null);
+          console.log("Initial Next Token:", response?.nextToken);
+        })
+        .catch(error => {
+          console.error('Error fetching games:', error);
+        });
+
+      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
+        .then(response => {
+          setSearchedGames(response?.gameTemplates || []);
+          setNextToken(response?.nextToken || null);
+          console.log("Initial Next Token (searched games):", response?.nextToken);
+        })
+        .catch(error => {
+          console.error('Error fetching games:', error);
+        });
+    }
+  }, [apiClients]);
+
   return (
-    <ExploreGamesContainer>
+    <ExploreGamesContainer id = "scrollableDiv">
       <HeaderContainer>
         <EGHeader screenSize={screenSize} />
       </HeaderContainer>
-      <Box mt={screenSize === ScreenSize.SMALL ? '77px' : '94px'} />
-      <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} />
-      <EGMostPopular screenSize={screenSize} apiClients={apiClients} />
-      {/* <BasicInfiniteScroll/> */}
+      <InfiniteScroll
+        dataLength={searchedGames.length}
+        next={() => fetchMoreGames(apiClients, nextToken || '', setNextToken, setSearchedGames, setLoading, loading)}
+        hasMore = {nextToken !== null}
+        loader=<h4>loading...</h4>
+        scrollableTarget="scrollableDiv"
+        style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+      >
+          <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
+          <EGMostPopular screenSize={screenSize} apiClients={apiClients} searchedGames={searchedGames} />
+      </InfiniteScroll>
     </ExploreGamesContainer>
   );
 }
-

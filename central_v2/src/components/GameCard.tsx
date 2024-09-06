@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { APIClients, IGameTemplate, GameTemplate } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import littleButton from '../images/littleButton.svg';
@@ -8,14 +9,16 @@ import eyeball from '../images/eyeball.svg';
 import rocket from '../images/rocket.svg';
 
 interface StyledGameCardProps {
+  id: string;
   title: string;
   description: string;
   image: string;
+  apiClients: APIClients;
+  game: IGameTemplate;
 }
 
 const LittleButtonSVG = styled('img')({
   cursor: 'pointer',
-  // marginLeft: 'auto',
 });
 
 const GymSVG = styled('img')({
@@ -31,16 +34,14 @@ const HeartSVG = styled('img')({
 
 const ViewSVG = styled('img')({
   cursor: 'pointer',
-  // marginLeft: 'auto',
 });
 
 const LaunchSVG = styled('img')({
   cursor: 'pointer',
-  // marginLeft: 'auto',
 });
 
 const GameCard = styled(Box)(() => ({
-  width: '100%', // Will likely be 100% in a carousel
+  width: '100%', 
   height: '100%',
   padding: '12px 16px 12px 16px',
   gap: '16px',
@@ -50,7 +51,7 @@ const GameCard = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
   boxSizing: 'border-box',
-  overflow: 'visible', // Allow shadows to extend outside the box
+  overflow: 'visible',
 }));
 
 const TextContainer = styled(Box)(() => ({
@@ -80,7 +81,7 @@ const TitleTextTypography = styled(Typography)(() => ({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 1, // Limits to 1 line
+  WebkitLineClamp: 1,
 }));
 
 const TextAndImageBox = styled(Box)(() => ({
@@ -89,8 +90,8 @@ const TextAndImageBox = styled(Box)(() => ({
   gap: '8px',
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'visible', // Ensure shadows aren't clipped
-  position: 'relative', // Allow absolute positioning of children
+  overflow: 'visible',
+  position: 'relative',
 }));
 
 const SideBySideBox = styled(Box)(() => ({
@@ -101,18 +102,62 @@ const SideBySideBox = styled(Box)(() => ({
   flexDirection: 'row',
 }));
 
-const SmallSideBySideBox = styled(Box)(() => ({
+interface SmallSideBySideBoxProps {
+  buttonCount: number;
+}
+
+const SmallSideBySideBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'buttonCount',
+})<SmallSideBySideBoxProps>(({ theme, buttonCount }) => ({
   width: '100%',
-  height: '24px',
-  gap: '4px',
-  marginTop: '9px',
+  height: buttonCount > 2 ? '48px' : '24px', // Default height based on button count
   display: 'flex',
-  flexDirection: 'row',
-  position: 'relative', // Needed for absolute positioning of buttons
-  overflow: 'visible', // Ensure shadows aren't clipped
+  flexDirection: 'column',
+  position: 'relative', 
+  overflow: 'visible',
+  marginTop: '7px',
+  // Dynamic height adjustments for the red buttons
+  [theme.breakpoints.down('sm')]: {
+    height: buttonCount > 2 ? '48px' : '24px', // Height if more than 2 buttons on small screens
+  },
+
+  [theme.breakpoints.up('md')]: {
+    height: buttonCount > 3 ? '48px' : '24px', // Height if more than 3 buttons on medium and larger screens
+  },
 }));
 
-const DescriptionText = styled(Typography)(() => ({
+const ButtonWrapper = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: '4px',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  flexWrap: 'wrap',
+
+  [theme.breakpoints.down('sm')]: {
+    justifyContent: 'start',
+    '> *:nth-of-type(n + 4)': {
+      marginTop: '4px',
+      marginLeft: '0',
+    },
+  },
+
+  [theme.breakpoints.up('md')]: {
+    justifyContent: 'start',
+    '> *:nth-of-type(n + 5)': {
+      marginTop: '4px',
+      marginLeft: '0',
+    },
+  },
+}));
+
+interface DescriptionTextProps {
+  buttonCount: number;
+}
+
+const DescriptionText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'buttonCount',
+})<DescriptionTextProps>(({ theme, buttonCount }) => ({
   flex: 1,
   height: 'auto',
   fontFamily: 'Rubik',
@@ -124,7 +169,13 @@ const DescriptionText = styled(Typography)(() => ({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 5,
+  WebkitLineClamp: buttonCount > 3 ? 4 : 5, 
+  [theme.breakpoints.up('sm')]: {
+    WebkitLineClamp: buttonCount > 2 ? 4 : 5, // 4 lines if > 3 buttons on medium or larger screens
+  },
+  [theme.breakpoints.up('md')]: {
+    WebkitLineClamp: buttonCount > 3 ? 4 : 5, // 4 lines if > 4 buttons on large screens
+  },
 }));
 
 const BottomButtonBox = styled(Box)(() => ({
@@ -149,9 +200,9 @@ const PrimaryButton1 = styled(Button)(() => ({
 }));
 
 const SecondaryButton = styled(Button)(() => ({
-  width: '42px',
+  width: 'auto',
   height: '24px',
-  padding: '4px 8px 4px 8px',
+  padding: '4px 8px',
   gap: '4px',
   borderRadius: '12px',
   background: 'linear-gradient(90deg, #E81144 0%, #E31C5E 100%)',
@@ -164,11 +215,21 @@ const SecondaryButton = styled(Button)(() => ({
   textAlign: 'center',
   boxShadow: '0px 3px 12px 0px #95002366',
   zIndex: 2, 
-  position: 'absolute', 
   boxSizing: 'border-box',
+  minWidth: '20px',
 }));
 
-export default function StyledGameCard({ title, description, image }: StyledGameCardProps) {
+function getDomainAndGrades(game: IGameTemplate) {
+  const extractedQuestions = game?.questionTemplates?.map((question) => question.questionTemplate);
+  const CCSSArray = extractedQuestions?.map((question) => {
+    return `${question.grade}.${question.domain}`;
+  });
+  return Array.from(new Set(CCSSArray));
+}
+
+export default function StyledGameCard({ id, title, description, image, apiClients, game }: StyledGameCardProps) {
+  const domainAndGrades = getDomainAndGrades(game);
+
   return (
     <GameCard>
       <TextContainer>
@@ -178,14 +239,19 @@ export default function StyledGameCard({ title, description, image }: StyledGame
         </TitleContainer>
         <SideBySideBox>
           <TextAndImageBox>
-            <DescriptionText>{description}</DescriptionText>
-            <SmallSideBySideBox>
-              <SecondaryButton style={{ top: '0', left: '0' }}>8.NS</SecondaryButton>
-              <SecondaryButton style={{ top: '0', left: '68px' }}>8.RP</SecondaryButton>
+            <DescriptionText buttonCount={domainAndGrades.length}>{description}</DescriptionText>
+            <SmallSideBySideBox buttonCount={domainAndGrades.length}>
+              <ButtonWrapper>
+                {domainAndGrades.map((domainGrade) => (
+                  <SecondaryButton key={`${domainGrade}-${id}`}>
+                    {domainGrade}
+                  </SecondaryButton>
+                ))}
+              </ButtonWrapper>
             </SmallSideBySideBox>
           </TextAndImageBox>
           <TextAndImageBox>
-            <GymSVG src={image} alt="Tag" />
+            <GymSVG src={image} alt='Tag' />
           </TextAndImageBox>
         </SideBySideBox>
       </TextContainer>
