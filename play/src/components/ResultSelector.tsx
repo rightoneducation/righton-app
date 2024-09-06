@@ -8,7 +8,6 @@ import SelectedAnswer from '../img/SelectedAnswer.svg';
 import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import { AnswerState } from '../lib/PlayModels';
-import DACScoreIndicator from './DACScoreIndicator';
 
 const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   width: '100%',
