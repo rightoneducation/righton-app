@@ -125,10 +125,6 @@ export default function JoinGame({
   const [shouldShowNameError, setShouldShowNameError] = useState<boolean>(false);
   const inputRef = React.useRef<HTMLDivElement>(null);
 
-  const areFieldsComplete = () => {
-    return gameCodeValue !== '' && firstName !== '' && lastName !== '';
-  }
-
   // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
   const handleGameCodeChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;

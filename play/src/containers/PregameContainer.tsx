@@ -64,43 +64,13 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     window.localStorage.removeItem(StorageKey);
     setRejoinGameObject(null);
   };
-  // on click of game code button, check if game code is valid
-  // if game code is invalid, return false to display error
-  // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
-  const handleGameCodeClick = async (
-    inputGameCodeValue: string
-  ): Promise<boolean> => {
-    if (!isGameCodeValid(inputGameCodeValue)) {
-      return false;
-    }
-    try {
-      const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
-        parseInt(inputGameCodeValue, 10)
-      );
-      console.log(gameSessionResponse);
-      if (isNullOrUndefined(gameSessionResponse)) {
-        return false;
-      }
-      if (
-        gameSessionResponse.currentState !== GameSessionState.TEAMS_JOINING
-      ) {
-        return false;
-      }
-      setGameSession(gameSessionResponse);
-      setPregameState(PregameState.SELECT_AVATAR);
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
 
   // create team and teammember on backend
-  const addTeamToGame = async () => {
+  const addTeamToGame = async (inputGameSession: IGameSession) => {
     const teamName = `${firstName} ${lastName}`;
     try {
       const team = await apiClients.team.addTeamToGameSessionId(
-        gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        inputGameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         teamName,
         null,
         selectedAvatar
@@ -129,27 +99,25 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     }
     return undefined;
   };
-  // handleInputChange = () => {
-  //   // handle input change
-  // }
+
   // on click of avatar select button, add team and team member, store local storage data, and navigate to game
-  const handleAvatarSelectClick = async () => {
+  const handleAvatarSelectClick = async (gameSessionResponse: IGameSession) => {
     try {
-      if (gameSession) {
-        const teamInfo = await addTeamToGame();
+      if (gameSessionResponse) {
+        const teamInfo = await addTeamToGame(gameSessionResponse);
         if (!teamInfo) {
           setIsAPIError(true);
           return;
         }
         const storageObject: LocalModel = {
           currentTime: new Date().getTime() / 60000,
-          gameSessionId: gameSession.id,
+          gameSessionId: gameSessionResponse.id,
           teamMemberAnswersId: teamInfo.teamMemberAnswersId,
           teamId: teamInfo.teamId,
           teamName: `${firstName} ${lastName}`,
           selectedAvatar,
           hasRejoined: false,
-          currentTimer: gameSession.phaseOneTime,
+          currentTimer: gameSessionResponse.phaseOneTime,
           answer: null,
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
@@ -159,6 +127,39 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       setIsAPIError(true);
     }
   };
+
+  // on click of game code button, check if game code is valid
+  // if game code is invalid, return false to display error
+  // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
+  const handleGameCodeClick = async (
+    inputGameCodeValue: string
+  ): Promise<boolean> => {
+    if (!isGameCodeValid(inputGameCodeValue)) {
+      return false;
+    }
+    try {
+      const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
+        parseInt(inputGameCodeValue, 10)
+      );
+      console.log(gameSessionResponse);
+      if (isNullOrUndefined(gameSessionResponse)) {
+        return false;
+      }
+      if (
+        gameSessionResponse.currentState !== GameSessionState.TEAMS_JOINING
+      ) {
+        return false;
+      }
+      setGameSession(gameSessionResponse);
+      handleAvatarSelectClick(gameSessionResponse);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
+  
   switch (pregameState) {
     case PregameState.ENTER_GAME_CODE:
       return (
