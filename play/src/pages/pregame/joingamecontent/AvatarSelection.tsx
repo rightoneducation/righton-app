@@ -1,23 +1,10 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Typography } from '@mui/material';
+import { Stack, Box, Typography} from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
-import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
-import AvatarIconStyled from '../../lib/styledcomponents/AvatarIconStyled';
-import { monsterMap, ErrorType } from '../../lib/PlayModels';
-import ErrorModal from '../../components/ErrorModal';
-
-// stack container for select avatar screen
-
-const StackContainer = styled(Stack)({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  minHeight: `100%`,
-  marginBottom: '40px',
-});
+import { monsterMap } from '../../../lib/PlayModels';
+import AvatarIconStyled from '../../../lib/styledcomponents/AvatarIconStyled';
 
 const GridContainer = styled('div')(({ theme }) => ({
   // using CSS Grid here because mui Grid responsiveness produces changes in spacing when crossing breakpoints
@@ -71,57 +58,23 @@ const Monster = styled('img')({
   },
 });
 
-const BottomContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSmallDevice',
-})<ContainerProps>(({ isSmallDevice, theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  paddingBottom: isSmallDevice
-    ? `${theme.sizing.extraExtraLargePadding}px`
-    : `${theme.sizing.largePadding}px`,
-  gap: 12,
-}));
-
-interface SelectAvatarProps {
+interface JoinGameProps {
+  isSmallDevice: boolean;
   selectedAvatar: number;
   setSelectedAvatar: (value: number) => void;
-  firstName: string;
-  lastName: string;
-  isSmallDevice: boolean;
-  isAPIError: boolean;
-  setIsAPIError: (value: boolean) => void;
-  handleAvatarSelectClick: () => void;
 }
 
-export default function SelectAvatar({
+export default function JoinGame({
+  isSmallDevice,
   selectedAvatar,
   setSelectedAvatar,
-  firstName,
-  lastName,
-  isSmallDevice,
-  handleAvatarSelectClick,
-  isAPIError,
-  setIsAPIError,
-}: SelectAvatarProps) {
+}: JoinGameProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [isButtonPressed, setIsButtonPressed] = React.useState(false);
-
-  const handleRetryClick = () => {
-    setIsAPIError(false);
-    setIsButtonPressed(false);
-  };
+  const [isClicked, setIsClicked] = React.useState<boolean>(false);
 
   return (
-    <BackgroundContainerStyled>
-      <StackContainer>
-        <ErrorModal
-          isModalOpen={isAPIError}
-          errorType={ErrorType.JOIN}
-          errorText=""
-          handleRetry={handleRetryClick}
-        />
+      <Box style={{display: 'flex', flexDirection: 'column'}}>
         <Stack spacing={2}>
           <Typography
             variant="h2"
@@ -140,7 +93,10 @@ export default function SelectAvatar({
                   src={monsterMap[index].icon}
                   onClick={() => {
                     setSelectedAvatar(index);
+                    setIsClicked(true);
+                    setTimeout(() => setIsClicked(false), 300);
                   }}
+                  isClicked={isClicked}
                   isSelected={index === selectedAvatar}
                   alt="avatar"
                 />
@@ -154,22 +110,6 @@ export default function SelectAvatar({
             alt="monster"
           />
         </MonsterContainer>
-        <BottomContainer isSmallDevice={isSmallDevice}>
-          <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {`${firstName} ${lastName}`}
-          </Typography>
-          <GamePlayButtonStyled
-            data-testid="selectavatar-button"
-            onClick={() => {
-              handleAvatarSelectClick();
-              setIsButtonPressed(true);
-            }}
-            disabled={isButtonPressed}
-          >
-            {t('joingame.selectavatar.button')}
-          </GamePlayButtonStyled>
-        </BottomContainer>
-      </StackContainer>
-    </BackgroundContainerStyled>
+      </Box>
   );
 }

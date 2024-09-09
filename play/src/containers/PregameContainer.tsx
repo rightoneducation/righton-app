@@ -11,8 +11,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
-import EnterCodeAndName from '../pages/pregame/EnterCodeAndName';
-import SelectAvatar from '../pages/pregame/SelectAvatar';
+import JoinGame from '../pages/pregame/JoinGame';
 import {
   PregameState,
   LocalModel,
@@ -29,6 +28,8 @@ export function PregameContainer({ apiClients }: PregameFinished) {
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const isMedDevice = useMediaQuery(theme.breakpoints.down('md'));
+  const [shouldShowAvatarSelect, setShouldShowAvatarSelect] = useState<boolean>(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
   );
@@ -128,6 +129,9 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     }
     return undefined;
   };
+  // handleInputChange = () => {
+  //   // handle input change
+  // }
   // on click of avatar select button, add team and team member, store local storage data, and navigate to game
   const handleAvatarSelectClick = async () => {
     try {
@@ -156,28 +160,22 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     }
   };
   switch (pregameState) {
-    case PregameState.SELECT_AVATAR:
-      return (
-        <SelectAvatar
-          selectedAvatar={selectedAvatar}
-          firstName={firstName}
-          lastName={lastName}
-          setSelectedAvatar={setSelectedAvatar}
-          isSmallDevice={isSmallDevice}
-          handleAvatarSelectClick={handleAvatarSelectClick}
-          isAPIError={isAPIerror}
-          setIsAPIError={setIsAPIError}
-        />
-      );
     case PregameState.ENTER_GAME_CODE:
       return (
-        <EnterCodeAndName
+        <JoinGame
+          isSmallDevice={isSmallDevice}
           isMedDevice={isMedDevice}
+          shouldShowAvatarSelect={shouldShowAvatarSelect}
+          setShouldShowAvatarSelect={setShouldShowAvatarSelect}
           firstName={firstName}
           setFirstName={setFirstName}
           lastName={lastName}
           setLastName={setLastName}
           handleGameCodeClick={handleGameCodeClick}
+          selectedAvatar={selectedAvatar}
+          setSelectedAvatar={setSelectedAvatar}
+          isButtonDisabled={isButtonDisabled}
+          setIsButtonDisabled={setIsButtonDisabled}
         />
       );
     case PregameState.SPLASH_SCREEN:
