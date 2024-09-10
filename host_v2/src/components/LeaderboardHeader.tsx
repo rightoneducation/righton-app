@@ -2,6 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { GameSessionState } from '@righton/networking';
 import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
 import QuestionIndicator from './QuestionIndicator';
 import playerIcon from '../img/playerIcon.svg';
@@ -35,7 +36,7 @@ export default function LeaderboardHeader() {
         </Grid>
         <Grid item style={{ paddingTop: `${theme.sizing.xxSmPadding}px` }}>
           <Typography variant="h1" style={{ fontSize: '24px', lineHeight: '36px', fontFamily: 'Poppins' }}>
-            {t('gameinprogress.header.finalresults')}
+          {localGameSession.currentState === GameSessionState.TEAMS_JOINING ? t('gameinprogress.header.leaderboard') : t('gameinprogress.header.finalresults')}
           </Typography>
         </Grid>
       </Container>

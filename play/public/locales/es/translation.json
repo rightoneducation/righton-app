@@ -57,7 +57,8 @@
       "phase2start": "Respuesta Explicaciones",
       "phase1results": "Resultados de la Fase 1",
       "phase2results": "Resultados de la Fase 2",
-      "finalresults": "Tabla de Clasificación",
+      "leaderboard": "Clasificación Final",
+      "finalresults": "Tabla de Posiciones",
       "finished": "Responde la Pregunta",
       "correct": "Correcta!",
       "incorrect": "¡Buen Intento!"

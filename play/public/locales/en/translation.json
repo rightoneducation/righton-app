@@ -57,7 +57,8 @@
       "phase2start": "Answer Explanations",
       "phase1results": "Phase 1 Results",
       "phase2results": "Phase 2 Results",
-      "finalresults": "Leaderboard",
+      "leaderboard": "Leaderboard",
+      "finalresults": "Final Leaderboard",
       "finished": "Answer the Question",
       "correct": "Correct!",
       "incorrect": "Nice Try!"
