@@ -84,6 +84,7 @@ export default function GameInProgressContent({
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
       isShortAnswerEnabled={isShortAnswerEnabled}
+      currentPhase={currentPhase}
     />
   );
 
