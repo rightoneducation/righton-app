@@ -3,6 +3,7 @@ import { APIClients, Environment, AppType } from '@righton/networking';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
+import { Typography, Box, Button } from '@mui/material';
 import { ScreenSize } from './lib/HostModels';
 import Theme from './lib/Theme';
 import ExploreGames from './pages/ExploreGames';
@@ -33,10 +34,12 @@ function App() {
 
   return (
     <ThemeProvider theme={Theme}>
+      <Box style={{backgroundColor: '#02215F'  }}>
       <EGHeader screenSize={screenSize} isXLScreen={isXLScreen} onScreenChange={handleScreenChange} />
       {currentScreen === Screen.ExploreGamesScreen && <ExploreGames apiClients={apiClients} />}
       {currentScreen === Screen.ExploreQuestionsScreen && <ExploreQuestions apiClients={apiClients} />}
       {currentScreen === Screen.MyLibraryScreen && <MyLibrary apiClients={apiClients} />}
+      </Box>
     </ThemeProvider>
   );
 }
