@@ -91,7 +91,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team');
         return;
       }
-      console.log(this.getGameSession());
       const newGameSession = { ...this.gameSession as IGameSession };
       newGameSession.teams.push(team);
       this.gameSession = newGameSession;
@@ -112,8 +111,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team');
         return;
       }
-      console.log(this.gameSession);
-      console.log(this.getGameSession());
       const newGameSession = { ...this.gameSession as IGameSession };
       newGameSession.teams[newGameSession.teams.findIndex((t) => t.id === team.id)] = team;
       this.gameSession = newGameSession;
@@ -125,8 +122,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (this.gameSession && this.gameSessionId && this.gameSession.startTime){
       try {  
         await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, startTime: newTime.toString()}).then((gameSession: IGameSession) => {
-          console.log(newTime);
-          console.log(gameSession);
           this.gameSession = gameSession;
         });
       } catch (error) {
@@ -175,7 +170,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
 
   private createAnswerFromBackendData = (ans: any): Answer => {
     const { rawAnswer, answerType } = ans;
-    console.log(ans);
     switch (answerType) {
       case AnswerType.NUMBER:
         return AnswerFactory.createAnswer(rawAnswer, answerType, ans.answerPrecision);
@@ -187,12 +181,13 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   };
 
   private processAnswer(ans: any, teamAnswersQuestion: any, phase: IPhase, teamName: string) {
-    console.log(ans);
     const answerObj = this.createAnswerFromBackendData(ans.answer);
     let newResponses = [...teamAnswersQuestion[phase].responses];
     if (answerObj) {
       answerObj.normalizeAnswer(answerObj.rawAnswer);
       const existingAnswer = teamAnswersQuestion[phase].responses.find((response: any) => {
+        if (answerObj.rawAnswer.toString() === response.rawAnswer.toString())
+          return true;
         if (this.isAnswerNumeric(answerObj)) {
           return answerObj.isEqualTo(response.normAnswer as number[]);
         }
@@ -502,7 +497,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       if (question.questionId !== currentQuestion.id) {
         return question;
       }
-      console.log(question);
       const updatedResponses = question.phase1.responses.map((response) => {
         const matchingMistake = currentMistakes.find((mistake: any) => mistake.answer === response.rawAnswer);
         if (matchingMistake)
@@ -510,7 +504,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         return response;
         }
       );
-      console.log(updatedResponses);
       return {
         ...question,
         phase1: {
@@ -523,7 +516,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       ...this.hostTeamAnswers,
       questions: updatedQuestions,
     };
-    console.log(this.hostTeamAnswers);
     return this.hostTeamAnswers;
   }
 
@@ -566,7 +558,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       return;
     }
     this.createTeamAnswerSubscription = this.teamAnswerAPIClient.subscribeCreateTeamAnswer(this.gameSessionId, (teamAnswer: BackendAnswer) => {
-      console.log(teamAnswer);
       if (!teamAnswer) {
         console.error('Error: Invalid team answer');
         return;
