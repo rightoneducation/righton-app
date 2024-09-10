@@ -27,6 +27,7 @@ const darkPurpleColor = '#4700B2'; // phase results, selected answer
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
 const blueColor = '#22ADFF'; // highlights around selected answer, pagination bullet
+const extraDarkBlueColor = '#02215F'; // upper explore games screen background
 const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
 const lightGreyColor = '#F4F4F4'; // submitted answer
@@ -385,6 +386,7 @@ declare module '@mui/material/styles' {
     darkPurple: string;
     blue: string;
     darkBlue: string;
+    extraDarkBlue: string;
     extraDarkGrey: string;
     darkGrey: string;
     lightGrey: string;
@@ -416,6 +418,7 @@ declare module '@mui/material/styles' {
     darkPurple?: string;
     blue?: string;
     darkBlue?: string;
+    extraDarkBlue?: string;
     purple?: string;
     extraDarkGrey?: string;
     darkGrey?: string;
@@ -485,6 +488,7 @@ export default createTheme({
       darkPurple: darkPurpleColor,
       blue: blueColor,
       darkBlue: secondaryTextColor,
+      extraDarkBlue: extraDarkBlueColor,
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,

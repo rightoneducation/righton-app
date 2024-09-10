@@ -15,10 +15,12 @@ interface ExploreGamesProps {
 }
 
 const ExploreGamesContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  backgroundColor: '#02215F',
+  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -26,8 +28,6 @@ const ExploreGamesContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
-  width: '100%',
-  height: '100vh',
 }));
 
 export default function ExploreGames({ apiClients }: ExploreGamesProps) {
