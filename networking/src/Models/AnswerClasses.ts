@@ -71,9 +71,7 @@ export class StringAnswer extends BaseAnswer<string>{
   }
 
   isEqualTo(otherNormAnswers: string[]): Boolean {
-    console.log(otherNormAnswers);
     if (this.normAnswer) {
-      console.log(this.normAnswer);
       return this.normAnswer.some((answer) => {
         return otherNormAnswers.includes(answer as string);
       }) 
@@ -135,7 +133,7 @@ export class NumericAnswer extends BaseAnswer<Number>{
             // we need to use the raw answer because the norm answer could be changed if there is a percentage present
             // so it's not a reliable way to check decimal places
             const normRawAnswer = this.rawAnswer.replace(/[,%]/g, '').trim();
-
+            
             // this is going to round the number we found that matches to the precision that the teacher requested
             const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[this.answerPrecision]);
             if (normRawAnswer === roundedNumberAsString)

@@ -52,7 +52,6 @@ export default function ResponsesGraph({
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef<HTMLElement | null>(null);
   const noResponseLabel = '–';
-
   const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - theme.sizing.defaultVictoryPadding : boundingRect.width - (theme.sizing.defaultVictoryPadding + theme.sizing.mdPadding * 2);
   const correctChoiceIndex =
     data.findIndex((element: any) => element.isCorrect);
@@ -71,6 +70,8 @@ export default function ResponsesGraph({
       (_, index) => index * tickInterval,
     );
   };
+  // remove any zero responses when displaying phase 1 data in phase 2
+  const filteredData = statePosition > 6 ? data.filter((response) => response.count !== 0) : data;
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
     setGraphClickIndex(selectedIndex);
@@ -113,7 +114,7 @@ export default function ResponsesGraph({
         <TitleText>Number of players</TitleText>
       </TitleContainer>
       <Box ref={graphRef}>
-        {(isShortAnswerEnabled ? data.length >= 1 : data.length >= 1) && (
+        {(isShortAnswerEnabled ? filteredData.length >= 1 : filteredData.length >= 1) && (
         <VictoryChart
           domainPadding={{ x: isShortAnswerEnabled ? 32: 16, y: 0 }} // domainPadding is offsetting all data away from the origin. used in conjunction with height
           padding={{
@@ -131,7 +132,7 @@ export default function ResponsesGraph({
           }
           theme={theme.victoryResponsesTheme}
           width={boundingRect.width}
-          height={isShortAnswerEnabled ? data.length * 68 : data.length * 40} // height is a calc of the width of the bars + the space between them + the offset
+          height={isShortAnswerEnabled ? filteredData.length * 68 : filteredData.length * 40} // height is a calc of the width of the bars + the space between them + the offset
         >
           <VictoryAxis
             standalone={false}
@@ -159,7 +160,7 @@ export default function ResponsesGraph({
             />
           )}
           <VictoryBar
-            data={data}
+            data={filteredData}
             y="count"
             x={isShortAnswerEnabled ? "rawAnswer" : "multiChoiceCharacter"}
             horizontal
