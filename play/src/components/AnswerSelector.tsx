@@ -91,13 +91,14 @@ export default function AnswerSelector({
       <Typography
         variant="h5"
         sx={{
+          color: `${theme.palette.primary.darkPurple}`,
           paddingLeft:
             !isSubmitted && answerStatus === AnswerState.SELECTED
               ? '1px'
               : '2px', // compensates for increased border thickness when selected
           paddingTop: '2px',
           opacity:
-            isSubmitted || answerStatus === AnswerState.CORRECT ? 0.5 : 1,
+            isSubmitted ? 0.5 : 1,
         }}
       >
         {String.fromCharCode(letterCode)}

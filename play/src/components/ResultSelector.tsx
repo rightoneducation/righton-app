@@ -94,11 +94,10 @@ export default function ResultSelector({
             variant="h5"
             sx={{
               paddingLeft: '1px',
-              color: correctCard ? '#384466' : '#4700B2',
+              color: correctCard ? '#384466' : `${theme.palette.primary.darkPurple}`,
               fontWeight: '800',
               fontSize: '16px',
               lineHeight: '22px',
-              opacity: correctCard ? '.5' : '1',
             }}
           >
             {String.fromCharCode(letterCode)}

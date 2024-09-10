@@ -49,6 +49,7 @@ export default function AnswerCard({
             fontSize: `${theme.typography.h3.fontSize}px`,
             fontWeight: `${theme.typography.h3.fontWeight}`,
             color: `${theme.palette.primary.darkPurple}`,
+            opacity: 0.5
           }}
         >
           {index + 1}
@@ -102,9 +103,9 @@ export default function AnswerCard({
             {!isShortAnswerEnabled && 
               <Typography
                 sx={{
+                  color: `${theme.palette.primary.darkPurple}`,
                   marginRight: `${theme.sizing.xSmPadding}px`,
                   fontWeight: `${theme.typography.h5.fontWeight}`,
-                  opacity: 0.5,
                 }}
               >
                 {String.fromCharCode(letterCode)}
