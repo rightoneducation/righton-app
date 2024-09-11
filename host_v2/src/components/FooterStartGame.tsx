@@ -94,7 +94,7 @@ export default function FooterStartGame({
     switch (gameSession.currentState) {
       case GameSessionState.TEAMS_JOINING:
         return (gameSession.currentQuestionIndex === null)
-            ? 'Start Game' 
+            ? 'Prepare Game' 
             : 'Next Question';
       case GameSessionState.FINAL_RESULTS:
         return 'End Game';
