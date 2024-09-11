@@ -8,7 +8,7 @@ import {
   Radio,
   Box
 } from '@mui/material';
-import { IHostTeamAnswersResponse, IQuestion } from "@righton/networking";
+import { IHostTeamAnswersResponse, IQuestion, GameSessionState } from "@righton/networking";
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useHostTeamAnswersContext';
@@ -53,6 +53,7 @@ const RadioLabelStyled = styled(FormControlLabel)({
 
 interface FeaturedMistakesProps {
   currentQuestion: IQuestion,
+  currentState: GameSessionState;
   featuredMistakesSelectionValue: string;
   isPopularMode: boolean;
   setIsPopularMode: (isPopularMode: boolean) => void;
@@ -60,6 +61,7 @@ interface FeaturedMistakesProps {
 
 export default function FeaturedMistakes({
   currentQuestion,
+  currentState,
   featuredMistakesSelectionValue,
   isPopularMode,
   setIsPopularMode

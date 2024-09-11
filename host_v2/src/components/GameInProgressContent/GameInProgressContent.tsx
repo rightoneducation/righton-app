@@ -110,6 +110,7 @@ export default function GameInProgressContent({
     <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       currentPhase={currentPhase}
+      currentState={localGameSession.currentState}
       responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
       confidences={currentPhase === IPhase.ONE ? currentConfidences : prevPhaseConfidences}
       graphClickInfo={graphClickInfo}

@@ -12,6 +12,7 @@ import FeaturedMistakes from '../../FeaturedMistakes';
 
 interface GameInProgressContentRightColumnProps {
   currentPhase: IPhase;
+  currentState: GameSessionState;
   featuredMistakesSelectionValue: string;
   currentQuestion: IQuestion;
   responses: IHostTeamAnswersResponse[];
@@ -28,6 +29,7 @@ interface GameInProgressContentRightColumnProps {
 
 export default function GameInProgressContentRightColumn ({ 
     currentPhase,
+    currentState,
     featuredMistakesSelectionValue,
     currentQuestion, 
     responses, 
@@ -48,6 +50,7 @@ export default function GameInProgressContentRightColumn ({
         {isShortAnswerEnabled && currentPhase === IPhase.ONE ?
           <FeaturedMistakes
             currentQuestion={currentQuestion}
+            currentState={currentState}
             featuredMistakesSelectionValue={featuredMistakesSelectionValue}
             isPopularMode={isPopularMode}
             setIsPopularMode={setIsPopularMode}
