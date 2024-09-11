@@ -68,7 +68,7 @@ export default function EnableConfidenceCard({
   return (
     <StyledContainer>
       <TitleContainer>
-        <TitleTypography>Confidence</TitleTypography>
+        <TitleTypography>Confidence Meter</TitleTypography>
         <ConfidenceSwitch
           checked={isConfidenceEnabled}
           onChange={() => setIsConfidenceEnabled(!isConfidenceEnabled)}
