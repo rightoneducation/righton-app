@@ -53,7 +53,10 @@ export default function DiscussAnswerCard({
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
       {correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
-        <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>)}
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
+        </Box>
+      )}
       {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <AnswerTitleTypography>Incorrect Answer</AnswerTitleTypography>
