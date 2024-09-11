@@ -97,7 +97,7 @@ export default function EnableShortAnswerCard ({
     <StyledContainer>
       <TitleContainer>
         <TitleTypography>
-          Responses
+          Answer Type
         </TitleTypography>
       </TitleContainer>
       <Box style={{width: '100%'}}>
