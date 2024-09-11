@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import {ScreenSize } from '../lib/HostModels';
-import PaginationContainerStyled from '../lib/PaginationContainerStyled';
-import SearchAndFilter from './SearchAndFilter';
 import RecommendedGames from './RecommendedGames';
 
 interface ExploreGamesUpperProps {
@@ -18,7 +16,7 @@ interface ExploreGamesUpperContainerProps {
     screenSize: ScreenSize;
   }
 const ExploreGamesUpperContainer = styled(Box)<ExploreGamesUpperContainerProps>(({ screenSize }) => ({
-    height: screenSize === ScreenSize.SMALL ? '438px' : '496px',
+    height: screenSize === ScreenSize.SMALL ? '368px' : '408px',
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
@@ -33,7 +31,6 @@ export default function ExploreGamesUpper({ screenSize, apiClients, recommendedG
 
   return (
     <ExploreGamesUpperContainer screenSize={screenSize}>
-        <SearchAndFilter screenSize={screenSize}/>
         <RecommendedGames screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames}/>
     </ExploreGamesUpperContainer>
   );

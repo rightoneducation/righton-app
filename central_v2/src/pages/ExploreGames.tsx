@@ -9,6 +9,7 @@ import { ScreenSize } from '../lib/HostModels';
 import ExploreGamesUpper from '../components/ExploreGamesUpper';
 import EGMostPopular from '../components/EGMostPopular';
 import fetchMoreGames from "../lib/HelperFunctions";
+import SearchBar from '../components/SearchBar';
 
 interface ExploreGamesProps {
   apiClients: APIClients;
@@ -46,6 +47,10 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
   const [searchedGames, setSearchedGames] = useState<IGameTemplate[]>([]);
   const [nextToken, setNextToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const handleSearchChange = (newSearch: string) => {
+    setSearchQuery(newSearch);
+  };
 
   useEffect(() => {
     if (apiClients) {
@@ -82,8 +87,14 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
         scrollableTarget="scrollableDiv"
         style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
       >
-          <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
-          <EGMostPopular screenSize={screenSize} apiClients={apiClients} searchedGames={searchedGames} />
+          <SearchBar screenSize={screenSize} onSearchChange={handleSearchChange}/>
+          {/* right now based on if typed anything, will change to if enter or whatever */}
+          {searchQuery === '' && (
+            <>
+            <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
+            <EGMostPopular screenSize={screenSize} apiClients={apiClients} searchedGames={searchedGames} />
+            </>
+          )}
       </InfiniteScroll>
     </ExploreGamesContainer>
   );
