@@ -34,7 +34,7 @@ const Shadow = styled(Box)(({theme}) => ({
 const SafeAreaStyled = styled(Box)(({ theme }) => ({
   paddingBottom: '34px',
   width: '100%',
-  height: '100vh',
+  height: '100dvh',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
