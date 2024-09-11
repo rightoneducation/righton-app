@@ -37,9 +37,10 @@ const EGHeaderContainer = styled(Box)<EGHeaderContainerProps>(({ screenSize, men
   zIndex: 1000
 }));
 
-const TransparentButton = styled(Button)<{ active?: boolean }>(({ active }) => ({
+const TransparentButton = styled(Button)<{ active?: boolean; menuOpen?: boolean }>(({ active, menuOpen }) => ({
   display: 'flex',
-  alignItems: 'center',
+  justifyContent: menuOpen ? 'flex-start' : 'center',
+  width: '200px',
   background: 'transparent',
   color: '#FFFFFF',
   fontFamily: 'Poppins',
@@ -53,6 +54,7 @@ const TransparentButton = styled(Button)<{ active?: boolean }>(({ active }) => (
     marginRight: '8px',
   },
 }));
+
 
 const PrimaryButton2 = styled(Button)(() => ({
   width: '123px',
@@ -109,7 +111,7 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
   };
   const getHeight = () => {
     if (menuOpen)
-      return '477px';
+      return '418px';
     if (screenSize === ScreenSize.SMALL)
       return '77px';
     return '94px';
@@ -186,14 +188,15 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
            <Box
            display="flex"
            flexDirection="column"
-           gap="16px"
-           alignItems="flex-start" // Keep the items left-aligned within the box
-           width="223px" // Set a fixed width to the box
-           style={{ margin: '0 auto' }} // This centers the box horizontally
+           gap="12px"
+           alignItems= "flex-start"
+           width="200px" // Set a fixed width to the box
+           style={{ margin: '0 auto',}} // This centers the box horizontally
          >
            <TransparentButton
              onClick={() => handleButtonClick(Screen.ExploreGamesScreen)}
              active={selectedScreen === Screen.ExploreGamesScreen}
+             menuOpen={menuOpen}
            >
              <img src={dice} alt="Games Icon" />
              Games
@@ -201,6 +204,7 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
            <TransparentButton
              onClick={() => handleButtonClick(Screen.ExploreQuestionsScreen)}
              active={selectedScreen === Screen.ExploreQuestionsScreen}
+             menuOpen={menuOpen}
            >
              <img src={qmarks} alt="Questions Icon" />
              Questions
@@ -208,6 +212,7 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
            <TransparentButton
              onClick={() => handleButtonClick(Screen.MyLibraryScreen)}
              active={selectedScreen === Screen.MyLibraryScreen}
+             menuOpen={menuOpen}
            >
              <img src={books} alt="My Library Icon" />
              My Library
