@@ -357,7 +357,7 @@ export default function JoinGame({
           </Box>
           {shouldShowAvatarSelect &&
             <Fade in style={{ transformOrigin: '50% 0 0' }}
-              {...{ timeout: 1000 }}
+              {...{ timeout: 2000 }}
             >
               <div>
                 <AvatarSelection isSmallDevice={isSmallDevice} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
