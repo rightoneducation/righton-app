@@ -91,7 +91,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team');
         return;
       }
-      console.log(this.getGameSession());
       const newGameSession = { ...this.gameSession as IGameSession };
       newGameSession.teams.push(team);
       this.gameSession = newGameSession;
@@ -112,8 +111,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         console.error('Error: Invalid team');
         return;
       }
-      console.log(this.gameSession);
-      console.log(this.getGameSession());
       const newGameSession = { ...this.gameSession as IGameSession };
       newGameSession.teams[newGameSession.teams.findIndex((t) => t.id === team.id)] = team;
       this.gameSession = newGameSession;
@@ -125,8 +122,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (this.gameSession && this.gameSessionId && this.gameSession.startTime){
       try {  
         await this.gameSessionAPIClient.updateGameSession({id: this.gameSessionId, startTime: newTime.toString()}).then((gameSession: IGameSession) => {
-          console.log(newTime);
-          console.log(gameSession);
           this.gameSession = gameSession;
         });
       } catch (error) {
@@ -191,6 +186,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (answerObj) {
       answerObj.normalizeAnswer(answerObj.rawAnswer);
       const existingAnswer = teamAnswersQuestion[phase].responses.find((response: any) => {
+        if (answerObj.rawAnswer.toString() === response.rawAnswer.toString())
+          return true;
         if (this.isAnswerNumeric(answerObj)) {
           return answerObj.isEqualTo(response.normAnswer as number[]);
         }
@@ -309,7 +306,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
   private decrementNoResponseCount(teamAnswersQuestion: any, phase: IPhase, teamName: string) {
     const noResponse = teamAnswersQuestion[phase].responses.find((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
     if (noResponse) {
-      noResponse.count -= 1;
+      noResponse.count = Math.max(noResponse.count - 1,0);
       noResponse.teams = noResponse.teams.filter((team: string) => team !== teamName);
     }
   }
@@ -500,7 +497,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       if (question.questionId !== currentQuestion.id) {
         return question;
       }
-      console.log(question);
       const updatedResponses = question.phase1.responses.map((response) => {
         const matchingMistake = currentMistakes.find((mistake: any) => mistake.answer === response.rawAnswer);
         if (matchingMistake)
@@ -508,7 +504,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         return response;
         }
       );
-      console.log(updatedResponses);
       return {
         ...question,
         phase1: {
@@ -521,7 +516,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       ...this.hostTeamAnswers,
       questions: updatedQuestions,
     };
-    console.log(this.hostTeamAnswers);
     return this.hostTeamAnswers;
   }
 

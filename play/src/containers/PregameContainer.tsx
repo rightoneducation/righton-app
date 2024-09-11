@@ -11,8 +11,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
-import EnterCodeAndName from '../pages/pregame/EnterCodeAndName';
-import SelectAvatar from '../pages/pregame/SelectAvatar';
+import JoinGame from '../pages/pregame/JoinGame';
 import {
   PregameState,
   LocalModel,
@@ -29,6 +28,8 @@ export function PregameContainer({ apiClients }: PregameFinished) {
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const isMedDevice = useMediaQuery(theme.breakpoints.down('md'));
+  const [shouldShowAvatarSelect, setShouldShowAvatarSelect] = useState<boolean>(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
   );
@@ -63,43 +64,13 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     window.localStorage.removeItem(StorageKey);
     setRejoinGameObject(null);
   };
-  // on click of game code button, check if game code is valid
-  // if game code is invalid, return false to display error
-  // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
-  const handleGameCodeClick = async (
-    inputGameCodeValue: string
-  ): Promise<boolean> => {
-    if (!isGameCodeValid(inputGameCodeValue)) {
-      return false;
-    }
-    try {
-      const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
-        parseInt(inputGameCodeValue, 10)
-      );
-      console.log(gameSessionResponse);
-      if (isNullOrUndefined(gameSessionResponse)) {
-        return false;
-      }
-      if (
-        gameSessionResponse.currentState !== GameSessionState.TEAMS_JOINING
-      ) {
-        return false;
-      }
-      setGameSession(gameSessionResponse);
-      setPregameState(PregameState.SELECT_AVATAR);
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
 
   // create team and teammember on backend
-  const addTeamToGame = async () => {
+  const addTeamToGame = async (inputGameSession: IGameSession) => {
     const teamName = `${firstName} ${lastName}`;
     try {
       const team = await apiClients.team.addTeamToGameSessionId(
-        gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        inputGameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         teamName,
         null,
         selectedAvatar
@@ -128,24 +99,25 @@ export function PregameContainer({ apiClients }: PregameFinished) {
     }
     return undefined;
   };
+
   // on click of avatar select button, add team and team member, store local storage data, and navigate to game
-  const handleAvatarSelectClick = async () => {
+  const handleAvatarSelectClick = async (gameSessionResponse: IGameSession) => {
     try {
-      if (gameSession) {
-        const teamInfo = await addTeamToGame();
+      if (gameSessionResponse) {
+        const teamInfo = await addTeamToGame(gameSessionResponse);
         if (!teamInfo) {
           setIsAPIError(true);
           return;
         }
         const storageObject: LocalModel = {
           currentTime: new Date().getTime() / 60000,
-          gameSessionId: gameSession.id,
+          gameSessionId: gameSessionResponse.id,
           teamMemberAnswersId: teamInfo.teamMemberAnswersId,
           teamId: teamInfo.teamId,
           teamName: `${firstName} ${lastName}`,
           selectedAvatar,
           hasRejoined: false,
-          currentTimer: gameSession.phaseOneTime,
+          currentTimer: gameSessionResponse.phaseOneTime,
           answer: null,
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
@@ -155,29 +127,56 @@ export function PregameContainer({ apiClients }: PregameFinished) {
       setIsAPIError(true);
     }
   };
-  switch (pregameState) {
-    case PregameState.SELECT_AVATAR:
-      return (
-        <SelectAvatar
-          selectedAvatar={selectedAvatar}
-          firstName={firstName}
-          lastName={lastName}
-          setSelectedAvatar={setSelectedAvatar}
-          isSmallDevice={isSmallDevice}
-          handleAvatarSelectClick={handleAvatarSelectClick}
-          isAPIError={isAPIerror}
-          setIsAPIError={setIsAPIError}
-        />
+
+  // on click of game code button, check if game code is valid
+  // if game code is invalid, return false to display error
+  // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
+  const handleGameCodeClick = async (
+    inputGameCodeValue: string
+  ): Promise<boolean> => {
+    if (!isGameCodeValid(inputGameCodeValue)) {
+      return false;
+    }
+    try {
+      const gameSessionResponse = await apiClients.gameSession.getGameSessionByCode(
+        parseInt(inputGameCodeValue, 10)
       );
+      console.log(gameSessionResponse);
+      if (isNullOrUndefined(gameSessionResponse)) {
+        return false;
+      }
+      if (
+        gameSessionResponse.currentState !== GameSessionState.TEAMS_JOINING
+      ) {
+        return false;
+      }
+      setGameSession(gameSessionResponse);
+      handleAvatarSelectClick(gameSessionResponse);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
+  
+  switch (pregameState) {
     case PregameState.ENTER_GAME_CODE:
       return (
-        <EnterCodeAndName
+        <JoinGame
+          isSmallDevice={isSmallDevice}
           isMedDevice={isMedDevice}
+          shouldShowAvatarSelect={shouldShowAvatarSelect}
+          setShouldShowAvatarSelect={setShouldShowAvatarSelect}
           firstName={firstName}
           setFirstName={setFirstName}
           lastName={lastName}
           setLastName={setLastName}
           handleGameCodeClick={handleGameCodeClick}
+          selectedAvatar={selectedAvatar}
+          setSelectedAvatar={setSelectedAvatar}
+          isButtonDisabled={isButtonDisabled}
+          setIsButtonDisabled={setIsButtonDisabled}
         />
       );
     case PregameState.SPLASH_SCREEN:

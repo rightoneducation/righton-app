@@ -62,6 +62,13 @@ export default function GameInProgressContentRightColumn ({
             setGraphClickInfo={setGraphClickInfo}
           />
         }
+        {isConfidenceEnabled && currentPhase === IPhase.TWO && 
+          <ConfidenceCard 
+            confidences={confidences}
+            graphClickInfo={graphClickInfo}
+            setGraphClickInfo={setGraphClickInfo}
+          />
+        }
       </ScrollBoxStyled>
     </Grid>
   );

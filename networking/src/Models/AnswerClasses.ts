@@ -37,6 +37,8 @@ export abstract class BaseAnswer<T> {
       this.answerType = answerType;
   }
 
+  abstract normalizeCorrectAnswer(rawAnswer: string): any;
+
   abstract normalizeAnswer(rawAnswer: string): void;
 
   abstract isEqualTo(otherNormAnswers: T[]): Boolean;
@@ -60,7 +62,11 @@ export class StringAnswer extends BaseAnswer<string>{
      return normAnswers;
   }
 
-  normalizeAnswer(rawAnswer: string): void {
+  normalizeCorrectAnswer(rawAnswer: string): any {
+    return this.normalizeStringAnswer(rawAnswer);
+  }
+
+  normalizeAnswer(rawAnswer: string): any {
     this.normAnswer = this.normalizeStringAnswer(rawAnswer);
   }
 
@@ -103,7 +109,11 @@ export class NumericAnswer extends BaseAnswer<Number>{
     return normAnswers;
   }
   
-  normalizeAnswer(rawAnswer: string): void {
+  normalizeCorrectAnswer(rawAnswer: string): any {
+    return this.normalizeNumericAnswer(rawAnswer);
+  }
+
+  normalizeAnswer(rawAnswer: string): any {
     this.normAnswer = this.normalizeNumericAnswer(rawAnswer);
   }
 
@@ -123,7 +133,7 @@ export class NumericAnswer extends BaseAnswer<Number>{
             // we need to use the raw answer because the norm answer could be changed if there is a percentage present
             // so it's not a reliable way to check decimal places
             const normRawAnswer = this.rawAnswer.replace(/[,%]/g, '').trim();
-
+            
             // this is going to round the number we found that matches to the precision that the teacher requested
             const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[this.answerPrecision]);
             if (normRawAnswer === roundedNumberAsString)
@@ -175,7 +185,11 @@ export class ExpressionAnswer extends BaseAnswer<string>{
     return normAnswers;
   }
 
-  normalizeAnswer(rawAnswer: string): void {
+  normalizeCorrectAnswer(rawAnswer: string): any {
+    return this.normalizeExpressionAnswer(rawAnswer);
+  }
+
+  normalizeAnswer(rawAnswer: string): any {
     this.normAnswer = this.normalizeExpressionAnswer(rawAnswer);
   }
 
@@ -226,7 +240,11 @@ export class MultiChoiceAnswer extends BaseAnswer<string> {
     return normAnswers;
   }
 
-  normalizeAnswer(rawAnswer: string): void {
+  normalizeCorrectAnswer(rawAnswer: string): any {
+    return this.normalizeMultiChoiceAnswer(rawAnswer);
+  }
+
+  normalizeAnswer(rawAnswer: string): any {
     this.normAnswer = this.normalizeMultiChoiceAnswer(rawAnswer);
   }
 
@@ -325,9 +343,6 @@ export class AnswerFactory {
       case AnswerType.EXPRESSION:
         return new ExpressionAnswer(rawAnswer, answerType);
       case AnswerType.MULTICHOICE:
-        console.log(rawAnswer);
-        console.log(answerType);
-        console.log(multiChoiceCharacter);
         return new MultiChoiceAnswer(rawAnswer, answerType, multiChoiceCharacter || '');
       case AnswerType.STRING:
       default:

@@ -8,7 +8,6 @@ import SelectedAnswer from '../img/SelectedAnswer.svg';
 import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import { AnswerState } from '../lib/PlayModels';
-import DACScoreIndicator from './DACScoreIndicator';
 
 const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   width: '100%',
@@ -181,9 +180,6 @@ export default function ResultSelector({
               </Box>
             )}
             <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
-          </Box>
-          <Box>
-            <DACScoreIndicator newPoints={newPoints} score={0} />
           </Box>
         </Box>
       );

@@ -205,16 +205,21 @@ export default function GameInProgress({
     try {
       const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)?.text ?? null;
       if (correctAnswer){
+        const normCorrectAnswer = answer.answer.normalizeCorrectAnswer(correctAnswer);
         if (isAnswerNumeric(answer.answer))
-          answer.isCorrect = answer.answer.isEqualTo([Number(correctAnswer)]) as boolean; // eslint-disable-line 
+          answer.isCorrect = answer.answer.isEqualTo([Number(normCorrectAnswer)]) as boolean; // eslint-disable-line 
         else {
-          answer.isCorrect = answer.answer.isEqualTo([correctAnswer]) as boolean; // eslint-disable-line 
+          answer.isCorrect = answer.answer.isEqualTo(normCorrectAnswer) as boolean; // eslint-disable-line 
+          console.log(answer.answer.isEqualTo(normCorrectAnswer) as boolean)
+          console.log(answer.answer);
+          console.log(correctAnswer);
+          console.log(answer.isCorrect);
         }
         if (isAnswerMultiChoice(answer.answer)){
           answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line
         }
       }
-      
+      console.log(correctAnswer);
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
       setTeamAnswerId(response.id ?? '');
