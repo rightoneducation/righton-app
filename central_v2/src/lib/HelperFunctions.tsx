@@ -1,9 +1,7 @@
 import { IAPIClients, IGameTemplate } from "@righton/networking";
 import {v4 as uuidv4} from 'uuid';
 
-const fetchMoreGames = async (apiClients: IAPIClients, nextToken: string, setNextToken: (nextToken: string | null) =>void, setGames: any, setLoading: (loading:boolean)=> void, loading: boolean) => {
-    console.log("in fetchmoregames");
-    console.log("Next Token:", nextToken);
+export const fetchMoreGames = async (apiClients: IAPIClients, nextToken: string, setNextToken: (nextToken: string | null) =>void, setGames: any, setLoading: (loading:boolean)=> void, loading: boolean) => {
 
     if (apiClients && !loading) {
       setLoading(true);
@@ -19,6 +17,4 @@ const fetchMoreGames = async (apiClients: IAPIClients, nextToken: string, setNex
     }
   };
 
-// change when we have more
-export default fetchMoreGames;
 

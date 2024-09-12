@@ -7,7 +7,7 @@ interface SearchBarProps {
     screenSize?: ScreenSize;
   }
 
-const SearchBarContainer = styled(TextField)(( { screenSize }: SearchBarProps) =>({
+const SearchBarContainer = styled(TextField)<SearchBarProps> (( {theme, screenSize }) =>({
     width: 'calc(100vw - 64px)',
     // maxWidth: '400px',
     margin: screenSize === ScreenSize.SMALL ? '16px 8px 16px 24px': '24px 16px 24px 32px',
@@ -25,7 +25,7 @@ const SearchBarContainer = styled(TextField)(( { screenSize }: SearchBarProps) =
             lineHeight: '38px', 
             fontFamily: 'Rubik',             
             '&::placeholder': {
-                color: '#02215F', // placeholder
+                color: `${theme.palette.primary.extraDarkBlue}`, // placeholder
                 fontWeight: 400, 
                 fontFamily: 'Rubik', 
                 fontSize: '16px',

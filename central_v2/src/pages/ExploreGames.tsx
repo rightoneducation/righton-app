@@ -8,7 +8,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { ScreenSize } from '../lib/HostModels';
 import ExploreGamesUpper from '../components/ExploreGamesUpper';
 import EGMostPopular from '../components/EGMostPopular';
-import fetchMoreGames from "../lib/HelperFunctions";
+import {fetchMoreGames} from "../lib/HelperFunctions";
 
 interface ExploreGamesProps {
   apiClients: APIClients;

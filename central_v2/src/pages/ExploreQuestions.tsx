@@ -18,7 +18,7 @@ const ExploreQuestionsContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  backgroundColor: '#02215F',
+  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -45,28 +45,8 @@ export default function ExploreQuestions({ apiClients }: ExploreQuestionsProps) 
 
 
   useEffect(() => {
-    if (apiClients) {
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
-        .then(response => {
-        //   setRecommendedGames(response?.gameTemplates || []);
-        //   setNextToken(response?.nextToken || null);
-        //   console.log("Initial Next Token:", response?.nextToken);
-        })
-        .catch(error => {
-          console.error('Error fetching games:', error);
-        });
-
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
-        .then(response => {
-        //   setSearchedGames(response?.gameTemplates || []);
-        //   setNextToken(response?.nextToken || null);
-        //   console.log("Initial Next Token (searched games):", response?.nextToken);
-        })
-        .catch(error => {
-          console.error('Error fetching games:', error);
-        });
-    }
-  }, [apiClients]);
+    // TODO - api requests for questions similar to explore games
+  }, []);
 
 
   return (

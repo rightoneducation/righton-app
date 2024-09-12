@@ -18,7 +18,7 @@ const MyLibraryContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  backgroundColor: '#02215F',
+  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari

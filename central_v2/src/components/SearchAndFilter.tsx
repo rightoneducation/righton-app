@@ -14,13 +14,13 @@ interface SearchAndFilterProps {
   screenSize?: ScreenSize;
 }
 
-const SearchAndFilterContainer = styled(Box)(( { screenSize }: SearchAndFilterProps ) => ({
+const SearchAndFilterContainer = styled(Box)<SearchAndFilterProps> (( { theme, screenSize }) => ({
   height: screenSize === ScreenSize.SMALL ? '70px' : '88px',
   width: '100%', 
   display: 'flex', 
   justifyContent: 'center',
   alignItems: 'center', 
-  backgroundColor: '#02215F' 
+  backgroundColor: `${theme.palette.primary.extraDarkBlue}`
 }));
 
 const PrimaryButton2 = styled(Button)(( { screenSize }: SearchAndFilterProps ) => ({

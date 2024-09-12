@@ -17,14 +17,14 @@ interface ExploreGamesUpperProps {
 interface ExploreGamesUpperContainerProps {
     screenSize: ScreenSize;
   }
-const ExploreGamesUpperContainer = styled(Box)<ExploreGamesUpperContainerProps>(({ screenSize }) => ({
+const ExploreGamesUpperContainer = styled(Box)<ExploreGamesUpperContainerProps>(({ theme, screenSize }) => ({
     height: screenSize === ScreenSize.SMALL ? '438px' : '496px',
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#02215F',
+    backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
   }));
 
 

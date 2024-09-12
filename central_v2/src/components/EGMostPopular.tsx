@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Typography, Box, styled } from '@mui/material';
+import { Grid, Typography, Box, styled, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClients, IGameTemplate } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid'; 
@@ -18,12 +18,12 @@ interface MostPopularTextProps {
     screenSize: ScreenSize;
   }
 
-const MostPopularText = styled(Typography)(({ screenSize }: MostPopularTextProps) => ({
-  lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
+  const MostPopularText = styled(Typography)<MostPopularTextProps>(({ theme, screenSize }) => ({
+    lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
   fontFamily: 'Poppins',
   fontWeight: '700',
   fontSize: screenSize === ScreenSize.SMALL ? '24px' : '40px',
-  color: '#02215F',
+  color: `${theme.palette.primary.extraDarkBlue}`,
 }));
 
 interface EGMostPopularContainerProps {
@@ -32,6 +32,8 @@ interface EGMostPopularContainerProps {
 }
 
 function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainerProps) {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -42,9 +44,9 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
         flexDirection: 'column',
         alignItems: 'center',
         backgroundColor: '#E9F1FF',
-        padding: screenSize === ScreenSize.SMALL ? '16px 24px 16px 24px' : '24px 32px 24px 32px',
+        padding: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px` : '24px 32px 24px 32px',
         boxSizing: 'border-box',
-        gap: screenSize === ScreenSize.SMALL ? '16px' : '24px',
+        gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.mdPadding}px`,
       }}
     >
       {children}
@@ -64,7 +66,7 @@ export default function EGMostPopular({ screenSize, apiClients, searchedGames }:
             <Grid
               item
               xs={12}
-              md={6} // 700
+              md={6} 
               xl={4}
               key={game.id} 
             >
