@@ -8,7 +8,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { ScreenSize } from '../lib/HostModels';
 import ExploreGamesUpper from '../components/ExploreGamesUpper';
 import EGMostPopular from '../components/EGMostPopular';
-import fetchMoreGames from "../lib/HelperFunctions";
+import {fetchMoreGames} from "../lib/HelperFunctions";
 
 interface MyLibraryProps {
   apiClients: APIClients;
@@ -45,28 +45,8 @@ export default function MyLibrary({ apiClients }: MyLibraryProps) {
 
 
   useEffect(() => {
-    if (apiClients) {
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
-        .then(response => {
-        //   setRecommendedGames(response?.gameTemplates || []);
-        //   setNextToken(response?.nextToken || null);
-        //   console.log("Initial Next Token:", response?.nextToken);
-        })
-        .catch(error => {
-          console.error('Error fetching games:', error);
-        });
-
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
-        .then(response => {
-        //   setSearchedGames(response?.gameTemplates || []);
-        //   setNextToken(response?.nextToken || null);
-        //   console.log("Initial Next Token (searched games):", response?.nextToken);
-        })
-        .catch(error => {
-          console.error('Error fetching games:', error);
-        });
-    }
-  }, [apiClients]);
+    // TODO - implement api requests for my library screen
+  }, []);
 
 
   return (
