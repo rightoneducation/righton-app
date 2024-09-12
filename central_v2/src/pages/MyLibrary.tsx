@@ -42,8 +42,6 @@ export default function MyLibrary({ apiClients }: MyLibraryProps) {
         ? ScreenSize.MEDIUM 
         : ScreenSize.SMALL;
 
-
-
   useEffect(() => {
     // TODO - implement api requests for my library screen
   }, []);

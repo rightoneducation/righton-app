@@ -11,7 +11,7 @@ import EGMostPopular from '../components/EGMostPopular';
 import {fetchMoreGames} from "../lib/HelperFunctions";
 
 interface ExploreGamesProps {
-  apiClients: APIClients;
+apiClients: APIClients;
 }
 
 const ExploreGamesContainer = styled(Box)(({ theme }) => ({
@@ -43,7 +43,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
         : ScreenSize.SMALL;
 
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
-  const [searchedGames, setSearchedGames] = useState<IGameTemplate[]>([]);
+  const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
   const [nextToken, setNextToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -53,7 +53,6 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
         .then(response => {
           setRecommendedGames(response?.gameTemplates || []);
           setNextToken(response?.nextToken || null);
-          console.log("Initial Next Token:", response?.nextToken);
         })
         .catch(error => {
           console.error('Error fetching games:', error);
@@ -61,9 +60,8 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
 
       apiClients.gameTemplate.listGameTemplates(12, null, null, null)
         .then(response => {
-          setSearchedGames(response?.gameTemplates || []);
+          setMostPopularGames(response?.gameTemplates || []);
           setNextToken(response?.nextToken || null);
-          console.log("Initial Next Token (searched games):", response?.nextToken);
         })
         .catch(error => {
           console.error('Error fetching games:', error);
@@ -75,15 +73,15 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
   return (
     <ExploreGamesContainer id = "scrollableDiv">
       <InfiniteScroll
-        dataLength={searchedGames.length}
-        next={() => fetchMoreGames(apiClients, nextToken || '', setNextToken, setSearchedGames, setLoading, loading)}
+        dataLength={mostPopularGames.length}
+        next={() => fetchMoreGames(apiClients, nextToken || '', setNextToken, setMostPopularGames, setLoading, loading)}
         hasMore = {nextToken !== null}
         loader=<h4>loading...</h4>
         scrollableTarget="scrollableDiv"
         style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
       >
           <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
-          <EGMostPopular screenSize={screenSize} apiClients={apiClients} searchedGames={searchedGames} />
+          <EGMostPopular screenSize={screenSize} apiClients={apiClients} mostPopularGames={mostPopularGames} />
       </InfiniteScroll>
     </ExploreGamesContainer>
   );

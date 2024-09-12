@@ -10,12 +10,12 @@ import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
 import { ScreenSize } from '../lib/HostModels';
-import { Screen } from '../lib/ScreenEnums';
+import { SelectedCentralPages } from '../lib/ScreenEnums';
 
 interface EGHeaderProps {
   screenSize: ScreenSize;
   isXLScreen: boolean;
-  onScreenChange: (newScreen: Screen) => void;
+  onScreenChange: (newScreen: SelectedCentralPages) => void;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
 }
@@ -98,13 +98,13 @@ const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
 }));
 
 export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuOpen, setMenuOpen }: EGHeaderProps) {
-  const [selectedScreen, setSelectedScreen] = useState<Screen>(Screen.ExploreGamesScreen);
+  const [selectedScreen, setSelectedScreen] = useState<SelectedCentralPages>(SelectedCentralPages.ExploreGamesScreen);
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const handleButtonClick = (screen: Screen) => {
+  const handleButtonClick = (screen: SelectedCentralPages) => {
     setSelectedScreen(screen);
     onScreenChange(screen);
   };
@@ -141,22 +141,22 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
           {isXLScreen ? (
             <Box display="flex" gap="80px">
               <TransparentButton
-                onClick={() => handleButtonClick(Screen.ExploreGamesScreen)}
-                active={selectedScreen === Screen.ExploreGamesScreen}
+                onClick={() => handleButtonClick(SelectedCentralPages.ExploreGamesScreen)}
+                active={selectedScreen === SelectedCentralPages.ExploreGamesScreen}
               >
                 <img src={dice} alt="Games Icon" />
                 Games
               </TransparentButton>
               <TransparentButton
-                onClick={() => handleButtonClick(Screen.ExploreQuestionsScreen)}
-                active={selectedScreen === Screen.ExploreQuestionsScreen}
+                onClick={() => handleButtonClick(SelectedCentralPages.ExploreQuestionsScreen)}
+                active={selectedScreen === SelectedCentralPages.ExploreQuestionsScreen}
               >
                 <img src={qmarks} alt="Questions Icon" />
                 Questions
               </TransparentButton>
               <TransparentButton
-                onClick={() => handleButtonClick(Screen.MyLibraryScreen)}
-                active={selectedScreen === Screen.MyLibraryScreen}
+                onClick={() => handleButtonClick(SelectedCentralPages.MyLibraryScreen)}
+                active={selectedScreen === SelectedCentralPages.MyLibraryScreen}
               >
                 <img src={books} alt="My Library Icon" />
                 My Library
@@ -193,24 +193,24 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
            style={{ margin: '0 auto',}} // This centers the box horizontally
          >
            <TransparentButton
-             onClick={() => handleButtonClick(Screen.ExploreGamesScreen)}
-             active={selectedScreen === Screen.ExploreGamesScreen}
+             onClick={() => handleButtonClick(SelectedCentralPages.ExploreGamesScreen)}
+             active={selectedScreen === SelectedCentralPages.ExploreGamesScreen}
              menuOpen={menuOpen}
            >
              <img src={dice} alt="Games Icon" />
              Games
            </TransparentButton>
            <TransparentButton
-             onClick={() => handleButtonClick(Screen.ExploreQuestionsScreen)}
-             active={selectedScreen === Screen.ExploreQuestionsScreen}
+             onClick={() => handleButtonClick(SelectedCentralPages.ExploreQuestionsScreen)}
+             active={selectedScreen === SelectedCentralPages.ExploreQuestionsScreen}
              menuOpen={menuOpen}
            >
              <img src={qmarks} alt="Questions Icon" />
              Questions
            </TransparentButton>
            <TransparentButton
-             onClick={() => handleButtonClick(Screen.MyLibraryScreen)}
-             active={selectedScreen === Screen.MyLibraryScreen}
+             onClick={() => handleButtonClick(SelectedCentralPages.MyLibraryScreen)}
+             active={selectedScreen === SelectedCentralPages.MyLibraryScreen}
              menuOpen={menuOpen}
            >
              <img src={books} alt="My Library Icon" />

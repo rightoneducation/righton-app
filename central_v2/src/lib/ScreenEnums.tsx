@@ -1,4 +1,4 @@
-export enum Screen { // eslint-disable-line
+export enum SelectedCentralPages { // eslint-disable-line
     ExploreGamesScreen,
     ExploreQuestionsScreen,
     MyLibraryScreen,

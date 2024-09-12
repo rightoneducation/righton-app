@@ -51,12 +51,10 @@ export class GameTemplateAPIClient
 
   async getGameTemplate(id: string): Promise<IGameTemplate> {
     try{
-      console.log(id);
       const result = await this.callGraphQL<GetGameTemplateQuery>(
         getGameTemplate,
         { id } as unknown as GraphQLOptions
       )
-      console.log(result);
       if (
         isNullOrUndefined(result.data) ||
         isNullOrUndefined(result.data.getGameTemplate)

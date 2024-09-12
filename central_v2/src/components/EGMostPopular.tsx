@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Grid, Typography, Box, styled, useTheme } from '@mui/material';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClients, IGameTemplate } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid'; 
 import StyledGameCard from './GameCard';
 import { ScreenSize } from '../lib/HostModels';
 import placeHolder from '../images/placeHolder.svg';
@@ -11,7 +9,7 @@ import placeHolder from '../images/placeHolder.svg';
 interface EGMostPopularProps {
   screenSize: ScreenSize;
   apiClients: APIClients;
-  searchedGames: IGameTemplate[];
+  mostPopularGames: IGameTemplate[];
 }
 
 interface MostPopularTextProps {
@@ -22,7 +20,7 @@ interface MostPopularTextProps {
     lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
   fontFamily: 'Poppins',
   fontWeight: '700',
-  fontSize: screenSize === ScreenSize.SMALL ? '24px' : '40px',
+  fontSize: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
   color: `${theme.palette.primary.extraDarkBlue}`,
 }));
 
@@ -44,7 +42,7 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
         flexDirection: 'column',
         alignItems: 'center',
         backgroundColor: '#E9F1FF',
-        padding: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px` : '24px 32px 24px 32px',
+        padding: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px` : `${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px`,
         boxSizing: 'border-box',
         gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.mdPadding}px`,
       }}
@@ -54,7 +52,7 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
   );
 }
 
-export default function EGMostPopular({ screenSize, apiClients, searchedGames }: EGMostPopularProps) {
+export default function EGMostPopular({ screenSize, apiClients, mostPopularGames }: EGMostPopularProps) {
 
   return (
     <EGMostPopularContainer screenSize={screenSize}>
@@ -62,7 +60,7 @@ export default function EGMostPopular({ screenSize, apiClients, searchedGames }:
         Most Popular
       </MostPopularText>
         <Grid container spacing={2} id="scrollableDiv" style={{ }}>
-          {searchedGames.map((game) => (
+          {mostPopularGames.map((game) => (
             <Grid
               item
               xs={12}
