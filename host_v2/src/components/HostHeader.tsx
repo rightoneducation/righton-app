@@ -75,7 +75,7 @@ function HostHeader({ gameCode }: HostHeaderProps) {
       }
       <TopLineStyled>
         <Box>
-          <Typography variant="body1" style={{fontSize: 10, color: 'white'}}>QA Version 1.3</Typography>
+          <Typography variant="body1" style={{fontSize: 10, color: 'white'}}>QA Version 1.4</Typography>
           <GameLobbyTypographyStyled>Game Lobby </GameLobbyTypographyStyled> 
         </Box>
         <IconsContainer>

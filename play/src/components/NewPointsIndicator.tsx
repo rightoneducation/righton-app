@@ -28,40 +28,40 @@ const NewPointsPill = styled(ScorePill)({
 const NewPointsAnimation = styled('div')({
   opacity: 0, 
   animation: `
-   newScoreUpWiggle 1500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms
+   newScoreUpWiggle 2200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms
   `,
   '@keyframes newScoreUpWiggle': {
     '0%': {
       transform: 'rotate(0deg) scale(1.0)',
     },
-    '10%': {
+    '5%': {
       opacity: 1,
       transform: 'rotate(0deg) scale(1.2)',
     },
-    '15%': {
-        opacity: 1,
-        transform: 'rotate(-12deg) scale(1.2)',
-      },
-      '30%': {
-        opacity: 1,
-        transform: 'rotate(12deg) scale(1.2)',
-      },
-      '45%': {
-        opacity: 1,
-        transform: 'rotate(-8deg) scale(1.2)',
-      },
-      '60%': {
-        opacity: 1,
-        transform: 'rotate(8deg) scale(1.2)',
-      },
-      '75%': {
-        opacity: 1,
-        transform: 'rotate(0deg) scale(1.2)',
-      },
-      '100%': {
-        opacity: 0,
-        transform: 'rotate(0deg) scale(1.0)',
-      },
+    '15%, 55%': {
+      opacity: 1,
+      transform: 'rotate(-12deg) scale(1.2)',
+    },
+    '25%, 65%': {
+      opacity: 1,
+      transform: 'rotate(12deg) scale(1.2)',
+    },
+    '35%, 75%': {
+      opacity: 1,
+      transform: 'rotate(-8deg) scale(1.2)',
+    },
+    '45%, 85%': {
+      opacity: 1,
+      transform: 'rotate(8deg) scale(1.2)',
+    },
+    '90%': {
+      opacity: 1,
+      transform: 'rotate(0deg) scale(1.2)',
+    },
+    '100%': {
+      opacity: 0,
+      transform: 'rotate(0deg) scale(1.0)',
+    },
   },
 });
 

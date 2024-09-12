@@ -119,14 +119,20 @@ export default function GameInProgress({
     let questionText = inputText;
     if (qmarkLocation !== -1) {
       const splicedString = inputText.substring(0, qmarkLocation + 1);
-      const periodLocation = splicedString.lastIndexOf('.');
+      const periodLocationSpace = splicedString.lastIndexOf('. ');
+      const periodLocationQuote = splicedString.lastIndexOf('." ');
+      const periodLocationCurlyQuote = splicedString.lastIndexOf('.” ');
+      const periodLocation = Math.max(periodLocationSpace, periodLocationQuote, periodLocationCurlyQuote);
       questionText = splicedString;
       if (periodLocation !== -1) {
-        introText = inputText.substring(0, periodLocation + 1);
-        questionText = inputText.substring(
-          periodLocation + 1,
-          inputText.length
-        );
+        let additionalChars = 1;
+        if (periodLocation === periodLocationSpace) {
+          additionalChars = 2; // period and space
+        } else if (periodLocation === periodLocationQuote || periodLocation === periodLocationCurlyQuote) {
+          additionalChars = 3; // period, quote, and space
+        }
+        introText = inputText.substring(0, periodLocation + additionalChars);
+        questionText = inputText.substring(periodLocation + additionalChars, inputText.length);
       }
     } else {
       const splicedString = inputText.substring(0, lastPeriodLocation);

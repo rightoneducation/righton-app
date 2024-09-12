@@ -32,7 +32,7 @@ const SafeAreaStyled = styled(Box)({
   paddingTop: '47px',
   paddingBottom: '34px',
   width: '100%',
-  height: '100vh',
+  height: '100dvh',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -55,7 +55,7 @@ function EndGameLobby({teams,
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     
     useEffect(()=> {
-      apiClients.gameTemplate.listGameTemplatesByGrade(10, null, null, '8', []).then((response) => {
+      apiClients.gameTemplate.listGameTemplatesByGrade(5, null, null, '8', []).then((response) => {
         if (response && setSuggestedGameTemplates)
           setSuggestedGameTemplates(response.gameTemplates);
       });
