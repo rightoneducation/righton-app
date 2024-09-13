@@ -22,11 +22,9 @@ type GameTemplate @model{
     )
   version: Int!
   description: String!
-  ccss: String
   domain: String
   cluster: String
   grade: String
-  gradeFilter: String
   standard: String
   phaseOneTime: Int
   phaseTwoTime: Int
@@ -174,7 +172,5 @@ type Subscription {
     @aws_subscribe(mutations: ["createTeam"])
   onTeamDeleteByGameSessionId(gameSessionTeamsId: ID!): Team
     @aws_subscribe(mutations: ["deleteTeam"])
-  onTeamUpdateByGameSessionId(gameSessionTeamsId: ID!): Team
-    @aws_subscribe(mutations: ["updateTeam"])
 }
 
