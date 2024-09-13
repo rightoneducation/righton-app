@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import {Button, Box, Typography } from '@mui/material';
-import { wrap } from 'module';
+import { GameSessionState } from '@righton/networking';
 
 interface MistakeSelectorProps {
   mistakeText: string;
@@ -9,6 +9,7 @@ interface MistakeSelectorProps {
   mistakeIndex: number;
   isPopularMode: boolean;
   isSelected: boolean;
+  currentState: GameSessionState;
   handleSelectMistake: (index: number) => void;
 }
 const SelectIndicatorContainerStyled = styled(Box)({
@@ -71,6 +72,7 @@ export default function MistakeSelector({
   mistakeIndex,
   isPopularMode,
   isSelected,
+  currentState,
   handleSelectMistake,
 }: MistakeSelectorProps) {
   const circleIndicator = ((isPopularMode && isSelected) || !isPopularMode) && (
@@ -120,10 +122,10 @@ export default function MistakeSelector({
           variant="body2"
           style={{
             color: '#FFFFFF',
-            opacity: isSelected ? 1 : 0.5,
+            opacity: isSelected && currentState === GameSessionState. PHASE_1_DISCUSS ? 1 : 0.5,
             textAlign: 'left',
             width: '120px',
-            overflowWrap: 'break-word',
+            overflowWrap: 'break-word'
           }}
         >
           {mistakeText}
@@ -139,9 +141,11 @@ export default function MistakeSelector({
         >
           {mistakePercent}%
         </Typography>
-        <SelectIndicatorContainerStyled>
-          {circleIndicator}
-        </SelectIndicatorContainerStyled>
+        {currentState === GameSessionState.PHASE_1_DISCUSS && (
+          <SelectIndicatorContainerStyled>
+            {circleIndicator}
+          </SelectIndicatorContainerStyled>
+        )}
       </Box>
     </>
   );

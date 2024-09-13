@@ -67,9 +67,12 @@ export default function FeaturedMistakes({
   setIsPopularMode
 }: FeaturedMistakesProps) {
 
-  const title = 'Common Mistakes';
-  const subtitle =
-    'Selected responses will be presented to players as options for popular incorrect answers.';
+  const title = currentState === GameSessionState.PHASE_1_DISCUSS 
+    ? 'Common Mistakes' 
+    : 'Common Mistakes Preview';
+  const subtitle =  currentState === GameSessionState.PHASE_1_DISCUSS 
+    ? 'Selected responses will be presented to players as options for popular incorrect answers.'
+    : 'On the next screen, you will select from these incorrect answers to be options in Phase 2.';
   const radioButtonText1 = 'Use the top 3 answers by popularity';
   const radioButtonText2 = 'Manually pick the options';
   const numOfPopularMistakes = 3;
@@ -134,21 +137,23 @@ export default function FeaturedMistakes({
       <BackgroundStyled elevation={0}>
         <TitleStyled>{title}</TitleStyled>
         <SubtitleStyled>{subtitle}</SubtitleStyled>
-        <RadioGroup
-          defaultValue={featuredMistakesSelectionValue}
-          onChange={handleModeChange}
-        >
-          <RadioLabelStyled
-            value="A"
-            control={<Radio sx={{color: '#FFFFFF'}}/>}
-            label={radioButtonText1}
-          />
-          <RadioLabelStyled
-            value="B"
-            control={<Radio sx={{color: '#FFFFFF'}}/>}
-            label={radioButtonText2}
-          />
-        </RadioGroup>
+        { currentState === GameSessionState.PHASE_1_DISCUSS &&
+          <RadioGroup
+            defaultValue={featuredMistakesSelectionValue}
+            onChange={handleModeChange}
+          >
+            <RadioLabelStyled
+              value="A"
+              control={<Radio sx={{color: '#FFFFFF'}}/>}
+              label={radioButtonText1}
+            />
+            <RadioLabelStyled
+              value="B"
+              control={<Radio sx={{color: '#FFFFFF'}}/>}
+              label={radioButtonText2}
+            />
+          </RadioGroup>
+        }
         {sortedMistakes.length > 0 ? (
           <Box
             sx={{
@@ -169,6 +174,7 @@ export default function FeaturedMistakes({
                 isSelected={mistake.isSelectedMistake}
                 mistakeIndex={index}
                 handleSelectMistake={handleSelectMistake}
+                currentState={currentState}
                 // style={{width:'100%'}}
               />
             ))}
