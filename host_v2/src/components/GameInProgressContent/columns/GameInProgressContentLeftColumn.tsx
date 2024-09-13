@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IGameSession, IQuestion, IPhase } from '@righton/networking';
@@ -22,6 +22,24 @@ export default function GameInProgressContentLeftColumn({
   }: GameInProgressContentLeftColumnProps
 ){
   const theme = useTheme();
+  const sortedChoices = useMemo(() => {
+    if (isShortAnswerEnabled && currentPhase === IPhase.TWO) {
+      return [...currentQuestion.choices].sort((a, b) => 
+        Number(a.isAnswer) - Number(b.isAnswer)
+      );
+    }
+    return currentQuestion.choices;
+  }, [isShortAnswerEnabled, currentPhase, currentQuestion.choices]);
+
+  const filteredChoices = useMemo(() => {
+    return sortedChoices.filter((sortedChoice: any) => {
+      if (isShortAnswerEnabled && currentPhase === IPhase.ONE) {
+        return sortedChoice.isAnswer;
+      }
+      return true;
+    });
+  }, [sortedChoices, isShortAnswerEnabled, currentPhase]);
+
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
     <ScrollBoxStyled>
@@ -31,8 +49,7 @@ export default function GameInProgressContentLeftColumn({
       currentQuestionIndex={localGameSession.currentQuestionIndex}
       currentState={localGameSession.currentState}
       />
-      {currentQuestion.choices.map((choice, index) => 
-        ((isShortAnswerEnabled && choice.isAnswer && currentPhase === IPhase.ONE) || !isShortAnswerEnabled || currentPhase === IPhase.TWO) &&
+        { filteredChoices.map((choice, index) => (
           <AnswerCard 
             isCorrectAnswer={choice.isAnswer}
             isShortAnswerEnabled={isShortAnswerEnabled ?? false}
@@ -42,7 +59,7 @@ export default function GameInProgressContentLeftColumn({
             answerReason={choice.reason}
             key={uuidv4()}
           />
-      )}
+        )) }
     </ScrollBoxStyled>
   </Grid>
   );
