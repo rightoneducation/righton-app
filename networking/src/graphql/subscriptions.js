@@ -130,47 +130,6 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `
     }
   }
 `;
-export const onTeamUpdateByGameSessionId = /* GraphQL */ `
-  subscription OnTeamUpdateByGameSessionId($gameSessionTeamsId: ID!) {
-    onTeamUpdateByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
-      id
-      name
-      question {
-        id
-        text
-        choices
-        answerSettings
-        responses
-        hints
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isConfidenceEnabled
-        isShortAnswerEnabled
-        isHintEnabled
-        gameSessionId
-        __typename
-      }
-      teamMembers {
-        nextToken
-        __typename
-      }
-      score
-      selectedAvatarIndex
-      createdAt
-      updatedAt
-      gameSessionTeamsId
-      teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
-      __typename
-    }
-  }
-`;
 export const onCreateGameTemplate = /* GraphQL */ `
   subscription OnCreateGameTemplate(
     $filter: ModelSubscriptionGameTemplateFilterInput
@@ -181,11 +140,9 @@ export const onCreateGameTemplate = /* GraphQL */ `
       owner
       version
       description
-      ccss
       domain
       cluster
       grade
-      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -213,11 +170,9 @@ export const onUpdateGameTemplate = /* GraphQL */ `
       owner
       version
       description
-      ccss
       domain
       cluster
       grade
-      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -245,11 +200,9 @@ export const onDeleteGameTemplate = /* GraphQL */ `
       owner
       version
       description
-      ccss
       domain
       cluster
       grade
-      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -719,11 +672,9 @@ export const onCreateGameQuestions = /* GraphQL */ `
         owner
         version
         description
-        ccss
         domain
         cluster
         grade
-        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
@@ -774,11 +725,9 @@ export const onUpdateGameQuestions = /* GraphQL */ `
         owner
         version
         description
-        ccss
         domain
         cluster
         grade
-        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
@@ -829,11 +778,9 @@ export const onDeleteGameQuestions = /* GraphQL */ `
         owner
         version
         description
-        ccss
         domain
         cluster
         grade
-        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
