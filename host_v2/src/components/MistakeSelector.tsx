@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import {Button, Box, Typography } from '@mui/material';
+import { wrap } from 'module';
 
 interface MistakeSelectorProps {
   mistakeText: string;
@@ -121,7 +122,8 @@ export default function MistakeSelector({
             color: '#FFFFFF',
             opacity: isSelected ? 1 : 0.5,
             textAlign: 'left',
-            width: '100%',
+            width: '120px',
+            overflowWrap: 'break-word',
           }}
         >
           {mistakeText}

@@ -1,124 +1,154 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { styled } from '@mui/material/styles';
-import { Container, Typography } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
-import { LocalModel, StorageKey } from '../lib/HostModels';
+import { IGameSession, GameSessionState } from '@righton/networking';
+import { useTranslation } from 'react-i18next';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { GameSessionDispatchContext } from '../lib/context/GameSessionContext';
+import { useTSDispatchContext } from '../hooks/context/useGameSessionContext';
+import TimerAddButton from '../lib/styledcomponents/TimerAddButton';
 
-const TimerContainer = styled(Container)(({ theme }) => ({
+const TimerContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  flexDirection: 'row',
+  width: '100%',
+  justifyContent: 'space-between',
   alignItems: 'center',
-  marginLeft: `-${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.extraExtraLargePadding}px`,
-  marginTop: `${theme.sizing.extraSmallPadding}px`,
-  marginBottom: `${theme.sizing.extraSmallPadding}px`,
+  gap: `${theme.sizing.mdPadding}px`,
 }));
 
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
   borderRadius: '40px',
   display: 'inline-block',
-  marginRight: `${theme.sizing.extraSmallPadding}px`,
-  height: `${theme.sizing.extraSmallPadding}px`,
-  width: `calc(100% - ${theme.sizing.mediumPadding}px)`,
+  height: `${theme.sizing.xSmPadding}px`,
+  width: '100%',
   backgroundColor: theme.palette.primary.baseQuestionColor,
   '& .MuiLinearProgress-bar': {
     background: theme.palette.primary.main,
   },
 }));
 
-const TimerText = styled(Container)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  width: `${theme.sizing.extraSmallPadding}px`,
-}));
-
 interface TimerProps {
   totalTime: number;
-  currentTimer: number;
-  isPaused: boolean;
-  isFinished: boolean;
-  localModel: LocalModel;
+  isAddTime?: boolean;
+  localGameSession: IGameSession;
 }
 
 export default function Timer({
   totalTime,
-  currentTimer,
-  isPaused,
-  isFinished,
-  localModel,
+  isAddTime,
+  localGameSession
 }: TimerProps) {
-  const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
-  const currentTime = Math.trunc(currentTimeMilli / 1000);
-  const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const dispatch = useTSDispatchContext(GameSessionDispatchContext);
+  const [timerString, setTimerString] = useState<string>('0:00');
+  const [progress, setProgress] = useState<number>(0);
 
+  const calculateCurrentTime = (startTime: number) => {
+    if (startTime) {
+        const difference = Date.now() - startTime;
+        if (difference >= totalTime * 1000) {
+          return 0;
+        } 
+        const remainingTime = totalTime - Math.trunc(difference / 1000);
+        return remainingTime;
+    }
+    return 0;
+  };
+  const currentTimeMilli = useRef<number>(calculateCurrentTime(Number(localGameSession.startTime)) * 1000);
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
-  let originalTime: number;
-  const isPausedRef = useRef<boolean>(isPaused);
+  const originalTimeRef = useRef<number | null>(null);
+  const isTimerActiveRef = useRef<boolean>(false);
 
-  // updates the current time as well as the localstorage in case of page reset
-  // recursive countdown timer function using requestAnimationFrame
-  function updateTimer(timestamp: number) {
-    if (!isPausedRef.current) {
+  const getTimerString = (currentTimeInput: number) => {
+    const currentTime = Math.trunc(currentTimeInput / 1000);
+    let sec = 0;
+    let secStr = '00';
+    let min = 0;
+    if (currentTime >= 0) {
+      min = Math.floor(currentTime / 60);
+      sec = Math.ceil(currentTime % 60);
+      if (sec === 60) sec = 0;
+      secStr = sec < 10 ? `0${sec}` : `${sec}`;
+    }
+    return `${min}:${secStr}`;
+  };
+
+  const updateTimer = (timestamp: number) => {
+    if (isTimerActiveRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
-        setCurrentTimeMilli((prevTime) => prevTime - delta);
-      } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
-      if (currentTimeMilli - (timestamp - originalTime) >= 0) {
+        currentTimeMilli.current -= delta;
+        setTimerString(getTimerString(currentTimeMilli.current));
+        setProgress((currentTimeMilli.current / (totalTime * 1000)) * 100);
+      } else {
+        originalTimeRef.current = timestamp;
+      }
+      if (currentTimeMilli.current <= 0) {
+        // dont do anything if less than 0
+      } 
+      else {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
-      } else {
-        //  handleTimerIsFinished();
       }
     }
   }
 
-  const timerString = useMemo(() => {
-    const getTimerString = (currentTimeInput: number) => {
-      let sec = 0;
-      let secStr = '00';
-      let min = 0;
-      if (currentTimeInput >= 0) {
-        min = Math.floor(currentTimeInput / 60);
-        sec = Math.ceil(currentTimeInput % 60);
-        if (sec === 60) sec = 0;
-        secStr = sec < 10 ? `0${sec}` : `${sec}`;
-      }
-      const storageObject: LocalModel = {
-        ...localModel,
-        currentTimer: currentTimeInput,
-        hasRejoined: true,
-      };
-      window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-      return `${min}:${secStr}`;
-    };
-    return getTimerString(currentTime);
-  }, [currentTime, localModel]);
+  const handleAddTime = () => {
+    const addedTime = 30;
+    const addedStartTime = addedTime * 1000;
+    // checks if the added time is greater than the total time
+    const newStartTime = Math.min(Number(localGameSession.startTime) + addedStartTime, Date.now());
+    currentTimeMilli.current = calculateCurrentTime(newStartTime) * 1000;
+    apiClients.gameSession.updateGameSession({id: localGameSession.id, startTime: newStartTime.toString()});
+    dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, startTime: newStartTime}});
+  }
 
-  // useEffect to start off timer
   useEffect(() => {
-    if (!isPaused && !isFinished)
+    if ( localGameSession.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
+      && localGameSession.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER
+    ) {
+      isTimerActiveRef.current = false;
+      currentTimeMilli.current = 0;
+      setTimerString('0:00');
+      setProgress(0);
+      prevTimeRef.current = null;
+    } else {
+      currentTimeMilli.current = calculateCurrentTime(Number(localGameSession.startTime) ?? 0) * 1000;
+    }
+    console.log('triggered');
+    if (currentTimeMilli.current > 0) {
+      isTimerActiveRef.current = true;
       animationRef.current = requestAnimationFrame(updateTimer);
-    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Update the isPausedRef when the isPaused prop changes
-  useEffect(() => {
-    isPausedRef.current = isPaused;
-  }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
-
+    }
+   return () => cancelAnimationFrame(animationRef.current ?? 0);
+  }, [localGameSession.currentState, localGameSession.startTime]); // eslint-disable-line
   return (
-    <TimerContainer maxWidth="md">
-      <TimerBar value={progress} variant="determinate" />
-      <TimerText maxWidth="sm">
-        <Typography
-          alignSelf="center"
-          variant="h6"
-          style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik' }}
-        >
-          {timerString}
-        </Typography>
-      </TimerText>
+    <TimerContainer>
+      <Box style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%',  gap: `calc(${theme.sizing.xSmPadding}px + ${theme.sizing.xxSmPadding}px)`, opacity: isTimerActiveRef.current ? 1 : 0.4,  }}>
+        <TimerBar value={progress} variant="determinate"/>
+        <Box style={{minWidth: '30px'}}>
+          <Typography
+            alignSelf="center"
+            variant="h6"
+            style={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Rubik', lineHeight: '14px' }}
+          >
+            {timerString}
+          </Typography>
+        </Box>
+      </Box>
+      { localGameSession.currentState !== GameSessionState.TEAMS_JOINING &&
+        <TimerAddButton onClick={handleAddTime} disabled={currentTimeMilli.current <= 0}>
+          <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
+            {t('gamesession.addtime')}
+          </Typography>
+        </TimerAddButton>
+      }
     </TimerContainer>
+        
   );
 }

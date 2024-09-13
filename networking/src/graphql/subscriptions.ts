@@ -317,6 +317,81 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
   APITypes.OnTeamDeleteByGameSessionIdSubscriptionVariables,
   APITypes.OnTeamDeleteByGameSessionIdSubscription
 >;
+export const onTeamUpdateByGameSessionId = /* GraphQL */ `subscription OnTeamUpdateByGameSessionId($gameSessionTeamsId: ID!) {
+  onTeamUpdateByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
+    id
+    name
+    question {
+      id
+      text
+      choices
+      answerSettings
+      responses
+      hints
+      imageUrl
+      instructions
+      standard
+      cluster
+      domain
+      grade
+      order
+      isConfidenceEnabled
+      isShortAnswerEnabled
+      isHintEnabled
+      gameSessionId
+      __typename
+    }
+    teamMembers {
+      items {
+        id
+        isFacilitator
+        answers {
+          items {
+            id
+            isCorrect
+            isSubmitted
+            isShortAnswerEnabled
+            currentState
+            currentQuestionIndex
+            questionId
+            teamMemberAnswersId
+            teamAnswersId
+            teamName
+            text
+            answer
+            confidenceLevel
+            hint
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        deviceId
+        createdAt
+        updatedAt
+        teamTeamMembersId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    score
+    selectedAvatarIndex
+    createdAt
+    updatedAt
+    gameSessionTeamsId
+    teamQuestionId
+    teamQuestionOrder
+    teamQuestionGameSessionId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnTeamUpdateByGameSessionIdSubscriptionVariables,
+  APITypes.OnTeamUpdateByGameSessionIdSubscription
+>;
 export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemplate(
   $filter: ModelSubscriptionGameTemplateFilterInput
 ) {
@@ -326,9 +401,11 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -344,9 +421,11 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -362,9 +441,11 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -441,9 +522,11 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -523,9 +606,11 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -541,9 +626,11 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -559,9 +646,11 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -638,9 +727,11 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -720,9 +811,11 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -738,9 +831,11 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -756,9 +851,11 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -835,9 +932,11 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -935,9 +1034,11 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -953,9 +1054,11 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1032,9 +1135,11 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1131,9 +1236,11 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -1149,9 +1256,11 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1228,9 +1337,11 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1327,9 +1438,11 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -1345,9 +1458,11 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1424,9 +1539,11 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -2304,9 +2421,11 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2322,9 +2441,11 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2340,9 +2461,11 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2411,9 +2534,11 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2495,9 +2620,11 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2513,9 +2640,11 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2584,9 +2713,11 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2665,9 +2796,11 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2683,9 +2816,11 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2701,9 +2836,11 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2772,9 +2909,11 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2856,9 +2995,11 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2874,9 +3015,11 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2945,9 +3088,11 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3026,9 +3171,11 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -3044,9 +3191,11 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -3062,9 +3211,11 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3133,9 +3284,11 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3217,9 +3370,11 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -3235,9 +3390,11 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3306,9 +3463,11 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime

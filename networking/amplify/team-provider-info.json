@@ -10,23 +10,34 @@
       "StackName": "amplify-mobile-main-706e8",
       "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-main-706e8/ca0691f0-4d2d-11ef-8193-0afff1f14c4f",
       "AmplifyAppId": "d2z6928w5qibze",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-main-706e8-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-130906-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
         "mobile6060603c": {
           "googleClientId": "23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com"
+        },
+        "mobilee1238193": {
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
         }
       },
       "function": {
         "mobile6060603cPostConfirmation": {
           "GROUP": "Teacher_Auth",
-          "deploymentBucketName": "amplify-mobile-main-706e8-deployment",
+          "deploymentBucketName": "amplify-mobile-dev-130906-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
         "createGame": {
+<<<<<<< HEAD
           "deploymentBucketName": "amplify-mobile-main-706e8-deployment",
           "s3Key": "amplify-builds/createGame-59623878364d44654533-build.zip"
+=======
+          "deploymentBucketName": "amplify-mobile-dev-130906-deployment",
+          "s3Key": "amplify-builds/createGame-74332b38696162705846-build.zip"
+>>>>>>> dev
         }
       },
       "api": {

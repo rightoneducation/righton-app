@@ -13,8 +13,7 @@ const BodyCardStyled = styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '24px',
-  margin: '8px',
-  padding: `${theme.sizing.smallPadding}px`,
+  padding: `${theme.sizing.smPadding}px`,
   backgroundColor: theme.palette.primary.main,
   boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.4)',
 }));

@@ -8,7 +8,7 @@
       "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     },
     "confidenceCard": {
-      "title": "Medidor de Confianza",
+      "title": "Medidor de confianza",
       "description": "Se pregunta a los jugadores qué tan seguros están de su respuesta a esta pregunta.",
       "instructions": "Toca una respuesta para ver más detalles.",
       "graph": {
@@ -35,7 +35,7 @@
   "gameinprogress": {
     "header": {
       "notstarted": "Responder la Pregunta",
-      "teamsjoining": "Responder la Pregunta",
+      "teamsjoining": "Preparar el Juego",
       "choosecorrectanswer": "Responder la Pregunta",
       "choosetrickiestanswer": "¡Elige la Más Astuta!",
       "phase1discuss": "Explicaciones de Respuestas",

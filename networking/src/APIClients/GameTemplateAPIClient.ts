@@ -1,4 +1,4 @@
-import { BaseAPIClient } from "./BaseAPIClient";
+import { BaseAPIClient, GradeTarget } from "./BaseAPIClient";
 import { IGameTemplateAPIClient } from "./interfaces";
 import { IGameTemplate } from "../Models";
 import { GameTemplateParser } from "../Parsers/GameTemplateParser";
@@ -95,19 +95,19 @@ export class GameTemplateAPIClient
     return (!isNullOrUndefined(result));
   }
 
-  async listGameTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", listGameTemplates, "listGameTemplates");
+  async listGameTemplates(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null, gradeTargets: GradeTarget[]): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", listGameTemplates, "listGameTemplates", gradeTargets);
   }
 
-  async listGameTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByDate, "gameTemplatesByDate");
+  async listGameTemplatesByDate(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null, gradeTargets: GradeTarget[]): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByDate, "gameTemplatesByDate", gradeTargets);
   }
 
-  async listGameTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByGrade, "gameTemplatesByGrade");
+  async listGameTemplatesByGrade(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null, gradeTargets: GradeTarget[]): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByGrade, "gameTemplatesByGrade", gradeTargets);
   }
 
-  async listGameTemplatesByQuestionTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByQuestionTemplatesCount, "gameTemplatesByQuestionTemplatesCount");
+  async listGameTemplatesByQuestionTemplatesCount(limit: number, nextToken: string | null, sortDirection: string | null, filterString: string | null, gradeTargets: GradeTarget[]): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    return this.executeQuery(limit, nextToken, sortDirection, filterString, "GameTemplate", gameTemplatesByQuestionTemplatesCount, "gameTemplatesByQuestionTemplatesCount", gradeTargets);
   }
 }

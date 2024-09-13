@@ -17,6 +17,7 @@ import {
   StorageKeyHint,
   ErrorType,
 } from '../lib/PlayModels';
+import { calculateCurrentTime } from '../lib/HelperFunctions';
 
 interface GameInProgressContainerProps {
   apiClients: IAPIClients;
@@ -25,7 +26,7 @@ interface GameInProgressContainerProps {
 export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const { apiClients } = props;
   const [retry, setRetry] = useState<number>(0);
-  const [currentTime, setCurrentTime] = useState<number>(0);
+  
   // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
   const handleRetry = () => {
     setRetry(retry + 1);
@@ -35,6 +36,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const localModel = useLoaderData() as LocalModel;
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
+
   const subscription = useFetchAndSubscribeGameSession(
     localModel?.gameSessionId,
     apiClients,
@@ -42,51 +44,6 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.hasRejoined,
     localModel?.teamId,
   );
-  let allottedTime = 0; // Initialize to default value
-
-  if (subscription && subscription.gameSession) {
-    const { currentState, phaseOneTime, phaseTwoTime } = subscription.gameSession;
-
-    if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      allottedTime = phaseOneTime;
-    } else if (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-      allottedTime = phaseTwoTime;
-    }
-  }
-  const calculateCurrentTime = () => {
-    if (subscription && subscription.gameSession) {
-      const getStartTime = Number(subscription.gameSession?.startTime);
-      if (getStartTime) {
-        const difference = Date.now() - getStartTime;
-        if (difference >= allottedTime * 1000) {
-          return 0;
-        } 
-        const remainingTime = allottedTime - Math.trunc(difference / 1000);
-        return remainingTime;
-      }
-    }
-    return 0;
-  };
-  
-  useEffect(() => {
-    setCurrentTime(calculateCurrentTime());
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        setCurrentTime(calculateCurrentTime());
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [subscription]); // eslint-disable-line
-  
-  useEffect(() => {
-    if (subscription.hasRejoined) {
-      setCurrentTime(calculateCurrentTime());
-    }
-  }, [subscription, subscription.hasRejoined]); // eslint-disable-line
 
 
   // if there isn't data in localstorage automatically redirect to the splashscreen
@@ -95,7 +52,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // if gamesession is loading/errored/waiting for teacher to start game
   if (
     isNullOrUndefined(subscription.gameSession) ||
-    subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING
+    (subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING 
+      && subscription.gameSession.currentQuestionIndex === null)
   ) {
     // if player is rejoining, show lobby in rejoining mode
     if (
@@ -141,7 +99,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   
   return (
     <GameSessionSwitch
-      currentTimer={currentTime}
+      currentTimer={subscription.currentTime}
+      isAddTime={subscription.isAddTime}
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}
       gameSession={subscription.gameSession}

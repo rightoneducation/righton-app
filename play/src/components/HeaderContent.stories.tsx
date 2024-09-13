@@ -60,8 +60,6 @@ Phase2Discuss.args = {
   handleTimerIsFinished,
 };
 
-
-
 export const Correct = Template.bind({});
 Correct.args = {
   isCorrect: true,

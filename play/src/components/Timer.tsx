@@ -36,6 +36,7 @@ interface TimerProps {
   currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
+  isAddTime?: boolean;
   handleTimerIsFinished: () => void;
 }
 
@@ -44,9 +45,10 @@ export default function Timer({
   currentTimer,
   isPaused,
   isFinished,
+  isAddTime,
   handleTimerIsFinished,
 }: TimerProps) {
-  const [timerString, setTimerString] = useState<string>('0:00');
+  const [timerString, setTimerString] = useState<string>('00:00');
   const [progress, setProgress] = useState<number>(0);
   const currentTimeMilli = useRef<number>(currentTimer * 1000);
   const animationRef = useRef<number | null>(null);
@@ -97,7 +99,7 @@ export default function Timer({
       }
     }
    return () => cancelAnimationFrame(animationRef.current ?? 0);
-  }, [isPaused, isFinished, currentTimer]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isPaused, isFinished, currentTimer, isAddTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">

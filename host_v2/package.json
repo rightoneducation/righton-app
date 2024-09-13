@@ -14,7 +14,9 @@
     "@types/node": "^16.18.68",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
+    "@types/react-modal": "^3.16.3",
     "@types/uuid": "^9.0.7",
+    "framer-motion": "^11.3.21",
     "i18next": "^23.7.11",
     "i18next-browser-languagedetector": "^7.2.0",
     "i18next-http-backend": "^2.4.2",
@@ -22,6 +24,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.21.0",
     "react-scripts": "5.0.1",
     "react-spring": "^9.7.3",
@@ -81,7 +84,7 @@
     "eslint-plugin-storybook": "^0.6.15",
     "prettier": "^3.1.1",
     "prop-types": "^15.8.1",
-    "webpack": "^5.89.0"
+    "webpack": "^5.94.0"
   },
   "resolutions": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
@@ -138,6 +141,9 @@
           ],
           "peerDependencies": true
         }
+      ],
+      "import/prefer-default-export": [
+        "off"
       ],
       "react/jsx-props-no-spreading": [
         "off"

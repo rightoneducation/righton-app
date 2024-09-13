@@ -37,12 +37,15 @@ export class TeamAnswerAPIClient
       }
       const input: CreateTeamAnswerInput = {
           answer: JSON.stringify(inputAnswer.answer), 
+          isCorrect: inputAnswer.isCorrect,
           isSubmitted: inputAnswer.isSubmitted,
           isShortAnswerEnabled: inputAnswer.isShortAnswerEnabled,
           currentState: inputAnswer.currentState,
           currentQuestionIndex: inputAnswer.currentQuestionIndex,
           questionId: inputAnswer.questionId,
           teamMemberAnswersId: inputAnswer.teamMemberAnswersId,
+          teamAnswersId: inputAnswer.teamAnswersId,
+          teamName: inputAnswer.teamName,
           text: inputAnswer.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
           confidenceLevel: ConfidenceLevel.NOT_RATED,
           hint: JSON.stringify(inputAnswer.hint)

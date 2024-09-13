@@ -58,7 +58,6 @@ export enum OverallGameState {
 export enum PregameState {
   SPLASH_SCREEN,
   ENTER_GAME_CODE,
-  ENTER_NAME,
   SELECT_AVATAR,
   FINISHED,
 }
@@ -123,8 +122,9 @@ export enum ErrorType {
  */
 export interface LocalModel {
   gameSessionId: string;
-  teamId: string;
   teamMemberAnswersId: string;
+  teamId: string;
+  teamName: string;
   currentTime: number;
   currentTimer: number;
   selectedAvatar: number;
