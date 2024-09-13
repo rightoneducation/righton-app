@@ -55,7 +55,8 @@ function EndGameLobby({teams,
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     
     useEffect(()=> {
-      apiClients.gameTemplate.listGameTemplatesByGrade(5, null, null, '8', []).then((response) => {
+      apiClients.gameTemplate.listGameTemplatesByGrade(5, null, null, null, []).then((response) => {
+        console.log(response);
         if (response && setSuggestedGameTemplates)
           setSuggestedGameTemplates(response.gameTemplates);
       });
