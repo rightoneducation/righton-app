@@ -7,7 +7,10 @@ export type AWSTeamAnswer = {
   currentQuestionIndex: number
   questionId: string
   teamMemberAnswersId: string
+  teamAnswersId?: string | null
+  teamName?: string | null
   text?: string | null
+  isCorrect?: boolean | null
   confidenceLevel?: string | null
   hint?: string | null
   createdAt: string

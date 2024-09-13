@@ -44,9 +44,9 @@ const lg = 1200;
 const xl = 1536;
 
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
-const headerHeight = 68;
-const footerHeight = 60;
-const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
+const headerHeight = 116;
+const footerHeight = 145;
+const pregameMinColumnWidth = 352; // used on enter game code screen and righton logo
 const extraSmallPadding = 8; // small icons, text positioning
 const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
 const mediumPadding = 24; // timer margin

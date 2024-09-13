@@ -7,10 +7,10 @@ export default styled(Stack)(({ theme }) => ({
   position: 'fixed',
   top: 0,
   left: 0,
-  paddingTop: `${theme.sizing.mediumPadding}px`,
+  paddingTop: `${theme.sizing.mdPadding}px`,
   background: theme.palette.primary.backgroundGradient,
   border: 'none',
   width: '100vw',
-  height: `${theme.sizing.fullHeaderHeight}px`,
+  height: `200px`,
   zIndex: -1,
 }));

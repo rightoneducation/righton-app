@@ -13,7 +13,7 @@ import {
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
-import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
+import { BodyContentAreaDoubleColumnStyled, BodyContentAreaDoubleColumnStyledNoSwiper } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
 import OpenAnswerCard from '../../components/OpenAnswerCard';
@@ -33,7 +33,7 @@ interface ChooseAnswerProps {
   displaySubmitted: boolean;
   handleSubmitAnswer: (answer: BackendAnswer) => void;
   currentState: GameSessionState;
-  handleSelectAnswer: (answer: string) => void;
+  handleSelectAnswer: (answer: string, multiChoiceCharacter: string) => void;
   isConfidenceEnabled: boolean;
   selectedConfidenceOption: string;
   handleSelectConfidence: (confidence: ConfidenceLevel) => void;
@@ -92,6 +92,10 @@ export default function ChooseAnswer({
     }
   }, [isSubmitted, isConfidenceEnabled, isHintEnabled, isSmallDevice, currentState, swiperRef]);
   const questionContents = (
+    <Grid item xs={12} sm style={{ 
+      width: '100%',
+      height: '100%', 
+    }}>
     <ScrollBoxStyled>
       <QuestionCard questionText={questionText} imageUrl={questionUrl} />
       {isSmallDevice ? (
@@ -107,6 +111,7 @@ export default function ChooseAnswer({
         </Typography>
       ) : null}
     </ScrollBoxStyled>
+    </Grid>
   );
 
   const onSubmitDisplay = (
@@ -125,101 +130,105 @@ export default function ChooseAnswer({
     )
   );
   const answerContents = (
-    <ScrollBoxStyled>
-      {isShortAnswerEnabled &&
-      currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
-        <OpenAnswerCard
-          backendAnswer={backendAnswer}
-          isSubmitted={backendAnswer.isSubmitted ?? false}
-          isShortAnswerEnabled={isShortAnswerEnabled}
-          answerSettings={answerSettings}
-          currentState={currentState}
-          currentQuestionIndex={currentQuestionIndex}
-          handleSubmitAnswer={handleSubmitAnswer}
-          questionId={questionId}
-          teamMemberAnswersId={teamMemberAnswersId}
-          currentTeam={currentTeam}
-        />
-      ) : (
-        <AnswerCard
-          answers={answerChoices}
-          isSubmitted={backendAnswer.isSubmitted ?? false}
-          isShortAnswerEnabled={isShortAnswerEnabled}
-          handleSubmitAnswer={handleSubmitAnswer}
-          currentState={currentState}
-          currentQuestionIndex={currentQuestionIndex}
-          selectedAnswer={backendAnswer.answer.rawAnswer}
-          handleSelectAnswer={handleSelectAnswer}
-          questionId={questionId}
-          teamMemberAnswersId={teamMemberAnswersId}
-          currentTeam={currentTeam}
-        />
-      )}
-      {isSubmitted && !isSmallDevice ? (
-        <>
-        { isConfidenceEnabled && 
-          (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) ?
-            <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="confidencecard-scrollbox">
-                <ConfidenceMeterCard
-                  selectedOption={selectedConfidenceOption}
-                  handleSelectOption={handleSelectConfidence}
-                  isSelected={isConfidenceSelected}
-                  isSmallDevice={isSmallDevice}
-                  timeOfLastSelect={timeOfLastConfidenceSelect}
-                  setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
-                />
-              </Box>
-            </Fade>
-          : null }
-          {isHintEnabled &&
-            currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
-            <Fade in={isSubmitted} timeout={500}>
-              <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox">
-                <HintCard
-                  answerHintText={answerHint?.rawHint ?? ''}
-                  currentState={currentState}
-                  currentQuestionIndex={currentQuestionIndex}
-                  isHintSubmitted={isHintSubmitted}
-                  handleSubmitHint={handleSubmitHint}
-                  currentTeam={currentTeam ?? null}
-                  questionId={questionId}
-                  teamMemberAnswersId={teamMemberAnswersId}
-                />
-              </Box>
-            </Fade>
-          )}
+    <Grid item xs={12} sm style={{ 
+      width: '100%',
+      height: '100%', 
+    }}>
+      <ScrollBoxStyled>
+        {isShortAnswerEnabled &&
+        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+          <OpenAnswerCard
+            backendAnswer={backendAnswer}
+            isSubmitted={backendAnswer.isSubmitted ?? false}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+            answerSettings={answerSettings}
+            currentState={currentState}
+            currentQuestionIndex={currentQuestionIndex}
+            handleSubmitAnswer={handleSubmitAnswer}
+            questionId={questionId}
+            teamMemberAnswersId={teamMemberAnswersId}
+            currentTeam={currentTeam}
+          />
+        ) : (
+          <AnswerCard
+            answers={answerChoices}
+            isSubmitted={backendAnswer.isSubmitted ?? false}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+            handleSubmitAnswer={handleSubmitAnswer}
+            currentState={currentState}
+            currentQuestionIndex={currentQuestionIndex}
+            selectedAnswer={backendAnswer.answer.rawAnswer}
+            handleSelectAnswer={handleSelectAnswer}
+            questionId={questionId}
+            teamMemberAnswersId={teamMemberAnswersId}
+            currentTeam={currentTeam}
+          />
+        )}
+        {isSubmitted && !isSmallDevice ? (
+          <>
+          { isConfidenceEnabled && 
+            (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) ?
+              <Fade in={isSubmitted} timeout={500}>
+                <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="confidencecard-scrollbox">
+                  <ConfidenceMeterCard
+                    selectedOption={selectedConfidenceOption}
+                    handleSelectOption={handleSelectConfidence}
+                    isSelected={isConfidenceSelected}
+                    isSmallDevice={isSmallDevice}
+                    timeOfLastSelect={timeOfLastConfidenceSelect}
+                    setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+                  />
+                </Box>
+              </Fade>
+            : null }
+            {isHintEnabled &&
+              currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
+              <Fade in={isSubmitted} timeout={500}>
+                <Box style={{ marginTop: !isSmallDevice ? `${theme.sizing.mediumPadding}px` : 0 }} id="hintcard-scrollbox">
+                  <HintCard
+                    answerHintText={answerHint?.rawHint ?? ''}
+                    currentState={currentState}
+                    currentQuestionIndex={currentQuestionIndex}
+                    isHintSubmitted={isHintSubmitted}
+                    handleSubmitHint={handleSubmitHint}
+                    currentTeam={currentTeam ?? null}
+                    questionId={questionId}
+                    teamMemberAnswersId={teamMemberAnswersId}
+                  />
+                </Box>
+              </Fade>
+            )}
 
-           {displaySubmitted ? onSubmitDisplay : null}
-          <Typography
-            sx={{
-              fontWeight: 700,
-              marginTop: `${theme.sizing.largePadding}px`,
-              marginX: `${theme.sizing.largePadding}px`,
-              fontSize: `${theme.typography.h4.fontSize}px`,
-              textAlign: 'center',
-            }}
-          >
-            {t('gameinprogress.chooseanswer.answerthankyou2')}
-          </Typography>
-        </>
-      ) : null}
-    </ScrollBoxStyled>
+            {displaySubmitted ? onSubmitDisplay : null}
+            <Typography
+              sx={{
+                fontWeight: 700,
+                marginTop: `${theme.sizing.largePadding}px`,
+                marginX: `${theme.sizing.largePadding}px`,
+                fontSize: `${theme.typography.h4.fontSize}px`,
+                textAlign: 'center',
+              }}
+            >
+              {t('gameinprogress.chooseanswer.answerthankyou2')}
+            </Typography>
+          </>
+        ) : null}
+      </ScrollBoxStyled>
+    </Grid>
   );
   
   return (
-    <BodyContentAreaDoubleColumnStyled
-      container
-      spacing={isSmallDevice ? 0 : 2}
-      style={{ paddingTop: '16px' }}
-    >
-      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        {isSmallDevice ? (
+    isSmallDevice ? (
+      <BodyContentAreaDoubleColumnStyled
+        container
+        style={{ paddingTop: '16px' }}
+      >
+        <Grid item xs={12} sm={6} style={{ width: '100%', height: '100%'}}>
           <Swiper
             modules={[Pagination]}
-            spaceBetween={4}
+            spaceBetween='8px'
             centeredSlides
-            slidesPerView="auto"
+            slidesPerView={1.2}
             pagination={{
               el: '.swiper-pagination-container',
               bulletClass: 'swiper-pagination-bullet',
@@ -249,7 +258,6 @@ export default function ChooseAnswer({
               {answerContents}
             </SwiperSlide>
             { isSubmitted && isSmallDevice && isConfidenceEnabled &&
-         
                 <SwiperSlide
                   style={{
                     width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
@@ -283,13 +291,19 @@ export default function ChooseAnswer({
                 </SwiperSlide>
             }
           </Swiper>
-        ) : (
-          questionContents
-        )}
-      </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
+          </Grid>
+        </BodyContentAreaDoubleColumnStyled>
+    ) : (
+      <BodyContentAreaDoubleColumnStyledNoSwiper
+        container
+        gap='16px'
+        style={{
+          paddingTop: '16px',
+        }}
+      >
+        {questionContents}
         {answerContents}
-      </Grid>
-    </BodyContentAreaDoubleColumnStyled>
+      </BodyContentAreaDoubleColumnStyledNoSwiper>
+    )
   );
 }

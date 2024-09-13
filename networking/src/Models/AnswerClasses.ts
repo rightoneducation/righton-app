@@ -37,6 +37,8 @@ export abstract class BaseAnswer<T> {
       this.answerType = answerType;
   }
 
+  abstract normalizeCorrectAnswer(rawAnswer: string): any;
+
   abstract normalizeAnswer(rawAnswer: string): void;
 
   abstract isEqualTo(otherNormAnswers: T[]): Boolean;
@@ -60,7 +62,11 @@ export class StringAnswer extends BaseAnswer<string>{
      return normAnswers;
   }
 
-  normalizeAnswer(rawAnswer: string): void {
+  normalizeCorrectAnswer(rawAnswer: string): any {
+    return this.normalizeStringAnswer(rawAnswer);
+  }
+
+  normalizeAnswer(rawAnswer: string): any {
     this.normAnswer = this.normalizeStringAnswer(rawAnswer);
   }
 
@@ -75,48 +81,69 @@ export class StringAnswer extends BaseAnswer<string>{
 
 }
 
-export class NumericAnswer extends BaseAnswer<string>{
-  normAnswer: string[]
+export class NumericAnswer extends BaseAnswer<Number>{
+  normAnswer: NormAnswerType[]
   answerPrecision: AnswerPrecision
 
-  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision, normAnswer?: string[],){
+  constructor (rawAnswer: string, answerType: AnswerType, answerPrecision: AnswerPrecision, normAnswer?: number[],){
       super(rawAnswer, answerType)
       this.normAnswer = normAnswer ?? []
       this.answerPrecision = answerPrecision
   }
 
-  normalizeNumericAnswer(rawAnswer: string): string[] {
-    let raw = rawAnswer;
-    const normAnswers: string[] = [];
+  normalizeNumericAnswer(rawAnswer: string): NormAnswerType[] {
+    const normAnswers: NormAnswerType[] = [];
     const percentagesRegex = /(\d+(\.\d+)?)%/g;
     const extractPercents = rawAnswer.match(percentagesRegex);
-    const percentages = extractPercents ? parseFloat(extractPercents[0]) : null
+    const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
     if (!isNullOrUndefined(percentages) && !isNaN(percentages)){
-      raw = String(percentages);
+      normAnswers.push(percentages);
+      return normAnswers;
     }
-
-    const noCommas = raw.replace(/,/g, '');
+    // then remove commas and spaces and push
+    const noCommas = rawAnswer.replace(/,/g, '');
     const normItem = noCommas.trim();
     if (!isNullOrUndefined(normItem)) {
-      const decimalPlaces = normItem.includes('.') ? normItem.split('.')[1].length : 0;
-      const numDecimal = parseFloat(normItem).toFixed(decimalPlaces);
-      normAnswers.push(numDecimal);
+      normAnswers.push(Number(normItem));
     }
     return normAnswers;
   }
   
-  normalizeAnswer(rawAnswer: string): void {
-    this.normAnswer = this.normalizeNumericAnswer(rawAnswer);
-    console.log(this.normAnswer);
+  normalizeCorrectAnswer(rawAnswer: string): any {
+    return this.normalizeNumericAnswer(rawAnswer);
   }
 
-  isEqualTo(otherNormAnswers: string[]): Boolean {
-    if (this.normAnswer) {
+  normalizeAnswer(rawAnswer: string): any {
+    this.normAnswer = this.normalizeNumericAnswer(rawAnswer);
+  }
+
+  isEqualTo(otherNormAnswers: number[]): Boolean {
+    const answerPrecisionDictionary = {
+      [AnswerPrecision.WHOLE]: 0,
+      [AnswerPrecision.TENTH]: 1,
+      [AnswerPrecision.HUNDREDTH]: 2,
+      [AnswerPrecision.THOUSANDTH]: 3
+    }
+    if (this.normAnswer){
       return this.normAnswer.some((answer) => {
-        return otherNormAnswers.includes(answer as string);
+        if (otherNormAnswers.includes(answer as number)){
+          if (!isNullOrUndefined(this.answerPrecision))
+          {
+            // we clean up the raw answer again to remove commas and the percent sign
+            // we need to use the raw answer because the norm answer could be changed if there is a percentage present
+            // so it's not a reliable way to check decimal places
+            const normRawAnswer = this.rawAnswer.replace(/[,%]/g, '').trim();
+            
+            // this is going to round the number we found that matches to the precision that the teacher requested
+            const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[this.answerPrecision]);
+            if (normRawAnswer === roundedNumberAsString)
+              return true;
+          }
+        }
+        return false;
       }) 
     }
-    return true;
+    return false;
   }
 
   static isAnswerTypeValid(input: string): Boolean {
@@ -158,7 +185,11 @@ export class ExpressionAnswer extends BaseAnswer<string>{
     return normAnswers;
   }
 
-  normalizeAnswer(rawAnswer: string): void {
+  normalizeCorrectAnswer(rawAnswer: string): any {
+    return this.normalizeExpressionAnswer(rawAnswer);
+  }
+
+  normalizeAnswer(rawAnswer: string): any {
     this.normAnswer = this.normalizeExpressionAnswer(rawAnswer);
   }
 
@@ -195,9 +226,11 @@ export class ExpressionAnswer extends BaseAnswer<string>{
 
 export class MultiChoiceAnswer extends BaseAnswer<string> {
   normAnswer: NormAnswerType[]
+  multiChoiceCharacter: string
 
-  constructor (rawAnswer: string, answerType: AnswerType, normAnswer?: string[]){
+  constructor (rawAnswer: string, answerType: AnswerType, multiChoiceCharacter?: string, normAnswer?: string[]){
     super(rawAnswer, answerType)
+    this.multiChoiceCharacter = multiChoiceCharacter ?? ''
     this.normAnswer = normAnswer ?? []
   }
 
@@ -207,7 +240,11 @@ export class MultiChoiceAnswer extends BaseAnswer<string> {
     return normAnswers;
   }
 
-  normalizeAnswer(rawAnswer: string): void {
+  normalizeCorrectAnswer(rawAnswer: string): any {
+    return this.normalizeMultiChoiceAnswer(rawAnswer);
+  }
+
+  normalizeAnswer(rawAnswer: string): any {
     this.normAnswer = this.normalizeMultiChoiceAnswer(rawAnswer);
   }
 
@@ -225,7 +262,10 @@ export class BackendAnswer {
   currentQuestionIndex: number;
   questionId: string;
   teamMemberAnswersId: string;
+  teamAnswersId: string;
+  teamName: string;
   text: string; // temporary to maintain build compatibility
+  isCorrect: boolean;
   confidenceLevel?: ConfidenceLevel | null;
   hint?: IAnswerHint | null;
 
@@ -237,7 +277,10 @@ export class BackendAnswer {
     currentQuestionIndex: number,
     questionId: string,
     teamMemberAnswersId: string,
+    teamAnswerId: string,
+    teamName: string,
     text: string,
+    isCorrect: boolean,
     id?: string | null,
     confidenceLevel?: ConfidenceLevel | null,
     hint?: IAnswerHint | null
@@ -249,7 +292,10 @@ export class BackendAnswer {
     this.currentQuestionIndex = currentQuestionIndex;
     this.questionId = questionId;
     this.teamMemberAnswersId = teamMemberAnswersId;
+    this.teamAnswersId = teamAnswerId;
+    this.teamName = teamName;
     this.text = text;
+    this.isCorrect = isCorrect;
     this.id = id ?? uuidv4();
     this.confidenceLevel = confidenceLevel;
     this.hint = hint;
@@ -278,6 +324,7 @@ export class BackendAnswer {
         rest.currentQuestionIndex,
         rest.questionId,
         rest.teamMemberAnswersId,
+        rest.isCorrect,
         rest.id,
         rest.confidenceLevel,
         rest.hint);
@@ -289,14 +336,14 @@ export class BackendAnswer {
 }
 
 export class AnswerFactory {
-  static createAnswer(rawAnswer: string, answerType: AnswerType, answerPrecision?: AnswerPrecision): Answer {
+  static createAnswer(rawAnswer: string, answerType: AnswerType, answerPrecision?: AnswerPrecision, multiChoiceCharacter?: string): Answer {
     switch (answerType) {
       case AnswerType.NUMBER:
-        return new NumericAnswer(rawAnswer, answerType, answerPrecision || AnswerPrecision.WHOLE);
+        return new NumericAnswer(rawAnswer, answerType, answerPrecision || AnswerPrecision.WHOLE,);
       case AnswerType.EXPRESSION:
         return new ExpressionAnswer(rawAnswer, answerType);
       case AnswerType.MULTICHOICE:
-        return new MultiChoiceAnswer(rawAnswer, answerType);
+        return new MultiChoiceAnswer(rawAnswer, answerType, multiChoiceCharacter || '');
       case AnswerType.STRING:
       default:
         return new StringAnswer(rawAnswer, answerType);

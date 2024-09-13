@@ -1,19 +1,20 @@
 import React from 'react';
 import { Grid, Typography, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
+import { ITeam, ModelHelper, IGameSession } from '@righton/networking';
+import { StartEndGameScrollBoxStyled } from '../lib/styledcomponents/layout/ScrollBoxStyled';
+import { APIClientsContext } from '../lib/context/ApiClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { GameSessionDispatchContext } from '../lib/context/GameSessionContext';
+import { useTSDispatchContext } from '../hooks/context/useGameSessionContext';
+
 import CloseIcon from '../images/Close.svg';
 import MonsterIcon from './MonsterIcon';
 
-interface Team {
-  name: string;
-  id: string;
-  selectedAvatarIndex: number;
-}
-
 interface CurrentStudentProps {
-  teams: Team[] | null;
-  handleDeleteTeam: (id: string) => void;
+  teams: ITeam[];
+  currentQuestionIndex: number;
 }
 
 const GridStyled = styled(Grid)({
@@ -37,17 +38,17 @@ const CloseSvg = styled('img')({
 });
 
 const MenuItemStyled = styled(Box)({
+  width: '100%',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
-  margin: 'auto',
-  marginBottom: '8px',
+  justifyContent: 'flex-start',
   borderRadius: '8px',
   height: '40px',
-  width: '82.6%',
   background: '#063772',
   padding: '4px',
+  paddingLeft: '8px',
   gap: '4px',
+  boxSizing: 'border-box',
 });
 
 const GridNameStyled = styled(Grid)({
@@ -58,23 +59,48 @@ const GridNameStyled = styled(Grid)({
   fontSize: '14px',
 });
 
+const GridScoreStyled = styled(GridNameStyled)({
+  paddingRight: '8px'
+});
+
 const BoxStyled = styled(Box)({
   padding: '16px 12px 16px 12px',
 });
 
-function CurrentStudents({ teams, handleDeleteTeam }: CurrentStudentProps) {
-  const sortedTeams = teams ? [...teams].sort((a, b) => a.name.localeCompare(b.name)) : [];
+function CurrentStudents({ teams, currentQuestionIndex }: CurrentStudentProps) {
+  const theme = useTheme();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const dispatch = useTSDispatchContext(GameSessionDispatchContext);
+  const sortedTeams = currentQuestionIndex === null 
+    ? [...teams].sort((a, b) => a.name.localeCompare(b.name))
+    : ModelHelper.teamSorter(teams, teams.length);
 
+  const handleDeleteTeam = (teamId: string) => {
+    console.log(teams);
+    console.log(teamId);
+    const updatedTeams = teams.filter((team) => team.id !== teamId);
+    console.log(updatedTeams);
+    dispatch({type: 'update_teams', payload: {teams: updatedTeams}});
+    apiClients?.hostDataManager?.deleteTeam(teamId, (updatedGameSession: IGameSession) => dispatch({type: 'synch_local_gameSession', payload: {gameSession: updatedGameSession}}));
+  };
+    
   return (
-    <BoxStyled>
-      {sortedTeams.map((team) => (
-        <MenuItemStyled key={uuidv4()}>
-          <MonsterIcon index={team.selectedAvatarIndex} />
-          <GridNameStyled>{team.name}</GridNameStyled>
-          <CloseSvg src={CloseIcon} alt="Close" onClick={() => handleDeleteTeam(team.id)} />
-        </MenuItemStyled>
-      ))}
-    </BoxStyled>
+    <StartEndGameScrollBoxStyled currentQuestionIndex={currentQuestionIndex} style={{height: '100%', width: '100%'}}>
+        {sortedTeams && sortedTeams.map((team) => (
+          <MenuItemStyled key={uuidv4()}>
+            <MonsterIcon index={team.selectedAvatarIndex} />
+            <Box style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+              <GridNameStyled>{team.name}</GridNameStyled>  
+              { currentQuestionIndex !== null && 
+                <GridScoreStyled>{team.score}</GridScoreStyled>
+              }
+              { currentQuestionIndex === null &&
+                <CloseSvg src={CloseIcon} alt="Close" onClick={() => handleDeleteTeam(team.id)} />
+              }
+            </Box>
+          </MenuItemStyled>
+        ))}
+    </StartEndGameScrollBoxStyled>
   );
 }
 

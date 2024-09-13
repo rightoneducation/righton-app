@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   StringAnswer,
   ExpressionAnswer,
-  ITeam,
+  IGameSession,
   IAnswerHint,
   GameSessionState,
   isNullOrUndefined,
@@ -72,7 +72,10 @@ export const checkForSubmittedAnswerOnRejoin = (
     isShortAnswerEnabled,
     questionId: '',
     teamMemberAnswersId: '',
+    teamAnswersId: '',
+    teamName: '',
     text: '',
+    isCorrect: false,
   };
   if (hasRejoined) {
     if (
@@ -214,4 +217,33 @@ export const fetchLocalData = () => {
     window.localStorage.removeItem(StorageKeyAnswer);
   }
   return localModel;
+};
+
+/** 
+  * calculates the current time by comparing the start time to Date.now
+  * @param response - the game session response from the backend
+  * @returns - the remaining time in seconds
+  */
+export const calculateCurrentTime = (response: IGameSession | null) => {
+  let allottedTime = 0;
+  console.log(response);
+  if (response){
+    if (response?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+      allottedTime = response?.phaseOneTime;
+    } else if (response?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+      allottedTime = response?.phaseTwoTime;
+    }
+
+    const getStartTime = Number(response?.startTime);
+    if (getStartTime) {
+      const difference = Date.now() - getStartTime;
+      if (difference >= allottedTime * 1000) {
+        return 0;
+      } 
+      const remainingTime = allottedTime - Math.trunc(difference / 1000);
+      console.log(remainingTime)
+      return remainingTime;
+    }
+  }
+  return 0;
 };

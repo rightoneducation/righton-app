@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { APIClients, Environment } from '@righton/networking';
+import { APIClients, Environment, AppType } from '@righton/networking';
 import GameSessionContainer from './containers/GameSessionContainer';
 import CreateNewGameSession from './containers/CreateNewGameSession';
 
@@ -24,7 +24,7 @@ const RedirectToCentralIfMissing = () => {
   return null;
 };
 
-const apiClients = new APIClients(Environment.Developing);
+const apiClients = new APIClients(Environment.Developing, AppType.HOST );
 
 function App() {
   return (

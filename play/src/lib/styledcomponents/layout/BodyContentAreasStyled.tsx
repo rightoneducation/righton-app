@@ -16,6 +16,10 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
   zIndex: 2,
   marginLeft: '0px',
 });
+export const BodyContentAreaDoubleColumnStyledNoSwiper = styled(BodyContentAreaDoubleColumnStyled)({
+  paddingLeft: '48px',
+  paddingRight: '48px',
+});
 export const BodyContentAreaTripleColumnStyled = styled(Grid)({
   position: 'absolute',
   top: '0',
@@ -29,12 +33,16 @@ export const BodyContentAreaTripleColumnStyled = styled(Grid)({
   zIndex: 2,
   marginLeft: '0px',
 });
+export const BodyContentAreaTripleColumnStyledNoSwiper = styled(BodyContentAreaTripleColumnStyled)({
+  paddingLeft: '48px',
+  paddingRight: '48px',
+});
 // content area of body that floats above background layers above - Single Column Page
 export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled
 )(({ theme }) => ({
   justifyContent: 'center',
-  maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`,
+  
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
 }));

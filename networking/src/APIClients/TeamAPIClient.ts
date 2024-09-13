@@ -9,7 +9,8 @@ import {
   CreateTeamMutationVariables,
   DeleteTeamMutationVariables,
   DeleteTeamMutation,
-  OnCreateTeamSubscription,
+  OnTeamCreateByGameSessionIdSubscription,
+  OnTeamUpdateByGameSessionIdSubscription,
   OnDeleteTeamSubscription,
   UpdateTeamInput,
   UpdateTeamMutation,
@@ -19,7 +20,8 @@ import {
   getTeam,
   createTeam,
   deleteTeam,
-  onCreateTeam,
+  onTeamCreateByGameSessionId,
+  onTeamUpdateByGameSessionId,
   onDeleteTeam,
   updateTeam,
 } from "../graphql";
@@ -108,15 +110,30 @@ export class TeamAPIClient
 
 
   subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
-    return this.subscribeGraphQL<OnCreateTeamSubscription>(
+    return this.subscribeGraphQL<OnTeamCreateByGameSessionIdSubscription>(
       {
-        query: onCreateTeam,
+        query: onTeamCreateByGameSessionId,
         variables: {
-          id: id,
+          gameSessionTeamsId: id,
         },
       },
-      (value: OnCreateTeamSubscription) => {
+      (value: OnTeamCreateByGameSessionIdSubscription) => {
         let team = this.mapOnCreateTeamSubscription(value);
+        callback(team);
+      }
+    );
+  }
+
+  subscribeUpdateTeam(id: string, callback: (result: ITeam) => void) {
+    return this.subscribeGraphQL<OnTeamUpdateByGameSessionIdSubscription>(
+      {
+        query: onTeamUpdateByGameSessionId,
+        variables: {
+          gameSessionTeamsId: id,
+        },
+      },
+      (value: OnTeamUpdateByGameSessionIdSubscription) => {
+        let team = this.mapOnUpdateTeamSubscription(value);
         callback(team);
       }
     );
@@ -138,7 +155,7 @@ export class TeamAPIClient
   }
 
   private mapOnCreateTeamSubscription(
-    subscription: OnCreateTeamSubscription
+    subscription: OnTeamCreateByGameSessionIdSubscription
   ): ITeam {
     return TeamParser.teamFromCreateTeamSubscription(subscription);
   }
@@ -147,5 +164,11 @@ export class TeamAPIClient
     subscription: OnDeleteTeamSubscription
   ): ITeam {
     return TeamParser.teamFromDeleteTeamSubscription(subscription);
+  }
+
+  private mapOnUpdateTeamSubscription(
+    subscription: OnTeamUpdateByGameSessionIdSubscription
+  ): ITeam {
+    return TeamParser.teamFromUpdateTeamSubscription(subscription);
   }
 }

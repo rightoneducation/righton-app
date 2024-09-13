@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 /* high-level footer container for game in progress and phase results 
 (stack container -> header stack container, body stack container, footer stack container) */
 export default styled(Stack)(({ theme }) => ({
-  paddingBottom: `${theme.sizing.smallPadding}px`,
+  paddingBottom: `${theme.sizing.smPadding}px`,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

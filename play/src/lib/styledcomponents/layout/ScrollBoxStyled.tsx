@@ -6,11 +6,12 @@ import { Box } from '@mui/material';
  * creates a box that constrains touch scrolling to vertical only so that it doesn't conflict with swiper horizontal scrolling
  */
 export default styled(Box)(({ theme }) => ({
-  height: `calc(100% - ${theme.sizing.footerHeight}px - ${theme.sizing.extraSmallPadding}px - 30px)`, // footer height & 8px grid spacing
+  height: `100%`, // footer height & 8px grid spacing
   paddingBottom: `${theme.sizing.mediumPadding}px`, // added so box shadow shows around edge of card
+  overflow: 'auto',
+  boxSizing: 'border-box',
   paddingLeft: `${theme.sizing.smallPadding}px`,
   paddingRight: `${theme.sizing.smallPadding}px`,
-  overflow: 'auto',
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
   '&::-webkit-scrollbar': {
     // Chrome and Safari

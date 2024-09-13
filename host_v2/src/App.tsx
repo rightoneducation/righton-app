@@ -4,30 +4,30 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
+  useMatch
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
-import {APIClients, Environment} from '@righton/networking';
-import GameSessionContainer from './containers/GameSessionContainer';
+import {APIClients, Environment, AppType} from '@righton/networking';
+import LaunchWrapper from './containers/Launcher/LaunchWrapper';
+import GameSessionWrapper from './containers/GameSession/GameSessionWrapper';
 import Theme from './lib/Theme';
 
-function RedirectToPlayIfMissing() {
+function RedirectToCentralIfMissing() {
   window.location.href = 'http://central.rightoneducation.com/';
   return null;
 }
-const apiClients = new APIClients(Environment.Developing);
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route
-        path="/"        
-        element={<GameSessionContainer apiClients={apiClients}/>}
-      />
-      <Route element={<RedirectToPlayIfMissing />} />
-    </>,
-  ),
-);
 
 function App() {
+  const apiClients = new APIClients(Environment.Developing, AppType.HOST);
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="/new/:gameId" element={<LaunchWrapper apiClients={apiClients}/>} />
+        <Route path="/host/:gameSessionId" element={<GameSessionWrapper apiClients={apiClients}/>} />
+        <Route path="*" element={<RedirectToCentralIfMissing />} />
+      </>
+    ));
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>

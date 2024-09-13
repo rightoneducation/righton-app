@@ -2,16 +2,17 @@ import { isNullOrUndefined } from "../global";
 import { ITeam, ITeamMember } from "../Models";
 import { AWSTeam } from "../Models/AWS";
 import { 
-  OnCreateTeamSubscription, 
+OnTeamCreateByGameSessionIdSubscription, 
+OnTeamUpdateByGameSessionIdSubscription,
   OnDeleteTeamSubscription 
 } from "../AWSMobileApi";
 import { TeamMemberParser } from "./TeamMemberParser"
 
 export class TeamParser {
     static teamFromCreateTeamSubscription(
-        subscription: OnCreateTeamSubscription
+        subscription: OnTeamCreateByGameSessionIdSubscription
     ): ITeam {
-        const createTeam = subscription.onCreateTeam
+        const createTeam = subscription.onTeamCreateByGameSessionId
         if (isNullOrUndefined(createTeam)) {
             throw new Error(
                 "subscription.teamFromCreateTeamSubscription can't be null."
@@ -32,6 +33,19 @@ export class TeamParser {
         }
         //@ts-ignore
         return this.teamFromAWSTeam(deleteTeam)
+    }
+
+    static teamFromUpdateTeamSubscription(
+        subscription: OnTeamUpdateByGameSessionIdSubscription
+    ): ITeam {
+        const createTeam = subscription.onTeamUpdateByGameSessionId
+        if (isNullOrUndefined(createTeam)) {
+            throw new Error(
+                "subscription.teamFromCreateTeamSubscription can't be null."
+            )
+        }
+        //@ts-ignore
+        return this.teamFromAWSTeam(createTeam)
     }
 
     static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
