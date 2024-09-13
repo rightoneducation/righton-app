@@ -163,7 +163,7 @@ const DescriptionText = styled(Typography, {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: buttonCount > 3 ? 4 : 5, 
+  WebkitLineClamp: buttonCount > 3 ? 4 : 5,
   [theme.breakpoints.up('sm')]: {
     WebkitLineClamp: buttonCount > 2 ? 4 : 5, // 4 lines if > 3 buttons on medium or larger screens
   },
