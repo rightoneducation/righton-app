@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { TextField, styled, InputAdornment, Button, Typography, Box } from '@mui/material';
+import debounce from 'lodash/debounce';
 import SearchIcon from '../images/search.svg';
 import { ScreenSize } from '../lib/HostModels';
 import Filter from '../images/filter.svg';
 
 interface SearchBarProps {
     screenSize?: ScreenSize;
-    onSearchChange: (searchQuery: string) => void; // New prop to pass search query to parent
+    onSearchChange: (searchTerm: string) => void;
 }
 interface SearchBarProps2 {
     screenSize?: ScreenSize;
@@ -72,12 +73,16 @@ const PrimaryButton2Text = styled(Typography)(() => ({
 }));
 
 export default function SearchBar({ screenSize, onSearchChange }: SearchBarProps) {
-    const [searchText, setSearchText] = useState('');
+    const [searchTerm, setSearchTerm] = useState<string>('');
 
-    const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newSearch = e.target.value;
-        setSearchText(newSearch);
-        onSearchChange(newSearch); // Call the prop function to pass the value to the parent
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        setSearchTerm(value);
+
+        // Debounce the onSearchChange call
+        debounce(() => {
+            onSearchChange(value);
+        }, 800)(); // Immediately invoke the debounced function
     };
 
     return (
@@ -88,8 +93,8 @@ export default function SearchBar({ screenSize, onSearchChange }: SearchBarProps
                     ? "Search for games..." 
                     : "Search by topics, standards, games, and/or questions..."}
                 variant="outlined"
-                value={searchText}
-                onChange={handleSearchInputChange} // Handle input change
+                value={searchTerm}
+                onChange={handleInputChange} // handle input change
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
