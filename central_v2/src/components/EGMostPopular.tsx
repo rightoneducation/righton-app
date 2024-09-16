@@ -11,7 +11,7 @@ import placeHolder from '../images/placeHolder.svg';
 interface EGMostPopularProps {
   screenSize: ScreenSize;
   apiClients: APIClients;
-  searchedGames: IGameTemplate[];
+  mostPopularGames: IGameTemplate[];
 }
 
 interface MostPopularTextProps {
@@ -52,7 +52,7 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
   );
 }
 
-export default function EGMostPopular({ screenSize, apiClients, searchedGames }: EGMostPopularProps) {
+export default function EGMostPopular({ screenSize, apiClients, mostPopularGames }: EGMostPopularProps) {
 
   return (
     <EGMostPopularContainer screenSize={screenSize}>
@@ -60,7 +60,7 @@ export default function EGMostPopular({ screenSize, apiClients, searchedGames }:
         Most Popular
       </MostPopularText>
         <Grid container spacing={2} id="scrollableDiv" style={{ }}>
-          {searchedGames.map((game) => (
+          {mostPopularGames.map((game) => (
             <Grid
               item
               xs={12}

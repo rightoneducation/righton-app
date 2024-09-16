@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { TextField, styled, InputAdornment, Button, Typography, Box } from '@mui/material';
+import React, { useState, ChangeEvent } from 'react';
+import { Box, InputAdornment, Typography, Button, styled, TextField, MenuItem, Select, Chip, InputLabel, FormControl, OutlinedInput, SelectChangeEvent } from '@mui/material';
 import debounce from 'lodash/debounce';
 import SearchIcon from '../images/search.svg';
 import { ScreenSize } from '../lib/HostModels';
@@ -8,6 +8,7 @@ import Filter from '../images/filter.svg';
 interface SearchBarProps {
     screenSize?: ScreenSize;
     onSearchChange: (searchTerm: string) => void;
+    onGradeChange: (selectedGrades: string[]) => void;
 }
 interface SearchBarProps2 {
     screenSize?: ScreenSize;
@@ -17,7 +18,7 @@ const SearchBarContainer = styled(TextField)(({ screenSize }: SearchBarProps2) =
     width: 'calc(100vw - 64px)',
     margin: screenSize === ScreenSize.SMALL ? '16px 8px 16px 24px' : '24px 16px 24px 32px',
     backgroundColor: '#FFFFFF',
-    height: '38px',  // Ensure the overall container is 38px
+    height: '38px',  
     borderRadius: '30px',
     '& .MuiOutlinedInput-root': {
         height: '100%',  
@@ -30,7 +31,7 @@ const SearchBarContainer = styled(TextField)(({ screenSize }: SearchBarProps2) =
             lineHeight: '38px', 
             fontFamily: 'Rubik',             
             '&::placeholder': {
-                color: '#02215F', // placeholder color
+                color: '#02215F', 
                 fontWeight: 400, 
                 fontFamily: 'Rubik', 
                 fontSize: '16px',
@@ -48,67 +49,102 @@ const SearchAndFilterContainer = styled(Box)(({ screenSize }: SearchBarProps2) =
     backgroundColor: '#02215F',
 }));
 
-const PrimaryButton2 = styled(Button)(({ screenSize }: SearchBarProps2) => ({
-    width: screenSize === ScreenSize.SMALL ? 'auto' :'115px',
-    minWidth: '44px',
-    height: '38px',
-    padding: '4px 12px 4px 12px',
-    gap: '8px',
-    borderRadius: '54px',
-    background: 'linear-gradient(90deg, #E81144 0%, #E31C5E 100%)',
-    boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
+// Define styled components
+const FormControlStyled = styled(FormControl)({
+  width: '125px',
+  backgroundColor: '#E81144',
+  borderRadius: '4px',
+  '& .MuiOutlinedInput-notchedOutline': {
+    border: 'none',
+  },
+});
+
+const InputLabelStyled = styled(InputLabel)({
+  color: '#FFFFFF',
+  '&.Mui-focused': {
     color: '#FFFFFF',
-    textTransform: 'none',
-    marginRight: '32px',
+  },
+});
+
+const SelectStyled = styled(Select)({
+  color: '#FFFFFF',
+  '& .MuiSelect-icon': {
+    color: '#FFFFFF',
+  },
+});
+
+const MenuPropsStyled = {
+  PaperProps: {
+    sx: {
+      backgroundColor: '#FFFFFF',
+      '& .MuiMenuItem-root': {
+        color: 'rgba(0, 0, 0, 0.5)',
+        '&.Mui-selected': {
+          color: 'black',
+        },
+      },
+    },
+  },
+};
+
+const MenuItemStyled = styled(MenuItem)(({ selected }: { selected: boolean }) => ({
+  color: selected ? 'black' : 'rgba(0, 0, 0, 0.5)',
 }));
 
-const PrimaryButton2Text = styled(Typography)(() => ({
-    width: '52px',
-    height: '30px',
-    fontFamily: 'Poppins',
-    fontWeight: '700',
-    fontSize: '20px',
-    lineHeight: '30px',
-    color: '#FFFFFF',
-}));
+const gradesList = ['High School', '8th Grade', '7th Grade', '6th Grade', '5th Grade', '4th Grade', '3rd Grade', '2nd Grade', '1st Grade', 'Kindergarten'];
 
-export default function SearchBar({ screenSize, onSearchChange }: SearchBarProps) {
-    const [searchTerm, setSearchTerm] = useState<string>('');
+export default function SearchBar({ screenSize, onSearchChange, onGradeChange }: SearchBarProps) {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.target;
-        setSearchTerm(value);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setSearchTerm(value);
+    debounce(() => {
+      onSearchChange(value);
+    }, 800)();
+  };
 
-        // Debounce the onSearchChange call
-        debounce(() => {
-            onSearchChange(value);
-        }, 800)(); // Immediately invoke the debounced function
-    };
+  const handleGradesChange = (event: SelectChangeEvent<unknown>) => {
+    const newGrades = (event.target.value as string[]);
+    setSelectedGrades(newGrades);
+    onGradeChange(newGrades);
+  };
 
-    return (
-        <SearchAndFilterContainer screenSize={screenSize}>
-            <SearchBarContainer
-                screenSize={screenSize}
-                placeholder={screenSize === ScreenSize.SMALL 
-                    ? "Search for games..." 
-                    : "Search by topics, standards, games, and/or questions..."}
-                variant="outlined"
-                value={searchTerm}
-                onChange={handleInputChange} // handle input change
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <img src={SearchIcon} alt="Search Icon" />
-                        </InputAdornment>
-                    ),
-                }}
-            />      
-            <PrimaryButton2 screenSize={screenSize}> 
-                <img src={Filter} alt="Filter Icon" />
-                {screenSize !== ScreenSize.SMALL && (
-                    <PrimaryButton2Text>Filter</PrimaryButton2Text> 
-                )}
-            </PrimaryButton2>
-        </SearchAndFilterContainer>
-    );
+  return (
+    <SearchAndFilterContainer screenSize={screenSize}>
+      <FormControlStyled fullWidth margin="normal">
+        <SelectStyled
+          multiple
+          value={selectedGrades}
+          onChange={handleGradesChange}
+          input={<OutlinedInput label="Grade" />}
+          renderValue={() => 'Grade'}
+          MenuProps={MenuPropsStyled}
+        >
+          {gradesList.map((grade) => (
+            <MenuItemStyled key={grade} value={grade} selected={selectedGrades.includes(grade)}>
+              {grade}
+            </MenuItemStyled>
+          ))}
+        </SelectStyled>
+      </FormControlStyled>
+      <SearchBarContainer
+        screenSize={screenSize}
+        placeholder={screenSize === ScreenSize.SMALL 
+          ? "Search for games..." 
+          : "Search by topics, standards, games, and/or questions..."}
+        variant="outlined"
+        value={searchTerm}
+        onChange={handleInputChange}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <img src={SearchIcon} alt="Search Icon" />
+            </InputAdornment>
+          ),
+        }}
+      />
+    </SearchAndFilterContainer>
+  );
 }
