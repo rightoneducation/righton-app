@@ -57,10 +57,10 @@ export default function GameInProgressContent({
     prevPhaseConfidences = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.confidences ?? [] as IHostTeamAnswersConfidence[];
   }
   let sortedMistakes: any = [];
+  const responses = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase].responses ?? [];
+  const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   // in shortAnswerMode
-  if (localGameSession.questions[localGameSession.currentQuestionIndex].isShortAnswerEnabled) {
-    const responses = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase].responses ?? [];
-    const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  if (localGameSession.questions[localGameSession.currentQuestionIndex].isShortAnswerEnabled) {  
     const mistakes = responses.map((response) => !response.isCorrect && response.multiChoiceCharacter !== '–' ? {
       answer: response.rawAnswer,
       percent: (response.count/totalAnswers)*100,
@@ -85,6 +85,8 @@ export default function GameInProgressContent({
       localGameSession={localGameSession}
       isShortAnswerEnabled={isShortAnswerEnabled}
       currentPhase={currentPhase}
+      responses={currentResponses}
+      totalAnswers={totalAnswers}
     />
   );
 

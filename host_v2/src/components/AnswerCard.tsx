@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, LinearProgress } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import { IHostTeamAnswersResponse } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
+import InputNum from '../lib/styledcomponents/footer/InputNum';
 
 interface AnswerCardProps {
   isCorrectAnswer: boolean;
@@ -13,7 +15,24 @@ interface AnswerCardProps {
   instructions: string[] | null;
   answerReason: string | null;
   isShortAnswerEnabled: boolean;
+  response: IHostTeamAnswersResponse | null;
+  totalAnswers: number;
 }
+
+const BarContainer = styled(Box)({
+  position: 'relative',
+  width: '100%',
+});
+
+const StyledAnswerBar = styled(LinearProgress)({
+  height: '18px',
+  width: '100%',
+  borderRadius: '3px',
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  boxSizing: 'border-box'
+});
+
 const AnswerTitleTypography = styled(Typography)({
   lineHeight: '28px',
   fontFamily: 'Karla',
@@ -21,17 +40,20 @@ const AnswerTitleTypography = styled(Typography)({
   fontSize: '24px',
   color: 'black',
 });
-export default function AnswerCard({
+
+export default function  AnswerCard({
   isCorrectAnswer,
   answerIndex,
   answerContent,
   instructions,
   answerReason,
-  isShortAnswerEnabled
+  isShortAnswerEnabled,
+  response,
+  totalAnswers
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const letterCode = 'A'.charCodeAt(0) + answerIndex;
-
+  const percent = response ? response.count/totalAnswers * 100 : 0;
   const correctAnswerInstruction = (index: number) => {
     return (
       <Box
@@ -113,7 +135,26 @@ export default function AnswerCard({
             }
             <Typography>{answerContent}</Typography>
           </AnswerOptionStyled>
+          
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
+            <Typography sx={{paddingTop: '16px'}}>
+              Players who answered this way
+            </Typography>
+            <BarContainer>
+              <StyledAnswerBar
+                variant="determinate"
+                sx={{
+                  height: '18px',
+                  borderRadius: '4px',
+                  backgroundColor: theme.palette.primary.progressBarBackgroundColor,
+                  '& .MuiLinearProgress-bar': {
+                    backgroundColor: theme.palette.primary.darkPurple
+                  }
+                }}
+                value={percent}
+              />
+              <InputNum progressPercent={percent}>{percent}%</InputNum>
+            </BarContainer>
             {isCorrectAnswer && instructions !== null
               ? instructions.map((instruction) =>
                   correctAnswerInstruction(instructions.indexOf(instruction)),
