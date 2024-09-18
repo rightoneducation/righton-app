@@ -49,7 +49,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
 
   useEffect(() => {
     if (apiClients) {
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
+      apiClients.gameTemplate.listGameTemplates(12, null, null, null, [])
         .then(response => {
           setRecommendedGames(response?.gameTemplates || []);
           setNextToken(response?.nextToken || null);
@@ -58,7 +58,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
           console.error('Error fetching games:', error);
         });
 
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
+      apiClients.gameTemplate.listGameTemplates(12, null, null, null, [])
         .then(response => {
           setMostPopularGames(response?.gameTemplates || []);
           setNextToken(response?.nextToken || null);
