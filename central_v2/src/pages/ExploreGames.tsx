@@ -11,6 +11,7 @@ import ExploreGamesUpper from '../components/ExploreGamesUpper';
 import EGMostPopular from '../components/EGMostPopular';
 import fetchMoreGames from "../lib/HelperFunctions";
 import SearchBar from '../components/SearchBar';
+import SearchResults from '../components/SearchResults';
 
 interface ExploreGamesProps {
   apiClients: APIClients;
@@ -51,7 +52,10 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
   const [searchedGames, setSearchedGames] = useState<IGameTemplate[]>([]);
-
+  const [sort, setSort] = useState<{ field: string; direction: string | null }>({
+    field: '',
+    direction: null,
+  });
   
   const handleSearchChange = (newSearch: string) => {
     setSearchTerm(newSearch);
@@ -59,6 +63,11 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
 
   const handleGradeChange = (newGrades: string[]) => {
     setSelectedGrades(newGrades);
+  };
+
+  const handleSortChange = (newSort: { field: string; direction: string | null }) => {
+    setSort(newSort);
+    console.log(newSort);
   };
 
   useEffect(() => {
@@ -96,12 +105,9 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
         scrollableTarget="scrollableDiv"
         style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
       >
-          <SearchBar screenSize={screenSize} onSearchChange={handleSearchChange} onGradeChange={handleGradeChange}/>
-          {/* right now based on if typed anything, will change to if enter or whatever */}
+          <SearchBar screenSize={screenSize} onSearchChange={handleSearchChange} onGradeChange={handleGradeChange} onSortChange={handleSortChange}/>
           {searchTerm || selectedGrades.length > 0 ? (
-            <Typography variant="h6" color="white">
-            Showing search results for {searchTerm} in {selectedGrades.length > 0 ? `${selectedGrades.join(', ')} ` : ''}
-          </Typography>
+            <SearchResults screenSize={screenSize} apiClients={apiClients} searchedGames={recommendedGames} searchTerm={searchTerm} grades={selectedGrades}/>
           ) :(
             <>
             <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
