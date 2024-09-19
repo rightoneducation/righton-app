@@ -68,14 +68,19 @@ const JoinGameFooter = styled(Box)(({ theme }) => ({
   paddingTop: '40px'
 }));
 
-const JoinGameBody = styled(Box)(({ theme }) => ({
+interface JoinGameBodyProps {
+  isSmallDevice: boolean;
+  isMedDevice: boolean;
+}
+
+const JoinGameBody = styled(Box)<JoinGameBodyProps>(({ theme, isSmallDevice, isMedDevice }) => ({
   paddingTop: '24px',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
   flexGrow: 1,
   overflow: 'auto',
-  width: `${theme.sizing.pregameMinColumnWidth}px`,
+  width: (!isSmallDevice && !isMedDevice) ? '540px' : `${theme.sizing.pregameMinColumnWidth}px`,
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -187,10 +192,10 @@ export default function JoinGame({
           src={Logo}
           alt="Question"
         />
-        <JoinGameBody style={{margin: 0}}>
+        <JoinGameBody isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} style={{margin: 0, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           <div ref={inputRef}/>
           {/* container here to trim the spacing set by parent stack between text and input, typ */}
-          <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '8px'  }}>
             <Typography variant="h2" sx={{ weight: 700, fontSize: '18px', lineHeight: '20px', textAlign: 'center' }}>
               {t('joingame.gamecode.title')}
             </Typography>
@@ -220,7 +225,7 @@ export default function JoinGame({
               }}
             />
           </Box>
-          <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <Box sx={{ width: `${theme.sizing.pregameMinColumnWidth}px`, display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <Box sx={{ width: '100%', display: 'flex'}}>
               <Typography variant="h2" sx={{ width: '100%', weight: 700, fontSize: '18px', lineHeight: '20px', textAlign: 'center', paddingLeft: '37px' }}>
                 {t('joingame.playername.title')}
@@ -360,7 +365,7 @@ export default function JoinGame({
               {...{ timeout: 1000 }}
             >
               <div>
-                <AvatarSelection isSmallDevice={isSmallDevice} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
+                <AvatarSelection isSmallDevice={isSmallDevice} isMedDevice={isMedDevice} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
               </div>
             </Fade>
           }
