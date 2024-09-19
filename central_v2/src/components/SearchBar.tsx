@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce';
 import SearchIcon from '../images/search.svg';
 import SortIcon from '../images/sort.svg';
 import SortArrow from '../images/sortArrow.svg';
+import GradeDropdown from '../images/GradeDropdown.svg';
 import { ScreenSize } from '../lib/HostModels';
 
 interface SearchBarProps {
@@ -57,7 +58,7 @@ const SearchAndFilterContainer = styled(Box)<SearchBarProps2>(({ screenSize, the
 
 const FormControlStyled = styled(FormControl)({
     height: '44px',
-    width: '125px',
+    width: '150px',
     backgroundColor: '#E81144',
     borderRadius: '30px 0px 0px 30px',
     '& .MuiOutlinedInput-notchedOutline': {
@@ -90,7 +91,7 @@ const MenuPropsStyled = {
 };
 
 const PrimaryButton2 = styled(Select)<SearchBarProps2>(({ screenSize, theme }) => ({
-    width: screenSize === ScreenSize.SMALL ? '60px' : '110px',
+    width: screenSize === ScreenSize.SMALL ? '44px' : '110px',
     minWidth: '44px',
     height: '44px',
     gap: `${theme.sizing.xSmPadding}px`,
@@ -116,18 +117,13 @@ const MenuItemStyled = styled(MenuItem)(({ selected }: { selected: boolean }) =>
     color: selected ? 'black' : 'rgba(0, 0, 0, 0.5)',
 }));
 
-function SortLabel(){
-  return (
-    <Box display="flex" alignItems="center">
-      <Typography>Sort</Typography>
-      <img src={SortIcon} alt="sort icon" />
-    </Box>
-  )
-}
-
 const gradesList = ['High School', '8th Grade', '7th Grade', '6th Grade', '5th Grade', '4th Grade', '3rd Grade', '2nd Grade', '1st Grade', 'Kindergarten'];
+function GradeDropdownIcon (){
+    return(
+        <img src={GradeDropdown} alt="Grade Dropdown Icon"/>
+    )}
 
-export default function SearchBar({ screenSize, onSearchChange, onGradeChange, onSortChange }: SearchBarProps) {
+function SearchBar({ screenSize, onSearchChange, onGradeChange, onSortChange }: SearchBarProps) {
     const theme = useTheme();
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
@@ -181,16 +177,20 @@ export default function SearchBar({ screenSize, onSearchChange, onGradeChange, o
         return null;
       };
 
-    return (
+      return (
         <SearchAndFilterContainer screenSize={screenSize}>
             <FormControlStyled>
+            <InputLabel id="grade-label" shrink={false} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', bottom: '28.5px', padding: 0}}>
+              <PrimaryButton2Text>Grade</PrimaryButton2Text>
+            </InputLabel>
                 <SelectStyled
                     multiple
                     value={selectedGrades}
                     onChange={handleGradesChange}
-                    input={<OutlinedInput label="Grade" />}
-                    renderValue={() => 'Grade'}
+                    renderValue={() => null}
+                    labelId="grade-label"
                     MenuProps={MenuPropsStyled}
+                    IconComponent={GradeDropdownIcon}
                 >
                     {gradesList.map((grade) => (
                         <MenuItemStyled key={grade} value={grade} selected={selectedGrades.includes(grade)}>
@@ -217,17 +217,21 @@ export default function SearchBar({ screenSize, onSearchChange, onGradeChange, o
             />
             {searchTerm || selectedGrades.length > 0 ? (
           
-          <FormControl style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <InputLabel id="sort-label" shrink={false}>
-              <PrimaryButton2Text>Sort</PrimaryButton2Text>
-              <img src={SortIcon} alt="sort icon" />
+          <FormControl style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: `${theme.sizing.mdPadding}px`}}>
+            <InputLabel id="sort-label" shrink={false} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', bottom: '28.5px',}}>
+                <img src={SortIcon} alt="sort icon" style={{marginRight:`${theme.sizing.xSmPadding}px`}} />
+              {screenSize=== ScreenSize.SMALL ?
+              null 
+              : <PrimaryButton2Text>Sort</PrimaryButton2Text>}
             </InputLabel>
             <PrimaryButton2
+              screenSize={screenSize}
               value={selectedSort.field}
               onChange={(e) => handleSortOptionClick(e.target.value as string)}
-              renderValue={() => 'Sort'}
+              renderValue={() => null}
               labelId="sort-label"
               MenuProps={MenuPropsStyled}
+              IconComponent= {() => null}
               sx={{  
                 "& .MuiOutlinedInput-notchedOutline": {
                   border: 0
@@ -256,3 +260,4 @@ export default function SearchBar({ screenSize, onSearchChange, onGradeChange, o
         </SearchAndFilterContainer>
     );
 }
+export default SearchBar;
