@@ -13,7 +13,7 @@
     "gamecode": {
       "title": "Enter Game Code",
       "button": "Join",
-      "error1": "We are unable to join this game.",
+      "error1": "Unable to join this game.",
       "error2": "Check the Game Code and try again."
     },
     "playername": {

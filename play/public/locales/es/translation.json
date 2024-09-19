@@ -13,7 +13,7 @@
     "gamecode": {
       "title": "Ingrese el código del juego",
       "button": "Unirse",
-      "error1": "Nosotras no podemos unirnos a este juego.",
+      "error1": "No se puede unir a este juego.",
       "error2": "Comprueba el código del juego e inténtalo de nuevo."
     },
     "playername": {
