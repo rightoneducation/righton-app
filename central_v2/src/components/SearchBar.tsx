@@ -89,7 +89,7 @@ const MenuPropsStyled = {
     },
 };
 
-const PrimaryButton2 = styled(Button)<SearchBarProps2>(({ screenSize, theme }) => ({
+const PrimaryButton2 = styled(Select)<SearchBarProps2>(({ screenSize, theme }) => ({
     width: screenSize === ScreenSize.SMALL ? '60px' : '110px',
     minWidth: '44px',
     height: '44px',
@@ -115,6 +115,15 @@ const PrimaryButton2 = styled(Button)<SearchBarProps2>(({ screenSize, theme }) =
 const MenuItemStyled = styled(MenuItem)(({ selected }: { selected: boolean }) => ({
     color: selected ? 'black' : 'rgba(0, 0, 0, 0.5)',
 }));
+
+function SortLabel(){
+  return (
+    <Box display="flex" alignItems="center">
+      <Typography>Sort</Typography>
+      <img src={SortIcon} alt="sort icon" />
+    </Box>
+  )
+}
 
 const gradesList = ['High School', '8th Grade', '7th Grade', '6th Grade', '5th Grade', '4th Grade', '3rd Grade', '2nd Grade', '1st Grade', 'Kindergarten'];
 
@@ -207,28 +216,41 @@ export default function SearchBar({ screenSize, onSearchChange, onGradeChange, o
                 }}
             />
             {searchTerm || selectedGrades.length > 0 ? (
-                <PrimaryButton2 screenSize={screenSize} style={{ marginLeft: '16px' }}>
-          <Select
-            value={selectedSort.field}
-            onChange={(e) => handleSortOptionClick(e.target.value as string)}
-            renderValue={() => 'Sort'}
-            input={<OutlinedInput label="Grade" />}
-            MenuProps={MenuPropsStyled}
-            >
-            {['Date Updated', 'Most Popular', 'Grade Level', 'Question Count'].map((field) => (
-              <MenuItem key={field} value={field} onClick={() => handleSortOptionClick(field)}>
-                <Box display="flex" alignItems="center" >
-                  <Typography
-                    fontWeight={selectedSort.field === field && selectedSort.direction ? 'bold' : 'normal'}
-                  >
-                    {field}
-                  </Typography>
-                  {renderSortArrow(field)}
-                </Box>
-              </MenuItem>
-            ))}
-          </Select>
-        </PrimaryButton2>
+          
+          <FormControl style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <InputLabel id="sort-label" shrink={false}>
+              <PrimaryButton2Text>Sort</PrimaryButton2Text>
+              <img src={SortIcon} alt="sort icon" />
+            </InputLabel>
+            <PrimaryButton2
+              value={selectedSort.field}
+              onChange={(e) => handleSortOptionClick(e.target.value as string)}
+              renderValue={() => 'Sort'}
+              labelId="sort-label"
+              MenuProps={MenuPropsStyled}
+              sx={{  
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: 0
+                },
+                "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  border: "none"
+                },
+              }}
+              >
+              {['Date Updated', 'Most Popular', 'Grade Level', 'Question Count'].map((field) => (
+                <MenuItem key={field} value={field} onClick={() => handleSortOptionClick(field)}>
+                  <Box display="flex" alignItems="center" >
+                    <Typography
+                      fontWeight={selectedSort.field === field && selectedSort.direction ? 'bold' : 'normal'}
+                    >
+                      {field}
+                    </Typography>
+                    {renderSortArrow(field)}
+                  </Box>
+                </MenuItem>
+              ))}
+            </PrimaryButton2>
+          </FormControl>
             ) : null}
             
         </SearchAndFilterContainer>
