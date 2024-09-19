@@ -17,7 +17,7 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import PrepareGameContent from '../components/PrepareGameContent/PrepareGameContent';
 import HeaderContent from '../components/HeaderContent';
 import FooterBackgroundStyled from '../lib/styledcomponents/footer/FooterBackgroundStyled';
-import FooterStartGame from '../components/FooterStartGame';
+import FooterInterim from '../components/FooterInterim';
 
 interface PrepareGameProps {
   isGamePrepared: boolean;
@@ -107,7 +107,7 @@ export default function PrepareGame( {
           }}
         >
           <FooterBackgroundStyled>
-            <FooterStartGame
+            <FooterInterim
               teamsLength={localGameSession.teams.length}
               screenSize={screenSize}
               handleButtonClick={handleButtonClick}
