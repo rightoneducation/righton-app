@@ -1,10 +1,11 @@
 import React from 'react';
-import { Grid, Typography, Box, styled, useTheme, Grow, Fade } from '@mui/material';
+import { Grid, Typography, Box, styled, useTheme, Grow, Fade, Skeleton } from '@mui/material';
 import { APIClients, IGameTemplate } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import StyledGameCard from './GameCard';
 import { ScreenSize } from '../lib/HostModels';
 import placeHolder from '../images/placeHolder.svg';
+import SkeletonGameCard from './SkeletonGameCard';
 
 interface EGMostPopularProps {
   screenSize: ScreenSize;
@@ -84,24 +85,18 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
 export default function EGMostPopular({ screenSize, apiClients, mostPopularGames }: EGMostPopularProps) {
   const loadingCards = Array(12).fill(0);
   const isLoading = mostPopularGames.length === 0;
+  const maxCards = 12;
   return (
     <EGMostPopularContainer screenSize={screenSize}>
       <MostPopularText screenSize={screenSize}>
         Most Popular
       </MostPopularText>
-        <Grid container spacing={2} id="scrollableDiv" style={{ }}>
-          {mostPopularGames.length > 0 
-          ? mostPopularGames.map((game,index) => (
-            
-              <Grid
-                item
-                xs={12}
-                md={6} 
-                xl={4}
-                key={game.id} 
-              >
-                <Fade in timeout={1000}  style={{ transformOrigin: '0 0 0', transitionDelay: `${200*index}ms` }}> 
-                <div>
+        <Grid container spacing={2} id="scrollableDiv" >
+        {Array.from({ length: maxCards }).map((_, index) => {
+          const game = mostPopularGames[index];
+          return (
+            <Grid item xs={12} md={6} xl={4} key={index}> {/* eslint-disable-line */}
+              {game ? (
                 <StyledGameCard
                   game={game}
                   id={game.id}
@@ -110,26 +105,12 @@ export default function EGMostPopular({ screenSize, apiClients, mostPopularGames
                   image={game.imageUrl || placeHolder}
                   apiClients={apiClients}
                 />
-                </div>
-                </Fade>
-              </Grid>
-
-            ))
-          : 
-          loadingCards.map((_, index) => (
-            <Grid
-            item
-            xs={12}
-            md={6} 
-            xl={4}
-            key={uuidv4()} 
-          >
-                <Fade in timeout={1000}  style={{transformOrigin: '0 0 0', transitionDelay: `${200*index}ms` }}>                        
-                    <GameCard />                        
-                </Fade>
+              ) : (
+                <SkeletonGameCard index={index} />
+              )}
             </Grid>
-        ))
-          }
+          );
+        })}
         </Grid>
     </EGMostPopularContainer>
   );
