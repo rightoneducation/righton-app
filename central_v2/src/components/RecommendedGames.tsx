@@ -17,14 +17,14 @@ interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
 }
 
-const RecommendedGamesContainer = styled(Box)(({ screenSize }: RecommendedGamesContainerProps) => ({
+const RecommendedGamesContainer = styled(Box)<RecommendedGamesContainerProps>(({ screenSize, theme }) => ({
   height: screenSize === ScreenSize.SMALL ? '368px': '408px', 
   gap: '16px',
   display: 'flex', 
   width: '100%',
   flexDirection: 'column', 
   alignItems: 'center', 
-  backgroundColor: '#02215F' 
+  backgroundColor: `${theme.palette.primary.extraDarkBlue}` 
 }));
 
 const Title = styled(Typography)<{ screenSize: ScreenSize }>(({ screenSize }) => ({

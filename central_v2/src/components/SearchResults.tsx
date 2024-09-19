@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Typography, Box, styled } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { APIClients, IGameTemplate } from '@righton/networking';
 import StyledGameCard from './GameCard';
 import { ScreenSize } from '../lib/HostModels';
@@ -18,28 +19,39 @@ interface SearchedTextProps {
     screenSize: ScreenSize;
   }
 
-const SearchedText = styled(Typography)(({ screenSize }: SearchedTextProps) => ({
+const SearchedText = styled(Typography)< SearchedTextProps>(({ screenSize, theme }) => ({
  lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
   fontFamily: 'Poppins',
   fontWeight: '700',
-  fontSize: screenSize === ScreenSize.SMALL ? '24px' : '40px',
-  color: '#02215F',
+  fontSize: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
+  color: `${theme.palette.primary.extraDarkBlue}`,
+  textAlign: 'center'
 }));
-const GradesText = styled(Typography)(({ screenSize }: SearchedTextProps) => ({
+const GradesText = styled(Typography)< SearchedTextProps>(({ screenSize, theme }) => ({
     lineHeight: screenSize === ScreenSize.SMALL ? '30px' : '36px',
     fontFamily: 'Poppins',
     fontWeight: '700',
-    fontSize: screenSize === ScreenSize.SMALL ? '20px' : '24px',
-    color: '#02215F',
+    fontSize: screenSize === ScreenSize.SMALL ? '20px' : `${theme.sizing.mdPadding}px`,
+    color: `${theme.palette.primary.extraDarkBlue}`,
     fontStyle: 'italic',
+    textAlign: 'center'
   }));
-  const ResultsLengthText = styled(Typography)(({ screenSize }: SearchedTextProps) => ({
-    // lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
+  const ResultsLengthText = styled(Typography)< SearchedTextProps>(({ screenSize, theme }) => ({
     fontFamily: 'Poppins',
     fontWeight: '700',
-    fontSize: screenSize === ScreenSize.SMALL ? '16px' : '20px',
-    color: '#02215F',
+    fontSize: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : '20px',
+    color: `${theme.palette.primary.extraDarkBlue}`,
   }));
+  const NoResultsText = styled(Typography)<SearchedTextProps>(({ screenSize, theme }) => ({
+    lineHeight: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.mdPadding}px`,
+    fontFamily: 'Poppins',
+    fontWeight: '600',
+    fontSize: screenSize === ScreenSize.SMALL ? '12px' : `${theme.sizing.smPadding}px`,
+    color: '#384466',
+    justifyContent: 'center',
+    display: 'flex',
+    textAlign: 'center'
+}));
 
 interface SearchResultsContainerProps {
   screenSize: ScreenSize;
@@ -47,9 +59,11 @@ interface SearchResultsContainerProps {
 }
 
 function SearchResultsContainer({ screenSize, children }: SearchResultsContainerProps) {
-  return (
+    const theme = useTheme();
+    return (
     <Box
       sx={{
+        minHeight: screenSize === ScreenSize.LARGE ? 'calc(100vh - 182px)' : 'calc(100vh - 147px)', // values so the baby blue covers page exactly
         flexGrow: 1,
         display: 'flex',
         justifyContent: 'flex-start',
@@ -57,9 +71,9 @@ function SearchResultsContainer({ screenSize, children }: SearchResultsContainer
         flexDirection: 'column',
         alignItems: 'center',
         backgroundColor: '#E9F1FF',
-        padding: screenSize === ScreenSize.SMALL ? '16px 24px 16px 24px' : '24px 32px 24px 32px',
+        padding: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px` : `${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px`,
         boxSizing: 'border-box',
-        gap: screenSize === ScreenSize.SMALL ? '16px' : '24px',
+        gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.mdPadding}px`,
       }}
     >
       {children}
@@ -77,10 +91,10 @@ function formatGrades(grades: string[]): string {
   
 export default function SearchResults({ screenSize, apiClients, searchedGames, searchTerm, grades }: SearchResultsProps) {
     const formattedGrades = formatGrades(grades);
-
+    const theme = useTheme();
   return (
     <SearchResultsContainer screenSize={screenSize}>
-        <Box style={{gap: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Box style={{gap: `${theme.sizing.xSmPadding}px`, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <SearchedText screenSize={screenSize}>
             Results for &quot;{searchTerm}&quot;
         </SearchedText>
@@ -90,17 +104,20 @@ export default function SearchResults({ screenSize, apiClients, searchedGames, s
         </GradesText>
       )}
       </Box>
+      {searchedGames.length > 0 && (
        <ResultsLengthText screenSize={screenSize}>
             {searchedGames.length} results
         </ResultsLengthText>
-        <Grid container spacing={2} id="scrollableDiv" style={{ }}>
+       )}
+        {searchedGames.length > 0 ? (
+        <Grid container spacing={2} id="scrollableDiv">
           {searchedGames.map((game) => (
             <Grid
               item
               xs={12}
-              md={6} // 700
+              md={6} 
               xl={4}
-              key={game.id} 
+              key={game.id}
             >
               <StyledGameCard
                 game={game}
@@ -113,6 +130,16 @@ export default function SearchResults({ screenSize, apiClients, searchedGames, s
             </Grid>
           ))}
         </Grid>
+      ) : (
+        <Box alignItems='center'>
+            <NoResultsText screenSize={screenSize}>
+            There are no results for &quot;{searchTerm}&quot;
+            </NoResultsText>
+            <NoResultsText screenSize={screenSize}>
+            Please check your spelling or try a different term
+        </NoResultsText>
+      </Box>
+      )}
     </SearchResultsContainer>
   );
 }

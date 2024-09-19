@@ -107,7 +107,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
       >
           <SearchBar screenSize={screenSize} onSearchChange={handleSearchChange} onGradeChange={handleGradeChange} onSortChange={handleSortChange}/>
           {searchTerm || selectedGrades.length > 0 ? (
-            <SearchResults screenSize={screenSize} apiClients={apiClients} searchedGames={recommendedGames} searchTerm={searchTerm} grades={selectedGrades}/>
+            <SearchResults screenSize={screenSize} apiClients={apiClients} searchedGames={[]} searchTerm={searchTerm} grades={selectedGrades}/>
           ) :(
             <>
             <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
