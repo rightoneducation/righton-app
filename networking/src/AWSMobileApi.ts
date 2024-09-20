@@ -269,6 +269,7 @@ export type CreateGameSessionInput = {
   description?: string | null,
   title?: string | null,
   currentTimer?: number | null,
+  sessionData?: string | null,
 };
 
 export enum GameSessionState {
@@ -297,6 +298,7 @@ export type ModelGameSessionConditionInput = {
   description?: ModelStringInput | null,
   title?: ModelStringInput | null,
   currentTimer?: ModelIntInput | null,
+  sessionData?: ModelStringInput | null,
   and?: Array< ModelGameSessionConditionInput | null > | null,
   or?: Array< ModelGameSessionConditionInput | null > | null,
   not?: ModelGameSessionConditionInput | null,
@@ -348,6 +350,7 @@ export type GameSession = {
   description?: string | null,
   title?: string | null,
   currentTimer?: number | null,
+  sessionData?: string | null,
   questions?: ModelQuestionConnection | null,
   createdAt: string,
   updatedAt: string,
@@ -469,6 +472,7 @@ export type UpdateGameSessionInput = {
   description?: string | null,
   title?: string | null,
   currentTimer?: number | null,
+  sessionData?: string | null,
 };
 
 export type DeleteGameSessionInput = {
@@ -774,6 +778,7 @@ export type ModelGameSessionFilterInput = {
   description?: ModelStringInput | null,
   title?: ModelStringInput | null,
   currentTimer?: ModelIntInput | null,
+  sessionData?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   and?: Array< ModelGameSessionFilterInput | null > | null,
@@ -1012,6 +1017,7 @@ export type ModelSubscriptionGameSessionFilterInput = {
   description?: ModelSubscriptionStringInput | null,
   title?: ModelSubscriptionStringInput | null,
   currentTimer?: ModelSubscriptionIntInput | null,
+  sessionData?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionGameSessionFilterInput | null > | null,
@@ -2404,6 +2410,7 @@ export type CreateGameSessionMutation = {
     description?: string | null,
     title?: string | null,
     currentTimer?: number | null,
+    sessionData?: string | null,
     questions?:  {
       __typename: "ModelQuestionConnection",
       items:  Array< {
@@ -2527,6 +2534,7 @@ export type UpdateGameSessionMutation = {
     description?: string | null,
     title?: string | null,
     currentTimer?: number | null,
+    sessionData?: string | null,
     questions?:  {
       __typename: "ModelQuestionConnection",
       items:  Array< {
@@ -2650,6 +2658,7 @@ export type DeleteGameSessionMutation = {
     description?: string | null,
     title?: string | null,
     currentTimer?: number | null,
+    sessionData?: string | null,
     questions?:  {
       __typename: "ModelQuestionConnection",
       items:  Array< {
@@ -5203,6 +5212,7 @@ export type GetGameSessionQuery = {
     description?: string | null,
     title?: string | null,
     currentTimer?: number | null,
+    sessionData?: string | null,
     questions?:  {
       __typename: "ModelQuestionConnection",
       items:  Array< {
@@ -5329,6 +5339,7 @@ export type ListGameSessionsQuery = {
       description?: string | null,
       title?: string | null,
       currentTimer?: number | null,
+      sessionData?: string | null,
       questions?:  {
         __typename: "ModelQuestionConnection",
         items:  Array< {
@@ -7784,6 +7795,7 @@ export type GameSessionByStateQuery = {
       description?: string | null,
       title?: string | null,
       currentTimer?: number | null,
+      sessionData?: string | null,
       questions?:  {
         __typename: "ModelQuestionConnection",
         items:  Array< {
@@ -7914,6 +7926,7 @@ export type GameSessionByCodeQuery = {
       description?: string | null,
       title?: string | null,
       currentTimer?: number | null,
+      sessionData?: string | null,
       questions?:  {
         __typename: "ModelQuestionConnection",
         items:  Array< {
@@ -8038,6 +8051,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
     description?: string | null,
     title?: string | null,
     currentTimer?: number | null,
+    sessionData?: string | null,
     questions?:  {
       __typename: "ModelQuestionConnection",
       items:  Array< {
@@ -9642,6 +9656,7 @@ export type OnCreateGameSessionSubscription = {
     description?: string | null,
     title?: string | null,
     currentTimer?: number | null,
+    sessionData?: string | null,
     questions?:  {
       __typename: "ModelQuestionConnection",
       items:  Array< {
@@ -9764,6 +9779,7 @@ export type OnUpdateGameSessionSubscription = {
     description?: string | null,
     title?: string | null,
     currentTimer?: number | null,
+    sessionData?: string | null,
     questions?:  {
       __typename: "ModelQuestionConnection",
       items:  Array< {
@@ -9886,6 +9902,7 @@ export type OnDeleteGameSessionSubscription = {
     description?: string | null,
     title?: string | null,
     currentTimer?: number | null,
+    sessionData?: string | null,
     questions?:  {
       __typename: "ModelQuestionConnection",
       items:  Array< {

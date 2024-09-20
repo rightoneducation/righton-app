@@ -7,7 +7,6 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
   const [gameSession, dispatch] = useReducer(GameSessionReducer, null);
   const [hostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer ,null);
-  console.log(hostTeamAnswers);
   useEffect(() => {
     try {
       dataManager.init(gameSessionId).then(() => {

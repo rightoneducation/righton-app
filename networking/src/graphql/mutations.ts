@@ -1335,6 +1335,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
@@ -1459,6 +1460,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
@@ -1583,6 +1585,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id

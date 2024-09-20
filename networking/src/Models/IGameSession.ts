@@ -1,6 +1,7 @@
 import { GameSessionState } from "../AWSMobileApi"
 import { IQuestion } from "./IQuestion"
 import { ITeam } from "./ITeam"
+import { IHostTeamAnswers } from "./IHostTeamAnswers"
 
 export interface IGameSession {
     id: string
@@ -14,6 +15,7 @@ export interface IGameSession {
     gameCode: number
     isAdvancedMode: boolean
     currentTimer: number
+    sessionData: IHostTeamAnswers
     questions: Array<IQuestion>
     title: string
     updatedAt: string

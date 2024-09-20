@@ -16,14 +16,15 @@ import { useTranslation } from 'react-i18next';
 import { AnswerState } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
+import AnswerResponsesCard from '../../components/AnswerResponses/AnswerResponsesCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import 'swiper/css';
-import 'swiper/css/pagination';
 import {
   BodyContentAreaTripleColumnStyled,
   BodyContentAreaTripleColumnStyledNoSwiper,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -56,9 +57,6 @@ export default function DiscussAnswer({
   const { t } = useTranslation();
   const correctAnswer = currentQuestion.choices.find((answer) => answer.isAnswer);
   const correctIndex = currentQuestion.choices.findIndex((answer) => answer.isAnswer);
-  console.log(answerChoices);
-  console.log(correctAnswer);
-  
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
@@ -146,7 +144,9 @@ export default function DiscussAnswer({
 
   const questionRightColumnContents = (
       <ScrollBoxStyled>
-        <DiscussAnswerCard
+        <Stack spacing={2}>
+          <AnswerResponsesCard sessionData={gameSession.sessionData ?? {}} currentQuestionIndex={gameSession.currentQuestionIndex} currentState={currentState} currentTeam={currentTeam}/>
+          <DiscussAnswerCard
             isPlayerCorrect={isPlayerCorrect}
             instructions={instructions}
             answerStatus={
@@ -160,6 +160,7 @@ export default function DiscussAnswer({
             isShortAnswerEnabled={isShortAnswerEnabled}
             newPoints={newPoints}
           />
+        </Stack>
       </ScrollBoxStyled>
   );
 

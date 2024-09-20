@@ -96,7 +96,8 @@
       "incorrectanswercolumn": "Respuestas Incorrectas",
       "correcttext": "Correcta!",
       "nicetrytext": "Buen intento",
-      "correctanswertext": "La respuesta es..."
+      "correctanswertext": "La respuesta es...",
+      "responses": "Respuestas de respuesta"
     },
     "startphase2": {
       "title": "Empezando la Fase 2...",

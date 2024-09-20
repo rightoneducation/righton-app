@@ -129,7 +129,7 @@ function FooterGameInProgress({
     if (currentState === GameSessionState.PHASE_2_START)
       setGraphClickInfo({graph: null, selectedIndex: null});
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
-    apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime});
+    apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime, sessionData: JSON.stringify(apiClients.hostDataManager.getHostTeamAnswers())});
   };
   const GetButtonText = () => {
     switch(currentState) {

@@ -96,6 +96,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
@@ -1703,6 +1704,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
@@ -1826,6 +1828,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
@@ -1949,6 +1952,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id

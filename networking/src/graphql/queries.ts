@@ -886,6 +886,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
@@ -1012,6 +1013,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
       description
       title
       currentTimer
+      sessionData
       questions {
         items {
           id
@@ -3529,6 +3531,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
       description
       title
       currentTimer
+      sessionData
       questions {
         items {
           id
@@ -3666,6 +3669,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
       description
       title
       currentTimer
+      sessionData
       questions {
         items {
           id
