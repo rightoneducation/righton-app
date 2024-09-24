@@ -13,12 +13,9 @@ export default function AnswerResponsesGraph({
   responses,
   currentTeam
 }: AnswerResponsesGraphProps) {
-  console.log(responses);
   const theme = useTheme();
   const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const assignColor = (response: IHostTeamAnswersResponse) => {
-    console.log(currentTeam);
-    console.log(response);
     if (response.isCorrect)
       return '#8DCD53';
     if (response.teams.find((team) => team === currentTeam.name)){
