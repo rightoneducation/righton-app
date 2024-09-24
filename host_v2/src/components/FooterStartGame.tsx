@@ -93,8 +93,8 @@ export default function FooterStartGame({
   const fetchButtonText = (gameSession: IGameSession, selectedGame: string | null) => {
     switch (gameSession.currentState) {
       case GameSessionState.TEAMS_JOINING:
-        return (gameSession.currentQuestionIndex === null)
-            ? 'Start Game' 
+        return (gameSession.currentQuestionIndex === null) // eslint-disable-line no-nested-ternary
+            ? (isGamePrepared) ? 'Start Game' : 'Prepare Game' 
             : 'Next Question';
       case GameSessionState.FINAL_RESULTS:
         return 'End Game';

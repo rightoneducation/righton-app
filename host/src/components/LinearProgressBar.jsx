@@ -5,7 +5,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 export default function LinearProgressBar({ inputNum, totalNum }) {
   const classes = useStyles();
   const progressPercent =
-    inputNum !== 0 ? (inputNum / totalNum) * 100 : 0;
+    (inputNum !== 0 && inputNum > totalNum) ? (inputNum / totalNum) * 100 : 0;
 
   return (
     <div className={classes.bargroup}>

@@ -16,7 +16,7 @@ const SafeAreaStyled = styled(Box)({
   paddingBottom: '34px',
   position: 'relative',
   width: '100%',
-  height: '100vh',
+  height: '100dvh',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

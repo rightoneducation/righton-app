@@ -30,13 +30,12 @@ export default function CardResults({
 }: CardResultsProps) {
   // determines what type of answer result to display
   const answerType = (answer: { text: string; isAnswer: boolean }) => {
-    if (answer?.isAnswer && answer?.text === selectedAnswer?.text)
+    if (answer?.isAnswer && answer?.text === selectedAnswer?.answer?.rawAnswer)
       return AnswerState.PLAYER_SELECTED_CORRECT;
-    if (answer?.text === selectedAnswer?.text) return AnswerState.SELECTED;
+    if (answer?.text === selectedAnswer?.answer?.rawAnswer) return AnswerState.SELECTED;
     if (answer?.isAnswer) return AnswerState.CORRECT;
     return AnswerState.DEFAULT;
   };
-
   return (
     <BodyCardStyled
       elevation={10}

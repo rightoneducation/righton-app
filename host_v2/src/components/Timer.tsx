@@ -141,11 +141,13 @@ export default function Timer({
           </Typography>
         </Box>
       </Box>
-      <TimerAddButton onClick={handleAddTime} disabled={currentTimeMilli.current <= 0}>
-        <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
-          {t('gamesession.addtime')}
-        </Typography>
-      </TimerAddButton>
+      { localGameSession.currentState !== GameSessionState.TEAMS_JOINING &&
+        <TimerAddButton onClick={handleAddTime} disabled={currentTimeMilli.current <= 0}>
+          <Typography variant="subtitle2" style={{ fontSize: '14px' }}>
+            {t('gamesession.addtime')}
+          </Typography>
+        </TimerAddButton>
+      }
     </TimerContainer>
         
   );

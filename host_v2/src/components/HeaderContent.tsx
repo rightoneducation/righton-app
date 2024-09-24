@@ -72,14 +72,6 @@ export default function HeaderContent({
               statePosition={statePosition}
             />
           </Grid>
-          <Grid item>
-            <HostPlayerIconContainer>
-              <Typography variant="subtitle2">
-                {t('gamesession.player')}
-              </Typography>
-              <img src={playerIcon} alt="Player Icon" />
-            </HostPlayerIconContainer>
-          </Grid>
         </Grid>
         <Grid item style={{ paddingTop: `${theme.sizing.xxSmPadding}px` }}>
           <Typography variant="h1" style={{ fontSize: '24px', lineHeight: '36px', fontFamily: 'Poppins' }}>

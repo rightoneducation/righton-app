@@ -84,7 +84,7 @@
     "eslint-plugin-storybook": "^0.6.15",
     "prettier": "^3.1.1",
     "prop-types": "^15.8.1",
-    "webpack": "^5.89.0"
+    "webpack": "^5.94.0"
   },
   "resolutions": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",

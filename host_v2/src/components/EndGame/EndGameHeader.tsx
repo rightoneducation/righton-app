@@ -72,10 +72,6 @@ function GameEndedHostHeader({ gameCode }: GameEndedHostHeaderProps) {
     <UpperStyled>
       <TopLineStyled>
         <GameLobbyTypographyStyled>Game End Lobby </GameLobbyTypographyStyled>
-        <IconsContainer>    
-          <HelpSvg onClick={handleHelpClick}/>
-          <CloseSvg onClick={handleCloseClick}/>
-        </IconsContainer>
       </TopLineStyled>
       <GameEndedGameCode gameCode={gameCode} />
     </UpperStyled>
