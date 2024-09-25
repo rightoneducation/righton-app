@@ -53,7 +53,7 @@ export default function Responses({
           { statePosition < 6 ? `Responses` : `Phase 1 Responses` }
         </TitleStyled>
         <ResponsesGraph
-          data={responses}
+          data={responses.reverse()}
           statePosition={statePosition}
           isShortAnswerEnabled={isShortAnswerEnabled}
           graphClickInfo={graphClickInfo}

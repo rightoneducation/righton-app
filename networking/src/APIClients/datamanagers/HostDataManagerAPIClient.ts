@@ -216,9 +216,9 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         newResponses.push(newAnswer);
       }
       if (this.isAnswerMultiChoice(answerObj))
-        newResponses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
+        newResponses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter)).reverse();
       else{
-        newResponses.sort((a: any, b: any) => a.rawAnswer.localeCompare(b.rawAnswer));
+        newResponses.sort((a: any, b: any) => a.rawAnswer.localeCompare(b.rawAnswer)).reverse();
         const noResponse = newResponses.filter((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
         const otherResponses = newResponses.filter((response: any) => response.multiChoiceCharacter !== this.noResponseCharacter);
         newResponses = [...otherResponses, ...noResponse];
@@ -371,6 +371,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
               count: teamsCount,
               isCorrect: false,
               multiChoiceCharacter: this.noResponseCharacter,
+              reason: '',
               teams: [],
             },
             ...question.choices.map((choice: IChoice, index: number) => {
@@ -380,6 +381,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
                 count: 0,
                 isCorrect: choice.isAnswer,
                 multiChoiceCharacter: String.fromCharCode(65 + index),
+                reason: choice.reason,
                 teams: [],
               }
             })
@@ -404,6 +406,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
               count: 0,
               isCorrect: choice.isAnswer,
               multiChoiceCharacter: String.fromCharCode(65 + index),
+              reason: choice.reason,
               teams: []
               }
             })
@@ -411,8 +414,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           hints: []
         }
     }
-    emptyMultiChoiceTeamAnswer.phase1.responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
-    emptyMultiChoiceTeamAnswer.phase2.responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
+    emptyMultiChoiceTeamAnswer.phase1.responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter)).reverse();
+    emptyMultiChoiceTeamAnswer.phase2.responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter)).reverse();
     return (emptyMultiChoiceTeamAnswer);
   }
 

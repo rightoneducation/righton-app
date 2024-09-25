@@ -4,11 +4,11 @@ import { Typography } from '@mui/material';
 export default styled(Typography)(({ theme, progressPercent }) => ({
   position: 'absolute',
   top: '0',
-  left: `calc(${progressPercent}% - 30px)`,
+  left: progressPercent > 0 ? `calc(${progressPercent}% - 30px)` : '5px',
   zIndex: 1,
   fontSize: '12px',
   fontWeight: '400',
   textAlign: 'right',
   fontFamily: 'Rubik',
-  color: theme.palette.primary.main,
+  color: progressPercent > 0 ? theme.palette.primary.main : theme.palette.primary.darkPurple,
 }));

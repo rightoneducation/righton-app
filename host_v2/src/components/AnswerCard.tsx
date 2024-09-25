@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, LinearProgress } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import { IHostTeamAnswersResponse } from '@righton/networking';
+import { GameSessionState, IHostTeamAnswersResponse } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
@@ -17,6 +17,7 @@ interface AnswerCardProps {
   isShortAnswerEnabled: boolean;
   response: IHostTeamAnswersResponse | null;
   totalAnswers: number;
+  currentState: GameSessionState;
 }
 
 const BarContainer = styled(Box)({
@@ -49,11 +50,15 @@ export default function  AnswerCard({
   answerReason,
   isShortAnswerEnabled,
   response,
-  totalAnswers
+  totalAnswers,
+  currentState
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
-  const letterCode = 'A'.charCodeAt(0) + answerIndex;
+  const letterCode = response?.multiChoiceCharacter;
   const percent = response ? response.count/totalAnswers * 100 : 0;
+  console.log(letterCode);
+  console.log(response?.multiChoiceCharacter);
+  console.log(response ? response.count/totalAnswers * 100 : 0);
   const correctAnswerInstruction = (index: number) => {
     return (
       <Box
@@ -130,31 +135,35 @@ export default function  AnswerCard({
                   fontWeight: `${theme.typography.h5.fontWeight}`,
                 }}
               >
-                {String.fromCharCode(letterCode)}
+                {letterCode}
               </Typography>
             }
             <Typography>{answerContent}</Typography>
           </AnswerOptionStyled>
           
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
-            <Typography sx={{paddingTop: '16px'}}>
-              Players who answered this way
-            </Typography>
-            <BarContainer>
-              <StyledAnswerBar
-                variant="determinate"
-                sx={{
-                  height: '18px',
-                  borderRadius: '4px',
-                  backgroundColor: theme.palette.primary.progressBarBackgroundColor,
-                  '& .MuiLinearProgress-bar': {
-                    backgroundColor: theme.palette.primary.darkPurple
-                  }
-                }}
-                value={percent}
-              />
-              <InputNum progressPercent={percent}>{percent}%</InputNum>
-            </BarContainer>
+            { (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_DISCUSS) &&
+              <>
+                <Typography sx={{paddingTop: '16px'}}>
+                  Players who answered this way
+                </Typography>
+                  <BarContainer>
+                    <StyledAnswerBar
+                      variant="determinate"
+                      sx={{
+                        height: '18px',
+                        borderRadius: '4px',
+                        backgroundColor: theme.palette.primary.progressBarBackgroundColor,
+                        '& .MuiLinearProgress-bar': {
+                          backgroundColor: theme.palette.primary.darkPurple
+                        }
+                      }}
+                      value={percent}
+                    />
+                    <InputNum progressPercent={percent}>{Math.floor(percent)}%</InputNum>
+                  </BarContainer>
+              </>
+            }
             {isCorrectAnswer && instructions !== null
               ? instructions.map((instruction) =>
                   correctAnswerInstruction(instructions.indexOf(instruction)),
