@@ -25,6 +25,7 @@ const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answe
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
+const progressBarBackgroundColor = '#D0DAE7'; // progress bar background color
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
   `${countdownColor}, 0.4)`,
@@ -101,6 +102,7 @@ declare module '@mui/material/styles' {
     correctColor: string;
     countdownColor: string;
     radialTimerArray: string[];
+    progressBarBackgroundColor: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -121,6 +123,7 @@ declare module '@mui/material/styles' {
     correctColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
+    progressBarBackgroundColor?: string;
   }
 }
 
@@ -158,6 +161,7 @@ export default createTheme({
       correctColor: greenCorrectColor,
       countdownColor,
       radialTimerArray,
+      progressBarBackgroundColor,
     },
   },
   typography: {

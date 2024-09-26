@@ -47,15 +47,23 @@ export default function PrepareGame( {
     const handleButtonClick = () => {
       const currentTimeMillis = Date.now().toString(); 
       const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
+      const hostTeamAnswers = apiClients.hostDataManager?.initHostTeamAnswers(localGameSession);
+      if (hostTeamAnswers)
+        dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {...hostTeamAnswers}});
       const questionUpdates = localGameSession.questions.map(async (question) => 
-        apiClients.question.updateQuestion({id: question.id, order: question.order, gameSessionId: question.gameSessionId, isConfidenceEnabled: isConfidenceEnabled, isHintEnabled: isHintEnabled, isShortAnswerEnabled: isShortAnswerEnabled}) // eslint-disable-line
+        apiClients.question.updateQuestion({
+          id: question.id, 
+          order: question.order, 
+          gameSessionId: question.gameSessionId, 
+          isConfidenceEnabled, 
+          isHintEnabled, 
+          isShortAnswerEnabled,
+          answerData: JSON.stringify(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(question.id))
+        }) // eslint-disable-line
       );
       Promise.all(questionUpdates)
       .then((questions) => {
         const updatedGameSession = {...localGameSession, questions};
-        const updateNoResponses = apiClients.hostDataManager?.initHostTeamAnswers(updatedGameSession);
-        if (updateNoResponses)
-          dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {...updateNoResponses}});
         dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis}});
         apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis});
         setIsTimerVisible(true);

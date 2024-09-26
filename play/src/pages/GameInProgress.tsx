@@ -216,10 +216,6 @@ export default function GameInProgress({
           answer.isCorrect = answer.answer.isEqualTo([Number(normCorrectAnswer)]) as boolean; // eslint-disable-line 
         else {
           answer.isCorrect = answer.answer.isEqualTo(normCorrectAnswer) as boolean; // eslint-disable-line 
-          console.log(answer.answer.isEqualTo(normCorrectAnswer) as boolean)
-          console.log(answer.answer);
-          console.log(correctAnswer);
-          console.log(answer.isCorrect);
         }
         if (isAnswerMultiChoice(answer.answer)){
           answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line

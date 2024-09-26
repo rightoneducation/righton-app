@@ -526,6 +526,15 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return this.hostTeamAnswers
   }
 
+  getHostTeamAnswersForQuestion(currentQuestionId: string): IHostTeamAnswersQuestion | null {
+    const response = this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestionId);
+    if (!response) {
+      console.error('Error: Invalid question id');
+      return null;
+    }
+    return response;
+  }
+
   getResponsesForQuestion(currentQuestionId: string, currentPhase: IPhase) {
     const currentQuestion = this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestionId);
     if (!currentQuestion) {

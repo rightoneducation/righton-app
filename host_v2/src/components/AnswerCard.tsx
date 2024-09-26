@@ -18,20 +18,6 @@ interface AnswerCardProps {
   response: IHostTeamAnswersResponse | null;
 }
 
-const BarContainer = styled(Box)({
-  position: 'relative',
-  width: '100%',
-});
-
-const StyledAnswerBar = styled(LinearProgress)({
-  height: '18px',
-  width: '100%',
-  borderRadius: '3px',
-  paddingLeft: '4px',
-  paddingRight: '4px',
-  boxSizing: 'border-box'
-});
-
 const AnswerTitleTypography = styled(Typography)({
   lineHeight: '28px',
   fontFamily: 'Karla',

@@ -57,14 +57,19 @@ export default function DiscussAnswer({
   const { t } = useTranslation();
   const correctAnswer = currentQuestion.choices.find((answer) => answer.isAnswer);
   const correctIndex = currentQuestion.choices.findIndex((answer) => answer.isAnswer);
+  const phaseOneResponses = currentQuestion?.answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== '–');
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
     currentState
   );
+  console.log(currentQuestion?.answerData);
+  console.log(currentQuestion?.answerData.phase1.responses);
+  console.log(phaseOneResponses);
+  const totalAnswers = phaseOneResponses.reduce((acc, response) => acc + response.teams.length, 0) ?? 0;
   const isPlayerCorrect = isShortAnswerEnabled
     ? ModelHelper.isShortAnswerResponseCorrect(
-        currentQuestion.responses ?? [],
+        phaseOneResponses ?? [],
         currentTeam
       )
     : correctAnswer?.text === selectedAnswer?.text;
@@ -105,24 +110,25 @@ export default function DiscussAnswer({
       <ScrollBoxStyled>
         <Stack spacing={2}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-          {answerChoices?.map(
-            (answer, index) =>
-              !answer.isAnswer && (
+          { phaseOneResponses && phaseOneResponses.map((response, index) => (
+            !response.isCorrect  && response.multiChoiceCharacter !== '–' &&
                 <DiscussAnswerCard
                   isPlayerCorrect={isPlayerCorrect}
                   instructions={instructions ?? ''}
                   answerStatus={
-                    answer.text === selectedAnswer?.text
+                    response.teams.includes(currentTeam.name) 
                       ? AnswerState.SELECTED
                       : AnswerState.DEFAULT
                   }
-                  answerText={answer.text}
+                  answerText={response.rawAnswer}
                   answerIndex={index}
-                  answerReason={answer.reason ?? ''}
+                  answerReason={response.reason ?? ''}
                   currentState={currentState}
                   key={uuidv4()}
                   isShortAnswerEnabled={isShortAnswerEnabled}
                   newPoints={newPoints}
+                  response={response}
+                  totalAnswers={totalAnswers}
                 />
               )
           )}
@@ -145,7 +151,7 @@ export default function DiscussAnswer({
   const questionRightColumnContents = (
       <ScrollBoxStyled>
         <Stack spacing={2}>
-          <AnswerResponsesCard sessionData={gameSession.sessionData ?? {}} currentQuestionIndex={gameSession.currentQuestionIndex} currentState={currentState} currentTeam={currentTeam}/>
+          <AnswerResponsesCard phaseOneResponses={phaseOneResponses} currentTeam={currentTeam}/>
           <DiscussAnswerCard
             isPlayerCorrect={isPlayerCorrect}
             instructions={instructions}

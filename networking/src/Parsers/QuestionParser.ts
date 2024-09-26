@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "../global";
-import { IQuestion, IChoice, IResponse, IHints, IAnswerSettings, AnswerType, AnswerPrecision } from "../Models";
+import { IQuestion, IChoice, IHints, IAnswerSettings, AnswerType, AnswerPrecision, IHostTeamAnswersQuestion } from "../Models";
 import { AWSQuestion } from "../Models/AWS";
 
 export class QuestionParser {
@@ -33,10 +33,10 @@ export class QuestionParser {
               console.error(e);
          }
       }
-      let responses: IResponse[] = [];
-      if (!isNullOrUndefined(awsQuestion.responses)) {
+      let answerData: IHostTeamAnswersQuestion | null = null;
+      if (!isNullOrUndefined(awsQuestion.answerData)) {
          try {
-          responses = JSON.parse(awsQuestion.responses) as IResponse[]
+          answerData = JSON.parse(awsQuestion.answerData) as IHostTeamAnswersQuestion
           } catch (e) {
               console.error(e);
          }
@@ -91,7 +91,7 @@ export class QuestionParser {
         text,
         answerSettings,
         hints,
-        responses,
+        answerData: answerData ?? {},
         gameSessionId,
         order,
         isConfidenceEnabled,

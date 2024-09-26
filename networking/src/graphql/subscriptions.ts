@@ -24,7 +24,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -103,7 +103,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -177,7 +177,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -252,7 +252,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -327,7 +327,7 @@ export const onTeamUpdateByGameSessionId = /* GraphQL */ `subscription OnTeamUpd
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -1632,7 +1632,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -1711,7 +1711,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -1756,7 +1756,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -1835,7 +1835,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -1880,7 +1880,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -1959,7 +1959,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -1995,7 +1995,7 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -2070,7 +2070,7 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -2145,7 +2145,7 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions

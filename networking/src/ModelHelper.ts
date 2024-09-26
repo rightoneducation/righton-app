@@ -1,7 +1,7 @@
 import { isNullOrUndefined } from "./global"
-import { BackendAnswer } from "./Models"
+import { BackendAnswer, IHostTeamAnswersResponse } from "./Models"
 import { IGameSession, ITeam } from "./Models"
-import { IChoice, IQuestion, IResponse } from './Models/IQuestion'
+import { IChoice, IQuestion } from './Models/IQuestion'
 import { ITeamMember } from './Models/ITeamMember'
 import { GameSessionState } from './AWSMobileApi'
 
@@ -110,9 +110,7 @@ export abstract class ModelHelper {
         }, 0)
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
-    static isShortAnswerResponseCorrect(shortAnswerResponses: IResponse[], team: ITeam){
-        console.log(shortAnswerResponses);
-        console.log(team);
+    static isShortAnswerResponseCorrect(shortAnswerResponses: IHostTeamAnswersResponse[], team: ITeam){
         return (shortAnswerResponses.some(response => 
             response.isCorrect 
             && response.teams.some(teamAnswer => teamAnswer === team.name)
@@ -139,7 +137,7 @@ export abstract class ModelHelper {
             if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id)){
                 return this.correctAnswerScore
             } else {
-                const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses
+                const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].answerData.phase1.responses;
                 if (isNullOrUndefined(teamResponses)){
                     return 0;
                 }
