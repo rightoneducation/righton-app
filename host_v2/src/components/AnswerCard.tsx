@@ -142,28 +142,6 @@ export default function  AnswerCard({
           </AnswerOptionStyled>
           
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
-            { (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_DISCUSS) &&
-              <>
-                <Typography sx={{paddingTop: '16px'}}>
-                  Players who answered this way
-                </Typography>
-                  <BarContainer>
-                    <StyledAnswerBar
-                      variant="determinate"
-                      sx={{
-                        height: '18px',
-                        borderRadius: '4px',
-                        backgroundColor: theme.palette.primary.progressBarBackgroundColor,
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: theme.palette.primary.darkPurple
-                        }
-                      }}
-                      value={percent}
-                    />
-                    <InputNum progressPercent={percent}>{Math.floor(percent)}%</InputNum>
-                  </BarContainer>
-              </>
-            }
             {isCorrectAnswer && instructions !== null
               ? instructions.map((instruction) =>
                   correctAnswerInstruction(instructions.indexOf(instruction)),
