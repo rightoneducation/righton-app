@@ -73,8 +73,6 @@ export default function GameInProgressContentLeftColumn({
             answerReason={response.reason ?? ''}
             key={uuidv4()}
             response={response}
-            totalAnswers={totalAnswers ?? 0}
-            currentState={localGameSession.currentState}
           />
       )) }
     </ScrollBoxStyled>

@@ -16,8 +16,6 @@ interface AnswerCardProps {
   answerReason: string | null;
   isShortAnswerEnabled: boolean;
   response: IHostTeamAnswersResponse | null;
-  totalAnswers: number;
-  currentState: GameSessionState;
 }
 
 const BarContainer = styled(Box)({
@@ -50,15 +48,9 @@ export default function  AnswerCard({
   answerReason,
   isShortAnswerEnabled,
   response,
-  totalAnswers,
-  currentState
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const letterCode = response?.multiChoiceCharacter;
-  const percent = response ? response.count/totalAnswers * 100 : 0;
-  console.log(letterCode);
-  console.log(response?.multiChoiceCharacter);
-  console.log(response ? response.count/totalAnswers * 100 : 0);
   const correctAnswerInstruction = (index: number) => {
     return (
       <Box
