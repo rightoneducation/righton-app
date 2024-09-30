@@ -4,38 +4,41 @@ import { VictoryChart, VictoryContainer, VictoryPie } from 'victory';
 import { IHostTeamAnswersResponse, ITeam, isNullOrUndefined } from '@righton/networking';
 import CustomLabel from './CustomLabel';
 
-interface AnswerResponsesGraphProps {
-  responses: IHostTeamAnswersResponse[];
+interface AnswerphaseOneResponsesGraphProps {
+  phaseOneResponses: IHostTeamAnswersResponse[];
+  phaseTwoResponses: IHostTeamAnswersResponse[];
   currentTeam: ITeam;
 }
 
-export default function AnswerResponsesGraph({
-  responses,
+export default function AnswerphaseOneResponsesGraph({
+  phaseOneResponses,
+  phaseTwoResponses,
   currentTeam
-}: AnswerResponsesGraphProps) {
+}: AnswerphaseOneResponsesGraphProps) {
   const theme = useTheme();
-  const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
-  const assignColor = (response: IHostTeamAnswersResponse) => {
-    if (response.isCorrect)
-      return '#8DCD53';
-    if (response.teams.find((team) => team === currentTeam.name)){
-      return '#19BCFB';
+  const totalAnswers = phaseOneResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  const assignColor = (response: IHostTeamAnswersResponse | null) => {
+    if (response){
+      if (response.isCorrect)
+        return '#6F9E3C';
+      if (response.teams.find((team) => team === currentTeam.name)){
+        return '#19BCFB';
+      }
+      if (response.multiChoiceCharacter === '–')
+        return '#EAE5F5';
     }
-    if (response.multiChoiceCharacter === '–')
-      return '#EAE5F5';
     return '#3400A8';
   };
-  const data = responses.reduce<{ letterCode: string; count: string; fill: string }[]>((acc, response, index) => {
+  const data = phaseOneResponses.reduce<{ letterCode: string; count: string; fill: string }[]>((acc, response, index) => {
     if (response.count !== 0) {
       acc.push({
         letterCode: response.multiChoiceCharacter !== '–' ? response.multiChoiceCharacter : ' ',
-        count: `${(response.count / totalAnswers) * 100}%`,
-        fill: assignColor(response)
+        count: `${Math.floor((response.count / totalAnswers) * 100)}%`,
+        fill: assignColor(phaseTwoResponses.find((res) => res.rawAnswer === response.rawAnswer) ?? null)
       });
     }
     return acc;
   }, []);
-  console.log(data);
   return (
   
      <VictoryPie
@@ -48,6 +51,8 @@ export default function AnswerResponsesGraph({
       innerRadius={120}
       cornerRadius={4}
       padAngle={1}
+      sortKey={(datum) => datum.letterCode}
+      sortOrder="descending"
       style={{
         data: {
           fill: ({ datum }) => datum.fill,

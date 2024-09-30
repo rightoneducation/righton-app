@@ -26,6 +26,7 @@ const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
 const progressBarBackgroundColor = '#D0DAE7'; // progress bar background color
+const progressBarSelectedColor = '#499BF3'; // progress bar when player has selected the answer
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
   `${countdownColor}, 0.4)`,
@@ -103,6 +104,7 @@ declare module '@mui/material/styles' {
     countdownColor: string;
     radialTimerArray: string[];
     progressBarBackgroundColor: string;
+    progressBarSelectedColor: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -124,6 +126,7 @@ declare module '@mui/material/styles' {
     countdownColor: string;
     radialTimerArray?: string[];
     progressBarBackgroundColor?: string;
+    progressBarSelectedColor?: string;
   }
 }
 
@@ -162,6 +165,7 @@ export default createTheme({
       countdownColor,
       radialTimerArray,
       progressBarBackgroundColor,
+      progressBarSelectedColor
     },
   },
   typography: {

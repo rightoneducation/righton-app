@@ -1,6 +1,7 @@
 import React from 'react';
 import { VictoryLabel } from 'victory';
-import { useTheme } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
+import check from '../../img/Pickedcheck.svg';
 
 export default function CustomLabel(props: any) {
   const {x, y, width, height, datum} = props;
@@ -24,19 +25,20 @@ export default function CustomLabel(props: any) {
               text={`${datum.letterCode}`}
               style={{
                 fontSize: 24,
-                fill: 'rgba(56,66,102,0.5)',
+                fill: `${datum.fill}`,
                 fontWeight: 700
               }}
             />
           )}
-          <VictoryLabel
-          {...props}
-          text={`${datum.count}`}
-          style={{
-            fontSize: 18,
-            fill: "#384466"
-          }}
-        />
+          {/* foreignObject is placed based on top-left positioning, while VictoryLabel is center positioned */}
+          <foreignObject x={x} y={y} width="60px" height="20px" style={{transform: `translate(-25px, -10px)`}}>
+            <Box style={{ display: 'flex', gap: '4px', alignItems: 'center', justifyContent: 'center' }}>
+              <Typography style={{fontSize: 16}}>{datum.count}</Typography>
+              { datum.fill === '#6F9E3C' &&
+                <img src={check} alt="check" />
+              }
+            </Box>
+          </foreignObject>
       </>
       )}
     </g>

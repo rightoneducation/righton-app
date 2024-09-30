@@ -27,39 +27,31 @@ const StyledAnswerBar = styled(LinearProgress)({
 });
 
 interface DiscussAnswerCardProps {
-  isPlayerCorrect: boolean;
   instructions: string[];
   answerStatus: AnswerState;
-  answerText: string;
-  answerIndex: number;
   answerReason?: string;
   currentState: GameSessionState;
   isShortAnswerEnabled: boolean;
   newPoints: number | undefined;
-  response?: IHostTeamAnswersResponse;
+  phaseOneResponse?: IHostTeamAnswersResponse;
+  phaseTwoResponse?: IHostTeamAnswersResponse;
   totalAnswers?: number;
 }
 
 export default function DiscussAnswerCard({
-  isPlayerCorrect,
   instructions,
   answerStatus,
-  answerText,
-  answerIndex,
   answerReason,
   currentState,
   isShortAnswerEnabled,
   newPoints,
-  response,
+  phaseOneResponse,
+  phaseTwoResponse,
   totalAnswers
 }: DiscussAnswerCardProps) {
-  console.log(response?.multiChoiceCharacter);
-  console.log(response?.count);
-  console.log(totalAnswers);
-
   const theme = useTheme();
   const { t } = useTranslation();
-  const resultText = isPlayerCorrect
+  const resultText = (answerStatus === AnswerState.PLAYER_SELECTED_CORRECT)
     ? t('gameinprogress.discussanswer.correcttext')
     : t('gameinprogress.discussanswer.nicetrytext');
   const correctCard =
@@ -73,10 +65,9 @@ export default function DiscussAnswerCard({
     color: 'black',
   });
   let percent = 0;
-  if (response && totalAnswers) {
-    percent = response.count / totalAnswers * 100;
+  if (phaseOneResponse && totalAnswers) {
+    percent = phaseOneResponse.count / totalAnswers * 100;
   }
-  console.log(percent);
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
@@ -110,15 +101,15 @@ export default function DiscussAnswerCard({
         )}
         <ResultSelector
           answerStatus={answerStatus}
-          index={answerIndex}
-          answerText={response?.rawAnswer ?? ''}
+          letterCode={(currentState === GameSessionState.PHASE_1_DISCUSS ? phaseOneResponse?.multiChoiceCharacter : phaseTwoResponse?.multiChoiceCharacter) ?? ''}
+          answerText={phaseOneResponse?.rawAnswer ?? ''}
           currentState={currentState}
           isShortAnswerEnabled={isShortAnswerEnabled}
           correctCard = {correctCard}
           newPoints={newPoints}
         />
          {(currentState === GameSessionState.PHASE_2_DISCUSS) &&
-            <>
+            <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '8px'}}>
               <Typography sx={{paddingTop: '16px'}}>
                 Players who answered this way
               </Typography>
@@ -130,14 +121,14 @@ export default function DiscussAnswerCard({
                       borderRadius: '4px',
                       backgroundColor: theme.palette.primary.progressBarBackgroundColor,
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: theme.palette.primary.darkPurple
+                        backgroundColor: answerStatus === AnswerState.SELECTED ? theme.palette.primary.progressBarSelectedColor : theme.palette.primary.darkPurple
                       }
                     }}
                     value={percent}
                   />
                   <InputNum progressPercent={percent}>{Math.floor(percent)}%</InputNum>
                 </BarContainer>
-            </>
+            </Box>
             }
         <Stack
           spacing={1}

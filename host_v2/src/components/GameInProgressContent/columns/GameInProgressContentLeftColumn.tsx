@@ -27,31 +27,31 @@ export default function GameInProgressContentLeftColumn({
 ){
   const theme = useTheme();
   console.log(responses);
-  const sortedResponses = useMemo(() => {
-    // create a deep copy to ensure immutability
-    const responsesCopy: IHostTeamAnswersResponse[] = responses ? [...responses] : [];
-    // // phase 1
-    // if ((currentPhase === IPhase.ONE) && responses) {
-    //   // if short answer is enabled, only show the correct answer
-    //   if (isShortAnswerEnabled)
-    //     return responsesCopy.filter((response) => response.isCorrect);
-    //   // otherwise, sort the responses so the correct answer is at the top
-    //   return responsesCopy.sort((a,b) => 
-    //     Number(b.isCorrect) - Number(a.isCorrect)
-    //   );
-    // }
-    // // phase 2
-    // if (currentPhase === IPhase.TWO && responses) {
-    //   // short answer, move the correct answer to the bottom
-    //   if (isShortAnswerEnabled) {
-    //     return responsesCopy.sort((a, b) => 
-    //       Number(a.isCorrect) - Number(b.isCorrect)
-    //     );
-    //   }
-    // }
-    // otherwise, leave it as is
-    return responsesCopy;
-  }, [responses]);
+  // const sortedResponses = useMemo(() => {
+  //   // create a deep copy to ensure immutability
+  //   const responsesCopy: IHostTeamAnswersResponse[] = responses ? [...responses] : [];
+  //   // // phase 1
+  //   // if ((currentPhase === IPhase.ONE) && responses) {
+  //   //   // if short answer is enabled, only show the correct answer
+  //   //   if (isShortAnswerEnabled)
+  //   //     return responsesCopy.filter((response) => response.isCorrect);
+  //   //   // otherwise, sort the responses so the correct answer is at the top
+  //   //   return responsesCopy.sort((a,b) => 
+  //   //     Number(b.isCorrect) - Number(a.isCorrect)
+  //   //   );
+  //   // }
+  //   // // phase 2
+  //   // if (currentPhase === IPhase.TWO && responses) {
+  //   //   // short answer, move the correct answer to the bottom
+  //   //   if (isShortAnswerEnabled) {
+  //   //     return responsesCopy.sort((a, b) => 
+  //   //       Number(a.isCorrect) - Number(b.isCorrect)
+  //   //     );
+  //   //   }
+  //   // }
+  //   // otherwise, leave it as is
+  //   return responsesCopy;
+  // }, [responses]);
 
   return (
     <Grid item xs={12} sm sx={{ width: '100%', height: '100%'}}>
@@ -62,7 +62,7 @@ export default function GameInProgressContentLeftColumn({
         currentQuestionIndex={localGameSession.currentQuestionIndex}
         currentState={localGameSession.currentState}
       />
-      { sortedResponses && sortedResponses.map((response, index) => (
+      { responses && responses.map((response, index) => (
         response.multiChoiceCharacter !== `–` &&
           <AnswerCard 
             isCorrectAnswer={response.isCorrect}

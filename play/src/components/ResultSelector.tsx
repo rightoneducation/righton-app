@@ -35,7 +35,7 @@ const CorrectStarsStyled = styled('img')({
 
 interface ResultSelectorProps {
   answerStatus: AnswerState;
-  index: number;
+  letterCode: string;
   answerText: string;
   percentageText?: string;
   currentState?: GameSessionState;
@@ -46,7 +46,7 @@ interface ResultSelectorProps {
 
 export default function ResultSelector({
   answerStatus,
-  index,
+  letterCode,
   answerText,
   percentageText,
   currentState,
@@ -55,7 +55,6 @@ export default function ResultSelector({
   newPoints
 }: ResultSelectorProps) {
   const theme = useTheme();
-  const letterCode = 'A'.charCodeAt(0) + index;
   
   const imageMap = {
     [AnswerState.DEFAULT]: '',
@@ -85,7 +84,6 @@ export default function ResultSelector({
       onContextMenu={handleContextMenu}
     />
   );
-
   const resultContents = (
     <>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
@@ -100,7 +98,7 @@ export default function ResultSelector({
               lineHeight: '22px',
             }}
           >
-            {String.fromCharCode(letterCode)}
+            {letterCode}
           </Typography>
         )}
         <Typography

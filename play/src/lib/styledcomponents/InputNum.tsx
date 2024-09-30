@@ -13,6 +13,5 @@ export default styled(Typography)<InputNumProps>(({ theme, progressPercent }) =>
   fontSize: '12px',
   fontWeight: '400',
   textAlign: 'right',
-  fontFamily: 'Rubik',
   color: progressPercent > 0 ? theme.palette.primary.main : theme.palette.primary.darkPurple,
 }));

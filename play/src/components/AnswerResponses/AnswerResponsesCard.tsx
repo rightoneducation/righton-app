@@ -9,11 +9,13 @@ import AnswerResponsesGraph from './AnswerResponsesGraph';
 interface AnswerResponsesCardProps {
   currentTeam: ITeam
   phaseOneResponses: IHostTeamAnswersResponse[]
+  phaseTwoResponses: IHostTeamAnswersResponse[] | null
 }
 
 export default function AnswerResponsesCard({
   currentTeam,
-  phaseOneResponses
+  phaseOneResponses,
+  phaseTwoResponses
 }: AnswerResponsesCardProps) {
   const { t } = useTranslation();
   return(
@@ -26,7 +28,7 @@ export default function AnswerResponsesCard({
           {t('gameinprogress.discussanswer.responses')}
         </Typography>
         { phaseOneResponses &&
-          <AnswerResponsesGraph responses={phaseOneResponses} currentTeam={currentTeam}/>
+          <AnswerResponsesGraph phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses ?? []} currentTeam={currentTeam}/>
         }
       </BodyCardContainerStyled>
     </BodyCardStyled>
