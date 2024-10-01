@@ -42,8 +42,8 @@ export default function GameSessionSwitch({
   const currentPhase = gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession.currentState === GameSessionState.PHASE_1_DISCUSS || gameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex] as IQuestion;
-  const responses = currentPhase === IPhase.ONE ? currentQuestion.answerData.phase1.responses : currentQuestion.answerData.phase2.responses;
-
+  const {responses} = currentQuestion.answerData.phase1;
+  console.log(responses);
   const currentTeam = gameSession.teams.find( 
     (team) => team.id === localModel.teamId
   );

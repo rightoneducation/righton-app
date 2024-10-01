@@ -58,7 +58,7 @@ export default function GameInProgressContentRightColumn ({
           :
           <Responses 
             currentQuestion={currentQuestion}
-            responses={responses}
+            responses={responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter))}
             statePosition={currentPhase === IPhase.ONE ? 0 : 8}
             isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
             graphClickInfo={graphClickInfo}

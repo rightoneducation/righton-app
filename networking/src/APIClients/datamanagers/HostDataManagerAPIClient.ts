@@ -216,12 +216,12 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         newResponses.push(newAnswer);
       }
       if (this.isAnswerMultiChoice(answerObj))
-        newResponses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter)).reverse();
+        newResponses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
       else{
-        newResponses.sort((a: any, b: any) => a.rawAnswer.localeCompare(b.rawAnswer)).reverse();
+        newResponses.sort((a: any, b: any) => a.rawAnswer.localeCompare(b.rawAnswer));
         const noResponse = newResponses.filter((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
         const otherResponses = newResponses.filter((response: any) => response.multiChoiceCharacter !== this.noResponseCharacter);
-        newResponses = [...otherResponses, ...noResponse];
+        newResponses = [...noResponse, ...otherResponses];
       }
     }
     return newResponses;
@@ -414,8 +414,8 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           hints: []
         }
     }
-    emptyMultiChoiceTeamAnswer.phase1.responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter)).reverse();
-    emptyMultiChoiceTeamAnswer.phase2.responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter)).reverse();
+    emptyMultiChoiceTeamAnswer.phase1.responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
+    emptyMultiChoiceTeamAnswer.phase2.responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter));
     return (emptyMultiChoiceTeamAnswer);
   }
 
@@ -542,8 +542,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       return [];
     }
     let responses = currentQuestion[currentPhase].responses; 
-    if (currentPhase === IPhase.ONE)
-      responses = this.shuffleSelectedMistakes(responses);
     return responses;
   }
 

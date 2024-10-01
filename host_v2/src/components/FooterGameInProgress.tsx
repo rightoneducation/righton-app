@@ -36,7 +36,6 @@ const ButtonStyled = styled(Button)({
     opacity: '100%',
     cursor: 'not-allowed',
     boxShadow: '0px 5px 22px 0px #47D9FF 30%',
-
   },
 });
 
@@ -120,14 +119,18 @@ function FooterGameInProgress({
       default:
         break;
     }
-    if ((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)) {
-      const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
+    if ((currentState === GameSessionState.PHASE_1_DISCUSS || currentState ===GameSessionState.PHASE_2_START || currentState === GameSessionState.PHASE_2_DISCUSS)) {
+      let currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
       if (currentResponses && currentResponses.length > 0)
+        // shuffle the phase 1 responses prior to moving onto phase 2
+        if (currentState === GameSessionState.PHASE_2_START){
+          setGraphClickInfo({graph: null, selectedIndex: null});
+          // for short answer, shuffle responses before sending them on so common mistakes sorted by popularity dont go to play
+          if (isShortAnswerEnabled)
+            currentResponses = apiClients.hostDataManager?.shuffleSelectedMistakes(currentResponses);
+        }
         await apiClients.question.updateQuestion({id, order, gameSessionId, answerData: JSON.stringify(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id))});
     }
-    console.log(currentState);
-    if (currentState === GameSessionState.PHASE_2_START)
-      setGraphClickInfo({graph: null, selectedIndex: null});
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
     apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime, sessionData: JSON.stringify(apiClients.hostDataManager.getHostTeamAnswers())});
   };
