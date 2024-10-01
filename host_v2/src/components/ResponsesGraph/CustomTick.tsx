@@ -11,11 +11,12 @@ const TooltipBox = styled(Box)({
 })
 
 export default function CustomTick(props: any) {
-  const { x, y, index, text, correctChoiceIndex, statePosition} = props;
+  const { x, y, index, data, correctChoiceIndex, statePosition} = props;
   const theme = useTheme();
   const showCustomTick = index ===  correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
   const isNoResponse = index === 0; 
+  console.log(data);
   return (
     <g>
 
@@ -44,7 +45,7 @@ export default function CustomTick(props: any) {
       <VictoryLabel 
         x={x} 
         y={y} 
-        text={text} 
+        text={data[index].multiChoiceCharacter} 
         style={{
           fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
           fontFamily: 'Poppins',

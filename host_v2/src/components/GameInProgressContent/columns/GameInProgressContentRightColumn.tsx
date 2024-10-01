@@ -61,6 +61,7 @@ export default function GameInProgressContentRightColumn ({
             responses={responses.sort((a: any, b: any) => b.multiChoiceCharacter.localeCompare(a.multiChoiceCharacter))}
             statePosition={currentPhase === IPhase.ONE ? 0 : 8}
             isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
+            isPrevPhaseResponses
             graphClickInfo={graphClickInfo}
             setGraphClickInfo={setGraphClickInfo}
           />

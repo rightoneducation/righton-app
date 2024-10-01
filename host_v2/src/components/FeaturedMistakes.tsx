@@ -67,10 +67,10 @@ export default function FeaturedMistakes({
   setIsPopularMode
 }: FeaturedMistakesProps) {
 
-  const title = currentState === GameSessionState.PHASE_1_DISCUSS 
+  const title = (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)
     ? 'Common Mistakes' 
     : 'Common Mistakes Preview';
-  const subtitle =  currentState === GameSessionState.PHASE_1_DISCUSS 
+  const subtitle = (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)
     ? 'Selected responses will be presented to players as options for popular incorrect answers.'
     : 'On the next screen, you will select from these incorrect answers to be options in Phase 2.';
   const radioButtonText1 = 'Use the top 3 answers by popularity';
@@ -99,7 +99,6 @@ export default function FeaturedMistakes({
         }
         return { ...mistake, isSelectedMistake: false };
       }); 
-      apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...finalMistakes], currentQuestion);
     return finalMistakes;
   };
   const sortedMistakes = buildFeaturedMistakes(hostTeamAnswerResponses);
@@ -131,13 +130,17 @@ export default function FeaturedMistakes({
     if (newHostTeamAnswers)
       dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...newHostTeamAnswers}});
   };
+
+  useEffect(() => {
+    resetMistakesToPopular();
+  }, []) // eslint-disable-line
   
   return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
         <TitleStyled>{title}</TitleStyled>
         <SubtitleStyled>{subtitle}</SubtitleStyled>
-        { currentState === GameSessionState.PHASE_1_DISCUSS &&
+        { (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)&&
           <RadioGroup
             defaultValue={featuredMistakesSelectionValue}
             onChange={handleModeChange}

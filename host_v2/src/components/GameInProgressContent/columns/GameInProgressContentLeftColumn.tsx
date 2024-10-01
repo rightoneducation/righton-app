@@ -36,7 +36,8 @@ export default function GameInProgressContentLeftColumn({
     // phase 2
     } else {
       // short answer, move the correct answer to the bottom
-      responsesCopy = responsesCopy.sort((a, b) => 
+      console.log(responsesCopy);
+      responsesCopy = responsesCopy.filter((response) => (response.isCorrect || response.isSelectedMistake)).sort((a, b) => 
         Number(a.isCorrect) - Number(b.isCorrect)
       );
     }

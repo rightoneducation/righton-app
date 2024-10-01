@@ -47,6 +47,7 @@ export default function GameInProgressContentMidColumn ({
         responses={responses}
         statePosition={0}
         graphClickInfo={graphClickInfo}
+        isPrevPhaseResponses={false}
         isShortAnswerEnabled={currentQuestion.isShortAnswerEnabled}
         setGraphClickInfo={setGraphClickInfo}
       />

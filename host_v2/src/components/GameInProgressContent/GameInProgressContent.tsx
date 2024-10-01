@@ -77,15 +77,13 @@ export default function GameInProgressContent({
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
   }
-
-  console.log(currentResponses);
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
       isShortAnswerEnabled={isShortAnswerEnabled}
       currentPhase={currentPhase}
-      responses={currentResponses}
+      responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
       totalAnswers={totalAnswers}
     />
   );
