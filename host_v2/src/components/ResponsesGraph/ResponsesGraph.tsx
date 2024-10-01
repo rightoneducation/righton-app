@@ -173,7 +173,7 @@ export default function ResponsesGraph({
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             style={{ 
               data: { 
-                fill: ({ index }: any) => (index === numAnswers-1 || statePosition > 6) ? 'transparent' : '#FFF'
+                fill: ({ index, datum }: any) => ((index === numAnswers-1 || statePosition > 6) && datum.multiChoiceCharacter ==='–') ? 'transparent' : '#FFF'
               } 
             }}
             barWidth={({ datum }) =>

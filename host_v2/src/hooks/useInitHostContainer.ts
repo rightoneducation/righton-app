@@ -11,7 +11,8 @@ export default function useInitHostContainer(apiClients: APIClients, gameSession
     try {
       dataManager.init(gameSessionId).then(() => {
         const initGameSession = dataManager.getGameSession(); // eslint-disable-line
-        const initHostTeamAnswers = dataManager.getHostTeamAnswers(); // eslint-disable-line
+        const initHostTeamAnswers = dataManager.initHostTeamAnswers(initGameSession); // eslint-disable-line
+        console.log('initHostTeamAnswers', initHostTeamAnswers);
         dispatch({type: 'synch_local_gameSession', payload: {...initGameSession}}); 
         dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...initHostTeamAnswers}});
       });

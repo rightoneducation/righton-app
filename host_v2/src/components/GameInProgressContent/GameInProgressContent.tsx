@@ -78,7 +78,7 @@ export default function GameInProgressContent({
     setGraphClickInfo({graph, selectedIndex })
   }
 
-  
+  console.log(currentResponses);
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
