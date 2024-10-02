@@ -814,7 +814,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -886,13 +886,14 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -940,7 +941,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             text
             choices
             answerSettings
-            responses
+            answerData
             hints
             imageUrl
             instructions
@@ -1012,13 +1013,14 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
       description
       title
       currentTimer
+      sessionData
       questions {
         items {
           id
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -1054,7 +1056,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: ID!, $order: In
     text
     choices
     answerSettings
-    responses
+    answerData
     hints
     imageUrl
     instructions
@@ -1095,7 +1097,7 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -1127,7 +1129,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -1204,7 +1206,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -3457,7 +3459,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             text
             choices
             answerSettings
-            responses
+            answerData
             hints
             imageUrl
             instructions
@@ -3529,13 +3531,14 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
       description
       title
       currentTimer
+      sessionData
       questions {
         items {
           id
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -3594,7 +3597,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             text
             choices
             answerSettings
-            responses
+            answerData
             hints
             imageUrl
             instructions
@@ -3666,13 +3669,14 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
       description
       title
       currentTimer
+      sessionData
       questions {
         items {
           id
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions

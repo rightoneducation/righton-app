@@ -36,6 +36,7 @@ interface ResponseGraphProps {
   statePosition: number,
   isShortAnswerEnabled: boolean,
   graphClickInfo: IGraphClickInfo, // eslint-disable-line
+  isPrevPhaseResponses: boolean,
   setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
   setGraphClickIndex: (index: number | null) => void;
 }
@@ -45,6 +46,7 @@ export default function ResponsesGraph({
   statePosition,
   isShortAnswerEnabled,
   graphClickInfo,
+  isPrevPhaseResponses,
   setGraphClickInfo,
   setGraphClickIndex,
 }: ResponseGraphProps) {
@@ -71,12 +73,11 @@ export default function ResponsesGraph({
     );
   };
   // remove any zero responses when displaying phase 1 data in phase 2
-  const filteredData = statePosition > 6 ? data.filter((response) => response.count !== 0) : data;
+
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
     setGraphClickIndex(selectedIndex);
   }
-
   useEffect(() => {
     const handleResize = () => {
       const node: HTMLElement | null = graphRef.current;
@@ -105,6 +106,7 @@ export default function ResponsesGraph({
         correctChoiceIndex={correctChoiceIndex}
         statePosition={statePosition}
         isShortAnswerEnabled={isShortAnswerEnabled}
+        data={data}
       />
     );
   }
@@ -114,7 +116,7 @@ export default function ResponsesGraph({
         <TitleText>Number of players</TitleText>
       </TitleContainer>
       <Box ref={graphRef}>
-        {(isShortAnswerEnabled ? filteredData.length >= 1 : filteredData.length >= 1) && (
+        {(isShortAnswerEnabled ? data.length >= 1 : data.length >= 1) && (
         <VictoryChart
           domainPadding={{ x: isShortAnswerEnabled ? 32: 16, y: 0 }} // domainPadding is offsetting all data away from the origin. used in conjunction with height
           padding={{
@@ -132,7 +134,7 @@ export default function ResponsesGraph({
           }
           theme={theme.victoryResponsesTheme}
           width={boundingRect.width}
-          height={isShortAnswerEnabled ? filteredData.length * 68 : filteredData.length * 40} // height is a calc of the width of the bars + the space between them + the offset
+          height={isShortAnswerEnabled ? data.length * 68 : data.length * 40} // height is a calc of the width of the bars + the space between them + the offset
         >
           <VictoryAxis
             standalone={false}
@@ -160,7 +162,7 @@ export default function ResponsesGraph({
             />
           )}
           <VictoryBar
-            data={filteredData}
+            data={data}
             y="count"
             x={isShortAnswerEnabled ? "rawAnswer" : "multiChoiceCharacter"}
             horizontal
@@ -173,7 +175,7 @@ export default function ResponsesGraph({
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             style={{ 
               data: { 
-                fill: ({ index }: any) => (index === numAnswers-1 || statePosition > 6) ? 'transparent' : '#FFF'
+                fill: ({ index, datum }: any) => ((index === numAnswers-1 || statePosition > 6) && datum.multiChoiceCharacter ==='–') || isPrevPhaseResponses ? 'transparent' : '#FFF'
               } 
             }}
             barWidth={({ datum }) =>
@@ -188,6 +190,7 @@ export default function ResponsesGraph({
                 graphClickInfo={graphClickInfo}
                 setGraphClickInfo={setGraphClickInfo}
                 isShortAnswerEnabled={isShortAnswerEnabled}
+                isPrevPhaseResponses={isPrevPhaseResponses}
               />
             }
             labelComponent={

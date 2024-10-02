@@ -57,10 +57,10 @@ export default function GameInProgressContent({
     prevPhaseConfidences = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.confidences ?? [] as IHostTeamAnswersConfidence[];
   }
   let sortedMistakes: any = [];
+  const responses = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase].responses ?? [];
+  const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   // in shortAnswerMode
-  if (localGameSession.questions[localGameSession.currentQuestionIndex].isShortAnswerEnabled) {
-    const responses = hostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.[currentPhase].responses ?? [];
-    const totalAnswers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
+  if (localGameSession.questions[localGameSession.currentQuestionIndex].isShortAnswerEnabled) {  
     const mistakes = responses.map((response) => !response.isCorrect && response.multiChoiceCharacter !== '–' ? {
       answer: response.rawAnswer,
       percent: (response.count/totalAnswers)*100,
@@ -77,13 +77,14 @@ export default function GameInProgressContent({
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
   }
-
-  
   const leftCardsColumn = (
     <GameInProgressContentLeftColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
       isShortAnswerEnabled={isShortAnswerEnabled}
+      currentPhase={currentPhase}
+      responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
+      totalAnswers={totalAnswers}
     />
   );
 
@@ -109,6 +110,7 @@ export default function GameInProgressContent({
     <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       currentPhase={currentPhase}
+      currentState={localGameSession.currentState}
       responses={currentPhase === IPhase.ONE ? currentResponses : prevPhaseResponses}
       confidences={currentPhase === IPhase.ONE ? currentConfidences : prevPhaseConfidences}
       graphClickInfo={graphClickInfo}

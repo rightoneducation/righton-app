@@ -13,7 +13,7 @@
     "gamecode": {
       "title": "Ingrese el código del juego",
       "button": "Unirse",
-      "error1": "Nosotras no podemos unirnos a este juego.",
+      "error1": "No se puede unir a este juego.",
       "error2": "Comprueba el código del juego e inténtalo de nuevo."
     },
     "playername": {
@@ -57,7 +57,8 @@
       "phase2start": "Respuesta Explicaciones",
       "phase1results": "Resultados de la Fase 1",
       "phase2results": "Resultados de la Fase 2",
-      "finalresults": "Tabla de Clasificación",
+      "leaderboard": "Clasificación Final",
+      "finalresults": "Tabla de Posiciones",
       "finished": "Responde la Pregunta",
       "correct": "Correcta!",
       "incorrect": "¡Buen Intento!"
@@ -95,7 +96,8 @@
       "incorrectanswercolumn": "Respuestas Incorrectas",
       "correcttext": "Correcta!",
       "nicetrytext": "Buen intento",
-      "correctanswertext": "La respuesta es..."
+      "correctanswertext": "La respuesta es...",
+      "responses": "Respuestas de respuesta"
     },
     "startphase2": {
       "title": "Empezando la Fase 2...",

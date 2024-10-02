@@ -30,5 +30,4 @@ Default.args = {
   percentageText: '66%',
   answerText: 'Sample',
   currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
-  index: 0,
 };

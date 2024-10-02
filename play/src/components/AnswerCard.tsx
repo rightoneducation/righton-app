@@ -42,6 +42,7 @@ export default function AnswerCard({
   currentTeam,
   handleSelectAnswer,
 }: AnswerCardProps) {
+  console.log(answers);
   const theme = useTheme();
   const { t } = useTranslation();
   const correctText = (

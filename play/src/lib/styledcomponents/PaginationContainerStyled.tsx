@@ -12,6 +12,6 @@ export default styled(Container)(({ theme }) => ({
   '--swiper-pagination-bullet-inactive-color': `${theme.palette.primary.darkGrey}`,
   '--swiper-pagination-bullet-inactive-opacity': '1',
   '--swiper-pagination-bullet-size': '10px',
-  '--swiper-pagination-bullet-horizontal-gap': '4px',
+  '--swiper-pagination-bullet-horizontal-gap': '8px',
   /* size and shape of bullets handled in <swiper pagination: { renderBullets } /> */
 }));

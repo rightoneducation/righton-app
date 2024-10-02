@@ -1,0 +1,15 @@
+{
+  "short_name": "RightOn!",
+  "name": "Right On! Teacher Central App",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg",
+      "sizes": "32x32"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#30285b"
+}

@@ -19,6 +19,7 @@ export type AWSGameSession = {
   description?: string | null
   title?: string | null
   currentTimer?: number | null
+  sessionData?: string | null
   questions?: {
       items: Array<AWSQuestion>
   } | null

@@ -39,7 +39,7 @@ const MonsterContainer = styled(Box, {
 }));
 
 const Monster = styled('img')({
-  height: '100%',
+  height: '50%',
   width: 'auto',
   animation: `none`,
   '@keyframes bounceAnimation': {
@@ -60,12 +60,14 @@ const Monster = styled('img')({
 
 interface JoinGameProps {
   isSmallDevice: boolean;
+  isMedDevice: boolean;
   selectedAvatar: number;
   setSelectedAvatar: (value: number) => void;
 }
 
 export default function JoinGame({
   isSmallDevice,
+  isMedDevice,
   selectedAvatar,
   setSelectedAvatar,
 }: JoinGameProps) {
@@ -73,7 +75,7 @@ export default function JoinGame({
   const { t } = useTranslation();
   const [isClicked, setIsClicked] = React.useState<boolean>(false);
 
-  return (
+    return (
       <Box style={{display: 'flex', flexDirection: 'column'}}>
         <Stack spacing={2}>
           <Typography
@@ -85,31 +87,43 @@ export default function JoinGame({
           >
             {t('joingame.selectavatar.title')}
           </Typography>
-          <GridContainer>
-            {Object.keys(monsterMap).map((value, index) => (
-              <AvatarIconContainer key={uuidv4()}>
-                <AvatarIconStyled
-                  data-testid="selectavatar-icon"
-                  src={monsterMap[index].icon}
-                  onClick={() => {
-                    setSelectedAvatar(index);
-                    setIsClicked(true);
-                    setTimeout(() => setIsClicked(false), 300);
-                  }}
-                  isClicked={isClicked}
-                  isSelected={index === selectedAvatar}
-                  alt="avatar"
-                />
-              </AvatarIconContainer>
-            ))}
-          </GridContainer>
+          <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '32px'}}>
+            <GridContainer>
+              {Object.keys(monsterMap).map((value, index) => (
+                <AvatarIconContainer key={uuidv4()}>
+                  <AvatarIconStyled
+                    data-testid="selectavatar-icon"
+                    src={monsterMap[index].icon}
+                    onClick={() => {
+                      setSelectedAvatar(index);
+                      setIsClicked(true);
+                      setTimeout(() => setIsClicked(false), 300);
+                    }}
+                    isClicked={isClicked}
+                    isSelected={index === selectedAvatar}
+                    alt="avatar"
+                  />
+                </AvatarIconContainer>
+              ))}
+            </GridContainer>
+            { (!isSmallDevice && !isMedDevice) &&
+                  <MonsterContainer isSmallDevice={isSmallDevice}>
+                  <Monster
+                    src={monsterMap[selectedAvatar].monster} // || 0 handles the case where a user has yet to select an answer so it shows the default
+                    alt="monster"
+                  />
+                </MonsterContainer>
+            }
+          </Box>
         </Stack>
-        <MonsterContainer isSmallDevice={isSmallDevice}>
-          <Monster
-            src={monsterMap[selectedAvatar].monster} // || 0 handles the case where a user has yet to select an answer so it shows the default
-            alt="monster"
-          />
-        </MonsterContainer>
+        { (isSmallDevice || isMedDevice) &&
+          <MonsterContainer isSmallDevice={isSmallDevice}>
+            <Monster
+              src={monsterMap[selectedAvatar].monster} // || 0 handles the case where a user has yet to select an answer so it shows the default
+              alt="monster"
+            />
+          </MonsterContainer>
+        }
       </Box>
-  );
+  )
 }

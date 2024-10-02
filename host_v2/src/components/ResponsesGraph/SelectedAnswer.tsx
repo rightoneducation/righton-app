@@ -14,6 +14,7 @@ interface SelectedAnswerProps {
   statePosition: number;
   graphClickInfo: IGraphClickInfo;
   isShortAnswerEnabled: boolean;
+  isPrevPhaseResponses: boolean;
 }
 
 const Text = styled(Typography)({
@@ -87,13 +88,18 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
     numPlayers,
     statePosition,
     graphClickInfo,
-    isShortAnswerEnabled
+    isShortAnswerEnabled,
+    isPrevPhaseResponses
   } = props;
   const showCustomTick =
     graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
   return (
     <Box>
-      {graphClickInfo.selectedIndex === null || (statePosition < 6 && graphClickInfo.graph !== 'realtimephase1') || (statePosition >= 6 && graphClickInfo.graph !== 'realtimephase2')  ? (
+      {graphClickInfo.selectedIndex === null 
+        || (statePosition < 6 && graphClickInfo.graph !== 'realtimephase1')
+        || (statePosition >= 6 && isPrevPhaseResponses && graphClickInfo.graph !== 'realtimephase1')
+        || (statePosition >= 6 && !isPrevPhaseResponses && graphClickInfo.graph !== 'realtimephase2') 
+      ? (
         <Text>
           Tap on a response to see more details.
         </Text>
@@ -105,7 +111,8 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
           <RectStyle>
             { !isShortAnswerEnabled &&
             <ChoiceContainer>
-              {data[graphClickInfo.selectedIndex].multiChoiceCharacter}
+              { (data[graphClickInfo.selectedIndex] && data[graphClickInfo.selectedIndex].multiChoiceCharacter)?
+              data[graphClickInfo.selectedIndex].multiChoiceCharacter : '-'}
             </ChoiceContainer>
             }
             <TextContainer>
@@ -133,6 +140,7 @@ export default function SelectedAnswer(props: SelectedAnswerProps) {
             numPlayers={numPlayers}
             statePosition={statePosition}
             isShortAnswerEnabled={isShortAnswerEnabled}
+            isPrevPhaseResponses={isPrevPhaseResponses}
           />
         </Box>
       )}

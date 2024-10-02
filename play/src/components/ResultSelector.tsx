@@ -35,7 +35,7 @@ const CorrectStarsStyled = styled('img')({
 
 interface ResultSelectorProps {
   answerStatus: AnswerState;
-  index: number;
+  letterCode: string;
   answerText: string;
   percentageText?: string;
   currentState?: GameSessionState;
@@ -46,7 +46,7 @@ interface ResultSelectorProps {
 
 export default function ResultSelector({
   answerStatus,
-  index,
+  letterCode,
   answerText,
   percentageText,
   currentState,
@@ -55,7 +55,6 @@ export default function ResultSelector({
   newPoints
 }: ResultSelectorProps) {
   const theme = useTheme();
-  const letterCode = 'A'.charCodeAt(0) + index;
   
   const imageMap = {
     [AnswerState.DEFAULT]: '',
@@ -63,6 +62,7 @@ export default function ResultSelector({
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
     [AnswerState.SELECTED]: SelectedAnswer,
     [AnswerState.PREVIOUS]: '',
+    [AnswerState.OTHER]: '',
   };
 
   // disables context menu when longclicking on image
@@ -85,7 +85,6 @@ export default function ResultSelector({
       onContextMenu={handleContextMenu}
     />
   );
-
   const resultContents = (
     <>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
@@ -94,14 +93,13 @@ export default function ResultSelector({
             variant="h5"
             sx={{
               paddingLeft: '1px',
-              color: correctCard ? '#384466' : '#4700B2',
+              color: correctCard ? '#384466' : `${theme.palette.primary.darkPurple}`,
               fontWeight: '800',
               fontSize: '16px',
               lineHeight: '22px',
-              opacity: correctCard ? '.5' : '1',
             }}
           >
-            {String.fromCharCode(letterCode)}
+            {letterCode}
           </Typography>
         )}
         <Typography

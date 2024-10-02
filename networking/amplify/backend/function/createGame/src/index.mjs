@@ -178,7 +178,7 @@ async function createAndSignRequest(query, variables) {
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -258,7 +258,7 @@ async function createAndSignRequest(query, variables) {
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,
           isHintEnabled: true,
-          responses: '[]',
+          answerData: '{}',
           order: index
         }
       });
