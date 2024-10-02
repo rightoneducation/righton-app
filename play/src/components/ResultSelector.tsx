@@ -62,6 +62,7 @@ export default function ResultSelector({
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
     [AnswerState.SELECTED]: SelectedAnswer,
     [AnswerState.PREVIOUS]: '',
+    [AnswerState.OTHER]: '',
   };
 
   // disables context menu when longclicking on image

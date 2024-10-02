@@ -14,7 +14,7 @@ export default function CustomLabel(props: any) {
   const labelY = centerY + deltaY * labelFactor;
 
   return (
-    <g style={{maxWidth: '100%'}}>
+    <g style={{width}}>
       {datum.count !== 0 && (
         <>
           {datum.letterCode !== ' ' && (
@@ -30,10 +30,18 @@ export default function CustomLabel(props: any) {
               }}
             />
           )}
+            <VictoryLabel
+              {...props}
+              x={x}
+              y={y}
+              text={`${datum.count}`}
+              style={{
+                fontSize: 16,
+              }}
+            />
           {/* foreignObject is placed based on top-left positioning, while VictoryLabel is center positioned */}
-          <foreignObject x={x} y={y} width="60px" height="20px" style={{transform: `translate(-25px, -10px)`}}>
+          <foreignObject x={x} y={y} width="60px" height="20px" style={{transform: `translate(-17px, 15px)`}}>
             <Box style={{ display: 'flex', gap: '4px', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography style={{fontSize: 16}}>{datum.count}</Typography>
               { datum.fill === '#6F9E3C' &&
                 <img src={check} alt="check" />
               }

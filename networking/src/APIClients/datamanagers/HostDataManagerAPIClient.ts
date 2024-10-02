@@ -333,7 +333,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return confidenceArray;
   };
 
-  private buildEmptyHostTeamAnswer(question: IQuestion, teamsCount: number) {
+  private buildEmptyHostTeamAnswer(question: IQuestion, teamsCount: number, isShortAnswerEnabled: boolean) {
     const emptyMultiChoiceTeamAnswer = {
       phase1: {
           responses: [
@@ -362,27 +362,39 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       },
       phase2: 
         {
-          responses: [
-            {
-              normAnswer: [],
-              rawAnswer: this.noResponseCharacter,
-              count: teamsCount,
-              isCorrect: false,
-              multiChoiceCharacter: this.noResponseCharacter,
-              teams: []
-            },
-            ...question.choices.map((choice: IChoice, index: number) => {
-              return {
-              normAnswer: [choice.text],
-              rawAnswer: choice.text,
-              count: 0,
-              isCorrect: choice.isAnswer,
-              multiChoiceCharacter: String.fromCharCode(65 + index),
-              reason: choice.reason,
-              teams: []
+          responses: 
+          !isShortAnswerEnabled 
+          ? [
+              {
+                normAnswer: [],
+                rawAnswer: this.noResponseCharacter,
+                count: teamsCount,
+                isCorrect: false,
+                multiChoiceCharacter: this.noResponseCharacter,
+                teams: []
+              },
+                ...question.choices.map((choice: IChoice, index: number) => {
+                  return {
+                  normAnswer: [choice.text],
+                  rawAnswer: choice.text,
+                  count: 0,
+                  isCorrect: choice.isAnswer,
+                  multiChoiceCharacter: String.fromCharCode(65 + index),
+                  reason: choice.reason,
+                  teams: []
+                  }
+                })
+            ]
+          : [
+              {
+                normAnswer: [],
+                rawAnswer: this.noResponseCharacter,
+                count: teamsCount,
+                isCorrect: false,
+                multiChoiceCharacter: this.noResponseCharacter,
+                teams: []
               }
-            })
-          ],
+            ],
           hints: []
         }
     }
@@ -404,7 +416,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (gameSession.questions.length > 0) {
       teamAnswers.questions = gameSession.questions.map((question) => ({
         questionId: question.id,
-        ...this.buildEmptyHostTeamAnswer(question, gameSession.teams.length)
+        ...this.buildEmptyHostTeamAnswer(question, gameSession.teams.length, question.isShortAnswerEnabled)
       }));
     }
     const numTeams = gameSession.teams.length;

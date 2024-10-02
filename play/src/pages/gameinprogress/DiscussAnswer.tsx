@@ -57,8 +57,15 @@ export default function DiscussAnswer({
   const { t } = useTranslation();
   const phaseOneResponses = currentQuestion?.answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== '–' || response.isCorrect).reverse();
   let phaseTwoResponses = null;
-  if (currentState === GameSessionState.PHASE_2_DISCUSS) 
-    phaseTwoResponses = currentQuestion?.answerData.phase2.responses.filter((response) => response.multiChoiceCharacter !== '–' || response.isCorrect).reverse();
+  let otherResponses = null;
+  if (currentState === GameSessionState.PHASE_2_DISCUSS){
+    const selectedMistakes = currentQuestion?.answerData.phase1.responses.filter((response) => response.isSelectedMistake).reverse();
+    const selectedRawAnswers = new Set(selectedMistakes.map(r => r.rawAnswer));
+    phaseTwoResponses = currentQuestion?.answerData.phase2.responses
+      .filter(response2 => selectedRawAnswers.has(response2.rawAnswer)).reverse();
+    otherResponses = currentQuestion?.answerData.phase1.responses
+      .filter(response2 => !selectedRawAnswers.has(response2.rawAnswer) && response2.count > 0 && !response2.isCorrect).reverse();
+  }
   const correctResponse = currentQuestion.answerData.phase1.responses.find((response) => response.isCorrect);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
@@ -67,6 +74,7 @@ export default function DiscussAnswer({
   );
   const totalAnswers = phaseOneResponses.reduce((acc, response) => acc + response.teams.length, 0) ?? 0;
   const isPlayerCorrect = selectedAnswer?.isCorrect ?? false;
+  
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>
@@ -122,6 +130,19 @@ export default function DiscussAnswer({
               />
             )
           )}
+          { otherResponses && otherResponses.length > 0 && (
+              <DiscussAnswerCard
+                instructions={instructions ?? ''}
+                answerStatus={AnswerState.OTHER}
+                answerReason=''
+                currentState={currentState}
+                key={uuidv4()}
+                isShortAnswerEnabled={isShortAnswerEnabled}
+                newPoints={newPoints}
+                otherAnswersCount={otherResponses.reduce((acc, response) => acc + response.count, 0) ?? 0}
+                totalAnswers={totalAnswers}
+              />
+          )}
         </Stack>
         {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
           <Typography
@@ -141,7 +162,7 @@ export default function DiscussAnswer({
   const questionRightColumnContents = (
       <ScrollBoxStyled>
         <Stack spacing={2}>
-          <AnswerResponsesCard phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses} currentTeam={currentTeam}/>
+          <AnswerResponsesCard phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses} otherResponses={otherResponses} currentTeam={currentTeam}/>
           <DiscussAnswerCard
             instructions={instructions}
             answerStatus={

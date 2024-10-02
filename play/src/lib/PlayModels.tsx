@@ -33,6 +33,7 @@ export enum AnswerState {
   PLAYER_SELECTED_CORRECT,
   SELECTED,
   PREVIOUS,
+  OTHER
 }
 
 /**

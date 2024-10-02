@@ -35,6 +35,7 @@ interface DiscussAnswerCardProps {
   newPoints: number | undefined;
   phaseOneResponse?: IHostTeamAnswersResponse;
   phaseTwoResponse?: IHostTeamAnswersResponse;
+  otherAnswersCount?: number;
   totalAnswers?: number;
 }
 
@@ -47,8 +48,10 @@ export default function DiscussAnswerCard({
   newPoints,
   phaseOneResponse,
   phaseTwoResponse,
+  otherAnswersCount,
   totalAnswers
 }: DiscussAnswerCardProps) {
+  console.log(answerStatus);
   const theme = useTheme();
   const { t } = useTranslation();
   const resultText = (answerStatus === AnswerState.PLAYER_SELECTED_CORRECT)
@@ -65,6 +68,8 @@ export default function DiscussAnswerCard({
     color: 'black',
   });
   let percent = 0;
+  if (answerStatus === AnswerState.OTHER)
+    percent = otherAnswersCount! / totalAnswers! * 100;
   if (phaseOneResponse && totalAnswers) {
     percent = phaseOneResponse.count / totalAnswers * 100;
   }
@@ -76,7 +81,7 @@ export default function DiscussAnswerCard({
           <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
         </Box>
       )}
-      {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
+      {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && answerStatus !== AnswerState.OTHER && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <AnswerTitleTypography>Incorrect Answer</AnswerTitleTypography>
           {answerStatus === AnswerState.SELECTED &&(
@@ -99,6 +104,7 @@ export default function DiscussAnswerCard({
             </Typography>
           </Box>
         )}
+        { answerStatus !== AnswerState.OTHER && (
         <ResultSelector
           answerStatus={answerStatus}
           letterCode={(currentState === GameSessionState.PHASE_1_DISCUSS ? phaseOneResponse?.multiChoiceCharacter : phaseTwoResponse?.multiChoiceCharacter) ?? ''}
@@ -108,10 +114,11 @@ export default function DiscussAnswerCard({
           correctCard = {correctCard}
           newPoints={newPoints}
         />
+        )}
          {(currentState === GameSessionState.PHASE_2_DISCUSS) &&
             <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '8px'}}>
               <Typography sx={{paddingTop: '16px'}}>
-                Players who answered this way
+                {answerStatus !== AnswerState.OTHER ? 'Players who answered this way' : 'Players who answered something else'}
               </Typography>
                 <BarContainer>
                   <StyledAnswerBar

@@ -119,18 +119,17 @@ function FooterGameInProgress({
       default:
         break;
     }
-    if ((currentState === GameSessionState.PHASE_1_DISCUSS || currentState ===GameSessionState.PHASE_2_START || currentState === GameSessionState.PHASE_2_DISCUSS)) {
+    if ((currentState === GameSessionState.PHASE_1_DISCUSS || currentState ===GameSessionState.PHASE_2_START || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || currentState === GameSessionState.PHASE_2_DISCUSS)) {
       let currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
-      console.log(currentResponses);
       if (currentResponses && currentResponses.length > 0)
         // shuffle the phase 1 responses prior to moving onto phase 2
         if (currentState === GameSessionState.PHASE_2_START){
           setGraphClickInfo({graph: null, selectedIndex: null});
           // for short answer, shuffle responses before sending them on so common mistakes sorted by popularity dont go to play
-          console.log(currentResponses);
           if (isShortAnswerEnabled)
             currentResponses = apiClients.hostDataManager?.shuffleSelectedMistakes(currentResponses);
         }
+        console.log(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id));
         await apiClients.question.updateQuestion({id, order, gameSessionId, answerData: JSON.stringify(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id))});
     }
     dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
