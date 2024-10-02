@@ -49,12 +49,15 @@ export default function Responses({
   const numPlayers = responses.reduce((acc, response) => acc + response.count, 0) ?? 0;
   const [graphClickIndex, setGraphClickIndex] = React.useState<number | null>(graphClickInfo.selectedIndex);
   // if game is short answer, we don't want to see all answers as they include m/c answers
-  const trimmedResponses = (isShortAnswerEnabled || (statePosition > 6 && isPrevPhaseResponses)) ? responses.filter((response) => response.count !== 0) : responses;
+  const trimmedResponses =
+   (isShortAnswerEnabled || (statePosition > 6 && isPrevPhaseResponses)) 
+    ? [...responses.filter((response) => response.multiChoiceCharacter !== '–' && response.count !== 0),...responses.filter((response) => response.multiChoiceCharacter === '–' && response.count !== 0)]
+    : responses;
   return (
     <HostDefaultCardStyled>
       <ResponseContainer>
         <TitleStyled>
-          { statePosition < 6 ? `Responses` : `Phase 1 Responses` }
+          { (statePosition < 6 || !isPrevPhaseResponses) ? `Responses` : `Phase 1 Responses` }
         </TitleStyled>
         <ResponsesGraph
           data={trimmedResponses}

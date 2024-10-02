@@ -121,11 +121,13 @@ function FooterGameInProgress({
     }
     if ((currentState === GameSessionState.PHASE_1_DISCUSS || currentState ===GameSessionState.PHASE_2_START || currentState === GameSessionState.PHASE_2_DISCUSS)) {
       let currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
+      console.log(currentResponses);
       if (currentResponses && currentResponses.length > 0)
         // shuffle the phase 1 responses prior to moving onto phase 2
         if (currentState === GameSessionState.PHASE_2_START){
           setGraphClickInfo({graph: null, selectedIndex: null});
           // for short answer, shuffle responses before sending them on so common mistakes sorted by popularity dont go to play
+          console.log(currentResponses);
           if (isShortAnswerEnabled)
             currentResponses = apiClients.hostDataManager?.shuffleSelectedMistakes(currentResponses);
         }

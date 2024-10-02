@@ -122,7 +122,7 @@ export default function MistakeSelector({
           variant="body2"
           style={{
             color: '#FFFFFF',
-            opacity: isSelected && currentState === GameSessionState. PHASE_1_DISCUSS ? 1 : 0.5,
+            opacity: isSelected && (currentState === GameSessionState. PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START) ? 1 : 0.5,
             textAlign: 'left',
             width: '120px',
             overflowWrap: 'break-word'
@@ -141,7 +141,7 @@ export default function MistakeSelector({
         >
           {mistakePercent}%
         </Typography>
-        {currentState === GameSessionState.PHASE_1_DISCUSS && (
+        {(currentState === GameSessionState. PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START) && (
           <SelectIndicatorContainerStyled>
             {circleIndicator}
           </SelectIndicatorContainerStyled>
