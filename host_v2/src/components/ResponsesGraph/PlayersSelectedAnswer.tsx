@@ -112,6 +112,7 @@ interface PlayersSelectedAnswerProps {
     numPlayers: number;
     statePosition: number;
     isShortAnswerEnabled: boolean;
+    isPrevPhaseResponses: boolean;
 }
 
 export default function PlayersSelectedAnswer({
@@ -119,7 +120,8 @@ export default function PlayersSelectedAnswer({
   graphClickIndex, 
   numPlayers, 
   statePosition, 
-  isShortAnswerEnabled
+  isShortAnswerEnabled,
+  isPrevPhaseResponses
 }: PlayersSelectedAnswerProps) {
   const theme = useTheme();
   const { count } = data[graphClickIndex];
@@ -130,7 +132,7 @@ export default function PlayersSelectedAnswer({
     <Box style={{display: 'flex', flexDirection: 'column', gap: theme.sizing.xSmPadding}}>
       <TextContainer>
         <TitleText>
-        { statePosition < 6 ? `Players who picked this answer` : `Players who think this is the trickiest answer`}
+        { (statePosition < 6 || isPrevPhaseResponses) ? `Players who picked this answer` : `Players who think this is the trickiest answer`}
         </TitleText>
         <NumberContainer>
           <CountText>

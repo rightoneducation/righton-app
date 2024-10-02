@@ -66,7 +66,7 @@ function HostHeader({ gameCode }: HostHeaderProps) {
   };
   
   const handleCloseClick = () => {
-    window.location.href = 'http://dev-central.rightoneducation.com/';
+    window.location.href = 'http://central.rightoneducation.com/';
   };
   return (
     <UpperStyled>
@@ -75,7 +75,6 @@ function HostHeader({ gameCode }: HostHeaderProps) {
       }
       <TopLineStyled>
         <Box>
-          <Typography variant="body1" style={{fontSize: 10, color: 'white'}}>QA Version 1.4</Typography>
           <GameLobbyTypographyStyled>Game Lobby </GameLobbyTypographyStyled> 
         </Box>
         <IconsContainer>

@@ -129,6 +129,7 @@ export default function useFetchAndSubscribeGameSession(
                     currentTeam,
                     isShortAnswerEnabled
                   );
+                  console.log(calcNewScore);
               }
               const prevScore = currentTeam?.score ?? 0;
               updateTeamScore(teamId, prevScore, calcNewScore); 

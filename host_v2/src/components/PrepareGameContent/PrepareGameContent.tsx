@@ -66,6 +66,7 @@ export default function PrepareGameContent({
     <GameInProgressContentRightColumn 
       currentQuestion={currentQuestion}
       localGameSession={localGameSession}
+      currentPhase={IPhase.ONE}
     />
   );
   

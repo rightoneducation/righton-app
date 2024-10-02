@@ -21,7 +21,7 @@ const StackContainer = styled(Stack)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   height: '100%',
-  maxWidth: theme.breakpoints.values.sm,
+  maxWidth: theme.breakpoints.values.md,
   paddingBottom: `${theme.sizing.largePadding}px`,
 }));
 
@@ -76,13 +76,17 @@ export default function HowToPlay({ mode }: HowToPlayProps) {
         <HowToPlaySwiper
           modules={[Pagination]}
           slidesPerView={1}
+          speed={500}
+          grabCursor
+          longSwipesMs={100}
+          longSwipesRatio={0.1}
           pagination={{
             el: '.swiper-pagination-container',
             bulletClass: 'swiper-pagination-bullet',
             bulletActiveClass: 'swiper-pagination-bullet-active',
             clickable: true,
             renderBullet(index, className) {
-              return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+              return `<span class="${className}" style="display:inline-block; width:20px; height:20px; border-radius:20px"></span>`;
             },
           }}
         >

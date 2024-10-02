@@ -1,7 +1,7 @@
 import { isNullOrUndefined } from "./global"
-import { BackendAnswer } from "./Models"
+import { BackendAnswer, IHostTeamAnswersResponse } from "./Models"
 import { IGameSession, ITeam } from "./Models"
-import { IChoice, IQuestion, IResponse } from './Models/IQuestion'
+import { IChoice, IQuestion } from './Models/IQuestion'
 import { ITeamMember } from './Models/ITeamMember'
 import { GameSessionState } from './AWSMobileApi'
 
@@ -98,24 +98,24 @@ export abstract class ModelHelper {
             if (isNullOrUndefined(teamMember.answers) ||
                 teamMember.answers.length === 0) {
                 return previousVal
-            }
-
+            };
             const answersToQuestion = teamMember.answers.find((answer) => {
                 return !isNullOrUndefined(answer) &&
                     !isNullOrUndefined(answer!.questionId) &&
                     answer.questionId === questionId &&
                     this.isAnswerFromPhaseOne(answer) &&
-                    answer!.text === answerText
-            })
-
+                    answer!.answer.rawAnswer === answerText
+            });
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
-        }, 0)
-
-        return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
+        }, 0);
+        console.log(totalNoChosenAnswer);
+        const totalNumberOfResponses = gameSession.questions[gameSession.currentQuestionIndex].answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== `–`).reduce((previousVal: number, response: IHostTeamAnswersResponse) => {
+            return previousVal + response.teams.length
+        }, 0);
+        console.log(totalNumberOfResponses);
+        return Math.round(totalNoChosenAnswer / totalNumberOfResponses * 100)
     }
-    static isShortAnswerResponseCorrect(shortAnswerResponses: IResponse[], team: ITeam){
-        console.log(shortAnswerResponses);
-        console.log(team);
+    static isShortAnswerResponseCorrect(shortAnswerResponses: IHostTeamAnswersResponse[], team: ITeam){
         return (shortAnswerResponses.some(response => 
             response.isCorrect 
             && response.teams.some(teamAnswer => teamAnswer === team.name)
@@ -127,7 +127,6 @@ export abstract class ModelHelper {
             console.error("No team member exists for the specified team")
             throw new Error("No team member exists for the specified team")
         }
-        
         const answers = this.getBasicTeamMemberAnswersToQuestionId(team, question.id)
         if (isNullOrUndefined(answers) ||
             answers.length === 0) {
@@ -137,13 +136,16 @@ export abstract class ModelHelper {
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
         let submittedTrickAnswer = answers.find(answer => (!this.isAnswerFromPhaseOne(answer)) && answer?.questionId === currentQuestion.id)
+        console.log("hellow");
         if (submittedTrickAnswer || gameSession.currentState === GameSessionState.PHASE_2_DISCUSS) {
-            return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer?.text ?? '', currentQuestion.id)
+            const score = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer?.text ?? '', currentQuestion.id);
+            console.log(score);
+            return score;
         } else {
             if (!isShortAnswerEnabled && answers.find(answer => (this.isAnswerFromPhaseOne(answer)) && answer?.text === correctAnswer?.text && answer?.questionId === currentQuestion.id)){
                 return this.correctAnswerScore
             } else {
-                const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses
+                const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].answerData.phase1.responses;
                 if (isNullOrUndefined(teamResponses)){
                     return 0;
                 }

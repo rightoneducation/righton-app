@@ -221,7 +221,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
         newResponses.sort((a: any, b: any) => a.rawAnswer.localeCompare(b.rawAnswer));
         const noResponse = newResponses.filter((response: any) => response.multiChoiceCharacter === this.noResponseCharacter);
         const otherResponses = newResponses.filter((response: any) => response.multiChoiceCharacter !== this.noResponseCharacter);
-        newResponses = [...otherResponses, ...noResponse];
+        newResponses = [...noResponse, ...otherResponses];
       }
     }
     return newResponses;
@@ -333,35 +333,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return confidenceArray;
   };
 
-  private buildEmptyHostTeamAnswerShortAnswer(teamsCount: number) {
-    return {
-      phase1: {
-          responses: [{
-          normAnswer: [],
-          rawAnswer: 'No response',
-          count: teamsCount,
-          isCorrect: false,
-          multiChoiceCharacter: this.noResponseCharacter,
-          teams: [],
-          isSelectedMistake: false,
-          }],
-          confidences: this.buildEmptyHostTeamAnswerConfidences()
-      },
-      phase2: {
-          responses: [{
-          normAnswer: [],
-          rawAnswer: 'No response',
-          count: teamsCount,
-          isCorrect: false,
-          multiChoiceCharacter: this.noResponseCharacter,
-          teams: [],
-          }],
-          hints: []
-      }
-    }
-  }
-
-  private buildEmptyHostTeamAnswerMultiChoice(question: IQuestion, teamsCount: number) {
+  private buildEmptyHostTeamAnswer(question: IQuestion, teamsCount: number, isShortAnswerEnabled: boolean) {
     const emptyMultiChoiceTeamAnswer = {
       phase1: {
           responses: [
@@ -371,6 +343,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
               count: teamsCount,
               isCorrect: false,
               multiChoiceCharacter: this.noResponseCharacter,
+              reason: '',
               teams: [],
             },
             ...question.choices.map((choice: IChoice, index: number) => {
@@ -380,6 +353,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
                 count: 0,
                 isCorrect: choice.isAnswer,
                 multiChoiceCharacter: String.fromCharCode(65 + index),
+                reason: choice.reason,
                 teams: [],
               }
             })
@@ -388,26 +362,39 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       },
       phase2: 
         {
-          responses: [
-            {
-              normAnswer: [],
-              rawAnswer: this.noResponseCharacter,
-              count: teamsCount,
-              isCorrect: false,
-              multiChoiceCharacter: this.noResponseCharacter,
-              teams: []
-            },
-            ...question.choices.map((choice: IChoice, index: number) => {
-              return {
-              normAnswer: [choice.text],
-              rawAnswer: choice.text,
-              count: 0,
-              isCorrect: choice.isAnswer,
-              multiChoiceCharacter: String.fromCharCode(65 + index),
-              teams: []
+          responses: 
+          !isShortAnswerEnabled 
+          ? [
+              {
+                normAnswer: [],
+                rawAnswer: this.noResponseCharacter,
+                count: teamsCount,
+                isCorrect: false,
+                multiChoiceCharacter: this.noResponseCharacter,
+                teams: []
+              },
+                ...question.choices.map((choice: IChoice, index: number) => {
+                  return {
+                  normAnswer: [choice.text],
+                  rawAnswer: choice.text,
+                  count: 0,
+                  isCorrect: choice.isAnswer,
+                  multiChoiceCharacter: String.fromCharCode(65 + index),
+                  reason: choice.reason,
+                  teams: []
+                  }
+                })
+            ]
+          : [
+              {
+                normAnswer: [],
+                rawAnswer: this.noResponseCharacter,
+                count: teamsCount,
+                isCorrect: false,
+                multiChoiceCharacter: this.noResponseCharacter,
+                teams: []
               }
-            })
-          ],
+            ],
           hints: []
         }
     }
@@ -429,7 +416,7 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     if (gameSession.questions.length > 0) {
       teamAnswers.questions = gameSession.questions.map((question) => ({
         questionId: question.id,
-        ...question.isShortAnswerEnabled ? this.buildEmptyHostTeamAnswerShortAnswer(this.gameSession?.teams.length ?? 0) : this.buildEmptyHostTeamAnswerMultiChoice(question, this.gameSession?.teams.length ?? 0)
+        ...this.buildEmptyHostTeamAnswer(question, gameSession.teams.length, question.isShortAnswerEnabled)
       }));
     }
     const numTeams = gameSession.teams.length;
@@ -458,19 +445,22 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
           });
         });
         Object.values(IPhase).forEach((phase) => {
-          const teamsAnswered = question[phase].responses
-            .reduce<string[]>((acc, response) => {
-              if (response.multiChoiceCharacter !== '–') {
-                acc.push(...response.teams);
-              }
-              return acc;
-            }, []);
-          const teamsUnanswered = gameSession.teams.map((team) => team.name).filter((team) => !teamsAnswered.includes(team));
-          const numNoResponses = numTeams - teamsAnswered.length;
-          const noResponses = question[phase].responses.find((response: any) => response.multiChoiceCharacter === '–');
-          if (noResponses) {
-            noResponses.count = numNoResponses ?? 0;
-            noResponses.teams = teamsUnanswered;
+          if (question[phase].responses){
+            const teamsAnswered = question[phase].responses
+              .reduce<string[]>((acc, response) => {
+                if (response.multiChoiceCharacter !== '–') {
+                  acc.push(...response.teams);
+                }
+                return acc;
+              }, []);
+            
+            const teamsUnanswered = gameSession.teams.map((team) => team.name).filter((team) => !teamsAnswered.includes(team));
+            const numNoResponses = numTeams - teamsAnswered.length;
+            const noResponses = question[phase].responses.find((response: any) => response.multiChoiceCharacter === '–');
+            if (noResponses) {
+              noResponses.count = numNoResponses ?? 0;
+              noResponses.teams = teamsUnanswered;
+            }
           }
         });
       });
@@ -523,6 +513,15 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
     return this.hostTeamAnswers
   }
 
+  getHostTeamAnswersForQuestion(currentQuestionId: string): IHostTeamAnswersQuestion | null {
+    const response = this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestionId);
+    if (!response) {
+      console.error('Error: Invalid question id');
+      return null;
+    }
+    return response;
+  }
+
   getResponsesForQuestion(currentQuestionId: string, currentPhase: IPhase) {
     const currentQuestion = this.hostTeamAnswers.questions.find((question) => question.questionId === currentQuestionId);
     if (!currentQuestion) {
@@ -530,8 +529,6 @@ export class HostDataManagerAPIClient extends PlayDataManagerAPIClient {
       return [];
     }
     let responses = currentQuestion[currentPhase].responses; 
-    if (currentPhase === IPhase.ONE)
-      responses = this.shuffleSelectedMistakes(responses);
     return responses;
   }
 

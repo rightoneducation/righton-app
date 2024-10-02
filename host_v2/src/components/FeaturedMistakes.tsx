@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { styled } from '@mui/material/styles';
 import {
   Paper,
@@ -8,7 +8,7 @@ import {
   Radio,
   Box
 } from '@mui/material';
-import { IHostTeamAnswersResponse, IQuestion } from "@righton/networking";
+import { IHostTeamAnswersResponse, IQuestion, GameSessionState } from "@righton/networking";
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { useTSHostTeamAnswersContext, useTSDispatchContext } from '../hooks/context/useHostTeamAnswersContext';
@@ -53,6 +53,7 @@ const RadioLabelStyled = styled(FormControlLabel)({
 
 interface FeaturedMistakesProps {
   currentQuestion: IQuestion,
+  currentState: GameSessionState;
   featuredMistakesSelectionValue: string;
   isPopularMode: boolean;
   setIsPopularMode: (isPopularMode: boolean) => void;
@@ -60,93 +61,125 @@ interface FeaturedMistakesProps {
 
 export default function FeaturedMistakes({
   currentQuestion,
+  currentState,
   featuredMistakesSelectionValue,
   isPopularMode,
   setIsPopularMode
 }: FeaturedMistakesProps) {
 
-  const title = 'Common Mistakes';
-  const subtitle =
-    'Selected responses will be presented to players as options for popular incorrect answers.';
+  const title = (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)
+    ? 'Common Mistakes' 
+    : 'Common Mistakes Preview';
+  const subtitle = (currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START)
+    ? 'Selected responses will be presented to players as options for popular incorrect answers.'
+    : 'On the next screen, you will select from these incorrect answers to be options in Phase 2.';
   const radioButtonText1 = 'Use the top 3 answers by popularity';
   const radioButtonText2 = 'Manually pick the options';
   const numOfPopularMistakes = 3;
-
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const localHostTeamAnswers = useTSHostTeamAnswersContext(HostTeamAnswersContext);
   const dispatchHostTeamAnswers = useTSDispatchContext(HostTeamAnswersDispatchContext);
-  const hostTeamAnswerResponses = localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [];
-  const totalAnswers = hostTeamAnswerResponses.reduce((acc, response) => acc + response.count, 0) ?? 0;
-  const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]): Mistake[] => {
+  const hostTeamAnswerResponses = useMemo(() => {
+    return localHostTeamAnswers.questions.find((question) => question.questionId === currentQuestion.id)?.phase1.responses ?? [];
+  }, [localHostTeamAnswers, currentQuestion.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const totalAnswers = useMemo(() => {
+    return hostTeamAnswerResponses.reduce((acc, response) => acc + response.count, 0);
+  }, [hostTeamAnswerResponses]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Pure function to build sorted mistakes
+  const buildFeaturedMistakes = (inputMistakes: IHostTeamAnswersResponse[]) => {
     const mistakes = inputMistakes
       .filter(response => !response.isCorrect && response.multiChoiceCharacter !== '–')
       .map((response) => ({
         answer: response.rawAnswer,
-        percent: Math.trunc((response.count/totalAnswers)*100),
+        percent: Math.trunc((response.count / totalAnswers) * 100),
         isSelectedMistake: response.isSelectedMistake ?? false,
-        }));
-    const sortedMistakes = mistakes.sort((a: any, b: any) => b.percent - a.percent) ?? [];
-    let finalMistakes = sortedMistakes;
-    if (isPopularMode)
-      finalMistakes = sortedMistakes.map((mistake, index) => {
-        if (index < numOfPopularMistakes) {
-          return { ...mistake, isSelectedMistake: true };
-        }
-        return { ...mistake, isSelectedMistake: false };
-      }); 
-      apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...finalMistakes], currentQuestion);
-    return finalMistakes;
+      }));
+    const sortMistakes = mistakes.sort((a, b) => b.percent - a.percent) ?? [];
+    return sortMistakes;
   };
-  const sortedMistakes = buildFeaturedMistakes(hostTeamAnswerResponses);
+
+  // Memoize sortedMistakes 
+  const sortedMistakes = useMemo(() => buildFeaturedMistakes(hostTeamAnswerResponses), [hostTeamAnswerResponses, totalAnswers]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Function to reset mistakes to popular mode
   const resetMistakesToPopular = () => {
     const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < numOfPopularMistakes) {
-        return { ...mistake, isSelected: true };
+        return { ...mistake, isSelectedMistake: true };
       }
-      return { ...mistake, isSelected: false };
+      return { ...mistake, isSelectedMistake: false };
     });
-    const newHostTeamAnswers = apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...resetMistakes], currentQuestion);
-    if (newHostTeamAnswers)
-      dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...newHostTeamAnswers}});
+    // Only update if there are changes
+    const needsUpdate = resetMistakes.some((mistake, index) => mistake.isSelectedMistake !== sortedMistakes[index].isSelectedMistake);
+    if (needsUpdate) {
+      const newHostTeamAnswers = apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...resetMistakes], currentQuestion);
+      if (newHostTeamAnswers) {
+        dispatchHostTeamAnswers({ type: 'synch_local_host_team_answers', payload: { ...newHostTeamAnswers } });
+      }
+    }
   };
 
+  // Handle mode change from radio buttons
   const handleModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    resetMistakesToPopular();
-    if (event.target.value === 'A') {
+    const selectedMode = event.target.value;
+    if (selectedMode === 'A') {
       setIsPopularMode(true);
     } else {
       setIsPopularMode(false);
     }
   };
 
+  // Handle selecting/deselecting a mistake manually
   const handleSelectMistake = (index: number) => {
-    const newMistakes = [...sortedMistakes];
-    newMistakes[index].isSelectedMistake = !newMistakes[index].isSelectedMistake;
-    const newHostTeamAnswers = apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...newMistakes], currentQuestion);
-    if (newHostTeamAnswers)
-      dispatchHostTeamAnswers({type: 'synch_local_host_team_answers', payload: {...newHostTeamAnswers}});
+    const numSelected = sortedMistakes.map((mistake) => mistake.isSelectedMistake).filter((isSelected) => isSelected).length;
+      const newMistakes = sortedMistakes.map((mistake, idx) => {
+        if (idx === index) {
+          if (numSelected < numOfPopularMistakes || mistake.isSelectedMistake)
+            return { ...mistake, isSelectedMistake: !mistake.isSelectedMistake };
+        }
+        return mistake;
+      });
+      const newHostTeamAnswers = apiClients.hostDataManager?.updateHostTeamAnswersSelectedMistakes([...newMistakes], currentQuestion);
+      if (newHostTeamAnswers) {
+        dispatchHostTeamAnswers({ type: 'synch_local_host_team_answers', payload: { ...newHostTeamAnswers } });
+      }
   };
-  
+
+  // Effect to handle initial and subsequent updates when in popular mode
+  useEffect(() => {
+    if (isPopularMode) {
+      const topSelected = sortedMistakes.slice(0, numOfPopularMistakes).every(mistake => mistake.isSelectedMistake);
+      const othersDeselected = sortedMistakes.slice(numOfPopularMistakes).every(mistake => !mistake.isSelectedMistake);
+      if (!topSelected || !othersDeselected) {
+        resetMistakesToPopular();
+      }
+    }
+  }, [isPopularMode, sortedMistakes]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <HostDefaultCardStyled elevation={10}>
       <BackgroundStyled elevation={0}>
         <TitleStyled>{title}</TitleStyled>
         <SubtitleStyled>{subtitle}</SubtitleStyled>
-        <RadioGroup
-          defaultValue={featuredMistakesSelectionValue}
-          onChange={handleModeChange}
-        >
-          <RadioLabelStyled
-            value="A"
-            control={<Radio sx={{color: '#FFFFFF'}}/>}
-            label={radioButtonText1}
-          />
-          <RadioLabelStyled
-            value="B"
-            control={<Radio sx={{color: '#FFFFFF'}}/>}
-            label={radioButtonText2}
-          />
-        </RadioGroup>
+        {(currentState === GameSessionState.PHASE_1_DISCUSS || currentState === GameSessionState.PHASE_2_START) &&
+          <RadioGroup
+            value={isPopularMode ? "A" : "B"} // Controlled component
+            onChange={handleModeChange}
+          >
+            <RadioLabelStyled
+              value="A"
+              control={<Radio sx={{ color: '#FFFFFF' }} />}
+              label={radioButtonText1}
+            />
+            <RadioLabelStyled
+              value="B"
+              control={<Radio sx={{ color: '#FFFFFF' }} />}
+              label={radioButtonText2}
+            />
+          </RadioGroup>
+        }
         {sortedMistakes.length > 0 ? (
           <Box
             sx={{
@@ -167,7 +200,7 @@ export default function FeaturedMistakes({
                 isSelected={mistake.isSelectedMistake}
                 mistakeIndex={index}
                 handleSelectMistake={handleSelectMistake}
-                // style={{width:'100%'}}
+                currentState={currentState}
               />
             ))}
           </Box>

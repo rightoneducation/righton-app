@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -216,10 +216,6 @@ export default function GameInProgress({
           answer.isCorrect = answer.answer.isEqualTo([Number(normCorrectAnswer)]) as boolean; // eslint-disable-line 
         else {
           answer.isCorrect = answer.answer.isEqualTo(normCorrectAnswer) as boolean; // eslint-disable-line 
-          console.log(answer.answer.isEqualTo(normCorrectAnswer) as boolean)
-          console.log(answer.answer);
-          console.log(correctAnswer);
-          console.log(answer.isCorrect);
         }
         if (isAnswerMultiChoice(answer.answer)){
           answer.answer.multiChoiceCharacter = multiChoiceCharacter; // eslint-disable-line
@@ -227,7 +223,7 @@ export default function GameInProgress({
       }
       console.log(correctAnswer);
       const response = await apiClients.teamAnswer.addTeamAnswer(answer);
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answer));
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
       setTeamAnswerId(response.id ?? '');
       setBackendAnswer(answer);
       setDisplaySubmitted(true);

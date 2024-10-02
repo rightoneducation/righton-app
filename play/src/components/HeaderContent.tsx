@@ -38,7 +38,7 @@ export default function HeaderContent({
   const { t } = useTranslation();
   const stateMap = {
     [GameSessionState.NOT_STARTED]: t('gameinprogress.header.notstarted'),
-    [GameSessionState.TEAMS_JOINING]: t('gameinprogress.header.teamsjoining'),
+    [GameSessionState.TEAMS_JOINING]:  t('gameinprogress.header.leaderboard'),
     [GameSessionState.CHOOSE_CORRECT_ANSWER]: t(
       'gameinprogress.header.choosecorrectanswer'
     ),

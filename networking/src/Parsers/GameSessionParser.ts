@@ -41,6 +41,10 @@ export class GameSessionParser {
         if (!isNullOrUndefined(awsGameSession?.questions) && !isNullOrUndefined(awsGameSession?.questions.items)) {
             questions = GameSessionParser.mapQuestions(awsGameSession.questions.items);    
         }
+        let sessionData = null;
+        if (!isNullOrUndefined(awsGameSession?.sessionData)) {
+            sessionData = JSON.parse(awsGameSession.sessionData);
+        }
       const {
           id,
           gameId,
@@ -83,6 +87,7 @@ export class GameSessionParser {
           currentState,
           gameCode,
           currentTimer,
+          sessionData,
           questions,
           isAdvancedMode,
           updatedAt,
