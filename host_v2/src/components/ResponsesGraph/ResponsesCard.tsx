@@ -66,6 +66,7 @@ export default function Responses({
           setGraphClickIndex={setGraphClickIndex}
         />
         <SelectedAnswer 
+          isPrevPhaseResponses={isPrevPhaseResponses}
           data={trimmedResponses}
           numPlayers={numPlayers}
           statePosition={statePosition}

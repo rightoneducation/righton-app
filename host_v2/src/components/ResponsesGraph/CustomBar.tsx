@@ -19,9 +19,9 @@ export function CustomBar(props: any) {
     statePosition,
     graphClickInfo,
     setGraphClickInfo,
-    isShortAnswerEnabled
+    isShortAnswerEnabled,
+    isPrevPhaseResponses
    } = props;
-   // console.log(datum);
    const height = (isShortAnswerEnabled ? 36 : 16) + theme.sizing.mdPadding - theme.sizing.xSmPadding / 2;
    // wrapping this in a useMemo in an effort to avoid any additional renders
    const isSelected = useMemo(() =>{
@@ -29,8 +29,8 @@ export function CustomBar(props: any) {
       return graphClickInfo.selectedIndex !== null &&
       graphClickInfo.selectedIndex !== undefined &&
       graphClickInfo.selectedIndex === index &&
-      (statePosition < 6 ? graphClickInfo.graph === 'realtimephase1' : graphClickInfo.graph === 'realtimephase2');
-   }, [graphClickInfo.selectedIndex, index, graphClickInfo.graph, statePosition]);
+      (statePosition < 6 || (statePosition > 6 && isPrevPhaseResponses) ? graphClickInfo.graph === 'realtimephase1' : graphClickInfo.graph === 'realtimephase2');
+   }, [graphClickInfo.selectedIndex, index, graphClickInfo.graph, statePosition, isPrevPhaseResponses]);
   return (
     <g>
       <Bar {...props} />
@@ -49,7 +49,7 @@ export function CustomBar(props: any) {
           rx={8}
           ry={8}
           onClick={() =>
-            setGraphClickInfo({ graph: statePosition < 6 ? 'realtimephase1' : 'realtimephase2', selectedIndex: index })
+            setGraphClickInfo({ graph: statePosition < 6 || (statePosition > 6 && isPrevPhaseResponses) ? 'realtimephase1' : 'realtimephase2', selectedIndex: index })
           }
         />
       )}

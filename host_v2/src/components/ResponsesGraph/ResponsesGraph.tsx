@@ -190,6 +190,7 @@ export default function ResponsesGraph({
                 graphClickInfo={graphClickInfo}
                 setGraphClickInfo={setGraphClickInfo}
                 isShortAnswerEnabled={isShortAnswerEnabled}
+                isPrevPhaseResponses={isPrevPhaseResponses}
               />
             }
             labelComponent={
