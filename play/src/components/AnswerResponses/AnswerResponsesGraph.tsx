@@ -4,19 +4,21 @@ import { VictoryChart, VictoryContainer, VictoryPie } from 'victory';
 import { IHostTeamAnswers, IHostTeamAnswersResponse, ITeam, isNullOrUndefined } from '@righton/networking';
 import CustomLabel from './CustomLabel';
 
-interface AnswerphaseOneResponsesGraphProps {
+interface AnswerPhaseOneResponsesGraphProps {
   phaseOneResponses: IHostTeamAnswersResponse[];
   phaseTwoResponses: IHostTeamAnswersResponse[];
   otherResponses: IHostTeamAnswersResponse[];
   currentTeam: ITeam;
+  isShortAnswerEnabled: boolean;
 }
 
 export default function AnswerphaseOneResponsesGraph({
   phaseOneResponses,
   phaseTwoResponses,
   otherResponses,
-  currentTeam
-}: AnswerphaseOneResponsesGraphProps) {
+  currentTeam,
+  isShortAnswerEnabled
+}: AnswerPhaseOneResponsesGraphProps) {
   console.log(phaseTwoResponses);
   const theme = useTheme();
   const possibleCharacters = ['A', 'B', 'C', 'D'];
@@ -39,18 +41,18 @@ export default function AnswerphaseOneResponsesGraph({
     return '#3400A8';
   };
   const assignLetterCode = (response: IHostTeamAnswersResponse, phase2Responses: IHostTeamAnswersResponse[]) => {
-    if (response.isCorrect)
+    if (response.isCorrect && isShortAnswerEnabled)
       return missingCharacter ?? '';
     return phaseTwoResponses?.find((response2) => response.rawAnswer === response2.rawAnswer)?.multiChoiceCharacter ?? '';
   }
-  const adjustedResponses = [...phaseOneResponses.filter((response) => response.isSelectedMistake || response.isCorrect), ...otherResponsesTrimmed];
+  const adjustedResponses = isShortAnswerEnabled ? [...phaseOneResponses.filter((response) => response.isSelectedMistake || response.isCorrect), ...otherResponsesTrimmed] : phaseOneResponses;
   
   const data = adjustedResponses.reduce<{ letterCode: string; count: string; fill: string }[]>((acc, response, index) => {
     if (response.count !== 0) {
       acc.push({
         letterCode: assignLetterCode(response, phaseTwoResponses),
         count: `${Math.floor((response.count / totalAnswers) * 100)}%`,
-        fill: (response.isSelectedMistake || response.isCorrect) ? assignColor(response, phaseTwoResponses.find((res) => res.rawAnswer === response.rawAnswer) ?? null) : "#B5B5B5"
+        fill: (!isShortAnswerEnabled || (response.isSelectedMistake || response.isCorrect)) ? assignColor(response, phaseTwoResponses.find((res) => res.rawAnswer === response.rawAnswer) ?? null) : "#B5B5B5"
       });
     }
     return acc;

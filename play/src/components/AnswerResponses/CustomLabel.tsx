@@ -12,10 +12,8 @@ export default function CustomLabel(props: any) {
   const labelFactor = 0.5;
   const labelX = centerX + deltaX * labelFactor;
   const labelY = centerY + deltaY * labelFactor;
-
+  console.log(x, y);
   return (
-    <g style={{width}}>
-      {datum.count !== 0 && (
         <>
           {datum.letterCode !== ' ' && (
             <VictoryLabel
@@ -29,26 +27,16 @@ export default function CustomLabel(props: any) {
                 fontWeight: 700
               }}
             />
-          )}
-            <VictoryLabel
-              {...props}
-              x={x}
-              y={y}
-              text={`${datum.count}`}
-              style={{
-                fontSize: 16,
-              }}
-            />
-          {/* foreignObject is placed based on top-left positioning, while VictoryLabel is center positioned */}
-          <foreignObject x={x} y={y} width="60px" height="20px" style={{transform: `translate(-17px, 15px)`}}>
-            <Box style={{ display: 'flex', gap: '4px', alignItems: 'center', justifyContent: 'center' }}>
-              { datum.fill === '#6F9E3C' &&
-                <img src={check} alt="check" />
-              }
-            </Box>
-          </foreignObject>
+          )}    
+          <text x={x} y={y} style={{ fontSize: '16px', fill: 'black', textAnchor: 'middle', dominantBaseline: 'middle' }}>
+            {datum.count} 
+          </text>
+          { datum.fill === '#6F9E3C' &&
+            <svg x={x-6} y={y+5} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="7.5" stroke="rgba(111, 158, 60, 1)"/>
+              <path d="M3.78125 9.04018L6.49268 11.7516L12.6632 5.58105" stroke="rgba(111, 158, 60, 1)" strokeLinecap="round"/>
+            </svg>
+          }
       </>
-      )}
-    </g>
   );
 }

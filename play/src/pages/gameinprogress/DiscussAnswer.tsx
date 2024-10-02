@@ -61,10 +61,14 @@ export default function DiscussAnswer({
   if (currentState === GameSessionState.PHASE_2_DISCUSS){
     const selectedMistakes = currentQuestion?.answerData.phase1.responses.filter((response) => response.isSelectedMistake).reverse();
     const selectedRawAnswers = new Set(selectedMistakes.map(r => r.rawAnswer));
+    if (isShortAnswerEnabled){
     phaseTwoResponses = currentQuestion?.answerData.phase2.responses
       .filter(response2 => selectedRawAnswers.has(response2.rawAnswer)).reverse();
     otherResponses = currentQuestion?.answerData.phase1.responses
       .filter(response2 => !selectedRawAnswers.has(response2.rawAnswer) && response2.count > 0 && !response2.isCorrect).reverse();
+    } else {
+      phaseTwoResponses = currentQuestion?.answerData.phase2.responses.filter((response) => response.multiChoiceCharacter !== '–' || response.isCorrect).reverse(); 
+    }
   }
   const correctResponse = currentQuestion.answerData.phase1.responses.find((response) => response.isCorrect);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
@@ -162,7 +166,7 @@ export default function DiscussAnswer({
   const questionRightColumnContents = (
       <ScrollBoxStyled>
         <Stack spacing={2}>
-          <AnswerResponsesCard phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses} otherResponses={otherResponses} currentTeam={currentTeam}/>
+          <AnswerResponsesCard isShortAnswerEnabled={isShortAnswerEnabled} phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses} otherResponses={otherResponses} currentTeam={currentTeam}/>
           <DiscussAnswerCard
             instructions={instructions}
             answerStatus={

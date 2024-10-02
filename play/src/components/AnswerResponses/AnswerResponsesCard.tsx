@@ -11,15 +11,16 @@ interface AnswerResponsesCardProps {
   phaseOneResponses: IHostTeamAnswersResponse[]
   otherResponses: IHostTeamAnswersResponse[] | null
   phaseTwoResponses: IHostTeamAnswersResponse[] | null
+  isShortAnswerEnabled: boolean
 }
 
 export default function AnswerResponsesCard({
   currentTeam,
   phaseOneResponses,
   phaseTwoResponses,
-  otherResponses
+  otherResponses,
+  isShortAnswerEnabled
 }: AnswerResponsesCardProps) {
-  console.log(phaseTwoResponses);
   const { t } = useTranslation();
   return(
     <BodyCardStyled>
@@ -31,7 +32,7 @@ export default function AnswerResponsesCard({
           {t('gameinprogress.discussanswer.responses')}
         </Typography>
         { phaseOneResponses &&
-          <AnswerResponsesGraph phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses ?? []} otherResponses={otherResponses ?? []} currentTeam={currentTeam}/>
+          <AnswerResponsesGraph isShortAnswerEnabled={isShortAnswerEnabled} phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses ?? []} otherResponses={otherResponses ?? []} currentTeam={currentTeam}/>
         }
       </BodyCardContainerStyled>
     </BodyCardStyled>
