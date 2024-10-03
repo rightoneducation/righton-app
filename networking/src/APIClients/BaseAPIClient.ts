@@ -9,7 +9,6 @@ import { QuestionTemplateParser } from "../Parsers/QuestionTemplateParser";
 export enum HTTPMethod {
   Post = "POST",
 }
-
 export enum GradeTarget {
   KINDERGARTEN = "K",
   GRADEONE = "1",
@@ -22,7 +21,6 @@ export enum GradeTarget {
   GRADEEIGHT = "8",
   HIGHSCHOOL = "H"
 }
-
 export interface GraphQLOptions {
   input?: object;
   variables?: object;
