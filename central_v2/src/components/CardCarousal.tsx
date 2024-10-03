@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Box, Grow, Fade, Skeleton } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import { APIClients, IGameTemplate } from '@righton/networking';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import { useTheme } from '@mui/material/styles';
+import { v4 as uuidv4 } from 'uuid';
 import StyledGameCard from './GameCard';
 import placeHolder from '../images/placeHolder.svg';
-
+import SkeletonGameCard from './SkeletonGameCard';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 interface GameCardCarouselProps {
     apiClients: APIClients;
@@ -17,8 +19,7 @@ interface GameCardCarouselProps {
 export default function GameCardCarousel({ apiClients, recommendedGames }: GameCardCarouselProps) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);
-
-
+    const maxSlides = 12;
     return (
         <Swiper
             style={{ width: '100%' }}
@@ -35,7 +36,7 @@ export default function GameCardCarousel({ apiClients, recommendedGames }: GameC
             ref={swiperRef}
             spaceBetween={theme.sizing.smPadding}
             centeredSlides
-            loop
+            
             navigation
             breakpoints={{
                 '375': {
@@ -49,18 +50,25 @@ export default function GameCardCarousel({ apiClients, recommendedGames }: GameC
                 },
             }}
         >
-            {recommendedGames.map((game) => (
-                <SwiperSlide key={game.id}>
-                    <StyledGameCard
-                        id={game.id || 'no id given'}
-                        title={game.title || 'Untitled Game'}
-                        description={game.description || 'No description available'}
-                        image={game.imageUrl || placeHolder}
-                        apiClients={apiClients}
-                        game={game}
-                    />
-                </SwiperSlide>
-            ))}
+            {Array.from({ length: maxSlides }).map((_, index) => {
+                const game = recommendedGames[index];
+                return (
+                    <SwiperSlide key={index}> {/* eslint-disable-line */}
+                        {game ? (
+                            <StyledGameCard
+                                game={game}
+                                id={game.id}
+                                title={game.title}
+                                description={game.description}
+                                image={game.imageUrl || placeHolder}
+                                apiClients={apiClients}
+                            />
+                        ) : (
+                            <SkeletonGameCard index={index} />
+                        )}
+                    </SwiperSlide>
+                );
+            })} 
         </Swiper>
     );
 }
