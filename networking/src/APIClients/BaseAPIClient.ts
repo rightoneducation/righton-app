@@ -107,15 +107,40 @@ export abstract class BaseAPIClient {
       filterString: string | null,
       type: T, 
       query: any,
-      queryName: string
+      queryName: string,
+      gradeTargets?: GradeTarget[] | null,
     ): Promise<QueryResult<T> | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type };
-      if (filterString != null) {
-        if (queryName === "gameTemplatesByGrade") {
-          queryParameters.grade = { eq: filterString };
-        } else {
-          queryParameters.filter = { title: { contains: filterString } };
-        }
+      if (filterString != null && gradeTargets) {
+          const filters: any[] = [];
+          const gradeFilters: any[] =[];
+          filters.push({ title: { contains: filterString } });
+          filters.push({ description: { contains: filterString } });
+          filters.push({ ccss: { contains: filterString } });
+          if (gradeTargets.length === 0) {
+            gradeFilters.push({ gradeFilter: { eq: "K" } });
+            gradeFilters.push({ gradeFilter: { eq: "1" } });
+            gradeFilters.push({ gradeFilter: { eq: "2" } });
+            gradeFilters.push({ gradeFilter: { eq: "3" } });
+            gradeFilters.push({ gradeFilter: { eq: "4" } });
+            gradeFilters.push({ gradeFilter: { eq: "5" } });
+            gradeFilters.push({ gradeFilter: { eq: "6" } });
+            gradeFilters.push({ gradeFilter: { eq: "7" } });
+            gradeFilters.push({ gradeFilter: { eq: "8" } });
+            gradeFilters.push({ gradeFilter: { eq: "H" } });
+          } else {
+            gradeTargets.forEach((target) => {
+              if (target !== null) {
+                gradeFilters.push({ gradeFilter: { eq: target } });
+              }
+            });
+          }
+          queryParameters.filter = {
+            and: [
+              { or: gradeFilters }, // Match one of the specified grades
+              { or: filters }       // Match at least one of the filters (title, description, etc.)
+            ]
+          };
       }
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
@@ -123,6 +148,7 @@ export abstract class BaseAPIClient {
       let result = (await API.graphql(
         graphqlOperation(query, queryParameters)
       )) as { data: any }
+      console.log(result);
       const operationResult = result.data[queryName];
       const parsedNextToken = operationResult.nextToken;
       if (type === "GameTemplate") {

@@ -9,7 +9,7 @@ import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions'; 
 import MyLibrary from '../pages/MyLibrary';
 import EGHeader from '../components/EGHeader';
-import { Screen } from '../lib/ScreenEnums';
+import { SelectedCentralPages } from '../lib/ScreenEnums';
 
 const ScreenContainer = styled(Box)(({ theme }) => ({
   width: '100%', 
@@ -45,18 +45,18 @@ function MainContainer({
   : isMediumScreen 
     ? ScreenSize.MEDIUM 
     : ScreenSize.SMALL;
-  const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.ExploreGamesScreen); // Manage current screen state
+  const [currentScreen, setCurrentScreen] = useState<SelectedCentralPages>(SelectedCentralPages.ExploreGamesScreen); // Manage current screen state
 
-  const handleScreenChange = (newScreen: Screen) => {
+  const handleScreenChange = (newScreen: SelectedCentralPages) => {
     setCurrentScreen(newScreen); // Update the screen when header buttons are clicked
   };
   return (
     <ScreenContainer>
       <EGHeader screenSize={screenSize} isXLScreen={isXLScreen} onScreenChange={handleScreenChange} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
       <BodyContainer screenSize={screenSize}>
-        {currentScreen === Screen.ExploreGamesScreen && <ExploreGames apiClients={apiClients} />}
-        {currentScreen === Screen.ExploreQuestionsScreen && <ExploreQuestions apiClients={apiClients} />}
-        {currentScreen === Screen.MyLibraryScreen && <MyLibrary apiClients={apiClients} />}
+        {currentScreen === SelectedCentralPages.ExploreGamesScreen && <ExploreGames apiClients={apiClients} />}
+        {currentScreen === SelectedCentralPages.ExploreQuestionsScreen && <ExploreQuestions apiClients={apiClients} />}
+        {currentScreen === SelectedCentralPages.MyLibraryScreen && <MyLibrary apiClients={apiClients} />}
       </BodyContainer>
     </ScreenContainer>
   );

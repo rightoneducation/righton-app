@@ -84,7 +84,7 @@ export default function Leaderboard({
     >
       <HeaderStackContainerStyled>
         <HeaderContent
-          currentState={GameSessionState.FINAL_RESULTS}
+          currentState={currentState}
           isCorrect={false}
           isIncorrect={false}
           totalTime={15}

@@ -11,7 +11,7 @@ interface AnswerBarProps {
 }
 
 export default function AnswerBar({ inputNum, totalNum }: AnswerBarProps) {
-  const progressPercent = inputNum !== 0 ? (inputNum / totalNum) * 100 : 0;
+  const progressPercent = (inputNum !== 0 && inputNum > totalNum) ? (inputNum / totalNum) * 100 : 0;
 
   const BarContainer = styled(Box)({
     position: 'relative',

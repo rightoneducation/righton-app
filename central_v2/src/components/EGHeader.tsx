@@ -10,12 +10,12 @@ import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
 import { ScreenSize } from '../lib/HostModels';
-import { Screen } from '../lib/ScreenEnums';
+import { SelectedCentralPages } from '../lib/ScreenEnums';
 
 interface EGHeaderProps {
   screenSize: ScreenSize;
   isXLScreen: boolean;
-  onScreenChange: (newScreen: Screen) => void;
+  onScreenChange: (newScreen: SelectedCentralPages) => void;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
 }
@@ -24,20 +24,19 @@ interface EGHeaderContainerProps {
   screenSize: ScreenSize;
   menuOpen: boolean;
 }
-const EGHeaderContainer = styled(Box)<EGHeaderContainerProps>(({ screenSize, menuOpen }) => ({
+const EGHeaderContainer = styled(Box)<EGHeaderContainerProps>(({ screenSize, menuOpen, theme }) => ({
   height: screenSize === ScreenSize.SMALL ? '77px' : '94px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
-  padding: '16px 32px 16px 32px',
+  padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
   boxSizing: 'border-box',
   position: 'sticky',
   top: 0,
-  zIndex: 1000
 }));
 
-const TransparentButton = styled(Button)<{ active?: boolean; menuOpen?: boolean }>(({ active, menuOpen }) => ({
+const TransparentButton = styled(Button)<{ active?: boolean; menuOpen?: boolean }>(({ active, menuOpen, theme }) => ({
   display: 'flex',
   justifyContent: menuOpen ? 'flex-start' : 'center',
   width: '200px',
@@ -51,16 +50,16 @@ const TransparentButton = styled(Button)<{ active?: boolean; menuOpen?: boolean 
   textTransform: 'none',
   opacity: active ? 1 : 0.5, // Apply opacity based on active prop
   '& img': {
-    marginRight: '8px',
+    marginRight:`${theme.sizing.xSmPadding}px`,
   },
 }));
 
 
-const PrimaryButton2 = styled(Button)(() => ({
+const PrimaryButton2 = styled(Button)(({theme}) => ({
   width: '123px',
   minWidth: '44px',
   height: '38px',
-  gap: '8px',
+  gap: `${theme.sizing.xSmPadding}px`,
   borderRadius: '54px',
   background: 'linear-gradient(90deg, #E81144 0%, #E31C5E 100%)',
   boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
@@ -76,15 +75,15 @@ const PrimaryButton2Text = styled(Typography)(() => ({
   lineHeight: '30px',
   color: '#FFFFFF',
 }));
-const CreateBox = styled(Box)({
+const CreateBox = styled(Box)(({theme}) =>({
     width: '199px',
     height: '154px',
-    padding: '8px 8px 8px 16px',
-    gap: '16px',
-    borderRadius: '16px',
+    padding: `${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px`,
+    gap: `${theme.sizing.smPadding}px`,
+    borderRadius: `${theme.sizing.smPadding}px`,
     background: '#36598D',
     boxSizing: 'border-box'
-  });
+}));
 
 interface ImageContainerProps {
   align: 'flex-start' | 'center' | 'flex-end';
@@ -99,13 +98,13 @@ const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
 }));
 
 export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuOpen, setMenuOpen }: EGHeaderProps) {
-  const [selectedScreen, setSelectedScreen] = useState<Screen>(Screen.ExploreGamesScreen);
+  const [selectedScreen, setSelectedScreen] = useState<SelectedCentralPages>(SelectedCentralPages.ExploreGamesScreen);
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const handleButtonClick = (screen: Screen) => {
+  const handleButtonClick = (screen: SelectedCentralPages) => {
     setSelectedScreen(screen);
     onScreenChange(screen);
   };
@@ -125,7 +124,7 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
           height: getHeight(),
           width: '100%',
           overflow: 'hidden',
-          zIndex: 1100,
+          zIndex: 5,
           position: 'fixed',
           background: 'linear-gradient(360deg, #02215F 0%, #0D68B1 100%)',
           padding: '0px 0px 16px 0px',
@@ -142,22 +141,22 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
           {isXLScreen ? (
             <Box display="flex" gap="80px">
               <TransparentButton
-                onClick={() => handleButtonClick(Screen.ExploreGamesScreen)}
-                active={selectedScreen === Screen.ExploreGamesScreen}
+                onClick={() => handleButtonClick(SelectedCentralPages.ExploreGamesScreen)}
+                active={selectedScreen === SelectedCentralPages.ExploreGamesScreen}
               >
                 <img src={dice} alt="Games Icon" />
                 Games
               </TransparentButton>
               <TransparentButton
-                onClick={() => handleButtonClick(Screen.ExploreQuestionsScreen)}
-                active={selectedScreen === Screen.ExploreQuestionsScreen}
+                onClick={() => handleButtonClick(SelectedCentralPages.ExploreQuestionsScreen)}
+                active={selectedScreen === SelectedCentralPages.ExploreQuestionsScreen}
               >
                 <img src={qmarks} alt="Questions Icon" />
                 Questions
               </TransparentButton>
               <TransparentButton
-                onClick={() => handleButtonClick(Screen.MyLibraryScreen)}
-                active={selectedScreen === Screen.MyLibraryScreen}
+                onClick={() => handleButtonClick(SelectedCentralPages.MyLibraryScreen)}
+                active={selectedScreen === SelectedCentralPages.MyLibraryScreen}
               >
                 <img src={books} alt="My Library Icon" />
                 My Library
@@ -194,24 +193,24 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
            style={{ margin: '0 auto',}} // This centers the box horizontally
          >
            <TransparentButton
-             onClick={() => handleButtonClick(Screen.ExploreGamesScreen)}
-             active={selectedScreen === Screen.ExploreGamesScreen}
+             onClick={() => handleButtonClick(SelectedCentralPages.ExploreGamesScreen)}
+             active={selectedScreen === SelectedCentralPages.ExploreGamesScreen}
              menuOpen={menuOpen}
            >
              <img src={dice} alt="Games Icon" />
              Games
            </TransparentButton>
            <TransparentButton
-             onClick={() => handleButtonClick(Screen.ExploreQuestionsScreen)}
-             active={selectedScreen === Screen.ExploreQuestionsScreen}
+             onClick={() => handleButtonClick(SelectedCentralPages.ExploreQuestionsScreen)}
+             active={selectedScreen === SelectedCentralPages.ExploreQuestionsScreen}
              menuOpen={menuOpen}
            >
              <img src={qmarks} alt="Questions Icon" />
              Questions
            </TransparentButton>
            <TransparentButton
-             onClick={() => handleButtonClick(Screen.MyLibraryScreen)}
-             active={selectedScreen === Screen.MyLibraryScreen}
+             onClick={() => handleButtonClick(SelectedCentralPages.MyLibraryScreen)}
+             active={selectedScreen === SelectedCentralPages.MyLibraryScreen}
              menuOpen={menuOpen}
            >
              <img src={books} alt="My Library Icon" />

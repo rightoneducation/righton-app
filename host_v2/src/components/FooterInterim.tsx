@@ -35,20 +35,20 @@ const ButtonStyled = styled(Button)({
   },
 });
 
-const FooterContainer = styled(Box)(({theme}) => ({
+const FooterContainer = styled(Box)(({ theme }) => ({
   position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  bottom: '0',
   width: '100%',
-  paddingBottom: '24px',
   gap: '16px',
+  height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
+  paddingBottom: '24px',
+  paddingTop: '16px',
 }));
 
 const InnerFooterContainer = styled(Box)({
-  position: 'sticky',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -59,7 +59,7 @@ const InnerFooterContainer = styled(Box)({
 
 const PlayerCountTypography = styled(Typography)({
   fontFamily: 'Rubik',
-  color: "#FFF",
+  color: "#000",
   fontSize: '24px',
   fontWeight: 700
 });
@@ -108,14 +108,14 @@ function FooterInterim({
         <PaginationContainerStyled className="swiper-pagination-container" />
       }
       <InnerFooterContainer>
-        { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
+        
           <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
             <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
             <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
               {teamsLength === 1 ? "player has joined" : "players have joined"}
             </PlayerCountTypography>
           </Box>
-        }
+        
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
           { buttonText }
         </ButtonStyled>

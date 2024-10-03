@@ -3,7 +3,7 @@ import { Typography, Card, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/material/styles';
 import { IHostTeamAnswersConfidence, IHostTeamAnswersConfidenceResponse } from '@righton/networking';
-import check from '../../images/correctAnswerCheck.png';
+import check from '../../img/Pickedcheck_white.svg';
 
 
 interface DropdownProps {
@@ -33,9 +33,8 @@ const DropDownContainer = styled(Box)(({ theme }) => ({
 const AnswerDataContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: `${theme.sizing.xSmPadding}px`,
   justifyContent: 'center',
-  paddingRight: `${theme.sizing.xSmPadding}px`,
+  gap: `${theme.sizing.xSmPadding}px`,
 }));
 
 const PlayerCard = styled(Card)(({ theme }) => ({
@@ -43,6 +42,7 @@ const PlayerCard = styled(Card)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: `${theme.sizing.xSmPadding}px`,
+  padding: `${theme.sizing.xSmPadding}px`,
   alignSelf: 'stretch',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   background: `${theme.palette.primary.dropdownInfoBackgroundColor}`,
@@ -76,14 +76,13 @@ const NameText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins',
   fontSize: `${theme.typography.h5.fontSize}`,
   fontWeight: `${theme.typography.body1.fontWeight}`,
-  lineHeight: `${theme.typography.subtitle1.lineHeight}`,
-  paddingLeft: `${theme.sizing.xSmPadding}px`,
+  minWidth: '32px'
 }));
 
 const AnswerText = styled(Typography)(({ theme }) => ({
   fontSize: `${theme.typography.h5.fontSize}`,
   color: `${theme.palette.primary.main}`,
-  fontWeight: `${theme.typography.h5.fontWeight}`,
+  fontWeight: `${theme.typography.h5.fontWeight}`
 }));
 
 export default function ConfidenceResponseDropdown({

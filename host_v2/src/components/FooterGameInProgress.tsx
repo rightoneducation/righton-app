@@ -9,7 +9,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { GameSessionContext, GameSessionDispatchContext } from '../lib/context/GameSessionContext';
 import { useTSGameSessionContext, useTSDispatchContext } from '../hooks/context/useGameSessionContext';
 import { getNextGameSessionState } from '../lib/HelperFunctions';
-import { ScreenSize } from '../lib/HostModels';
+import { IGraphClickInfo, ScreenSize } from '../lib/HostModels';
 
 const ButtonStyled = styled(Button)({
   border: '2px solid #159EFA',
@@ -36,7 +36,6 @@ const ButtonStyled = styled(Button)({
     opacity: '100%',
     cursor: 'not-allowed',
     boxShadow: '0px 5px 22px 0px #47D9FF 30%',
-
   },
 });
 
@@ -73,6 +72,7 @@ interface FootGameInProgressProps {
   scope3: any;
   animate3: any;
   setIsAnimating: (isAnimating: boolean) => void;
+  setGraphClickInfo: (graphClickInfo: IGraphClickInfo) => void;
 }
 
 function FooterGameInProgress({
@@ -86,7 +86,8 @@ function FooterGameInProgress({
   animate2,
   scope3,
   animate3, 
-  setIsAnimating
+  setIsAnimating,
+  setGraphClickInfo
 }: FootGameInProgressProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -94,11 +95,11 @@ function FooterGameInProgress({
   const { id, order, gameSessionId, isShortAnswerEnabled } = localGameSession.questions[localGameSession.currentQuestionIndex];
   const dispatch = useTSDispatchContext(GameSessionDispatchContext);
   const handleButtonClick = async () => {
-    setIsAnimating(true);
     const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
     const startTime = Date.now(); 
     switch (nextState) {
       case GameSessionState.FINAL_RESULTS:{
+        setIsAnimating(true);
         const animations = () => {
           return Promise.all([
             animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' }),
@@ -107,21 +108,32 @@ function FooterGameInProgress({
           ]);
         };
         await animations();
+        setIsAnimating(false);
         break;
       }
       case GameSessionState.TEAMS_JOINING:
+        setIsAnimating(true);
         await animate(scope.current, { x: '-100vw' }, { duration: 1, ease: 'easeOut' });
+        setIsAnimating(false);
         break;
       default:
         break;
     }
-    if (nextState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && isShortAnswerEnabled) {
-      const currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
-      apiClients.question.updateQuestion({id, order, gameSessionId, responses: JSON.stringify(currentResponses)});
+    if ((currentState === GameSessionState.PHASE_1_DISCUSS || currentState ===GameSessionState.PHASE_2_START || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER || currentState === GameSessionState.PHASE_2_DISCUSS)) {
+      let currentResponses = apiClients.hostDataManager?.getResponsesForQuestion(id, IPhase.ONE);
+      if (currentResponses && currentResponses.length > 0)
+        // shuffle the phase 1 responses prior to moving onto phase 2
+        if (currentState === GameSessionState.PHASE_2_START){
+          setGraphClickInfo({graph: null, selectedIndex: null});
+          // for short answer, shuffle responses before sending them on so common mistakes sorted by popularity dont go to play
+          if (isShortAnswerEnabled)
+            currentResponses = apiClients.hostDataManager?.shuffleSelectedMistakes(currentResponses);
+        }
+        console.log(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id));
+        await apiClients.question.updateQuestion({id, order, gameSessionId, answerData: JSON.stringify(apiClients.hostDataManager?.getHostTeamAnswersForQuestion(id))});
     }
-    apiClients.gameSession.updateGameSession({id: localGameSession.id, currentState: nextState, startTime: startTime.toString()});
-    dispatch({type: 'advance_game_phase', payload: {nextState, startTime}});
-    setIsAnimating(false);
+    dispatch({type: 'synch_local_gameSession', payload: {...localGameSession, currentState: nextState, startTime}});
+    apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, startTime, sessionData: JSON.stringify(apiClients.hostDataManager.getHostTeamAnswers())});
   };
   const GetButtonText = () => {
     switch(currentState) {

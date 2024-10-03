@@ -13,7 +13,7 @@
     "gamecode": {
       "title": "Enter Game Code",
       "button": "Join",
-      "error1": "We are unable to join this game.",
+      "error1": "Unable to join this game.",
       "error2": "Check the Game Code and try again."
     },
     "playername": {
@@ -57,7 +57,8 @@
       "phase2start": "Answer Explanations",
       "phase1results": "Phase 1 Results",
       "phase2results": "Phase 2 Results",
-      "finalresults": "Leaderboard",
+      "leaderboard": "Leaderboard",
+      "finalresults": "Final Leaderboard",
       "finished": "Answer the Question",
       "correct": "Correct!",
       "incorrect": "Nice Try!"
@@ -104,7 +105,8 @@
       "incorrectanswercolumn": "Incorrect Answers",
       "correcttext": "Correct!",
       "nicetrytext": "Nice try",
-      "correctanswertext": "The answer is..."
+      "correctanswertext": "The answer is...",
+      "responses": "Answer Responses"
     },
     "startphase2": {
       "title": "Starting Phase 2...",

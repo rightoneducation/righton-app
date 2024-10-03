@@ -4,8 +4,9 @@ import {
   IChoice,
   IQuestion,
   IGameSession,
-  IResponse,
+  IPhase,
   GameSessionState,
+  IHostTeamAnswersResponse,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { Navigate } from 'react-router-dom';
@@ -38,9 +39,11 @@ export default function GameSessionSwitch({
     !hasRejoined
   );
   const { currentState } = gameSession;
+  const currentPhase = gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession.currentState === GameSessionState.PHASE_1_DISCUSS || gameSession.currentState === GameSessionState.PHASE_2_START ? IPhase.ONE : IPhase.TWO;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex] as IQuestion;
-  
+  const {responses} = currentQuestion.answerData.phase1;
+  console.log(responses);
   const currentTeam = gameSession.teams.find( 
     (team) => team.id === localModel.teamId
   );
@@ -53,15 +56,14 @@ export default function GameSessionSwitch({
   const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
   const answerChoices =
   (isShortAnswerEnabled
-    ? currentQuestion?.responses?.reduce(
-        (acc: IChoice[], response: IResponse) => {
+    ? responses.reduce(
+        (acc: IChoice[], response: IHostTeamAnswersResponse) => {
           console.log(response);
           const shouldAddResponse = 
             (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
             currentState !== GameSessionState.PHASE_1_DISCUSS) 
               ? (response.isSelectedMistake || response.isCorrect) 
               : true;
-          console.log(shouldAddResponse);
           if (shouldAddResponse) {
             acc.push({
               id: uuidv4(),
@@ -69,7 +71,6 @@ export default function GameSessionSwitch({
               isAnswer: response.isCorrect,
             } as IChoice);
           }
-          
           return acc;
         },
         []
@@ -81,8 +82,9 @@ export default function GameSessionSwitch({
             text: choice.text,
             isAnswer: choice.isAnswer,
             reason: choice.reason ?? '',
-          } as IChoice)
-      )) ?? [];
+          } as IChoice) ?? []
+      )
+    );
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isGameFirstStarting ? (
@@ -155,6 +157,7 @@ export default function GameSessionSwitch({
       return <StartPhase2 /> 
 
     case GameSessionState.FINAL_RESULTS:
+    case GameSessionState.TEAMS_JOINING:
       return (
         <FinalResultsContainer
           {...gameSession}

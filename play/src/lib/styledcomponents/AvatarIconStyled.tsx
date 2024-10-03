@@ -3,11 +3,12 @@ import { styled } from '@mui/material/styles';
 // icons for the avatar select screen
 interface AvatarIconStyledProps {
   isSelected: boolean;
+  isClicked: boolean;
 }
 
 export default styled('img', {
-  shouldForwardProp: (prop) => prop !== 'isSelected',
-})<AvatarIconStyledProps>(({ isSelected }) => ({
+  shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isClicked',
+})<AvatarIconStyledProps>(({ isSelected, isClicked }) => ({
   height: '106px',
   width: 'auto',
   boxShadow: '0px 8px 20px rgba(26, 100, 136, 0.3)',
@@ -15,7 +16,7 @@ export default styled('img', {
   borderColor: 'white',
   borderStyle: 'solid',
   borderWidth: isSelected ? '6px' : '0px',
-  animation: isSelected ? `scaleAnimation 300ms` : 'none',
+  animation: isSelected && isClicked ? `scaleAnimation 300ms` : 'none',
   '@keyframes scaleAnimation': {
     '0%': {
       opacity: 0,

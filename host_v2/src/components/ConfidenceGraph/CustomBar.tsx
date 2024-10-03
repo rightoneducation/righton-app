@@ -9,7 +9,7 @@ interface BarProps {
   selectedHeight: number;
   index?: number;
   graphClickIndex: number | null;
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
+  setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 export default function CustomBar(props: any) {
@@ -19,7 +19,7 @@ export default function CustomBar(props: any) {
     selectedHeight,
     index,
     graphClickIndex,
-    handleGraphClick,
+    setGraphClickInfo,
   } = props;
 
   const offset = selectedWidth / 2;
@@ -45,7 +45,7 @@ export default function CustomBar(props: any) {
         ry={8}
         onClick={() => {
           if (index !== null && index !== undefined) {
-            handleGraphClick({graph: 'confidence', selectedIndex: index});
+            setGraphClickInfo({graph: 'confidence', selectedIndex: index});
           }
         }}
         style={{ cursor: 'pointer' }}

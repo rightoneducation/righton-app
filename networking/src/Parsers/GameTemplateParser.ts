@@ -51,6 +51,7 @@ export class GameTemplateParser {
           cluster,
           grade,
           standard,
+          ccss,
           imageUrl,
           questionTemplatesCount
       } = awsGameTemplate || {}
@@ -70,6 +71,7 @@ export class GameTemplateParser {
           cluster,
           grade,
           standard,
+          ccss,
           phaseOneTime,
           phaseTwoTime,
           imageUrl,

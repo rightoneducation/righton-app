@@ -24,7 +24,7 @@ export default function HowToPlaySlide2Content() {
           alt="monster"
           sx={{
             top: '40px',
-            left: '210px',
+            left: '310px',
             height: '70px',
             width: '70px',
           }}
@@ -34,7 +34,7 @@ export default function HowToPlaySlide2Content() {
           alt="monster"
           sx={{
             bottom: '80px',
-            left: '180px',
+            left: '280px',
             width: '90px',
             height: 'auto',
             zIndex: -1,
@@ -45,7 +45,7 @@ export default function HowToPlaySlide2Content() {
           alt="monster"
           sx={{
             bottom: '80px',
-            left: '430px',
+            left: '530px',
             width: '90px',
             height: 'auto',
           }}

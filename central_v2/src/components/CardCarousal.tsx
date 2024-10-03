@@ -39,13 +39,13 @@ export default function GameCardCarousel({ apiClients, recommendedGames }: GameC
             navigation
             breakpoints={{
                 '375': {
-                    slidesPerView: 1.186,
+                    slidesPerView: 1.2,
                 },
                 '744': {
-                    slidesPerView: 1.826,
+                    slidesPerView: 1.8,
                 },
                 '1500': {
-                    slidesPerView: 3.31,
+                    slidesPerView: 3.3,
                 },
             }}
         >

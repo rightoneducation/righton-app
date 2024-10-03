@@ -35,32 +35,34 @@ const CorrectStarsStyled = styled('img')({
 
 interface ResultSelectorProps {
   answerStatus: AnswerState;
-  index: number;
+  letterCode: string;
   answerText: string;
   percentageText?: string;
   currentState?: GameSessionState;
   isShortAnswerEnabled?: boolean;
   correctCard?: boolean;
+  newPoints?: number;
 }
 
 export default function ResultSelector({
   answerStatus,
-  index,
+  letterCode,
   answerText,
   percentageText,
   currentState,
   isShortAnswerEnabled,
   correctCard,
+  newPoints
 }: ResultSelectorProps) {
   const theme = useTheme();
-  const letterCode = 'A'.charCodeAt(0) + index;
-
+  
   const imageMap = {
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
     [AnswerState.SELECTED]: SelectedAnswer,
     [AnswerState.PREVIOUS]: '',
+    [AnswerState.OTHER]: '',
   };
 
   // disables context menu when longclicking on image
@@ -83,7 +85,6 @@ export default function ResultSelector({
       onContextMenu={handleContextMenu}
     />
   );
-
   const resultContents = (
     <>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
@@ -92,14 +93,13 @@ export default function ResultSelector({
             variant="h5"
             sx={{
               paddingLeft: '1px',
-              color: correctCard ? '#384466' : '#4700B2',
+              color: correctCard ? '#384466' : `${theme.palette.primary.darkPurple}`,
               fontWeight: '800',
               fontSize: '16px',
               lineHeight: '22px',
-              opacity: correctCard ? '.5' : '1',
             }}
           >
-            {String.fromCharCode(letterCode)}
+            {letterCode}
           </Typography>
         )}
         <Typography
@@ -156,27 +156,29 @@ export default function ResultSelector({
       );
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
-        <Box sx={{ width: '100%' }}>
-          {currentState === GameSessionState.PHASE_1_DISCUSS && (
-            <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
-              <CorrectStarsStyled
-                src={CorrectStars}
-                alt="Stars icon that denotes player is correct"
-                style={{ top: -5, left: 0 }}
-              />
-              <CorrectStarsStyled
-                src={CorrectStars}
-                alt="Stars icon that denotes player is correct"
-                style={{ top: -5, right: 10 }}
-              />
-              <CorrectStarsStyled
-                src={CorrectStars_Mirrored}
-                alt="Stars icon that denotes player is correct"
-                style={{ top: 30, right: 0 }}
-              />
-            </Box>
-          )}
-          <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
+        <Box sx={{width: '100%', display: 'flex', alignItems: 'center'}}>
+          <Box sx={{ width: '100%' }}>
+            {currentState === GameSessionState.PHASE_1_DISCUSS && (
+              <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
+                <CorrectStarsStyled
+                  src={CorrectStars}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: -5, left: 0 }}
+                />
+                <CorrectStarsStyled
+                  src={CorrectStars}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: -5, right: 10 }}
+                />
+                <CorrectStarsStyled
+                  src={CorrectStars_Mirrored}
+                  alt="Stars icon that denotes player is correct"
+                  style={{ top: 30, right: 0 }}
+                />
+              </Box>
+            )}
+            <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
+          </Box>
         </Box>
       );
     case AnswerState.SELECTED:

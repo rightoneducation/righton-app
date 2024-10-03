@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, LinearProgress } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import { GameSessionState, IHostTeamAnswersResponse } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
+import InputNum from '../lib/styledcomponents/footer/InputNum';
 
 interface AnswerCardProps {
   isCorrectAnswer: boolean;
@@ -12,7 +14,10 @@ interface AnswerCardProps {
   answerContent: string;
   instructions: string[] | null;
   answerReason: string | null;
+  isShortAnswerEnabled: boolean;
+  response: IHostTeamAnswersResponse | null;
 }
+
 const AnswerTitleTypography = styled(Typography)({
   lineHeight: '28px',
   fontFamily: 'Karla',
@@ -20,16 +25,18 @@ const AnswerTitleTypography = styled(Typography)({
   fontSize: '24px',
   color: 'black',
 });
-export default function AnswerCard({
+
+export default function  AnswerCard({
   isCorrectAnswer,
   answerIndex,
   answerContent,
   instructions,
-  answerReason
+  answerReason,
+  isShortAnswerEnabled,
+  response,
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
-  const letterCode = 'A'.charCodeAt(0) + answerIndex;
-
+  const letterCode = response?.multiChoiceCharacter;
   const correctAnswerInstruction = (index: number) => {
     return (
       <Box
@@ -47,6 +54,7 @@ export default function AnswerCard({
             fontSize: `${theme.typography.h3.fontSize}px`,
             fontWeight: `${theme.typography.h3.fontWeight}`,
             color: `${theme.palette.primary.darkPurple}`,
+            opacity: 0.5
           }}
         >
           {index + 1}
@@ -97,17 +105,20 @@ export default function AnswerCard({
                 : theme.palette.primary.lightGrey,
             }}
           >
-            <Typography
-              sx={{
-                marginRight: `${theme.sizing.xSmPadding}px`,
-                fontWeight: `${theme.typography.h5.fontWeight}`,
-                opacity: 0.5,
-              }}
-            >
-              {String.fromCharCode(letterCode)}
-            </Typography>
+            {!isShortAnswerEnabled && 
+              <Typography
+                sx={{
+                  color: `${theme.palette.primary.darkPurple}`,
+                  marginRight: `${theme.sizing.xSmPadding}px`,
+                  fontWeight: `${theme.typography.h5.fontWeight}`,
+                }}
+              >
+                {letterCode}
+              </Typography>
+            }
             <Typography>{answerContent}</Typography>
           </AnswerOptionStyled>
+          
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
             {isCorrectAnswer && instructions !== null
               ? instructions.map((instruction) =>

@@ -24,7 +24,7 @@ const ScoreAnimation = styled('div', {
   zIndex: 2,
   animation: startAnimation
     ? `
-   scoreGrow 1000ms ease-in-out 2600ms
+   scoreGrow 1000ms ease-in-out 1650ms
   `
     : ``,
   '@keyframes scoreGrow': {

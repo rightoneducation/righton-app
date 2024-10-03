@@ -1,10 +1,7 @@
-export enum Screen {
+export enum SelectedCentralPages { // eslint-disable-line
     ExploreGamesScreen,
     ExploreQuestionsScreen,
     MyLibraryScreen,
   }
 
-  export enum Fake {
-    FakeOne
-  }
   

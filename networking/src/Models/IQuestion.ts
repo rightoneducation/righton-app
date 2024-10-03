@@ -1,12 +1,13 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
 import { AnswerType, AnswerPrecision } from "./AnswerClasses";
+import { IHostTeamAnswersQuestion } from "./IHostTeamAnswers";
 
 export interface IQuestion {
     id: string
     text: string
     choices: Array<IChoice>
     answerSettings: IAnswerSettings
-    responses: Array<IResponse>
+    answerData: IHostTeamAnswersQuestion
     hints: Array<IHints>
     imageUrl: string
     instructions: Array<string>
@@ -39,7 +40,7 @@ export interface IResponse {
     isCorrect: boolean
     isSelectedMistake: boolean
     count: number
-    teams: Array<IResponseTeam>
+    teams: string[]
 }
 
 export interface IResponseTeam {

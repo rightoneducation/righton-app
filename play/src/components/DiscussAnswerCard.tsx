@@ -1,43 +1,60 @@
 import React from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Stack, Box } from '@mui/material';
-import { GameSessionState } from '@righton/networking';
+import { Typography, Stack, Box, LinearProgress } from '@mui/material';
+import { GameSessionState, IHostTeamAnswersResponse } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
+import InputNum from '../lib/styledcomponents/InputNum';
 import ResultSelector from './ResultSelector';
-import DACScoreIndicator from './DACScoreIndicator';
-import DACP2ScoreIndicator from './DACP2ScoreIndicator';
+import NewPointsIndicator from './NewPointsIndicator';
 
+
+const BarContainer = styled(Box)({
+  position: 'relative',
+  width: '100%',
+});
+
+const StyledAnswerBar = styled(LinearProgress)({
+  height: '18px',
+  width: '100%',
+  borderRadius: '3px',
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  boxSizing: 'border-box'
+});
 
 interface DiscussAnswerCardProps {
-  isPlayerCorrect: boolean;
   instructions: string[];
   answerStatus: AnswerState;
-  answerText: string;
-  answerIndex: number;
   answerReason?: string;
   currentState: GameSessionState;
   isShortAnswerEnabled: boolean;
   newPoints: number | undefined;
+  phaseOneResponse?: IHostTeamAnswersResponse;
+  phaseTwoResponse?: IHostTeamAnswersResponse;
+  otherAnswersCount?: number;
+  totalAnswers?: number;
 }
 
 export default function DiscussAnswerCard({
-  isPlayerCorrect,
   instructions,
   answerStatus,
-  answerText,
-  answerIndex,
   answerReason,
   currentState,
   isShortAnswerEnabled,
   newPoints,
+  phaseOneResponse,
+  phaseTwoResponse,
+  otherAnswersCount,
+  totalAnswers
 }: DiscussAnswerCardProps) {
+  console.log(answerStatus);
   const theme = useTheme();
   const { t } = useTranslation();
-  const resultText = isPlayerCorrect
+  const resultText = (answerStatus === AnswerState.PLAYER_SELECTED_CORRECT)
     ? t('gameinprogress.discussanswer.correcttext')
     : t('gameinprogress.discussanswer.nicetrytext');
   const correctCard =
@@ -50,44 +67,76 @@ export default function DiscussAnswerCard({
     fontSize: '24px',
     color: 'black',
   });
+  let percent = 0;
+  if (answerStatus === AnswerState.OTHER)
+    percent = otherAnswersCount! / totalAnswers! * 100;
+  if (phaseOneResponse && totalAnswers) {
+    percent = phaseOneResponse.count / totalAnswers * 100;
+  }
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
       {correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
-               <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>)}
-      {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && (
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <AnswerTitleTypography> Correct Answer </AnswerTitleTypography>
+        </Box>
+      )}
+      {!correctCard && currentState === GameSessionState.PHASE_2_DISCUSS && answerStatus !== AnswerState.OTHER && (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <AnswerTitleTypography>Incorrect Answer</AnswerTitleTypography>
           {answerStatus === AnswerState.SELECTED &&(
-            <DACP2ScoreIndicator newPoints={newPoints} score={0} />)}
+            <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>)}
         </Box>
       )}
         {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
-          <Box sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}>
-            <Typography
-              variant="subtitle1"
-              sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
-            >
-              {resultText}
-            </Typography>
+          <Box sx={{ marginBottom: '16px', width: '100%' }}>
+            <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+              <Typography
+                variant="subtitle1"
+                sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
+              >
+                {resultText}
+              </Typography>
+              <NewPointsIndicator newPoints={newPoints} score={0} currentState={currentState}/>
+            </Box>
             <Typography variant="body1">
               {t('gameinprogress.discussanswer.correctanswertext')}
             </Typography>
           </Box>
         )}
-        {currentState === GameSessionState.PHASE_1_DISCUSS &&(
-          <Box style={{ marginLeft: '416px'}}>
-            <DACScoreIndicator newPoints={newPoints} score={0} />
-          </Box>
-        )}
+        { answerStatus !== AnswerState.OTHER && (
         <ResultSelector
           answerStatus={answerStatus}
-          index={answerIndex}
-          answerText={answerText}
+          letterCode={(currentState === GameSessionState.PHASE_1_DISCUSS ? phaseOneResponse?.multiChoiceCharacter : phaseTwoResponse?.multiChoiceCharacter) ?? ''}
+          answerText={phaseOneResponse?.rawAnswer ?? ''}
           currentState={currentState}
           isShortAnswerEnabled={isShortAnswerEnabled}
           correctCard = {correctCard}
+          newPoints={newPoints}
         />
+        )}
+         {(currentState === GameSessionState.PHASE_2_DISCUSS) &&
+            <Box style={{width: '100%', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+              <Typography sx={{paddingTop: '16px'}}>
+                {answerStatus !== AnswerState.OTHER ? 'Players who answered this way' : 'Players who answered something else'}
+              </Typography>
+                <BarContainer>
+                  <StyledAnswerBar
+                    variant="determinate"
+                    sx={{
+                      height: '18px',
+                      borderRadius: '4px',
+                      backgroundColor: theme.palette.primary.progressBarBackgroundColor,
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: answerStatus === AnswerState.SELECTED ? theme.palette.primary.progressBarSelectedColor : theme.palette.primary.darkPurple
+                      }
+                    }}
+                    value={percent}
+                  />
+                  <InputNum progressPercent={percent}>{Math.floor(percent)}%</InputNum>
+                </BarContainer>
+            </Box>
+            }
         <Stack
           spacing={1}
           sx={{ paddingTop: `${theme.sizing.extraSmallPadding}px` }}

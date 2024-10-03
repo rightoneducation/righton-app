@@ -4,7 +4,7 @@ export type AWSQuestion = {
   answerSettings: string
   hints: string
   choices?: string | null
-  responses?: string | null
+  answerData?: string | null
   imageUrl?: string | null
   instructions?: string | null
   standard?: string | null

@@ -115,6 +115,7 @@ export default function OpenAnswerCard({
   const handlePresubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const answer = AnswerFactory.createAnswer(currentContents, answerType, answerPrecision);
     answer.normalizeAnswer(currentContents);
+    const isCorrect = true;
     const packagedAnswer = new BackendAnswer(
       answer,
       true,
@@ -126,7 +127,7 @@ export default function OpenAnswerCard({
       currentTeam?.id ?? '',
       currentTeam?.name ?? '',
       currentContents,
-      false
+      isCorrect
     );
     handleSubmitAnswer(packagedAnswer);
   };

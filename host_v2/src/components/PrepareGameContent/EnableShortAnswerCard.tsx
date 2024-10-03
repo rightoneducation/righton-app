@@ -5,6 +5,8 @@ import { useTheme, styled } from '@mui/material/styles';
 const StyledContainer = styled(Paper)(({theme})=>({
   display: 'flex',
   padding: `${theme.sizing.smPadding}px`,
+  marginLeft: `${theme.sizing.xSmPadding}px`,
+  marginRight: `${theme.sizing.xSmPadding}px`,
   flexDirection: 'column',
   alignItems: 'flex-start',
   gap: `${theme.sizing.smPadding}px`,
@@ -95,7 +97,7 @@ export default function EnableShortAnswerCard ({
     <StyledContainer>
       <TitleContainer>
         <TitleTypography>
-          Responses
+          Answer Type
         </TitleTypography>
       </TitleContainer>
       <Box style={{width: '100%'}}>

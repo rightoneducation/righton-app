@@ -16,16 +16,15 @@ import { useTranslation } from 'react-i18next';
 import { AnswerState } from '../../lib/PlayModels';
 import QuestionCard from '../../components/QuestionCard';
 import DiscussAnswerCard from '../../components/DiscussAnswerCard';
+import AnswerResponsesCard from '../../components/AnswerResponses/AnswerResponsesCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import ThreeColumnScrollBox from '../../lib/styledcomponents/layout/ThreeColumnScrollBox';
-import 'swiper/css';
-import 'swiper/css/pagination';
 import {
   BodyContentAreaTripleColumnStyled,
-  BodyContentAreaDoubleColumnStyled,
+  BodyContentAreaTripleColumnStyledNoSwiper,
   BodyContentAreaSingleColumnStyled,
 } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import DACScoreIndicator from '../../components/DACScoreIndicator';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -40,17 +39,6 @@ interface DiscussAnswerProps {
   gameSession: IGameSession;
   newPoints: number | undefined;
 }
-
-const ColumnHeader = styled(Typography)({
-  marginTop: `16px`,
-  marginBottom: `16px`,
-  textAlign: 'center',
-  fontFamily: 'Karla',
-  fontWeight: '800',
-  fontSize: '16px',
-  lineHeight: '18.7px',
-  color: 'white',
-});
 
 export default function DiscussAnswer({
   isSmallDevice,
@@ -67,38 +55,42 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
-  const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
-  
-  
+  const phaseOneResponses = currentQuestion?.answerData.phase1.responses.filter((response) => response.multiChoiceCharacter !== '–' || response.isCorrect).reverse();
+  let phaseTwoResponses = null;
+  let otherResponses = null;
+  if (currentState === GameSessionState.PHASE_2_DISCUSS){
+    const selectedMistakes = currentQuestion?.answerData.phase1.responses.filter((response) => response.isSelectedMistake).reverse();
+    const selectedRawAnswers = new Set(selectedMistakes.map(r => r.rawAnswer));
+    if (isShortAnswerEnabled){
+    phaseTwoResponses = currentQuestion?.answerData.phase2.responses
+      .filter(response2 => selectedRawAnswers.has(response2.rawAnswer)).reverse();
+    otherResponses = currentQuestion?.answerData.phase1.responses
+      .filter(response2 => !selectedRawAnswers.has(response2.rawAnswer) && response2.count > 0 && !response2.isCorrect).reverse();
+    } else {
+      phaseTwoResponses = currentQuestion?.answerData.phase2.responses.filter((response) => response.multiChoiceCharacter !== '–' || response.isCorrect).reverse(); 
+    }
+  }
+  const correctResponse = currentQuestion.answerData.phase1.responses.find((response) => response.isCorrect);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
     currentState
   );
-  const isPlayerCorrect = isShortAnswerEnabled
-    ? ModelHelper.isShortAnswerResponseCorrect(
-        currentQuestion.responses ?? [],
-        currentTeam
-      )
-    : correctAnswer?.text === selectedAnswer?.text;
-    console.log(selectedAnswer?.text);
-  // const isPlayerCorrect = true;
+  const totalAnswers = phaseOneResponses.reduce((acc, response) => acc + response.teams.length, 0) ?? 0;
+  const isPlayerCorrect = selectedAnswer?.isCorrect ?? false;
+  
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>
         <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-        <DACScoreIndicator newPoints={5} score={0} />
         <DiscussAnswerCard
-          isPlayerCorrect={isPlayerCorrect}
           instructions={instructions}
           answerStatus={
             isPlayerCorrect
               ? AnswerState.PLAYER_SELECTED_CORRECT
               : AnswerState.CORRECT
           }
-          answerText={correctAnswer?.text ?? ''}
-          answerIndex={correctIndex ?? 0}
+          phaseOneResponse={correctResponse}
           currentState={currentState}
           isShortAnswerEnabled={isShortAnswerEnabled}
           newPoints={newPoints}
@@ -122,26 +114,38 @@ export default function DiscussAnswer({
       <ScrollBoxStyled>
         <Stack spacing={2}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-          {answerChoices?.map(
-            (answer, index) =>
-              !answer.isAnswer && (
-                <DiscussAnswerCard
-                  isPlayerCorrect={isPlayerCorrect}
-                  instructions={instructions ?? ''}
-                  answerStatus={
-                    answer.text === selectedAnswer?.text
-                      ? AnswerState.SELECTED
-                      : AnswerState.DEFAULT
-                  }
-                  answerText={answer.text}
-                  answerIndex={index}
-                  answerReason={answer.reason ?? ''}
-                  currentState={currentState}
-                  key={uuidv4()}
-                  isShortAnswerEnabled={isShortAnswerEnabled}
-                  newPoints={newPoints}
-                />
-              )
+          { phaseTwoResponses?.reverse && phaseTwoResponses.map((response, index) => (
+            !response.isCorrect &&
+              <DiscussAnswerCard
+                instructions={instructions ?? ''}
+                answerStatus={
+                  response.teams.includes(currentTeam.name) 
+                    ? AnswerState.SELECTED
+                    : AnswerState.DEFAULT
+                }
+                phaseTwoResponse={response}
+                phaseOneResponse={phaseOneResponses.find((p1Response) => p1Response.rawAnswer === response.rawAnswer)}
+                answerReason={response.reason ?? ''}
+                currentState={currentState}
+                key={uuidv4()}
+                isShortAnswerEnabled={isShortAnswerEnabled}
+                newPoints={newPoints}
+                totalAnswers={totalAnswers}
+              />
+            )
+          )}
+          { otherResponses && otherResponses.length > 0 && (
+              <DiscussAnswerCard
+                instructions={instructions ?? ''}
+                answerStatus={AnswerState.OTHER}
+                answerReason=''
+                currentState={currentState}
+                key={uuidv4()}
+                isShortAnswerEnabled={isShortAnswerEnabled}
+                newPoints={newPoints}
+                otherAnswersCount={otherResponses.reduce((acc, response) => acc + response.count, 0) ?? 0}
+                totalAnswers={totalAnswers}
+              />
           )}
         </Stack>
         {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
@@ -161,76 +165,86 @@ export default function DiscussAnswer({
 
   const questionRightColumnContents = (
       <ScrollBoxStyled>
-        <DiscussAnswerCard
-            isPlayerCorrect={isPlayerCorrect}
+        <Stack spacing={2}>
+          <AnswerResponsesCard isShortAnswerEnabled={isShortAnswerEnabled} phaseOneResponses={phaseOneResponses} phaseTwoResponses={phaseTwoResponses} otherResponses={otherResponses} currentTeam={currentTeam}/>
+          <DiscussAnswerCard
             instructions={instructions}
             answerStatus={
               isPlayerCorrect
                 ? AnswerState.PLAYER_SELECTED_CORRECT
                 : AnswerState.CORRECT
             }
-            answerText={correctAnswer?.text ?? ''}
-            answerIndex={correctIndex ?? 0}
+            phaseOneResponse={correctResponse}
+            phaseTwoResponse={correctResponse}
             currentState={currentState}
             isShortAnswerEnabled={isShortAnswerEnabled}
             newPoints={newPoints}
+            totalAnswers={totalAnswers}
           />
+        </Stack>
       </ScrollBoxStyled>
   );
 
-  return currentState === GameSessionState.PHASE_2_DISCUSS ? (
-    <BodyContentAreaTripleColumnStyled
-      container
-      spacing={isSmallDevice ? 0 : 2}
-    >
-      <Grid item xs={12} sm={4} style={{ width: `100%`, height: '100%', padding: '0px' }}>
-        {isSmallDevice ? (
-          <Swiper
-            modules={[Pagination]}
-            spaceBetween={4}
-            centeredSlides
-            slidesPerView="auto"
-            pagination={{
-              el: '.swiper-pagination-container',
-              bulletClass: 'swiper-pagination-bullet',
-              bulletActiveClass: 'swiper-pagination-bullet-active',
-              clickable: true,
-              renderBullet(index, className) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-              },
-            }}
-            style={{ height: '100%' }}
-          >
-            <SwiperSlide
-              style={{
-                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                height: '100%',
+  return currentState === GameSessionState.PHASE_2_DISCUSS ? ( // eslint-disable-line
+    isSmallDevice ? (
+      <BodyContentAreaTripleColumnStyled
+        container
+        gap='16px'
+      >
+        <Grid item xs={12} sm style={{ width: `100%`, height: '100%'}}>
+            <Swiper
+              modules={[Pagination]}
+              spaceBetween='8px'
+              centeredSlides
+              slidesPerView={1.2}
+              pagination={{
+                el: '.swiper-pagination-container',
+                bulletClass: 'swiper-pagination-bullet',
+                bulletActiveClass: 'swiper-pagination-bullet-active',
+                clickable: true,
+                renderBullet(index, className) {
+                  return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                },
               }}
+              style={{ height: '100%' }}
             >
-              {questionLeftColumnContents}
-            </SwiperSlide>
-            <SwiperSlide
-              style={{
-                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                height: '100%',
-              }}
-            >
-              {questionRightColumnContents}
-            </SwiperSlide>
-          </Swiper>
-        ) : (
-          questionLeftColumnContents
-        )}
-      </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
-        {questionRightColumnContents}
-      </Grid>
-    </BodyContentAreaTripleColumnStyled>
-  ) : (
-    <BodyContentAreaSingleColumnStyled>
-      <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
-        {P1LeftColumnContents}
-      </Box>
-    </BodyContentAreaSingleColumnStyled>
+              <SwiperSlide
+                style={{
+                  width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                  height: '100%',
+                }}
+              >
+                {questionLeftColumnContents}
+              </SwiperSlide>
+              <SwiperSlide
+                style={{
+                  width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                  height: '100%',
+                }}
+              >
+                {questionRightColumnContents}
+              </SwiperSlide>
+            </Swiper>
+        </Grid>
+        </BodyContentAreaTripleColumnStyled>
+      ):(
+        <BodyContentAreaTripleColumnStyledNoSwiper
+          container
+          gap='16px'
+        >
+          <Grid item xs={0} sm sx={{ width: '100%', height: '100%' }}>
+            {questionLeftColumnContents}
+          </Grid>
+          <Grid item xs={0} sm sx={{ width: '100%', height: '100%' }}>
+            {questionRightColumnContents}
+          </Grid>
+        </BodyContentAreaTripleColumnStyledNoSwiper>
+      )
+    ) : (
+      <BodyContentAreaSingleColumnStyled>
+        <Box sx={{ width: '100%', maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`, height: '100%' }}>
+          {P1LeftColumnContents}
+        </Box>
+      </BodyContentAreaSingleColumnStyled>
   );
 }

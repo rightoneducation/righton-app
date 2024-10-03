@@ -42,6 +42,7 @@ export default function AnswerCard({
   currentTeam,
   handleSelectAnswer,
 }: AnswerCardProps) {
+  console.log(answers);
   const theme = useTheme();
   const { t } = useTranslation();
   const correctText = (
@@ -92,8 +93,8 @@ export default function AnswerCard({
   };
 
   return (
-    <BodyCardStyled elevation={10}>
-      <BodyCardContainerStyled spacing={2}>
+    <BodyCardStyled elevation={10} >
+      <BodyCardContainerStyled spacing={2} >
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
           ? correctText
           : trickText}

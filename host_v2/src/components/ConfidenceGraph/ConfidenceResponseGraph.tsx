@@ -19,7 +19,7 @@ import CustomBar from './CustomBar';
 interface GraphProps {
   confidences: IHostTeamAnswersConfidence[];
   graphClickIndex: number | null;
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void;
+  setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void;
 }
 
 interface Response {
@@ -51,7 +51,7 @@ const CenteredContainer = styled(Box)({
 export default function ConfidenceResponsesGraph({
   confidences,
   graphClickIndex,
-  handleGraphClick,
+  setGraphClickInfo,
 }: GraphProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();  
@@ -143,7 +143,7 @@ export default function ConfidenceResponsesGraph({
                     }
                     selectedHeight={200}
                     graphClickIndex={graphClickIndex}
-                    handleGraphClick={handleGraphClick}
+                    setGraphClickInfo={setGraphClickInfo}
                   />
                 }
               />
@@ -164,7 +164,7 @@ export default function ConfidenceResponsesGraph({
                     }
                     selectedHeight={200}
                     graphClickIndex={graphClickIndex}
-                    handleGraphClick={handleGraphClick}
+                    setGraphClickInfo={setGraphClickInfo}
                   />
                 }
               />

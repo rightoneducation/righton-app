@@ -23,7 +23,7 @@ export default function HowToPlaySlide1Content() {
           alt="monster"
           sx={{
             top: '40px',
-            left: '210px',
+            left: '310px',
             height: '70px',
             width: '70px',
           }}
@@ -33,7 +33,7 @@ export default function HowToPlaySlide1Content() {
           alt="monster"
           sx={{
             bottom: '60px',
-            left: '420px',
+            left: '520px',
             width: '115px',
             height: 'auto',
           }}

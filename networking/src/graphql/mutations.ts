@@ -27,9 +27,11 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -45,9 +47,11 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -63,9 +67,11 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -142,9 +148,11 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -225,9 +233,11 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -243,9 +253,11 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -261,9 +273,11 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -340,9 +354,11 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -423,9 +439,11 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
     owner
     version
     description
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     phaseOneTime
     phaseTwoTime
@@ -441,9 +459,11 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -459,9 +479,11 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -538,9 +560,11 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -639,9 +663,11 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -657,9 +683,11 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -736,9 +764,11 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -836,9 +866,11 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -854,9 +886,11 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -933,9 +967,11 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1033,9 +1069,11 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
           owner
           version
           description
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           phaseOneTime
           phaseTwoTime
@@ -1051,9 +1089,11 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1130,9 +1170,11 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 owner
                 version
                 description
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1221,7 +1263,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -1293,13 +1335,14 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -1345,7 +1388,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -1417,13 +1460,14 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -1469,7 +1513,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           text
           choices
           answerSettings
-          responses
+          answerData
           hints
           imageUrl
           instructions
@@ -1541,13 +1585,14 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
     description
     title
     currentTimer
+    sessionData
     questions {
       items {
         id
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -1583,7 +1628,7 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     text
     choices
     answerSettings
-    responses
+    answerData
     hints
     imageUrl
     instructions
@@ -1612,7 +1657,7 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     text
     choices
     answerSettings
-    responses
+    answerData
     hints
     imageUrl
     instructions
@@ -1641,7 +1686,7 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     text
     choices
     answerSettings
-    responses
+    answerData
     hints
     imageUrl
     instructions
@@ -1673,7 +1718,7 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -1751,7 +1796,7 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -1829,7 +1874,7 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -2116,9 +2161,11 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2134,9 +2181,11 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2152,9 +2201,11 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2223,9 +2274,11 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2307,9 +2360,11 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2325,9 +2380,11 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2396,9 +2453,11 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2478,9 +2537,11 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2496,9 +2557,11 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2514,9 +2577,11 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2585,9 +2650,11 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2669,9 +2736,11 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2687,9 +2756,11 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2758,9 +2829,11 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2840,9 +2913,11 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
       owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -2858,9 +2933,11 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -2876,9 +2953,11 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2947,9 +3026,11 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3031,9 +3112,11 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             owner
             version
             description
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             phaseOneTime
             phaseTwoTime
@@ -3049,9 +3132,11 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -3120,9 +3205,11 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   owner
                   version
                   description
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   phaseOneTime
                   phaseTwoTime

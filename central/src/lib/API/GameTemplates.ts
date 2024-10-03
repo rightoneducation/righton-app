@@ -66,13 +66,13 @@ export const listGameTemplates = async (apiClients: IAPIClients, listQuerySettin
     const queryLimit = listQuerySettings?.queryLimit ?? null;
     switch (sortField) {
       case SortField.GRADE:
-        return await apiClients.gameTemplate.listGameTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString);
+        return await apiClients.gameTemplate.listGameTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString, []);
       case SortField.UPDATEDAT:
-        return await apiClients.gameTemplate.listGameTemplatesByDate(queryLimit, nextToken, sortDirection, filterString);
+        return await apiClients.gameTemplate.listGameTemplatesByDate(queryLimit, nextToken, sortDirection, filterString, []);
       case SortField.COUNT:
-        return await apiClients.gameTemplate.listGameTemplatesByQuestionTemplatesCount(queryLimit, nextToken, sortDirection, filterString);
+        return await apiClients.gameTemplate.listGameTemplatesByQuestionTemplatesCount(queryLimit, nextToken, sortDirection, filterString, []);
       default:
-        return await apiClients.gameTemplate.listGameTemplates(queryLimit, nextToken, sortDirection, filterString);
+        return await apiClients.gameTemplate.listGameTemplates(queryLimit, nextToken, sortDirection, filterString, []);
     }
   } catch (e) {
     console.log(e);

@@ -33,6 +33,7 @@ export enum AnswerState {
   PLAYER_SELECTED_CORRECT,
   SELECTED,
   PREVIOUS,
+  OTHER
 }
 
 /**
@@ -58,7 +59,6 @@ export enum OverallGameState {
 export enum PregameState {
   SPLASH_SCREEN,
   ENTER_GAME_CODE,
-  ENTER_NAME,
   SELECT_AVATAR,
   FINISHED,
 }

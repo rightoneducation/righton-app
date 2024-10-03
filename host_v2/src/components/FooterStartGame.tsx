@@ -80,7 +80,7 @@ interface FootStartGameProps {
   isGamePrepared: boolean;
   scope4?: React.RefObject<HTMLDivElement>;
 }
-function FooterStartGame({
+export default function FooterStartGame({
   teamsLength,
   screenSize,
   selectedSuggestedGame,
@@ -88,28 +88,27 @@ function FooterStartGame({
   handleButtonClick,
   scope4
 }: FootStartGameProps) {
-  
   const localGameSession = useTSGameSessionContext(GameSessionContext);
   const [isAnimating, setIsAnimating] = useState(false);
-  const fetchButtonText = (gameSession: IGameSession) => {
+  const fetchButtonText = (gameSession: IGameSession, selectedGame: string | null) => {
     switch (gameSession.currentState) {
       case GameSessionState.TEAMS_JOINING:
-        return (gameSession.currentQuestionIndex === null)
-            ? 'Start Game' 
+        return (gameSession.currentQuestionIndex === null) // eslint-disable-line no-nested-ternary
+            ? (isGamePrepared) ? 'Start Game' : 'Prepare Game' 
             : 'Next Question';
       case GameSessionState.FINAL_RESULTS:
         return 'End Game';
       default:
-        return (selectedSuggestedGame === null)
+        return (selectedGame === null)
             ? 'Exit to RightOn Central'
             : 'Play Selected Game';
       }
   }
-  const [buttonText, setButtonText] = useState(fetchButtonText(localGameSession));
+  let buttonText = fetchButtonText(localGameSession, selectedSuggestedGame ?? null);
 
   
   const handleButtonAnimationClick = () => {
-    setButtonText('Starting Game...');
+    buttonText = 'Starting Game...';
     setIsAnimating(true);
   };
   const handleAnimationEnd = (event: React.AnimationEvent) => {
@@ -164,4 +163,3 @@ function FooterStartGame({
     </FooterContainer>
   );
 }
-export default FooterStartGame;

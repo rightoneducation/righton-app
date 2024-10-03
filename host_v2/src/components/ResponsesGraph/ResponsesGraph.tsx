@@ -34,9 +34,10 @@ const TitleContainer = styled(Box)({
 interface ResponseGraphProps {
   data: IHostTeamAnswersResponse[];
   statePosition: number,
-  graphClickInfo: IGraphClickInfo, // eslint-disable-line
   isShortAnswerEnabled: boolean,
-  handleGraphClick: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
+  graphClickInfo: IGraphClickInfo, // eslint-disable-line
+  isPrevPhaseResponses: boolean,
+  setGraphClickInfo: ({ graph, selectedIndex }: IGraphClickInfo) => void; // eslint-disable-line
   setGraphClickIndex: (index: number | null) => void;
 }
 
@@ -44,13 +45,15 @@ export default function ResponsesGraph({
   data,
   statePosition,
   isShortAnswerEnabled,
+  graphClickInfo,
+  isPrevPhaseResponses,
+  setGraphClickInfo,
   setGraphClickIndex,
 }: ResponseGraphProps) {
   const theme = useTheme();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef<HTMLElement | null>(null);
   const noResponseLabel = '–';
-
   const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - theme.sizing.defaultVictoryPadding : boundingRect.width - (theme.sizing.defaultVictoryPadding + theme.sizing.mdPadding * 2);
   const correctChoiceIndex =
     data.findIndex((element: any) => element.isCorrect);
@@ -69,12 +72,12 @@ export default function ResponsesGraph({
       (_, index) => index * tickInterval,
     );
   };
-  const [graphClickInfo, setGraphClickInfo] = React.useState<IGraphClickInfo>({graph: null, selectedIndex: null});
+  // remove any zero responses when displaying phase 1 data in phase 2
+
   const handleGraphClick = ({ graph, selectedIndex }: IGraphClickInfo) => {
     setGraphClickInfo({graph, selectedIndex })
     setGraphClickIndex(selectedIndex);
   }
-
   useEffect(() => {
     const handleResize = () => {
       const node: HTMLElement | null = graphRef.current;
@@ -103,6 +106,7 @@ export default function ResponsesGraph({
         correctChoiceIndex={correctChoiceIndex}
         statePosition={statePosition}
         isShortAnswerEnabled={isShortAnswerEnabled}
+        data={data}
       />
     );
   }
@@ -171,7 +175,7 @@ export default function ResponsesGraph({
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             style={{ 
               data: { 
-                fill: ({ index }: any) => index === numAnswers-1 ? 'transparent' : '#FFF'
+                fill: ({ index, datum }: any) => ((index === numAnswers-1 || statePosition > 6) && datum.multiChoiceCharacter ==='–') || isPrevPhaseResponses ? 'transparent' : '#FFF'
               } 
             }}
             barWidth={({ datum }) =>
@@ -181,16 +185,20 @@ export default function ResponsesGraph({
             dataComponent={
               <CustomBar 
                 data={data}
+                statePosition={statePosition}
                 customBarSelectedWidth={customBarSelectedWidth}
                 graphClickInfo={graphClickInfo}
-                handleGraphClick={handleGraphClick}
+                setGraphClickInfo={setGraphClickInfo}
                 isShortAnswerEnabled={isShortAnswerEnabled}
+                isPrevPhaseResponses={isPrevPhaseResponses}
               />
             }
             labelComponent={
               <CustomLabel
                 noResponseLabel={noResponseLabel}
                 isShortAnswerEnabled={isShortAnswerEnabled}
+                customBarSelectedWidth={customBarSelectedWidth}
+                statePosition={statePosition}
               />
             }
           

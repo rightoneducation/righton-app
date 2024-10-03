@@ -22,9 +22,11 @@ type GameTemplate @model{
     )
   version: Int!
   description: String!
+  ccss: String
   domain: String
   cluster: String
   grade: String
+  gradeFilter: String
   standard: String
   phaseOneTime: Int
   phaseTwoTime: Int
@@ -86,6 +88,7 @@ type GameSession @model {
   description: String
   title: String
   currentTimer: Int
+  sessionData: AWSJSON
   questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
 }
 
@@ -106,7 +109,7 @@ type Question @model(subscriptions: null, timestamps: null) {
   text: String!
   choices: AWSJSON
   answerSettings: AWSJSON
-  responses: AWSJSON
+  answerData: AWSJSON
   hints: AWSJSON
   imageUrl: String
   instructions: AWSJSON
@@ -172,5 +175,7 @@ type Subscription {
     @aws_subscribe(mutations: ["createTeam"])
   onTeamDeleteByGameSessionId(gameSessionTeamsId: ID!): Team
     @aws_subscribe(mutations: ["deleteTeam"])
+  onTeamUpdateByGameSessionId(gameSessionTeamsId: ID!): Team
+    @aws_subscribe(mutations: ["updateTeam"])
 }
 

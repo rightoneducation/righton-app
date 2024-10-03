@@ -5,6 +5,8 @@ import { Paper } from '@mui/material';
 export default styled(Paper)(({ theme }) => ({
   display: 'flex',
   padding: `${theme.sizing.smPadding}px`,
+  marginLeft: `${theme.sizing.xSmPadding}px`,
+  marginRight: `${theme.sizing.xSmPadding}px`,
   flexDirection: 'column',
   alignItems: 'flex-start',
   gap: `${theme.sizing.smPadding}px`,

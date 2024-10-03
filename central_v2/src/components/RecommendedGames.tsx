@@ -17,9 +17,9 @@ interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
 }
 
-const RecommendedGamesContainer = styled(Box)<RecommendedGamesContainerProps>(({ screenSize, theme }) => ({
+const RecommendedGamesContainer = styled(Box)<RecommendedGamesContainerProps>(({ theme, screenSize }) => ({
   height: screenSize === ScreenSize.SMALL ? '368px': '408px', 
-  gap: '16px',
+  gap: `${theme.sizing.smPadding}px`,
   display: 'flex', 
   width: '100%',
   flexDirection: 'column', 
@@ -27,10 +27,10 @@ const RecommendedGamesContainer = styled(Box)<RecommendedGamesContainerProps>(({
   backgroundColor: `${theme.palette.primary.extraDarkBlue}` 
 }));
 
-const Title = styled(Typography)<{ screenSize: ScreenSize }>(({ screenSize }) => ({
+const Title = styled(Typography)<{ screenSize: ScreenSize }>(({ screenSize, theme }) => ({
   fontFamily: 'Poppins',
   fontWeight: '700',
-  fontSize: screenSize === ScreenSize.SMALL ? '24px' : '40px',
+  fontSize: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
   lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
   color: '#FFFFFF',
 }));

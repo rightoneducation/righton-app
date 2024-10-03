@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import {
   Typography,
   Box,
@@ -36,6 +36,14 @@ export default function ConfidenceMeterCard({
     value: ConfidenceLevel;
   }
 
+  const ConfidenceTitleTypography = styled(Typography)({
+    lineHeight: '28px',
+    fontFamily: 'Karla',
+    fontWeight: '800',
+    fontSize: '24px',
+    color: 'black',
+  });
+
   const confidenceOptionArray: IConfidenceOption[] = [
     {
       text: t('gameinprogress.chooseanswer.confidenceoption1'),
@@ -69,12 +77,9 @@ export default function ConfidenceMeterCard({
         marginBottom: `${theme.sizing.smallPadding}px`,
       }}
     >
-      <Typography
-        variant="h2"
-        sx={{ color: `${theme.palette.primary.darkBlue}` }}
-      >
+      <ConfidenceTitleTypography>
         {t('gameinprogress.chooseanswer.confidenceheader')}
-      </Typography>
+      </ConfidenceTitleTypography>
     </Box>
   );
   const chooseConfidenceText = (
@@ -90,14 +95,7 @@ export default function ConfidenceMeterCard({
 
   const responseOption = (option: IConfidenceOption) => {
     return (
-      <Box
-        maxWidth={isSmallDevice ? `${theme.sizing.largePadding}px` : `${theme.sizing.extraLargePadding}px`}
-        sx={{
-          textAlign: 'center',
-          alignItems: 'center',
-          marginX: `${theme.sizing.extraSmallPadding}px`,
-        }}
-      >
+      <Box style={{width: '100%', maxWidth: `${theme.sizing.mediumPadding}px`, display: 'flex', justifyContent: 'center', textAlign: 'center', paddingLeft: '8px', paddingRight: '8px'}}>
         <FormControlLabel
           key={option.value}
           value={option.value}
@@ -120,7 +118,7 @@ export default function ConfidenceMeterCard({
             {option.text}
           </Typography>}
           labelPlacement="bottom"
-          sx={{ marginX: '0' }}
+          style={{width: '100%'}}
         />
       </Box>
     );
