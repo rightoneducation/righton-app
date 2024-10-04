@@ -1,12 +1,13 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Box, InputAdornment, Typography, Button, styled, TextField, MenuItem, Select, Chip, InputLabel, FormControl, OutlinedInput, SelectChangeEvent } from '@mui/material';
+import { Box, InputAdornment, Typography, Collapse, styled, TextField, MenuItem, Select, Checkbox, Chip, InputLabel, FormControl, OutlinedInput, SelectChangeEvent } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import debounce from 'lodash/debounce';
 import SearchIcon from '../images/search.svg';
 import SortIcon from '../images/sort.svg';
 import SortArrow from '../images/sortArrow.svg';
-import GradeDropdown from '../images/GradeDropdown.svg';
+import SelectArrow from '../images/SelectArrow.svg';
 import { ScreenSize } from '../lib/HostModels';
+import { SelectContainer, SelectGrade, SelectLabel, SelectArrowContainer, SelectMenu, SelectMenuItem } from '../lib/styledcomponents/SelectGrade';
 
 interface SearchBarProps {
     screenSize?: ScreenSize;
@@ -113,18 +114,24 @@ const PrimaryButton2 = styled(Select)<SearchBarProps2>(({ screenSize, theme }) =
     color: '#FFFFFF',
   }));
 
+  const StyledInputLabel = styled(InputLabel)({
+    height: '44px',
+    fontFamily: 'Poppins',
+    fontWeight: '700',
+    fontSize: '20px',
+    lineHeight: '30px',
+    color: '#FFFFFF',
+  });
+
 const MenuItemStyled = styled(MenuItem)(({ selected }: { selected: boolean }) => ({
     color: selected ? 'black' : 'rgba(0, 0, 0, 0.5)',
 }));
 
 const gradesList = ['High School', '8th Grade', '7th Grade', '6th Grade', '5th Grade', '4th Grade', '3rd Grade', '2nd Grade', '1st Grade', 'Kindergarten'];
-function GradeDropdownIcon (){
-    return(
-        <img src={GradeDropdown} alt="Grade Dropdown Icon"/>
-    )}
 
 function SearchBar({ screenSize, onSearchChange, onGradeChange, onSortChange }: SearchBarProps) {
     const theme = useTheme();
+    const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
     const [selectedSort, setSelectedSort] = useState<{ field: string; direction: string | null }>({
@@ -176,29 +183,24 @@ function SearchBar({ screenSize, onSearchChange, onGradeChange, onSortChange }: 
         }
         return null;
       };
-
       return (
         <SearchAndFilterContainer screenSize={screenSize}>
-            <FormControlStyled>
-            <InputLabel id="grade-label" shrink={false} style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', bottom: '28.5px', padding: 0}}>
-              <PrimaryButton2Text>Grade</PrimaryButton2Text>
-            </InputLabel>
-                <SelectStyled
-                    multiple
-                    value={selectedGrades}
-                    onChange={handleGradesChange}
-                    renderValue={() => null}
-                    labelId="grade-label"
-                    MenuProps={MenuPropsStyled}
-                    IconComponent={GradeDropdownIcon}
-                >
-                    {gradesList.map((grade) => (
-                        <MenuItemStyled key={grade} value={grade} selected={selectedGrades.includes(grade)}>
-                            {grade}
-                        </MenuItemStyled>
-                    ))}
-                </SelectStyled>
-            </FormControlStyled>
+          <SelectContainer>
+            <SelectGrade onClick={(prev) => setIsSelectOpen(!isSelectOpen)}>
+              <SelectLabel>Choose Grade</SelectLabel>
+              <SelectArrowContainer isSelectOpen={isSelectOpen}>
+                <img src={SelectArrow} alt="Select Arrow" />
+              </SelectArrowContainer>
+            </SelectGrade>
+                <SelectMenu isSelectOpen={isSelectOpen}>
+                  {gradesList.map((grade) => (
+                    <SelectMenuItem>
+                      <Checkbox checked={selectedGrades.includes(grade)} color="default"/>
+                        {grade}
+                    </SelectMenuItem>
+                  ))}
+                </SelectMenu>
+            </SelectContainer>
             <SearchBarContainer
                 screenSize={screenSize}
                 placeholder={screenSize === ScreenSize.SMALL 

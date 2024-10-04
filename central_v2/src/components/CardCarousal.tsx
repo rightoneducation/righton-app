@@ -35,8 +35,9 @@ export default function GameCardCarousel({ apiClients, recommendedGames }: GameC
             }}
             ref={swiperRef}
             spaceBetween={theme.sizing.smPadding}
+            updateOnWindowResize
             centeredSlides
-            
+            loop
             navigation
             breakpoints={{
                 '375': {
@@ -46,7 +47,8 @@ export default function GameCardCarousel({ apiClients, recommendedGames }: GameC
                     slidesPerView: 1.8,
                 },
                 '1500': {
-                    slidesPerView: 3.3,
+                    slidesPerView: 3.5,
+
                 },
             }}
         >

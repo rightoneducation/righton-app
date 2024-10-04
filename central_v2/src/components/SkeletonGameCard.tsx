@@ -23,7 +23,7 @@ interface SkeletonGameCardProps {
 
 export default function SkeletonGameCard({index}: SkeletonGameCardProps) {
   return (
-    <Fade in timeout={1000}  style={{ transformOrigin: '0 0 0', transitionDelay: `${200*index}ms` }}>   
+    <Fade in timeout={800}  style={{ transformOrigin: '0 0 0', transitionDelay: `${150*index}ms` }}>   
       <GameCard sx={{ padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 2, height: '260px' }}>
         <Box sx={{ display: 'flex', alignContents: 'center', justifyContent: 'space-between'}}>
           <Skeleton animation="wave" variant="text" width="70%" height={30} />
