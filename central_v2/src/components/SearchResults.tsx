@@ -3,7 +3,7 @@ import { Grid, Typography, Box, styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { APIClients, IGameTemplate } from '@righton/networking';
 import StyledGameCard from './GameCard';
-import { ScreenSize } from '../lib/HostModels';
+import { ScreenSize } from '../lib/CentralModels';
 import placeHolder from '../images/placeHolder.svg';
 
 

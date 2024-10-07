@@ -1,9 +1,10 @@
-import React, { useState, ChangeEvent } from 'react';
+import React from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
+import { SortType, SortDirection } from '@righton/networking';
 import { ScreenSize } from '../CentralModels';
 
 
-export const SelectContainer = styled(Box)(() => {
+export const SortContainer = styled(Box)(() => {
   return {
     display: 'flex',
     flexDirection: 'column',
@@ -12,23 +13,22 @@ export const SelectContainer = styled(Box)(() => {
   };
 });
 
-export const SelectGrade = styled(Box, {
+export const SortButton = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
 })<{ screenSize: ScreenSize }>(({ screenSize }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: screenSize === ScreenSize.SMALL ? '38px' : '240px',
+    width: screenSize === ScreenSize.SMALL ? '38px' : '94px',
     minHeight: '44px',
     background: 'linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)',
-    borderTopLeftRadius: '22px',
-    borderBottomLeftRadius: '22px',
-    gap: '16px',
+    borderRadius: '22px',
+    gap: '8px',
     zIndex: 3
 }));
 
-export const SelectLabel = styled(Typography)(() => {
+export const SortLabel = styled(Typography)(() => {
   return {
     color: 'white',
     fontFamily: 'Poppins',
@@ -37,11 +37,11 @@ export const SelectLabel = styled(Typography)(() => {
   };
 });
 
-export const SelectArrowContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSelectOpen',
-})<{ isSelectOpen: boolean }>(({ isSelectOpen }) => ({
-  transform: isSelectOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-  animation: isSelectOpen ? 'rotateScaleOpen 300ms ease-in-out' : 'rotateScaleClose 300ms ease-in-out',
+export const SortArrowContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSortOpen',
+})<{ isSortOpen: boolean }>(({ isSortOpen }) => ({
+  transform: isSortOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+  animation: isSortOpen ? 'rotateScaleOpen 300ms ease-in-out' : 'rotateScaleClose 300ms ease-in-out',
   '@keyframes rotateScaleOpen': {
     '0%': {
       transform:'rotate(0deg) scale(1)'
@@ -66,35 +66,38 @@ export const SelectArrowContainer = styled(Box, {
   }
 }));
 
-export const SelectMenu = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSelectOpen',
-})<{ isSelectOpen: boolean }>(({ isSelectOpen }) => ({
+export const SortMenuArrowContainer = styled(SortArrowContainer, {
+  shouldForwardProp: (prop) => prop !== 'selectedSort' && prop !== 'currentSort',
+})<{ selectedSort: {field: SortType, direction: SortDirection}, currentSort: SortType}>(({ selectedSort, currentSort}) => ({
+  transform: selectedSort.field === currentSort && selectedSort.direction === SortDirection.ASC ? 'rotate(180deg)' : 'rotate(0deg)',
+  animation: selectedSort.field === currentSort && selectedSort.direction === SortDirection.ASC ? 'rotateScaleOpen 300ms ease-in-out' : 'rotateScaleClose 300ms ease-in-out',
+}));
+
+export const SortMenu = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSortOpen',
+})<{ isSortOpen: boolean }>(({ isSortOpen }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'center',
   zIndex: 2,
   background: 'white',
-  borderTopLeftRadius: '16px',
-  borderBottomLeftRadius: '16px',
-  borderBottomRightRadius: '16px',
-  paddingLeft: '36px',
-  paddingRight: '36px',
-  paddingTop: '8px',
-  paddingBottom: '8px',
+  borderRadius: '16px',
+  padding: "8px",  
   position: 'absolute',     
   top: '44px',             
-  left: 0,
+  right: 0,
   width: '100%',
-  minWidth: '240px',
+  minWidth: '174px',
   boxSizing: 'border-box',
-  transition: isSelectOpen ? 'opacity 300ms ease, transform 300ms ease-in-out' : 'opacity 300ms ease, transform 150ms ease-in-out',
-  opacity: isSelectOpen ? 1 : 0,
-  transform: isSelectOpen ? 'translateY(0px)' : 'translateY(-20px)',
-  boxShadow: '0px 8px 16px -4px rgba(0, 0, 0, 0.4)'
+  transition: isSortOpen ? 'opacity 300ms ease, transform 300ms ease-in-out' : 'opacity 300ms ease, transform 150ms ease-in-out',
+  opacity: isSortOpen ? 1 : 0,
+  transform: isSortOpen ? 'translateY(0px)' : 'translateY(-20px)',
+  boxShadow: '0px 8px 16px -4px rgba(0, 0, 0, 0.4)',
+  cursor: 'pointer',
 }));
 
-export const SelectMenuItem = styled(Box)(() => {
+export const SortMenuItem = styled(Box)(() => {
   return {
     width: '100%',
     display: 'flex',

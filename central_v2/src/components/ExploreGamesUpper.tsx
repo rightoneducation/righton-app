@@ -4,7 +4,7 @@ import { APIClients, IGameTemplate } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
-import {ScreenSize } from '../lib/HostModels';
+import {ScreenSize } from '../lib/CentralModels';
 import RecommendedGames from './RecommendedGames';
 
 interface ExploreGamesUpperProps {
