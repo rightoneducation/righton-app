@@ -147,6 +147,7 @@ export const getGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -178,6 +179,7 @@ export const listGameSessions = /* GraphQL */ `
         description
         title
         currentTimer
+        sessionData
         createdAt
         updatedAt
         __typename
@@ -194,7 +196,7 @@ export const getQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -233,7 +235,7 @@ export const listQuestions = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -263,7 +265,7 @@ export const getTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -812,6 +814,7 @@ export const gameSessionByState = /* GraphQL */ `
         description
         title
         currentTimer
+        sessionData
         createdAt
         updatedAt
         __typename
@@ -850,454 +853,9 @@ export const gameSessionByCode = /* GraphQL */ `
         description
         title
         currentTimer
+        sessionData
         createdAt
         updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const gameSessionByState = /* GraphQL */ `
-  query GameSessionByState(
-    $currentState: GameSessionState!
-    $sortDirection: ModelSortDirection
-    $filter: ModelGameSessionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    gameSessionByState(
-      currentState: $currentState
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        gameId
-        startTime
-        phaseOneTime
-        phaseTwoTime
-        currentQuestionIndex
-        currentState
-        gameCode
-        isAdvancedMode
-        imageUrl
-        description
-        title
-        currentTimer
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const gameSessionByCode = /* GraphQL */ `
-  query GameSessionByCode(
-    $gameCode: Int!
-    $sortDirection: ModelSortDirection
-    $filter: ModelGameSessionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    gameSessionByCode(
-      gameCode: $gameCode
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        gameId
-        startTime
-        phaseOneTime
-        phaseTwoTime
-        currentQuestionIndex
-        currentState
-        gameCode
-        isAdvancedMode
-        imageUrl
-        description
-        title
-        currentTimer
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getQuestion = /* GraphQL */ `
-  query GetQuestion($id: ID!, $order: Int!, $gameSessionId: ID!) {
-    getQuestion(id: $id, order: $order, gameSessionId: $gameSessionId) {
-      id
-      text
-      choices
-      answerSettings
-      responses
-      hints
-      imageUrl
-      instructions
-      standard
-      cluster
-      domain
-      grade
-      order
-      isConfidenceEnabled
-      isShortAnswerEnabled
-      isHintEnabled
-      gameSessionId
-      __typename
-    }
-  }
-`;
-export const listQuestions = /* GraphQL */ `
-  query ListQuestions(
-    $id: ID
-    $orderGameSessionId: ModelQuestionPrimaryCompositeKeyConditionInput
-    $filter: ModelQuestionFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listQuestions(
-      id: $id
-      orderGameSessionId: $orderGameSessionId
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        text
-        choices
-        answerSettings
-        responses
-        hints
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isConfidenceEnabled
-        isShortAnswerEnabled
-        isHintEnabled
-        gameSessionId
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getTeam = /* GraphQL */ `
-  query GetTeam($id: ID!) {
-    getTeam(id: $id) {
-      id
-      name
-      question {
-        id
-        text
-        choices
-        answerSettings
-        responses
-        hints
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isConfidenceEnabled
-        isShortAnswerEnabled
-        isHintEnabled
-        gameSessionId
-        __typename
-      }
-      teamMembers {
-        nextToken
-        __typename
-      }
-      score
-      selectedAvatarIndex
-      createdAt
-      updatedAt
-      gameSessionTeamsId
-      teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
-      __typename
-    }
-  }
-`;
-export const listTeams = /* GraphQL */ `
-  query ListTeams(
-    $filter: ModelTeamFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        score
-        selectedAvatarIndex
-        createdAt
-        updatedAt
-        gameSessionTeamsId
-        teamQuestionId
-        teamQuestionOrder
-        teamQuestionGameSessionId
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getTeamMember = /* GraphQL */ `
-  query GetTeamMember($id: ID!) {
-    getTeamMember(id: $id) {
-      id
-      isFacilitator
-      answers {
-        nextToken
-        __typename
-      }
-      deviceId
-      createdAt
-      updatedAt
-      teamTeamMembersId
-      __typename
-    }
-  }
-`;
-export const listTeamMembers = /* GraphQL */ `
-  query ListTeamMembers(
-    $filter: ModelTeamMemberFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTeamMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        isFacilitator
-        deviceId
-        createdAt
-        updatedAt
-        teamTeamMembersId
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getTeamAnswer = /* GraphQL */ `
-  query GetTeamAnswer($id: ID!) {
-    getTeamAnswer(id: $id) {
-      id
-      isSubmitted
-      isShortAnswerEnabled
-      currentState
-      currentQuestionIndex
-      questionId
-      teamMemberAnswersId
-      text
-      answer
-      confidenceLevel
-      hint
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listTeamAnswers = /* GraphQL */ `
-  query ListTeamAnswers(
-    $filter: ModelTeamAnswerFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        isSubmitted
-        isShortAnswerEnabled
-        currentState
-        currentQuestionIndex
-        questionId
-        teamMemberAnswersId
-        text
-        answer
-        confidenceLevel
-        hint
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getPublicGameQuestions = /* GraphQL */ `
-  query GetPublicGameQuestions($id: ID!) {
-    getPublicGameQuestions(id: $id) {
-      id
-      publicGameTemplateID
-      publicQuestionTemplateID
-      publicGameTemplate {
-        id
-        owner
-        title
-        version
-        description
-        domain
-        cluster
-        grade
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        questionTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      publicQuestionTemplate {
-        id
-        owner
-        title
-        version
-        choices
-        instructions
-        answerSettings
-        domain
-        cluster
-        grade
-        standard
-        imageUrl
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const listPublicGameQuestions = /* GraphQL */ `
-  query ListPublicGameQuestions(
-    $filter: ModelPublicGameQuestionsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPublicGameQuestions(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        publicGameTemplateID
-        publicQuestionTemplateID
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getPrivateGameQuestions = /* GraphQL */ `
-  query GetPrivateGameQuestions($id: ID!) {
-    getPrivateGameQuestions(id: $id) {
-      id
-      privateGameTemplateID
-      privateQuestionTemplateID
-      privateGameTemplate {
-        id
-        owner
-        title
-        version
-        description
-        domain
-        cluster
-        grade
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        questionTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      privateQuestionTemplate {
-        id
-        owner
-        title
-        version
-        choices
-        instructions
-        answerSettings
-        domain
-        cluster
-        grade
-        standard
-        imageUrl
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const listPrivateGameQuestions = /* GraphQL */ `
-  query ListPrivateGameQuestions(
-    $filter: ModelPrivateGameQuestionsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPrivateGameQuestions(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        privateGameTemplateID
-        privateQuestionTemplateID
-        createdAt
-        updatedAt
-        owner
         __typename
       }
       nextToken

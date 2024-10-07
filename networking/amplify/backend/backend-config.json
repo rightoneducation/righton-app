@@ -88,47 +88,5 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
-  },
-  "parameters": {
-    "AMPLIFY_function_createGameTest_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "createGameTest"
-        }
-      ]
-    },
-    "AMPLIFY_function_createGameTest_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "createGameTest"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "mobile6060603cPostConfirmation"
-        }
-      ]
-    }
   }
 }

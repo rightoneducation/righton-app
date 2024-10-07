@@ -61,5 +61,12 @@
         "mobile": {}
       }
     }
+  },
+  "main": {
+    "categories": {
+      "auth": {
+        "mobile6060603c": {}
+      }
+    }
   }
 }

@@ -219,8 +219,8 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
   listGameTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      owner
       title
+      owner
       version
       description
       ccss
@@ -235,12 +235,12 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
       questionTemplates {
         items {
           id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          publicGameTemplate {
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
             id
-            owner
             title
+            owner
             version
             description
             ccss
@@ -255,12 +255,12 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             questionTemplates {
               items {
                 id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   description
                   ccss
@@ -279,10 +279,10 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   type
                   __typename
                 }
-                publicQuestionTemplate {
+                questionTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   choices
                   instructions
@@ -300,7 +300,6 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                 }
                 createdAt
                 updatedAt
-                owner
                 __typename
               }
               nextToken
@@ -313,10 +312,10 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             type
             __typename
           }
-          publicQuestionTemplate {
+          questionTemplate {
             id
-            owner
             title
+            owner
             version
             choices
             instructions
@@ -329,12 +328,12 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             gameTemplates {
               items {
                 id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   description
                   ccss
@@ -353,10 +352,10 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   type
                   __typename
                 }
-                publicQuestionTemplate {
+                questionTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   choices
                   instructions
@@ -374,7 +373,6 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                 }
                 createdAt
                 updatedAt
-                owner
                 __typename
               }
               nextToken
@@ -388,7 +386,6 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
           }
           createdAt
           updatedAt
-          owner
           __typename
         }
         nextToken
@@ -617,980 +614,8 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
   listQuestionTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      owner
       title
-      version
-      description
-      domain
-      cluster
-      grade
-      standard
-      phaseOneTime
-      phaseTwoTime
-      imageUrl
-      questionTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          privateGameTemplate {
-            id
-            owner
-            title
-            version
-            description
-            domain
-            cluster
-            grade
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          privateQuestionTemplate {
-            id
-            owner
-            title
-            version
-            choices
-            instructions
-            answerSettings
-            domain
-            cluster
-            grade
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      questionTemplatesCount
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListPrivateGameTemplatesQueryVariables,
-  APITypes.ListPrivateGameTemplatesQuery
->;
-export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTemplatesByDate(
-  $type: String!
-  $updatedAt: ModelStringKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPrivateGameTemplateFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  privateGameTemplatesByDate(
-    type: $type
-    updatedAt: $updatedAt
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
       owner
-      title
-      version
-      description
-      domain
-      cluster
-      grade
-      standard
-      phaseOneTime
-      phaseTwoTime
-      imageUrl
-      questionTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          privateGameTemplate {
-            id
-            owner
-            title
-            version
-            description
-            domain
-            cluster
-            grade
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          privateQuestionTemplate {
-            id
-            owner
-            title
-            version
-            choices
-            instructions
-            answerSettings
-            domain
-            cluster
-            grade
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      questionTemplatesCount
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PrivateGameTemplatesByDateQueryVariables,
-  APITypes.PrivateGameTemplatesByDateQuery
->;
-export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTemplatesByGrade(
-  $type: String!
-  $grade: ModelStringKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPrivateGameTemplateFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  privateGameTemplatesByGrade(
-    type: $type
-    grade: $grade
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      owner
-      title
-      version
-      description
-      domain
-      cluster
-      grade
-      standard
-      phaseOneTime
-      phaseTwoTime
-      imageUrl
-      questionTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          privateGameTemplate {
-            id
-            owner
-            title
-            version
-            description
-            domain
-            cluster
-            grade
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          privateQuestionTemplate {
-            id
-            owner
-            title
-            version
-            choices
-            instructions
-            answerSettings
-            domain
-            cluster
-            grade
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      questionTemplatesCount
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PrivateGameTemplatesByGradeQueryVariables,
-  APITypes.PrivateGameTemplatesByGradeQuery
->;
-export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */ `query PrivateGameTemplatesByPrivateQuestionTemplatesCount(
-  $type: String!
-  $questionTemplatesCount: ModelIntKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPrivateGameTemplateFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  privateGameTemplatesByPrivateQuestionTemplatesCount(
-    type: $type
-    questionTemplatesCount: $questionTemplatesCount
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      owner
-      title
-      version
-      description
-      domain
-      cluster
-      grade
-      standard
-      phaseOneTime
-      phaseTwoTime
-      imageUrl
-      questionTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          privateGameTemplate {
-            id
-            owner
-            title
-            version
-            description
-            domain
-            cluster
-            grade
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          privateQuestionTemplate {
-            id
-            owner
-            title
-            version
-            choices
-            instructions
-            answerSettings
-            domain
-            cluster
-            grade
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      questionTemplatesCount
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PrivateGameTemplatesByPrivateQuestionTemplatesCountQueryVariables,
-  APITypes.PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery
->;
-export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionTemplate($id: ID!) {
-  getPublicQuestionTemplate(id: $id) {
-    id
-    owner
-    title
-    version
-    choices
-    instructions
-    answerSettings
-    domain
-    cluster
-    grade
-    standard
-    imageUrl
-    gameTemplates {
-      items {
-        id
-        publicGameTemplateID
-        publicQuestionTemplateID
-        publicGameTemplate {
-          id
-          owner
-          title
-          version
-          description
-          domain
-          cluster
-          grade
-          standard
-          phaseOneTime
-          phaseTwoTime
-          imageUrl
-          questionTemplates {
-            items {
-              id
-              publicGameTemplateID
-              publicQuestionTemplateID
-              publicGameTemplate {
-                id
-                owner
-                title
-                version
-                description
-                domain
-                cluster
-                grade
-                standard
-                phaseOneTime
-                phaseTwoTime
-                imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
-                questionTemplatesCount
-                createdAt
-                updatedAt
-                type
-                __typename
-              }
-              publicQuestionTemplate {
-                id
-                owner
-                title
-                version
-                choices
-                instructions
-                answerSettings
-                domain
-                cluster
-                grade
-                standard
-                imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
-                gameTemplatesCount
-                createdAt
-                updatedAt
-                type
-                __typename
-              }
-              createdAt
-              updatedAt
-              owner
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          questionTemplatesCount
-          createdAt
-          updatedAt
-          type
-          __typename
-        }
-        publicQuestionTemplate {
-          id
-          owner
-          title
-          version
-          choices
-          instructions
-          answerSettings
-          domain
-          cluster
-          grade
-          standard
-          imageUrl
-          gameTemplates {
-            items {
-              id
-              publicGameTemplateID
-              publicQuestionTemplateID
-              publicGameTemplate {
-                id
-                owner
-                title
-                version
-                description
-                domain
-                cluster
-                grade
-                standard
-                phaseOneTime
-                phaseTwoTime
-                imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
-                questionTemplatesCount
-                createdAt
-                updatedAt
-                type
-                __typename
-              }
-              publicQuestionTemplate {
-                id
-                owner
-                title
-                version
-                choices
-                instructions
-                answerSettings
-                domain
-                cluster
-                grade
-                standard
-                imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
-                gameTemplatesCount
-                createdAt
-                updatedAt
-                type
-                __typename
-              }
-              createdAt
-              updatedAt
-              owner
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          gameTemplatesCount
-          createdAt
-          updatedAt
-          type
-          __typename
-        }
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-    gameTemplatesCount
-    createdAt
-    updatedAt
-    type
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetPublicQuestionTemplateQueryVariables,
-  APITypes.GetPublicQuestionTemplateQuery
->;
-export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuestionTemplates(
-  $filter: ModelPublicQuestionTemplateFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listPublicQuestionTemplates(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      owner
-      title
       version
       choices
       instructions
@@ -1603,12 +628,12 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
       gameTemplates {
         items {
           id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          publicGameTemplate {
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
             id
-            owner
             title
+            owner
             version
             description
             ccss
@@ -1623,12 +648,12 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             questionTemplates {
               items {
                 id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   description
                   ccss
@@ -1647,10 +672,10 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   type
                   __typename
                 }
-                publicQuestionTemplate {
+                questionTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   choices
                   instructions
@@ -1668,7 +693,6 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                 }
                 createdAt
                 updatedAt
-                owner
                 __typename
               }
               nextToken
@@ -1681,10 +705,10 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             type
             __typename
           }
-          publicQuestionTemplate {
+          questionTemplate {
             id
-            owner
             title
+            owner
             version
             choices
             instructions
@@ -1697,12 +721,12 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             gameTemplates {
               items {
                 id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   description
                   ccss
@@ -1721,10 +745,10 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   type
                   __typename
                 }
-                publicQuestionTemplate {
+                questionTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   choices
                   instructions
@@ -1742,7 +766,6 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                 }
                 createdAt
                 updatedAt
-                owner
                 __typename
               }
               nextToken
@@ -1756,7 +779,6 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
           }
           createdAt
           updatedAt
-          owner
           __typename
         }
         nextToken
@@ -1840,663 +862,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
             teamTeamMembersId
             __typename
           }
-          publicQuestionTemplate {
-            id
-            owner
-            title
-            version
-            choices
-            instructions
-            answerSettings
-            domain
-            cluster
-            grade
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      gameTemplatesCount
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PublicQuestionTemplatesByDateQueryVariables,
-  APITypes.PublicQuestionTemplatesByDateQuery
->;
-export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestionTemplatesByGrade(
-  $type: String!
-  $grade: ModelStringKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPublicQuestionTemplateFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  publicQuestionTemplatesByGrade(
-    type: $type
-    grade: $grade
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      owner
-      title
-      version
-      choices
-      instructions
-      answerSettings
-      domain
-      cluster
-      grade
-      standard
-      imageUrl
-      gameTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          publicGameTemplate {
-            id
-            owner
-            title
-            version
-            description
-            domain
-            cluster
-            grade
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          publicQuestionTemplate {
-            id
-            owner
-            title
-            version
-            choices
-            instructions
-            answerSettings
-            domain
-            cluster
-            grade
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      gameTemplatesCount
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PublicQuestionTemplatesByGradeQueryVariables,
-  APITypes.PublicQuestionTemplatesByGradeQuery
->;
-export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `query PublicQuestionTemplatesByPublicGameTemplatesCount(
-  $type: String!
-  $gameTemplatesCount: ModelIntKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPublicQuestionTemplateFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  publicQuestionTemplatesByPublicGameTemplatesCount(
-    type: $type
-    gameTemplatesCount: $gameTemplatesCount
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      owner
-      title
-      version
-      choices
-      instructions
-      answerSettings
-      domain
-      cluster
-      grade
-      standard
-      imageUrl
-      gameTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          publicGameTemplate {
-            id
-            owner
-            title
-            version
-            description
-            domain
-            cluster
-            grade
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          publicQuestionTemplate {
-            id
-            owner
-            title
-            version
-            choices
-            instructions
-            answerSettings
-            domain
-            cluster
-            grade
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      gameTemplatesCount
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PublicQuestionTemplatesByPublicGameTemplatesCountQueryVariables,
-  APITypes.PublicQuestionTemplatesByPublicGameTemplatesCountQuery
->;
-export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestionTemplate($id: ID!) {
-  getPrivateQuestionTemplate(id: $id) {
-    id
-    owner
-    title
-    version
-    choices
-    instructions
-    answerSettings
-    domain
-    cluster
-    grade
-    standard
-    imageUrl
-    gameTemplates {
-      items {
-        id
-        privateGameTemplateID
-        privateQuestionTemplateID
-        privateGameTemplate {
-          id
-          owner
-          title
-          version
-          description
-          domain
-          cluster
-          grade
-          standard
-          phaseOneTime
-          phaseTwoTime
-          imageUrl
-          questionTemplates {
-            items {
-              id
-              privateGameTemplateID
-              privateQuestionTemplateID
-              privateGameTemplate {
-                id
-                owner
-                title
-                version
-                description
-                domain
-                cluster
-                grade
-                standard
-                phaseOneTime
-                phaseTwoTime
-                imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
-                questionTemplatesCount
-                createdAt
-                updatedAt
-                type
-                __typename
-              }
-              privateQuestionTemplate {
-                id
-                owner
-                title
-                version
-                choices
-                instructions
-                answerSettings
-                domain
-                cluster
-                grade
-                standard
-                imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
-                gameTemplatesCount
-                createdAt
-                updatedAt
-                type
-                __typename
-              }
-              createdAt
-              updatedAt
-              owner
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          questionTemplatesCount
-          createdAt
-          updatedAt
-          type
-          __typename
-        }
-        privateQuestionTemplate {
-          id
-          owner
-          title
-          version
-          choices
-          instructions
-          answerSettings
-          domain
-          cluster
-          grade
-          standard
-          imageUrl
-          gameTemplates {
-            items {
-              id
-              privateGameTemplateID
-              privateQuestionTemplateID
-              privateGameTemplate {
-                id
-                owner
-                title
-                version
-                description
-                domain
-                cluster
-                grade
-                standard
-                phaseOneTime
-                phaseTwoTime
-                imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
-                questionTemplatesCount
-                createdAt
-                updatedAt
-                type
-                __typename
-              }
-              privateQuestionTemplate {
-                id
-                owner
-                title
-                version
-                choices
-                instructions
-                answerSettings
-                domain
-                cluster
-                grade
-                standard
-                imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
-                gameTemplatesCount
-                createdAt
-                updatedAt
-                type
-                __typename
-              }
-              createdAt
-              updatedAt
-              owner
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          gameTemplatesCount
-          createdAt
-          updatedAt
-          type
+          nextToken
           __typename
         }
         score
@@ -3429,204 +1795,12 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
   listGameQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      owner
-      title
-      version
-      choices
-      instructions
-      answerSettings
-      domain
-      cluster
-      grade
-      standard
-      imageUrl
-      gameTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          publicGameTemplate {
-            id
-            owner
-            title
-            version
-            description
-            domain
-            cluster
-            grade
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          publicQuestionTemplate {
-            id
-            owner
-            title
-            version
-            choices
-            instructions
-            answerSettings
-            domain
-            cluster
-            grade
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  owner
-                  title
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      gameTemplatesCount
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetPublicGameQuestionsQueryVariables,
-  APITypes.GetPublicGameQuestionsQuery
->;
-export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuestions(
-  $filter: ModelPublicGameQuestionsFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listPublicGameQuestions(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      publicGameTemplateID
-      publicQuestionTemplateID
-      publicGameTemplate {
+      gameTemplateID
+      questionTemplateID
+      gameTemplate {
         id
-        owner
         title
+        owner
         version
         description
         ccss
@@ -3641,12 +1815,12 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         questionTemplates {
           items {
             id
-            publicGameTemplateID
-            publicQuestionTemplateID
-            publicGameTemplate {
+            gameTemplateID
+            questionTemplateID
+            gameTemplate {
               id
-              owner
               title
+              owner
               version
               description
               ccss
@@ -3665,7 +1839,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
                   questionTemplateID
                   createdAt
                   updatedAt
-                  owner
                   __typename
                 }
                 nextToken
@@ -3678,10 +1851,10 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               type
               __typename
             }
-            publicQuestionTemplate {
+            questionTemplate {
               id
-              owner
               title
+              owner
               version
               choices
               instructions
@@ -3698,7 +1871,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
                   questionTemplateID
                   createdAt
                   updatedAt
-                  owner
                   __typename
                 }
                 nextToken
@@ -3712,7 +1884,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
             }
             createdAt
             updatedAt
-            owner
             __typename
           }
           nextToken
@@ -3725,10 +1896,10 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         type
         __typename
       }
-      publicQuestionTemplate {
+      questionTemplate {
         id
-        owner
         title
+        owner
         version
         choices
         instructions
@@ -3741,12 +1912,12 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         gameTemplates {
           items {
             id
-            publicGameTemplateID
-            publicQuestionTemplateID
-            publicGameTemplate {
+            gameTemplateID
+            questionTemplateID
+            gameTemplate {
               id
-              owner
               title
+              owner
               version
               description
               ccss
@@ -3765,7 +1936,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
                   questionTemplateID
                   createdAt
                   updatedAt
-                  owner
                   __typename
                 }
                 nextToken
@@ -3778,10 +1948,10 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               type
               __typename
             }
-            publicQuestionTemplate {
+            questionTemplate {
               id
-              owner
               title
+              owner
               version
               choices
               instructions
@@ -3798,7 +1968,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
                   questionTemplateID
                   createdAt
                   updatedAt
-                  owner
                   __typename
                 }
                 nextToken
@@ -3812,7 +1981,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
             }
             createdAt
             updatedAt
-            owner
             __typename
           }
           nextToken
@@ -3826,7 +1994,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
       }
       createdAt
       updatedAt
-      owner
       __typename
     }
     nextToken

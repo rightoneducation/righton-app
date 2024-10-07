@@ -220,6 +220,7 @@ export const createGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -253,6 +254,7 @@ export const updateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -286,6 +288,7 @@ export const deleteGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -306,7 +309,7 @@ export const createQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -333,7 +336,7 @@ export const updateQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -360,7 +363,7 @@ export const deleteQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -390,7 +393,7 @@ export const createTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -434,7 +437,7 @@ export const updateTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -478,7 +481,7 @@ export const deleteTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -813,678 +816,5 @@ export const deleteGameQuestions = /* GraphQL */ `
       updatedAt
       __typename
     }
-  }
-`;
-export const createQuestion = /* GraphQL */ `
-  mutation CreateQuestion(
-    $input: CreateQuestionInput!
-    $condition: ModelQuestionConditionInput
-  ) {
-    createQuestion(input: $input, condition: $condition) {
-      id
-      text
-      choices
-      answerSettings
-      responses
-      hints
-      imageUrl
-      instructions
-      standard
-      cluster
-      domain
-      grade
-      order
-      isConfidenceEnabled
-      isShortAnswerEnabled
-      isHintEnabled
-      gameSessionId
-      __typename
-    }
-  }
-`;
-export const updateQuestion = /* GraphQL */ `
-  mutation UpdateQuestion(
-    $input: UpdateQuestionInput!
-    $condition: ModelQuestionConditionInput
-  ) {
-    updateQuestion(input: $input, condition: $condition) {
-      id
-      text
-      choices
-      answerSettings
-      responses
-      hints
-      imageUrl
-      instructions
-      standard
-      cluster
-      domain
-      grade
-      order
-      isConfidenceEnabled
-      isShortAnswerEnabled
-      isHintEnabled
-      gameSessionId
-      __typename
-    }
-  }
-`;
-export const deleteQuestion = /* GraphQL */ `
-  mutation DeleteQuestion(
-    $input: DeleteQuestionInput!
-    $condition: ModelQuestionConditionInput
-  ) {
-    deleteQuestion(input: $input, condition: $condition) {
-      id
-      text
-      choices
-      answerSettings
-      responses
-      hints
-      imageUrl
-      instructions
-      standard
-      cluster
-      domain
-      grade
-      order
-      isConfidenceEnabled
-      isShortAnswerEnabled
-      isHintEnabled
-      gameSessionId
-      __typename
-    }
-  }
-`;
-export const createTeam = /* GraphQL */ `
-  mutation CreateTeam(
-    $input: CreateTeamInput!
-    $condition: ModelTeamConditionInput
-  ) {
-    createTeam(input: $input, condition: $condition) {
-      id
-      name
-      question {
-        id
-        text
-        choices
-        answerSettings
-        responses
-        hints
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isConfidenceEnabled
-        isShortAnswerEnabled
-        isHintEnabled
-        gameSessionId
-        __typename
-      }
-      teamMembers {
-        nextToken
-        __typename
-      }
-      score
-      selectedAvatarIndex
-      createdAt
-      updatedAt
-      gameSessionTeamsId
-      teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
-      __typename
-    }
-  }
-`;
-export const updateTeam = /* GraphQL */ `
-  mutation UpdateTeam(
-    $input: UpdateTeamInput!
-    $condition: ModelTeamConditionInput
-  ) {
-    updateTeam(input: $input, condition: $condition) {
-      id
-      name
-      question {
-        id
-        text
-        choices
-        answerSettings
-        responses
-        hints
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isConfidenceEnabled
-        isShortAnswerEnabled
-        isHintEnabled
-        gameSessionId
-        __typename
-      }
-      teamMembers {
-        nextToken
-        __typename
-      }
-      score
-      selectedAvatarIndex
-      createdAt
-      updatedAt
-      gameSessionTeamsId
-      teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
-      __typename
-    }
-  }
-`;
-export const deleteTeam = /* GraphQL */ `
-  mutation DeleteTeam(
-    $input: DeleteTeamInput!
-    $condition: ModelTeamConditionInput
-  ) {
-    deleteTeam(input: $input, condition: $condition) {
-      id
-      name
-      question {
-        id
-        text
-        choices
-        answerSettings
-        responses
-        hints
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isConfidenceEnabled
-        isShortAnswerEnabled
-        isHintEnabled
-        gameSessionId
-        __typename
-      }
-      teamMembers {
-        nextToken
-        __typename
-      }
-      score
-      selectedAvatarIndex
-      createdAt
-      updatedAt
-      gameSessionTeamsId
-      teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
-      __typename
-    }
-  }
-`;
-export const createTeamMember = /* GraphQL */ `
-  mutation CreateTeamMember(
-    $input: CreateTeamMemberInput!
-    $condition: ModelTeamMemberConditionInput
-  ) {
-    createTeamMember(input: $input, condition: $condition) {
-      id
-      isFacilitator
-      answers {
-        nextToken
-        __typename
-      }
-      deviceId
-      createdAt
-      updatedAt
-      teamTeamMembersId
-      __typename
-    }
-  }
-`;
-export const updateTeamMember = /* GraphQL */ `
-  mutation UpdateTeamMember(
-    $input: UpdateTeamMemberInput!
-    $condition: ModelTeamMemberConditionInput
-  ) {
-    updateTeamMember(input: $input, condition: $condition) {
-      id
-      isFacilitator
-      answers {
-        nextToken
-        __typename
-      }
-      deviceId
-      createdAt
-      updatedAt
-      teamTeamMembersId
-      __typename
-    }
-  }
-`;
-export const deleteTeamMember = /* GraphQL */ `
-  mutation DeleteTeamMember(
-    $input: DeleteTeamMemberInput!
-    $condition: ModelTeamMemberConditionInput
-  ) {
-    deleteTeamMember(input: $input, condition: $condition) {
-      id
-      isFacilitator
-      answers {
-        nextToken
-        __typename
-      }
-      deviceId
-      createdAt
-      updatedAt
-      teamTeamMembersId
-      __typename
-    }
-  }
-`;
-export const createTeamAnswer = /* GraphQL */ `
-  mutation CreateTeamAnswer(
-    $input: CreateTeamAnswerInput!
-    $condition: ModelTeamAnswerConditionInput
-  ) {
-    createTeamAnswer(input: $input, condition: $condition) {
-      id
-      isSubmitted
-      isShortAnswerEnabled
-      currentState
-      currentQuestionIndex
-      questionId
-      teamMemberAnswersId
-      text
-      answer
-      confidenceLevel
-      hint
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateTeamAnswer = /* GraphQL */ `
-  mutation UpdateTeamAnswer(
-    $input: UpdateTeamAnswerInput!
-    $condition: ModelTeamAnswerConditionInput
-  ) {
-    updateTeamAnswer(input: $input, condition: $condition) {
-      id
-      isSubmitted
-      isShortAnswerEnabled
-      currentState
-      currentQuestionIndex
-      questionId
-      teamMemberAnswersId
-      text
-      answer
-      confidenceLevel
-      hint
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteTeamAnswer = /* GraphQL */ `
-  mutation DeleteTeamAnswer(
-    $input: DeleteTeamAnswerInput!
-    $condition: ModelTeamAnswerConditionInput
-  ) {
-    deleteTeamAnswer(input: $input, condition: $condition) {
-      id
-      isSubmitted
-      isShortAnswerEnabled
-      currentState
-      currentQuestionIndex
-      questionId
-      teamMemberAnswersId
-      text
-      answer
-      confidenceLevel
-      hint
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const createPublicGameQuestions = /* GraphQL */ `
-  mutation CreatePublicGameQuestions(
-    $input: CreatePublicGameQuestionsInput!
-    $condition: ModelPublicGameQuestionsConditionInput
-  ) {
-    createPublicGameQuestions(input: $input, condition: $condition) {
-      id
-      publicGameTemplateID
-      publicQuestionTemplateID
-      publicGameTemplate {
-        id
-        owner
-        title
-        version
-        description
-        domain
-        cluster
-        grade
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        questionTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      publicQuestionTemplate {
-        id
-        owner
-        title
-        version
-        choices
-        instructions
-        answerSettings
-        domain
-        cluster
-        grade
-        standard
-        imageUrl
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const updatePublicGameQuestions = /* GraphQL */ `
-  mutation UpdatePublicGameQuestions(
-    $input: UpdatePublicGameQuestionsInput!
-    $condition: ModelPublicGameQuestionsConditionInput
-  ) {
-    updatePublicGameQuestions(input: $input, condition: $condition) {
-      id
-      publicGameTemplateID
-      publicQuestionTemplateID
-      publicGameTemplate {
-        id
-        owner
-        title
-        version
-        description
-        domain
-        cluster
-        grade
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        questionTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      publicQuestionTemplate {
-        id
-        owner
-        title
-        version
-        choices
-        instructions
-        answerSettings
-        domain
-        cluster
-        grade
-        standard
-        imageUrl
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const deletePublicGameQuestions = /* GraphQL */ `
-  mutation DeletePublicGameQuestions(
-    $input: DeletePublicGameQuestionsInput!
-    $condition: ModelPublicGameQuestionsConditionInput
-  ) {
-    deletePublicGameQuestions(input: $input, condition: $condition) {
-      id
-      publicGameTemplateID
-      publicQuestionTemplateID
-      publicGameTemplate {
-        id
-        owner
-        title
-        version
-        description
-        domain
-        cluster
-        grade
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        questionTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      publicQuestionTemplate {
-        id
-        owner
-        title
-        version
-        choices
-        instructions
-        answerSettings
-        domain
-        cluster
-        grade
-        standard
-        imageUrl
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const createPrivateGameQuestions = /* GraphQL */ `
-  mutation CreatePrivateGameQuestions(
-    $input: CreatePrivateGameQuestionsInput!
-    $condition: ModelPrivateGameQuestionsConditionInput
-  ) {
-    createPrivateGameQuestions(input: $input, condition: $condition) {
-      id
-      privateGameTemplateID
-      privateQuestionTemplateID
-      privateGameTemplate {
-        id
-        owner
-        title
-        version
-        description
-        domain
-        cluster
-        grade
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        questionTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      privateQuestionTemplate {
-        id
-        owner
-        title
-        version
-        choices
-        instructions
-        answerSettings
-        domain
-        cluster
-        grade
-        standard
-        imageUrl
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const updatePrivateGameQuestions = /* GraphQL */ `
-  mutation UpdatePrivateGameQuestions(
-    $input: UpdatePrivateGameQuestionsInput!
-    $condition: ModelPrivateGameQuestionsConditionInput
-  ) {
-    updatePrivateGameQuestions(input: $input, condition: $condition) {
-      id
-      privateGameTemplateID
-      privateQuestionTemplateID
-      privateGameTemplate {
-        id
-        owner
-        title
-        version
-        description
-        domain
-        cluster
-        grade
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        questionTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      privateQuestionTemplate {
-        id
-        owner
-        title
-        version
-        choices
-        instructions
-        answerSettings
-        domain
-        cluster
-        grade
-        standard
-        imageUrl
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const deletePrivateGameQuestions = /* GraphQL */ `
-  mutation DeletePrivateGameQuestions(
-    $input: DeletePrivateGameQuestionsInput!
-    $condition: ModelPrivateGameQuestionsConditionInput
-  ) {
-    deletePrivateGameQuestions(input: $input, condition: $condition) {
-      id
-      privateGameTemplateID
-      privateQuestionTemplateID
-      privateGameTemplate {
-        id
-        owner
-        title
-        version
-        description
-        domain
-        cluster
-        grade
-        standard
-        phaseOneTime
-        phaseTwoTime
-        imageUrl
-        questionTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      privateQuestionTemplate {
-        id
-        owner
-        title
-        version
-        choices
-        instructions
-        answerSettings
-        domain
-        cluster
-        grade
-        standard
-        imageUrl
-        gameTemplatesCount
-        createdAt
-        updatedAt
-        type
-        __typename
-      }
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const createGameSessionFromTemplate = /* GraphQL */ `
-  mutation CreateGameSessionFromTemplate(
-    $input: CreateGameSessionFromTemplateInput!
-  ) {
-    createGameSessionFromTemplate(input: $input)
   }
 `;

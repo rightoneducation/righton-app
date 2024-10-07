@@ -2421,8 +2421,8 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
     questionTemplateID
     gameTemplate {
       id
-      owner
       title
+      owner
       version
       description
       ccss
@@ -2437,12 +2437,12 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       questionTemplates {
         items {
           id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          publicGameTemplate {
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
             id
-            owner
             title
+            owner
             version
             description
             ccss
@@ -2457,12 +2457,12 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             questionTemplates {
               items {
                 id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   description
                   ccss
@@ -2481,10 +2481,10 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   type
                   __typename
                 }
-                publicQuestionTemplate {
+                questionTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   choices
                   instructions
@@ -2502,7 +2502,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                 }
                 createdAt
                 updatedAt
-                owner
                 __typename
               }
               nextToken
@@ -2515,10 +2514,10 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             type
             __typename
           }
-          publicQuestionTemplate {
+          questionTemplate {
             id
-            owner
             title
+            owner
             version
             choices
             instructions
@@ -2531,12 +2530,12 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             gameTemplates {
               items {
                 id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   description
                   ccss
@@ -2555,10 +2554,10 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   type
                   __typename
                 }
-                publicQuestionTemplate {
+                questionTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   choices
                   instructions
@@ -2576,7 +2575,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                 }
                 createdAt
                 updatedAt
-                owner
                 __typename
               }
               nextToken
@@ -2590,7 +2588,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
           }
           createdAt
           updatedAt
-          owner
           __typename
         }
         nextToken
@@ -2605,8 +2602,8 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
     }
     questionTemplate {
       id
-      owner
       title
+      owner
       version
       choices
       instructions
@@ -2619,12 +2616,12 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       gameTemplates {
         items {
           id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          publicGameTemplate {
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
             id
-            owner
             title
+            owner
             version
             description
             ccss
@@ -2639,12 +2636,12 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             questionTemplates {
               items {
                 id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   description
                   ccss
@@ -2663,10 +2660,10 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   type
                   __typename
                 }
-                publicQuestionTemplate {
+                questionTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   choices
                   instructions
@@ -2684,7 +2681,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                 }
                 createdAt
                 updatedAt
-                owner
                 __typename
               }
               nextToken
@@ -2697,10 +2693,10 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             type
             __typename
           }
-          publicQuestionTemplate {
+          questionTemplate {
             id
-            owner
             title
+            owner
             version
             choices
             instructions
@@ -2713,12 +2709,12 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             gameTemplates {
               items {
                 id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   description
                   ccss
@@ -2737,10 +2733,10 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   type
                   __typename
                 }
-                publicQuestionTemplate {
+                questionTemplate {
                   id
-                  owner
                   title
+                  owner
                   version
                   choices
                   instructions
@@ -2758,7 +2754,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                 }
                 createdAt
                 updatedAt
-                owner
                 __typename
               }
               nextToken
@@ -2772,7 +2767,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
           }
           createdAt
           updatedAt
-          owner
           __typename
         }
         nextToken
@@ -2802,8 +2796,8 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
     questionTemplateID
     gameTemplate {
       id
-      owner
       title
+      owner
       version
       description
       ccss
