@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox } from '@mui/material';
+import { Checkbox, Typography } from '@mui/material';
 import { GradeTarget } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import { 
@@ -89,7 +89,7 @@ export default function SelectGradesMenu ({
             {Object.keys(gradeMap).map((grade) => (
               <SelectMenuItem onClick={() => handleGradesChange(grade)}>
                 <Checkbox checked={(selectedGrades).includes(gradeMap[grade as keyof typeof gradeMap])} color="default"/>
-                  {grade}
+                  <Typography style={{fontFamily: 'Poppins', fontSize: '16px', fontWeight: 500}}>{grade}</Typography>
               </SelectMenuItem>
             ))}
             <SelectButtonBox>
