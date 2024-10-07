@@ -16,7 +16,7 @@ export interface ITeamAnswerAPIClient {
   subscribeUpdateTeamAnswer(
     id: string,
     callback: (result: BackendAnswer) => void
-  ): Promise<any>;
+  ): Subscription;
 
   updateTeamAnswer(
     teamAnswerId: string,

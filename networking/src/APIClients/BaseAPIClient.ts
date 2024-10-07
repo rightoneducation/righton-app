@@ -54,7 +54,9 @@ export interface SubscriptionValue<T> {
 
 export const client = generateClient({});
 
-type QueryResult = { gameTemplates: IGameTemplate[]; nextToken: string | null} | { questionTemplates: IQuestionTemplate[]; nextToken: string | null};
+type QueryResult = 
+    | { gameTemplates: IGameTemplate[]; nextToken: string | null }
+    | { questionTemplates: IQuestionTemplate[]; nextToken: string | null };
 
 // used in GameTemplateAPIClient and QuestionTemplateAPIClient to store query settings
 export interface IQueryParameters { 
@@ -144,9 +146,9 @@ export abstract class BaseAPIClient {
       awsType: string,
       query: any,
       queryName: string,
-      gradeTargets?: GradeTarget[] | null,
       type: PublicPrivateType,
-    ): Promise<QueryResult<T> | null> {
+      gradeTargets?: GradeTarget[] | null,
+    ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
       if (filterString != null) {
         queryParameters.filter = { title: { contains: filterString } };
@@ -180,6 +182,7 @@ export abstract class BaseAPIClient {
               { or: filters }       // Match at least one of the filters (title, description, etc.)
             ]
           };
+        }
       }
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
@@ -189,22 +192,23 @@ export abstract class BaseAPIClient {
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
         const operationResult = result.data[queryName];
         const parsedNextToken = operationResult.nextToken;
-        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-          const gameTemplates = operationResult.items.map((item: any) => 
-            GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
-          );
-          return { gameTemplates, nextToken: parsedNextToken } as QueryResult;
+          if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+            const gameTemplates = operationResult.items.map((item: any) => 
+                GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
+            );
+            return { gameTemplates, nextToken: parsedNextToken };
         } else {
             const questionTemplates = operationResult.items.map((item: any) => 
-            QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
-          );
-          return { questionTemplates, nextToken: parsedNextToken } as QueryResult;
+                QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
+            );
+            return { questionTemplates, nextToken: parsedNextToken };
         }
       }
-      if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate")
-        return {gameTemplates: [], nextToken: null};
-      else
-        return {questionTemplates: [], nextToken: null};
+      if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+        return { gameTemplates: [], nextToken: null };
+      } else {
+        return { questionTemplates: [], nextToken: null };
+      }
   }
 }
-export { Environment };
+export {Environment};

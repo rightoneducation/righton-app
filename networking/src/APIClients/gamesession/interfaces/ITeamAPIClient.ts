@@ -13,7 +13,7 @@ export interface ITeamAPIClient {
   subscribeUpdateTeam(
     id: string,
     callback: (result: ITeam) => void
-  ): Promise<any>;
+  ): Subscription;
 
   updateTeam(teamInput: UpdateTeamInput): Promise<ITeam>;
 

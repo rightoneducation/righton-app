@@ -49,7 +49,7 @@ export class APIClients {
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
 
-  constructor(env: Environment, appType: AppType) {
+  constructor(env: Environment,  authClient: IAuthAPIClient, appType: AppType) {
     this.configAmplify(awsconfig);
     this.auth = authClient;
     this.gameTemplate = new GameTemplateAPIClient(env, this.auth);
@@ -66,10 +66,10 @@ export class APIClients {
       this.hostDataManager = new HostDataManagerAPIClient(env, this.gameSession, this.question, this.team, this.teamMember, this.teamAnswer);
     }
   }
-  static async create(env: Environment): Promise<APIClients> {
+  static async create(env: Environment, appType: AppType): Promise<APIClients> {
     const authClient = new AuthAPIClient();
     await authClient.init(); // Ensure the auth client is initialized
-    return new APIClients(env, authClient); 
+    return new APIClients(env, authClient, appType); 
   }
     
   configAmplify(awsconfig: any) {

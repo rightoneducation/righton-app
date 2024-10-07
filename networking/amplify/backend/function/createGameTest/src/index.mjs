@@ -71,22 +71,7 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
-  const listGameSessions = /* GraphQL */ `query ListGameSessions(
-    $filter: ModelGameSessionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        gameCode
-      }
-      nextToken
-      __typename
-    }
-  }
-  `;  
-const getPrivateGameTemplate = /* GraphQL */ `
+  const getPrivateGameTemplate = /* GraphQL */ `
   query GetPrivateGameTemplate($id: ID!) {
     getPrivateGameTemplate(id: $id) {
       id
@@ -181,8 +166,6 @@ const getPrivateGameTemplate = /* GraphQL */ `
   }
 `;
 
-
-
 const createGameSession = /* GraphQL */ `
 mutation CreateGameSession(
   $input: CreateGameSessionInput!
@@ -217,7 +200,8 @@ mutation CreateGameSession(
 }
 `;
 
-const createQuestion = /* GraphQL */ `mutation CreateQuestion(
+const createQuestion = /* GraphQL */ `
+mutation CreateQuestion(
   $input: CreateQuestionInput!
   $condition: ModelQuestionConditionInput
 ) {
@@ -226,7 +210,7 @@ const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     text
     choices
     answerSettings
-    answerData
+    responses
     hints
     imageUrl
     instructions
@@ -241,28 +225,10 @@ const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     gameSessionId
     __typename
   }
+}
 `;
   let statusCode = 200;
-  let responseBody = {};
-
-  const generateUniqueGameCode = async () => {
-    let gameCodeIsUnique = false;
-    let gameCode = 0;
-    while (!gameCodeIsUnique){
-      gameCode = Math.floor(Math.random() * 9000) + 1000;
-      console.log(gameCode);
-      const matchingGameSessionsRequest = await createAndSignRequest(listGameSessions, { filter: { gameCode: { eq: gameCode } } });
-      console.log(matchingGameSessionsRequest);
-      const matchingGameSessionsResponse = await fetch(matchingGameSessionsRequest);
-      const matchingGameSessionsResponseParsed = await matchingGameSessionsResponse.json();
-      const numOfMatches = matchingGameSessionsResponseParsed.data.listGameSessions.items.length;
-      console.log(matchingGameSessionsResponseParsed);
-      if (numOfMatches === 0)
-        gameCodeIsUnique = true;
-    }
-    return gameCode;
-  }
-
+  let responseBody ={};
   try {
     // getGameTemplate
     const gameTemplateId = event.arguments.input.gameTemplateId;
@@ -272,43 +238,28 @@ const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json(), publicPrivate);
     const { questionTemplates: questions, ...game } = gameTemplateParsed;
-    const uniqueGameCode = await generateUniqueGameCode();
+
     // createGameSession
-    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game, gameCode: uniqueGameCode }});
+    const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
 
-    // Fisher-Yates Shuffle per: https://bost.ocks.org/mike/shuffle/
-    const shuffleQuestions = (choicesArray) => {
-      let length = choicesArray.length, t, i;
-      while (length){
-        i = Math.floor(Math.random() * length--);
-        t = choicesArray[length];
-        choicesArray[length] = choicesArray[i];
-        choicesArray[i] = t;
-      }
-      return choicesArray;
-    }
-
     // createQuestions
-    const promises = questions.map(async (question, index) => {
-      const {owner, version, createdAt, title, updatedAt, gameId, __typename, choices, ...trimmedQuestion} = question;
-      const choicesParsed = choices ? JSON.parse(choices) : [];
-      const shuffledChoices = shuffleQuestions(choicesParsed);
+    const promises = questions.map(async (question) => {
+      const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
       const questionRequest = await createAndSignRequest(createQuestion, {
         input: {    
           ...trimmedQuestion,
           id: uuidv4(),
           text: title,
-          choices: JSON.stringify(shuffledChoices),
           answerSettings: question.answerSettings,
           gameSessionId: gameSessionParsed.id,
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,
           isHintEnabled: true,
-          answerData: '{}',
-          order: index
+          responses: '[]',
+          order: 0
         }
       });
       const questionResponse = await fetch(questionRequest);
@@ -318,7 +269,7 @@ const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     });
     const questionsParsed = await Promise.all(promises);
     responseBody = gameSessionParsed.id;
-    } catch (error) {
+  } catch (error) {
     console.error("Error occurred:", error);
     // Log detailed error information
     if (error instanceof SyntaxError) {
@@ -334,6 +285,6 @@ const createQuestion = /* GraphQL */ `mutation CreateQuestion(
         }
       ]
     };
-    }
+  }
   return responseBody;
 };
