@@ -20,10 +20,16 @@ export const SortButton = styled(Box, {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: screenSize === ScreenSize.SMALL ? '38px' : '94px',
+    width: '100%',
+    minWidth: '44px',
     minHeight: '44px',
     background: 'linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)',
     borderRadius: '22px',
+    paddingTop: '8px',
+    paddingBottom: '8px',
+    paddingLeft: '12px',
+    paddingRight: '12px',
+    boxSizing: 'border-box',
     gap: '8px',
     zIndex: 3
 }));

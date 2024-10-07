@@ -24,7 +24,7 @@ const SearchBarContainer = styled(TextField)<SearchBarProps2>(({ screenSize, the
     flexGrow: 1,
     margin: '0', 
     backgroundColor: '#FFFFFF',
-    height: '44px',  
+    height: '44px',
     borderRadius: '0px 30px 30px 0px', 
     '& .MuiOutlinedInput-root': {
         height: '100%',
@@ -33,9 +33,12 @@ const SearchBarContainer = styled(TextField)<SearchBarProps2>(({ screenSize, the
         borderRadius: '0px 30px 30px 0px',             
         '& .MuiInputBase-input': {
             padding: 0,
-            height: '38px',
-            lineHeight: '38px',
-            fontFamily: 'Rubik',
+            whiteSpace: screenSize !== ScreenSize.SMALL ? 'nowrap' : 'normal',
+            height: screenSize !== ScreenSize.SMALL ? '44px' : '16px',
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
             '&::placeholder': {
                 color: `${theme.palette.primary.extraDarkBlue}`, 
                 fontWeight: 400, 
@@ -135,6 +138,8 @@ function SearchBar({ screenSize, onSearchChange, handleChooseGrades, onSortChang
           <Box style={{display: 'flex', width: '100%'}}>
             <SelectGradesMenu screenSize={screenSize ?? ScreenSize.SMALL} handleChooseGrades={handleChooseGrades} />
             <SearchBarContainer
+                multiline
+                maxRows={2}
                 screenSize={screenSize}
                 placeholder={screenSize === ScreenSize.SMALL 
                     ? "Search for Games..." 
