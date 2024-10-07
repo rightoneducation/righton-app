@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
+import { Typography, TextField, Divider, Button, Select, MenuItem, Grid, Box, Radio } from '@material-ui/core';
 import { v4 as uuidv4 } from 'uuid';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionMakerAnswerDropdown from './QuestionMakerAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
-import { NumericAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision } from '@righton/networking';
+import { NumericAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision, PublicPrivateType } from '@righton/networking';
 
 export default function QuestionMaker({ 
   gameId, 
@@ -16,6 +16,11 @@ export default function QuestionMaker({
   setLocalQuestionTemplates,
   handleCreateQuestionTemplate, 
   handleUpdateQuestionTemplate,
+  listQuerySettings,
+  publicPrivateQueryType,
+  handlePublicPrivateChange,
+  question,
+  setQuestion
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
@@ -28,26 +33,8 @@ export default function QuestionMaker({
   const [isAnswerTypeValid, setIsAnswerTypeValid] = useState(false);
   const [isAnswerPrecisionValid, setIsAnswerPrecisionValid] = useState(false);
   const initialState = useMemo(() => originalQuestion != null, [originalQuestion]);
-  const [question, setQuestion] = useState(() => {
-    if (originalQuestion) {
-      const copyOfOriginal = { ...originalQuestion }
-      copyOfOriginal.choices = JSON.parse(copyOfOriginal.choices)
-      copyOfOriginal.instructions = JSON.parse(copyOfOriginal.instructions);
-      copyOfOriginal.answerSettings = JSON.parse(copyOfOriginal.answerSettings);
-      return copyOfOriginal
-    }
-    return {
-      title: '',
-      imageUrl: '',
-      choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }],
-      grade: null,
-      domain: null,
-      cluster: null,
-      standard: null,
-    }
-  });
-  const [answerType, setAnswerType] = useState(question.answerSettings?.answerType ?? AnswerType.NUMBER);
-  const [answerPrecision, setAnswerPrecision] = useState(question.answerSettings?.answerPrecision ?? AnswerPrecision.WHOLE);
+  const [answerType, setAnswerType] = useState(question?.answerSettings?.answerType ?? AnswerType.NUMBER);
+  const [answerPrecision, setAnswerPrecision] = useState(question?.answerSettings?.answerPrecision ?? AnswerPrecision.WHOLE);
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if (match) {
@@ -162,7 +149,6 @@ export default function QuestionMaker({
       questionToSend.choices = JSON.stringify(questionToSend.choices)
       questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
       questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
-      questionToSend.owner = "Owners Name";
       questionToSend.version = 0;
       questionToSend.gameTemplatesCount = 0;
       let newQuestion;
@@ -194,7 +180,6 @@ export default function QuestionMaker({
           <Button type="button" className={classes.back} onClick={handleBack}>
             <ArrowBack style={{ marginRight: 8 }} />
               {match ? `Back to Game Maker` : `Back to Questions`}
-              
           </Button>
         </Grid>
 
@@ -214,7 +199,34 @@ export default function QuestionMaker({
           <Grid item container justifyContent='center' xs={8} sm={4}>
             {question.imageUrl ? <img src={question.imageUrl} alt="" width={'60%'} /> : <img className={classes.image} src={Placeholder} alt="Invalid URL" />}
           </Grid>
-
+          <Grid container item xs={12} sm={12} style={{display: 'flex', alignItems: 'center', gap: 10, width: '100%'}}>
+                  <Typography style={{ fontWeight: 200, fontSize: '1 rem', color: 'rgba(0,0,0,0.75)' }}> Game Type: </Typography>
+                  <Box style={{ display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)' }}> Public </Typography>
+                    <Radio
+                      checked={publicPrivateQueryType === PublicPrivateType.PUBLIC} 
+                      value={PublicPrivateType.PUBLIC} 
+                      onChange={handlePublicPrivateChange} 
+                      color='default'
+                      disabled={gameId}
+                    />
+                  </Box>
+                  <Box style={{display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)'}}> Private </Typography>
+                    <Radio 
+                      checked={publicPrivateQueryType === PublicPrivateType.PRIVATE} 
+                      value={PublicPrivateType.PRIVATE} 
+                      onChange={handlePublicPrivateChange} 
+                      color='default'
+                      disabled={gameId}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                { gameId &&
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.50)', fontStyle: "italic"}}> Question access type must match game access type </Typography>
+                  }
+                </Grid>
           <Grid item xs={12}>
             <Divider className={classes.divider} />
           </Grid>

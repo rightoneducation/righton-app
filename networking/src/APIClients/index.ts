@@ -11,4 +11,7 @@ export * from './TeamAPIClient';
 export * from './TeamAnswerAPIClient';
 export * from './TeamMemberAPIClient';
 export * from './datamanagers';
+export * from './auth';
+export * from './gamesession';
 export * from './interfaces';
+export * from './templates';

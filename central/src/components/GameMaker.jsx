@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent, Box } from '@material-ui/core';
+import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent, Box, Radio } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
-import { isNullOrUndefined } from '@righton/networking';
+import { PublicPrivateType, isNullOrUndefined } from '@righton/networking';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import CCSSText from './CCSSText';
 import GameCCSS from './GameMakerCCSS';
@@ -13,18 +13,6 @@ import SearchBar from './SearchBar.jsx';
 import SortByDropdown from './SortByDropdown';
 import QuestionDashboard from './QuestionDashboard';
 import { v4 as uuidv4 } from 'uuid';
-
-// New "empty" game
-const newGame = {
-  title: '',
-  description: '',
-  grade: '',
-  domain: '',
-  phaseOneTime: 180,
-  phaseTwoTime: 180,
-  imageUrl: '',
-  questionTemplates: [],
-}
 
 // Preset times
 const times = [
@@ -53,9 +41,12 @@ const times = [
 export default function GameMaker({ 
   loading,
   questions, 
+  gameDetails,
+  setGameDetails,
   game,
   games, 
   handleQuestionBankClick, 
+  handleCreateQuestionTemplateClick,
   selectedQuestions, 
   setSelectedQuestions, 
   saveGameTemplate, 
@@ -79,6 +70,8 @@ export default function GameMaker({
   nextToken,
   localQuestionTemplates,
   setLocalQuestionTemplates,
+  publicPrivateQueryType,
+  handlePublicPrivateChange
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
@@ -162,6 +155,7 @@ export default function GameMaker({
     setSelectedQuestions([]); 
     setLocalQuestionTemplates([]);
     gameDetails.questionTemplates = localQuestionTemplates;
+    gameDetails.id = gameId;
     if (CCSS === 'Mashup' || CCSS === undefined){
       gameDetails.grade = 'Mashup';
       gameDetails.domain = '';
@@ -179,6 +173,7 @@ export default function GameMaker({
         return { questionTemplateId: question.questionTemplate.id, index: index };
       });
     saveGameTemplate(game, gameDetails);
+    setGameDetails({});
     event.preventDefault();
     history.push('/');
   };
@@ -276,6 +271,27 @@ export default function GameMaker({
                 <Grid container item xs={12} sm={4} justifyContent='center'>
                   {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'} />}
                 </Grid>
+                <Grid container item xs={12} sm={4} style={{display: 'flex', alignItems: 'center', gap: 10}}>
+                  <Typography style={{ fontWeight: 200, fontSize: '1 rem', color: 'rgba(0,0,0,0.75)' }}> Game Type: </Typography>
+                  <Box style={{ display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)' }}> Public </Typography>
+                    <Radio
+                      checked={publicPrivateQueryType === PublicPrivateType.PUBLIC} 
+                      value={PublicPrivateType.PUBLIC} 
+                      onChange={handlePublicPrivateChange} 
+                      color='default'
+                    />
+                  </Box>
+                  <Box style={{display: 'flex', justifyContainer: 'center', alignItems: 'center'}}>
+                    <Typography style={{ fontWeight: 200, fontSize: '15px', color: 'rgba(0,0,0,0.75)'}}> Private </Typography>
+                    <Radio 
+                      checked={publicPrivateQueryType === PublicPrivateType.PRIVATE} 
+                      value={PublicPrivateType.PRIVATE} 
+                      onChange={handlePublicPrivateChange} 
+                      color='default'
+                    />
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
 
@@ -356,7 +372,7 @@ export default function GameMaker({
                   </Grid>
 
                   <Grid container item xs={6} justifyContent='center'>
-                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/questionmaker/${uuidv4()}`)}>
+                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => handleCreateQuestionTemplateClick(gameDetails)}>
                       Create Question
                     </Button>
                   </Grid>

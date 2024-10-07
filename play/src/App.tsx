@@ -45,7 +45,9 @@ function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>
-        <RouterProvider router={router} />
+        {apiClients &&
+          <RouterProvider router={router} />
+        }
       </ThemeProvider>
     </StyledEngineProvider>
   );
