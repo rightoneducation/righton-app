@@ -79,14 +79,7 @@ export default function GameMaker({
   }, []);
   const classes = useStyles();
   const history = useHistory();
-  const [gameDetails, setGameDetails] = useState(() => {
-    if (game) {
-      return { ...game };
-    }
-    else {
-      return {id: gameId, ...newGame};
-    }
-  });
+ 
   const calculateCCSS = (localQuestionTemplates) => {
     if (localQuestionTemplates === 'Mashup') 
       return localQuestionTemplates;

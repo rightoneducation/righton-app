@@ -1,4 +1,4 @@
-import { PublicPrivateType } from "../../BaseAPIClient";
+import { PublicPrivateType, GradeTarget } from "../../BaseAPIClient";
 import { IGameTemplate } from "../../../Models";
 import { 
   createPublicGameTemplate,
@@ -174,7 +174,8 @@ export interface IGameTemplateAPIClient {
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
-    filterString: string | null
+    filterString: string | null,
+    gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByDate<T extends PublicPrivateType>(
@@ -182,7 +183,8 @@ export interface IGameTemplateAPIClient {
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
-    filterString: string | null
+    filterString: string | null,
+    gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByGrade<T extends PublicPrivateType>(
@@ -190,7 +192,8 @@ export interface IGameTemplateAPIClient {
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
-    filterString: string | null
+    filterString: string | null,
+    gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByQuestionTemplatesCount<T extends PublicPrivateType>(
@@ -198,6 +201,7 @@ export interface IGameTemplateAPIClient {
     limit: number | null,
     nextToken: string | null,
     sortDirection: string | null,
-    filterString: string | null
+    filterString: string | null,
+    gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 }

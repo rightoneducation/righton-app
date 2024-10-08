@@ -1,4 +1,4 @@
-import { BaseAPIClient, PublicPrivateType } from "../BaseAPIClient";
+import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
 import { GameTemplateType, gameTemplateRuntimeMap, IGameTemplateAPIClient } from "./interfaces/IGameTemplateAPIClient";
 import { IGameTemplate } from "../../Models";
 import { GameTemplateParser } from "../../Parsers/GameTemplateParser";
@@ -92,12 +92,13 @@ export class GameTemplateAPIClient
     limit: number, 
     nextToken: string | null, 
     sortDirection: string | null, 
-    filterString: string | null
+    filterString: string | null,
+    gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.default;
     const awsType = `${type}GameTemplate`;
     const queryName = `list${type}GameTemplates`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type); 
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets); 
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
@@ -106,12 +107,13 @@ export class GameTemplateAPIClient
     limit: number, 
     nextToken: string | null, 
     sortDirection: string | null, 
-    filterString: string | null
+    filterString: string | null,
+    gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}GameTemplate`;
     const queryName = `${type.toLowerCase()}GameTemplatesByDate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
@@ -120,12 +122,13 @@ export class GameTemplateAPIClient
     limit: number, 
     nextToken: string | null, 
     sortDirection: string | null, 
-    filterString: string | null
+    filterString: string | null,
+    gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byGrade;
     const awsType = `${type}GameTemplate`;
     const queryName = `${type.toLowerCase()}GameTemplatesByGrade`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; }; 
   }
 
@@ -134,11 +137,12 @@ export class GameTemplateAPIClient
     limit: number,
     nextToken: string | null, 
     sortDirection: string | null,  
-    filterString: string | null
+    filterString: string | null,
+    gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byQuestionTemplatesCount;
     const awsType = `${type}GameTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}GameTemplatesByDate`, queryFunction, type);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}GameTemplatesByDate`, queryFunction, type, gradeTargets);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 }

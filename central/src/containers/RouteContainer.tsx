@@ -16,7 +16,9 @@ import {
   CreatePrivateGameTemplateInput,
   CreatePublicQuestionTemplateInput,
   CreatePrivateQuestionTemplateInput,
-  isNullOrUndefined
+  isNullOrUndefined,
+  AWSGameTemplate,
+  IQuestionTemplateOrder
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game } from '../API';
@@ -257,7 +259,7 @@ export const RouteContainer = ({
         const awsGameTemplateUpdate = {...gameTemplateUpdate, questionTemplatesOrder: JSON.stringify(gameTemplateUpdate.questionTemplatesOrder)}  as AWSGameTemplate; 
         const gameTemplateUpdateInput = {...awsGameTemplateUpdate, createdAt: awsGameTemplateUpdate.createdAt?.toString(), updatedAt: awsGameTemplateUpdate.updatedAt?.toString()}
         const questionTemplatesUpdate = questionTemplates;
-        const game = await updateGameTemplate(publicPrivateQueryType, apiClients, gameTemplateUpdate);
+        const game = await updateGameTemplate(publicPrivateQueryType, apiClients, gameTemplateUpdateInput);
           
         if (game) {
           // ~~~~ add questions to game ~~~~~~ using , questionIDSet

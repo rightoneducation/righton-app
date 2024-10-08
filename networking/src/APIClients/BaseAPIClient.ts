@@ -144,8 +144,8 @@ export abstract class BaseAPIClient {
       sortDirection: string | null,
       filterString: string | null,
       awsType: string,
-      query: any,
       queryName: string,
+      query: any,
       type: PublicPrivateType,
       gradeTargets?: GradeTarget[] | null,
     ): Promise<QueryResult | null> {
