@@ -21,19 +21,26 @@ type PublicGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String
   title: String!
+  owner: String! @index(
+      name: "publicGameTemplatesByOwner"
+      queryField: "publicGameTemplatesByOwner"
+      sortKeyFields: ["createdAt"]
+    )
   version: Int!
   description: String!
+  ccss: String
   domain: String
   cluster: String
   grade: String
+  gradeFilter: String
   standard: String
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
-  questionTemplates: [PublicQuestionTemplate] @manyToMany(relationName: "PublicGameQuestions")
+  questionTemplates: [PublicQuestionTemplate] @manyToMany(relationName: "PublicGameQuestions") 
   questionTemplatesCount: Int! @default(value: "0")
+  questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
   type: String @default(value: "PublicGameTemplate") @index(name: "publicGameTemplatesByDate", queryField: "publicGameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "publicGameTemplatesByGrade", queryField: "publicGameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "publicGameTemplatesByPublicQuestionTemplatesCount", queryField: "publicGameTemplatesByPublicQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
@@ -56,19 +63,26 @@ type PrivateGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String
+  owner: String! @index(
+    name: "privatecGameTemplatesByOwner"
+    queryField: "privateGameTemplatesByOwner"
+    sortKeyFields: ["createdAt"]
+  )
   title: String!
   version: Int!
   description: String!
+  ccss: String
   domain: String
   cluster: String
   grade: String
+  gradeFilter: String
   standard: String
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
   questionTemplates: [PrivateQuestionTemplate] @manyToMany(relationName: "PrivateGameQuestions")
   questionTemplatesCount: Int! @default(value: "0")
+  questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
   type: String @default(value: "PrivateGameTemplate") @index(name: "privateGameTemplatesByDate", queryField: "privateGameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "privateGameTemplatesByGrade", queryField: "privateGameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "privateGameTemplatesByPrivateQuestionTemplatesCount", queryField: "privateGameTemplatesByPrivateQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
@@ -92,7 +106,7 @@ type PublicQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String
+  owner: String!
   title: String!
   version: Int!
   choices: AWSJSON
@@ -126,7 +140,7 @@ type PrivateQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String
+  owner: String!
   title: String!
   version: Int!
   choices: AWSJSON
@@ -165,7 +179,7 @@ type GameSession @model
 {
   id: ID!
   gameId: ID!
-  startTime: AWSDateTime
+  startTime: String
   phaseOneTime: Int!
   phaseTwoTime: Int!
   teams: [Team] @hasMany
@@ -178,6 +192,7 @@ type GameSession @model
   description: String
   title: String
   currentTimer: Int
+  sessionData: AWSJSON
   questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
 }
 
@@ -186,11 +201,9 @@ enum GameSessionState {
   TEAMS_JOINING
   CHOOSE_CORRECT_ANSWER
   PHASE_1_DISCUSS
-  PHASE_1_RESULTS
   PHASE_2_START
   CHOOSE_TRICKIEST_ANSWER
   PHASE_2_DISCUSS
-  PHASE_2_RESULTS
   FINAL_RESULTS
   FINISHED
 }
@@ -207,7 +220,7 @@ type Question @model(subscriptions: null, timestamps: null)
   text: String!
   choices: AWSJSON
   answerSettings: AWSJSON
-  responses: AWSJSON
+  answerData: AWSJSON
   hints: AWSJSON
   imageUrl: String
   instructions: AWSJSON
@@ -219,7 +232,7 @@ type Question @model(subscriptions: null, timestamps: null)
   isConfidenceEnabled: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
   isHintEnabled: Boolean! @default(value: "true")
-  gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
+  gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["order"])
 }
 
 type Team @model 
@@ -270,12 +283,15 @@ type TeamAnswer @model
 )
 {
   id: ID!
+  isCorrect: Boolean
   isSubmitted: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
   currentState: GameSessionState!
   currentQuestionIndex: Int!
   questionId: ID!
   teamMemberAnswersId: ID!
+  teamAnswersId: ID
+  teamName: String
   text: String!
   answer: AWSJSON!
   confidenceLevel: ConfidenceLevel
@@ -285,7 +301,7 @@ type TeamAnswer @model
 type Subscription {
   onGameSessionUpdatedById(id: ID!): GameSession
     @aws_subscribe(mutations: ["updateGameSession"])
-    @auth(
+        @auth(
       rules: [
         { allow: public, provider: iam  },
         { allow: private, provider: userPools }
@@ -293,7 +309,7 @@ type Subscription {
     )
   onTeamMemberUpdateByTeamId(teamTeamMembersId: ID!): TeamMember
     @aws_subscribe(mutations: ["updateTeamMember"])
-    @auth(
+        @auth(
       rules: [
         { allow: public, provider: iam  },
         { allow: private, provider: userPools }
@@ -301,18 +317,27 @@ type Subscription {
     )
   onTeamCreateByGameSessionId(gameSessionTeamsId: ID!): Team
     @aws_subscribe(mutations: ["createTeam"])
-    @auth(
+        @auth(
       rules: [
         { allow: public, provider: iam  },
         { allow: private, provider: userPools }
       ]
     )
   onTeamDeleteByGameSessionId(gameSessionTeamsId: ID!): Team
-    @aws_subscribe(mutations: ["deleteTeam"]) 
-    @auth(
+    @aws_subscribe(mutations: ["deleteTeam"])
+        @auth(
+      rules: [
+        { allow: public, provider: iam  },
+        { allow: private, provider: userPools }
+      ]
+    )
+  onTeamUpdateByGameSessionId(gameSessionTeamsId: ID!): Team
+    @aws_subscribe(mutations: ["updateTeam"])
+        @auth(
       rules: [
         { allow: public, provider: iam  },
         { allow: private, provider: userPools }
       ]
     )
 }
+

@@ -2,8 +2,8 @@ import { isNullOrUndefined } from "../global";
 import { ITeam, ITeamMember } from "../Models";
 import { AWSTeam } from "../Models/AWS";
 import { 
-OnTeamCreateByGameSessionIdSubscription, 
-OnTeamUpdateByGameSessionIdSubscription,
+    OnTeamCreateByGameSessionIdSubscription, 
+    OnTeamUpdateByGameSessionIdSubscription,
   OnDeleteTeamSubscription 
 } from "../AWSMobileApi";
 import { TeamMemberParser } from "./TeamMemberParser"
