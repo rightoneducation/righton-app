@@ -5,13 +5,15 @@ export const getPublicGameTemplate = /* GraphQL */ `
   query GetPublicGameTemplate($id: ID!) {
     getPublicGameTemplate(id: $id) {
       id
-      owner
       title
+      owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -21,6 +23,7 @@ export const getPublicGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -41,18 +44,65 @@ export const listPublicGameTemplates = /* GraphQL */ `
     ) {
       items {
         id
-        owner
         title
+        owner
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const publicGameTemplatesByOwner = /* GraphQL */ `
+  query PublicGameTemplatesByOwner(
+    $owner: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPublicGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    publicGameTemplatesByOwner(
+      owner: $owner
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        owner
+        version
+        description
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -82,18 +132,21 @@ export const publicGameTemplatesByDate = /* GraphQL */ `
     ) {
       items {
         id
-        owner
         title
+        owner
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -123,18 +176,21 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `
     ) {
       items {
         id
-        owner
         title
+        owner
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -164,18 +220,21 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
     ) {
       items {
         id
-        owner
         title
+        owner
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -194,9 +253,11 @@ export const getPrivateGameTemplate = /* GraphQL */ `
       title
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -206,6 +267,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -230,14 +292,61 @@ export const listPrivateGameTemplates = /* GraphQL */ `
         title
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const privateGameTemplatesByOwner = /* GraphQL */ `
+  query PrivateGameTemplatesByOwner(
+    $owner: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPrivateGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    privateGameTemplatesByOwner(
+      owner: $owner
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        title
+        version
+        description
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -271,14 +380,17 @@ export const privateGameTemplatesByDate = /* GraphQL */ `
         title
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -312,14 +424,17 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `
         title
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -353,14 +468,17 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
         title
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -761,6 +879,7 @@ export const getGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -792,6 +911,7 @@ export const listGameSessions = /* GraphQL */ `
         description
         title
         currentTimer
+        sessionData
         createdAt
         updatedAt
         __typename
@@ -830,6 +950,7 @@ export const gameSessionByState = /* GraphQL */ `
         description
         title
         currentTimer
+        sessionData
         createdAt
         updatedAt
         __typename
@@ -868,6 +989,7 @@ export const gameSessionByCode = /* GraphQL */ `
         description
         title
         currentTimer
+        sessionData
         createdAt
         updatedAt
         __typename
@@ -884,7 +1006,7 @@ export const getQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -923,7 +1045,7 @@ export const listQuestions = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -953,7 +1075,7 @@ export const getTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -1051,12 +1173,15 @@ export const getTeamAnswer = /* GraphQL */ `
   query GetTeamAnswer($id: ID!) {
     getTeamAnswer(id: $id) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -1076,12 +1201,15 @@ export const listTeamAnswers = /* GraphQL */ `
     listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        isCorrect
         isSubmitted
         isShortAnswerEnabled
         currentState
         currentQuestionIndex
         questionId
         teamMemberAnswersId
+        teamAnswersId
+        teamName
         text
         answer
         confidenceLevel
@@ -1103,18 +1231,21 @@ export const getPublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
-        owner
         title
+        owner
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -1183,14 +1314,17 @@ export const getPrivateGameQuestions = /* GraphQL */ `
         title
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type

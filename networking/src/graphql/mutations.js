@@ -8,13 +8,15 @@ export const createPublicGameTemplate = /* GraphQL */ `
   ) {
     createPublicGameTemplate(input: $input, condition: $condition) {
       id
-      owner
       title
+      owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -24,6 +26,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -38,13 +41,15 @@ export const updatePublicGameTemplate = /* GraphQL */ `
   ) {
     updatePublicGameTemplate(input: $input, condition: $condition) {
       id
-      owner
       title
+      owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -54,6 +59,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -68,13 +74,15 @@ export const deletePublicGameTemplate = /* GraphQL */ `
   ) {
     deletePublicGameTemplate(input: $input, condition: $condition) {
       id
-      owner
       title
+      owner
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -84,6 +92,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -102,9 +111,11 @@ export const createPrivateGameTemplate = /* GraphQL */ `
       title
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -114,6 +125,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -132,9 +144,11 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
       title
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -144,6 +158,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -162,9 +177,11 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
       title
       version
       description
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       phaseOneTime
       phaseTwoTime
@@ -174,6 +191,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
         __typename
       }
       questionTemplatesCount
+      questionTemplatesOrder
       createdAt
       updatedAt
       type
@@ -384,6 +402,7 @@ export const createGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -417,6 +436,7 @@ export const updateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -450,6 +470,7 @@ export const deleteGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -470,7 +491,7 @@ export const createQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -497,7 +518,7 @@ export const updateQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -524,7 +545,7 @@ export const deleteQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -554,7 +575,7 @@ export const createTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -598,7 +619,7 @@ export const updateTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -642,7 +663,7 @@ export const deleteTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -740,12 +761,15 @@ export const createTeamAnswer = /* GraphQL */ `
   ) {
     createTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -763,12 +787,15 @@ export const updateTeamAnswer = /* GraphQL */ `
   ) {
     updateTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -786,12 +813,15 @@ export const deleteTeamAnswer = /* GraphQL */ `
   ) {
     deleteTeamAnswer(input: $input, condition: $condition) {
       id
+      isCorrect
       isSubmitted
       isShortAnswerEnabled
       currentState
       currentQuestionIndex
       questionId
       teamMemberAnswersId
+      teamAnswersId
+      teamName
       text
       answer
       confidenceLevel
@@ -813,18 +843,21 @@ export const createPublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
-        owner
         title
+        owner
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -867,18 +900,21 @@ export const updatePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
-        owner
         title
+        owner
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -921,18 +957,21 @@ export const deletePublicGameQuestions = /* GraphQL */ `
       publicQuestionTemplateID
       publicGameTemplate {
         id
-        owner
         title
+        owner
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -979,14 +1018,17 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         title
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -1033,14 +1075,17 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         title
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
@@ -1087,14 +1132,17 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         title
         version
         description
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         phaseOneTime
         phaseTwoTime
         imageUrl
         questionTemplatesCount
+        questionTemplatesOrder
         createdAt
         updatedAt
         type
