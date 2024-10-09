@@ -19,9 +19,9 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
           const { questionTemplates: fetchedQuestionTemplates } = awsGameTemplate.data[queryName];
           console.log(fetchedQuestionTemplates)
           questionTemplates = fetchedQuestionTemplates.items.map((item) => {
-            console.log("Here");
-            console.log(item); 
-              return item[questionName];
+              const { questionTemplate } = item[questionName];
+              const { gameTemplates, questionTemplates, ...rest } = questionTemplate;
+              return rest;
           });
       } else {
           console.log("getGameTemplate is not present in the response");
@@ -29,7 +29,6 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
   } catch (e) {
       console.error('Error processing question templates:', e);
   }
-  console.log(questionTemplates);
   const { owner, version, domain, grade, cluster, standard, __typename, createdAt, updatedAt, ...trimmedGameTemplate } = awsGameTemplate.data[queryName];
   const gameTemplate = {
       ...trimmedGameTemplate, 
@@ -211,7 +210,7 @@ mutation CreateQuestion(
     text
     choices
     answerSettings
-    answerData
+    responses
     hints
     imageUrl
     instructions
@@ -238,30 +237,17 @@ mutation CreateQuestion(
     const gameTemplateRequest = await createAndSignRequest( publicPrivate === 'Public' ? getPublicGameTemplate : getPrivateGameTemplate, { id: gameTemplateId });
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json(), publicPrivate);
-    console.log(gameTemplateParsed);
-    const { questionTemplates, ...game } = gameTemplateParsed;
+    const { questionTemplates: questions, ...game } = gameTemplateParsed;
 
     // createGameSession
     const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
+
     // createQuestions
-    const promises = questionTemplates.map(async (question) => {
+    const promises = questions.map(async (question) => {
       const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
-      console.log(
-        {
-          ...trimmedQuestion,
-          id: uuidv4(),
-          text: title,
-          answerSettings: question.answerSettings,
-          gameSessionId: gameSessionParsed.id,
-          isConfidenceEnabled: false,
-          isShortAnswerEnabled: false,
-          isHintEnabled: true,
-          order: 0
-        }
-      )
       const questionRequest = await createAndSignRequest(createQuestion, {
         input: {    
           ...trimmedQuestion,
@@ -272,12 +258,12 @@ mutation CreateQuestion(
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,
           isHintEnabled: true,
+          responses: '[]',
           order: 0
         }
       });
       const questionResponse = await fetch(questionRequest);
       const questionJson = await questionResponse.json();
-      console.log(questionJson);
       const questionParsed = questionJson.data.createQuestion;
       return questionParsed;
     });

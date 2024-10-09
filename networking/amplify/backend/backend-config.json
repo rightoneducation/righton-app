@@ -90,6 +90,46 @@
     }
   },
   "parameters": {
+    "AMPLIFY_auth_mobile6060603c_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee1238193_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee1238193"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee1238193_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee1238193"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee1238193_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee1238193"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobilee1238193_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobilee1238193"
+        }
+      ]
+    },
     "AMPLIFY_function_createGameTest_deploymentBucketName": {
       "usedBy": [
         {

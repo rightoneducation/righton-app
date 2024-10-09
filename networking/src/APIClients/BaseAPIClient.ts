@@ -150,6 +150,8 @@ export abstract class BaseAPIClient {
       gradeTargets?: GradeTarget[] | null,
     ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
+      console.log(query);
+      console.log(queryParameters);
       if (filterString != null) {
         queryParameters.filter = { title: { contains: filterString } };
       if (filterString != null && gradeTargets) {

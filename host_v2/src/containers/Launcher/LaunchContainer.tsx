@@ -1,19 +1,22 @@
 import React, { useEffect } from 'react';
 import { Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { APIClients, GameSessionState } from '@righton/networking';
+import { IAPIClients, GameSessionState, PublicPrivateType } from '@righton/networking';
 import LoadingPage from '../../pages/LoadingPage';
 
 interface LaunchContainerProps {
-  apiClients: APIClients;
+  apiClients: IAPIClients;
   gameId: string;
 }
 
 export default function LaunchContainer({apiClients, gameId}: LaunchContainerProps) {
   const theme = useTheme();
-
+  const publicPrivate = PublicPrivateType.PUBLIC;
+  
+  
   useEffect(() => {
-    apiClients.gameSession.createGameSessionFromTemplate(gameId).then((response) => {
+    console.log('here');
+    apiClients.gameSession.createGameSessionFromTemplate(gameId, publicPrivate).then((response) => {
       if (!response) {
         return;
       }
@@ -25,6 +28,7 @@ export default function LaunchContainer({apiClients, gameId}: LaunchContainerPro
         .then((updatedResponse) => {
           window.location.replace(`/host/${updatedResponse.id}`);
         });
+      
     })
     .catch((error) => {
       console.error(error);
