@@ -9,7 +9,6 @@ export type AmplifyDependentResourcesAttributes = {
     "mobile6060603c": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
-      "GoogleWebClient": "string",
       "HostedUIDomain": "string",
       "IdentityPoolId": "string",
       "IdentityPoolName": "string",

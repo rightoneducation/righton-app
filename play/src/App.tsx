@@ -24,6 +24,7 @@ function RedirectToPlayIfMissing() {
 
 function App() {
   const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.PLAY);
+  console.log(apiClients?.auth.init);
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
