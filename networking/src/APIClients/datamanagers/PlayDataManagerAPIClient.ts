@@ -1,6 +1,6 @@
 import { Environment } from '../interfaces/IBaseAPIClient';
 import { IPlayDataManagerAPIClient } from './interfaces/IPlayDataManagerAPIClient';
-import { IGameSessionAPIClient } from '../interfaces';
+import { IGameSessionAPIClient } from '../gamesession/interfaces';
 import { IGameSession } from '../../Models/IGameSession';
 
 export class PlayDataManagerAPIClient implements IPlayDataManagerAPIClient{

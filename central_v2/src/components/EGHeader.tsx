@@ -9,7 +9,7 @@ import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
-import { ScreenSize } from '../lib/HostModels';
+import { ScreenSize } from '../lib/CentralModels';
 import { SelectedCentralPages } from '../lib/ScreenEnums';
 
 interface EGHeaderProps {

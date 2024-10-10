@@ -6,7 +6,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
-import { APIClients, Environment, AppType } from '@righton/networking';
+import { useAPIClients, Environment, AppType } from '@righton/networking';
 import {
   PregameContainer,
   PregameLocalModelLoader,
@@ -22,30 +22,36 @@ function RedirectToPlayIfMissing() {
   return null;
 }
 
-const apiClients = new APIClients(Environment.Developing, AppType.PLAY);
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route
-        path="/"
-        element={<PregameContainer apiClients={apiClients} />}
-        loader={PregameLocalModelLoader}
-      />
-      <Route
-        path="/game"
-        element={<GameInProgressContainer apiClients={apiClients} />}
-        loader={LocalModelLoader}
-      />
-      <Route element={<RedirectToPlayIfMissing />} />
-    </>
-  )
-);
-
 function App() {
+  const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.PLAY);
+  console.log(apiClients?.auth.init);
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+      {apiClients &&
+        <>
+          <Route
+            path="/"
+            element={<PregameContainer apiClients={apiClients} />}
+            loader={PregameLocalModelLoader}
+          />
+          <Route
+            path="/game"
+            element={<GameInProgressContainer apiClients={apiClients} />}
+            loader={LocalModelLoader}
+          />
+        </>
+        }
+        <Route element={<RedirectToPlayIfMissing />} />
+      </>
+    )
+  );
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={Theme}>
-        <RouterProvider router={router} />
+        {apiClients &&
+          <RouterProvider router={router} />
+        }
       </ThemeProvider>
     </StyledEngineProvider>
   );

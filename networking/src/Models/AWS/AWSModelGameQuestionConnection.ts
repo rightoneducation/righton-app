@@ -8,10 +8,14 @@ export type AWSModelGameQuestionConnection = {
 
 export type AWSGameQuestion = {
   id: string,
-  questionTemplateID: string,
-  gameTemplateID: string,
-  questionTemplate?: AWSQuestionTemplate | null | undefined,
-  gameTemplate?: AWSGameTemplate | null | undefined,
+  privateGameTemplateID?: string,
+  publicGameTemplateID?: string,
+  privateQuestionTemplateID?: string,
+  publicQuestionTemplateID?: string,
+  privateQuestionTemplate?: AWSQuestionTemplate | null | undefined,
+  publicQuestionTemplate?: AWSQuestionTemplate | null | undefined,
+  privateGameTemplate?: AWSGameTemplate | null | undefined,
+  publicGameTemplate?: AWSGameTemplate | null | undefined,
   createdAt: string,
   updatedAt: string,
 };

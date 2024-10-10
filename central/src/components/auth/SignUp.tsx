@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
-import { Auth } from "aws-amplify";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
 import { Grid, Typography } from "@material-ui/core";
-import RightOnLogo from "./RightOnLogo.png";
+import RightOnLogo from "../../images/RightOnLogo.png";
 
-const Signup: React.FC = () => {
+const Signup: React.FC <{apiClients: any}> = ({apiClients}) =>{
   const [loading, setLoading] = React.useState(false);
 
   const history = useHistory();
 
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,14 +23,7 @@ const Signup: React.FC = () => {
       return;
     }
     try {
-      await Auth.signUp({
-        username: email,
-        password: confirmPassword,
-        attributes: {
-          email,
-          name,
-        },
-      });
+      await apiClients.auth.awsSignUp(username, email, password);
       history.push("/confirmation");
     } catch (error) {
       console.error(error);
@@ -77,9 +67,9 @@ const Signup: React.FC = () => {
           <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%", marginBottom: '0'}}>
             <Field
               variant="outlined"
-              label="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              label="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <Field
               variant="outlined"

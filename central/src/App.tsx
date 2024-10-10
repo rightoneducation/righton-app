@@ -6,7 +6,8 @@ import {
   createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
-import { APIClients, Environment, AppType } from '@righton/networking';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { useAPIClients, Environment, AppType } from '@righton/networking';
 import { RouteContainer } from './containers/RouteContainer';
 import AlertContext, { Alert } from './context/AlertContext';
 
@@ -26,20 +27,24 @@ const theme = createTheme({
 
 function App() {
   const [alert, setAlert] = useState<Alert | null>(null);
-  const apiClients = new APIClients(Environment.Developing, AppType.CENTRAL);
+  const { apiClients, loading } = useAPIClients(Environment.Developing, AppType.CENTRAL);
   const alertContext = {
     alert,
     setAlert,
   };
-
+  
   return (
-    <ThemeProvider theme={theme}>
-      <AlertContext.Provider value={alertContext}>
-        <Router>
-          <RouteContainer setAlert={setAlert} apiClients={apiClients}/>
-        </Router>
-      </AlertContext.Provider>
-    </ThemeProvider>
+    <GoogleOAuthProvider clientId="23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com">
+      <ThemeProvider theme={theme}>
+        <AlertContext.Provider value={alertContext}>
+          <Router>
+            { apiClients &&
+              <RouteContainer setAlert={setAlert} apiClients={apiClients}/>
+            }
+          </Router>
+        </AlertContext.Provider>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 

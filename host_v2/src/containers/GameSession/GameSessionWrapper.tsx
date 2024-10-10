@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   useMatch
 } from 'react-router-dom';
-import { APIClients } from '@righton/networking';
+import { IAPIClients } from '@righton/networking';
 import { APIClientsContext } from '../../lib/context/ApiClientsContext';
 import { GameSessionContext, GameSessionDispatchContext } from '../../lib/context/GameSessionContext';
 import { GameSessionReducer } from '../../lib/reducer/GameSessionReducer';
@@ -14,7 +14,7 @@ import GameSessionContainer from './GameSessionContainer';
 import LoadingPage from '../../pages/LoadingPage';
 
 interface GameSessionWrapperProps {
-  apiClients: APIClients;
+  apiClients: IAPIClients;
 }
 
 export default function GameSessionWrapper({apiClients}: GameSessionWrapperProps) {

@@ -1,7 +1,7 @@
 import { useContext, Dispatch, Context } from 'react';
-import { APIClients } from '@righton/networking';
+import { IAPIClients } from '@righton/networking';
 
-export const useTSAPIClientsContext = (context: Context<APIClients | undefined>) => {
+export const useTSAPIClientsContext = (context: Context<IAPIClients | undefined>) => {
   const APIClientsContext = useContext( context );
   if (!APIClientsContext)
     throw new Error ("No APIClientsContext found");

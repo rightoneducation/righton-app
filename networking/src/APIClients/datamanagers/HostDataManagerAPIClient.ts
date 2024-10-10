@@ -1,9 +1,8 @@
 import { PlayDataManagerAPIClient } from './PlayDataManagerAPIClient';
-import { IQuestionAPIClient, ITeamAPIClient, ITeamMemberAPIClient, ITeamAnswerAPIClient } from '../interfaces';
+import { IQuestionAPIClient, ITeamAPIClient, ITeamMemberAPIClient, ITeamAnswerAPIClient, IGameSessionAPIClient } from '../gamesession/interfaces';
 import { IQuestion, IChoice } from '../../Models/IQuestion';
 import { IHostTeamAnswers, IHostTeamAnswersQuestion, IHostTeamAnswersHint, IHostTeamAnswersConfidence, IHostTeamAnswersResponse, IHostTeamAnswersPerPhase, ITeam } from '../../Models';
 import { Environment } from '../interfaces/IBaseAPIClient';
-import { IGameSessionAPIClient } from '../interfaces';
 import { IGameSession } from '../../Models/IGameSession';
 import { BackendAnswer, Answer, NumericAnswer, MultiChoiceAnswer, AnswerFactory, AnswerType } from '../../Models/AnswerClasses';
 import { GameSessionState, ConfidenceLevel } from '../../AWSMobileApi';

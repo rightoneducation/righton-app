@@ -1,9 +1,9 @@
 import { useState, useEffect, useReducer } from 'react';
-import { APIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient, ITeam, GameSessionState } from '@righton/networking';
+import { IAPIClients, IGameSession, IHostTeamAnswers, IHostDataManagerAPIClient, ITeam, GameSessionState } from '@righton/networking';
 import { GameSessionReducer } from '../lib/reducer/GameSessionReducer';
 import { HostTeamAnswersReducer } from '../lib/reducer/HostTeamAnswersReducer';
 
-export default function useInitHostContainer(apiClients: APIClients, gameSessionId: string): { gameSession: IGameSession | null, hostTeamAnswers: IHostTeamAnswers | null, dispatch: any, dispatchHostTeamAnswers: any } {
+export default function useInitHostContainer(apiClients: IAPIClients, gameSessionId: string): { gameSession: IGameSession | null, hostTeamAnswers: IHostTeamAnswers | null, dispatch: any, dispatchHostTeamAnswers: any } {
   const dataManager = apiClients.hostDataManager as IHostDataManagerAPIClient; //eslint-disable-line
   const [gameSession, dispatch] = useReducer(GameSessionReducer, null);
   const [hostTeamAnswers, dispatchHostTeamAnswers] = useReducer(HostTeamAnswersReducer ,null);

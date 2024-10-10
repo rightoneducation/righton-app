@@ -4,7 +4,7 @@ import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from './LoadingIndicator';
-import { IQuestionTemplate, isNullOrUndefined } from '@righton/networking';
+import { IQuestionTemplate, PublicPrivateType, isNullOrUndefined } from '@righton/networking';
 import QuestionCard from './QuestionCard';
 
 type QuestionDashboardProps = {
@@ -14,11 +14,13 @@ type QuestionDashboardProps = {
   isUserAuth: boolean;
   // gameDetails: ;
   // setGameDetails: (gameDetails: ) => void;
+  checkQuestionOwner: (question: IQuestionTemplate) => Promise<boolean>;
   handleDeleteQuestionTemplate: (id: string) => void;
   handleCloneQuestionTemplate: (question: IQuestionTemplate) => void;
   nextToken: string | null; 
   handleScrollDown: (nextToken: string | null) => void;
   handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
+  publicPrivateQueryType: PublicPrivateType;
 };
 
 export default function QuestionDashboard({
@@ -28,11 +30,13 @@ export default function QuestionDashboard({
   isUserAuth,
   // gameDetails,
   // setGameDetails,
+  checkQuestionOwner,
   handleCloneQuestionTemplate,
   handleDeleteQuestionTemplate,
   nextToken,
   handleScrollDown,
-  handleQuestionSelected
+  handleQuestionSelected,
+  publicPrivateQueryType
 }: QuestionDashboardProps) {
   const classes = useStyles();
   const history = useHistory();
@@ -51,16 +55,54 @@ export default function QuestionDashboard({
     setAnchorEl(null);
     setActiveIndex(null);
   };
-  const cloneHandler = (question: IQuestionTemplate) => () => {
-    handleCloneQuestionTemplate(question);
-    handleClose();
-  };
-  const deleteHandler = (id: string) => () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this question?');
-    if (confirmDelete) {
-      handleDeleteQuestionTemplate(id);
+
+
+  const editHandler = async (question: IQuestionTemplate) => {
+    try {
+      const isOwner = await checkQuestionOwner(question);
+      if (isOwner){
+        history.push(`/questionmaker/${question.id}`); 
+        handleClose(); 
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to edit this question.');
+      }
+    }catch (error){
+      console.log(error);
     }
-    handleClose();
+  };
+
+  const cloneHandler = async (question: IQuestionTemplate) => {
+    try {
+      const isOwner = await checkQuestionOwner(question);
+      if (isOwner){
+        handleCloneQuestionTemplate(question);
+        handleClose(); 
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to clone this game.');
+      }
+    } catch (error){
+      console.log(error);
+    }
+  };
+
+  const deleteHandler = async (question: IQuestionTemplate) => {
+    try {
+      const isOwner = await checkQuestionOwner(question);
+      if (isOwner){
+        const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+        if (confirmDelete) {
+          handleDeleteQuestionTemplate(question.id);
+        }
+        handleClose();
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to delete this game.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderQuestions = (loading: boolean) => {
@@ -115,11 +157,13 @@ export default function QuestionDashboard({
                   index={index}
                   activeIndex={activeIndex}
                   handleClick={handleClick}
+                  editHandler={editHandler}
                   cloneHandler={cloneHandler}
                   deleteHandler={deleteHandler}
                   handleClose={handleClose}
                   handleQuestionSelected={handleQuestionSelected}
                   handleQuestionCardClick={handleQuestionCardClick}
+                  publicPrivateQueryType={publicPrivateQueryType}
                 />
               </Grid>
             )}
@@ -142,6 +186,7 @@ const useStyles = makeStyles((theme) => ({
   loadingContainer: {
     margin: 'auto',
     width: '60%',
+    height: `calc(100vh - 156px)`
   },
   loadingTitle: {
     fontSize: '24px',

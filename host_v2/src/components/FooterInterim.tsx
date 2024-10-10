@@ -108,14 +108,16 @@ function FooterInterim({
         <PaginationContainerStyled className="swiper-pagination-container" />
       }
       <InnerFooterContainer>
-        
-          <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
-            <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
-            <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
-              {teamsLength === 1 ? "player has joined" : "players have joined"}
-            </PlayerCountTypography>
-          </Box>
-        
+        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
+          { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
+            <>
+              <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
+              <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
+                {teamsLength === 1 ? "player has joined" : "players have joined"}
+              </PlayerCountTypography>
+            </>
+            }
+        </Box>
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
           { buttonText }
         </ButtonStyled>

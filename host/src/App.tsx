@@ -32,10 +32,14 @@ function App() {
       <Router>
         <Switch>
           <Route path="/host/:gameSessionId">
-            <GameSessionContainer apiClients={apiClients} />
+            { apiClients &&
+              <GameSessionContainer apiClients={apiClients} />
+            }
           </Route>
-          <Route path="/new/:gameId">
-            <CreateNewGameSession apiClients={apiClients} />
+          <Route path="/new/:publicPrivate/:gameId">
+            { apiClients && 
+              <CreateNewGameSession apiClients={apiClients} />
+            }
           </Route>
           <Route>
             <RedirectToCentralIfMissing />

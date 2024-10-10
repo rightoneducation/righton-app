@@ -1,14 +1,21 @@
 import {
   IAPIClients,
   IGameTemplate,
-  CreateGameTemplateInput,
-  UpdateGameTemplateInput
+  PublicPrivateType,
+  CreatePublicGameTemplateInput,
+  CreatePrivateGameTemplateInput,
+  UpdatePublicGameTemplateInput,
+  UpdatePrivateGameTemplateInput
 } from '@righton/networking';
 import { IListQuerySettings, SortField } from './QueryInputs';
 
-export const createGameTemplate = async (apiClients: IAPIClients, createGameTemplateInput: CreateGameTemplateInput): Promise<IGameTemplate | null> => {
+export const createGameTemplate = async (
+  type: PublicPrivateType, 
+  apiClients: IAPIClients, 
+  createGameTemplateInput: CreatePublicGameTemplateInput | CreatePrivateGameTemplateInput
+): Promise<IGameTemplate | null> => {
   try {
-    const game = await apiClients.gameTemplate.createGameTemplate(createGameTemplateInput);
+    const game = await apiClients.gameTemplate.createGameTemplate(type, createGameTemplateInput);
     return game;
   } catch (e) {
     console.log(e);
@@ -16,9 +23,13 @@ export const createGameTemplate = async (apiClients: IAPIClients, createGameTemp
   return null;
 }
 
-export const getGameTemplate = async (apiClients: IAPIClients, id: string): Promise<IGameTemplate | null> => {
+export const getGameTemplate = async (
+  type: PublicPrivateType, 
+  apiClients: IAPIClients, 
+  id: string
+): Promise<IGameTemplate | null> => {
   try {
-    const game = await apiClients.gameTemplate.getGameTemplate(id);
+    const game = await apiClients.gameTemplate.getGameTemplate(type, id);
     return game;
 
   } catch (e) {
@@ -27,14 +38,18 @@ export const getGameTemplate = async (apiClients: IAPIClients, id: string): Prom
   return null;
 }
 
-export const updateGameTemplate = async (apiClients: IAPIClients, updateGameTemplateInput: UpdateGameTemplateInput): Promise<IGameTemplate | null> => {
+export const updateGameTemplate = async (
+  type: PublicPrivateType, 
+  apiClients: IAPIClients, 
+  updateGameTemplateInput: UpdatePublicGameTemplateInput | UpdatePrivateGameTemplateInput
+): Promise<IGameTemplate | null> => {
   try {
     // need to ensure that the createdAt and updatedAt fields are in the correct string format for graphql
     const existingCreatedAt = updateGameTemplateInput.createdAt;
     const existingUpdatedAt = updateGameTemplateInput.updatedAt;
     updateGameTemplateInput.createdAt = new Date(existingCreatedAt ?? '').toISOString();
     updateGameTemplateInput.updatedAt = new Date(existingUpdatedAt ?? '').toISOString();
-    const game = await apiClients.gameTemplate.updateGameTemplate(updateGameTemplateInput);
+    const game = await apiClients.gameTemplate.updateGameTemplate(type, updateGameTemplateInput);
     return game;
   } catch (e) {
     console.log(e);
@@ -42,22 +57,30 @@ export const updateGameTemplate = async (apiClients: IAPIClients, updateGameTemp
   return null;
 };
 
-export const deleteGameTemplate = async (apiClients: IAPIClients, id: string): Promise<boolean> => {
-  const gameTemplate = await apiClients.gameTemplate.getGameTemplate(id);
+export const deleteGameTemplate = async (
+  type: PublicPrivateType, 
+  apiClients: IAPIClients, 
+  id: string
+): Promise<boolean> => {
+  const gameTemplate = await apiClients.gameTemplate.getGameTemplate(type, id);
   if (gameTemplate?.questionTemplates) {
     await Promise.all(gameTemplate.questionTemplates.map(async (questionTemplate) => {
       try {
-        await apiClients.gameQuestions.deleteGameQuestions(questionTemplate.gameQuestionId);
+        await apiClients.gameQuestions.deleteGameQuestions(type, questionTemplate.gameQuestionId);
       } catch (error) {
         console.error("Error deleting game question:", error);
         return false;
       }
     }));
   }
-  return await apiClients.gameTemplate.deleteGameTemplate(id);
+  return await apiClients.gameTemplate.deleteGameTemplate(type, id);
 };
 
-export const listGameTemplates = async (apiClients: IAPIClients, listQuerySettings: IListQuerySettings | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
+export const listGameTemplates = async (
+  type: PublicPrivateType,
+  apiClients: IAPIClients, 
+  listQuerySettings: IListQuerySettings | null
+): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
   try {
     const nextToken = listQuerySettings?.nextToken ?? null;
     const sortDirection = listQuerySettings?.sortDirection ?? null;
@@ -66,13 +89,13 @@ export const listGameTemplates = async (apiClients: IAPIClients, listQuerySettin
     const queryLimit = listQuerySettings?.queryLimit ?? null;
     switch (sortField) {
       case SortField.GRADE:
-        return await apiClients.gameTemplate.listGameTemplatesByGrade(queryLimit, nextToken, sortDirection, filterString, []);
+        return await apiClients.gameTemplate.listGameTemplatesByGrade(type, queryLimit, nextToken, sortDirection, filterString, []);
       case SortField.UPDATEDAT:
-        return await apiClients.gameTemplate.listGameTemplatesByDate(queryLimit, nextToken, sortDirection, filterString, []);
+        return await apiClients.gameTemplate.listGameTemplatesByDate(type, queryLimit, nextToken, sortDirection, filterString, []);
       case SortField.COUNT:
-        return await apiClients.gameTemplate.listGameTemplatesByQuestionTemplatesCount(queryLimit, nextToken, sortDirection, filterString, []);
+        return await apiClients.gameTemplate.listGameTemplatesByQuestionTemplatesCount(type, queryLimit, nextToken, sortDirection, filterString, []);
       default:
-        return await apiClients.gameTemplate.listGameTemplates(queryLimit, nextToken, sortDirection, filterString, []);
+        return await apiClients.gameTemplate.listGameTemplates(type, queryLimit, nextToken, sortDirection, filterString, []);
     }
   } catch (e) {
     console.log(e);

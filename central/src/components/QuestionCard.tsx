@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Card, CardContent, Grid, Typography, Button, Menu, MenuItem, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { IQuestionTemplate, IGameTemplate } from '@righton/networking';
+import { IQuestionTemplate, PublicPrivateType } from '@righton/networking';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSSText';
@@ -16,11 +16,13 @@ type QuestionCardProps = {
   index: number;
   activeIndex: number | null;
   handleClick: (event: any) => void;
-  cloneHandler: (question: IQuestionTemplate) => () => void;
-  deleteHandler: (id: string) => () => void;
+  editHandler: (question: IQuestionTemplate) => void;
+  cloneHandler: (question: IQuestionTemplate) => void;
+  deleteHandler: (question: IQuestionTemplate) => void;
   handleClose: () => void;
   handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
   handleQuestionCardClick: (id: string) => void;
+  publicPrivateQueryType: PublicPrivateType;
 };
 
 export default function QuestionCard({
@@ -32,11 +34,13 @@ export default function QuestionCard({
   index,
   activeIndex,
   handleClick,
+  editHandler,
   cloneHandler,
   deleteHandler,
   handleClose,
   handleQuestionSelected,
-  handleQuestionCardClick
+  handleQuestionCardClick,
+  publicPrivateQueryType
 } : QuestionCardProps) {
   const classes = useStyles();
   const gameCount = question.gameTemplates ? question.gameTemplates.length : 0;
@@ -61,6 +65,11 @@ return (
             <Typography className={classes.title} >
               {question.title}
             </Typography>
+            { publicPrivateQueryType === PublicPrivateType.PUBLIC &&
+              <Typography className={classes.owner} >
+                Created by: {question.owner}
+              </Typography>
+            }
           </div>
         </Grid>
         <Grid container item xs={4} md={3}>
@@ -92,9 +101,9 @@ return (
                   onClose={handleClose}
                   onClick={(event) => { if (!match) event.stopPropagation(); }}
                 >
-                  <MenuItem onClick={(event) => { history.push(`/questionmaker/${question.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
-                  <MenuItem onClick={cloneHandler(question)}>Clone</MenuItem>
-                  <MenuItem onClick={deleteHandler(question.id)}>Delete</MenuItem>
+                  <MenuItem onClick={(event) => { editHandler(question)}}>Edit</MenuItem>
+                  <MenuItem onClick={(event) => {cloneHandler(question)}}>Clone</MenuItem>
+                  <MenuItem onClick={(event) => {deleteHandler(question)}}>Delete</MenuItem>
                 </Menu>             
               </Grid>
             }
@@ -140,6 +149,17 @@ const useStyles = makeStyles(theme => ({
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
       WebkitLineClamp: 3,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      maxWidth: '95%',
+    }, 
+    owner: {
+      fontWeight: 400,
+      height: '60%',
+      color: '#384466',
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 2,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       maxWidth: '95%',

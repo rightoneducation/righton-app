@@ -4,7 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
-import { ScreenSize } from '../lib/HostModels';
+import { ScreenSize } from '../lib/CentralModels';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions'; 
 import MyLibrary from '../pages/MyLibrary';

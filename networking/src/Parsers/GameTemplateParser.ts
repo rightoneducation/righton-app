@@ -2,6 +2,7 @@ import { isNullOrUndefined } from "../global";
 import { IGameTemplate, IQuestionTemplate, IQuestionTemplateOrder } from "../Models";
 import { AWSGameTemplate } from "../Models/AWS";
 import { QuestionTemplateParser } from "./QuestionTemplateParser";
+import { PublicPrivateType } from "../APIClients";
 
 const sortQuestionTemplatesByOrder = (questionTemplates: {questionTemplate: IQuestionTemplate, gameQuestionId: string}[], order: IQuestionTemplateOrder[]) => {
     if (isNullOrUndefined(questionTemplates) || isNullOrUndefined(order)) return questionTemplates;
@@ -21,17 +22,26 @@ const sortQuestionTemplatesByOrder = (questionTemplates: {questionTemplate: IQue
 
 export class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
-        awsGameTemplate: AWSGameTemplate
+        awsGameTemplate: AWSGameTemplate,
+        publicPrivate: PublicPrivateType
     ): IGameTemplate {
         // parse the IQuestionTemplate[] from IModelGameQuestionConnection
         let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
         if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
             for (const item of awsGameTemplate.questionTemplates.items) {
-                if (item && item.questionTemplate) {
-                    const { gameTemplates, ...rest } = item.questionTemplate;
+                if (item) {
+                    let template;
+                    if (publicPrivate === PublicPrivateType.PUBLIC && item.publicQuestionTemplate) {
+                        template = item.publicQuestionTemplate;
+                    } else if (publicPrivate === PublicPrivateType.PRIVATE && item.privateQuestionTemplate) {
+                        template = item.privateQuestionTemplate;
+                    } else {
+                        continue;
+                    }
+                    const { gameTemplates, ...rest } = template;
                     // Only add to questionTemplates if 'rest' is not empty
                     if (Object.keys(rest).length > 0) {
-                        questionTemplates.push({questionTemplate: QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(rest) as IQuestionTemplate, gameQuestionId: item.id as string});
+                        questionTemplates.push({questionTemplate: QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(rest, publicPrivate) as IQuestionTemplate, gameQuestionId: item.id as string});
                     }
                 }
             }
@@ -55,9 +65,8 @@ export class GameTemplateParser {
           imageUrl,
           questionTemplatesCount
       } = awsGameTemplate || {}
-
-        const createdAt = new Date(awsGameTemplate.createdAt ?? 0);
-        const updatedAt = new Date(awsGameTemplate.updatedAt ?? 0);
+        const createdAt = awsGameTemplate.createdAt ? new Date(awsGameTemplate.createdAt) : new Date();
+        const updatedAt = awsGameTemplate.updatedAt ? new Date(awsGameTemplate.updatedAt) : new Date();
         const phaseOneTime = awsGameTemplate.phaseOneTime ?? 0;
         const phaseTwoTime = awsGameTemplate.phaseTwoTime ?? 0;
 

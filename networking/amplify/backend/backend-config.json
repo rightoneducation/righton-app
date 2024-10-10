@@ -1,17 +1,27 @@
 {
   "api": {
     "mobile": {
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authmobile6060603c"
+              }
+            }
+          ],
           "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDate": "2025-04-04T19:50:54.710Z",
-              "apiKeyExpirationDays": 365,
-              "description": "apikey"
-            },
-            "authenticationType": "API_KEY"
+            "authenticationType": "AWS_IAM"
           }
         }
       },
@@ -45,7 +55,9 @@
         "signupAttributes": [
           "EMAIL"
         ],
-        "socialProviders": [],
+        "socialProviders": [
+          "GOOGLE"
+        ],
         "usernameAttributes": [],
         "verificationMechanisms": [
           "EMAIL"
@@ -56,14 +68,13 @@
     }
   },
   "function": {
-    "createGame": {
+    "createGameTest": {
       "build": true,
       "dependsOn": [
         {
           "attributes": [
             "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
+            "GraphQLAPIEndpointOutput"
           ],
           "category": "api",
           "resourceName": "mobile"
@@ -79,59 +90,19 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile6060603c_googleClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile6060603c"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee1238193_nativeClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee1238193_userPoolId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee1238193_userPoolName": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
-    "AMPLIFY_auth_mobilee1238193_webClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobilee1238193"
-        }
-      ]
-    },
-    "AMPLIFY_function_createGame_deploymentBucketName": {
+    "AMPLIFY_function_createGameTest_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "createGame"
+          "resourceName": "createGameTest"
         }
       ]
     },
-    "AMPLIFY_function_createGame_s3Key": {
+    "AMPLIFY_function_createGameTest_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "createGame"
+          "resourceName": "createGameTest"
         }
       ]
     },
