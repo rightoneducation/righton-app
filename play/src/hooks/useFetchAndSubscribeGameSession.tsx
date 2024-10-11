@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  isNullOrUndefined,
   IAPIClients,
   IGameSession,
   ITeam,
@@ -71,7 +70,8 @@ export default function useFetchAndSubscribeGameSession(
     // added so we can update th score for the discuss page. (previously implemented in results pages we got rid of)
     const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
       try {
-        await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
+        const response = await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
+        console.log(response);
         setNewPoints(newScore);
       } catch {
         setIsError({ error: true, withheldPoints: newScore });
@@ -164,5 +164,6 @@ export default function useFetchAndSubscribeGameSession(
       }
     };
   }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
+  console.log(newPoints);
   return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime };
 }

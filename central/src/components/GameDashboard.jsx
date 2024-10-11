@@ -6,7 +6,7 @@ import LoadingIndicator from './LoadingIndicator';
 import GameCard from './GameCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function GameDashboard({ loading, nextToken, games, handleScrollDown, deleteGame, cloneGameTemplate, gameId, isUserAuth }) {
+export default function GameDashboard({ checkGameOwner, loading, nextToken, publicPrivateQueryType, games, handleScrollDown, deleteGame, cloneGameTemplate, gameId, isUserAuth, setGameDetails }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -19,19 +19,55 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
     event.stopPropagation();
   };
   const handleClose = () => {
-    setAnchorEl(null);
     setActiveIndex(null);
   };
-  const cloneHandler = (game) => () => {
-    cloneGameTemplate(game);
-    handleClose();
-  };
-  const deleteHandler = (id) => () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this game?');
-    if (confirmDelete) {
-      deleteGame(id);
+  const editHandler = async (game) => {
+    try {
+      const isOwner = await checkGameOwner(game);
+      if (isOwner){
+       setGameDetails(game);
+       history.push(`/gamemaker/${game.id}`); 
+        handleClose(); 
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to edit this game.');
+      }
+    }catch (error){
+      console.log(error);
     }
-    handleClose();
+  };
+
+  const cloneHandler = async (game, event) => {
+    try {
+      const isOwner = await checkGameOwner(game);
+      if (isOwner){
+        cloneGameTemplate(game);
+        handleClose(); 
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to clone this game.');
+      }
+    } catch (error){
+      console.log(error);
+    }
+  };
+
+  const deleteHandler = async (game) => {
+    try {
+      const isOwner = await checkGameOwner(game);
+      if (isOwner){
+        const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+        if (confirmDelete) {
+          deleteGame(game.id);
+        }
+        handleClose();
+      } else {
+        handleClose();
+        alert('You do not have the required authorization to delete this game.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderGames = (loading) => {
@@ -80,6 +116,7 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
                 index={index}
                 handleClick={handleClick}
                 handleClose={handleClose}
+                editHandler={editHandler}
                 cloneHandler={cloneHandler}
                 deleteHandler={deleteHandler}
                 addquestion={addquestion}
@@ -88,6 +125,7 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
                 anchorEl={anchorEl}
                 activeIndex={activeIndex}
                 onClick={() => history.push(`/games/${game.id}`)}
+                publicPrivateQueryType={publicPrivateQueryType}
               />
             </Grid>
           ) : 
@@ -107,6 +145,7 @@ const useStyles = makeStyles(theme => ({
   loadingContainer: {
     margin: 'auto',
     width: '60%',
+    height: `calc(100vh - 156px)`
   },
   loadingTitle: {
     fontSize: '24px',

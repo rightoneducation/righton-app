@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { APIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, Button } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { ScreenSize } from '../lib/HostModels';
+import { ScreenSize } from '../lib/CentralModels';
 import ExploreGamesUpper from '../components/ExploreGamesUpper';
 import EGMostPopular from '../components/EGMostPopular';
 import {fetchMoreGames} from "../lib/HelperFunctions";
 
 interface MyLibraryProps {
-  apiClients: APIClients;
+  apiClients: IAPIClients;
 }
 
 const MyLibraryContainer = styled(Box)(({ theme }) => ({

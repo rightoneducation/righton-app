@@ -44,6 +44,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.hasRejoined,
     localModel?.teamId,
   );
+  console.log(subscription.newPoints);
 
 
   // if there isn't data in localstorage automatically redirect to the splashscreen

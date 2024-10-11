@@ -2,13 +2,8 @@
 
 export * from './APIClients';
 export * from './BaseAPIClient';
-export * from './GameQuestionsAPIClient';
-export * from './GameSessionAPIClient';
-export * from './GameTemplateAPIClient';
-export * from './QuestionAPIClient';
-export * from './QuestionTemplateAPIClient';
-export * from './TeamAnswerAPIClient';
-export * from './TeamAPIClient';
-export * from './TeamMemberAPIClient';
+export * from './auth';
 export * from './datamanagers';
+export * from './gamesession';
 export * from './interfaces';
+export * from './templates';

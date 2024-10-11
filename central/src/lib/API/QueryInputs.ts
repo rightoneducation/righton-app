@@ -1,3 +1,4 @@
+import { PublicPrivateType } from '@righton/networking';
 export enum SortDirection {
   ASC = 'ASC',
   DESC = 'DESC'
