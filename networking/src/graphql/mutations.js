@@ -1,19 +1,12 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createGameSessionFromTemplate = /* GraphQL */ `
-  mutation CreateGameSessionFromTemplate(
-    $input: CreateGameSessionFromTemplateInput!
+export const createPublicGameTemplate = /* GraphQL */ `
+  mutation CreatePublicGameTemplate(
+    $input: CreatePublicGameTemplateInput!
+    $condition: ModelPublicGameTemplateConditionInput
   ) {
-    createGameSessionFromTemplate(input: $input)
-  }
-`;
-export const createGameTemplate = /* GraphQL */ `
-  mutation CreateGameTemplate(
-    $input: CreateGameTemplateInput!
-    $condition: ModelGameTemplateConditionInput
-  ) {
-    createGameTemplate(input: $input, condition: $condition) {
+    createPublicGameTemplate(input: $input, condition: $condition) {
       id
       title
       owner
@@ -41,12 +34,12 @@ export const createGameTemplate = /* GraphQL */ `
     }
   }
 `;
-export const updateGameTemplate = /* GraphQL */ `
-  mutation UpdateGameTemplate(
-    $input: UpdateGameTemplateInput!
-    $condition: ModelGameTemplateConditionInput
+export const updatePublicGameTemplate = /* GraphQL */ `
+  mutation UpdatePublicGameTemplate(
+    $input: UpdatePublicGameTemplateInput!
+    $condition: ModelPublicGameTemplateConditionInput
   ) {
-    updateGameTemplate(input: $input, condition: $condition) {
+    updatePublicGameTemplate(input: $input, condition: $condition) {
       id
       title
       owner
@@ -74,12 +67,12 @@ export const updateGameTemplate = /* GraphQL */ `
     }
   }
 `;
-export const deleteGameTemplate = /* GraphQL */ `
-  mutation DeleteGameTemplate(
-    $input: DeleteGameTemplateInput!
-    $condition: ModelGameTemplateConditionInput
+export const deletePublicGameTemplate = /* GraphQL */ `
+  mutation DeletePublicGameTemplate(
+    $input: DeletePublicGameTemplateInput!
+    $condition: ModelPublicGameTemplateConditionInput
   ) {
-    deleteGameTemplate(input: $input, condition: $condition) {
+    deletePublicGameTemplate(input: $input, condition: $condition) {
       id
       title
       owner
@@ -107,15 +100,114 @@ export const deleteGameTemplate = /* GraphQL */ `
     }
   }
 `;
-export const createQuestionTemplate = /* GraphQL */ `
-  mutation CreateQuestionTemplate(
-    $input: CreateQuestionTemplateInput!
-    $condition: ModelQuestionTemplateConditionInput
+export const createPrivateGameTemplate = /* GraphQL */ `
+  mutation CreatePrivateGameTemplate(
+    $input: CreatePrivateGameTemplateInput!
+    $condition: ModelPrivateGameTemplateConditionInput
   ) {
-    createQuestionTemplate(input: $input, condition: $condition) {
+    createPrivateGameTemplate(input: $input, condition: $condition) {
       id
-      title
       owner
+      title
+      version
+      description
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const updatePrivateGameTemplate = /* GraphQL */ `
+  mutation UpdatePrivateGameTemplate(
+    $input: UpdatePrivateGameTemplateInput!
+    $condition: ModelPrivateGameTemplateConditionInput
+  ) {
+    updatePrivateGameTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
+      version
+      description
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const deletePrivateGameTemplate = /* GraphQL */ `
+  mutation DeletePrivateGameTemplate(
+    $input: DeletePrivateGameTemplateInput!
+    $condition: ModelPrivateGameTemplateConditionInput
+  ) {
+    deletePrivateGameTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
+      version
+      description
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const createPublicQuestionTemplate = /* GraphQL */ `
+  mutation CreatePublicQuestionTemplate(
+    $input: CreatePublicQuestionTemplateInput!
+    $condition: ModelPublicQuestionTemplateConditionInput
+  ) {
+    createPublicQuestionTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
       version
       choices
       instructions
@@ -137,15 +229,15 @@ export const createQuestionTemplate = /* GraphQL */ `
     }
   }
 `;
-export const updateQuestionTemplate = /* GraphQL */ `
-  mutation UpdateQuestionTemplate(
-    $input: UpdateQuestionTemplateInput!
-    $condition: ModelQuestionTemplateConditionInput
+export const updatePublicQuestionTemplate = /* GraphQL */ `
+  mutation UpdatePublicQuestionTemplate(
+    $input: UpdatePublicQuestionTemplateInput!
+    $condition: ModelPublicQuestionTemplateConditionInput
   ) {
-    updateQuestionTemplate(input: $input, condition: $condition) {
+    updatePublicQuestionTemplate(input: $input, condition: $condition) {
       id
-      title
       owner
+      title
       version
       choices
       instructions
@@ -167,15 +259,105 @@ export const updateQuestionTemplate = /* GraphQL */ `
     }
   }
 `;
-export const deleteQuestionTemplate = /* GraphQL */ `
-  mutation DeleteQuestionTemplate(
-    $input: DeleteQuestionTemplateInput!
-    $condition: ModelQuestionTemplateConditionInput
+export const deletePublicQuestionTemplate = /* GraphQL */ `
+  mutation DeletePublicQuestionTemplate(
+    $input: DeletePublicQuestionTemplateInput!
+    $condition: ModelPublicQuestionTemplateConditionInput
   ) {
-    deleteQuestionTemplate(input: $input, condition: $condition) {
+    deletePublicQuestionTemplate(input: $input, condition: $condition) {
       id
-      title
       owner
+      title
+      version
+      choices
+      instructions
+      answerSettings
+      domain
+      cluster
+      grade
+      standard
+      imageUrl
+      gameTemplates {
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const createPrivateQuestionTemplate = /* GraphQL */ `
+  mutation CreatePrivateQuestionTemplate(
+    $input: CreatePrivateQuestionTemplateInput!
+    $condition: ModelPrivateQuestionTemplateConditionInput
+  ) {
+    createPrivateQuestionTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
+      version
+      choices
+      instructions
+      answerSettings
+      domain
+      cluster
+      grade
+      standard
+      imageUrl
+      gameTemplates {
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const updatePrivateQuestionTemplate = /* GraphQL */ `
+  mutation UpdatePrivateQuestionTemplate(
+    $input: UpdatePrivateQuestionTemplateInput!
+    $condition: ModelPrivateQuestionTemplateConditionInput
+  ) {
+    updatePrivateQuestionTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
+      version
+      choices
+      instructions
+      answerSettings
+      domain
+      cluster
+      grade
+      standard
+      imageUrl
+      gameTemplates {
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const deletePrivateQuestionTemplate = /* GraphQL */ `
+  mutation DeletePrivateQuestionTemplate(
+    $input: DeletePrivateQuestionTemplateInput!
+    $condition: ModelPrivateQuestionTemplateConditionInput
+  ) {
+    deletePrivateQuestionTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
       version
       choices
       instructions
@@ -220,6 +402,7 @@ export const createGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -253,6 +436,7 @@ export const updateGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -286,6 +470,7 @@ export const deleteGameSession = /* GraphQL */ `
       description
       title
       currentTimer
+      sessionData
       questions {
         nextToken
         __typename
@@ -306,7 +491,7 @@ export const createQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -333,7 +518,7 @@ export const updateQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -360,7 +545,7 @@ export const deleteQuestion = /* GraphQL */ `
       text
       choices
       answerSettings
-      responses
+      answerData
       hints
       imageUrl
       instructions
@@ -390,7 +575,7 @@ export const createTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -434,7 +619,7 @@ export const updateTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -478,7 +663,7 @@ export const deleteTeam = /* GraphQL */ `
         text
         choices
         answerSettings
-        responses
+        answerData
         hints
         imageUrl
         instructions
@@ -647,16 +832,16 @@ export const deleteTeamAnswer = /* GraphQL */ `
     }
   }
 `;
-export const createGameQuestions = /* GraphQL */ `
-  mutation CreateGameQuestions(
-    $input: CreateGameQuestionsInput!
-    $condition: ModelGameQuestionsConditionInput
+export const createPublicGameQuestions = /* GraphQL */ `
+  mutation CreatePublicGameQuestions(
+    $input: CreatePublicGameQuestionsInput!
+    $condition: ModelPublicGameQuestionsConditionInput
   ) {
-    createGameQuestions(input: $input, condition: $condition) {
+    createPublicGameQuestions(input: $input, condition: $condition) {
       id
-      gameTemplateID
-      questionTemplateID
-      gameTemplate {
+      publicGameTemplateID
+      publicQuestionTemplateID
+      publicGameTemplate {
         id
         title
         owner
@@ -678,10 +863,10 @@ export const createGameQuestions = /* GraphQL */ `
         type
         __typename
       }
-      questionTemplate {
+      publicQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions
@@ -699,20 +884,21 @@ export const createGameQuestions = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
 `;
-export const updateGameQuestions = /* GraphQL */ `
-  mutation UpdateGameQuestions(
-    $input: UpdateGameQuestionsInput!
-    $condition: ModelGameQuestionsConditionInput
+export const updatePublicGameQuestions = /* GraphQL */ `
+  mutation UpdatePublicGameQuestions(
+    $input: UpdatePublicGameQuestionsInput!
+    $condition: ModelPublicGameQuestionsConditionInput
   ) {
-    updateGameQuestions(input: $input, condition: $condition) {
+    updatePublicGameQuestions(input: $input, condition: $condition) {
       id
-      gameTemplateID
-      questionTemplateID
-      gameTemplate {
+      publicGameTemplateID
+      publicQuestionTemplateID
+      publicGameTemplate {
         id
         title
         owner
@@ -734,10 +920,10 @@ export const updateGameQuestions = /* GraphQL */ `
         type
         __typename
       }
-      questionTemplate {
+      publicQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions
@@ -755,20 +941,21 @@ export const updateGameQuestions = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
 `;
-export const deleteGameQuestions = /* GraphQL */ `
-  mutation DeleteGameQuestions(
-    $input: DeleteGameQuestionsInput!
-    $condition: ModelGameQuestionsConditionInput
+export const deletePublicGameQuestions = /* GraphQL */ `
+  mutation DeletePublicGameQuestions(
+    $input: DeletePublicGameQuestionsInput!
+    $condition: ModelPublicGameQuestionsConditionInput
   ) {
-    deleteGameQuestions(input: $input, condition: $condition) {
+    deletePublicGameQuestions(input: $input, condition: $condition) {
       id
-      gameTemplateID
-      questionTemplateID
-      gameTemplate {
+      publicGameTemplateID
+      publicQuestionTemplateID
+      publicGameTemplate {
         id
         title
         owner
@@ -790,10 +977,10 @@ export const deleteGameQuestions = /* GraphQL */ `
         type
         __typename
       }
-      questionTemplate {
+      publicQuestionTemplate {
         id
-        title
         owner
+        title
         version
         choices
         instructions
@@ -811,7 +998,186 @@ export const deleteGameQuestions = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
+  }
+`;
+export const createPrivateGameQuestions = /* GraphQL */ `
+  mutation CreatePrivateGameQuestions(
+    $input: CreatePrivateGameQuestionsInput!
+    $condition: ModelPrivateGameQuestionsConditionInput
+  ) {
+    createPrivateGameQuestions(input: $input, condition: $condition) {
+      id
+      privateGameTemplateID
+      privateQuestionTemplateID
+      privateGameTemplate {
+        id
+        owner
+        title
+        version
+        description
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      privateQuestionTemplate {
+        id
+        owner
+        title
+        version
+        choices
+        instructions
+        answerSettings
+        domain
+        cluster
+        grade
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updatePrivateGameQuestions = /* GraphQL */ `
+  mutation UpdatePrivateGameQuestions(
+    $input: UpdatePrivateGameQuestionsInput!
+    $condition: ModelPrivateGameQuestionsConditionInput
+  ) {
+    updatePrivateGameQuestions(input: $input, condition: $condition) {
+      id
+      privateGameTemplateID
+      privateQuestionTemplateID
+      privateGameTemplate {
+        id
+        owner
+        title
+        version
+        description
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      privateQuestionTemplate {
+        id
+        owner
+        title
+        version
+        choices
+        instructions
+        answerSettings
+        domain
+        cluster
+        grade
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deletePrivateGameQuestions = /* GraphQL */ `
+  mutation DeletePrivateGameQuestions(
+    $input: DeletePrivateGameQuestionsInput!
+    $condition: ModelPrivateGameQuestionsConditionInput
+  ) {
+    deletePrivateGameQuestions(input: $input, condition: $condition) {
+      id
+      privateGameTemplateID
+      privateQuestionTemplateID
+      privateGameTemplate {
+        id
+        owner
+        title
+        version
+        description
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      privateQuestionTemplate {
+        id
+        owner
+        title
+        version
+        choices
+        instructions
+        answerSettings
+        domain
+        cluster
+        grade
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createGameSessionFromTemplate = /* GraphQL */ `
+  mutation CreateGameSessionFromTemplate(
+    $input: CreateGameSessionFromTemplateInput!
+  ) {
+    createGameSessionFromTemplate(input: $input)
   }
 `;

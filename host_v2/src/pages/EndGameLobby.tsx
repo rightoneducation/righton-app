@@ -6,7 +6,8 @@ import {debounce} from 'lodash';
 import {
   GameSessionState,
   IGameTemplate,
-  ITeam
+  ITeam,
+  PublicPrivateType
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/ApiClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -53,9 +54,10 @@ function EndGameLobby({teams,
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const screenSize = isSmallScreen ? ScreenSize.SMALL : ScreenSize.LARGE;
     const apiClients = useTSAPIClientsContext(APIClientsContext);
+    const publicPrivate = PublicPrivateType.PUBLIC;
     
     useEffect(()=> {
-      apiClients.gameTemplate.listGameTemplatesByGrade(5, null, null, null, []).then((response) => {
+      apiClients.gameTemplate.listGameTemplatesByGrade(publicPrivate, 5, null, null, null, []).then((response) => {
         console.log(response);
         if (response && setSuggestedGameTemplates)
           setSuggestedGameTemplates(response.gameTemplates);
@@ -74,7 +76,7 @@ function EndGameLobby({teams,
     const debouncedGameTemplateSearch = useCallback( // eslint-disable-line
       debounce((search: string) => {
         console.log(search);
-        apiClients.gameTemplate.listGameTemplates(5, null, null, search, []).then((response) => {
+        apiClients.gameTemplate.listGameTemplates(publicPrivate, 5, null, null, search, []).then((response) => {
           console.log(response);
           console.log(search);
           if (response && setSuggestedGameTemplates)

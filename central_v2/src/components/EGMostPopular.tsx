@@ -1,10 +1,11 @@
 import React from 'react';
-import { Grid, Typography, Box, styled, useTheme } from '@mui/material';
+import { Grid, Typography, Box, styled, useTheme, Grow, Fade, Skeleton } from '@mui/material';
 import { APIClients, IGameTemplate } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
 import StyledGameCard from './GameCard';
-import { ScreenSize } from '../lib/HostModels';
+import { ScreenSize } from '../lib/CentralModels';
 import placeHolder from '../images/placeHolder.svg';
-
+import SkeletonGameCard from './SkeletonGameCard';
 
 interface EGMostPopularProps {
   screenSize: ScreenSize;
@@ -29,8 +30,37 @@ interface EGMostPopularContainerProps {
   children: React.ReactNode;
 }
 
+const GameCard = styled(Box)(({ theme }) => ({
+    width: '100%',
+    height: '260px',
+    padding: `12px ${theme.sizing.smPadding}px 12px ${theme.sizing.smPadding}px`,
+    gap: `${theme.sizing.smPadding}px`,
+    borderRadius: `${theme.sizing.smPadding}px`,
+    boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
+    background: 'linear-gradient(90deg, #EFEFEF 0%, #C2BEBE 100%)',
+    backgroundSize: '200% 200%',
+    animation: 'gradient-animation 3s ease infinite',
+    display: 'flex',
+    flexDirection: 'column',
+    boxSizing: 'border-box',
+    overflow: 'visible',
+  
+    '@keyframes gradient-animation': {
+      '0%': {
+        backgroundPosition: '0% 50%',
+      },
+      '50%': {
+        backgroundPosition: '100% 50%',
+      },
+      '100%': {
+        backgroundPosition: '0% 50%',
+      },
+    },
+  }));
+
 function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainerProps) {
   const theme = useTheme();
+  
 
   return (
     <Box
@@ -53,31 +83,34 @@ function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainer
 }
 
 export default function EGMostPopular({ screenSize, apiClients, mostPopularGames }: EGMostPopularProps) {
-
+  const loadingCards = Array(12).fill(0);
+  const isLoading = mostPopularGames.length === 0;
+  const maxCards = 12;
   return (
     <EGMostPopularContainer screenSize={screenSize}>
       <MostPopularText screenSize={screenSize}>
         Most Popular
       </MostPopularText>
-        <Grid container spacing={2} id="scrollableDiv" style={{ }}>
-          {mostPopularGames.map((game) => (
-            <Grid
-              item
-              xs={12}
-              md={6} 
-              xl={4}
-              key={game.id} 
-            >
-              <StyledGameCard
-                game={game}
-                id={game.id}
-                title={game.title}
-                description={game.description}
-                image={game.imageUrl || placeHolder}
-                apiClients={apiClients}
-              />
+        <Grid container spacing={2} id="scrollableDiv" >
+        {Array.from({ length: maxCards }).map((_, index) => {
+          const game = mostPopularGames[index];
+          return (
+            <Grid item xs={12} md={6} xl={4} key={index}> {/* eslint-disable-line */}
+              {game ? (
+                <StyledGameCard
+                  game={game}
+                  id={game.id}
+                  title={game.title}
+                  description={game.description}
+                  image={game.imageUrl || placeHolder}
+                  apiClients={apiClients}
+                />
+              ) : (
+                <SkeletonGameCard index={index} />
+              )}
             </Grid>
-          ))}
+          );
+        })}
         </Grid>
     </EGMostPopularContainer>
   );

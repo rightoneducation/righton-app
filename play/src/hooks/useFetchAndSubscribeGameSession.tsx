@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  isNullOrUndefined,
   IAPIClients,
   IGameSession,
   ITeam,

@@ -44,7 +44,6 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   gap: '16px',
   height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
-  paddingBottom: '24px',
   paddingTop: '16px',
 }));
 
@@ -108,14 +107,16 @@ function FooterInterim({
         <PaginationContainerStyled className="swiper-pagination-container" />
       }
       <InnerFooterContainer>
-        
-          <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
-            <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
-            <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
-              {teamsLength === 1 ? "player has joined" : "players have joined"}
-            </PlayerCountTypography>
-          </Box>
-        
+        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: "pre-wrap", fontWeight: 400}}>
+          { localGameSession.currentQuestionIndex === null && localGameSession.currentState === GameSessionState.TEAMS_JOINING && !isGamePrepared &&
+            <>
+              <PlayerCountTypography> {teamsLength} </PlayerCountTypography> 
+              <PlayerCountTypography style={{fontSize: '18px', fontWeight: 400}}>
+                {teamsLength === 1 ? "player has joined" : "players have joined"}
+              </PlayerCountTypography>
+            </>
+            }
+        </Box>
         <ButtonStyled disabled={teamsLength <= 0} onClick={handleButtonClick}>
           { buttonText }
         </ButtonStyled>
