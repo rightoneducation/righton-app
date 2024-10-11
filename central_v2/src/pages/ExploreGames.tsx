@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { APIClients, IGameTemplate, GradeTarget } from '@righton/networking';
+import { IAPIClients, IGameTemplate, GradeTarget, PublicPrivateType } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, Button } from '@mui/material';
@@ -14,7 +14,7 @@ import SearchBar from '../components/searchbar/SearchBar';
 import SearchResults from '../components/SearchResults';
 
 interface ExploreGamesProps {
-apiClients: APIClients;
+apiClients: IAPIClients;
 }
 
 const ExploreGamesContainer = styled(Box)(({ theme }) => ({
@@ -71,7 +71,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
 
   useEffect(() => {
     if (apiClients) {
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null, selectedGrades ?? [])
+      apiClients.gameTemplate.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, null, null, selectedGrades ?? [])
         .then(response => {
           setRecommendedGames(response?.gameTemplates || []);
           setNextToken(response?.nextToken || null);
@@ -80,7 +80,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
           console.error('Error fetching games:', error);
         });
 
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null, selectedGrades ?? [])
+      apiClients.gameTemplate.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, null, null, selectedGrades ?? [])
         .then(response => {
           setMostPopularGames(response?.gameTemplates || []);
           setNextToken(response?.nextToken || null);

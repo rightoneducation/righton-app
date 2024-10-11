@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { APIClients } from '@righton/networking';
+import { IAPIClients } from '@righton/networking';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
@@ -28,7 +28,7 @@ const BodyContainer = styled(Box)<BodyContainerProps>(({ screenSize }) => ({
 }));
 
 interface MainContainerProps {
-  apiClients: APIClients;
+  apiClients: IAPIClients;
 }
 
 function MainContainer({

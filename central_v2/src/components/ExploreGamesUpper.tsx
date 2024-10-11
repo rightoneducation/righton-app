@@ -1,6 +1,6 @@
 import React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { APIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
@@ -9,7 +9,7 @@ import RecommendedGames from './RecommendedGames';
 
 interface ExploreGamesUpperProps {
   screenSize: ScreenSize;
-  apiClients: APIClients;
+  apiClients: IAPIClients;
   recommendedGames: IGameTemplate[];
 }
 interface ExploreGamesUpperContainerProps {
