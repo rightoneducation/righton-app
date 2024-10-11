@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { APIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, Button } from '@mui/material';
@@ -11,7 +11,7 @@ import EGMostPopular from '../components/EGMostPopular';
 import {fetchMoreGames} from "../lib/HelperFunctions";
 
 interface ExploreQuestionsProps {
-  apiClients: APIClients;
+  apiClients: IAPIClients;
 }
 
 const ExploreQuestionsContainer = styled(Box)(({ theme }) => ({

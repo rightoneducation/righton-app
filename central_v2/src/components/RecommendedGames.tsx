@@ -1,7 +1,7 @@
 import React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { APIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import GameCardCarousal from './CardCarousal';
@@ -10,7 +10,7 @@ import PaginationContainerStyled from '../lib/PaginationContainerStyled';
 
 interface RecommendedGamesProps {
   screenSize: ScreenSize;
-  apiClients: APIClients;
+  apiClients: IAPIClients;
   recommendedGames: IGameTemplate[];
 }
 interface RecommendedGamesContainerProps {

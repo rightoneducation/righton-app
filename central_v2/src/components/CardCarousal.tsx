@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Grow, Fade, Skeleton } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { APIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,7 +12,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 interface GameCardCarouselProps {
-    apiClients: APIClients;
+    apiClients: IAPIClients;
     recommendedGames: IGameTemplate[];
 }
 

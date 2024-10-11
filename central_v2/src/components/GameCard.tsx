@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { APIClients, IGameTemplate, GameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import heart from '../images/heart.svg';
@@ -11,7 +11,7 @@ interface StyledGameCardProps {
   title: string;
   description: string;
   image: string;
-  apiClients: APIClients;
+  apiClients: IAPIClients;
   game: IGameTemplate;
 }
 

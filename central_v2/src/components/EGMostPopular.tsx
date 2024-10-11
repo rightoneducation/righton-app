@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography, Box, styled, useTheme, Grow, Fade, Skeleton } from '@mui/material';
-import { APIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import StyledGameCard from './GameCard';
 import { ScreenSize } from '../lib/CentralModels';
@@ -9,7 +9,7 @@ import SkeletonGameCard from './SkeletonGameCard';
 
 interface EGMostPopularProps {
   screenSize: ScreenSize;
-  apiClients: APIClients;
+  apiClients: IAPIClients;
   mostPopularGames: IGameTemplate[];
 }
 
