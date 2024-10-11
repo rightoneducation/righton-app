@@ -171,7 +171,7 @@ function GameLaunch({ publicPrivateQueryType, loading, game, gameId, saveGame, d
   if (loading) return <Skeleton variant="rect" height={500} />;
   const questions = game?.questionTemplates || [];
   const questionCount = game?.questionTemplates.length || 0;
-  const LAUNCH_GAME_URL = `http://localhost:3001/new/${publicPrivateQueryType}/${game.id}`;
+  const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/${publicPrivateQueryType}/${game.id}`;
 
   return (
     <Box className={classes.root}>
