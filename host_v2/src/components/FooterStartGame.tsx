@@ -49,6 +49,7 @@ const ButtonStyled = styled(Button, {
 }));
 const FooterContainer = styled(Box)(({ theme }) => ({
   position: 'sticky',
+  bottom: 0,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -65,6 +66,7 @@ const InnerFooterContainer = styled(Box)({
   alignItems: 'center',
   width: '100%',
   gap: '16px',
+  height: '100%'
 });
 const PlayerCountTypography = styled(Typography)({
   fontFamily: 'Rubik',

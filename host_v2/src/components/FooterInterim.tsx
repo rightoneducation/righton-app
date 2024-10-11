@@ -44,7 +44,6 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   gap: '16px',
   height: `calc(${theme.sizing.footerHeight}px - 16px - 24px)`,
-  paddingBottom: '24px',
   paddingTop: '16px',
 }));
 
