@@ -6,6 +6,8 @@
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^5.16.7",
+    "@react-oauth/google": "^0.12.1",
+    "@storybook/addon-viewport": "^8.3.5",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -14,11 +16,17 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/styled-components": "^5.1.34",
+    "aws-amplify": "^6.0.25",
+    "chromatic": "^11.11.0",
+    "init": "^0.1.2",
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.0.1",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
+    "storybook": "^8.3.5",
     "swiper": "^11.1.1",
     "typescript": "^4.4.2",
     "uuid": "^10.0.0",
@@ -28,7 +36,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token 99c8d45b7b98"
   },
   "prettier": {
     "singleQuote": true
@@ -45,7 +56,8 @@
       "airbnb-typescript",
       "prettier",
       "plugin:@typescript-eslint/recommended",
-      "plugin:import/typescript"
+      "plugin:import/typescript",
+      "plugin:storybook/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -113,12 +125,26 @@
     ]
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.9.0",
+    "@storybook/addon-essentials": "^8.3.5",
+    "@storybook/addon-interactions": "^8.3.5",
+    "@storybook/addon-links": "^8.3.5",
+    "@storybook/addon-onboarding": "^8.3.5",
+    "@storybook/blocks": "^8.3.5",
+    "@storybook/preset-create-react-app": "^8.3.5",
+    "@storybook/react": "^8.3.5",
+    "@storybook/react-webpack5": "^8.3.5",
+    "@storybook/test": "^8.3.5",
+    "@types/lodash": "^4.17.7",
     "@typescript-eslint/parser": "^8.1.0",
     "eslint": "^9.9.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.3.3"
+    "eslint-plugin-storybook": "^0.9.0",
+    "prettier": "^3.3.3",
+    "prop-types": "^15.8.1",
+    "webpack": "^5.95.0"
   }
 }

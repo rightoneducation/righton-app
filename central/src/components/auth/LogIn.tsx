@@ -1,14 +1,14 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
-import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
 import { Grid, Typography } from "@material-ui/core";
-import RightOnLogo from "./RightOnLogo.png";
+import RightOnLogo from "../../images/RightOnLogo.png";
+import { GoogleLogin } from '@react-oauth/google';
 
-const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUserAuth}) => {
+const LogIn: React.FC<{apiClients: any, handleUserAuth:(isLoggedIn:boolean)=>void }> = ({apiClients, handleUserAuth}) => {
   const [loading, setLoading] = React.useState(false);
-  const [email, setEmail] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [adminError, setAdminError] = React.useState(false);
 
@@ -17,17 +17,15 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     setLoading(true);
 
     try {
-      await Auth.signIn(email, password);
-      const user = await Auth.currentAuthenticatedUser();
-      if (user.signInUserSession.accessToken.payload["cognito:groups"].includes('admin')){
+      await apiClients.auth.awsSignIn(username, password);
+      if (await apiClients.auth.verifyAuth()) {
         handleUserAuth(true);
         window.location.href = "/";
       }
       else {
-        await Auth.signOut();
+        await apiClients.auth.awsSignOut();
         setAdminError(true);
       }
-
     } catch (e) {
       console.log(e);
       if (e instanceof Error){
@@ -36,6 +34,10 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
     }
     setLoading(false);
   };
+
+  const handleGoogleLogin = async() => {
+    await apiClients.auth.awsSignInFederated();
+  }
 
   return (
     <Grid
@@ -72,10 +74,10 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
           </h1>
           <Field
             variant="outlined"
-            label="Email"
-            value={email}
-            type="email"
-            onChange={(e) => setEmail(e.target.value)}
+            label="Username"
+            value={username}
+            type="username"
+            onChange={(e) => setUsername(e.target.value)}
           />
           <Field
             variant="outlined"
@@ -95,6 +97,12 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
             </LogInLink>
             <SignUpLink to="/signup">Sign Up</SignUpLink>
           </ButtonGrid>
+        <GoogleLogin
+          onSuccess={() => handleGoogleLogin()}
+          onError={() => {
+            setAdminError(true);
+          }}
+        />
         </form>
       </Grid>
       {adminError ? <ErrorType> There has been an error. Please verify your username/password and contact the administrator for account verification. </ErrorType> : null}

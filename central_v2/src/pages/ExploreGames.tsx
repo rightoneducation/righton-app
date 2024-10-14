@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { APIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate, GradeTarget, PublicPrivateType } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, Button } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { ScreenSize } from '../lib/HostModels';
+import debounce from 'lodash/debounce'
+import { ScreenSize } from '../lib/CentralModels';
 import ExploreGamesUpper from '../components/ExploreGamesUpper';
 import EGMostPopular from '../components/EGMostPopular';
-import {fetchMoreGames} from "../lib/HelperFunctions";
+import { fetchMoreGames } from "../lib/HelperFunctions";
+import SearchBar from '../components/searchbar/SearchBar';
+import SearchResults from '../components/SearchResults';
 
 interface ExploreGamesProps {
-apiClients: APIClients;
+apiClients: IAPIClients;
 }
 
 const ExploreGamesContainer = styled(Box)(({ theme }) => ({
@@ -46,10 +49,29 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
   const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
   const [nextToken, setNextToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
+  const [sort, setSort] = useState<{ field: string; direction: string | null }>({
+    field: '',
+    direction: null,
+  });
+
+  const handleChooseGrades = (grades: GradeTarget[]) => {
+    setSelectedGrades((prev) => [...grades]);
+  };
+
+  const handleSearchChange = (newSearch: string) => {
+    setSearchTerm(newSearch);
+  };
+
+  const handleSortChange = (newSort: { field: string; direction: string | null }) => {
+    setSort(newSort);
+    console.log(newSort);
+  };
 
   useEffect(() => {
     if (apiClients) {
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
+      apiClients.gameTemplate.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, null, null, selectedGrades ?? [])
         .then(response => {
           setRecommendedGames(response?.gameTemplates || []);
           setNextToken(response?.nextToken || null);
@@ -58,16 +80,17 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
           console.error('Error fetching games:', error);
         });
 
-      apiClients.gameTemplate.listGameTemplates(12, null, null, null)
+      apiClients.gameTemplate.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, null, null, selectedGrades ?? [])
         .then(response => {
           setMostPopularGames(response?.gameTemplates || []);
           setNextToken(response?.nextToken || null);
+          console.log("Initial Next Token (mp games):", response?.nextToken);
         })
         .catch(error => {
           console.error('Error fetching games:', error);
         });
     }
-  }, [apiClients]);
+  }, [apiClients]); // eslint-disable-line
 
 
   return (
@@ -80,8 +103,15 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
         scrollableTarget="scrollableDiv"
         style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
       >
-          <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
-          <EGMostPopular screenSize={screenSize} apiClients={apiClients} mostPopularGames={mostPopularGames} />
+          <SearchBar screenSize={screenSize} onSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} onSortChange={handleSortChange}/>
+          {searchTerm || selectedGrades.length > 0 ? (
+            <SearchResults screenSize={screenSize} apiClients={apiClients} searchedGames={[]} searchTerm={searchTerm} grades={selectedGrades}/>
+          ) :(
+            <>
+            <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
+            <EGMostPopular screenSize={screenSize} apiClients={apiClients} mostPopularGames={mostPopularGames} />
+            </>
+          )}
       </InfiniteScroll>
     </ExploreGamesContainer>
   );

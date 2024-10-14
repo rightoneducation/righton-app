@@ -78,7 +78,7 @@ export default function DiscussAnswer({
   );
   const totalAnswers = phaseOneResponses.reduce((acc, response) => acc + response.teams.length, 0) ?? 0;
   const isPlayerCorrect = selectedAnswer?.isCorrect ?? false;
-  
+  console.log(newPoints);
   const P1LeftColumnContents = (
     <ScrollBoxStyled>
       <Stack spacing={2}>

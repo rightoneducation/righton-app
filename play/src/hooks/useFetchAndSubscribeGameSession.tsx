@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  isNullOrUndefined,
   IAPIClients,
   IGameSession,
   ITeam,
@@ -68,12 +67,16 @@ export default function useFetchAndSubscribeGameSession(
       setIsLoading(false);
       return;
     }
-    // added so we can update th score for the discuss page. (previously implemented in results pages we got rid of)
+    // added so we can update the score for the discuss page. (previously implemented in results pages we got rid of)
     const updateTeamScore = async (inputTeamId: string, prevScore: number, newScore: number) => {
       try {
-        await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
+        console.log('sup');
+        const response = await apiClients.team.updateTeam({ id: inputTeamId, score: newScore + prevScore });
+        console.log('updateTeamscore');
+        console.log(response);
         setNewPoints(newScore);
-      } catch {
+      } catch (e) {
+        console.log(e);
         setIsError({ error: true, withheldPoints: newScore });
       }
     };
@@ -132,6 +135,8 @@ export default function useFetchAndSubscribeGameSession(
                   console.log(calcNewScore);
               }
               const prevScore = currentTeam?.score ?? 0;
+              console.log('inside useEffect');
+              console.log(calcNewScore);
               updateTeamScore(teamId, prevScore, calcNewScore); 
             }
           }
@@ -164,5 +169,7 @@ export default function useFetchAndSubscribeGameSession(
       }
     };
   }, [gameSessionId, apiClients, t, retry, hasRejoined, teamId]); // eslint-disable-line react-hooks/exhaustive-deps
+  console.log("outside of useEffect");
+  console.log(newPoints);
   return { isLoading, error, gameSession, hasRejoined, newPoints, currentTime, isAddTime };
 }

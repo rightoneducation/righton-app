@@ -1,4 +1,4 @@
 import { createContext, Dispatch } from 'react';
-import { APIClients } from '@righton/networking';
+import { IAPIClients } from '@righton/networking';
 
-export const APIClientsContext = createContext<APIClients | undefined>(undefined);
+export const APIClientsContext = createContext<IAPIClients | undefined>(undefined);

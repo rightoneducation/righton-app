@@ -1,62 +1,68 @@
 {
-  "dev": {
+  "maintwo": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-dev-a9ea8-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-dev-a9ea8-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-dev-a9ea8-authRole",
+      "AuthRoleName": "amplify-mobile-maintwo-2a88b-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-maintwo-2a88b-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-maintwo-2a88b-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-dev-a9ea8-deployment",
-      "UnauthRoleName": "amplify-mobile-dev-a9ea8-unauthRole",
-      "StackName": "amplify-mobile-dev-a9ea8",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-dev-a9ea8/4b5536c0-86f5-11ef-bcbd-0afff86fcd1b",
+      "DeploymentBucketName": "amplify-mobile-maintwo-2a88b-deployment",
+      "UnauthRoleName": "amplify-mobile-maintwo-2a88b-unauthRole",
+      "StackName": "amplify-mobile-maintwo-2a88b",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-maintwo-2a88b/e53a7d70-89e0-11ef-a8e6-0affe2471bdb",
       "AmplifyAppId": "d2z6928w5qibze",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-a9ea8-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-maintwo-2a88b-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
-      "function": {
-        "mobile6060603cPostConfirmation": {
-          "GROUP": "Teacher_Auth",
-          "deploymentBucketName": "amplify-mobile-dev-a9ea8-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
-        },
-        "createGame": {},
-        "mobile": {}
-      },
       "auth": {
         "mobile6060603c": {}
+      },
+      "function": {
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-maintwo-2a88b-deployment",
+          "s3Key": "amplify-builds/createGameTest-7879614d582b65544231-build.zip"
+        },
+        "mobile6060603cPostConfirmation": {
+          "GROUP": "Teacher_Auth",
+          "deploymentBucketName": "amplify-mobile-maintwo-2a88b-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
+        },
+        "mobile": {},
+        "mobile6060603c": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   },
   "main": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-main-31e50-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-main-31e50-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-main-31e50-authRole",
+      "AuthRoleName": "amplify-mobile-main-52bc6-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-main-52bc6-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-main-52bc6-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-main-31e50-deployment",
-      "UnauthRoleName": "amplify-mobile-main-31e50-unauthRole",
-      "StackName": "amplify-mobile-main-31e50",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-main-31e50/c81e4ac0-8795-11ef-a523-127d5880d09d",
+      "DeploymentBucketName": "amplify-mobile-main-52bc6-deployment",
+      "UnauthRoleName": "amplify-mobile-main-52bc6-unauthRole",
+      "StackName": "amplify-mobile-main-52bc6",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-main-52bc6/89444930-89e3-11ef-8169-120861abe029",
       "AmplifyAppId": "d2z6928w5qibze",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-main-31e50-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-main-52bc6-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
-        "mobile6060603c": {
-          "googleClientId": "23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com"
-        }
+        "mobile6060603c": {}
       },
       "function": {
-        "createGame": {
-          "deploymentBucketName": "amplify-mobile-main-31e50-deployment",
-          "s3Key": "amplify-builds/createGame-68726c722f7559472f57-build.zip"
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-main-52bc6-deployment",
+          "s3Key": "amplify-builds/createGameTest-4656614570672f395973-build.zip"
         },
         "mobile6060603cPostConfirmation": {
           "GROUP": "Teacher_Auth",
-          "deploymentBucketName": "amplify-mobile-main-31e50-deployment",
+          "deploymentBucketName": "amplify-mobile-main-52bc6-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
-        "mobile": {}
+        "mobile": {},
+        "mobile6060603c": {}
       },
       "api": {
         "mobile": {}
