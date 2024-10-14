@@ -15,7 +15,6 @@ export const createQuestionTemplate = async (
   createQuestionTemplateInput: CreatePublicQuestionTemplateInput | CreatePrivateQuestionTemplateInput
 ): Promise<IQuestionTemplate | null> => {
   try {
-    console.log(createQuestionTemplateInput);
     const question = await apiClients.questionTemplate.createQuestionTemplate(type, createQuestionTemplateInput);
     return question;
   } catch (e) {

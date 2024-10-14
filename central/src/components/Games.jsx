@@ -59,7 +59,6 @@ export default function Games({
   const questionMatch = useRouteMatch('/games/:gameId/questions/:questionId');
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const game = getGameById(games, gameId) ?? null;
-  console.log(game);
     // New "empty" game
     const newGame = {
       title: '',
@@ -73,7 +72,6 @@ export default function Games({
     }
   
     const [gameDetails, setGameDetails] = useState(() => {
-      console.log(game);
       if (game) {
         return { ...game };
       }

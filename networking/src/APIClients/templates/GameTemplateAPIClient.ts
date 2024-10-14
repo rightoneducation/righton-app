@@ -15,15 +15,12 @@ export class GameTemplateAPIClient
     createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate> {
     const variables: GraphQLOptions = { input: createGameTemplateInput as GameTemplateType<T>['create']['input']};
-    console.log(variables);
     const queryFunction = gameTemplateRuntimeMap[type].create.queryFunction;
     const createType = `create${type}GameTemplate`;
-    console.log(createType);
     const gameTemplate = await this.callGraphQL<GameTemplateType<T>['create']['query']>(
         queryFunction,
         variables
     ) as { data: any};
-    console.log(gameTemplate);
     if (
         isNullOrUndefined(gameTemplate?.data)
     ) {
