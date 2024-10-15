@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Grid, Typography, Box, CircularProgress, styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IAPIClients, IGameTemplate } from '@righton/networking';
-import StyledGameCard from './GameCard';
-import { ScreenSize } from '../lib/CentralModels';
-import placeHolder from '../images/placeHolder.svg';
+import StyledGameCard from '../cards/GameCard';
+import { ScreenSize } from '../../lib/CentralModels';
+import placeHolder from '../../images/placeHolder.svg';
 
 
 interface SearchResultsProps {

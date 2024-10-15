@@ -2,50 +2,31 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IAPIClients, IGameTemplate, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
-import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Box, Button } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import debounce from 'lodash/debounce'
 import { ScreenSize } from '../lib/CentralModels';
-import ExploreGamesUpper from '../components/ExploreGamesUpper';
-import EGMostPopular from '../components/EGMostPopular';
+import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
+import RecommendedGames from '../components/exploregames/RecommendedGames';
+import EGMostPopular from '../components/exploregames/EGMostPopular';
 import { handleGameSearch } from "../lib/HelperFunctions";
 import SearchBar from '../components/searchbar/SearchBar';
-import SearchResults from '../components/SearchResults';
+import SearchResults from '../components/exploregames/SearchResults';
 
 interface ExploreGamesProps {
 apiClients: IAPIClients;
 }
 
-const ExploreGamesContainer = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
-}));
-
 export default function ExploreGames({ apiClients }: ExploreGamesProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const defaultFetchLimit = 9;
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const isXLScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const screenSize = isLargeScreen  // eslint-disable-line
       ? ScreenSize.LARGE 
       : isMediumScreen 
         ? ScreenSize.MEDIUM 
         : ScreenSize.SMALL;
-
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
   const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
   const [searchedGames, setSearchedGames]= useState<IGameTemplate[]>([]);
@@ -131,7 +112,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
     }
   }
   return (
-    <ExploreGamesContainer id = "scrollableDiv">
+    <ExploreGamesMainContainer id = "scrollableDiv">
       <InfiniteScroll
         dataLength={mostPopularGames.length}
         next={loadMoreGames}
@@ -141,15 +122,17 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
         style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
       >
           <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
-          {searchTerms.length > 0 || searchedGames.length > 0 || selectedGrades.length > 0 ? (
-            <SearchResults screenSize={screenSize} apiClients={apiClients} searchTerm={searchTerms} grades={selectedGrades} searchedGames={searchedGames} isLoading={isLoading}/>
+            {searchTerms.length > 0 || searchedGames.length > 0 || selectedGrades.length > 0 ? (
+          <SearchResults screenSize={screenSize} apiClients={apiClients} searchTerm={searchTerms} grades={selectedGrades} searchedGames={searchedGames} isLoading={isLoading}/>
           ) : (
             <>
-              <ExploreGamesUpper screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames} />
+              <ExploreGamesUpperContainer screenSize={screenSize}>
+                <RecommendedGames screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames}/>
+              </ExploreGamesUpperContainer>
               <EGMostPopular screenSize={screenSize} apiClients={apiClients} mostPopularGames={mostPopularGames}/>
             </>
           )}
       </InfiniteScroll>
-    </ExploreGamesContainer>
+    </ExploreGamesMainContainer>
   );
 }

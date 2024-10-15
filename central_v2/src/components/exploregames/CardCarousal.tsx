@@ -5,9 +5,9 @@ import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
-import StyledGameCard from './GameCard';
-import placeHolder from '../images/placeHolder.svg';
-import SkeletonGameCard from './SkeletonGameCard';
+import StyledGameCard from '../cards/GameCard';
+import placeHolder from '../../images/placeHolder.svg';
+import SkeletonGameCard from '../cards/GameCardSkeleton';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
