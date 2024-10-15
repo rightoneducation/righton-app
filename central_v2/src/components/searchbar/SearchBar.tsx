@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent } from 'react';
 import { Box, InputAdornment, Typography, Button, Collapse, styled, TextField, MenuItem, Select, Checkbox, Chip, InputLabel, FormControl, OutlinedInput, SelectChangeEvent } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import debounce from 'lodash/debounce';
-import { GradeTarget } from '@righton/networking';
+import { GradeTarget, SortType, SortDirection } from '@righton/networking';
 import SearchIcon from '../../images/search.svg';
 import { ScreenSize } from '../../lib/CentralModels';
 import SelectGradesMenu from './SelectGradesMenu';
@@ -12,8 +12,8 @@ import SortSearchMenu from './SortSearchMenu';
 interface SearchBarProps {
     screenSize?: ScreenSize;
     handleChooseGrades: (grades: GradeTarget[]) => void;
-    onSearchChange: (searchTerm: string) => void;
-    onSortChange: (sort: { field: string; direction: string | null }) => void;
+    handleSearchChange: (searchTerm: string) => void;
+    handleSortChange: (sort: { field: SortType; direction: SortDirection }) => void;
 }
 interface SearchBarProps2 {
     screenSize?: ScreenSize;
@@ -100,39 +100,14 @@ const PrimaryButton2 = styled(Select)<SearchBarProps2>(({ screenSize, theme }) =
     color: '#FFFFFF',
   }));
 
-function SearchBar({ screenSize, onSearchChange, handleChooseGrades, onSortChange }: SearchBarProps) {
+function SearchBar({ screenSize, handleSearchChange, handleChooseGrades, handleSortChange }: SearchBarProps) {
     const theme = useTheme();
-    
     const [searchTerm, setSearchTerm] = useState<string>('');
-
-    const [selectedSort, setSelectedSort] = useState<{ field: string; direction: string | null }>({
-        field: '',
-        direction: null,
-      });
-
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setSearchTerm(value);
-        debounce(() => {
-            onSearchChange(value);
-        }, 800)();
+        handleSearchChange(value);
     };
-
-    const handleSortOptionClick = (field: string) => {
-        let newDirection: string | null = 'desc';
-    
-        if (selectedSort.field === field) {
-          if (selectedSort.direction === 'desc') {
-            newDirection = 'asc';
-          } else if (selectedSort.direction === 'asc') {
-            newDirection = null; // reset sorting
-          } else {
-            newDirection = 'desc'; // start with descending
-          }
-        }
-        setSelectedSort({ field, direction: newDirection });
-        onSortChange({ field, direction: newDirection });
-      };
       return (
         <SearchAndFilterContainer screenSize={screenSize}>
           <Box style={{display: 'flex', width: '100%'}}>
@@ -156,7 +131,7 @@ function SearchBar({ screenSize, onSearchChange, handleChooseGrades, onSortChang
                 }}
             />
           </Box>
-          <SortSearchMenu screenSize={screenSize ?? ScreenSize.SMALL} handleChooseGrades={handleChooseGrades}/>
+          <SortSearchMenu screenSize={screenSize ?? ScreenSize.SMALL} handleSortChange={handleSortChange}/>
         </SearchAndFilterContainer>
     );
 }

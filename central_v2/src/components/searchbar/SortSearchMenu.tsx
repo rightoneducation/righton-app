@@ -16,12 +16,12 @@ import SortArrow from '../../images/sortArrow.svg';
 
 interface SortSearchMenuProps {
   screenSize: ScreenSize;
-  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (sort: { field: SortType; direction: SortDirection }) => void;
 }
 
 export default function SortSearchMenu ({
   screenSize,
-  handleChooseGrades,
+  handleSortChange
 }: SortSearchMenuProps ){
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [selectedSort, setSelectedSort] = useState<{ field: SortType, direction: SortDirection }>({ field: SortType.listGameTemplatesByDate, direction: SortDirection.ASC });
@@ -33,10 +33,11 @@ export default function SortSearchMenu ({
   };
 
   // updates copy of array that will be sent to parent component on click of choose button
-  const handleSortChange = (selectSort: {field: SortType, direction: SortDirection}) => {
+  const preSortChange = (selectSort: {field: SortType, direction: SortDirection}) => {
     const inverseDirection = selectSort.direction === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC;
     const newDirection = selectedSort.field === selectSort.field ? inverseDirection : SortDirection.ASC;
     setSelectedSort({field: selectSort.field, direction: newDirection});
+    handleSortChange({field: selectSort.field, direction: newDirection});
   };
   return (
     <SortContainer>
@@ -50,7 +51,7 @@ export default function SortSearchMenu ({
     </SortButton>
       <SortMenu isSortOpen={isSortOpen}>
       {Object.keys(sortTypeMap).map((sortType) => (
-        <SortMenuItem key={sortType} onClick={() => handleSortChange({field: sortTypeMap[sortType as keyof typeof sortTypeMap], direction: selectedSort.direction})}>
+        <SortMenuItem key={sortType} onClick={() => preSortChange({field: sortTypeMap[sortType as keyof typeof sortTypeMap], direction: selectedSort.direction})}>
           <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
             <Typography
               fontSize='16px'

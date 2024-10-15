@@ -40,7 +40,6 @@ export class GameTemplateAPIClient
         queryFunction,
         { id } as unknown as GraphQLOptions
       ) as { data: any };
-      console.log(result);
       if (
         isNullOrUndefined(result?.data)
       ) {
@@ -142,7 +141,7 @@ export class GameTemplateAPIClient
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.byQuestionTemplatesCount;
     const awsType = `${type}GameTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}GameTemplatesByDate`, queryFunction, type, gradeTargets);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}GameTemplatesByPublicQuestionTemplatesCount`, queryFunction, type, gradeTargets);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 }

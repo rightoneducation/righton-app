@@ -8,7 +8,7 @@ export const SelectContainer = styled(Box)(() => {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    position: 'relative',
+    position: 'relative'
   };
 });
 
@@ -25,7 +25,8 @@ export const SelectGrade = styled(Box, {
     borderTopLeftRadius: '22px',
     borderBottomLeftRadius: '22px',
     gap: '16px',
-    zIndex: 3
+    zIndex: 4,
+    cursor: 'pointer'
 }));
 
 export const SelectLabel = styled(Typography)(() => {
@@ -73,7 +74,7 @@ export const SelectMenu = styled(Box, {
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'center',
-  zIndex: 2,
+  zIndex: 3,
   background: 'white',
   borderTopLeftRadius: '16px',
   borderBottomLeftRadius: '16px',
