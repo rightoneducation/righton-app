@@ -5,13 +5,10 @@ import { IAPIClients } from '@righton/networking';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 
-interface AppSwitchProps {
-  apiClients: IAPIClients;
-}
+// interface AppSwitchProps {
+// }
 
-function AppSwitch({
-  apiClients
-}: AppSwitchProps) {
+function AppSwitch() {
   const questionScreen = useMatch('/questions') !== null;
   const libraryScreen = useMatch('/library') !== null;
 
@@ -33,7 +30,7 @@ function AppSwitch({
     default: 
       return (
         <AppContainer>
-          <ExploreGames apiClients={apiClients} />
+          <ExploreGames />
         </AppContainer>
       );
   }
