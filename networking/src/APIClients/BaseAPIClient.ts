@@ -28,7 +28,11 @@ export enum SortType {
   listGameTemplates,
   listGameTemplatesByDate,
   listGameTemplatesByGrade,
-  listGameTemplatesByQuestionCount
+  listGameTemplatesByQuestionCount,
+  listQuestionTemplates,
+  listQuestionTemplatesByDate,
+  listQuestionTemplatesByGrade,
+  listQuestionTemplatesByGameCount,
 }
 export enum SortDirection {
   ASC = "ASC",
