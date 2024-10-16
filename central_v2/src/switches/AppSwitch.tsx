@@ -1,7 +1,8 @@
 import React from 'react';
 import { useMatch } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { IAPIClients } from '@righton/networking';
+import { IGameTemplate, IQuestionTemplate } from '@righton/networking';
+import useInitCentralContainer from '../hooks/useExploreGamesStateManager';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 
@@ -11,7 +12,6 @@ import ExploreGames from '../pages/ExploreGames';
 function AppSwitch() {
   const questionScreen = useMatch('/questions') !== null;
   const libraryScreen = useMatch('/library') !== null;
-
   switch (true) {
     case (questionScreen):
       return (
@@ -28,6 +28,7 @@ function AppSwitch() {
         // </AppContainer>
       );
     default: 
+      
       return (
         <AppContainer>
           <ExploreGames />

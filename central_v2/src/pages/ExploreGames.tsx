@@ -9,6 +9,7 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
+import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
 import RecommendedGames from '../components/exploregames/RecommendedGames';
 import EGMostPopular from '../components/exploregames/EGMostPopular';
 import SearchBar from '../components/searchbar/SearchBar';
@@ -28,90 +29,20 @@ export default function ExploreGames() {
       : isMediumScreen 
         ? ScreenSize.MEDIUM 
         : ScreenSize.SMALL;
-  const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
-  const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
-  const [searchedGames, setSearchedGames]= useState<IGameTemplate[]>([]);
-  const [nextToken, setNextToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [searchTerms, setSearchTerms] = useState('');
-  const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
-  const [isFetching, setIsFetching] = useState(false);
-  const debounceInterval = 800;
-  const [sort, setSort] = useState<{ field: SortType; direction: SortDirection | null }>({
-    field: SortType.listGameTemplatesByDate,
-    direction: SortDirection.DESC,
-  });
-
-  const handleChooseGrades = (grades: GradeTarget[]) => {
-    setSelectedGrades((prev) => [...grades]);
-    setIsLoading(true);
-    setNextToken(null);
-    apiClients?.centralDataManager?.searchForGameTemplates(PublicPrivateType.PUBLIC, null, null, searchTerms, sort.direction ?? SortDirection.ASC, sort.field, [...grades]).then((response) => {
-      setIsLoading(false);
-      setSearchedGames(response.games);
-    })
-  };
-
-  const handleSortChange = (newSort: { field: SortType; direction: SortDirection | null }) => {
-    setSort(newSort);
-    setIsLoading(true);
-    setNextToken(null);
-    apiClients?.centralDataManager?.searchForGameTemplates(PublicPrivateType.PUBLIC, null, null, searchTerms, newSort.direction ?? SortDirection.ASC, newSort.field, selectedGrades).then((response) => {
-      setIsLoading(false);
-      setSearchedGames(response.games);
-    })
-  };
-
-  // note that all parameters are sent through as props
-  // this avoids stale state issues from the useCallback
-  const debouncedSearch = useCallback(  // eslint-disable-line
-    debounce((search: string, sortDirection: SortDirection, gradeTargets: GradeTarget[], sortType: SortType) => {
-      setNextToken(null);
-      apiClients?.centralDataManager?.searchForGameTemplates(PublicPrivateType.PUBLIC, null, null, search, sortDirection, sortType, gradeTargets).then((response) => {
-        setIsLoading(false);
-        setSearchedGames(response.games);
-      })
-    }, debounceInterval),
-    [debounceInterval]
-  );
-
-  const handleSearchChange = (searchString: string) => {
-    setIsLoading(true);
-    setSearchTerms(searchString);
-    debouncedSearch(searchString, sort.direction ?? SortDirection.ASC, selectedGrades, sort.field);
-  };
-
-  useEffect(() => {
-    if (apiClients) {
-      apiClients.gameTemplate.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, null, null, selectedGrades ?? [])
-        .then(response => {
-          setRecommendedGames(response?.gameTemplates || []);
-          setMostPopularGames(response?.gameTemplates || []);
-          setNextToken(response?.nextToken || null);
-        })
-        .catch(error => {
-          console.error('Error fetching games:', error);
-        });
-    }
-  }, []); // eslint-disable-line
-
-  const loadMoreGames = () => {
-    if (nextToken && !isFetching) {
-      setIsFetching(true);
-      apiClients.gameTemplate.listGameTemplates(PublicPrivateType.PUBLIC, 12, nextToken, null, null, selectedGrades ?? [])
-        .then(response => {
-          if (response){
-            setMostPopularGames(prev => [...prev, ...response.gameTemplates]);
-            setNextToken(response.nextToken || null);
-            setIsFetching(false);
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching more games:', error);
-          setIsFetching(false);
-        });
-    }
-  }
+  const {
+    recommendedGames,
+    mostPopularGames,
+    searchedGames,
+    nextToken,
+    isLoading,
+    searchTerms,
+    selectedGrades,
+    handleChooseGrades,
+    handleSortChange,
+    handleSearchChange,
+    loadMoreGames
+  } = useExploreGamesStateManager();
+  
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
       <InfiniteScroll
