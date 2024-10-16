@@ -1,8 +1,10 @@
-import { IGameTemplate } from "../../../Models";
+import { IGameTemplate, IQuestionTemplate } from "../../../Models";
 import { PublicPrivateType, SortDirection, SortType, GradeTarget } from "../../BaseAPIClient";
 
 
 export interface ICentralDataManagerAPIClient {
+  initGames: () => Promise<{ nextToken: string | null, games: IGameTemplate[] }>;
+  initQuestions: () => Promise<{ nextToken: string | null, questions: IQuestionTemplate[] }>;
   searchForGameTemplates: (
     type: PublicPrivateType, 
     limit: number | null, 

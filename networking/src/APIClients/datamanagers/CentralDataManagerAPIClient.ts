@@ -18,6 +18,21 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     this.questionTemplateAPIClient = questionTemplateAPIClient;
   } 
   
+  public initGames = async () => {
+    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, []);
+    if (response){
+      return { nextToken: response.nextToken, games: response.gameTemplates };
+    }
+    return { nextToken: null, games: [] };
+  };
+
+  public initQuestions = async () => {
+    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, "");
+    if (response)
+      return { nextToken: response.nextToken, questions: response.questionTemplates };
+    return { nextToken: null, questions: [] };
+  };
+
   public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[]) => {
     switch(sortType){
       case SortType.listGameTemplatesByDate: {
