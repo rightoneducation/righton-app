@@ -1,53 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
-import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { ElementType } from '@righton/networking';
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
+import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
+import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
+import MostPopular from '../components/explore/MostPopular';
 
-interface ExploreQuestionsProps {
-  apiClients: IAPIClients;
-}
+// interface ExploreGamesProps {
+// }
 
-const ExploreQuestionsContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
-  width: '100%',
-  height: '100vh',
-}));
-
-export default function ExploreQuestions({ apiClients }: ExploreQuestionsProps) {
+export default function ExploreGames() {
   const theme = useTheme();
   const { t } = useTranslation();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const isXLScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const screenSize = isLargeScreen  // eslint-disable-line
       ? ScreenSize.LARGE 
       : isMediumScreen 
         ? ScreenSize.MEDIUM 
         : ScreenSize.SMALL;
-
-
-
-  useEffect(() => {
-    // TODO - api requests for questions similar to explore games
-  }, []);
-
-
+  const {
+    recommendedQuestions,
+    mostPopularQuestions,
+    searchedQuestions,
+    nextToken,
+    isLoading,
+    searchTerms,
+    selectedGrades,
+    handleChooseGrades,
+    handleSortChange,
+    handleSearchChange,
+    loadMoreQuestions
+  } = useExploreQuestionsStateManager();
+  
   return (
-    <ExploreQuestionsContainer id = "scrollableDiv">
-          <Typography> EXPLORE QUESTIONS PAGE</Typography>
-    </ExploreQuestionsContainer>
+    <ExploreGamesMainContainer id = "scrollableDiv">
+      <MostPopular screenSize={screenSize} mostPopularElements={mostPopularQuestions} elementType={ElementType.QUESTION}/>
+    </ExploreGamesMainContainer>
   );
 }

@@ -1,10 +1,9 @@
 import React from 'react';
 import { useMatch } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { IGameTemplate, IQuestionTemplate } from '@righton/networking';
-import useInitCentralContainer from '../hooks/useExploreGamesStateManager';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
+import ExploreQuestions from '../pages/ExploreQuestions';
 
 // interface AppSwitchProps {
 // }
@@ -15,10 +14,9 @@ function AppSwitch() {
   switch (true) {
     case (questionScreen):
       return (
-        <><Box/><Box/></>
-        // <AppContainer>
-        //   <ExploreQuestions apiClients={apiClients} />
-        // </AppContainer>
+        <AppContainer>
+          <ExploreQuestions />
+        </AppContainer>
       );
     case (libraryScreen):
       return (
@@ -28,7 +26,6 @@ function AppSwitch() {
         // </AppContainer>
       );
     default: 
-      
       return (
         <AppContainer>
           <ExploreGames />
