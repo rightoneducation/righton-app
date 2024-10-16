@@ -1,25 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IAPIClients, IGameTemplate, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
+import { IGameTemplate, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import debounce from 'lodash/debounce'
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import RecommendedGames from '../components/exploregames/RecommendedGames';
 import EGMostPopular from '../components/exploregames/EGMostPopular';
-import { handleGameSearch } from "../lib/HelperFunctions";
 import SearchBar from '../components/searchbar/SearchBar';
 import SearchResults from '../components/exploregames/SearchResults';
 
-interface ExploreGamesProps {
-apiClients: IAPIClients;
-}
+// interface ExploreGamesProps {
+// }
 
-export default function ExploreGames({ apiClients }: ExploreGamesProps) {
+export default function ExploreGames() {
   const theme = useTheme();
   const { t } = useTranslation();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const screenSize = isLargeScreen  // eslint-disable-line
@@ -45,7 +46,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
     setSelectedGrades((prev) => [...grades]);
     setIsLoading(true);
     setNextToken(null);
-    handleGameSearch(apiClients, PublicPrivateType.PUBLIC, null, null, searchTerms, sort.direction ?? SortDirection.ASC, sort.field, [...grades]).then((response) => {
+    apiClients?.centralDataManager?.searchForGameTemplates(PublicPrivateType.PUBLIC, null, null, searchTerms, sort.direction ?? SortDirection.ASC, sort.field, [...grades]).then((response) => {
       setIsLoading(false);
       setSearchedGames(response.games);
     })
@@ -55,7 +56,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
     setSort(newSort);
     setIsLoading(true);
     setNextToken(null);
-    handleGameSearch(apiClients, PublicPrivateType.PUBLIC, null, null, searchTerms, newSort.direction ?? SortDirection.ASC, newSort.field, selectedGrades).then((response) => {
+    apiClients?.centralDataManager?.searchForGameTemplates(PublicPrivateType.PUBLIC, null, null, searchTerms, newSort.direction ?? SortDirection.ASC, newSort.field, selectedGrades).then((response) => {
       setIsLoading(false);
       setSearchedGames(response.games);
     })
@@ -66,7 +67,7 @@ export default function ExploreGames({ apiClients }: ExploreGamesProps) {
   const debouncedSearch = useCallback(  // eslint-disable-line
     debounce((search: string, sortDirection: SortDirection, gradeTargets: GradeTarget[], sortType: SortType) => {
       setNextToken(null);
-      handleGameSearch(apiClients, PublicPrivateType.PUBLIC, null, null, search, sortDirection, sortType, gradeTargets).then((response) => {
+      apiClients?.centralDataManager?.searchForGameTemplates(PublicPrivateType.PUBLIC, null, null, search, sortDirection, sortType, gradeTargets).then((response) => {
         setIsLoading(false);
         setSearchedGames(response.games);
       })

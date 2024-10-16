@@ -27,6 +27,8 @@ import { PlayDataManagerAPIClient } from './datamanagers/PlayDataManagerAPIClien
 import { IPlayDataManagerAPIClient } from './datamanagers/interfaces/IPlayDataManagerAPIClient';
 import { HostDataManagerAPIClient } from './datamanagers/HostDataManagerAPIClient';
 import { IHostDataManagerAPIClient } from './datamanagers/interfaces/IHostDataManagerAPIClient';
+import { CentralDataManagerAPIClient } from './datamanagers/CentralDataManagerAPIClient';
+import { ICentralDataManagerAPIClient } from './datamanagers/interfaces/ICentralDataManagerAPIClient';
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 
@@ -48,6 +50,7 @@ export class APIClients {
   teamAnswer: ITeamAnswerAPIClient;
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
+  centralDataManager?: ICentralDataManagerAPIClient;
 
   constructor(env: Environment,  authClient: IAuthAPIClient, appType: AppType) {
     this.configAmplify(awsconfig);
@@ -62,8 +65,10 @@ export class APIClients {
     this.teamAnswer = new TeamAnswerAPIClient(env, this.auth);
     if (appType === AppType.PLAY) {
       this.playDataManager = new PlayDataManagerAPIClient(env, this.gameSession);
-    } else {
+    } else if (appType ===AppType.HOST) {
       this.hostDataManager = new HostDataManagerAPIClient(env, this.gameSession, this.question, this.team, this.teamMember, this.teamAnswer);
+    } else {
+      this.centralDataManager = new CentralDataManagerAPIClient(env, this.gameTemplate, this.questionTemplate);
     }
   }
   static async create(env: Environment, appType: AppType): Promise<APIClients> {

@@ -7,7 +7,7 @@ import { IGameSessionAPIClient } from '../gamesession/interfaces/IGameSessionAPI
 import { ITeamAPIClient } from '../gamesession/interfaces/ITeamAPIClient';
 import { ITeamMemberAPIClient } from '../gamesession/interfaces/ITeamMemberAPIClient';
 import { ITeamAnswerAPIClient } from '../gamesession/interfaces/ITeamAnswerAPIClient';
-import { IHostDataManagerAPIClient, IPlayDataManagerAPIClient } from '../datamanagers';
+import { ICentralDataManagerAPIClient, IHostDataManagerAPIClient, IPlayDataManagerAPIClient } from '../datamanagers';
 
 export interface IAPIClients {
   auth: IAuthAPIClient;
@@ -21,4 +21,5 @@ export interface IAPIClients {
   teamAnswer: ITeamAnswerAPIClient;
   hostDataManager?: IHostDataManagerAPIClient;
   playDataManager?: IPlayDataManagerAPIClient;
+  centralDataManager?: ICentralDataManagerAPIClient;
 }
