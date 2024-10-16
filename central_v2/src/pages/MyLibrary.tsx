@@ -6,8 +6,6 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, Button } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ScreenSize } from '../lib/CentralModels';
-import ExploreGamesUpper from '../components/ExploreGamesUpper';
-import EGMostPopular from '../components/EGMostPopular';
 
 
 interface MyLibraryProps {

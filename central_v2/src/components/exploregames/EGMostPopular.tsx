@@ -2,10 +2,10 @@ import React from 'react';
 import { Grid, Typography, Box, styled, useTheme, Grow, Fade, Skeleton } from '@mui/material';
 import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import StyledGameCard from './GameCard';
-import { ScreenSize } from '../lib/CentralModels';
-import placeHolder from '../images/placeHolder.svg';
-import SkeletonGameCard from './SkeletonGameCard';
+import StyledGameCard from '../cards/GameCard';
+import { ScreenSize } from '../../lib/CentralModels';
+import placeHolder from '../../images/placeHolder.svg';
+import SkeletonGameCard from '../cards/GameCardSkeleton';
 
 interface EGMostPopularProps {
   screenSize: ScreenSize;

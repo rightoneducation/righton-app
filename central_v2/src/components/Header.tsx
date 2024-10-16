@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, IconButton } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
@@ -12,19 +13,18 @@ import plus from '../images/plus.svg';
 import { ScreenSize } from '../lib/CentralModels';
 import { SelectedCentralPages } from '../lib/ScreenEnums';
 
-interface EGHeaderProps {
+interface HeaderProps {
   screenSize: ScreenSize;
   isXLScreen: boolean;
-  onScreenChange: (newScreen: SelectedCentralPages) => void;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
 }
 
-interface EGHeaderContainerProps {
+interface HeaderContainerProps {
   screenSize: ScreenSize;
   menuOpen: boolean;
 }
-const EGHeaderContainer = styled(Box)<EGHeaderContainerProps>(({ screenSize, menuOpen, theme }) => ({
+const HeaderContainer = styled(Box)<HeaderContainerProps>(({ screenSize, menuOpen, theme }) => ({
   height: screenSize === ScreenSize.SMALL ? '77px' : '94px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -97,7 +97,8 @@ const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
   height: '100%',
 }));
 
-export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuOpen, setMenuOpen }: EGHeaderProps) {
+export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }: HeaderProps) {
+  const navigate = useNavigate();
   const [selectedScreen, setSelectedScreen] = useState<SelectedCentralPages>(SelectedCentralPages.ExploreGamesScreen);
 
   const handleMenuToggle = () => {
@@ -106,7 +107,18 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
 
   const handleButtonClick = (screen: SelectedCentralPages) => {
     setSelectedScreen(screen);
-    onScreenChange(screen);
+    switch (screen) {
+      case SelectedCentralPages.ExploreQuestionsScreen:
+        navigate('/questions');
+        break;
+      case SelectedCentralPages.MyLibraryScreen:
+        navigate('/library');
+        break;
+      case SelectedCentralPages.ExploreGamesScreen:
+      default:
+        navigate('/');
+        break;
+    }
   };
   const getHeight = () => {
     if (menuOpen)
@@ -116,24 +128,23 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
     return '94px';
   }
   return (
-       <Collapse
-        in
-        timeout={500}
-        style={{
-          transition: 'height 0.5s ease-in-out',
-          height: getHeight(),
-          width: '100%',
-          overflow: 'hidden',
-          zIndex: 5,
-          position: 'fixed',
-          background: 'linear-gradient(360deg, #02215F 0%, #0D68B1 100%)',
-          padding: '0px 0px 16px 0px',
-          display: 'flex',
-          justifyContent: 'center', // Center the entire menu box horizontally
-        }}
-      >
-     
-      <EGHeaderContainer screenSize={screenSize} menuOpen={menuOpen}>
+      <Collapse
+      in
+      timeout={500}
+      style={{
+        transition: 'height 0.5s ease-in-out',
+        height: getHeight(),
+        width: '100%',
+        overflow: 'hidden',
+        zIndex: 5,
+        position: 'fixed',
+        background: 'linear-gradient(360deg, #02215F 0%, #0D68B1 100%)',
+        padding: '0px 0px 16px 0px',
+        display: 'flex',
+        justifyContent: 'center', // Center the entire menu box horizontally
+      }}
+    >
+      <HeaderContainer screenSize={screenSize} menuOpen={menuOpen}>
         <ImageContainer align="flex-start" style={{ width: isXLScreen ? '210px' : 'auto', alignItems: 'flex-start' }}>
           <img src={rightonlogo} alt="Right On Logo" />
         </ImageContainer>
@@ -182,7 +193,7 @@ export default function EGHeader({ screenSize, isXLScreen, onScreenChange, menuO
           )}
         </ImageContainer>
        
-      </EGHeaderContainer>
+      </HeaderContainer>
       {menuOpen && 
            <Box
            display="flex"
