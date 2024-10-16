@@ -1,11 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { IGameTemplate } from '@righton/networking';
+import { debounce } from 'lodash';
+import { IGameTemplate, PublicPrivateType, SortDirection, SortType, GradeTarget } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
-import { PublicPrivateType, SortDirection, SortType, GradeTarget } from '@righton/networking';
-import { debounce } from 'lodash';
 
-interface useExploreGamesStateManagerProps {
+interface UseExploreGamesStateManagerProps {
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
@@ -19,7 +18,7 @@ interface useExploreGamesStateManagerProps {
   loadMoreGames: () => void;
 }
 
-export default function useExploreGamesStateManager(): useExploreGamesStateManagerProps {
+export default function useExploreGamesStateManager(): UseExploreGamesStateManagerProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const debounceInterval = 800;
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
