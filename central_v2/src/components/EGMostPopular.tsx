@@ -60,7 +60,6 @@ const GameCard = styled(Box)(({ theme }) => ({
 
 function EGMostPopularContainer({ screenSize, children }: EGMostPopularContainerProps) {
   const theme = useTheme();
-  
 
   return (
     <Box
@@ -92,12 +91,18 @@ export default function EGMostPopular({ screenSize, apiClients, mostPopularGames
         Most Popular
       </MostPopularText>
         <Grid container spacing={2} id="scrollableDiv" >
-        {Array.from({ length: maxCards }).map((_, index) => {
-          const game = mostPopularGames[index];
-          return (
-            <Grid item xs={12} md={6} xl={4} key={index}> {/* eslint-disable-line */}
-              {game ? (
-                <StyledGameCard
+        {mostPopularGames.length === 0 
+          ? Array.from({ length: maxCards }).map((_, index) => {
+            return (
+              <Grid item xs={12} md={6} xl={4} key={index}> {/* eslint-disable-line */}
+                <SkeletonGameCard index={index} />
+              </Grid>
+            );
+            })
+          : mostPopularGames.map((game) => {
+            return (
+              <Grid item xs={12} md={6} xl={4} key={game.id}> {/* eslint-disable-line */}
+               <StyledGameCard
                   game={game}
                   id={game.id}
                   title={game.title}
@@ -105,12 +110,9 @@ export default function EGMostPopular({ screenSize, apiClients, mostPopularGames
                   image={game.imageUrl || placeHolder}
                   apiClients={apiClients}
                 />
-              ) : (
-                <SkeletonGameCard index={index} />
-              )}
-            </Grid>
-          );
-        })}
+              </Grid>
+            );
+          })}
         </Grid>
     </EGMostPopularContainer>
   );

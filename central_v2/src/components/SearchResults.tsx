@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Typography, Box, styled } from '@mui/material';
+import { Grid, Typography, Box, CircularProgress, styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IAPIClients, IGameTemplate } from '@righton/networking';
 import StyledGameCard from './GameCard';
@@ -13,6 +13,7 @@ interface SearchResultsProps {
   searchedGames: IGameTemplate[];
   searchTerm: string;
   grades: string[];
+  isLoading: boolean;
 }
 
 interface SearchedTextProps {
@@ -89,56 +90,64 @@ function formatGrades(grades: string[]): string {
   }
 
   
-export default function SearchResults({ screenSize, apiClients, searchedGames, searchTerm, grades }: SearchResultsProps) {
+export default function SearchResults({ screenSize, apiClients, searchedGames, searchTerm, grades, isLoading }: SearchResultsProps) {
     const formattedGrades = formatGrades(grades);
     const theme = useTheme();
   return (
     <SearchResultsContainer screenSize={screenSize}>
         <Box style={{gap: `${theme.sizing.xSmPadding}px`, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <SearchedText screenSize={screenSize}>
-            Results for &quot;{searchTerm}&quot;
-        </SearchedText>
-      {grades.length > 0 && (
-        <GradesText screenSize={screenSize}>
-          in {formattedGrades}
-        </GradesText>
-      )}
-      </Box>
-      {searchedGames.length > 0 && (
-       <ResultsLengthText screenSize={screenSize}>
-            {searchedGames.length} results
-        </ResultsLengthText>
-       )}
-        {searchedGames.length > 0 ? (
-        <Grid container spacing={2} id="scrollableDiv">
-          {searchedGames.map((game) => (
-            <Grid
-              item
-              xs={12}
-              md={6} 
-              xl={4}
-              key={game.id}
-            >
-              <StyledGameCard
-                game={game}
-                id={game.id}
-                title={game.title}
-                description={game.description}
-                image={game.imageUrl || placeHolder}
-                apiClients={apiClients}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Box alignItems='center'>
+          <SearchedText screenSize={screenSize}>
+              Results for &quot;{searchTerm}&quot;
+          </SearchedText>
+          {isLoading 
+            ? <CircularProgress style={{color:`${theme.palette.primary.circularProgress}`}}/>
+            : 
+              <>
+                {searchedGames.length > 0 && (
+                  <ResultsLengthText screenSize={screenSize}>
+                    {searchedGames.length} results
+                  </ResultsLengthText>
+                )}
+                {grades.length > 0 && (
+                <GradesText screenSize={screenSize}>
+                  in {formattedGrades}
+                </GradesText>
+                )}
+              </>
+          }
+      </Box> 
+      {!isLoading && (        
+        searchedGames.length > 0 ? (
+          <Grid container spacing={2} id="scrollableDiv">
+            {searchedGames.map((game) => (
+              <Grid
+                item
+                xs={12}
+                md={6}
+                xl={4}
+                key={game.id}
+              >
+                <StyledGameCard
+                  game={game}
+                  id={game.id}
+                  title={game.title}
+                  description={game.description}
+                  image={game.imageUrl || placeHolder}
+                  apiClients={apiClients}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Box alignItems='center'>
             <NoResultsText screenSize={screenSize}>
-            There are no results for &quot;{searchTerm}&quot;
+              There are no results for &quot;{searchTerm}&quot;
             </NoResultsText>
             <NoResultsText screenSize={screenSize}>
-            Please check your spelling or try a different term
-        </NoResultsText>
-      </Box>
+              Please check your spelling or try a different term
+            </NoResultsText>
+          </Box>
+        )
       )}
     </SearchResultsContainer>
   );

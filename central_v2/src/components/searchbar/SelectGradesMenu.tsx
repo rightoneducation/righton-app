@@ -26,6 +26,7 @@ export default function SelectGradesMenu ({
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
   const gradeMap = {
+    'High School': GradeTarget.HIGHSCHOOL,
     '8th Grade': GradeTarget.GRADEEIGHT,
     '7th Grade': GradeTarget.GRADESEVEN,
     '6th Grade': GradeTarget.GRADESIX,
@@ -37,6 +38,7 @@ export default function SelectGradesMenu ({
     'Kindergarten': GradeTarget.KINDERGARTEN,
   };
   const selectedGradeMap = {
+    'HS': GradeTarget.HIGHSCHOOL,
     '8': GradeTarget.GRADEEIGHT,
     '7': GradeTarget.GRADESEVEN,
     '6': GradeTarget.GRADESIX,
@@ -45,7 +47,7 @@ export default function SelectGradesMenu ({
     '3': GradeTarget.GRADETHREE,
     '2': GradeTarget.GRADETWO,
     '1': GradeTarget.GRADEONE,
-    'Kindergarten': GradeTarget.KINDERGARTEN,
+    'K': GradeTarget.KINDERGARTEN,
   }
   // updates copy of array that will be sent to parent component on click of choose button
   const handleGradesChange = (grade: string) => {
@@ -60,18 +62,28 @@ export default function SelectGradesMenu ({
       return 'Choose Grade';
     } 
     if (selectedGrades.length === 1) {
+      if (selectedGrades[0] === GradeTarget.HIGHSCHOOL) {
+        return 'Grade HS';
+      }
       if (selectedGrades[0] === GradeTarget.KINDERGARTEN) {
-        return 'Kindergarten';
+        return 'Grade K';
       }
       return `Grade ${Object.keys(selectedGradeMap).find((g) => selectedGradeMap[g as keyof typeof selectedGradeMap] === selectedGrades[0])}`;
     }
     if (selectedGrades.length >= 2) {
-      const gradesForLabel = selectedGrades.slice(0,2);
-      const labels = gradesForLabel.map((g) => Object.keys(selectedGradeMap).find((grade) => selectedGradeMap[grade as keyof typeof selectedGradeMap] === g));
-      const parsedLabels = labels.map((label) => label === 'Kindergarten' ? 'Kdg.' : label);
+      const labels = selectedGrades.map((g) => Object.keys(selectedGradeMap).find((grade) => selectedGradeMap[grade as keyof typeof selectedGradeMap] === g));
+      const sortedLabels = labels.sort((a: string | undefined, b: string | undefined) => {
+          // move K to the front
+          if (a === 'K') return -1;
+          if (b === 'K') return 1; 
+          // then do regular compare
+          if (a && b)
+            return a.localeCompare(b); 
+          return 0;
+      }).slice(0,2);
       if (selectedGrades.length === 2)
-        return `Grades ${parsedLabels.join(' & ')}`;
-      return `Grades ${labels.join(', ')}...`;  
+        return `Grades ${sortedLabels.join(' & ')}`;
+      return `Grades ${sortedLabels.join(', ')}...`;  
     }
     return `${selectedGrades.length} Grades Selected`;
   }

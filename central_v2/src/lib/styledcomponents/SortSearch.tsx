@@ -31,7 +31,8 @@ export const SortButton = styled(Box, {
     paddingRight: '12px',
     boxSizing: 'border-box',
     gap: '8px',
-    zIndex: 3
+    zIndex: 4,
+    cursor: 'pointer'
 }));
 
 export const SortLabel = styled(Typography)(() => {
@@ -86,7 +87,7 @@ export const SortMenu = styled(Box, {
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'center',
-  zIndex: 2,
+  zIndex: 3,
   background: 'white',
   borderRadius: '16px',
   padding: "8px",  
@@ -100,7 +101,7 @@ export const SortMenu = styled(Box, {
   opacity: isSortOpen ? 1 : 0,
   transform: isSortOpen ? 'translateY(0px)' : 'translateY(-20px)',
   boxShadow: '0px 8px 16px -4px rgba(0, 0, 0, 0.4)',
-  cursor: 'pointer',
+  cursor: isSortOpen ? 'pointer' : 'default'
 }));
 
 export const SortMenuItem = styled(Box)(() => {
