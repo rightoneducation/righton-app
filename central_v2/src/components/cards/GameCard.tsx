@@ -11,7 +11,6 @@ interface StyledGameCardProps {
   title: string;
   description: string;
   image: string;
-  apiClients: IAPIClients;
   game: IGameTemplate;
 }
 
@@ -221,7 +220,7 @@ function getDomainAndGrades(game: IGameTemplate) {
   return Array.from(new Set(CCSSArray));
 }
 
-export default function StyledGameCard({ id, title, description, image, apiClients, game }: StyledGameCardProps) {
+export default function StyledGameCard({ id, title, description, image, game }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
 
   return (

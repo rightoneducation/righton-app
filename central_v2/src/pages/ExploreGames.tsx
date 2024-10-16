@@ -10,10 +10,10 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
-import RecommendedGames from '../components/exploregames/RecommendedGames';
-import EGMostPopular from '../components/exploregames/EGMostPopular';
+import RecommendedGames from '../components/explore/games/RecommendedGames';
+import EGMostPopular from '../components/explore/games/EGMostPopular';
 import SearchBar from '../components/searchbar/SearchBar';
-import SearchResults from '../components/exploregames/SearchResults';
+import SearchResults from '../components/explore/games/SearchResults';
 
 // interface ExploreGamesProps {
 // }

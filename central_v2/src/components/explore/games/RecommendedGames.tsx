@@ -5,8 +5,8 @@ import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import GameCardCarousal from './CardCarousal';
-import {ScreenSize } from '../../lib/CentralModels';
-import PaginationContainerStyled from '../../lib/PaginationContainerStyled';
+import {ScreenSize } from '../../../lib/CentralModels';
+import PaginationContainerStyled from '../../../lib/PaginationContainerStyled';
 
 interface RecommendedGamesProps {
   screenSize: ScreenSize;

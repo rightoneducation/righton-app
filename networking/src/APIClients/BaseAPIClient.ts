@@ -12,6 +12,12 @@ import { IAuthAPIClient } from "./auth";
 export enum HTTPMethod {
   Post = "POST",
 }
+
+export enum ElementType {
+  GAME,
+  QUESTION
+}
+
 export enum GradeTarget {
   KINDERGARTEN = "K",
   GRADEONE = "1",

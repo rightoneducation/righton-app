@@ -8,7 +8,7 @@ import cloneQuestion from '../../images/cloneQuestion.svg';
 
 interface StyledQuestionCardProps {
   id: string;
-  description: string;
+  title: string;
   image: string;
   question: IQuestionTemplate;
 }
@@ -88,34 +88,10 @@ const TextAndImageBox = styled(Box)(({theme}) => ({
 
 const SideBySideBox = styled(Box)(({theme}) => ({
   width: '100%',
-  height: '136px',
+  height: 'auto',
   gap: `${theme.sizing.xSmPadding}px`,
   display: 'flex',
-  flexDirection: 'row',
-}));
-
-interface SmallSideBySideBoxProps {
-  buttonCount: number;
-}
-
-const SmallSideBySideBox = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'buttonCount',
-})<SmallSideBySideBoxProps>(({ theme, buttonCount }) => ({
-  width: '100%',
-  height: buttonCount > 2 ? `${theme.sizing.xLgPadding}px` : `${theme.sizing.mdPadding}px`, // Default height based on button count
-  display: 'flex',
   flexDirection: 'column',
-  position: 'relative', 
-  overflow: 'visible',
-  marginTop: '7px',
-  // dynamic height adjustments for the red buttons
-  [theme.breakpoints.down('sm')]: {
-    height: buttonCount > 2 ? `${theme.sizing.xLgPadding}px` : `${theme.sizing.mdPadding}px`, // Height if more than 2 buttons on small screens
-  },
-
-  [theme.breakpoints.up('md')]: {
-    height: buttonCount > 3 ? `${theme.sizing.xLgPadding}px` : `${theme.sizing.mdPadding}px`, // Height if more than 3 buttons on medium and larger screens
-  },
 }));
 
 const ButtonWrapper = styled(Box)(({ theme }) => ({
@@ -199,7 +175,7 @@ const SecondaryButton = styled(Button)(({theme}) => ({
   minWidth: '20px',
 }));
 
-export default function StyledGameCard({ id, description, image, question }: StyledQuestionCardProps) {
+export default function StyledGameCard({ id, title, image, question }: StyledQuestionCardProps) {
   const domainAndGrade =`${question.grade}.${question.domain}`;
 
   return (
@@ -216,7 +192,7 @@ export default function StyledGameCard({ id, description, image, question }: Sty
             <GymSVG src={image} alt='Tag' />
           </TextAndImageBox>
           <TextAndImageBox>
-            <DescriptionText>{description}</DescriptionText>
+            <DescriptionText>{title}</DescriptionText>
           </TextAndImageBox>
         </SideBySideBox>
       </TextContainer>
