@@ -27,7 +27,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public initQuestions = async () => {
-    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, []);
+    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, []);
     if (response)
       return { nextToken: response.nextToken, questions: response.questionTemplates };
     return { nextToken: null, questions: [] };

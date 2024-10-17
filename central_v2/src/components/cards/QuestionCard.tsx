@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { IQuestionTemplate } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -34,7 +34,7 @@ const LaunchSVG = styled('img')({
 
 const QuestionCard = styled(Box)(({theme}) => ({
   width: '100%', 
-  height: '100%',
+  height: 'auto',
   padding: `12px ${theme.sizing.smPadding}px 12px ${theme.sizing.smPadding}px`,
   gap: `${theme.sizing.smPadding}px`,
   borderRadius: `${theme.sizing.smPadding}px`,
@@ -48,7 +48,7 @@ const QuestionCard = styled(Box)(({theme}) => ({
 
 const TextContainer = styled(Box)(({theme}) => ({
   width: '100%',
-  height: '182px',
+  height: '100%',
   gap: `${theme.sizing.smPadding}px`,
   display: 'flex',
   flexDirection: 'column',
@@ -56,7 +56,7 @@ const TextContainer = styled(Box)(({theme}) => ({
 
 const TitleContainer = styled(Box)(() => ({
   width: '100%',
-  height: '130px',
+  height: '25px',
   display: 'flex',
   justifyContent: 'space-between',
 }));
@@ -76,19 +76,15 @@ const TitleTextTypography = styled(Typography)(({theme}) => ({
   WebkitLineClamp: 1,
 }));
 
-const TextAndImageBox = styled(Box)(({theme}) => ({
-  flex: 1,
-  height: '136px',
+const ImageBox = styled(Box)(({theme}) => ({
+  width: '100%',
+  height: '130px', 
   gap: `${theme.sizing.xSmPadding}px`,
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'visible',
-  position: 'relative',
 }));
 
 const SideBySideBox = styled(Box)(({theme}) => ({
   width: '100%',
-  height: 'auto',
+  height: '100%',
   gap: `${theme.sizing.xSmPadding}px`,
   display: 'flex',
   flexDirection: 'column',
@@ -188,12 +184,10 @@ export default function StyledGameCard({ id, title, image, question }: StyledQue
           <HeartSVG src={heart} alt="Tag" />
         </TitleContainer>
         <SideBySideBox>
-          <TextAndImageBox>
+          <ImageBox>
             <GymSVG src={image} alt='Tag' />
-          </TextAndImageBox>
-          <TextAndImageBox>
-            <DescriptionText>{title}</DescriptionText>
-          </TextAndImageBox>
+          </ImageBox>
+          <DescriptionText>{title}</DescriptionText>
         </SideBySideBox>
       </TextContainer>
       <BottomButtonBox>

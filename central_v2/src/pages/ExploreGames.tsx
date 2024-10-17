@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IGameTemplate, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
+import { ElementType, IGameTemplate, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,7 +11,7 @@ import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
 import RecommendedGames from '../components/explore/games/RecommendedGames';
-import EGMostPopular from '../components/explore/games/EGMostPopular';
+import MostPopular from '../components/explore/MostPopular';
 import SearchBar from '../components/searchbar/SearchBar';
 import SearchResults from '../components/explore/games/SearchResults';
 
@@ -61,7 +61,7 @@ export default function ExploreGames() {
               <ExploreGamesUpperContainer screenSize={screenSize}>
                 <RecommendedGames screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames}/>
               </ExploreGamesUpperContainer>
-              <EGMostPopular screenSize={screenSize} apiClients={apiClients} mostPopularGames={mostPopularGames}/>
+              <MostPopular screenSize={screenSize} mostPopularElements={mostPopularGames} elementType={ElementType.GAME}/>
             </>
           )}
       </InfiniteScroll>
