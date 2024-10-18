@@ -55,11 +55,6 @@ export default function GameCard({
                   <Typography className={classes.title} >
                     {title}
                   </Typography>
-                  { publicPrivateQueryType === PublicPrivateType.PUBLIC &&
-                    <Typography className={classes.owner} >
-                      Created by: {owner}
-                    </Typography>
-                  }
                 </>
                 <Typography className={classes.textSecondary} color="textSecondary" >
                   {description}
