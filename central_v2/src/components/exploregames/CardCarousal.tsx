@@ -46,7 +46,7 @@ export default function GameCardCarousel({ apiClients, recommendedGames }: GameC
                 '744': {
                     slidesPerView: 1.8,
                 },
-                '1500': {
+                '1024': {
                     slidesPerView: 3.5,
 
                 },
