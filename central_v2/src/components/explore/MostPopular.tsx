@@ -45,14 +45,14 @@ function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns }
     {mostPopularElements.length === 0 
       ? Array.from({ length: maxCards }).map((_, index) => {
         return (
-          <Grid item xs={12} md={6} xl={4} key={index}> {/* eslint-disable-line */}
+          <Grid item xs={12} md={6} lg={4} key={index}> {/* eslint-disable-line */}
             <SkeletonGameCard index={index} />
           </Grid>
         );
         })
       : mostPopularElements.map((game) => {
         return (
-          <Grid item xs={12} md={6} xl={4} key={game.id}> {/* eslint-disable-line */}
+          <Grid item xs={12} md={6} lg={4} key={game.id}> {/* eslint-disable-line */}
            <StyledGameCard
               game={game}
               id={game.id}
