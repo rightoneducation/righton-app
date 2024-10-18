@@ -8,6 +8,7 @@ import StyledGameCard from '../cards/GameCard';
 import StyledQuestionCard from '../cards/QuestionCard';
 import placeHolder from '../../images/placeHolder.svg';
 import SkeletonGameCard from '../cards/GameCardSkeleton';
+import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -20,6 +21,18 @@ export default function CardCarousel({ recommendedElements, elementType }: CardC
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);
     const maxSlides = 12;
+    const carouselSlideNumMap = {
+        [ElementType.GAME]: {
+            [theme.breakpoints.values.sm]: 1.2,
+            [theme.breakpoints.values.md]: 1.8,
+            [theme.breakpoints.values.lg]: 3.5,
+        },
+        [ElementType.QUESTION] : {
+            [theme.breakpoints.values.sm]: 2.2,
+            [theme.breakpoints.values.md]: 3.8,
+            [theme.breakpoints.values.lg]: 5.5,
+        }
+    } 
     return (
         <Swiper
             style={{
@@ -43,14 +56,14 @@ export default function CardCarousel({ recommendedElements, elementType }: CardC
             loop
             navigation
             breakpoints={{
-                '375': {
-                    slidesPerView: 1.2,
+                [theme.breakpoints.values.sm]: {
+                    slidesPerView: carouselSlideNumMap[elementType][theme.breakpoints.values.sm],
                 },
-                '744': {
-                    slidesPerView: 1.8,
+                [theme.breakpoints.values.md]: {
+                    slidesPerView: carouselSlideNumMap[elementType][theme.breakpoints.values.md],
                 },
-                '1024': {
-                    slidesPerView: 5.5,
+                [theme.breakpoints.values.lg]: {
+                    slidesPerView: carouselSlideNumMap[elementType][theme.breakpoints.values.lg],
 
                 },
             }}
@@ -86,8 +99,8 @@ export default function CardCarousel({ recommendedElements, elementType }: CardC
                                 image={questionElement.imageUrl || placeHolder}
                             />
                         ) : (
-                            <SkeletonGameCard index={index} />
-                        )}
+                            <SkeletonQuestionCard index={index} />
+                        )}                        
                     </SwiperSlide>
                 );
             })}

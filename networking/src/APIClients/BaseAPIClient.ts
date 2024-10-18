@@ -18,6 +18,11 @@ export enum ElementType {
   QUESTION
 }
 
+export enum GalleryType {
+  MOST_POPULAR,
+  SEARCH_RESULTS
+}
+
 export enum GradeTarget {
   KINDERGARTEN = "K",
   GRADEONE = "1",

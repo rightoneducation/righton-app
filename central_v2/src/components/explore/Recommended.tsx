@@ -16,7 +16,8 @@ interface RecommendedGamesContainerProps {
 }
 
 const RecommendedContainer = styled(Box)<RecommendedGamesContainerProps>(({ theme, screenSize }) => ({
-  height: screenSize === ScreenSize.SMALL ? '368px': '408px', 
+  // height: screenSize === ScreenSize.SMALL ? '368px': '408px', 
+  // height: 'auto',
   gap: `${theme.sizing.smPadding}px`,
   display: 'flex', 
   width: '100%',

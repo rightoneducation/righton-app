@@ -15,6 +15,7 @@ export function MostPopularContainer({ screenSize, children }: MostPopularContai
       sx={{
         flexGrow: 1,
         display: 'flex',
+        height: '100%',
         justifyContent: 'flex-start',
         width: '100%',
         flexDirection: 'column',

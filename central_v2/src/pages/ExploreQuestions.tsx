@@ -4,14 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { ElementType } from '@righton/networking';
+import { ElementType, GalleryType } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
-import MostPopular from '../components/explore/MostPopular';
+import CardGallery from '../components/cardgallery/CardGallery';
 import Recommended from '../components/explore/Recommended';
+import SearchBar from '../components/searchbar/SearchBar';
+import SearchResults from '../components/explore/games/SearchResults';
 
 // interface ExploreGamesProps {
 // }
@@ -43,10 +45,26 @@ export default function ExploreGames() {
   
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
-      <ExploreGamesUpperContainer screenSize={screenSize}>
-        <Recommended screenSize={screenSize} recommendedElements={recommendedQuestions} elementType={ElementType.QUESTION}/>
-      </ExploreGamesUpperContainer>
-      <MostPopular screenSize={screenSize} mostPopularElements={mostPopularQuestions} elementType={ElementType.QUESTION}/>
+      <InfiniteScroll
+        dataLength={mostPopularQuestions.length}
+        next={loadMoreQuestions}
+        hasMore = {nextToken !== null}
+        loader=<h4>loading...</h4>
+        scrollableTarget="scrollableDiv"
+        style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+      >
+        <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
+          {searchTerms.length > 0 || searchedQuestions.length > 0 || selectedGrades.length > 0 ? (
+        <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS}/>
+        ) : (
+          <>
+            <ExploreGamesUpperContainer screenSize={screenSize}>
+              <Recommended screenSize={screenSize} recommendedElements={recommendedQuestions} elementType={ElementType.QUESTION}/>
+            </ExploreGamesUpperContainer>
+            <CardGallery screenSize={screenSize} galleryElements={mostPopularQuestions} elementType={ElementType.QUESTION} galleryType={GalleryType.MOST_POPULAR}/>
+          </>
+        )}
+      </InfiniteScroll>
     </ExploreGamesMainContainer>
   );
 }

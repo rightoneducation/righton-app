@@ -1,31 +1,24 @@
 import React from 'react';
-import { Grid, Typography, Box, styled, useTheme, Grow, Fade, Skeleton } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import { IGameTemplate, IQuestionTemplate, ElementType } from '@righton/networking';
+import { IGameTemplate, IQuestionTemplate, ElementType, GalleryType } from '@righton/networking';
 import StyledGameCard from '../cards/GameCard';
 import StyledQuestionCard from '../cards/QuestionCard';
 import { ScreenSize } from '../../lib/CentralModels';
 import placeHolder from '../../images/placeHolder.svg';
 import SkeletonGameCard from '../cards/GameCardSkeleton';
 import { MostPopularContainer } from '../../lib/styledcomponents/ExploreStyledComponents';
+import GalleryHeaderText from './GalleryHeaderText';
 
-interface MostPopularProps {
+interface CardGalleryProps {
   screenSize: ScreenSize;
-  mostPopularElements: IGameTemplate[] | IQuestionTemplate[];
+  galleryElements: IGameTemplate[] | IQuestionTemplate[];
+  searchTerm?: string;
+  grades?: string[];
+  isLoading?: boolean;
   elementType: ElementType;
+  galleryType: GalleryType;
 }
-
-interface MostPopularTextProps {
-    screenSize: ScreenSize;
-  }
-
-  const MostPopularText = styled(Typography)<MostPopularTextProps>(({ theme, screenSize }) => ({
-    lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
-  fontFamily: 'Poppins',
-  fontWeight: '700',
-  fontSize: screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
-  color: `${theme.palette.primary.extraDarkBlue}`,
-}));
 
 interface MostPopularComponentProps<T> {
   mostPopularElements: { [key: number]: T[] };
@@ -67,28 +60,6 @@ function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns }
   );
 }
 
-
-// {mostPopularElements.length === 0 
-//   ? Array.from({ length: maxCards }).map((_, index) => {
-//     return (
-//       <Grid item xs={12} md={6} xl={4} key={index}> {/* eslint-disable-line */}
-//         <SkeletonGameCard index={index} />
-//       </Grid>
-//     );
-//     })
-//   : mostPopularElements.map((question) => {
-//     return (
-//       <Grid item xs={6} md={4} lg={2} key={question.id}> {/* eslint-disable-line */}
-//        <StyledQuestionCard
-//           question={question}
-//           id={question.id}
-//           title={question.title}
-//           image={question.imageUrl || placeHolder}
-//         />
-//       </Grid>
-//     );
-//   })}
-
 function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColumns}: MostPopularComponentProps<IQuestionTemplate>){
   const array = Array.from({length: numColumns});
   return (
@@ -118,8 +89,7 @@ function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColum
   );
 }
 
-
-export default function MostPopular({ screenSize, mostPopularElements, elementType }: MostPopularProps) {
+export default function CardGallery({ screenSize, galleryElements, elementType, searchTerm, grades, isLoading, galleryType}: CardGalleryProps) {
   const maxCards = 12;
   const getNumColumns = () => {
     switch(screenSize){
@@ -131,7 +101,6 @@ export default function MostPopular({ screenSize, mostPopularElements, elementTy
         return 6;
     }
   }
-
   const reformatElements = <T,>(mostPopularElementsMap: T[]): { [key: number]: T[] } => {
     // adjust column number for array indexing
     const numColumns = getNumColumns() - 1;
@@ -152,14 +121,13 @@ export default function MostPopular({ screenSize, mostPopularElements, elementTy
     }
     return newElements;
   }
+  
   return (
     <MostPopularContainer screenSize={screenSize}>
-      <MostPopularText screenSize={screenSize}>
-        Most Popular
-      </MostPopularText>
+      <GalleryHeaderText searchedElements={galleryElements} searchedTerm={searchTerm} grades={grades} isLoading={isLoading} screenSize={screenSize} galleryType={galleryType}/>
       { elementType === ElementType.GAME 
-        ? <MostPopularGamesComponent mostPopularElements={mostPopularElements as IGameTemplate[]} maxCards={maxCards} numColumns={getNumColumns()}/>
-        : <MostPopularQuestionsComponent mostPopularElements={reformatElements(mostPopularElements as IQuestionTemplate[])} maxCards={maxCards} numColumns={getNumColumns()}/>
+        ? <MostPopularGamesComponent mostPopularElements={galleryElements as IGameTemplate[]} maxCards={maxCards} numColumns={getNumColumns()}/>
+        : <MostPopularQuestionsComponent mostPopularElements={reformatElements(galleryElements as IQuestionTemplate[])} maxCards={maxCards} numColumns={getNumColumns()}/>
       }
     </MostPopularContainer>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { ElementType, IGameTemplate, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
+import { ElementType, GalleryType, IGameTemplate, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,7 +11,7 @@ import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
 import Recommended from '../components/explore/Recommended';
-import MostPopular from '../components/explore/MostPopular';
+import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
 import SearchResults from '../components/explore/games/SearchResults';
 
@@ -42,7 +42,7 @@ export default function ExploreGames() {
     handleSearchChange,
     loadMoreGames
   } = useExploreGamesStateManager();
-  
+  console.log(searchedGames);
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
       <InfiniteScroll
@@ -55,13 +55,13 @@ export default function ExploreGames() {
       >
           <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
             {searchTerms.length > 0 || searchedGames.length > 0 || selectedGrades.length > 0 ? (
-          <SearchResults screenSize={screenSize} apiClients={apiClients} searchTerm={searchTerms} grades={selectedGrades} searchedGames={searchedGames} isLoading={isLoading}/>
+          <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedGames} isLoading={isLoading} elementType={ElementType.GAME} galleryType={GalleryType.SEARCH_RESULTS}/>
           ) : (
             <>
               <ExploreGamesUpperContainer screenSize={screenSize}>
                 <Recommended screenSize={screenSize} recommendedElements={recommendedGames} elementType={ElementType.GAME}/>
               </ExploreGamesUpperContainer>
-              <MostPopular screenSize={screenSize} mostPopularElements={mostPopularGames} elementType={ElementType.GAME}/>
+              <CardGallery screenSize={screenSize} galleryElements={mostPopularGames} elementType={ElementType.GAME} galleryType={GalleryType.MOST_POPULAR}/>
             </>
           )}
       </InfiniteScroll>

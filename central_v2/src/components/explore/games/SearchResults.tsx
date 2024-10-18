@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Typography, Box, CircularProgress, styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { IAPIClients, IGameTemplate } from '@righton/networking';
+import { IGameTemplate, IQuestionTemplate, ElementType } from '@righton/networking';
 import StyledGameCard from '../../cards/GameCard';
 import { ScreenSize } from '../../../lib/CentralModels';
 import placeHolder from '../../../images/placeHolder.svg';
@@ -9,11 +9,11 @@ import placeHolder from '../../../images/placeHolder.svg';
 
 interface SearchResultsProps {
   screenSize: ScreenSize;
-  apiClients: IAPIClients;
-  searchedGames: IGameTemplate[];
+  searchedElements: IGameTemplate[] | IQuestionTemplate[];
   searchTerm: string;
   grades: string[];
   isLoading: boolean;
+  elementType: ElementType;
 }
 
 interface SearchedTextProps {
@@ -89,8 +89,7 @@ function formatGrades(grades: string[]): string {
     return `${grades.slice(0, -1).join(', ')}, and ${grades[grades.length - 1]}`;
   }
 
-  
-export default function SearchResults({ screenSize, apiClients, searchedGames, searchTerm, grades, isLoading }: SearchResultsProps) {
+export default function SearchResults({ screenSize, searchedElements, searchTerm, grades, isLoading, elementType }: SearchResultsProps) {
     const formattedGrades = formatGrades(grades);
     const theme = useTheme();
   return (
@@ -103,9 +102,9 @@ export default function SearchResults({ screenSize, apiClients, searchedGames, s
             ? <CircularProgress style={{color:`${theme.palette.primary.circularProgress}`}}/>
             : 
               <>
-                {searchedGames.length > 0 && (
+                {searchedElements.length > 0 && (
                   <ResultsLengthText screenSize={screenSize}>
-                    {searchedGames.length} results
+                    {searchedElements.length} results
                   </ResultsLengthText>
                 )}
                 {grades.length > 0 && (
@@ -117,26 +116,8 @@ export default function SearchResults({ screenSize, apiClients, searchedGames, s
           }
       </Box> 
       {!isLoading && (        
-        searchedGames.length > 0 ? (
-          <Grid container spacing={2} id="scrollableDiv">
-            {searchedGames.map((game) => (
-              <Grid
-                item
-                xs={12}
-                md={6}
-                xl={4}
-                key={game.id}
-              >
-                <StyledGameCard
-                  game={game}
-                  id={game.id}
-                  title={game.title}
-                  description={game.description}
-                  image={game.imageUrl || placeHolder}
-                />
-              </Grid>
-            ))}
-          </Grid>
+        searchedElements.length > 0 ? (
+          <Grid container spacing={2} id="scrollableDiv"/>
         ) : (
           <Box alignItems='center'>
             <NoResultsText screenSize={screenSize}>
