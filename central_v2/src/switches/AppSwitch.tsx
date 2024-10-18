@@ -5,6 +5,7 @@ import { IGameTemplate, IQuestionTemplate } from '@righton/networking';
 import useInitCentralContainer from '../hooks/useExploreGamesStateManager';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
+import SignUp from '../pages/SignUp';
 
 // interface AppSwitchProps {
 // }
@@ -12,6 +13,7 @@ import ExploreGames from '../pages/ExploreGames';
 function AppSwitch() {
   const questionScreen = useMatch('/questions') !== null;
   const libraryScreen = useMatch('/library') !== null;
+  const signUpScreen = useMatch('/signup') !== null;
   switch (true) {
     case (questionScreen):
       return (
@@ -27,8 +29,13 @@ function AppSwitch() {
         //   <MyLibrary apiClients={apiClients} />
         // </AppContainer>
       );
+    case (signUpScreen):
+      return (
+        <AppContainer>
+          <SignUp />
+        </AppContainer>
+      );
     default: 
-      
       return (
         <AppContainer>
           <ExploreGames />
