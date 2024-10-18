@@ -12,6 +12,17 @@ import { IAuthAPIClient } from "./auth";
 export enum HTTPMethod {
   Post = "POST",
 }
+
+export enum ElementType {
+  GAME,
+  QUESTION
+}
+
+export enum GalleryType {
+  MOST_POPULAR,
+  SEARCH_RESULTS
+}
+
 export enum GradeTarget {
   KINDERGARTEN = "K",
   GRADEONE = "1",
@@ -28,7 +39,11 @@ export enum SortType {
   listGameTemplates,
   listGameTemplatesByDate,
   listGameTemplatesByGrade,
-  listGameTemplatesByQuestionCount
+  listGameTemplatesByQuestionCount,
+  listQuestionTemplates,
+  listQuestionTemplatesByDate,
+  listQuestionTemplatesByGrade,
+  listQuestionTemplatesByGameCount,
 }
 export enum SortDirection {
   ASC = "ASC",
@@ -188,6 +203,7 @@ export abstract class BaseAPIClient {
         queryParameters.sortDirection = sortDirection;
       }
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+      console.log("queryParameters", queryParameters);
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
         const operationResult = result.data[queryName];

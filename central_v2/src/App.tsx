@@ -27,6 +27,7 @@ function App() {
         { apiClients && 
           <>
             <Route path="/" element={<AppSwitch />}/>
+            <Route path="/questions" element={<AppSwitch />}/>
             <Route path="/signup" element={<AppSwitch />}/>
           </>
         }

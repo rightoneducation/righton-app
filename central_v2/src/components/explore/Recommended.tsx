@@ -1,24 +1,23 @@
 import React from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTranslation } from 'react-i18next';
-import { IAPIClients, IGameTemplate } from '@righton/networking';
+import { ElementType, IGameTemplate, IQuestionTemplate } from '@righton/networking';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
-import GameCardCarousal from './CardCarousal';
-import {ScreenSize } from '../../lib/CentralModels';
+import CardCarousal from './CardCarousal';
+import { ScreenSize } from '../../lib/CentralModels';
 import PaginationContainerStyled from '../../lib/PaginationContainerStyled';
 
-interface RecommendedGamesProps {
+interface RecommendedProps {
   screenSize: ScreenSize;
-  apiClients: IAPIClients;
-  recommendedGames: IGameTemplate[];
+  recommendedElements: IGameTemplate[] | IQuestionTemplate[];
+  elementType: ElementType;
 }
 interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
 }
 
-const RecommendedGamesContainer = styled(Box)<RecommendedGamesContainerProps>(({ theme, screenSize }) => ({
-  height: screenSize === ScreenSize.SMALL ? '368px': '408px', 
+const RecommendedContainer = styled(Box)<RecommendedGamesContainerProps>(({ theme, screenSize }) => ({
+  // height: screenSize === ScreenSize.SMALL ? '368px': '408px', 
+  // height: 'auto',
   gap: `${theme.sizing.smPadding}px`,
   display: 'flex', 
   width: '100%',
@@ -35,14 +34,16 @@ const Title = styled(Typography)<{ screenSize: ScreenSize }>(({ screenSize, them
   color: '#FFFFFF',
 }));
 
-export default function RecommendedGames({ screenSize, apiClients, recommendedGames }: RecommendedGamesProps) {
+export default function Recommended({ screenSize, recommendedElements, elementType }: RecommendedProps) {
   const theme = useTheme(); 
 
   return (
-    <RecommendedGamesContainer screenSize={screenSize}>
-      <Title screenSize={screenSize}>Recommended Games</Title>
-      <GameCardCarousal apiClients={apiClients} recommendedGames={recommendedGames}/>
+    <RecommendedContainer screenSize={screenSize}>
+      <Title screenSize={screenSize}>
+        Recommended {elementType === ElementType.GAME ? 'Games' : 'Questions' }
+      </Title>
+      <CardCarousal recommendedElements={recommendedElements} elementType={elementType}/>
       <PaginationContainerStyled className="swiper-pagination-container"/>
-    </RecommendedGamesContainer>
+    </RecommendedContainer>
   );
 }
