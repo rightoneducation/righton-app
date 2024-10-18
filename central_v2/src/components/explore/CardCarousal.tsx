@@ -1,25 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Grow, Fade, Skeleton } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { IAPIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate, IQuestionTemplate, ElementType } from '@righton/networking';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
-import StyledGameCard from '../../cards/GameCard';
-import placeHolder from '../../../images/placeHolder.svg';
-import SkeletonGameCard from '../../cards/GameCardSkeleton';
+import StyledGameCard from '../cards/GameCard';
+import StyledQuestionCard from '../cards/QuestionCard';
+import placeHolder from '../../images/placeHolder.svg';
+import SkeletonGameCard from '../cards/GameCardSkeleton';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-interface GameCardCarouselProps {
-    apiClients: IAPIClients;
-    recommendedGames: IGameTemplate[];
+interface CardCarouselProps {
+    elementType: ElementType.GAME | ElementType.QUESTION;
+    recommendedGames?: IGameTemplate[];
+    recommendedQuestions?: IQuestionTemplate[];
 }
 
-export default function GameCardCarousel({ apiClients, recommendedGames }: GameCardCarouselProps) {
+export default function CardCarousel({ recommendedGames, recommendedQuestions, elementType }: CardCarouselProps) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);
     const maxSlides = 12;
+    const isGameCarousel = elementType === ElementType.GAME;
     return (
         <Swiper
             style={{ width: '100%' }}
@@ -53,17 +56,26 @@ export default function GameCardCarousel({ apiClients, recommendedGames }: GameC
             }}
         >
             {Array.from({ length: maxSlides }).map((_, index) => {
-                const game = recommendedGames[index];
+                const element = recommendedElements[index];
                 return (
                     <SwiperSlide key={index}> {/* eslint-disable-line */}
-                        {game ? (
-                            <StyledGameCard
-                                game={game}
-                                id={game.id}
-                                title={game.title}
-                                description={game.description}
-                                image={game.imageUrl || placeHolder}
-                            />
+                        {element ? (
+                            elementType === ElementType.GAME ? (
+                                <StyledGameCard
+                                    game={element}
+                                    id={element.id}
+                                    title={element.title}
+                                    description={element.description}
+                                    image={element.image || placeHolder}
+                                />
+                            ) : (
+                                <StyledQuestionCard
+                                    question={element}
+                                    id={element.id}
+                                    title={element.title}
+                                    image={element.image || placeHolder}
+                                />
+                            )
                         ) : (
                             <SkeletonGameCard index={index} />
                         )}
