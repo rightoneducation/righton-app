@@ -7,6 +7,7 @@ import StyledQuestionCard from '../cards/QuestionCard';
 import { ScreenSize } from '../../lib/CentralModels';
 import placeHolder from '../../images/placeHolder.svg';
 import SkeletonGameCard from '../cards/GameCardSkeleton';
+import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import { MostPopularContainer } from '../../lib/styledcomponents/ExploreStyledComponents';
 import GalleryHeaderText from './GalleryHeaderText';
 
@@ -62,11 +63,20 @@ function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns }
 
 function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColumns}: MostPopularComponentProps<IQuestionTemplate>){
   const array = Array.from({length: numColumns});
+  const elementsLength = Object.values(mostPopularElements).reduce((acc, column) => acc + column.length, 0);
   return (
     <Grid container spacing={2} id="scrollableDiv" >
-      {mostPopularElements && Array.from({ length: numColumns }).map((_, index) => {
+      {elementsLength === 0 
+      ? Array.from({ length: maxCards }).map((_, index) => {
         return (
-          <Grid item xs={12} md={4} lg={2} key={uuidv4()}> 
+          <Grid item xs={12} md={4} lg={2} key={index}> {/* eslint-disable-line */}
+            <SkeletonQuestionCard index={index} />
+          </Grid>
+        );
+        })
+      : Array.from({ length: numColumns }).map((_, index) => {
+        return (
+          <Grid item xs={12} md={4} lg={2.4} key={uuidv4()}> 
             <Box style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
               {
                 mostPopularElements[index] && mostPopularElements[index].length > 0 && mostPopularElements[index].map((question) => {

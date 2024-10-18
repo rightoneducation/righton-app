@@ -14,10 +14,8 @@ import CardGallery from '../components/cardgallery/CardGallery';
 import Recommended from '../components/explore/Recommended';
 import SearchBar from '../components/searchbar/SearchBar';
 
-// interface ExploreGamesProps {
-// }
 
-export default function ExploreGames() {
+export default function ExploreQuestions() {
   const theme = useTheme();
   const { t } = useTranslation();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -44,28 +42,26 @@ export default function ExploreGames() {
   
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
-      <InfiniteScroll
-        dataLength={mostPopularQuestions.length}
-        next={loadMoreQuestions}
-        hasMore = {nextToken !== null}
-        loader=<h4>loading...</h4>
-        scrollableTarget="scrollableDiv"
-        style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
-      >
         <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
-          {searchTerms.length > 0 || searchedQuestions.length > 0 || selectedGrades.length > 0 ? (
-          <Box style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
-        <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS}/>
-        </Box>
+          {searchTerms.length > 0 || searchedQuestions.length > 0 || selectedGrades.length > 0 ? (          
+          <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS}/>
         ) : (
           <>
             <ExploreGamesUpperContainer screenSize={screenSize}>
               <Recommended screenSize={screenSize} recommendedElements={recommendedQuestions} elementType={ElementType.QUESTION}/>
             </ExploreGamesUpperContainer>
-            <CardGallery screenSize={screenSize} galleryElements={mostPopularQuestions} elementType={ElementType.QUESTION} galleryType={GalleryType.MOST_POPULAR}/>
+            <InfiniteScroll
+              dataLength={mostPopularQuestions.length}
+              next={loadMoreQuestions}
+              hasMore = {nextToken !== null}
+              loader=<h4>loading...</h4>
+              scrollableTarget="scrollableDiv"
+              style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+            >
+              <CardGallery screenSize={screenSize} galleryElements={mostPopularQuestions} elementType={ElementType.QUESTION} galleryType={GalleryType.MOST_POPULAR}/>
+            </InfiniteScroll>
           </>
         )}
-      </InfiniteScroll>
     </ExploreGamesMainContainer>
   );
 }

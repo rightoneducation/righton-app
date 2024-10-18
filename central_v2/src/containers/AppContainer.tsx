@@ -34,10 +34,9 @@ function AppContainer({
   const theme = useTheme();
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const isXLScreen = useMediaQuery(theme.breakpoints.up('xl'));
+  const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [menuOpen, setMenuOpen] = useState(false);
-  const screenSize = isLargeScreen  // eslint-disable-line
+  const screenSize = isLgScreen  // eslint-disable-line
   ? ScreenSize.LARGE 
   : isMediumScreen 
     ? ScreenSize.MEDIUM 
@@ -45,7 +44,7 @@ function AppContainer({
   return (
     <ScreenContainer>
       <HeaderContainer>
-        <Header screenSize={screenSize} isXLScreen={isXLScreen} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
+        <Header screenSize={screenSize} isLgScreen={isLgScreen} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
       </HeaderContainer>
       <BodyContainer screenSize={screenSize}>
         {children}

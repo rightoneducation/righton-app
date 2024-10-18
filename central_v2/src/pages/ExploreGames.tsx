@@ -42,31 +42,28 @@ export default function ExploreGames() {
     handleSearchChange,
     loadMoreGames
   } = useExploreGamesStateManager();
-  console.log(searchedGames);
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
-      <InfiniteScroll
-        dataLength={mostPopularGames.length}
-        next={loadMoreGames}
-        hasMore = {nextToken !== null}
-        loader=<h4>loading...</h4>
-        scrollableTarget="scrollableDiv"
-        style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
-      >
-          <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
-            {searchTerms.length > 0 || searchedGames.length > 0 || selectedGrades.length > 0 ? (
-            <Box style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+      <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
+        {searchTerms.length > 0 || searchedGames.length > 0 || selectedGrades.length > 0 ? (
             <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedGames} isLoading={isLoading} elementType={ElementType.GAME} galleryType={GalleryType.SEARCH_RESULTS}/>
-            </Box>
-          ) : (
-            <>
-              <ExploreGamesUpperContainer screenSize={screenSize}>
-                <Recommended screenSize={screenSize} recommendedElements={recommendedGames} elementType={ElementType.GAME}/>
-              </ExploreGamesUpperContainer>
-              <CardGallery screenSize={screenSize} galleryElements={mostPopularGames} elementType={ElementType.GAME} galleryType={GalleryType.MOST_POPULAR}/>
-            </>
-          )}
-      </InfiniteScroll>
+      ) : (
+        <>
+          <ExploreGamesUpperContainer screenSize={screenSize}>
+            <Recommended screenSize={screenSize} recommendedElements={recommendedGames} elementType={ElementType.GAME}/>
+          </ExploreGamesUpperContainer>
+          <InfiniteScroll
+            dataLength={mostPopularGames.length}
+            next={loadMoreGames}
+            hasMore = {nextToken !== null}
+            loader=<h4>loading...</h4>
+            scrollableTarget="scrollableDiv"
+            style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+          >
+            <CardGallery screenSize={screenSize} galleryElements={mostPopularGames} elementType={ElementType.GAME} galleryType={GalleryType.MOST_POPULAR}/>
+          </InfiniteScroll>
+        </>
+      )}
     </ExploreGamesMainContainer>
   );
 }

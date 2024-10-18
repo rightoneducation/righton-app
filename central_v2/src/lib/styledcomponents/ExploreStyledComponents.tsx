@@ -24,7 +24,14 @@ export function MostPopularContainer({ screenSize, children }: MostPopularContai
         boxSizing: 'border-box',
         gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.mdPadding}px`,
         flexGrow: 1,
-      }}
+        overflow: 'auto',
+        '&::-webkit-scrollbar': {
+          // Chrome and Safari
+          display: 'none',
+        },
+        scrollbarWidth: 'none', // Firefox
+        '-ms-overflow-style': 'none',
+            }}
     >
       {children}
     </Box>

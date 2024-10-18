@@ -15,7 +15,7 @@ import { SelectedCentralPages } from '../lib/ScreenEnums';
 
 interface HeaderProps {
   screenSize: ScreenSize;
-  isXLScreen: boolean;
+  isLgScreen: boolean;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
 }
@@ -96,7 +96,7 @@ const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
   height: '100%',
 }));
 
-export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }: HeaderProps) {
+export default function Header({ screenSize, isLgScreen, menuOpen, setMenuOpen }: HeaderProps) {
   const navigate = useNavigate();
   const [selectedScreen, setSelectedScreen] = useState<SelectedCentralPages>(SelectedCentralPages.ExploreGamesScreen);
 
@@ -143,11 +143,11 @@ export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }
       }}
     >
       <HeaderContainer screenSize={screenSize} menuOpen={menuOpen}>
-        <ImageContainer align="flex-start" style={{ width: isXLScreen ? '210px' : 'auto', alignItems: 'flex-start' }}>
+        <ImageContainer align="flex-start" style={{ width: isLgScreen ? '210px' : 'auto', alignItems: 'flex-start' }}>
           <img src={rightonlogo} alt="Right On Logo" />
         </ImageContainer>
         <ImageContainer align="center" style={{ flexDirection: 'column' }}>
-          {isXLScreen ? (
+          {isLgScreen ? (
             <Box display="flex" gap="80px">
               <TransparentButton
                 onClick={() => handleButtonClick(SelectedCentralPages.ExploreGamesScreen)}
@@ -177,8 +177,8 @@ export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }
             </IconButton>
           )}
         </ImageContainer>
-        <ImageContainer align="flex-end" style={{ width: isXLScreen ? 'auto' : '120px', alignItems: 'flex-start' }}>
-          {isXLScreen ? (
+        <ImageContainer align="flex-end" style={{ width: isLgScreen ? 'auto' : '120px', alignItems: 'flex-start' }}>
+          {isLgScreen ? (
             <>
               <PrimaryButton2 style={{ marginTop: '12px' }}>
                 <img src={plus} alt="Plus Icon" />
