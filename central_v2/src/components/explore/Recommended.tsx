@@ -1,6 +1,4 @@
 import React from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTranslation } from 'react-i18next';
 import { ElementType, IGameTemplate, IQuestionTemplate } from '@righton/networking';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';

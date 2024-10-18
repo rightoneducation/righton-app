@@ -11,7 +11,7 @@ import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
 import MostPopular from '../components/explore/MostPopular';
-import RecommendedQuestions from '../components/explore/Recommended';
+import Recommended from '../components/explore/Recommended';
 
 // interface ExploreGamesProps {
 // }
@@ -44,7 +44,7 @@ export default function ExploreGames() {
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
       <ExploreGamesUpperContainer screenSize={screenSize}>
-        <RecommendedQuestions screenSize={screenSize} recommendedQuestions={recommendedQuestions}/>
+        <Recommended screenSize={screenSize} recommendedElements={recommendedQuestions} elementType={ElementType.QUESTION}/>
       </ExploreGamesUpperContainer>
       <MostPopular screenSize={screenSize} mostPopularElements={mostPopularQuestions} elementType={ElementType.QUESTION}/>
     </ExploreGamesMainContainer>

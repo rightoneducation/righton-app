@@ -10,7 +10,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
-import RecommendedGames from '../components/explore/games/RecommendedGames';
+import Recommended from '../components/explore/Recommended';
 import MostPopular from '../components/explore/MostPopular';
 import SearchBar from '../components/searchbar/SearchBar';
 import SearchResults from '../components/explore/games/SearchResults';
@@ -59,7 +59,7 @@ export default function ExploreGames() {
           ) : (
             <>
               <ExploreGamesUpperContainer screenSize={screenSize}>
-                <RecommendedGames screenSize={screenSize} apiClients={apiClients} recommendedGames={recommendedGames}/>
+                <Recommended screenSize={screenSize} recommendedElements={recommendedGames} elementType={ElementType.GAME}/>
               </ExploreGamesUpperContainer>
               <MostPopular screenSize={screenSize} mostPopularElements={mostPopularGames} elementType={ElementType.GAME}/>
             </>

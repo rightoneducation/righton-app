@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, Grow, Fade, Skeleton } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
-import { IAPIClients, IGameTemplate, IQuestionTemplate, ElementType } from '@righton/networking';
+import React, { useRef } from 'react';
+import { useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
+import { IGameTemplate, IQuestionTemplate, ElementType } from '@righton/networking';
 import StyledGameCard from '../cards/GameCard';
 import StyledQuestionCard from '../cards/QuestionCard';
 import placeHolder from '../../images/placeHolder.svg';
@@ -14,18 +13,19 @@ import 'swiper/css/pagination';
 
 interface CardCarouselProps {
     elementType: ElementType.GAME | ElementType.QUESTION;
-    recommendedGames?: IGameTemplate[];
-    recommendedQuestions?: IQuestionTemplate[];
+    recommendedElements: IGameTemplate[] | IQuestionTemplate[];
 }
 
-export default function CardCarousel({ recommendedGames, recommendedQuestions, elementType }: CardCarouselProps) {
+export default function CardCarousel({ recommendedElements, elementType }: CardCarouselProps) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);
     const maxSlides = 12;
-    const isGameCarousel = elementType === ElementType.GAME;
     return (
         <Swiper
-            style={{ width: '100%' }}
+            style={{
+                width: '100%',
+                height: elementType === ElementType.GAME ? '260px' : '385px',
+            }}
             modules={[Pagination]}
             pagination={{
                 el: '.swiper-pagination-container',
@@ -49,39 +49,48 @@ export default function CardCarousel({ recommendedGames, recommendedQuestions, e
                 '744': {
                     slidesPerView: 1.8,
                 },
-                '1500': {
-                    slidesPerView: 3.5,
+                '1024': {
+                    slidesPerView: 5.5,
 
                 },
             }}
         >
-            {Array.from({ length: maxSlides }).map((_, index) => {
-                const element = recommendedElements[index];
-                return (
-                    <SwiperSlide key={index}> {/* eslint-disable-line */}
-                        {element ? (
-                            elementType === ElementType.GAME ? (
+           {Array.from({ length: maxSlides }).map((_, index) => {
+                const element = recommendedElements[index] as IGameTemplate | IQuestionTemplate;
+                if (elementType === ElementType.GAME) {
+                    const gameElement = element as IGameTemplate;
+                    return (
+                        <SwiperSlide key={uuidv4()}>
+                            {gameElement ? (
                                 <StyledGameCard
-                                    game={element}
-                                    id={element.id}
-                                    title={element.title}
-                                    description={element.description}
-                                    image={element.image || placeHolder}
+                                    game={gameElement}
+                                    id={gameElement.id}
+                                    title={gameElement.title}
+                                    description={gameElement.description}
+                                    image={gameElement.imageUrl || placeHolder}
                                 />
                             ) : (
-                                <StyledQuestionCard
-                                    question={element}
-                                    id={element.id}
-                                    title={element.title}
-                                    image={element.image || placeHolder}
-                                />
-                            )
+                                <SkeletonGameCard index={index} />
+                            )}
+                        </SwiperSlide>
+                    );
+                }
+                const questionElement = element as IQuestionTemplate;
+                return (
+                    <SwiperSlide key={uuidv4()}>
+                        {questionElement ? (
+                            <StyledQuestionCard
+                                question={questionElement}
+                                id={questionElement.id}
+                                title={questionElement.title}
+                                image={questionElement.imageUrl || placeHolder}
+                            />
                         ) : (
                             <SkeletonGameCard index={index} />
                         )}
                     </SwiperSlide>
                 );
-            })} 
+            })}
         </Swiper>
     );
 }
