@@ -25,15 +25,14 @@ interface HeaderContainerProps {
   menuOpen: boolean;
 }
 const HeaderContainer = styled(Box)<HeaderContainerProps>(({ screenSize, menuOpen, theme }) => ({
-  height: screenSize === ScreenSize.SMALL ? '77px' : '94px',
+  height: '94px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
   padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
   boxSizing: 'border-box',
-  position: 'sticky',
-  top: 0,
+
 }));
 
 const TransparentButton = styled(Button)<{ active?: boolean; menuOpen?: boolean }>(({ active, menuOpen, theme }) => ({
@@ -123,8 +122,6 @@ export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }
   const getHeight = () => {
     if (menuOpen)
       return '418px';
-    if (screenSize === ScreenSize.SMALL)
-      return '77px';
     return '94px';
   }
   return (
@@ -142,6 +139,7 @@ export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }
         padding: '0px 0px 16px 0px',
         display: 'flex',
         justifyContent: 'center', // Center the entire menu box horizontally
+        boxSizing: 'border-box',
       }}
     >
       <HeaderContainer screenSize={screenSize} menuOpen={menuOpen}>
