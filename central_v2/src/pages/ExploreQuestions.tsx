@@ -13,7 +13,6 @@ import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateMa
 import CardGallery from '../components/cardgallery/CardGallery';
 import Recommended from '../components/explore/Recommended';
 import SearchBar from '../components/searchbar/SearchBar';
-import SearchResults from '../components/explore/games/SearchResults';
 
 // interface ExploreGamesProps {
 // }
@@ -55,7 +54,9 @@ export default function ExploreGames() {
       >
         <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
           {searchTerms.length > 0 || searchedQuestions.length > 0 || selectedGrades.length > 0 ? (
+          <Box style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
         <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS}/>
+        </Box>
         ) : (
           <>
             <ExploreGamesUpperContainer screenSize={screenSize}>

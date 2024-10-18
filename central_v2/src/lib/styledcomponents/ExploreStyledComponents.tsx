@@ -13,7 +13,6 @@ export function MostPopularContainer({ screenSize, children }: MostPopularContai
   return (
     <Box
       sx={{
-        flexGrow: 1,
         display: 'flex',
         height: '100%',
         justifyContent: 'flex-start',
@@ -24,6 +23,7 @@ export function MostPopularContainer({ screenSize, children }: MostPopularContai
         padding: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px` : `${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px`,
         boxSizing: 'border-box',
         gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.mdPadding}px`,
+        flexGrow: 1,
       }}
     >
       {children}

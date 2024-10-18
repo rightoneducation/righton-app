@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ElementType, GalleryType, IGameTemplate, GradeTarget, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import debounce from 'lodash/debounce'
@@ -13,7 +14,6 @@ import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
 import Recommended from '../components/explore/Recommended';
 import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
-import SearchResults from '../components/explore/games/SearchResults';
 
 // interface ExploreGamesProps {
 // }
@@ -55,7 +55,9 @@ export default function ExploreGames() {
       >
           <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
             {searchTerms.length > 0 || searchedGames.length > 0 || selectedGrades.length > 0 ? (
-          <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedGames} isLoading={isLoading} elementType={ElementType.GAME} galleryType={GalleryType.SEARCH_RESULTS}/>
+            <Box style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+            <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedGames} isLoading={isLoading} elementType={ElementType.GAME} galleryType={GalleryType.SEARCH_RESULTS}/>
+            </Box>
           ) : (
             <>
               <ExploreGamesUpperContainer screenSize={screenSize}>
