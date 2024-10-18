@@ -5,21 +5,23 @@ import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
 import { ScreenSize } from '../lib/CentralModels';
 import Header from '../components/Header';
+import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
 
 const ScreenContainer = styled(Box)(({ theme }) => ({
   width: '100%', 
-  height: '100vh', 
-  backgroundColor: `${theme.palette.primary.extraDarkBlue}`
+  height: '100dvh', 
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 interface BodyContainerProps {
   screenSize: ScreenSize;
 }
 
-const BodyContainer = styled(Box)<BodyContainerProps>(({ screenSize }) => ({
-  paddingTop: screenSize === ScreenSize.SMALL ? '77px' : '94px', 
-  boxSizing: 'border-box', 
-  height: '100%'
+const BodyContainer = styled(Box)<BodyContainerProps>(({ theme, screenSize }) => ({
+  width: '100%',
+  flexGrow: 1,
+  overflowY: 'auto',
 }));
 
 interface AppContainerProps {
@@ -42,7 +44,9 @@ function AppContainer({
     : ScreenSize.SMALL;
   return (
     <ScreenContainer>
-      <Header screenSize={screenSize} isXLScreen={isXLScreen} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
+      <HeaderContainer>
+        <Header screenSize={screenSize} isXLScreen={isXLScreen} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
+      </HeaderContainer>
       <BodyContainer screenSize={screenSize}>
         {children}
       </BodyContainer>

@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
+import SignUp from '../pages/SignUp';
 
 // interface AppSwitchProps {
 // }
@@ -11,6 +12,7 @@ import ExploreQuestions from '../pages/ExploreQuestions';
 function AppSwitch() {
   const questionScreen = useMatch('/questions') !== null;
   const libraryScreen = useMatch('/library') !== null;
+  const signUpScreen = useMatch('/signup') !== null;
   switch (true) {
     case (questionScreen):
       return (
@@ -24,6 +26,12 @@ function AppSwitch() {
         // <AppContainer>
         //   <MyLibrary apiClients={apiClients} />
         // </AppContainer>
+      );
+    case (signUpScreen):
+      return (
+        <AppContainer>
+          <SignUp />
+        </AppContainer>
       );
     default: 
       return (
