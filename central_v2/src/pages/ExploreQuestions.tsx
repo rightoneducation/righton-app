@@ -11,7 +11,7 @@ import { ScreenSize } from '../lib/CentralModels';
 import { ExploreGamesMainContainer, ExploreGamesUpperContainer } from '../lib/styledcomponents/ExploreGamesStyledComponents';
 import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
 import MostPopular from '../components/explore/MostPopular';
-import RecommendedQuestions from '../components/explore/RecommendedQuestions';
+import RecommendedQuestions from '../components/explore/Recommended';
 
 // interface ExploreGamesProps {
 // }
