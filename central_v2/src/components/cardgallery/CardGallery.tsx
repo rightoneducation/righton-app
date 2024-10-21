@@ -19,21 +19,24 @@ interface CardGalleryProps {
   isLoading?: boolean;
   elementType: ElementType;
   galleryType: GalleryType;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 interface MostPopularComponentProps<T> {
   mostPopularElements: { [key: number]: T[] };
   maxCards: number;
   numColumns: number;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 interface MostPopularGamesComponentProps {
   mostPopularElements: IGameTemplate[];
   maxCards: number;
   numColumns: number;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 
-function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns }: MostPopularGamesComponentProps){
+function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns, setIsTabsOpen }: MostPopularGamesComponentProps){
   return (
     <Grid container spacing={2} id="scrollableDiv" >
     {mostPopularElements.length === 0 
@@ -61,7 +64,7 @@ function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns }
   );
 }
 
-function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColumns}: MostPopularComponentProps<IQuestionTemplate>){
+function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColumns, setIsTabsOpen}: MostPopularComponentProps<IQuestionTemplate>){
   const array = Array.from({length: numColumns});
   const elementsLength = Object.values(mostPopularElements).reduce((acc, column) => acc + column.length, 0);
   return (
@@ -86,6 +89,7 @@ function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColum
                       id={question.id}
                       title={question.title}
                       image={question.imageUrl || placeHolder}
+                      setIsTabsOpen={setIsTabsOpen}
                     />
                   )
                 })
@@ -99,7 +103,7 @@ function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColum
   );
 }
 
-export default function CardGallery({ screenSize, galleryElements, elementType, searchTerm, grades, isLoading, galleryType}: CardGalleryProps) {
+export default function CardGallery({ screenSize, galleryElements, elementType, searchTerm, grades, isLoading, galleryType, setIsTabsOpen}: CardGalleryProps) {
   const maxCards = 12;
   const getNumColumns = () => {
     switch(screenSize){
@@ -136,8 +140,8 @@ export default function CardGallery({ screenSize, galleryElements, elementType, 
     <MostPopularContainer screenSize={screenSize}>
       <GalleryHeaderText searchedElements={galleryElements} searchedTerm={searchTerm} grades={grades} isLoading={isLoading} screenSize={screenSize} galleryType={galleryType}/>
       { elementType === ElementType.GAME 
-        ? <MostPopularGamesComponent mostPopularElements={galleryElements as IGameTemplate[]} maxCards={maxCards} numColumns={getNumColumns()}/>
-        : <MostPopularQuestionsComponent mostPopularElements={reformatElements(galleryElements as IQuestionTemplate[])} maxCards={maxCards} numColumns={getNumColumns()}/>
+        ? <MostPopularGamesComponent mostPopularElements={galleryElements as IGameTemplate[]} maxCards={maxCards} numColumns={getNumColumns()} setIsTabsOpen={setIsTabsOpen}/>
+        : <MostPopularQuestionsComponent mostPopularElements={reformatElements(galleryElements as IQuestionTemplate[])} maxCards={maxCards} numColumns={getNumColumns()} setIsTabsOpen={setIsTabsOpen}/>
       }
     </MostPopularContainer>
   );

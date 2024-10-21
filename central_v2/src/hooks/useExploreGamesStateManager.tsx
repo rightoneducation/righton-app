@@ -12,6 +12,8 @@ interface UseExploreGamesStateManagerProps {
   isLoading: boolean;
   searchTerms: string;
   selectedGrades: GradeTarget[];
+  isTabsOpen: boolean;
+  setIsTabsOpen: (isOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: { field: SortType; direction: SortDirection | null }) => void;
   handleSearchChange: (searchString: string) => void;
@@ -33,6 +35,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     field: SortType.listGameTemplatesByDate,
     direction: SortDirection.DESC,
   });
+  const [isTabsOpen, setIsTabsOpen] = useState(false);
   
   const initGames = async () => {
     setIsLoading(true);
@@ -108,5 +111,5 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
       console.log('Error:', error);
     }
   }, []); // eslint-disable-line
-  return { recommendedGames, mostPopularGames, searchedGames, nextToken, isLoading, searchTerms, selectedGrades, handleChooseGrades, handleSortChange, handleSearchChange, loadMoreGames };
+  return { recommendedGames, mostPopularGames, searchedGames, nextToken, isLoading, searchTerms, selectedGrades, isTabsOpen, setIsTabsOpen, handleChooseGrades, handleSortChange, handleSearchChange, loadMoreGames };
 }

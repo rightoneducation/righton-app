@@ -13,6 +13,7 @@ import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateMa
 import CardGallery from '../components/cardgallery/CardGallery';
 import Recommended from '../components/explore/Recommended';
 import SearchBar from '../components/searchbar/SearchBar';
+import QuestionTabs from '../components/questiontabs/QuestionTabs';
 
 
 export default function ExploreQuestions() {
@@ -34,6 +35,8 @@ export default function ExploreQuestions() {
     isLoading,
     searchTerms,
     selectedGrades,
+    isTabsOpen,
+    setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
@@ -42,13 +45,14 @@ export default function ExploreQuestions() {
   
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
+      {isTabsOpen && <QuestionTabs isTabsOpen={isTabsOpen}/>}
         <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
           {searchTerms.length > 0 || searchedQuestions.length > 0 || selectedGrades.length > 0 ? (          
-          <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS}/>
+          <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS} setIsTabsOpen={setIsTabsOpen}/>
         ) : (
           <>
             <ExploreGamesUpperContainer screenSize={screenSize}>
-              <Recommended screenSize={screenSize} recommendedElements={recommendedQuestions} elementType={ElementType.QUESTION}/>
+              <Recommended screenSize={screenSize} recommendedElements={recommendedQuestions} elementType={ElementType.QUESTION} setIsTabsOpen={setIsTabsOpen}/>
             </ExploreGamesUpperContainer>
             <InfiniteScroll
               dataLength={mostPopularQuestions.length}
@@ -58,7 +62,7 @@ export default function ExploreQuestions() {
               scrollableTarget="scrollableDiv"
               style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
             >
-              <CardGallery screenSize={screenSize} galleryElements={mostPopularQuestions} elementType={ElementType.QUESTION} galleryType={GalleryType.MOST_POPULAR}/>
+              <CardGallery screenSize={screenSize} galleryElements={mostPopularQuestions} elementType={ElementType.QUESTION} galleryType={GalleryType.MOST_POPULAR} setIsTabsOpen={setIsTabsOpen}/>
             </InfiniteScroll>
           </>
         )}

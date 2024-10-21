@@ -12,6 +12,8 @@ interface UseExploreQuestionsStateManagerProps {
   isLoading: boolean;
   searchTerms: string;
   selectedGrades: GradeTarget[];
+  isTabsOpen: boolean;
+  setIsTabsOpen: (isOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: { field: SortType; direction: SortDirection | null }) => void;
   handleSearchChange: (searchString: string) => void;
@@ -33,6 +35,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     field: SortType.listQuestionTemplatesByDate,
     direction: SortDirection.DESC,
   });
+  const [isTabsOpen, setIsTabsOpen] = useState(false);
   
   const initQuestions = async () => {
     setIsLoading(true);
@@ -108,5 +111,5 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
       console.log('Error:', error);
     }
   }, []); // eslint-disable-line
-  return { recommendedQuestions, mostPopularQuestions, searchedQuestions, nextToken, isLoading, searchTerms, selectedGrades, handleChooseGrades, handleSortChange, handleSearchChange, loadMoreQuestions };
+  return { recommendedQuestions, mostPopularQuestions, searchedQuestions, nextToken, isLoading, searchTerms, selectedGrades, isTabsOpen, setIsTabsOpen, handleChooseGrades, handleSortChange, handleSearchChange, loadMoreQuestions };
 }

@@ -11,6 +11,7 @@ interface StyledQuestionCardProps {
   title: string;
   image: string;
   question: IQuestionTemplate;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 const GymSVG = styled('img')({
@@ -171,7 +172,7 @@ const SecondaryButton = styled(Button)(({theme}) => ({
   minWidth: '20px',
 }));
 
-export default function StyledGameCard({ id, title, image, question }: StyledQuestionCardProps) {
+export default function StyledGameCard({ id, title, image, question, setIsTabsOpen }: StyledQuestionCardProps) {
   const domainAndGrade =`${question.grade}.${question.domain}`;
 
   return (
@@ -191,7 +192,7 @@ export default function StyledGameCard({ id, title, image, question }: StyledQue
         </SideBySideBox>
       </TextContainer>
       <BottomButtonBox>
-        <PrimaryButton1>
+        <PrimaryButton1 onClick={() => setIsTabsOpen(true)}>
           <ViewSVG src={eyeball} alt="View" />
           View
         </PrimaryButton1>

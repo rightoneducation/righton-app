@@ -15,9 +15,10 @@ import 'swiper/css/pagination';
 interface CardCarouselProps {
     elementType: ElementType.GAME | ElementType.QUESTION;
     recommendedElements: IGameTemplate[] | IQuestionTemplate[];
+    setIsTabsOpen: (isOpen: boolean) => void;
 }
 
-export default function CardCarousel({ recommendedElements, elementType }: CardCarouselProps) {
+export default function CardCarousel({ recommendedElements, elementType, setIsTabsOpen }: CardCarouselProps) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);
     const maxSlides = 12;
@@ -97,6 +98,7 @@ export default function CardCarousel({ recommendedElements, elementType }: CardC
                                 id={questionElement.id}
                                 title={questionElement.title}
                                 image={questionElement.imageUrl || placeHolder}
+                                setIsTabsOpen={setIsTabsOpen}
                             />
                         ) : (
                             <SkeletonQuestionCard index={index} />

@@ -37,6 +37,8 @@ export default function ExploreGames() {
     isLoading,
     searchTerms,
     selectedGrades,
+    isTabsOpen,
+    setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
@@ -46,11 +48,11 @@ export default function ExploreGames() {
     <ExploreGamesMainContainer id = "scrollableDiv">
       <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
         {searchTerms.length > 0 || searchedGames.length > 0 || selectedGrades.length > 0 ? (
-            <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedGames} isLoading={isLoading} elementType={ElementType.GAME} galleryType={GalleryType.SEARCH_RESULTS}/>
+            <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedGames} isLoading={isLoading} elementType={ElementType.GAME} galleryType={GalleryType.SEARCH_RESULTS} setIsTabsOpen={setIsTabsOpen}/>
       ) : (
         <>
           <ExploreGamesUpperContainer screenSize={screenSize}>
-            <Recommended screenSize={screenSize} recommendedElements={recommendedGames} elementType={ElementType.GAME}/>
+            <Recommended screenSize={screenSize} recommendedElements={recommendedGames} elementType={ElementType.GAME} setIsTabsOpen={setIsTabsOpen}/>
           </ExploreGamesUpperContainer>
           <InfiniteScroll
             dataLength={mostPopularGames.length}
@@ -60,7 +62,7 @@ export default function ExploreGames() {
             scrollableTarget="scrollableDiv"
             style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
           >
-            <CardGallery screenSize={screenSize} galleryElements={mostPopularGames} elementType={ElementType.GAME} galleryType={GalleryType.MOST_POPULAR}/>
+            <CardGallery screenSize={screenSize} galleryElements={mostPopularGames} elementType={ElementType.GAME} galleryType={GalleryType.MOST_POPULAR} setIsTabsOpen={setIsTabsOpen}/>
           </InfiniteScroll>
         </>
       )}

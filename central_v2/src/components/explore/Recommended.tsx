@@ -10,6 +10,7 @@ interface RecommendedProps {
   screenSize: ScreenSize;
   recommendedElements: IGameTemplate[] | IQuestionTemplate[];
   elementType: ElementType;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
@@ -34,7 +35,7 @@ const Title = styled(Typography)<{ screenSize: ScreenSize }>(({ screenSize, them
   color: '#FFFFFF',
 }));
 
-export default function Recommended({ screenSize, recommendedElements, elementType }: RecommendedProps) {
+export default function Recommended({ screenSize, recommendedElements, elementType, setIsTabsOpen }: RecommendedProps) {
   const theme = useTheme(); 
 
   return (
@@ -42,7 +43,7 @@ export default function Recommended({ screenSize, recommendedElements, elementTy
       <Title screenSize={screenSize}>
         Recommended {elementType === ElementType.GAME ? 'Games' : 'Questions' }
       </Title>
-      <CardCarousal recommendedElements={recommendedElements} elementType={elementType}/>
+      <CardCarousal recommendedElements={recommendedElements} elementType={elementType} setIsTabsOpen={setIsTabsOpen}/>
       <PaginationContainerStyled className="swiper-pagination-container"/>
     </RecommendedContainer>
   );
