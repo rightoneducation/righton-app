@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@mui/material';
 import { ButtonType, ButtonColor, buttonContentMap } from './ButtonModels';
 import { ButtonStyled, ButtonContent, ButtonIconContainer, ButtonTypography } from '../../lib/styledcomponents/ButtonStyledComponents';
 
@@ -12,10 +13,10 @@ export default function CentralButton ({
   isEnabled
 }: CentralButtonProps) {
   const buttonObj = buttonContentMap[buttonType];
-  const color = buttonObj.color ? buttonObj.color : ButtonColor.BLUE;
+  const buttonColor = buttonObj.color ? buttonObj.color : ButtonColor.BLUE;
 
   return (
-    <ButtonStyled color={color} disabled={!isEnabled}>
+    <ButtonStyled buttonColor={buttonColor} disabled={!isEnabled}>
       <ButtonContent>
       { buttonObj.icon && 
         <ButtonIconContainer>

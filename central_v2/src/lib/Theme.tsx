@@ -42,6 +42,9 @@ const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-ca
 const answerBarBackgroundColor = 'rgba(8, 69, 143, 0.20)';
 const progressBarColor = '#08458F';
 const progressBarBackgroundColor = '#D0DAE7';
+const buttonGradientBlue = 'linear-gradient(0deg, #1C94C3 0%, #3153C7 100%)';
+const buttonGradientRed = 'linear-gradient(0deg, #F60E44 0%, #E31C5E 100%)';
+const buttonGradientGrey = 'linear-gradient(0deg, #969696 0%, #515151 100%)';
 const radialTimerArray = [
   'rgb(126, 90, 175)',
   'rgb(148, 98, 179)',
@@ -403,6 +406,9 @@ declare module '@mui/material/styles' {
     progressBarBackgroundColor: string;
     countdownColor: string;
     radialTimerArray: string[];
+    buttonGradientBlue: string;
+    buttonGradientRed: string;
+    buttonGradientGrey: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -437,6 +443,9 @@ declare module '@mui/material/styles' {
     progressBarBackgroundColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
+    buttonGradientBlue?: string;
+    buttonGradientRed?: string;
+    buttonGradientGrey?: string;
   }
 }
 
@@ -507,6 +516,9 @@ export default createTheme({
       progressBarBackgroundColor,
       countdownColor,
       radialTimerArray,
+      buttonGradientBlue,
+      buttonGradientRed,
+      buttonGradientGrey,
     },
   },
   typography: {
