@@ -22,7 +22,9 @@ export default function CentralButton ({
           <img src={buttonObj.icon} alt={`${buttonObj.text}`}/>
         </ButtonIconContainer>
       }
-      <ButtonTypography> {buttonObj.text} </ButtonTypography>
+      { buttonObj.text && 
+        <ButtonTypography> {buttonObj.text} </ButtonTypography>
+      } 
       { buttonObj.rightIcon && 
         <ButtonIconContainer>
           <img src={buttonObj.rightIcon} alt={`${buttonObj.text}`}/>

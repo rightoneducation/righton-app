@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import login from '../images/buttonIconLogin.svg';
 import signup from '../images/buttonIconSignup.svg';
 import view from '../images/buttonIconView.svg';
@@ -14,34 +15,34 @@ import create from '../images/buttonIconCreate.svg';
 import bank from '../images/buttonIconBank.svg';
 
 export enum ButtonType {
-  LOGIN,
-  SIGNUP,
-  VIEW,
-  LAUNCH,
-  UPLOAD,
-  NEXTSTEP,
-  VERIFY,
-  GETSTARTED,
-  RESETLINK,
-  RESET,
-  PREVIOUSQUESTION,
-  BACKTOEXPLORE,
-  FAVORITE,
-  CLONEANDEDIT,
-  NEXTQUESTION,
-  SAVE,
-  DISCARD,
-  ADDSTEP,
-  BROWSEFILES,
-  CHANGEIMAGE,
-  NEXTCARD,
-  LAUNCHGAME,
-  CREATEQUESTION,
-  QUESTIONBANK,
-  BACK,
-  EDITPICTURE,
-  EDITINFORMATION,
-  CHANGEPASSWORD
+  LOGIN = "login",
+  SIGNUP = "signup",
+  VIEW = "view",
+  LAUNCH = "launch",
+  UPLOAD = "upload",
+  NEXTSTEP = "nextstep",
+  VERIFY = "verify",
+  GETSTARTED = "getstarted",
+  RESETLINK = "resetlink",
+  RESET = "reset",
+  PREVIOUSQUESTION = "previousquestion",
+  BACKTOEXPLORE = "backtoexplore",
+  FAVORITE = "favorite",
+  CLONEANDEDIT = "cloneandedit",
+  NEXTQUESTION = "nextquestion",
+  SAVE = "save",
+  DISCARD = "discard",
+  ADDSTEP = "addstep",
+  BROWSEFILES = "browsefiles",
+  CHANGEIMAGE = "changeimage",
+  NEXTCARD = "nextcard",
+  LAUNCHGAME = "launchgame",
+  CREATEQUESTION = "createquestion",
+  QUESTIONBANK = "questionbank",
+  BACK = "back",
+  EDITPICTURE = "editpicture",
+  EDITINFORMATION = "editinformation",
+  CHANGEPASSWORD = "changepassword"
 }
 
 export enum ButtonColor {
@@ -52,119 +53,121 @@ export enum ButtonColor {
 type ButtonContentMapProps = {
   [key in ButtonType]: {
     icon?: string,
-    text: string,
+    text?: string,
     color?: ButtonColor,
     rightIcon?: string
   }
 }
 
+const { t } = useTranslation();
+
 export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LOGIN]: {
     icon: login,
-    text: 'Login',
+    text: t([ButtonType.LOGIN]),
     color: ButtonColor.RED
   },
   [ButtonType.SIGNUP]: {
     icon: signup,
-    text: 'Sign Up',
+    text: t([ButtonType.SIGNUP]),
   },
   [ButtonType.VIEW]: {
     icon: view,
-    text: 'View',
+    text: t([ButtonType.VIEW]),
   },
   [ButtonType.LAUNCH]: {
     icon: launch,
-    text: 'Launch',
+    text: t([ButtonType.LAUNCH]),
   },
   [ButtonType.UPLOAD]: {
     icon: upload,
-    text: 'Upload',
+    text: t([ButtonType.UPLOAD]),
   },
   [ButtonType.NEXTSTEP]: {
-    text: 'Next Step',
+    text: t([ButtonType.NEXTSTEP]),
   },
   [ButtonType.VERIFY]: {
-    text: 'Verify',
+    text: t([ButtonType.VERIFY]),
   },
   [ButtonType.GETSTARTED]: {
-    text: 'Get Started!',
+    text: t([ButtonType.GETSTARTED]),
   },
   [ButtonType.RESETLINK]: {
-    text: 'Send Reset Link',
+    text: t([ButtonType.RESETLINK]),
     color: ButtonColor.RED
   },
   [ButtonType.RESET]: {
-    text: 'Reset',
+    text: t([ButtonType.RESET]),
     color: ButtonColor.RED
   },
   [ButtonType.PREVIOUSQUESTION]: {
     icon: previous,
-    text: 'Previous Question',
+    text: t([ButtonType.PREVIOUSQUESTION]),
   },
   [ButtonType.BACKTOEXPLORE]: {
     icon: previous,
-    text: 'Back to Explore Questions',
+    text: t([ButtonType.BACKTOEXPLORE]),
   },
   [ButtonType.FAVORITE]: {
     icon: favorite,
-    text: 'Favorite',
+    text: t([ButtonType.FAVORITE]),
   },
   [ButtonType.CLONEANDEDIT]: {
     icon: clone,
-    text: 'Clone and Edit',
+    text: t([ButtonType.CLONEANDEDIT]),
   },
   [ButtonType.NEXTQUESTION]: {
-    text: 'Next Question',
+    text: t([ButtonType.NEXTQUESTION]),
     rightIcon: next,
   },
   [ButtonType.SAVE]: {
     icon: save,
-    text: 'Save',
+    text: t([ButtonType.SAVE]),
   },
   [ButtonType.DISCARD]: {
     icon: discard,
-    text: 'Discard',
+    text: t([ButtonType.DISCARD]),
     color: ButtonColor.RED,
   },
   [ButtonType.ADDSTEP]: {
     icon: add,
-    text: 'Add Step',
+    text: t([ButtonType.ADDSTEP]),
   },
   [ButtonType.BROWSEFILES]: {
     icon: upload,
-    text: 'Browse Files',
+    text: t([ButtonType.BROWSEFILES]),
   },
   [ButtonType.CHANGEIMAGE]: {
     icon: upload,
-    text: 'Change Image',
+    text: t([ButtonType.CHANGEIMAGE]),
   },
   [ButtonType.NEXTCARD]: {
     icon: next,
-    text: 'Next Card',
+    text: t([ButtonType.NEXTCARD]),
   },
   [ButtonType.LAUNCHGAME]: {
     icon: launch,
-    text: 'Launch Game',
+    text: t([ButtonType.LAUNCHGAME]),
   }, 
   [ButtonType.CREATEQUESTION]: {
     icon: create,
-    text: 'Create Question',
+    text: t([ButtonType.CREATEQUESTION]),
   },
   [ButtonType.QUESTIONBANK]: {
     icon: bank,
-    text: 'Question Bank',
+    text: t([ButtonType.QUESTIONBANK]),
   },
   [ButtonType.BACK]: {
     icon: previous,
-    text: 'Back',
+    text: t([ButtonType.BACK]),
   },
   [ButtonType.EDITPICTURE]: {
-    text: 'Edit Picture',
+    text: t([ButtonType.EDITPICTURE]),
   },
   [ButtonType.EDITINFORMATION]: {
-    text: 'Edit Information',
+    text: t([ButtonType.EDITINFORMATION]),
   },
   [ButtonType.CHANGEPASSWORD]: {
-    text: 'Change Password',
+    text: t([ButtonType.CHANGEPASSWORD]),
   }
 }
