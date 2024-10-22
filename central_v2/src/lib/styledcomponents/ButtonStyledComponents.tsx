@@ -1,0 +1,41 @@
+import { Button, Box, Typography, styled } from '@mui/material';
+import { ButtonColor } from '../../components/button/ButtonModels';
+
+type ButtonStyledProps = {
+  color: ButtonColor;
+  isEnabled: boolean;
+}
+
+export const ButtonStyled = styled(Button)<ButtonStyledProps>(({ theme, color }) => ({
+  width: '100%',
+  height: '100%',
+  borderRadius: '54px',
+  boxShadow: '0px 0px 8px 0px rgba(71, 217, 255, 0.4)',
+  background: color === ButtonColor.RED ?  'linear-gradient(0deg, #1C94C3 0%, #3153C7 100%)' : 'linear-gradient(0deg, #1C94C3 0%, #3153C7 100%)',
+}));
+
+export const ButtonContent = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100%',
+  width: '100%',
+  gap: '8px',
+  paddingTop: '4px',
+  paddingButtom: '4px',
+  paddingLeft: '12px',
+  paddingRight: '12px'
+}));
+
+export const ButtonIconContainer = styled(Box)(({ theme }) => ({
+  height: '20px',
+  width: '20px'
+}));
+
+export const ButtonTypography = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Poppins',
+  fontSize: '20px',
+  fontWeight: '700',
+  color: '#FFFFFF'
+}));
