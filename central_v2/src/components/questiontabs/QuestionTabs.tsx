@@ -5,6 +5,7 @@ import tabExploreQuestionsIcon from '../../images/tabExploreQuestions.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
+import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestionCardBase';
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -116,8 +117,22 @@ export default function QuestionTabs({
               );
             })}
             </Tabs>
-            <Box style={{position: 'relative', flexGrow:1, height: '100%', width: '100%', background: '#02215F', zIndex: 6, borderTopRightRadius: '16px'}}>
-              Content
+            <Box style={{
+              position: 'relative', 
+              flexGrow:1, 
+              height: '100%', 
+              width: '100%', 
+              background: '#02215F', 
+              zIndex: 6, 
+              borderTopRightRadius: '16px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}>
+              <Box style={{minHeight: '180px'}}/>
+              <Box style={{ width: '100%', maxWidth: '664px'}}>
+                <DetailedQuestionCardBase />
+              </Box>
             </Box>
           </TabContent>
         </Slide>
