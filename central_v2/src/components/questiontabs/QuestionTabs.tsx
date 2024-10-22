@@ -1,11 +1,14 @@
 import React from 'react';
 import { Box, Fade, Slide, Tabs, Tab, styled } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import tabExploreQuestionsIcon from '../../images/tabExploreQuestions.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestionCardBase';
+import CentralButton from '../button/Button';
+import { ButtonType } from '../button/ButtonModels';
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -72,6 +75,7 @@ export default function QuestionTabs({
   isTabsOpen,
 } : TabContainerProps) 
 {
+  const theme = useTheme();
   const [openTab, setOpenTab] = React.useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setOpenTab(newValue);
@@ -129,7 +133,25 @@ export default function QuestionTabs({
               flexDirection: 'column',
               alignItems: 'center'
             }}>
-              <Box style={{minHeight: '180px'}}/>
+              <Box style={{
+                width: '100%',
+                minHeight: '180px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                padding: `${theme.sizing.mdPadding}px`,
+                boxSizing: 'border-box'
+              }}>
+                <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+                  <CentralButton buttonType={ButtonType.PREVIOUSQUESTION} isEnabled/>
+                  <CentralButton buttonType={ButtonType.BACKTOEXPLORE} isEnabled/>
+                </Box>
+                <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`}}>
+                  <CentralButton buttonType={ButtonType.FAVORITE} isEnabled/>
+                  <CentralButton buttonType={ButtonType.CLONEANDEDIT} isEnabled/>
+                  <CentralButton buttonType={ButtonType.NEXTQUESTION} isEnabled/>
+                </Box>
+              </Box>
               <Box style={{ width: '100%', maxWidth: '664px'}}>
                 <DetailedQuestionCardBase />
               </Box>

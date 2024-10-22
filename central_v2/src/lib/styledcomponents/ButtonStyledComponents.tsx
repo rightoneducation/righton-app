@@ -8,7 +8,7 @@ type ButtonStyledProps = {
 export const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'buttonColor',
 })<ButtonStyledProps>(({ theme, buttonColor }) => ({
-  width: 'auto',
+  width: 'fit-content',
   height: '38px',
   borderRadius: '54px',
   textTransform: 'none',
