@@ -8,9 +8,10 @@ type ButtonStyledProps = {
 export const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'buttonColor',
 })<ButtonStyledProps>(({ theme, buttonColor }) => ({
-  width: '100%',
-  height: '100%',
+  width: 'auto',
+  height: '38px',
   borderRadius: '54px',
+  textTransform: 'none',
   boxShadow: '0px 0px 8px 0px rgba(71, 217, 255, 0.4)',
   background: buttonColor === ButtonColor.RED 
     ? `${theme.palette.primary.buttonGradientRed}` 
@@ -34,7 +35,7 @@ export const ButtonContent = styled(Box)(({ theme }) => ({
   width: '100%',
   gap: '8px',
   paddingTop: '4px',
-  paddingButtom: '4px',
+  paddingBottom: '4px',
   paddingLeft: '12px',
   paddingRight: '12px'
 }));

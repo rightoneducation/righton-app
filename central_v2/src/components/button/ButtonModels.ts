@@ -1,18 +1,18 @@
 import { useTranslation } from 'react-i18next';
-import login from '../images/buttonIconLogin.svg';
-import signup from '../images/buttonIconSignup.svg';
-import view from '../images/buttonIconView.svg';
-import launch from '../images/buttonIconLaunch.svg';
-import upload from '../images/buttonIconUpload.svg';
-import previous from '../images/buttonIconPrevious.svg';
-import favorite from '../images/buttonIconFavorite.svg';
-import clone from '../images/buttonIconClone.svg';
-import next from '../images/buttonIconNext.svg';
-import save from '../images/buttonIconSave.svg';
-import discard from '../images/buttonIconDiscard.svg';
-import add from '../images/buttonIconAdd.svg';
-import create from '../images/buttonIconCreate.svg';
-import bank from '../images/buttonIconBank.svg';
+import login from '../../images/buttonIconLogin.svg';
+import signup from '../../images/buttonIconSignup.svg';
+import view from '../../images/buttonIconView.svg';
+import launch from '../../images/buttonIconLaunch.svg';
+import upload from '../../images/buttonIconUpload.svg';
+import previous from '../../images/buttonIconPrevious.svg';
+import favorite from '../../images/buttonIconFavorite.svg';
+import clone from '../../images/buttonIconClone.svg';
+import next from '../../images/buttonIconNext.svg';
+import save from '../../images/buttonIconSave.svg';
+import discard from '../../images/buttonIconDiscard.svg';
+import add from '../../images/buttonIconAdd.svg';
+import create from '../../images/buttonIconCreate.svg';
+import bank from '../../images/buttonIconBank.svg';
 
 export enum ButtonType {
   LOGIN = "login",
@@ -53,121 +53,120 @@ export enum ButtonColor {
 type ButtonContentMapProps = {
   [key in ButtonType]: {
     icon?: string,
-    text?: string,
+    textKey?: string,
     color?: ButtonColor,
     rightIcon?: string
   }
 }
 
-const { t } = useTranslation();
-
+// textKey data is duplicated to improve clarity of object and centralize all button content properties
 export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LOGIN]: {
     icon: login,
-    text: t([ButtonType.LOGIN]),
+    textKey: ButtonType.LOGIN,
     color: ButtonColor.RED
   },
   [ButtonType.SIGNUP]: {
     icon: signup,
-    text: t([ButtonType.SIGNUP]),
+    textKey: ButtonType.SIGNUP,
   },
   [ButtonType.VIEW]: {
     icon: view,
-    text: t([ButtonType.VIEW]),
+    textKey: ButtonType.VIEW,
   },
   [ButtonType.LAUNCH]: {
     icon: launch,
-    text: t([ButtonType.LAUNCH]),
+    textKey: ButtonType.LAUNCH,
   },
   [ButtonType.UPLOAD]: {
     icon: upload,
-    text: t([ButtonType.UPLOAD]),
+    textKey: ButtonType.UPLOAD,
   },
   [ButtonType.NEXTSTEP]: {
-    text: t([ButtonType.NEXTSTEP]),
+    textKey: ButtonType.NEXTSTEP,
   },
   [ButtonType.VERIFY]: {
-    text: t([ButtonType.VERIFY]),
+    textKey: ButtonType.VERIFY,
   },
   [ButtonType.GETSTARTED]: {
-    text: t([ButtonType.GETSTARTED]),
+    textKey: ButtonType.GETSTARTED,
   },
   [ButtonType.RESETLINK]: {
-    text: t([ButtonType.RESETLINK]),
+    textKey: ButtonType.RESETLINK,
     color: ButtonColor.RED
   },
   [ButtonType.RESET]: {
-    text: t([ButtonType.RESET]),
+    textKey: ButtonType.RESET,
     color: ButtonColor.RED
   },
   [ButtonType.PREVIOUSQUESTION]: {
     icon: previous,
-    text: t([ButtonType.PREVIOUSQUESTION]),
+    textKey: ButtonType.PREVIOUSQUESTION,
   },
   [ButtonType.BACKTOEXPLORE]: {
     icon: previous,
-    text: t([ButtonType.BACKTOEXPLORE]),
+    textKey: ButtonType.BACKTOEXPLORE,
   },
   [ButtonType.FAVORITE]: {
     icon: favorite,
-    text: t([ButtonType.FAVORITE]),
+    textKey: ButtonType.FAVORITE,
   },
   [ButtonType.CLONEANDEDIT]: {
     icon: clone,
-    text: t([ButtonType.CLONEANDEDIT]),
+    textKey: ButtonType.CLONEANDEDIT,
   },
   [ButtonType.NEXTQUESTION]: {
-    text: t([ButtonType.NEXTQUESTION]),
+    textKey: ButtonType.NEXTQUESTION,
     rightIcon: next,
   },
   [ButtonType.SAVE]: {
     icon: save,
-    text: t([ButtonType.SAVE]),
+    textKey: ButtonType.SAVE,
   },
   [ButtonType.DISCARD]: {
     icon: discard,
-    text: t([ButtonType.DISCARD]),
+    textKey: ButtonType.DISCARD,
     color: ButtonColor.RED,
   },
   [ButtonType.ADDSTEP]: {
     icon: add,
-    text: t([ButtonType.ADDSTEP]),
+    textKey: ButtonType.ADDSTEP,
   },
   [ButtonType.BROWSEFILES]: {
     icon: upload,
-    text: t([ButtonType.BROWSEFILES]),
+    textKey: ButtonType.BROWSEFILES,
   },
   [ButtonType.CHANGEIMAGE]: {
     icon: upload,
-    text: t([ButtonType.CHANGEIMAGE]),
+    textKey: ButtonType.CHANGEIMAGE,
   },
   [ButtonType.NEXTCARD]: {
     icon: next,
-    text: t([ButtonType.NEXTCARD]),
+    textKey: ButtonType.NEXTCARD,
   },
   [ButtonType.LAUNCHGAME]: {
     icon: launch,
-    text: t([ButtonType.LAUNCHGAME]),
+    textKey: ButtonType.LAUNCHGAME,
   }, 
   [ButtonType.CREATEQUESTION]: {
     icon: create,
-    text: t([ButtonType.CREATEQUESTION]),
+    textKey: ButtonType.CREATEQUESTION,
   },
   [ButtonType.QUESTIONBANK]: {
     icon: bank,
-    text: t([ButtonType.QUESTIONBANK]),
+    textKey: ButtonType.QUESTIONBANK,
   },
   [ButtonType.BACK]: {
     icon: previous,
-    text: t([ButtonType.BACK]),
+    textKey: ButtonType.BACK,
   },
   [ButtonType.EDITPICTURE]: {
-    text: t([ButtonType.EDITPICTURE]),
+    textKey: ButtonType.EDITPICTURE,
   },
   [ButtonType.EDITINFORMATION]: {
-    text: t([ButtonType.EDITINFORMATION]),
+    textKey: ButtonType.EDITINFORMATION,
   },
   [ButtonType.CHANGEPASSWORD]: {
-    text: t([ButtonType.CHANGEPASSWORD]),
+    textKey: ButtonType.CHANGEPASSWORD,
   }
 }

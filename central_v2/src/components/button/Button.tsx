@@ -1,34 +1,36 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { ButtonType, ButtonColor, buttonContentMap } from './ButtonModels';
 import { ButtonStyled, ButtonContent, ButtonIconContainer, ButtonTypography } from '../../lib/styledcomponents/ButtonStyledComponents';
 
 interface CentralButtonProps {
   buttonType: ButtonType;
   isEnabled: boolean;
-};
+}
 
 export default function CentralButton ({
   buttonType,
   isEnabled
 }: CentralButtonProps) {
+  const { t } = useTranslation();
   const buttonObj = buttonContentMap[buttonType];
-  const buttonColor = buttonObj.color ? buttonObj.color : ButtonColor.BLUE;
+  const buttonText = buttonObj.textKey ? t(`button.${buttonObj.textKey}`) : null;
+  const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
 
   return (
     <ButtonStyled buttonColor={buttonColor} disabled={!isEnabled}>
       <ButtonContent>
       { buttonObj.icon && 
         <ButtonIconContainer>
-          <img src={buttonObj.icon} alt={`${buttonObj.text}`}/>
+          <img src={buttonObj.icon} alt={`${buttonText}`}/>
         </ButtonIconContainer>
       }
-      { buttonObj.text && 
-        <ButtonTypography> {buttonObj.text} </ButtonTypography>
+      { buttonText && 
+        <ButtonTypography> {buttonText} </ButtonTypography>
       } 
       { buttonObj.rightIcon && 
         <ButtonIconContainer>
-          <img src={buttonObj.rightIcon} alt={`${buttonObj.text}`}/>
+          <img src={buttonObj.rightIcon} alt={`${buttonText}`}/>
         </ButtonIconContainer>
       }
       </ButtonContent>
