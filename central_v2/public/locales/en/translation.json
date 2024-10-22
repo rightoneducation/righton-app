@@ -1,0 +1,32 @@
+{
+  "button" : {
+    "login": "Login",
+    "signup": "Sign Up",
+    "view": "View",
+    "launch": "Launch",
+    "upload": "Upload",
+    "nextstep": "Next Step",
+    "verify": "Verify",
+    "getstarted": "Get Started!",
+    "resetlink": "Send Reset Link",
+    "reset": "Reset",
+    "previousquestion": "Previous Question",
+    "backtoexplore": "Back to Explore Questions",
+    "favorite": "Favorite",
+    "cloneandedit": "Clone and Edit",
+    "nextquestion": "Next Question",
+    "save": "Save",
+    "discard": "Discard",
+    "addstep": "Add Step",
+    "browsefiles": "Browse Files",
+    "changeimage": "Change Image",
+    "nextcard": "Next Card",
+    "launchgame": "Launch Game",
+    "createquestion": "Create Question",
+    "questionbank": "Question Bank",
+    "back": "Back",
+    "editpicture": "Edit Picture",
+    "editinformation": "Edit Information",
+    "changepassword": "Change Password"
+  }
+}

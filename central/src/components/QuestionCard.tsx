@@ -65,11 +65,6 @@ return (
             <Typography className={classes.title} >
               {question.title}
             </Typography>
-            { publicPrivateQueryType === PublicPrivateType.PUBLIC &&
-              <Typography className={classes.owner} >
-                Created by: {question.owner}
-              </Typography>
-            }
           </div>
         </Grid>
         <Grid container item xs={4} md={3}>

@@ -1,0 +1,32 @@
+{
+  "button": {
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "view": "Ver",
+    "launch": "Lanzar",
+    "upload": "Subir",
+    "nextstep": "Siguiente Paso",
+    "verify": "Verificar",
+    "getstarted": "¡Empezar!",
+    "resetlink": "Enviar Enlace de Restablecimiento",
+    "reset": "Restablecer",
+    "previousquestion": "Pregunta Anterior",
+    "backtoexplore": "Volver a Explorar Preguntas",
+    "favorite": "Favorito",
+    "cloneandedit": "Clonar y Editar",
+    "nextquestion": "Siguiente Pregunta",
+    "save": "Guardar",
+    "discard": "Descartar",
+    "addstep": "Agregar Paso",
+    "browsefiles": "Explorar Archivos",
+    "changeimage": "Cambiar Imagen",
+    "nextcard": "Siguiente Tarjeta",
+    "launchgame": "Lanzar Juego",
+    "createquestion": "Crear Pregunta",
+    "questionbank": "Banco de Preguntas",
+    "back": "Atrás",
+    "editpicture": "Editar Imagen",
+    "editinformation": "Editar Información",
+    "changepassword": "Cambiar Contraseña"
+  }
+}
