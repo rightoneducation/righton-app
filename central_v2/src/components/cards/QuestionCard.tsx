@@ -5,13 +5,15 @@ import { styled } from '@mui/material/styles';
 import heart from '../../images/heart.svg';
 import eyeball from '../../images/eyeball.svg';
 import cloneQuestion from '../../images/cloneQuestion.svg';
+import CentralButton from '../button/Button';
+import { ButtonType } from '../button/ButtonModels';
 
 interface StyledQuestionCardProps {
   id: string;
   title: string;
   image: string;
   question: IQuestionTemplate;
-  setIsTabsOpen: (isOpen: boolean) => void;
+  handleViewButtonClick: (element: IQuestionTemplate) => void;
 }
 
 const GymSVG = styled('img')({
@@ -172,7 +174,7 @@ const SecondaryButton = styled(Button)(({theme}) => ({
   minWidth: '20px',
 }));
 
-export default function StyledGameCard({ id, title, image, question, setIsTabsOpen }: StyledQuestionCardProps) {
+export default function StyledQuestionCard({ id, title, image, question, handleViewButtonClick }: StyledQuestionCardProps) {
   const domainAndGrade =`${question.grade}.${question.domain}`;
 
   return (
@@ -192,10 +194,7 @@ export default function StyledGameCard({ id, title, image, question, setIsTabsOp
         </SideBySideBox>
       </TextContainer>
       <BottomButtonBox>
-        <PrimaryButton1 onClick={() => setIsTabsOpen(true)}>
-          <ViewSVG src={eyeball} alt="View" />
-          View
-        </PrimaryButton1>
+        <CentralButton buttonType={ButtonType.VIEW} isEnabled onClick={() => handleViewButtonClick(question)} />
         <PrimaryButton1>
           <LaunchSVG src={cloneQuestion} alt="Clone" />
         </PrimaryButton1>

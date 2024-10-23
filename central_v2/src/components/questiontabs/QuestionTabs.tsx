@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Fade, Slide, Tabs, Tab, styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
+import { IQuestionTemplate } from '@righton/networking';
 import tabExploreQuestionsIcon from '../../images/tabExploreQuestions.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
@@ -12,6 +13,8 @@ import { ButtonType } from '../button/ButtonModels';
 
 interface TabContainerProps {
   isTabsOpen: boolean;
+  question: IQuestionTemplate;
+  questions: IQuestionTemplate[];
 }
 
 const TabContainer = styled(Box)(({ theme }) => ({
@@ -69,10 +72,14 @@ const StyledTab = styled(Tab)<StyledTabProps>(({ theme, isSelected }) => ({
 
 interface TabContainerProps {
   isTabsOpen: boolean;
+  question: IQuestionTemplate;
+  questions: IQuestionTemplate[];
 }
 
 export default function QuestionTabs({
   isTabsOpen,
+  question,
+  questions
 } : TabContainerProps) 
 {
   const theme = useTheme();
@@ -153,7 +160,7 @@ export default function QuestionTabs({
                 </Box>
               </Box>
               <Box style={{ width: '100%', maxWidth: '664px'}}>
-                <DetailedQuestionCardBase />
+                <DetailedQuestionCardBase question={question}/>
               </Box>
             </Box>
           </TabContent>

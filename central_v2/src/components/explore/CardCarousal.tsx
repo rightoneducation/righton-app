@@ -12,13 +12,14 @@ import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-interface CardCarouselProps {
+interface CardCarouselProps<T> {
     elementType: ElementType.GAME | ElementType.QUESTION;
-    recommendedElements: IGameTemplate[] | IQuestionTemplate[];
+    recommendedElements: T[];
     setIsTabsOpen: (isOpen: boolean) => void;
+    handleView: (element: T, elements: T[]) => void;
 }
 
-export default function CardCarousel({ recommendedElements, elementType, setIsTabsOpen }: CardCarouselProps) {
+export default function CardCarouse<T extends IGameTemplate | IQuestionTemplate>({ recommendedElements, elementType, setIsTabsOpen, handleView }: CardCarouselProps<T>) {
     const theme = useTheme();
     const swiperRef = useRef<SwiperRef>(null);
     const maxSlides = 12;
@@ -34,6 +35,11 @@ export default function CardCarousel({ recommendedElements, elementType, setIsTa
             [theme.breakpoints.values.lg]: 5.5,
         }
     } 
+
+    const handleViewButtonClick = (element: T) => {
+        handleView(element, recommendedElements as T[]);
+    };
+    
     return (
         <Swiper
             style={{
@@ -82,6 +88,7 @@ export default function CardCarousel({ recommendedElements, elementType, setIsTa
                                     title={gameElement.title}
                                     description={gameElement.description}
                                     image={gameElement.imageUrl || placeHolder}
+                                    handleViewButtonClick={handleViewButtonClick as (element: IGameTemplate) => void}
                                 />
                             ) : (
                                 <SkeletonGameCard index={index} />
@@ -98,7 +105,7 @@ export default function CardCarousel({ recommendedElements, elementType, setIsTa
                                 id={questionElement.id}
                                 title={questionElement.title}
                                 image={questionElement.imageUrl || placeHolder}
-                                setIsTabsOpen={setIsTabsOpen}
+                                handleViewButtonClick={handleViewButtonClick as (element: IQuestionTemplate) => void}
                             />
                         ) : (
                             <SkeletonQuestionCard index={index} />

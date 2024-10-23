@@ -5,6 +5,8 @@ import { styled } from '@mui/material/styles';
 import heart from '../../images/heart.svg';
 import eyeball from '../../images/eyeball.svg';
 import rocket from '../../images/rocket.svg';
+import CentralButton from '../button/Button';
+import { ButtonType } from '../button/ButtonModels';
 
 interface StyledGameCardProps {
   id: string;
@@ -12,6 +14,7 @@ interface StyledGameCardProps {
   description: string;
   image: string;
   game: IGameTemplate;
+  handleViewButtonClick: (element: IGameTemplate) => void;
 }
 
 const GymSVG = styled('img')({
@@ -220,7 +223,7 @@ function getDomainAndGrades(game: IGameTemplate) {
   return Array.from(new Set(CCSSArray));
 }
 
-export default function StyledGameCard({ id, title, description, image, game }: StyledGameCardProps) {
+export default function StyledGameCard({ id, title, description, image, game, handleViewButtonClick }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
 
   return (
@@ -249,10 +252,7 @@ export default function StyledGameCard({ id, title, description, image, game }: 
         </SideBySideBox>
       </TextContainer>
       <BottomButtonBox>
-        <PrimaryButton1>
-          <ViewSVG src={eyeball} alt="Tag" />
-          View
-        </PrimaryButton1>
+        <CentralButton buttonType={ButtonType.VIEW} isEnabled onClick={() => handleViewButtonClick(game)} />
         <PrimaryButton1>
           <LaunchSVG src={rocket} alt="Tag" />
           Launch

@@ -1,110 +1,30 @@
 import React from 'react';
-import { Box, Typography, RadioGroup, FormControlLabel, Radio, styled } from '@mui/material';
+import { Typography, RadioGroup } from '@mui/material';
+import { IQuestionTemplate } from '@righton/networking';
+import {
+  BaseCardStyled,
+  TitleBarStyled,
+  QuestionTitleStyled,
+  RadioContainerStyled,
+  RadioLabelStyled,
+  RadioStyled,
+  ContentContainerStyled,
+  ImageStyled,
+  ContentRightContainerStyled,
+  TextContainerStyled,
+  CCSSIndicator
+} from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import image from '../../../images/RightOnLogo.png';
 
-const BaseCardStyled = styled(Box)(({ theme }) => ({
-  width: '100%',
-  padding: `${theme.sizing.mdPadding}px`,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: `${theme.sizing.xSmPadding}px`,
-  background: '#FFFFFF',
-  borderRadius: `${theme.sizing.smPadding}px`,
-}));
-
-const TitleBarStyled = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: 'fit-content',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-}));
-
-const QuestionTitleStyled = styled(Typography)(({ theme }) => ({
-  fontSize: '20px',
-  fontWeight: 700,
-  color: '#000',
-}));
-
-const RadioContainerStyled = styled(Box)(({ theme }) => ({
-  width: 'fit-content',
-  height: '100%',
-  display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
-}));
-
-type RadioLabelProps = {
-  isSelected: boolean;
+interface DetailedQuestionCardBaseProps {
+  question: IQuestionTemplate;
 }
 
-const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(({ theme, isSelected }) => ({
-  color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
-  '& .MuiTypography-root': {
-    color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
-  },
-}));
-
-const RadioStyled = styled(Radio)(({ theme }) => ({
-  color: 'rgba(0, 0, 0, 0.2)',
-  '&.Mui-checked': {
-    color: `${theme.palette.primary.mediumBlue}`,
-  },
-  
-}));
-
-const ContentContainerStyled = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '175px',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: `${theme.sizing.smPadding}px`,
-}));
-
-const ImageStyled = styled('img')({
-  width: '100%',
-  height: '175px',
-  objectFit: 'cover',
-});
-
-const ContentRightContainerStyled = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: `${theme.sizing.xSmPadding}px`,
-}));
-
-const TextContainerStyled = styled(Box)(({ theme }) => ({
-  height: '100%',
-  flexGrow: 1,
-  background: `${theme.palette.primary.lightGrey}`,
-  borderRadius: `${theme.sizing.xSmPadding}px`,
-  padding: `${theme.sizing.xSmPadding}px`,
-}));
-
-const CCSSIndicator = styled(Box)(({theme}) => ({
-  width: 'fit-content',
-  height: `${theme.sizing.mdPadding}px`,
-  padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding}px`,
-  gap: `${theme.sizing.xxSmPadding}px`,
-  borderRadius: '12px',
-  background: 'linear-gradient(90deg, #E81144 0%, #E31C5E 100%)',
-  color: '#FFFFFF',
-  textTransform: 'none',
-  fontFamily: 'Rubik',
-  fontSize: '14px',
-  fontWeight: 400,
-  lineHeight: '16.59px',
-  textAlign: 'center',
-  boxShadow: '0px 3px 12px 0px #95002366',
-  zIndex: 2, 
-  boxSizing: 'border-box',
-  minWidth: '20px',
-}));
-
-export default function DetailedQuestionCardBase() {
+export default function DetailedQuestionCardBase(
+  {
+    question
+  } : DetailedQuestionCardBaseProps
+) {
   const [questionType, setQuestionType] = React.useState<string>('A'); 
   console.log(questionType);
   const handleQuestionTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,15 +59,15 @@ export default function DetailedQuestionCardBase() {
         </RadioContainerStyled>
       </TitleBarStyled>
       <ContentContainerStyled>
-        <ImageStyled src={image} alt="image" />
+        <ImageStyled src={question.imageUrl ?? ''} alt="image" />
         <ContentRightContainerStyled>
           <TextContainerStyled> 
             <Typography>
-              Question: What is the capital of France?
+              {question.title}
             </Typography>
           </TextContainerStyled>
           <CCSSIndicator>
-            7.RP.G.4
+            {`${question.grade}.${question.domain}.${question.cluster}.${question.standard}`}
           </CCSSIndicator>
         </ContentRightContainerStyled>      
       </ContentContainerStyled>

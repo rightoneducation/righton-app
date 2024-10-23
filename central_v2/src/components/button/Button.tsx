@@ -6,11 +6,13 @@ import { ButtonStyled, ButtonContent, ButtonIconContainer, ButtonTypography } fr
 interface CentralButtonProps {
   buttonType: ButtonType;
   isEnabled: boolean;
+  onClick?: () => void;
 }
 
 export default function CentralButton ({
   buttonType,
-  isEnabled
+  isEnabled,
+  onClick
 }: CentralButtonProps) {
   const { t } = useTranslation();
   const buttonObj = buttonContentMap[buttonType];
@@ -18,7 +20,7 @@ export default function CentralButton ({
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
 
   return (
-    <ButtonStyled buttonColor={buttonColor} disabled={!isEnabled}>
+    <ButtonStyled buttonColor={buttonColor} disabled={!isEnabled} onClick={onClick}>
       <ButtonContent>
       { buttonObj.icon && 
         <ButtonIconContainer>

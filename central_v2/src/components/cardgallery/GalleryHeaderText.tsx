@@ -4,8 +4,8 @@ import { IGameTemplate, IQuestionTemplate, GalleryType } from '@righton/networki
 import { ScreenSize } from '../../lib/CentralModels';
 import { SearchedText, GradesText, ResultsLengthText, MostPopularText } from '../../lib/styledcomponents/CardGalleryStyledComponents';
 
-interface GalleryHeaderTextProps {
-  searchedElements?: IGameTemplate[] | IQuestionTemplate[];
+interface GalleryHeaderTextProps<T> {
+  searchedElements?: T[];
   searchedTerm?: string;
   grades?: string[];
   isLoading?: boolean;
@@ -20,7 +20,7 @@ function formatGrades(grades: string[]): string {
   return `${grades.slice(0, -1).join(', ')}, and ${grades[grades.length - 1]}`;
 }
 
-export default function GalleryHeaderText ({searchedElements, searchedTerm, grades, isLoading, screenSize, galleryType}: GalleryHeaderTextProps){
+export default function GalleryHeaderText<T extends IGameTemplate | IQuestionTemplate>({searchedElements, searchedTerm, grades, isLoading, screenSize, galleryType}: GalleryHeaderTextProps<T>){
   const theme = useTheme();
   const formattedGrades = formatGrades(grades ?? []);
   return (

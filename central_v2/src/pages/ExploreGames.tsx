@@ -44,15 +44,26 @@ export default function ExploreGames() {
     handleSearchChange,
     loadMoreGames
   } = useExploreGamesStateManager();
+
+  const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
+  const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
+
+  const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
+    setSelectedGame(game);
+    setGameSet(games);
+    setIsTabsOpen(true);
+  }
+
+
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
       <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
         {searchTerms.length > 0 || searchedGames.length > 0 || selectedGrades.length > 0 ? (
-            <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedGames} isLoading={isLoading} elementType={ElementType.GAME} galleryType={GalleryType.SEARCH_RESULTS} setIsTabsOpen={setIsTabsOpen}/>
+            <CardGallery<IGameTemplate> screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedGames} isLoading={isLoading} elementType={ElementType.GAME} galleryType={GalleryType.SEARCH_RESULTS} setIsTabsOpen={setIsTabsOpen} handleView={handleView}/>
       ) : (
         <>
           <ExploreGamesUpperContainer screenSize={screenSize}>
-            <Recommended screenSize={screenSize} recommendedElements={recommendedGames} elementType={ElementType.GAME} setIsTabsOpen={setIsTabsOpen}/>
+            <Recommended<IGameTemplate> screenSize={screenSize} recommendedElements={recommendedGames} elementType={ElementType.GAME} setIsTabsOpen={setIsTabsOpen} handleView={handleView}/>
           </ExploreGamesUpperContainer>
           <InfiniteScroll
             dataLength={mostPopularGames.length}
@@ -62,7 +73,7 @@ export default function ExploreGames() {
             scrollableTarget="scrollableDiv"
             style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
           >
-            <CardGallery screenSize={screenSize} galleryElements={mostPopularGames} elementType={ElementType.GAME} galleryType={GalleryType.MOST_POPULAR} setIsTabsOpen={setIsTabsOpen}/>
+            <CardGallery<IGameTemplate> screenSize={screenSize} galleryElements={mostPopularGames} elementType={ElementType.GAME} galleryType={GalleryType.MOST_POPULAR} setIsTabsOpen={setIsTabsOpen} handleView={handleView}/>
           </InfiniteScroll>
         </>
       )}

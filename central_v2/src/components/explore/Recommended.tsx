@@ -6,11 +6,12 @@ import CardCarousal from './CardCarousal';
 import { ScreenSize } from '../../lib/CentralModels';
 import PaginationContainerStyled from '../../lib/PaginationContainerStyled';
 
-interface RecommendedProps {
+interface RecommendedProps<T> {
   screenSize: ScreenSize;
-  recommendedElements: IGameTemplate[] | IQuestionTemplate[];
+  recommendedElements: T[];
   elementType: ElementType;
   setIsTabsOpen: (isOpen: boolean) => void;
+  handleView: (element: T, elements: T[]) => void;
 }
 interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
@@ -35,7 +36,7 @@ const Title = styled(Typography)<{ screenSize: ScreenSize }>(({ screenSize, them
   color: '#FFFFFF',
 }));
 
-export default function Recommended({ screenSize, recommendedElements, elementType, setIsTabsOpen }: RecommendedProps) {
+export default function Recommended<T extends IGameTemplate | IQuestionTemplate>({ screenSize, recommendedElements, elementType, setIsTabsOpen, handleView }: RecommendedProps<T>) {
   const theme = useTheme(); 
 
   return (
@@ -43,7 +44,7 @@ export default function Recommended({ screenSize, recommendedElements, elementTy
       <Title screenSize={screenSize}>
         Recommended {elementType === ElementType.GAME ? 'Games' : 'Questions' }
       </Title>
-      <CardCarousal recommendedElements={recommendedElements} elementType={elementType} setIsTabsOpen={setIsTabsOpen}/>
+      <CardCarousal recommendedElements={recommendedElements} elementType={elementType} setIsTabsOpen={setIsTabsOpen} handleView={handleView}/>
       <PaginationContainerStyled className="swiper-pagination-container"/>
     </RecommendedContainer>
   );

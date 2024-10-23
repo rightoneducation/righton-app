@@ -11,15 +11,16 @@ import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import { MostPopularContainer } from '../../lib/styledcomponents/ExploreStyledComponents';
 import GalleryHeaderText from './GalleryHeaderText';
 
-interface CardGalleryProps {
+interface CardGalleryProps<T>{
   screenSize: ScreenSize;
-  galleryElements: IGameTemplate[] | IQuestionTemplate[];
+  galleryElements: T[];
   searchTerm?: string;
   grades?: string[];
   isLoading?: boolean;
   elementType: ElementType;
   galleryType: GalleryType;
   setIsTabsOpen: (isOpen: boolean) => void;
+  handleView: (element: T, elements: T[]) => void;
 }
 
 interface MostPopularComponentProps<T> {
@@ -27,6 +28,7 @@ interface MostPopularComponentProps<T> {
   maxCards: number;
   numColumns: number;
   setIsTabsOpen: (isOpen: boolean) => void;
+  handleViewButtonClick: (element: T) => void;
 }
 
 interface MostPopularGamesComponentProps {
@@ -34,9 +36,10 @@ interface MostPopularGamesComponentProps {
   maxCards: number;
   numColumns: number;
   setIsTabsOpen: (isOpen: boolean) => void;
+  handleViewButtonClick: (element: IGameTemplate) => void;
 }
 
-function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns, setIsTabsOpen }: MostPopularGamesComponentProps){
+function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns, setIsTabsOpen, handleViewButtonClick }: MostPopularGamesComponentProps){
   return (
     <Grid container spacing={2} id="scrollableDiv" >
     {mostPopularElements.length === 0 
@@ -56,6 +59,7 @@ function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns, 
               title={game.title}
               description={game.description}
               image={game.imageUrl || placeHolder}
+              handleViewButtonClick={handleViewButtonClick as (element: IGameTemplate) => void}
             />
           </Grid>
         );
@@ -64,7 +68,7 @@ function MostPopularGamesComponent({ mostPopularElements, maxCards, numColumns, 
   );
 }
 
-function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColumns, setIsTabsOpen}: MostPopularComponentProps<IQuestionTemplate>){
+function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColumns, setIsTabsOpen, handleViewButtonClick}: MostPopularComponentProps<IQuestionTemplate>){
   const array = Array.from({length: numColumns});
   const elementsLength = Object.values(mostPopularElements).reduce((acc, column) => acc + column.length, 0);
   return (
@@ -89,7 +93,7 @@ function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColum
                       id={question.id}
                       title={question.title}
                       image={question.imageUrl || placeHolder}
-                      setIsTabsOpen={setIsTabsOpen}
+                      handleViewButtonClick={handleViewButtonClick as (element: IQuestionTemplate) => void}
                     />
                   )
                 })
@@ -103,7 +107,7 @@ function MostPopularQuestionsComponent ({mostPopularElements, maxCards, numColum
   );
 }
 
-export default function CardGallery({ screenSize, galleryElements, elementType, searchTerm, grades, isLoading, galleryType, setIsTabsOpen}: CardGalleryProps) {
+export default function CardGallery<T extends IGameTemplate | IQuestionTemplate>({ screenSize, galleryElements, elementType, searchTerm, grades, isLoading, galleryType, setIsTabsOpen, handleView}: CardGalleryProps<T>) {
   const maxCards = 12;
   const getNumColumns = () => {
     switch(screenSize){
@@ -115,7 +119,7 @@ export default function CardGallery({ screenSize, galleryElements, elementType, 
         return 6;
     }
   }
-  const reformatElements = <T,>(mostPopularElementsMap: T[]): { [key: number]: T[] } => {
+  const reformatElements = <T,>(mostPopularElementsMap: T[]): { [key: number]: T[] } => { // eslint-disable-line
     // adjust column number for array indexing
     const numColumns = getNumColumns() - 1;
     const newElements: { [key: number]: T[] } = {};
@@ -136,12 +140,15 @@ export default function CardGallery({ screenSize, galleryElements, elementType, 
     return newElements;
   }
   
+  const handleViewButtonClick = (element: T) => {
+    handleView(element, galleryElements as T[]);
+};
   return (
     <MostPopularContainer screenSize={screenSize}>
-      <GalleryHeaderText searchedElements={galleryElements} searchedTerm={searchTerm} grades={grades} isLoading={isLoading} screenSize={screenSize} galleryType={galleryType}/>
+      <GalleryHeaderText<T> searchedElements={galleryElements} searchedTerm={searchTerm} grades={grades} isLoading={isLoading} screenSize={screenSize} galleryType={galleryType}/>
       { elementType === ElementType.GAME 
-        ? <MostPopularGamesComponent mostPopularElements={galleryElements as IGameTemplate[]} maxCards={maxCards} numColumns={getNumColumns()} setIsTabsOpen={setIsTabsOpen}/>
-        : <MostPopularQuestionsComponent mostPopularElements={reformatElements(galleryElements as IQuestionTemplate[])} maxCards={maxCards} numColumns={getNumColumns()} setIsTabsOpen={setIsTabsOpen}/>
+        ? <MostPopularGamesComponent mostPopularElements={galleryElements as IGameTemplate[]} maxCards={maxCards} numColumns={getNumColumns()} setIsTabsOpen={setIsTabsOpen} handleViewButtonClick={handleViewButtonClick as (element: IGameTemplate) => void}/>
+        : <MostPopularQuestionsComponent mostPopularElements={reformatElements(galleryElements as IQuestionTemplate[])} maxCards={maxCards} numColumns={getNumColumns()} setIsTabsOpen={setIsTabsOpen} handleViewButtonClick={handleViewButtonClick as (element: IQuestionTemplate) => void}/>
       }
     </MostPopularContainer>
   );

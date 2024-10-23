@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { ElementType, GalleryType } from '@righton/networking';
+import { ElementType, GalleryType, IQuestionTemplate } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
@@ -43,16 +42,25 @@ export default function ExploreQuestions() {
     loadMoreQuestions
   } = useExploreQuestionsStateManager();
   
+  const [selectedQuestion, setSelectedQuestion] = useState<IQuestionTemplate | null>(null);
+  const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
+
+  const handleView = (question: IQuestionTemplate, questions: IQuestionTemplate[]) => {
+    setSelectedQuestion(question);
+    setQuestionSet(questions);
+    setIsTabsOpen(true);
+  }
+
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
-      {isTabsOpen && <QuestionTabs isTabsOpen={isTabsOpen}/>}
+      {isTabsOpen && selectedQuestion && <QuestionTabs isTabsOpen={isTabsOpen} question={selectedQuestion} questions={questionSet} />}
         <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
           {searchTerms.length > 0 || searchedQuestions.length > 0 || selectedGrades.length > 0 ? (          
-          <CardGallery screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS} setIsTabsOpen={setIsTabsOpen}/>
+          <CardGallery<IQuestionTemplate> screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS} setIsTabsOpen={setIsTabsOpen} handleView={handleView}/>
         ) : (
           <>
             <ExploreGamesUpperContainer screenSize={screenSize}>
-              <Recommended screenSize={screenSize} recommendedElements={recommendedQuestions} elementType={ElementType.QUESTION} setIsTabsOpen={setIsTabsOpen}/>
+              <Recommended<IQuestionTemplate> screenSize={screenSize} recommendedElements={recommendedQuestions} elementType={ElementType.QUESTION} setIsTabsOpen={setIsTabsOpen} handleView={handleView}/>
             </ExploreGamesUpperContainer>
             <InfiniteScroll
               dataLength={mostPopularQuestions.length}
@@ -62,7 +70,7 @@ export default function ExploreQuestions() {
               scrollableTarget="scrollableDiv"
               style={{ width: '100vw', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
             >
-              <CardGallery screenSize={screenSize} galleryElements={mostPopularQuestions} elementType={ElementType.QUESTION} galleryType={GalleryType.MOST_POPULAR} setIsTabsOpen={setIsTabsOpen}/>
+              <CardGallery<IQuestionTemplate> screenSize={screenSize} galleryElements={mostPopularQuestions} elementType={ElementType.QUESTION} galleryType={GalleryType.MOST_POPULAR} setIsTabsOpen={setIsTabsOpen} handleView={handleView}/>
             </InfiniteScroll>
           </>
         )}
