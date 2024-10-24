@@ -9,6 +9,12 @@ export const BaseCardStyled = styled(Box)(({ theme }) => ({
   gap: `${theme.sizing.xSmPadding}px`,
   background: '#FFFFFF',
   borderRadius: `${theme.sizing.smPadding}px`,
+  boxSizing: 'border-box',
+  height: 'fit-content'
+}));
+
+export const SubCardStyled = styled(BaseCardStyled)(({ theme }) => ({
+  minWidth: '50%'
 }));
 
 export const TitleBarStyled = styled(Box)(({ theme }) => ({
@@ -30,7 +36,7 @@ export const RadioContainerStyled = styled(Box)(({ theme }) => ({
   height: '100%',
   display: 'flex',
   justifyContent: 'flex-end',
-  alignItems: 'center',
+  alignItems: 'center'
 }));
 
 type RadioLabelProps = {
@@ -38,6 +44,7 @@ type RadioLabelProps = {
 }
 
 export const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(({ theme, isSelected }) => ({
+  cursor: 'default',
   color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
   '& .MuiTypography-root': {
     color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
@@ -45,6 +52,7 @@ export const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(({ the
 }));
 
 export const RadioStyled = styled(Radio)(({ theme }) => ({
+  cursor: 'default',
   color: 'rgba(0, 0, 0, 0.2)',
   '&.Mui-checked': {
     color: `${theme.palette.primary.mediumBlue}`,
@@ -106,5 +114,14 @@ export const CCSSIndicator = styled(Box)(({theme}) => ({
 export const AnswerIndicator = styled(Box)(({theme}) => ({
   width: '100%',
   height: `${theme.sizing.xLgPadding}px`,
+  borderRadius: '20px',
   background: `${theme.palette.primary.lightGrey}`,
+  paddingTop: `10px`,
+  paddingBottom: '10px',
+  paddingLeft: `12px`,
+  paddingRight: `12px`,
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  boxSizing: 'border-box',
 }));

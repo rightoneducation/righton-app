@@ -41,7 +41,6 @@ export default function DetailedQuestionCardBase(
           <RadioGroup
             row
             value={questionType}
-            onChange={handleQuestionTypeChange}
           >
             <RadioLabelStyled
               value="A"

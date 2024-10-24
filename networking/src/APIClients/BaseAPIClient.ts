@@ -203,7 +203,6 @@ export abstract class BaseAPIClient {
         queryParameters.sortDirection = sortDirection;
       }
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-      console.log("queryParameters", queryParameters);
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
         const operationResult = result.data[queryName];

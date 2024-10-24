@@ -3,7 +3,7 @@ import { Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  BaseCardStyled,
+  SubCardStyled,
   QuestionTitleStyled,
   AnswerIndicator,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
@@ -11,15 +11,20 @@ import { CardType } from '../../../lib/CentralModels';
 
 interface DetailedQuestionSubCardProps {
   cardType: CardType;
+  answer: string;
+  instructions?: string[];
+  answerReason?: string;
 }
 
-export default function DetailedQuestionSubCard (
-  { cardType }: DetailedQuestionSubCardProps
-) {
+export default function DetailedQuestionSubCard ({ 
+  cardType,
+  answer,
+  instructions,
+  answerReason
+}: DetailedQuestionSubCardProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A'); 
-  const instructions: any[] = [];
-  const answerReason = 'This is the reason for the incorrect answer.';
+  
   const correctAnswerInstruction = (index: number) => {
     return (
       <Box
@@ -37,7 +42,6 @@ export default function DetailedQuestionSubCard (
             fontSize: `${theme.typography.h3.fontSize}px`,
             fontWeight: `${theme.typography.h3.fontWeight}`,
             color: `${theme.palette.primary.darkPurple}`,
-            opacity: 0.5
           }}
         >
           {index + 1}
@@ -47,7 +51,7 @@ export default function DetailedQuestionSubCard (
             marginLeft: `${theme.sizing.xSmPadding}px`,
           }}
         >
-          {instructions !== null ? instructions[index] : null}
+          {instructions ? instructions[index] : null}
         </Typography>
       </Box>
     );
@@ -71,21 +75,19 @@ export default function DetailedQuestionSubCard (
         </Typography>
       </Box>
   ];
-
-  const answer = 'a';
   return (
-    <BaseCardStyled>
+    <SubCardStyled>
       <QuestionTitleStyled>
         {cardType === CardType.CORRECT ? 'Correct' : 'Incorrect'} Answer
       </QuestionTitleStyled>
       <AnswerIndicator>
         {answer}
       </AnswerIndicator>
-      {cardType === CardType.CORRECT && instructions !== null
+      {cardType === CardType.CORRECT && instructions
         ? instructions.map((instruction) =>
             correctAnswerInstruction(instructions.indexOf(instruction)),
           )
         : incorrectAnswerReasoning}
-    </BaseCardStyled>
+    </SubCardStyled>
   );
 }
