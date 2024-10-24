@@ -1,6 +1,6 @@
 import { createContext, Dispatch } from 'react';
 import { IAPIClients } from '@righton/networking';
 
-export const APIClientsContext = createContext<IAPIClients | undefined>(
+export const APIClientsContext = createContext<IAPIClients | undefined>( // eslint-disable-line
   undefined,
-); // eslint-disable-line
+);

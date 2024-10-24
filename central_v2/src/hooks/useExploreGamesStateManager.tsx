@@ -104,8 +104,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
 
   // note that all parameters are sent through as props
   // this avoids stale state issues from the useCallback
-  const debouncedSearch = useCallback(
-    // eslint-disable-line
+  const debouncedSearch = useCallback( // eslint-disable-line
     debounce(
       (
         search: string,

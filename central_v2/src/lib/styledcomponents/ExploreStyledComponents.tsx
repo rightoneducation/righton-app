@@ -7,11 +7,10 @@ interface MostPopularContainerProps {
   children: React.ReactNode;
 }
 
-export function MostPopularContainer({
+export function MostPopularContainer({ // eslint-disable-line
   screenSize,
   children,
 }: MostPopularContainerProps) {
-  // eslint-disable-line
   const theme = useTheme();
 
   return (

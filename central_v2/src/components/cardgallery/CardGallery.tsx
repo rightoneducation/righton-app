@@ -56,9 +56,7 @@ function MostPopularGamesComponent({
       {mostPopularElements.length === 0
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
-              <Grid item xs={12} md={6} lg={4} key={index}>
-                {' '}
-                {/* eslint-disable-line */}
+              <Grid item xs={12} md={6} lg={4} key={index}> {/* eslint-disable-line */}
                 <SkeletonGameCard index={index} />
               </Grid>
             );
@@ -66,8 +64,6 @@ function MostPopularGamesComponent({
         : mostPopularElements.map((game) => {
             return (
               <Grid item xs={12} md={6} lg={4} key={game.id}>
-                {' '}
-                {/* eslint-disable-line */}
                 <StyledGameCard
                   game={game}
                   id={game.id}
@@ -102,9 +98,7 @@ function MostPopularQuestionsComponent({
       {elementsLength === 0
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
-              <Grid item xs={12} md={4} lg={2} key={index}>
-                {' '}
-                {/* eslint-disable-line */}
+              <Grid item xs={12} md={4} lg={2} key={index}> {/* eslint-disable-line */}
                 <SkeletonQuestionCard index={index} />
               </Grid>
             );
@@ -168,10 +162,9 @@ export default function CardGallery<
         return 6;
     }
   };
-  const reformatElements = <T,>(
+  const reformatElements = <T,>( // eslint-disable-line
     mostPopularElementsMap: T[],
   ): { [key: number]: T[] } => {
-    // eslint-disable-line
     // adjust column number for array indexing
     const numColumns = getNumColumns() - 1;
     const newElements: { [key: number]: T[] } = {};
