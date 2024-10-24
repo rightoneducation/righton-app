@@ -1,10 +1,10 @@
 export enum ScreenSize {
   SMALL,
   MEDIUM,
-  LARGE
+  LARGE,
 }
 
 export enum CardType {
   CORRECT,
-  INCORRECT
+  INCORRECT,
 }

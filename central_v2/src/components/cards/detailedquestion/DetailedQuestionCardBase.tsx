@@ -12,7 +12,7 @@ import {
   ImageStyled,
   ContentRightContainerStyled,
   TextContainerStyled,
-  CCSSIndicator
+  CCSSIndicator,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import image from '../../../images/RightOnLogo.png';
 
@@ -20,38 +20,33 @@ interface DetailedQuestionCardBaseProps {
   question: IQuestionTemplate;
 }
 
-export default function DetailedQuestionCardBase(
-  {
-    question
-  } : DetailedQuestionCardBaseProps
-) {
-  const [questionType, setQuestionType] = React.useState<string>('A'); 
+export default function DetailedQuestionCardBase({
+  question,
+}: DetailedQuestionCardBaseProps) {
+  const [questionType, setQuestionType] = React.useState<string>('A');
   console.log(questionType);
-  const handleQuestionTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQuestionTypeChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setQuestionType((event.target as HTMLInputElement).value);
-  }
+  };
 
   return (
     <BaseCardStyled>
       <TitleBarStyled>
-        <QuestionTitleStyled>
-          Question
-        </QuestionTitleStyled>
+        <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>
-          <RadioGroup
-            row
-            value={questionType}
-          >
+          <RadioGroup row value={questionType}>
             <RadioLabelStyled
               value="A"
               control={<RadioStyled />}
-              label='Multiple Choice'
+              label="Multiple Choice"
               isSelected={questionType === 'A'}
             />
             <RadioLabelStyled
               value="B"
               control={<RadioStyled />}
-              label='Short Answer'
+              label="Short Answer"
               isSelected={questionType === 'B'}
             />
           </RadioGroup>
@@ -60,15 +55,13 @@ export default function DetailedQuestionCardBase(
       <ContentContainerStyled>
         <ImageStyled src={question.imageUrl ?? ''} alt="image" />
         <ContentRightContainerStyled>
-          <TextContainerStyled> 
-            <Typography>
-              {question.title}
-            </Typography>
+          <TextContainerStyled>
+            <Typography>{question.title}</Typography>
           </TextContainerStyled>
           <CCSSIndicator>
             {`${question.grade}.${question.domain}.${question.cluster}.${question.standard}`}
           </CCSSIndicator>
-        </ContentRightContainerStyled>      
+        </ContentRightContainerStyled>
       </ContentContainerStyled>
     </BaseCardStyled>
   );

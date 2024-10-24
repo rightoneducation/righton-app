@@ -3,7 +3,7 @@ import { ButtonColor } from '../../components/button/ButtonModels';
 
 type ButtonStyledProps = {
   buttonColor: ButtonColor;
-}
+};
 
 export const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'buttonColor',
@@ -13,17 +13,19 @@ export const ButtonStyled = styled(Button, {
   borderRadius: '54px',
   textTransform: 'none',
   boxShadow: '0px 0px 8px 0px rgba(71, 217, 255, 0.4)',
-  background: buttonColor === ButtonColor.RED 
-    ? `${theme.palette.primary.buttonGradientRed}` 
-    : `${theme.palette.primary.buttonGradientBlue}`,
-  ':hover': {
-    background: buttonColor === ButtonColor.RED 
-      ? `${theme.palette.primary.buttonGradientRed}` 
+  background:
+    buttonColor === ButtonColor.RED
+      ? `${theme.palette.primary.buttonGradientRed}`
       : `${theme.palette.primary.buttonGradientBlue}`,
+  ':hover': {
+    background:
+      buttonColor === ButtonColor.RED
+        ? `${theme.palette.primary.buttonGradientRed}`
+        : `${theme.palette.primary.buttonGradientBlue}`,
   },
-  "&:disabled": {
+  '&:disabled': {
     background: `${theme.palette.primary.buttonGradientGrey}`,
-  }
+  },
 }));
 
 export const ButtonContent = styled(Box)(({ theme }) => ({
@@ -37,17 +39,17 @@ export const ButtonContent = styled(Box)(({ theme }) => ({
   paddingTop: '4px',
   paddingBottom: '4px',
   paddingLeft: '12px',
-  paddingRight: '12px'
+  paddingRight: '12px',
 }));
 
 export const ButtonIconContainer = styled(Box)(({ theme }) => ({
   height: '20px',
-  width: '20px'
+  width: '20px',
 }));
 
 export const ButtonTypography = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
   fontWeight: '700',
-  color: '#FFFFFF'
+  color: '#FFFFFF',
 }));

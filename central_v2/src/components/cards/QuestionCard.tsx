@@ -22,7 +22,7 @@ const GymSVG = styled('img')({
   objectFit: 'cover',
 });
 
-const HeartSVG = styled('img')(({theme}) =>({
+const HeartSVG = styled('img')(({ theme }) => ({
   cursor: 'pointer',
   marginLeft: `${theme.sizing.xxSmPadding}px`,
 }));
@@ -35,8 +35,8 @@ const LaunchSVG = styled('img')({
   cursor: 'pointer',
 });
 
-const QuestionCard = styled(Box)(({theme}) => ({
-  width: '100%', 
+const QuestionCard = styled(Box)(({ theme }) => ({
+  width: '100%',
   height: 'auto',
   padding: `12px ${theme.sizing.smPadding}px 12px ${theme.sizing.smPadding}px`,
   gap: `${theme.sizing.smPadding}px`,
@@ -49,7 +49,7 @@ const QuestionCard = styled(Box)(({theme}) => ({
   overflow: 'visible',
 }));
 
-const TextContainer = styled(Box)(({theme}) => ({
+const TextContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   gap: `${theme.sizing.smPadding}px`,
@@ -64,7 +64,7 @@ const TitleContainer = styled(Box)(() => ({
   justifyContent: 'space-between',
 }));
 
-const TitleTextTypography = styled(Typography)(({theme}) => ({
+const TitleTextTypography = styled(Typography)(({ theme }) => ({
   width: '100%',
   lineHeight: '30px',
   gap: `${theme.sizing.xSmPadding}px`,
@@ -79,13 +79,13 @@ const TitleTextTypography = styled(Typography)(({theme}) => ({
   WebkitLineClamp: 1,
 }));
 
-const ImageBox = styled(Box)(({theme}) => ({
+const ImageBox = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: '130px', 
+  height: '130px',
   gap: `${theme.sizing.xSmPadding}px`,
 }));
 
-const SideBySideBox = styled(Box)(({theme}) => ({
+const SideBySideBox = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   gap: `${theme.sizing.xSmPadding}px`,
@@ -133,7 +133,7 @@ const DescriptionText = styled(Typography)(({ theme }) => ({
   WebkitLineClamp: 6,
 }));
 
-const BottomButtonBox = styled(Box)(({theme}) => ({
+const BottomButtonBox = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '38px',
   gap: `${theme.sizing.xSmPadding}px`,
@@ -142,19 +142,20 @@ const BottomButtonBox = styled(Box)(({theme}) => ({
   justifyContent: 'center',
 }));
 
-const PrimaryButton1 = styled(Button)(({theme}) => ({
+const PrimaryButton1 = styled(Button)(({ theme }) => ({
   width: 'auto',
   height: '38px',
   padding: `${theme.sizing.xxSmPadding}px 12px`,
   gap: `${theme.sizing.xSmPadding}px`,
   borderRadius: '54px',
-  background: 'linear-gradient(270.1deg, #1C94C3 0.09%, #2A6AC6 64.33%, #2C62C6 76.27%, #3153C7 99.91%)',
+  background:
+    'linear-gradient(270.1deg, #1C94C3 0.09%, #2A6AC6 64.33%, #2C62C6 76.27%, #3153C7 99.91%)',
   boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
   color: '#FFFFFF',
   textTransform: 'none',
 }));
 
-const SecondaryButton = styled(Button)(({theme}) => ({
+const SecondaryButton = styled(Button)(({ theme }) => ({
   width: 'auto',
   height: `${theme.sizing.mdPadding}px`,
   padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding}px`,
@@ -169,13 +170,19 @@ const SecondaryButton = styled(Button)(({theme}) => ({
   lineHeight: '16.59px',
   textAlign: 'center',
   boxShadow: '0px 3px 12px 0px #95002366',
-  zIndex: 2, 
+  zIndex: 2,
   boxSizing: 'border-box',
   minWidth: '20px',
 }));
 
-export default function StyledQuestionCard({ id, title, image, question, handleViewButtonClick }: StyledQuestionCardProps) {
-  const domainAndGrade =`${question.grade}.${question.domain}`;
+export default function StyledQuestionCard({
+  id,
+  title,
+  image,
+  question,
+  handleViewButtonClick,
+}: StyledQuestionCardProps) {
+  const domainAndGrade = `${question.grade}.${question.domain}`;
 
   return (
     <QuestionCard>
@@ -188,13 +195,17 @@ export default function StyledQuestionCard({ id, title, image, question, handleV
         </TitleContainer>
         <SideBySideBox>
           <ImageBox>
-            <GymSVG src={image} alt='Tag' />
+            <GymSVG src={image} alt="Tag" />
           </ImageBox>
           <DescriptionText>{title}</DescriptionText>
         </SideBySideBox>
       </TextContainer>
       <BottomButtonBox>
-        <CentralButton buttonType={ButtonType.VIEW} isEnabled onClick={() => handleViewButtonClick(question)} />
+        <CentralButton
+          buttonType={ButtonType.VIEW}
+          isEnabled
+          onClick={() => handleViewButtonClick(question)}
+        />
         <PrimaryButton1>
           <LaunchSVG src={cloneQuestion} alt="Clone" />
         </PrimaryButton1>

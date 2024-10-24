@@ -16,15 +16,15 @@ interface DetailedQuestionSubCardProps {
   answerReason?: string;
 }
 
-export default function DetailedQuestionSubCard ({ 
+export default function DetailedQuestionSubCard({
   cardType,
   answer,
   instructions,
-  answerReason
+  answerReason,
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
-  const [questionType, setQuestionType] = React.useState<string>('A'); 
-  
+  const [questionType, setQuestionType] = React.useState<string>('A');
+
   const correctAnswerInstruction = (index: number) => {
     return (
       <Box
@@ -58,31 +58,29 @@ export default function DetailedQuestionSubCard ({
   };
 
   const incorrectAnswerReasoning = [
-      <Box
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginTop: `${theme.sizing.xSmPadding}px`,
+      }}
+    >
+      <Typography
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          marginTop: `${theme.sizing.xSmPadding}px`,
+          marginLeft: `${theme.sizing.xSmPadding}px`,
         }}
       >
-        <Typography
-          sx={{
-            marginLeft: `${theme.sizing.xSmPadding}px`,
-          }}
-        >
-          {answerReason}
-        </Typography>
-      </Box>
+        {answerReason}
+      </Typography>
+    </Box>,
   ];
   return (
     <SubCardStyled>
       <QuestionTitleStyled>
         {cardType === CardType.CORRECT ? 'Correct' : 'Incorrect'} Answer
       </QuestionTitleStyled>
-      <AnswerIndicator>
-        {answer}
-      </AnswerIndicator>
+      <AnswerIndicator>{answer}</AnswerIndicator>
       {cardType === CardType.CORRECT && instructions
         ? instructions.map((instruction) =>
             correctAnswerInstruction(instructions.indexOf(instruction)),

@@ -22,7 +22,10 @@ interface ExploreGamesUpperContainerProps {
   screenSize: ScreenSize;
 }
 
-export const ExploreGamesUpperContainer = styled(Box)<ExploreGamesUpperContainerProps>(({ screenSize, theme }) => ({ // eslint-disable-line
+export const ExploreGamesUpperContainer = styled(
+  Box,
+)<ExploreGamesUpperContainerProps>(({ screenSize, theme }) => ({
+  // eslint-disable-line
   display: 'flex',
   justifyContent: 'center',
   width: '100%',

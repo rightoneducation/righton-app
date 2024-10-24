@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, Typography, RadioGroup, FormControlLabel, Radio, styled } from '@mui/material';
+import {
+  Box,
+  Typography,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  styled,
+} from '@mui/material';
 
 export const BaseCardStyled = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -10,11 +17,11 @@ export const BaseCardStyled = styled(Box)(({ theme }) => ({
   background: '#FFFFFF',
   borderRadius: `${theme.sizing.smPadding}px`,
   boxSizing: 'border-box',
-  height: 'fit-content'
+  height: 'fit-content',
 }));
 
 export const SubCardStyled = styled(BaseCardStyled)(({ theme }) => ({
-  minWidth: '50%'
+  minWidth: '50%',
 }));
 
 export const TitleBarStyled = styled(Box)(({ theme }) => ({
@@ -36,20 +43,22 @@ export const RadioContainerStyled = styled(Box)(({ theme }) => ({
   height: '100%',
   display: 'flex',
   justifyContent: 'flex-end',
-  alignItems: 'center'
+  alignItems: 'center',
 }));
 
 type RadioLabelProps = {
   isSelected: boolean;
-}
+};
 
-export const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(({ theme, isSelected }) => ({
-  cursor: 'default',
-  color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
-  '& .MuiTypography-root': {
+export const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(
+  ({ theme, isSelected }) => ({
+    cursor: 'default',
     color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
-  },
-}));
+    '& .MuiTypography-root': {
+      color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
+    },
+  }),
+);
 
 export const RadioStyled = styled(Radio)(({ theme }) => ({
   cursor: 'default',
@@ -57,7 +66,6 @@ export const RadioStyled = styled(Radio)(({ theme }) => ({
   '&.Mui-checked': {
     color: `${theme.palette.primary.mediumBlue}`,
   },
-  
 }));
 
 export const ContentContainerStyled = styled(Box)(({ theme }) => ({
@@ -91,7 +99,7 @@ export const TextContainerStyled = styled(Box)(({ theme }) => ({
   padding: `${theme.sizing.xSmPadding}px`,
 }));
 
-export const CCSSIndicator = styled(Box)(({theme}) => ({
+export const CCSSIndicator = styled(Box)(({ theme }) => ({
   width: 'fit-content',
   height: `${theme.sizing.mdPadding}px`,
   padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding}px`,
@@ -106,12 +114,12 @@ export const CCSSIndicator = styled(Box)(({theme}) => ({
   lineHeight: '16.59px',
   textAlign: 'center',
   boxShadow: '0px 3px 12px 0px #95002366',
-  zIndex: 2, 
+  zIndex: 2,
   boxSizing: 'border-box',
   minWidth: '20px',
 }));
 
-export const AnswerIndicator = styled(Box)(({theme}) => ({
+export const AnswerIndicator = styled(Box)(({ theme }) => ({
   width: '100%',
   height: `${theme.sizing.xLgPadding}px`,
   borderRadius: '20px',

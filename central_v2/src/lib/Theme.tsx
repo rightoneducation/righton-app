@@ -131,9 +131,7 @@ const customVictoryResponsesTheme = {
       },
       labels: {
         fill: ({ datum, index }: any) =>
-          index === 0 || datum.answerCount === 0
-            ? '#FFF'
-            : '#384466',
+          index === 0 || datum.answerCount === 0 ? '#FFF' : '#384466',
         fontFamily: 'Rubik',
         fontWeight: '400',
         textAnchor: 'end',
@@ -159,7 +157,7 @@ const customVictoryConfidenceTheme = {
     },
   },
   stack: {
-    colorScale: [ primaryTextColor, 'transparent'],
+    colorScale: [primaryTextColor, 'transparent'],
     style: {
       data: {
         stroke: primaryTextColor,
@@ -252,27 +250,27 @@ declare module '@mui/material/styles' {
             padding: number;
             fill: string;
             fontSize: string;
-          },
-        },
-      },
+          };
+        };
+      };
       stack: {
         colorScale: string[];
         style: {
           data: {
             stroke: string;
             strokeWidth: number;
-          },
-        },
-      },
+          };
+        };
+      };
       bar: {
         style: {
           data: {
             fill: string;
-          },
-        },
+          };
+        };
         barWidth: number;
-      },
-    }
+      };
+    };
   }
 
   interface ThemeOptions {
@@ -353,27 +351,27 @@ declare module '@mui/material/styles' {
             padding: number;
             fill: string;
             fontSize: string;
-          },
-        },
-      },
+          };
+        };
+      };
       stack?: {
         colorScale?: string[];
         style?: {
           data: {
             stroke: string;
             strokeWidth: number;
-          },
-        },
-      },
+          };
+        };
+      };
       bar?: {
         style?: {
           data?: {
             fill: string;
-          },
-        },
+          };
+        };
         barWidth: number;
-      },
-    }
+      };
+    };
   }
 
   interface PaletteColor {

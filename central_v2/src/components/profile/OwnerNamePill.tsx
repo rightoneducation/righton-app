@@ -32,12 +32,10 @@ interface OwnerNamePillProps {
   ownerName: string;
 }
 
-export default function OwnerNamePill ({ownerName}: OwnerNamePillProps) {
+export default function OwnerNamePill({ ownerName }: OwnerNamePillProps) {
   return (
     <OwnerNamePillContainer>
-      <OwnerNamePillText>
-        {ownerName}
-      </OwnerNamePillText>
+      <OwnerNamePillText>{ownerName}</OwnerNamePillText>
     </OwnerNamePillContainer>
   );
 }

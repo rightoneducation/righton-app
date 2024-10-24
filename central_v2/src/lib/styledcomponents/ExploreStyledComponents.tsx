@@ -7,7 +7,11 @@ interface MostPopularContainerProps {
   children: React.ReactNode;
 }
 
-export function MostPopularContainer({ screenSize, children }: MostPopularContainerProps) { // eslint-disable-line
+export function MostPopularContainer({
+  screenSize,
+  children,
+}: MostPopularContainerProps) {
+  // eslint-disable-line
   const theme = useTheme();
 
   return (
@@ -20,9 +24,15 @@ export function MostPopularContainer({ screenSize, children }: MostPopularContai
         flexDirection: 'column',
         alignItems: 'center',
         backgroundColor: '#E9F1FF',
-        padding: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px` : `${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px`,
+        padding:
+          screenSize === ScreenSize.SMALL
+            ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`
+            : `${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px`,
         boxSizing: 'border-box',
-        gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.smPadding}px` : `${theme.sizing.mdPadding}px`,
+        gap:
+          screenSize === ScreenSize.SMALL
+            ? `${theme.sizing.smPadding}px`
+            : `${theme.sizing.mdPadding}px`,
         flexGrow: 1,
         overflow: 'auto',
         '&::-webkit-scrollbar': {
@@ -31,7 +41,7 @@ export function MostPopularContainer({ screenSize, children }: MostPopularContai
         },
         scrollbarWidth: 'none', // Firefox
         '-ms-overflow-style': 'none',
-            }}
+      }}
     >
       {children}
     </Box>

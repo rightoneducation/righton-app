@@ -8,8 +8,8 @@ import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
 
 const ScreenContainer = styled(Box)(({ theme }) => ({
-  width: '100%', 
-  height: '100dvh', 
+  width: '100%',
+  height: '100dvh',
   display: 'flex',
   flexDirection: 'column',
 }));
@@ -18,37 +18,40 @@ interface BodyContainerProps {
   screenSize: ScreenSize;
 }
 
-const BodyContainer = styled(Box)<BodyContainerProps>(({ theme, screenSize }) => ({
-  width: '100%',
-  flexGrow: 1,
-  overflowY: 'auto',
-}));
+const BodyContainer = styled(Box)<BodyContainerProps>(
+  ({ theme, screenSize }) => ({
+    width: '100%',
+    flexGrow: 1,
+    overflowY: 'auto',
+  }),
+);
 
 interface AppContainerProps {
   children: React.ReactNode;
 }
 
-function AppContainer({
-  children
-}: AppContainerProps) {
+function AppContainer({ children }: AppContainerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [menuOpen, setMenuOpen] = useState(false);
-  const screenSize = isLgScreen  // eslint-disable-line
-  ? ScreenSize.LARGE 
-  : isMediumScreen 
-    ? ScreenSize.MEDIUM 
-    : ScreenSize.SMALL;
+  const screenSize = isLgScreen // eslint-disable-line
+    ? ScreenSize.LARGE
+    : isMediumScreen
+      ? ScreenSize.MEDIUM
+      : ScreenSize.SMALL;
   return (
     <ScreenContainer>
       <HeaderContainer>
-        <Header screenSize={screenSize} isLgScreen={isLgScreen} menuOpen={menuOpen} setMenuOpen={setMenuOpen}/>
+        <Header
+          screenSize={screenSize}
+          isLgScreen={isLgScreen}
+          menuOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+        />
       </HeaderContainer>
-      <BodyContainer screenSize={screenSize}>
-        {children}
-      </BodyContainer>
+      <BodyContainer screenSize={screenSize}>{children}</BodyContainer>
     </ScreenContainer>
   );
 }

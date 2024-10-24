@@ -23,7 +23,7 @@ const GymSVG = styled('img')({
   objectFit: 'cover',
 });
 
-const HeartSVG = styled('img')(({theme}) =>({
+const HeartSVG = styled('img')(({ theme }) => ({
   cursor: 'pointer',
   marginLeft: `${theme.sizing.xxSmPadding}px`,
 }));
@@ -36,8 +36,8 @@ const LaunchSVG = styled('img')({
   cursor: 'pointer',
 });
 
-const GameCard = styled(Box)(({theme}) => ({
-  width: '100%', 
+const GameCard = styled(Box)(({ theme }) => ({
+  width: '100%',
   height: '100%',
   padding: `12px ${theme.sizing.smPadding}px 12px ${theme.sizing.smPadding}px`,
   gap: `${theme.sizing.smPadding}px`,
@@ -50,7 +50,7 @@ const GameCard = styled(Box)(({theme}) => ({
   overflow: 'visible',
 }));
 
-const TextContainer = styled(Box)(({theme}) => ({
+const TextContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '182px',
   gap: `${theme.sizing.smPadding}px`,
@@ -65,7 +65,7 @@ const TitleContainer = styled(Box)(() => ({
   justifyContent: 'space-between',
 }));
 
-const TitleTextTypography = styled(Typography)(({theme}) => ({
+const TitleTextTypography = styled(Typography)(({ theme }) => ({
   width: '100%',
   lineHeight: '30px',
   gap: `${theme.sizing.xSmPadding}px`,
@@ -80,7 +80,7 @@ const TitleTextTypography = styled(Typography)(({theme}) => ({
   WebkitLineClamp: 1,
 }));
 
-const TextAndImageBox = styled(Box)(({theme}) => ({
+const TextAndImageBox = styled(Box)(({ theme }) => ({
   flex: 1,
   height: '136px',
   gap: `${theme.sizing.xSmPadding}px`,
@@ -90,7 +90,7 @@ const TextAndImageBox = styled(Box)(({theme}) => ({
   position: 'relative',
 }));
 
-const SideBySideBox = styled(Box)(({theme}) => ({
+const SideBySideBox = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '136px',
   gap: `${theme.sizing.xSmPadding}px`,
@@ -106,19 +106,28 @@ const SmallSideBySideBox = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'buttonCount',
 })<SmallSideBySideBoxProps>(({ theme, buttonCount }) => ({
   width: '100%',
-  height: buttonCount > 2 ? `${theme.sizing.xLgPadding}px` : `${theme.sizing.mdPadding}px`, // Default height based on button count
+  height:
+    buttonCount > 2
+      ? `${theme.sizing.xLgPadding}px`
+      : `${theme.sizing.mdPadding}px`, // Default height based on button count
   display: 'flex',
   flexDirection: 'column',
-  position: 'relative', 
+  position: 'relative',
   overflow: 'visible',
   marginTop: '7px',
   // dynamic height adjustments for the red buttons
   [theme.breakpoints.down('sm')]: {
-    height: buttonCount > 2 ? `${theme.sizing.xLgPadding}px` : `${theme.sizing.mdPadding}px`, // Height if more than 2 buttons on small screens
+    height:
+      buttonCount > 2
+        ? `${theme.sizing.xLgPadding}px`
+        : `${theme.sizing.mdPadding}px`, // Height if more than 2 buttons on small screens
   },
 
   [theme.breakpoints.up('md')]: {
-    height: buttonCount > 3 ? `${theme.sizing.xLgPadding}px` : `${theme.sizing.mdPadding}px`, // Height if more than 3 buttons on medium and larger screens
+    height:
+      buttonCount > 3
+        ? `${theme.sizing.xLgPadding}px`
+        : `${theme.sizing.mdPadding}px`, // Height if more than 3 buttons on medium and larger screens
   },
 }));
 
@@ -174,7 +183,7 @@ const DescriptionText = styled(Typography, {
   },
 }));
 
-const BottomButtonBox = styled(Box)(({theme}) => ({
+const BottomButtonBox = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '38px',
   gap: `${theme.sizing.xSmPadding}px`,
@@ -183,19 +192,20 @@ const BottomButtonBox = styled(Box)(({theme}) => ({
   justifyContent: 'center',
 }));
 
-const PrimaryButton1 = styled(Button)(({theme}) => ({
+const PrimaryButton1 = styled(Button)(({ theme }) => ({
   width: 'auto',
   height: '38px',
   padding: `${theme.sizing.xxSmPadding}px 12px`,
   gap: `${theme.sizing.xSmPadding}px`,
   borderRadius: '54px',
-  background: 'linear-gradient(270.1deg, #1C94C3 0.09%, #2A6AC6 64.33%, #2C62C6 76.27%, #3153C7 99.91%)',
+  background:
+    'linear-gradient(270.1deg, #1C94C3 0.09%, #2A6AC6 64.33%, #2C62C6 76.27%, #3153C7 99.91%)',
   boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
   color: '#FFFFFF',
   textTransform: 'none',
 }));
 
-const SecondaryButton = styled(Button)(({theme}) => ({
+const SecondaryButton = styled(Button)(({ theme }) => ({
   width: 'auto',
   height: `${theme.sizing.mdPadding}px`,
   padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding}px`,
@@ -210,20 +220,29 @@ const SecondaryButton = styled(Button)(({theme}) => ({
   lineHeight: '16.59px',
   textAlign: 'center',
   boxShadow: '0px 3px 12px 0px #95002366',
-  zIndex: 2, 
+  zIndex: 2,
   boxSizing: 'border-box',
   minWidth: '20px',
 }));
 
 function getDomainAndGrades(game: IGameTemplate) {
-  const extractedQuestions = game?.questionTemplates?.map((question) => question.questionTemplate);
+  const extractedQuestions = game?.questionTemplates?.map(
+    (question) => question.questionTemplate,
+  );
   const CCSSArray = extractedQuestions?.map((question) => {
     return `${question.grade}.${question.domain}`;
   });
   return Array.from(new Set(CCSSArray));
 }
 
-export default function StyledGameCard({ id, title, description, image, game, handleViewButtonClick }: StyledGameCardProps) {
+export default function StyledGameCard({
+  id,
+  title,
+  description,
+  image,
+  game,
+  handleViewButtonClick,
+}: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
 
   return (
@@ -235,7 +254,9 @@ export default function StyledGameCard({ id, title, description, image, game, ha
         </TitleContainer>
         <SideBySideBox>
           <TextAndImageBox>
-            <DescriptionText buttonCount={domainAndGrades.length}>{description}</DescriptionText>
+            <DescriptionText buttonCount={domainAndGrades.length}>
+              {description}
+            </DescriptionText>
             <SmallSideBySideBox buttonCount={domainAndGrades.length}>
               <ButtonWrapper>
                 {domainAndGrades.map((domainGrade) => (
@@ -247,12 +268,16 @@ export default function StyledGameCard({ id, title, description, image, game, ha
             </SmallSideBySideBox>
           </TextAndImageBox>
           <TextAndImageBox>
-            <GymSVG src={image} alt='Tag' />
+            <GymSVG src={image} alt="Tag" />
           </TextAndImageBox>
         </SideBySideBox>
       </TextContainer>
       <BottomButtonBox>
-        <CentralButton buttonType={ButtonType.VIEW} isEnabled onClick={() => handleViewButtonClick(game)} />
+        <CentralButton
+          buttonType={ButtonType.VIEW}
+          isEnabled
+          onClick={() => handleViewButtonClick(game)}
+        />
         <PrimaryButton1>
           <LaunchSVG src={rocket} alt="Tag" />
           Launch

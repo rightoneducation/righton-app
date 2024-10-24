@@ -14,26 +14,29 @@ function AppSwitch() {
   const libraryScreen = useMatch('/library') !== null;
   const signUpScreen = useMatch('/signup') !== null;
   switch (true) {
-    case (questionScreen):
+    case questionScreen:
       return (
         <AppContainer>
           <ExploreQuestions />
         </AppContainer>
       );
-    case (libraryScreen):
+    case libraryScreen:
       return (
-        <><Box/><Box/></>
+        <>
+          <Box />
+          <Box />
+        </>
         // <AppContainer>
         //   <MyLibrary apiClients={apiClients} />
         // </AppContainer>
       );
-    case (signUpScreen):
+    case signUpScreen:
       return (
         <AppContainer>
           <SignUp />
         </AppContainer>
       );
-    default: 
+    default:
       return (
         <AppContainer>
           <ExploreGames />

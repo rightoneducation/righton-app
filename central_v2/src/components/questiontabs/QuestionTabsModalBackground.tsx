@@ -1,5 +1,14 @@
 import React from 'react';
-import { Box, Fade, Slide, Tabs, Tab, Grid, styled, Modal } from '@mui/material';
+import {
+  Box,
+  Fade,
+  Slide,
+  Tabs,
+  Tab,
+  Grid,
+  styled,
+  Modal,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 const TabContainer = styled(Box)(({ theme }) => ({
@@ -8,7 +17,7 @@ const TabContainer = styled(Box)(({ theme }) => ({
   height: '100dvh',
   width: '100dvw',
   zIndex: 5,
-  overflow: 'hidden'
+  overflow: 'hidden',
 }));
 
 const ModalBackground = styled(Box)(({ theme }) => ({
@@ -17,7 +26,7 @@ const ModalBackground = styled(Box)(({ theme }) => ({
   height: '100%',
   width: '100%',
   background: 'rgba(0,0,0,0.5)',
-  zIndex: 5
+  zIndex: 5,
 }));
 
 interface QuestionTabsModalBackgroundProps {
@@ -25,12 +34,20 @@ interface QuestionTabsModalBackgroundProps {
   handleBackToExplore: () => void;
 }
 
-export default function QuestionTabsModalBackground({isTabsOpen, handleBackToExplore}: QuestionTabsModalBackgroundProps) {
-
+export default function QuestionTabsModalBackground({
+  isTabsOpen,
+  handleBackToExplore,
+}: QuestionTabsModalBackgroundProps) {
   return (
-    <Fade in={isTabsOpen} mountOnEnter unmountOnExit timeout={1000} onClick={handleBackToExplore}>
+    <Fade
+      in={isTabsOpen}
+      mountOnEnter
+      unmountOnExit
+      timeout={1000}
+      onClick={handleBackToExplore}
+    >
       <TabContainer>
-      <ModalBackground/>
+        <ModalBackground />
       </TabContainer>
     </Fade>
   );
