@@ -7,7 +7,6 @@ import { Typography, Box, Button } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ScreenSize } from '../lib/CentralModels';
 
-
 interface MyLibraryProps {
   apiClients: IAPIClients;
 }
@@ -34,20 +33,19 @@ export default function MyLibrary({ apiClients }: MyLibraryProps) {
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const isXLScreen = useMediaQuery(theme.breakpoints.up('xl'));
-  const screenSize = isLargeScreen  // eslint-disable-line
-      ? ScreenSize.LARGE 
-      : isMediumScreen 
-        ? ScreenSize.MEDIUM 
-        : ScreenSize.SMALL;
+  const screenSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE
+    : isMediumScreen
+      ? ScreenSize.MEDIUM
+      : ScreenSize.SMALL;
 
   useEffect(() => {
     // TODO - implement api requests for my library screen
   }, []);
 
-
   return (
-    <MyLibraryContainer id = "scrollableDiv">
-          <Typography> MY LIBRARY PAGE</Typography>
+    <MyLibraryContainer id="scrollableDiv">
+      <Typography> MY LIBRARY PAGE</Typography>
     </MyLibraryContainer>
   );
 }

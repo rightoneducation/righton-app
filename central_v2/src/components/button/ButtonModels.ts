@@ -15,56 +15,56 @@ import create from '../../images/buttonIconCreate.svg';
 import bank from '../../images/buttonIconBank.svg';
 
 export enum ButtonType {
-  LOGIN = "login",
-  SIGNUP = "signup",
-  VIEW = "view",
-  LAUNCH = "launch",
-  UPLOAD = "upload",
-  NEXTSTEP = "nextstep",
-  VERIFY = "verify",
-  GETSTARTED = "getstarted",
-  RESETLINK = "resetlink",
-  RESET = "reset",
-  PREVIOUSQUESTION = "previousquestion",
-  BACKTOEXPLORE = "backtoexplore",
-  FAVORITE = "favorite",
-  CLONEANDEDIT = "cloneandedit",
-  NEXTQUESTION = "nextquestion",
-  SAVE = "save",
-  DISCARD = "discard",
-  ADDSTEP = "addstep",
-  BROWSEFILES = "browsefiles",
-  CHANGEIMAGE = "changeimage",
-  NEXTCARD = "nextcard",
-  LAUNCHGAME = "launchgame",
-  CREATEQUESTION = "createquestion",
-  QUESTIONBANK = "questionbank",
-  BACK = "back",
-  EDITPICTURE = "editpicture",
-  EDITINFORMATION = "editinformation",
-  CHANGEPASSWORD = "changepassword"
+  LOGIN = 'login',
+  SIGNUP = 'signup',
+  VIEW = 'view',
+  LAUNCH = 'launch',
+  UPLOAD = 'upload',
+  NEXTSTEP = 'nextstep',
+  VERIFY = 'verify',
+  GETSTARTED = 'getstarted',
+  RESETLINK = 'resetlink',
+  RESET = 'reset',
+  PREVIOUSQUESTION = 'previousquestion',
+  BACKTOEXPLORE = 'backtoexplore',
+  FAVORITE = 'favorite',
+  CLONEANDEDIT = 'cloneandedit',
+  NEXTQUESTION = 'nextquestion',
+  SAVE = 'save',
+  DISCARD = 'discard',
+  ADDSTEP = 'addstep',
+  BROWSEFILES = 'browsefiles',
+  CHANGEIMAGE = 'changeimage',
+  NEXTCARD = 'nextcard',
+  LAUNCHGAME = 'launchgame',
+  CREATEQUESTION = 'createquestion',
+  QUESTIONBANK = 'questionbank',
+  BACK = 'back',
+  EDITPICTURE = 'editpicture',
+  EDITINFORMATION = 'editinformation',
+  CHANGEPASSWORD = 'changepassword',
 }
 
 export enum ButtonColor {
   RED,
-  BLUE
+  BLUE,
 }
 
 type ButtonContentMapProps = {
   [key in ButtonType]: {
-    icon?: string,
-    textKey?: string,
-    color?: ButtonColor,
-    rightIcon?: string
-  }
-}
+    icon?: string;
+    textKey?: string;
+    color?: ButtonColor;
+    rightIcon?: string;
+  };
+};
 
 // textKey data is duplicated to improve clarity of object and centralize all button content properties
 export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LOGIN]: {
     icon: login,
     textKey: ButtonType.LOGIN,
-    color: ButtonColor.RED
+    color: ButtonColor.RED,
   },
   [ButtonType.SIGNUP]: {
     icon: signup,
@@ -93,11 +93,11 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.RESETLINK]: {
     textKey: ButtonType.RESETLINK,
-    color: ButtonColor.RED
+    color: ButtonColor.RED,
   },
   [ButtonType.RESET]: {
     textKey: ButtonType.RESET,
-    color: ButtonColor.RED
+    color: ButtonColor.RED,
   },
   [ButtonType.PREVIOUSQUESTION]: {
     icon: previous,
@@ -147,7 +147,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LAUNCHGAME]: {
     icon: launch,
     textKey: ButtonType.LAUNCHGAME,
-  }, 
+  },
   [ButtonType.CREATEQUESTION]: {
     icon: create,
     textKey: ButtonType.CREATEQUESTION,
@@ -168,5 +168,5 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CHANGEPASSWORD]: {
     textKey: ButtonType.CHANGEPASSWORD,
-  }
-}
+  },
+};

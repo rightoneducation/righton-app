@@ -4,6 +4,7 @@ import { Container } from '@mui/material';
 // container for the Swiperjs pagination bullets
 export default styled('div')(({ theme }) => ({
   height: `${theme.sizing.mdPadding}px`,
+  paddingBottom: `${theme.sizing.mdPadding}px`,
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
