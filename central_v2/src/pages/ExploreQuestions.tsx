@@ -13,6 +13,7 @@ import CardGallery from '../components/cardgallery/CardGallery';
 import Recommended from '../components/explore/Recommended';
 import SearchBar from '../components/searchbar/SearchBar';
 import QuestionTabs from '../components/questiontabs/QuestionTabs';
+import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 
 
 export default function ExploreQuestions() {
@@ -51,9 +52,18 @@ export default function ExploreQuestions() {
     setIsTabsOpen(true);
   }
 
+  const handleBackToExplore = () => {
+    setIsTabsOpen(false);
+  };
+
   return (
     <ExploreGamesMainContainer id = "scrollableDiv">
-      {isTabsOpen && selectedQuestion && <QuestionTabs isTabsOpen={isTabsOpen} question={selectedQuestion} questions={questionSet} />}
+      {selectedQuestion && 
+        <>
+        <QuestionTabsModalBackground isTabsOpen={isTabsOpen}/>
+        <QuestionTabs isTabsOpen={isTabsOpen} question={selectedQuestion} questions={questionSet} handleBackToExplore={handleBackToExplore}/>
+        </>
+        }
         <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>
           {searchTerms.length > 0 || searchedQuestions.length > 0 || selectedGrades.length > 0 ? (          
           <CardGallery<IQuestionTemplate> screenSize={screenSize} searchTerm={searchTerms} grades={selectedGrades} galleryElements={searchedQuestions} isLoading={isLoading} elementType={ElementType.QUESTION} galleryType={GalleryType.SEARCH_RESULTS} setIsTabsOpen={setIsTabsOpen} handleView={handleView}/>

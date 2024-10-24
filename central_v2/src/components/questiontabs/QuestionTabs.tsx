@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Fade, Slide, Tabs, Tab, Grid, styled } from '@mui/material';
+import { Box, Fade, Slide, Tabs, Tab, Grid, styled, Modal } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { IQuestionTemplate } from '@righton/networking';
@@ -25,8 +25,7 @@ const TabContainer = styled(Box)(({ theme }) => ({
   top: 0,
   height: '100dvh',
   width: '100dvw',
-  background: 'rgba(0,0,0,0.25)',
-  zIndex: 5,
+  zIndex: 6,
   overflow: 'hidden'
 }));
 
@@ -35,7 +34,7 @@ const ModalBackground = styled(Box)(({ theme }) => ({
   top: 0,
   height: '100%',
   width: '100%',
-  background: 'rgba(0,0,0,0.25)',
+  background: 'rgba(0,0,0,0.5)',
   zIndex: 5
 }));
 
@@ -55,7 +54,7 @@ const TabContent = styled(Box)(({ theme }) => ({
   top: 0,
   height: '100%',
   width: '100%',
-  zIndex: 6
+  zIndex: 7
 }));
 
 type StyledTabProps = {
@@ -90,12 +89,14 @@ interface TabContainerProps {
   isTabsOpen: boolean;
   question: IQuestionTemplate;
   questions: IQuestionTemplate[];
+  handleBackToExplore: () => void;
 }
 
 export default function QuestionTabs({
   isTabsOpen,
   question,
-  questions
+  questions,
+  handleBackToExplore
 } : TabContainerProps) 
 {
   const theme = useTheme();
@@ -118,85 +119,83 @@ export default function QuestionTabs({
   };
   console.log(question);
   return (
-    <TabContainer>
-      <Fade in={isTabsOpen} timeout={1000}>
-        <ModalBackground/>
-      </Fade>
-      <ContentFrame>
-        <Slide direction="up" in={isTabsOpen} timeout={1000}>
-          <TabContent>
-            <Tabs value={openTab} onChange={handleChange} TabIndicatorProps={{
-              style: {
-                display: 'none'
-              }
-            }}>
-            {Object.entries(tabMap).map(([key, value], index) => {
-              const numericKey = Number(key);
-              return (
-                <StyledTab
-                  key={uuidv4()}
-                  icon={<img src={tabIconMap[numericKey]} alt={value} style={{opacity: openTab === numericKey ?  1 : 0.5}}/>}
-                  iconPosition='start'
-                  label={value}
-                  isSelected={openTab === numericKey}
-                  style={{marginRight: '8px'}}
-                />
-              );
-            })}
-            </Tabs>
-            <Box style={{
-              position: 'relative', 
-              flexGrow:1, 
-              height: '100%', 
-              width: '100%', 
-              background: '#02215F', 
-              zIndex: 6, 
-              borderTopRightRadius: '16px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}>
-              <Box style={{
-                width: '100%',
-                minHeight: '180px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                padding: `${theme.sizing.mdPadding}px`,
-                boxSizing: 'border-box'
+    <Slide direction="up" in={isTabsOpen} mountOnEnter unmountOnExit timeout={1000} >
+      <TabContainer>
+        <ContentFrame>
+            <TabContent>
+              <Tabs value={openTab} onChange={handleChange} TabIndicatorProps={{
+                style: {
+                  display: 'none'
+                }
               }}>
-                <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
-                  <CentralButton buttonType={ButtonType.PREVIOUSQUESTION} isEnabled/>
-                  <CentralButton buttonType={ButtonType.BACKTOEXPLORE} isEnabled/>
+              {Object.entries(tabMap).map(([key, value], index) => {
+                const numericKey = Number(key);
+                return (
+                  <StyledTab
+                    key={uuidv4()}
+                    icon={<img src={tabIconMap[numericKey]} alt={value} style={{opacity: openTab === numericKey ?  1 : 0.5}}/>}
+                    iconPosition='start'
+                    label={value}
+                    isSelected={openTab === numericKey}
+                    style={{marginRight: '8px'}}
+                  />
+                );
+              })}
+              </Tabs>
+              <Box style={{
+                position: 'relative', 
+                flexGrow:1, 
+                height: '100%', 
+                width: '100%', 
+                background: '#02215F', 
+                zIndex: 6, 
+                borderTopRightRadius: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}>
+                <Box style={{
+                  width: '100%',
+                  minHeight: '180px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  padding: `${theme.sizing.mdPadding}px`,
+                  boxSizing: 'border-box'
+                }}>
+                  <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+                    <CentralButton buttonType={ButtonType.PREVIOUSQUESTION} isEnabled/>
+                    <CentralButton buttonType={ButtonType.BACKTOEXPLORE} isEnabled onClick={handleBackToExplore}/>
+                  </Box>
+                  <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`}}>
+                    <CentralButton buttonType={ButtonType.FAVORITE} isEnabled/>
+                    <CentralButton buttonType={ButtonType.CLONEANDEDIT} isEnabled/>
+                    <CentralButton buttonType={ButtonType.NEXTQUESTION} isEnabled/>
+                  </Box>
                 </Box>
-                <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`}}>
-                  <CentralButton buttonType={ButtonType.FAVORITE} isEnabled/>
-                  <CentralButton buttonType={ButtonType.CLONEANDEDIT} isEnabled/>
-                  <CentralButton buttonType={ButtonType.NEXTQUESTION} isEnabled/>
-                </Box>
-              </Box>
-              <DetailedQuestionContainer container gap={`${theme.sizing.smPadding}px`}>
-                  <Grid xs={4} md item style={{display: 'flex', justifyContent: 'flex-end'
-                  }}>
-                    <OwnerTag/>
-                  </Grid>
-                  <Grid md={6} item style={{width: '100%', maxWidth: '672px', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
-                    <DetailedQuestionCardBase question={question}/>
-                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, width: '100%'}}>
-                      <DetailedQuestionSubCard cardType={CardType.CORRECT} answer={question?.choices?.find(answer => answer.isAnswer)?.text ?? ''} instructions={question?.instructions ?? []} />
-                      <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
-                        {question && question.choices?.filter((choice) => !choice.isAnswer).map((choice, index) => (
-                          <DetailedQuestionSubCard key={uuidv4()} cardType={CardType.INCORRECT} answer={choice.text} answerReason={choice.reason} />
-                        ))}
+                <DetailedQuestionContainer container gap={`${theme.sizing.smPadding}px`}>
+                    <Grid xs={4} md item style={{display: 'flex', justifyContent: 'flex-end'
+                    }}>
+                      <OwnerTag/>
+                    </Grid>
+                    <Grid md={6} item style={{width: '100%', maxWidth: '672px', display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+                      <DetailedQuestionCardBase question={question}/>
+                      <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, width: '100%'}}>
+                        <DetailedQuestionSubCard cardType={CardType.CORRECT} answer={question?.choices?.find(answer => answer.isAnswer)?.text ?? ''} instructions={question?.instructions ?? []} />
+                        <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
+                          {question && question.choices?.filter((choice) => !choice.isAnswer).map((choice, index) => (
+                            <DetailedQuestionSubCard key={uuidv4()} cardType={CardType.INCORRECT} answer={choice.text} answerReason={choice.reason} />
+                          ))}
+                        </Box>
                       </Box>
-                    </Box>
-                  </Grid>
-                  <Grid xs={4} md item /> 
-              </DetailedQuestionContainer>
-            </Box>
-          </TabContent>
-        </Slide>
-      </ContentFrame>
-    </TabContainer>
+                    </Grid>
+                    <Grid xs={4} md item /> 
+                </DetailedQuestionContainer>
+              </Box>
+            </TabContent>
+          
+        </ContentFrame>
+      </TabContainer>
+    </Slide>
   );
 }
