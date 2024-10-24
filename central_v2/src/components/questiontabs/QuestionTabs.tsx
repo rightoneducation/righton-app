@@ -26,7 +26,8 @@ const TabContainer = styled(Box)(({ theme }) => ({
   height: '100dvh',
   width: '100dvw',
   zIndex: 6,
-  overflow: 'hidden'
+  overflow: 'hidden',
+  pointerEvents: 'none'
 }));
 
 const ModalBackground = styled(Box)(({ theme }) => ({
@@ -54,7 +55,8 @@ const TabContent = styled(Box)(({ theme }) => ({
   top: 0,
   height: '100%',
   width: '100%',
-  zIndex: 7
+  zIndex: 7,
+  pointerEvents: 'auto'
 }));
 
 type StyledTabProps = {
@@ -70,6 +72,7 @@ const StyledTab = styled(Tab)<StyledTabProps>(({ theme, isSelected }) => ({
     background: '#02215F',
     color: '#fff',
   },
+  pointerEvents: 'auto'
 }));
 
 const DetailedQuestionContainer = styled(Grid)(({theme}) => ({
@@ -90,13 +93,17 @@ interface TabContainerProps {
   question: IQuestionTemplate;
   questions: IQuestionTemplate[];
   handleBackToExplore: () => void;
+  handlePrevQuestion: () => void;
+  handleNextQuestion: () => void;
 }
 
 export default function QuestionTabs({
   isTabsOpen,
   question,
   questions,
-  handleBackToExplore
+  handleBackToExplore,
+  handlePrevQuestion,
+  handleNextQuestion
 } : TabContainerProps) 
 {
   const theme = useTheme();
@@ -164,13 +171,13 @@ export default function QuestionTabs({
                   boxSizing: 'border-box'
                 }}>
                   <Box style={{display: 'flex', flexDirection: 'column', gap: `${theme.sizing.smPadding}px`}}>
-                    <CentralButton buttonType={ButtonType.PREVIOUSQUESTION} isEnabled/>
+                    <CentralButton buttonType={ButtonType.PREVIOUSQUESTION} isEnabled  onClick={handlePrevQuestion}/>
                     <CentralButton buttonType={ButtonType.BACKTOEXPLORE} isEnabled onClick={handleBackToExplore}/>
                   </Box>
                   <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`}}>
                     <CentralButton buttonType={ButtonType.FAVORITE} isEnabled/>
                     <CentralButton buttonType={ButtonType.CLONEANDEDIT} isEnabled/>
-                    <CentralButton buttonType={ButtonType.NEXTQUESTION} isEnabled/>
+                    <CentralButton buttonType={ButtonType.NEXTQUESTION} isEnabled onClick={handleNextQuestion}/>
                   </Box>
                 </Box>
                 <DetailedQuestionContainer container gap={`${theme.sizing.smPadding}px`}>

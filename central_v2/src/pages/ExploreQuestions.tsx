@@ -52,6 +52,24 @@ export default function ExploreQuestions() {
     setIsTabsOpen(true);
   }
 
+  const handlePrevQuestion = () => {
+    const index = questionSet.findIndex((question) => question.id === selectedQuestion?.id);
+    if (index > 0) {
+      setSelectedQuestion(questionSet[index - 1]);
+    } else {
+      setSelectedQuestion(questionSet[questionSet.length - 1])
+    }
+  }
+
+  const handleNextQuestion = () => {
+    const index = questionSet.findIndex((question) => question.id === selectedQuestion?.id);
+    if (index < questionSet.length - 1) {
+      setSelectedQuestion(questionSet[index + 1]);
+    } else {
+      setSelectedQuestion(questionSet[0]);
+    }
+  }
+
   const handleBackToExplore = () => {
     setIsTabsOpen(false);
   };
@@ -60,8 +78,8 @@ export default function ExploreQuestions() {
     <ExploreGamesMainContainer id = "scrollableDiv">
       {selectedQuestion && 
         <>
-        <QuestionTabsModalBackground isTabsOpen={isTabsOpen}/>
-        <QuestionTabs isTabsOpen={isTabsOpen} question={selectedQuestion} questions={questionSet} handleBackToExplore={handleBackToExplore}/>
+          <QuestionTabsModalBackground isTabsOpen={isTabsOpen} handleBackToExplore={handleBackToExplore}/>
+          <QuestionTabs isTabsOpen={isTabsOpen} question={selectedQuestion} questions={questionSet} handleBackToExplore={handleBackToExplore} handlePrevQuestion={handlePrevQuestion} handleNextQuestion={handleNextQuestion}/>
         </>
         }
         <SearchBar screenSize={screenSize} handleSearchChange={handleSearchChange} handleChooseGrades={handleChooseGrades} handleSortChange={handleSortChange}/>

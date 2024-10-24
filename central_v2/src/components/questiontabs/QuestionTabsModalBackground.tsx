@@ -22,12 +22,13 @@ const ModalBackground = styled(Box)(({ theme }) => ({
 
 interface QuestionTabsModalBackgroundProps {
   isTabsOpen: boolean;
+  handleBackToExplore: () => void;
 }
 
-export default function QuestionTabsModalBackground({isTabsOpen}: QuestionTabsModalBackgroundProps) {
+export default function QuestionTabsModalBackground({isTabsOpen, handleBackToExplore}: QuestionTabsModalBackgroundProps) {
 
   return (
-    <Fade in={isTabsOpen}  mountOnEnter unmountOnExit timeout={1000}>
+    <Fade in={isTabsOpen} mountOnEnter unmountOnExit timeout={1000} onClick={handleBackToExplore}>
       <TabContainer>
       <ModalBackground/>
       </TabContainer>
