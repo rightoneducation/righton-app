@@ -171,7 +171,9 @@ export abstract class BaseAPIClient {
           const filters: any[] = [];
           const gradeFilters: any[] =[];
           filters.push({ title: { contains: filterString } });
-          filters.push({ description: { contains: filterString } });
+          if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+            filters.push({ description: { contains: filterString } });
+          }
           filters.push({ ccss: { contains: filterString } });
           if (gradeTargets.length === 0) {
             gradeFilters.push({ gradeFilter: { eq: "K" } });

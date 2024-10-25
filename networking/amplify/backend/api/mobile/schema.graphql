@@ -112,9 +112,11 @@ type PublicQuestionTemplate @model
   choices: AWSJSON
   instructions: AWSJSON
   answerSettings: AWSJSON
+  ccss: String
   domain: String
   cluster: String
   grade: String
+  gradeFilter: String
   standard: String
   imageUrl: String
   gameTemplates: [PublicGameTemplate] @manyToMany(relationName: "PublicGameQuestions")
@@ -146,9 +148,11 @@ type PrivateQuestionTemplate @model
   choices: AWSJSON
   instructions: AWSJSON
   answerSettings: AWSJSON
+  ccss: String
   domain: String
   cluster: String
   grade: String
+  gradeFilter: String
   standard: String
   imageUrl: String
   gameTemplates: [PrivateGameTemplate] @manyToMany(relationName: "PrivateGameQuestions")
@@ -340,4 +344,3 @@ type Subscription {
       ]
     )
 }
-
