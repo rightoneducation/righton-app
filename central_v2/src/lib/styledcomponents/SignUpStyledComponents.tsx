@@ -6,7 +6,7 @@ export const SignUpMainContainer = styled(Box)(({ theme }) => ({ // eslint-disab
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -14,4 +14,11 @@ export const SignUpMainContainer = styled(Box)(({ theme }) => ({ // eslint-disab
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
+  // border: '15px solid red',
+  // justifyContent: 'center',
+  overflow: 'auto',
+  flexGrow: 1,
+  paddingTop: '40px',
+  gap: '20px'
+  // paddingBottom: '124.91px'
 }));

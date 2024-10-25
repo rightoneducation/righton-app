@@ -20,8 +20,9 @@ interface BodyContainerProps {
 
 const BodyContainer = styled(Box)<BodyContainerProps>(({ theme, screenSize }) => ({
   width: '100%',
+  height: '100%',
   flexGrow: 1,
-  overflowY: 'auto',
+  // overflowY: 'auto',
 }));
 
 interface AppContainerProps {
