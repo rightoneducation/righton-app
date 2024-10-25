@@ -12,6 +12,17 @@ import { IAuthAPIClient } from "./auth";
 export enum HTTPMethod {
   Post = "POST",
 }
+
+export enum ElementType {
+  GAME,
+  QUESTION
+}
+
+export enum GalleryType {
+  MOST_POPULAR,
+  SEARCH_RESULTS
+}
+
 export enum GradeTarget {
   KINDERGARTEN = "K",
   GRADEONE = "1",
@@ -28,7 +39,11 @@ export enum SortType {
   listGameTemplates,
   listGameTemplatesByDate,
   listGameTemplatesByGrade,
-  listGameTemplatesByQuestionCount
+  listGameTemplatesByQuestionCount,
+  listQuestionTemplates,
+  listQuestionTemplatesByDate,
+  listQuestionTemplatesByGrade,
+  listQuestionTemplatesByGameCount,
 }
 export enum SortDirection {
   ASC = "ASC",
@@ -156,7 +171,9 @@ export abstract class BaseAPIClient {
           const filters: any[] = [];
           const gradeFilters: any[] =[];
           filters.push({ title: { contains: filterString } });
-          filters.push({ description: { contains: filterString } });
+          if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+            filters.push({ description: { contains: filterString } });
+          }
           filters.push({ ccss: { contains: filterString } });
           if (gradeTargets.length === 0) {
             gradeFilters.push({ gradeFilter: { eq: "K" } });

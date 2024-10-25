@@ -86,9 +86,11 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -124,9 +126,11 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -168,9 +172,11 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -295,9 +301,11 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -333,9 +341,11 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -377,9 +387,11 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -504,9 +516,11 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -542,9 +556,11 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -586,9 +602,11 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -713,9 +731,11 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -751,9 +771,11 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -795,9 +817,11 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -922,9 +946,11 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -960,9 +986,11 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1004,9 +1032,11 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1131,9 +1161,11 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1169,9 +1201,11 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1213,9 +1247,11 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1274,9 +1310,11 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -1338,9 +1376,11 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1376,9 +1416,11 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1420,9 +1462,11 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1480,9 +1524,11 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -1544,9 +1590,11 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1582,9 +1630,11 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1626,9 +1676,11 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1686,9 +1738,11 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -1750,9 +1804,11 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1788,9 +1844,11 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1832,9 +1890,11 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1892,9 +1952,11 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -1956,9 +2018,11 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1994,9 +2058,11 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -2038,9 +2104,11 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -2098,9 +2166,11 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -2162,9 +2232,11 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -2200,9 +2272,11 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -2244,9 +2318,11 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -2304,9 +2380,11 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -2368,9 +2446,11 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -2406,9 +2486,11 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -2450,9 +2532,11 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -3479,9 +3563,11 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -3513,9 +3599,11 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -3553,9 +3641,11 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -3601,9 +3691,11 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -3661,9 +3753,11 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -3695,9 +3789,11 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -3735,9 +3831,11 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -3862,9 +3960,11 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -3896,9 +3996,11 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -3936,9 +4038,11 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -3984,9 +4088,11 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -4044,9 +4150,11 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4078,9 +4186,11 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4118,9 +4228,11 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4245,9 +4357,11 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4279,9 +4393,11 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4319,9 +4435,11 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4367,9 +4485,11 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -4427,9 +4547,11 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4461,9 +4583,11 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4501,9 +4625,11 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4628,9 +4754,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4662,9 +4790,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4702,9 +4832,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4750,9 +4882,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -4810,9 +4944,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4844,9 +4980,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4884,9 +5022,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5011,9 +5151,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5045,9 +5187,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -5085,9 +5229,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5133,9 +5279,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -5193,9 +5341,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5227,9 +5377,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -5267,9 +5419,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5394,9 +5548,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5428,9 +5584,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -5468,9 +5626,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5516,9 +5676,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -5576,9 +5738,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5610,9 +5774,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -5650,9 +5816,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount

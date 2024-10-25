@@ -28,6 +28,7 @@ const darkPurpleColor = '#4700B2'; // phase results, selected answer
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
 const blueColor = '#22ADFF'; // highlights around selected answer, pagination bullet
+const mediumBlueColor = '#3958BF'; // checked radio button
 const extraDarkBlueColor = '#02215F'; // upper explore games screen background
 const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
@@ -130,9 +131,7 @@ const customVictoryResponsesTheme = {
       },
       labels: {
         fill: ({ datum, index }: any) =>
-          index === 0 || datum.answerCount === 0
-            ? '#FFF'
-            : '#384466',
+          index === 0 || datum.answerCount === 0 ? '#FFF' : '#384466',
         fontFamily: 'Rubik',
         fontWeight: '400',
         textAnchor: 'end',
@@ -158,7 +157,7 @@ const customVictoryConfidenceTheme = {
     },
   },
   stack: {
-    colorScale: [ primaryTextColor, 'transparent'],
+    colorScale: [primaryTextColor, 'transparent'],
     style: {
       data: {
         stroke: primaryTextColor,
@@ -251,27 +250,27 @@ declare module '@mui/material/styles' {
             padding: number;
             fill: string;
             fontSize: string;
-          },
-        },
-      },
+          };
+        };
+      };
       stack: {
         colorScale: string[];
         style: {
           data: {
             stroke: string;
             strokeWidth: number;
-          },
-        },
-      },
+          };
+        };
+      };
       bar: {
         style: {
           data: {
             fill: string;
-          },
-        },
+          };
+        };
         barWidth: number;
-      },
-    }
+      };
+    };
   }
 
   interface ThemeOptions {
@@ -352,27 +351,27 @@ declare module '@mui/material/styles' {
             padding: number;
             fill: string;
             fontSize: string;
-          },
-        },
-      },
+          };
+        };
+      };
       stack?: {
         colorScale?: string[];
         style?: {
           data: {
             stroke: string;
             strokeWidth: number;
-          },
-        },
-      },
+          };
+        };
+      };
       bar?: {
         style?: {
           data?: {
             fill: string;
-          },
-        },
+          };
+        };
         barWidth: number;
-      },
-    }
+      };
+    };
   }
 
   interface PaletteColor {
@@ -390,6 +389,7 @@ declare module '@mui/material/styles' {
     green: string;
     darkPurple: string;
     blue: string;
+    mediumBlue: string;
     darkBlue: string;
     extraDarkBlue: string;
     extraDarkGrey: string;
@@ -426,6 +426,7 @@ declare module '@mui/material/styles' {
     green?: string;
     darkPurple?: string;
     blue?: string;
+    mediumBlue?: string;
     darkBlue?: string;
     extraDarkBlue?: string;
     purple?: string;
@@ -500,6 +501,7 @@ export default createTheme({
       green: greenColor,
       darkPurple: darkPurpleColor,
       blue: blueColor,
+      mediumBlue: mediumBlueColor,
       darkBlue: secondaryTextColor,
       extraDarkBlue: extraDarkBlueColor,
       extraDarkGrey: extraDarkGreyColor,
