@@ -1,3 +1,10 @@
+export enum ScreenType {
+  GAMES,
+  QUESTIONS,
+  LIBRARY,
+  SIGNUP
+}
+
 export enum ScreenSize {
   SMALL,
   MEDIUM,

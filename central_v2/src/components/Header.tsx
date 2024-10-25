@@ -10,10 +10,11 @@ import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
-import { ScreenSize } from '../lib/CentralModels';
+import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import { SelectedCentralPages } from '../lib/ScreenEnums';
 
 interface HeaderProps {
+  currentScreen: ScreenType;
   screenSize: ScreenSize;
   isLgScreen: boolean;
   menuOpen: boolean;
@@ -100,30 +101,32 @@ const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
 }));
 
 export default function Header({
+  currentScreen,
   screenSize,
   isLgScreen,
   menuOpen,
   setMenuOpen,
 }: HeaderProps) {
   const navigate = useNavigate();
-  const [selectedScreen, setSelectedScreen] = useState<SelectedCentralPages>(
-    SelectedCentralPages.ExploreGamesScreen,
+
+  const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
+    currentScreen
   );
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const handleButtonClick = (screen: SelectedCentralPages) => {
+  const handleButtonClick = (screen: ScreenType) => {
     setSelectedScreen(screen);
     switch (screen) {
-      case SelectedCentralPages.ExploreQuestionsScreen:
+      case ScreenType.QUESTIONS:
         navigate('/questions');
         break;
-      case SelectedCentralPages.MyLibraryScreen:
+      case ScreenType.LIBRARY:
         navigate('/library');
         break;
-      case SelectedCentralPages.ExploreGamesScreen:
+      case ScreenType.GAMES:
       default:
         navigate('/');
         break;
@@ -166,10 +169,10 @@ export default function Header({
             <Box display="flex" gap="80px">
               <TransparentButton
                 onClick={() =>
-                  handleButtonClick(SelectedCentralPages.ExploreGamesScreen)
+                  handleButtonClick(ScreenType.GAMES)
                 }
                 active={
-                  selectedScreen === SelectedCentralPages.ExploreGamesScreen
+                  selectedScreen === ScreenType.GAMES
                 }
               >
                 <img src={dice} alt="Games Icon" />
@@ -177,10 +180,10 @@ export default function Header({
               </TransparentButton>
               <TransparentButton
                 onClick={() =>
-                  handleButtonClick(SelectedCentralPages.ExploreQuestionsScreen)
+                  handleButtonClick(ScreenType.QUESTIONS)
                 }
                 active={
-                  selectedScreen === SelectedCentralPages.ExploreQuestionsScreen
+                  selectedScreen === ScreenType.QUESTIONS
                 }
               >
                 <img src={qmarks} alt="Questions Icon" />
@@ -188,9 +191,9 @@ export default function Header({
               </TransparentButton>
               <TransparentButton
                 onClick={() =>
-                  handleButtonClick(SelectedCentralPages.MyLibraryScreen)
+                  handleButtonClick(ScreenType.LIBRARY)
                 }
-                active={selectedScreen === SelectedCentralPages.MyLibraryScreen}
+                active={selectedScreen === ScreenType.LIBRARY}
               >
                 <img src={books} alt="My Library Icon" />
                 My Library
@@ -236,9 +239,9 @@ export default function Header({
         >
           <TransparentButton
             onClick={() =>
-              handleButtonClick(SelectedCentralPages.ExploreGamesScreen)
+              handleButtonClick(ScreenType.GAMES)
             }
-            active={selectedScreen === SelectedCentralPages.ExploreGamesScreen}
+            active={selectedScreen === ScreenType.GAMES}
             menuOpen={menuOpen}
           >
             <img src={dice} alt="Games Icon" />
@@ -246,10 +249,10 @@ export default function Header({
           </TransparentButton>
           <TransparentButton
             onClick={() =>
-              handleButtonClick(SelectedCentralPages.ExploreQuestionsScreen)
+              handleButtonClick(ScreenType.QUESTIONS)
             }
             active={
-              selectedScreen === SelectedCentralPages.ExploreQuestionsScreen
+              selectedScreen === ScreenType.QUESTIONS
             }
             menuOpen={menuOpen}
           >
@@ -258,9 +261,9 @@ export default function Header({
           </TransparentButton>
           <TransparentButton
             onClick={() =>
-              handleButtonClick(SelectedCentralPages.MyLibraryScreen)
+              handleButtonClick(ScreenType.LIBRARY)
             }
-            active={selectedScreen === SelectedCentralPages.MyLibraryScreen}
+            active={selectedScreen === ScreenType.LIBRARY}
             menuOpen={menuOpen}
           >
             <img src={books} alt="My Library Icon" />

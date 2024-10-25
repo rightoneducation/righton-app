@@ -5,6 +5,7 @@ import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUp from '../pages/SignUp';
+import { ScreenType } from '../lib/CentralModels';
 
 // interface AppSwitchProps {
 // }
@@ -14,13 +15,14 @@ function AppSwitch() {
   const libraryScreen = useMatch('/library') !== null;
   const signUpScreen = useMatch('/signup') !== null;
   switch (true) {
-    case questionScreen:
+    case questionScreen: {
       return (
-        <AppContainer>
+        <AppContainer currentScreen={ScreenType.QUESTIONS}>
           <ExploreQuestions />
         </AppContainer>
       );
-    case libraryScreen:
+    }
+    case libraryScreen: {
       return (
         <>
           <Box />
@@ -30,18 +32,21 @@ function AppSwitch() {
         //   <MyLibrary apiClients={apiClients} />
         // </AppContainer>
       );
-    case signUpScreen:
+    }
+    case signUpScreen: {
       return (
-        <AppContainer>
+        <AppContainer currentScreen={ScreenType.SIGNUP}>
           <SignUp />
         </AppContainer>
       );
-    default:
+    }
+    default:{
       return (
-        <AppContainer>
+        <AppContainer currentScreen={ScreenType.GAMES}>
           <ExploreGames />
         </AppContainer>
       );
+    }
   }
 }
 

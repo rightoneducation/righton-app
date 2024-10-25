@@ -3,7 +3,7 @@ import { Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  SubCardStyled,
+  BaseCardStyled,
   QuestionTitleStyled,
   AnswerIndicator,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
@@ -76,7 +76,7 @@ export default function DetailedQuestionSubCard({
     </Box>,
   ];
   return (
-    <SubCardStyled>
+    <BaseCardStyled>
       <QuestionTitleStyled>
         {cardType === CardType.CORRECT ? 'Correct' : 'Incorrect'} Answer
       </QuestionTitleStyled>
@@ -86,6 +86,6 @@ export default function DetailedQuestionSubCard({
             correctAnswerInstruction(instructions.indexOf(instruction)),
           )
         : incorrectAnswerReasoning}
-    </SubCardStyled>
+    </BaseCardStyled>
   );
 }

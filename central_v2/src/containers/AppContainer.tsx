@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
-import { ScreenSize } from '../lib/CentralModels';
+import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
 
@@ -27,10 +27,11 @@ const BodyContainer = styled(Box)<BodyContainerProps>(
 );
 
 interface AppContainerProps {
+  currentScreen: ScreenType;
   children: React.ReactNode;
 }
 
-function AppContainer({ children }: AppContainerProps) {
+function AppContainer({ currentScreen, children }: AppContainerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -45,6 +46,7 @@ function AppContainer({ children }: AppContainerProps) {
     <ScreenContainer>
       <HeaderContainer>
         <Header
+          currentScreen={currentScreen}
           screenSize={screenSize}
           isLgScreen={isLgScreen}
           menuOpen={menuOpen}

@@ -97,6 +97,7 @@ export default function ExploreQuestions() {
             handleBackToExplore={handleBackToExplore}
           />
           <QuestionTabs
+            screenSize={screenSize}
             isTabsOpen={isTabsOpen}
             question={selectedQuestion}
             questions={questionSet}

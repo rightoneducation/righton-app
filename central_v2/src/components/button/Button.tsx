@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { ButtonType, ButtonColor, buttonContentMap } from './ButtonModels';
 import {
@@ -20,11 +22,13 @@ export default function CentralButton({
   onClick,
 }: CentralButtonProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
   const buttonObj = buttonContentMap[buttonType];
   const buttonText = buttonObj.textKey
     ? t(`button.${buttonObj.textKey}`)
     : null;
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <ButtonStyled
@@ -38,7 +42,7 @@ export default function CentralButton({
             <img src={buttonObj.icon} alt={`${buttonText}`} />
           </ButtonIconContainer>
         )}
-        {buttonText && <ButtonTypography> {buttonText} </ButtonTypography>}
+        {buttonText && !isSmallScreen && <ButtonTypography> {buttonText} </ButtonTypography>}
         {buttonObj.rightIcon && (
           <ButtonIconContainer>
             <img src={buttonObj.rightIcon} alt={`${buttonText}`} />

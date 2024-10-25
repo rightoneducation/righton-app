@@ -14,17 +14,18 @@ import {
   TextContainerStyled,
   CCSSIndicator,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
-import image from '../../../images/RightOnLogo.png';
+import { ScreenSize } from '../../../lib/CentralModels';
 
 interface DetailedQuestionCardBaseProps {
+  screenSize: ScreenSize;
   question: IQuestionTemplate;
 }
 
 export default function DetailedQuestionCardBase({
+  screenSize,
   question,
 }: DetailedQuestionCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
-  console.log(questionType);
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -36,23 +37,23 @@ export default function DetailedQuestionCardBase({
       <TitleBarStyled>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>
-          <RadioGroup row value={questionType}>
+          <RadioGroup row value={questionType} style={{overflow: 'hidden', flexWrap: 'nowrap'}}>
             <RadioLabelStyled
               value="A"
               control={<RadioStyled />}
-              label="Multiple Choice"
+              label={screenSize === ScreenSize.SMALL ? "M.C." : "Multiple Choice"}
               isSelected={questionType === 'A'}
             />
             <RadioLabelStyled
               value="B"
               control={<RadioStyled />}
-              label="Short Answer"
+              label={screenSize === ScreenSize.SMALL ? "S.A." : "Short Answer"}
               isSelected={questionType === 'B'}
             />
           </RadioGroup>
         </RadioContainerStyled>
       </TitleBarStyled>
-      <ContentContainerStyled>
+      <ContentContainerStyled screenSize={screenSize}>
         <ImageStyled src={question.imageUrl ?? ''} alt="image" />
         <ContentRightContainerStyled>
           <TextContainerStyled>

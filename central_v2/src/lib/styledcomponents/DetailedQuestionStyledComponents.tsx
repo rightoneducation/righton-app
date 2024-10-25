@@ -7,6 +7,7 @@ import {
   Radio,
   styled,
 } from '@mui/material';
+import { ScreenSize } from '../CentralModels';
 
 export const BaseCardStyled = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -20,16 +21,13 @@ export const BaseCardStyled = styled(Box)(({ theme }) => ({
   height: 'fit-content',
 }));
 
-export const SubCardStyled = styled(BaseCardStyled)(({ theme }) => ({
-  minWidth: '50%',
-}));
-
 export const TitleBarStyled = styled(Box)(({ theme }) => ({
   width: '100%',
   height: 'fit-content',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  gap: `${theme.sizing.smPadding}px`,
 }));
 
 export const QuestionTitleStyled = styled(Typography)(({ theme }) => ({
@@ -68,10 +66,15 @@ export const RadioStyled = styled(Radio)(({ theme }) => ({
   },
 }));
 
-export const ContentContainerStyled = styled(Box)(({ theme }) => ({
+interface ContentContainerProps {
+  screenSize: ScreenSize;
+}
+
+export const ContentContainerStyled = styled(Box)<ContentContainerProps>(({ theme, screenSize }) => ({
   width: '100%',
-  height: '175px',
+  height: screenSize === ScreenSize.SMALL ? '100%' : '100%',
   display: 'flex',
+  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   gap: `${theme.sizing.smPadding}px`,
