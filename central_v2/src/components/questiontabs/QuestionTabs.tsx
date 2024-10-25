@@ -187,7 +187,7 @@ export default function QuestionTabs({
                       <SubCardGridItem 
                         item
                         sm={12}
-                        lg={6}
+                        md={6}
                       >
                         <DetailedQuestionSubCard
                           cardType={CardType.CORRECT}
@@ -201,7 +201,7 @@ export default function QuestionTabs({
                       <SubCardGridItem
                         item
                         sm={12}
-                        lg={6}
+                        md={6}
                       >
                         {question &&
                           question.choices
