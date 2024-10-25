@@ -14,9 +14,11 @@ export interface IQuestionTemplate {
   choices?: IChoice[] | null,
   instructions?: string[] | null,
   answerSettings?: string | null,
+  ccss: string,
   domain: string;
   cluster: string;
   grade: string;
+  gradeFilter: string;
   standard: string;
   imageUrl?: string | null | undefined,
   gameTemplates?: { gameTemplate: IGameTemplate, gameQuestionId: string }[] | null,

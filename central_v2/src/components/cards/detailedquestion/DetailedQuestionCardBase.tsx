@@ -60,7 +60,7 @@ export default function DetailedQuestionCardBase({
             <Typography>{question.title}</Typography>
           </TextContainerStyled>
           <CCSSIndicator>
-            {`${question.grade}.${question.domain}.${question.cluster}.${question.standard}`}
+            {question.ccss}
           </CCSSIndicator>
         </ContentRightContainerStyled>
       </ContentContainerStyled>
