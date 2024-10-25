@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox, Typography } from '@mui/material';
+import { Checkbox, Typography, Collapse } from '@mui/material';
 import { GradeTarget } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
@@ -114,37 +114,39 @@ export default function SelectGradesMenu({
           <img src={SelectArrow} alt="Select Arrow" />
         </SelectArrowContainer>
       </SelectGrade>
-      <SelectMenu isSelectOpen={isSelectOpen}>
-        {Object.keys(gradeMap).map((grade) => (
-          <SelectMenuItem onClick={() => handleGradesChange(grade)}>
-            <Checkbox
-              checked={selectedGrades.includes(
-                gradeMap[grade as keyof typeof gradeMap],
-              )}
-              color="default"
-            />
-            <Typography
-              style={{
-                fontFamily: 'Poppins',
-                fontSize: '16px',
-                fontWeight: 500,
+      <Collapse in={isSelectOpen} timeout={1000}>
+        <SelectMenu isSelectOpen={isSelectOpen}>
+          {Object.keys(gradeMap).map((grade) => (
+            <SelectMenuItem onClick={() => handleGradesChange(grade)}>
+              <Checkbox
+                checked={selectedGrades.includes(
+                  gradeMap[grade as keyof typeof gradeMap],
+                )}
+                color="default"
+              />
+              <Typography
+                style={{
+                  fontFamily: 'Poppins',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                }}
+              >
+                {grade}
+              </Typography>
+            </SelectMenuItem>
+          ))}
+          <SelectButtonBox>
+            <SelectButton
+              onClick={() => {
+                setIsSelectOpen(false);
+                handleChooseGrades(selectedGrades);
               }}
             >
-              {grade}
-            </Typography>
-          </SelectMenuItem>
-        ))}
-        <SelectButtonBox>
-          <SelectButton
-            onClick={() => {
-              setIsSelectOpen(false);
-              handleChooseGrades(selectedGrades);
-            }}
-          >
-            Choose
-          </SelectButton>
-        </SelectButtonBox>
-      </SelectMenu>
+              Choose
+            </SelectButton>
+          </SelectButtonBox>
+        </SelectMenu>
+      </Collapse>
     </SelectContainer>
   );
 }
