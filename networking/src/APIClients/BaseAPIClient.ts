@@ -166,13 +166,13 @@ export abstract class BaseAPIClient {
     ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
       if (filterString != null) {
-        queryParameters.filter = { title: { contains: filterString } };
+        queryParameters.filter = { lowerCaseTitle: { contains: filterString } };
       if (filterString != null && gradeTargets) {
           const filters: any[] = [];
           const gradeFilters: any[] =[];
-          filters.push({ title: { contains: filterString } });
+          filters.push({ lowerCaseTitle: { contains: filterString } });
           if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-            filters.push({ description: { contains: filterString } });
+            filters.push({ lowerCaseDescription: { contains: filterString } });
           }
           filters.push({ ccss: { contains: filterString } });
           if (gradeTargets.length === 0) {
