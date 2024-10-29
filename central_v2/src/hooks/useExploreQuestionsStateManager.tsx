@@ -51,7 +51,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     direction: SortDirection | null;
   }>({
     field: SortType.listQuestionTemplatesByDate,
-    direction: SortDirection.DESC,
+    direction: null,
   });
   const [isTabsOpen, setIsTabsOpen] = useState(false);
 

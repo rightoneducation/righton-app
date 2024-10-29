@@ -45,7 +45,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     direction: SortDirection | null;
   }>({
     field: SortType.listGameTemplatesByDate,
-    direction: SortDirection.DESC,
+    direction: null,
   });
   const [isTabsOpen, setIsTabsOpen] = useState(false);
 

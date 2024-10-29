@@ -170,12 +170,12 @@ export abstract class BaseAPIClient {
         queryParameters.filter = { lowerCaseTitle: { contains: filterStringLowerCase } };
       if (filterStringLowerCase != null && gradeTargets) {
           const filters: any[] = [];
-          const gradeFilters: any[] =[];
+          const gradeFilters: any[] = [];
           filters.push({ lowerCaseTitle: { contains: filterStringLowerCase } });
           if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
             filters.push({ lowerCaseDescription: { contains: filterStringLowerCase } });
           }
-          filters.push({ ccss: { contains: filterStringLowerCase } });
+          // filters.push({ ccss: { contains: filterStringLowerCase } });
           if (gradeTargets.length === 0) {
             queryParameters.filter = { 
               or: filters 
@@ -193,16 +193,13 @@ export abstract class BaseAPIClient {
               ]
             };
           }
-         
         }
       }
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
-      console.log(queryParameters);
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
-      console.log(result);
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
         const operationResult = result.data[queryName];
         const parsedNextToken = operationResult.nextToken;
