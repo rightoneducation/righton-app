@@ -165,47 +165,44 @@ export abstract class BaseAPIClient {
       gradeTargets?: GradeTarget[] | null,
     ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
-      if (filterString != null) {
-        queryParameters.filter = { lowerCaseTitle: { contains: filterString } };
-      if (filterString != null && gradeTargets) {
+      const filterStringLowerCase = filterString?.toLowerCase();
+      if (filterStringLowerCase != null) {
+        queryParameters.filter = { lowerCaseTitle: { contains: filterStringLowerCase } };
+      if (filterStringLowerCase != null && gradeTargets) {
           const filters: any[] = [];
           const gradeFilters: any[] =[];
-          filters.push({ lowerCaseTitle: { contains: filterString } });
+          filters.push({ lowerCaseTitle: { contains: filterStringLowerCase } });
           if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-            filters.push({ lowerCaseDescription: { contains: filterString } });
+            filters.push({ lowerCaseDescription: { contains: filterStringLowerCase } });
           }
-          filters.push({ ccss: { contains: filterString } });
+          filters.push({ ccss: { contains: filterStringLowerCase } });
           if (gradeTargets.length === 0) {
-            gradeFilters.push({ gradeFilter: { eq: "K" } });
-            gradeFilters.push({ gradeFilter: { eq: "1" } });
-            gradeFilters.push({ gradeFilter: { eq: "2" } });
-            gradeFilters.push({ gradeFilter: { eq: "3" } });
-            gradeFilters.push({ gradeFilter: { eq: "4" } });
-            gradeFilters.push({ gradeFilter: { eq: "5" } });
-            gradeFilters.push({ gradeFilter: { eq: "6" } });
-            gradeFilters.push({ gradeFilter: { eq: "7" } });
-            gradeFilters.push({ gradeFilter: { eq: "8" } });
-            gradeFilters.push({ gradeFilter: { eq: "H" } });
+            queryParameters.filter = { 
+              or: filters 
+            };       // Match at least one of the filters (title, description, etc.)
           } else {
             gradeTargets.forEach((target) => {
               if (target !== null) {
                 gradeFilters.push({ gradeFilter: { eq: target } });
               }
             });
+            queryParameters.filter = {
+              and: [
+                { or: gradeFilters }, // Match one of the specified grades
+                { or: filters }       // Match at least one of the filters (title, description, etc.)
+              ]
+            };
           }
-          queryParameters.filter = {
-            and: [
-              { or: gradeFilters }, // Match one of the specified grades
-              { or: filters }       // Match at least one of the filters (title, description, etc.)
-            ]
-          };
+         
         }
       }
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
+      console.log(queryParameters);
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
+      console.log(result);
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
         const operationResult = result.data[queryName];
         const parsedNextToken = operationResult.nextToken;

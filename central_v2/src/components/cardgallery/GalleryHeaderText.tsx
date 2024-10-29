@@ -61,7 +61,7 @@ export default function GalleryHeaderText<
         />
       ) : (
         <>
-          {searchedElements && searchedElements.length > 0 && (
+          {searchedElements && (
             <ResultsLengthText screenSize={screenSize}>
               {searchedElements.length} results
             </ResultsLengthText>
@@ -70,6 +70,16 @@ export default function GalleryHeaderText<
             <GradesText screenSize={screenSize}>
               in {formattedGrades}
             </GradesText>
+          )}
+            {searchedElements && searchedElements.length === 0 && (
+            <>
+              <ResultsLengthText screenSize={screenSize} style={{fontSize: '16px', paddingTop: '24px'}}>
+                There are no results for {searchedTerm}.
+              </ResultsLengthText>
+              <ResultsLengthText screenSize={screenSize} style={{fontSize: '16px'}}>
+                Please check your spelling or try a different term
+              </ResultsLengthText>
+            </>
           )}
         </>
       )}

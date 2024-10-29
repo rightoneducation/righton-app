@@ -31,6 +31,7 @@ interface CardGalleryProps<T> {
 interface MostPopularComponentProps<T> {
   mostPopularElements: { [key: number]: T[] };
   maxCards: number;
+  isLoading: boolean;
   numColumns: number;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleViewButtonClick: (element: T) => void;
@@ -40,6 +41,7 @@ interface MostPopularGamesComponentProps {
   mostPopularElements: IGameTemplate[];
   maxCards: number;
   numColumns: number;
+  isLoading: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleViewButtonClick: (element: IGameTemplate) => void;
 }
@@ -47,13 +49,14 @@ interface MostPopularGamesComponentProps {
 function MostPopularGamesComponent({
   mostPopularElements,
   maxCards,
+  isLoading,
   numColumns,
   setIsTabsOpen,
   handleViewButtonClick,
 }: MostPopularGamesComponentProps) {
   return (
     <Grid container spacing={2} id="scrollableDiv">
-      {mostPopularElements.length === 0
+      {(mostPopularElements.length === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
               <Grid item xs={12} md={6} lg={4} key={index}> {/* eslint-disable-line */}
@@ -84,6 +87,7 @@ function MostPopularGamesComponent({
 function MostPopularQuestionsComponent({
   mostPopularElements,
   maxCards,
+  isLoading,
   numColumns,
   setIsTabsOpen,
   handleViewButtonClick,
@@ -95,7 +99,7 @@ function MostPopularQuestionsComponent({
   );
   return (
     <Grid container spacing={2} id="scrollableDiv">
-      {elementsLength === 0
+      {(elementsLength === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
               <Grid item xs={12} md={4} lg={2} key={index}> {/* eslint-disable-line */}
@@ -200,6 +204,7 @@ export default function CardGallery<
       />
       {elementType === ElementType.GAME ? (
         <MostPopularGamesComponent
+          isLoading={isLoading ?? false}
           mostPopularElements={galleryElements as IGameTemplate[]}
           maxCards={maxCards}
           numColumns={getNumColumns()}
@@ -210,6 +215,7 @@ export default function CardGallery<
         />
       ) : (
         <MostPopularQuestionsComponent
+          isLoading={isLoading || false}
           mostPopularElements={reformatElements(
             galleryElements as IQuestionTemplate[],
           )}

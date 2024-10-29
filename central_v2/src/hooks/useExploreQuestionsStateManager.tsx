@@ -141,13 +141,16 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
 
   const handleSearchChange = (searchString: string) => {
     setIsLoading(true);
+    setSearchedQuestions([]);
     setSearchTerms(searchString);
-    debouncedSearch(
-      searchString,
-      sort.direction ?? SortDirection.ASC,
-      selectedGrades,
-      sort.field,
-    );
+    if (searchString !== ''){
+      debouncedSearch(
+        searchString,
+        sort.direction ?? SortDirection.ASC,
+        selectedGrades,
+        sort.field,
+      );
+    }
   };
 
   const loadMoreQuestions = () => {
