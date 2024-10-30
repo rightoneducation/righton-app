@@ -3,6 +3,7 @@ import { IQuestionTemplate, IGameTemplate } from "../Models";
 import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
 import { PublicPrivateType } from "../APIClients";
+import { IChoice } from "../Models/IQuestion";
 
 export class QuestionTemplateParser {
     static questionTemplateFromAWSQuestionTemplate(
@@ -32,18 +33,37 @@ export class QuestionTemplateParser {
             // assign an empty array if gameTemplates is null
             gameTemplates = [];
         }
+        // parse choices array
+        let choices: IChoice[] = [];
+        if (!isNullOrUndefined(awsQuestionTemplate.choices)) {
+           try {
+            choices = JSON.parse(awsQuestionTemplate.choices) as IChoice[]
+            } catch (e) {
+                console.error(e);
+           }
+        }
+        // parse instructions array
+        let instructions: string[] = [];
+        if (!isNullOrUndefined(awsQuestionTemplate.instructions)) {
+           try {
+            instructions = JSON.parse(awsQuestionTemplate.instructions) as string[]
+            } catch (e) {
+                console.error(e);
+           }
+        }
        
       const {
           id,
           title,
+          lowerCaseTitle,
           owner,
           version,
-          choices,
-          instructions,
           answerSettings,
+          ccss,
           domain,
           cluster,
           grade,
+          gradeFilter,
           standard,
           imageUrl,
           gameTemplatesCount
@@ -59,18 +79,20 @@ export class QuestionTemplateParser {
 
       const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
-
       const questionTemplate: IQuestionTemplate = {
           id,
           title,
+          lowerCaseTitle: lowerCaseTitle ?? '',
           owner,
           version,
           choices,
           instructions,
           answerSettings,
+          ccss: ccss ?? '',
           domain: domain ?? '',
           cluster: cluster ?? '',
           grade: grade ?? '',
+          gradeFilter: gradeFilter ?? '',
           standard: standard ?? '',
           imageUrl,
           gameTemplates,

@@ -10,12 +10,13 @@ import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
-import { ScreenSize } from '../lib/CentralModels';
+import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import { SelectedCentralPages } from '../lib/ScreenEnums';
 
 interface HeaderProps {
+  currentScreen: ScreenType;
   screenSize: ScreenSize;
-  isXLScreen: boolean;
+  isLgScreen: boolean;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
 }
@@ -24,18 +25,22 @@ interface HeaderContainerProps {
   screenSize: ScreenSize;
   menuOpen: boolean;
 }
-const HeaderContainer = styled(Box)<HeaderContainerProps>(({ screenSize, menuOpen, theme }) => ({
-  height: '94px',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  width: '100%',
-  padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
-  boxSizing: 'border-box',
+const HeaderContainer = styled(Box)<HeaderContainerProps>(
+  ({ screenSize, menuOpen, theme }) => ({
+    height: '94px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
+    boxSizing: 'border-box',
+  }),
+);
 
-}));
-
-const TransparentButton = styled(Button)<{ active?: boolean; menuOpen?: boolean }>(({ active, menuOpen, theme }) => ({
+const TransparentButton = styled(Button)<{
+  active?: boolean;
+  menuOpen?: boolean;
+}>(({ active, menuOpen, theme }) => ({
   display: 'flex',
   justifyContent: menuOpen ? 'flex-start' : 'center',
   width: '200px',
@@ -49,12 +54,11 @@ const TransparentButton = styled(Button)<{ active?: boolean; menuOpen?: boolean 
   textTransform: 'none',
   opacity: active ? 1 : 0.5, // Apply opacity based on active prop
   '& img': {
-    marginRight:`${theme.sizing.xSmPadding}px`,
+    marginRight: `${theme.sizing.xSmPadding}px`,
   },
 }));
 
-
-const PrimaryButton2 = styled(Button)(({theme}) => ({
+const PrimaryButton2 = styled(Button)(({ theme }) => ({
   width: '123px',
   minWidth: '44px',
   height: '38px',
@@ -74,14 +78,14 @@ const PrimaryButton2Text = styled(Typography)(() => ({
   lineHeight: '30px',
   color: '#FFFFFF',
 }));
-const CreateBox = styled(Box)(({theme}) =>({
-    width: '199px',
-    height: '154px',
-    padding: `${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px`,
-    gap: `${theme.sizing.smPadding}px`,
-    borderRadius: `${theme.sizing.smPadding}px`,
-    background: '#36598D',
-    boxSizing: 'border-box'
+const CreateBox = styled(Box)(({ theme }) => ({
+  width: '199px',
+  height: '154px',
+  padding: `${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px`,
+  gap: `${theme.sizing.smPadding}px`,
+  borderRadius: `${theme.sizing.smPadding}px`,
+  background: '#36598D',
+  boxSizing: 'border-box',
 }));
 
 interface ImageContainerProps {
@@ -96,36 +100,44 @@ const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
   height: '100%',
 }));
 
-export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }: HeaderProps) {
+export default function Header({
+  currentScreen,
+  screenSize,
+  isLgScreen,
+  menuOpen,
+  setMenuOpen,
+}: HeaderProps) {
   const navigate = useNavigate();
-  const [selectedScreen, setSelectedScreen] = useState<SelectedCentralPages>(SelectedCentralPages.ExploreGamesScreen);
+
+  const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
+    currentScreen
+  );
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const handleButtonClick = (screen: SelectedCentralPages) => {
+  const handleButtonClick = (screen: ScreenType) => {
     setSelectedScreen(screen);
     switch (screen) {
-      case SelectedCentralPages.ExploreQuestionsScreen:
+      case ScreenType.QUESTIONS:
         navigate('/questions');
         break;
-      case SelectedCentralPages.MyLibraryScreen:
+      case ScreenType.LIBRARY:
         navigate('/library');
         break;
-      case SelectedCentralPages.ExploreGamesScreen:
+      case ScreenType.GAMES:
       default:
         navigate('/');
         break;
     }
   };
   const getHeight = () => {
-    if (menuOpen)
-      return '418px';
+    if (menuOpen) return '418px';
     return '94px';
-  }
+  };
   return (
-      <Collapse
+    <Collapse
       in
       timeout={500}
       style={{
@@ -143,29 +155,45 @@ export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }
       }}
     >
       <HeaderContainer screenSize={screenSize} menuOpen={menuOpen}>
-        <ImageContainer align="flex-start" style={{ width: isXLScreen ? '210px' : 'auto', alignItems: 'flex-start' }}>
+        <ImageContainer
+          align="flex-start"
+          style={{
+            width: isLgScreen ? '210px' : 'auto',
+            alignItems: 'flex-start',
+          }}
+        >
           <img src={rightonlogo} alt="Right On Logo" />
         </ImageContainer>
         <ImageContainer align="center" style={{ flexDirection: 'column' }}>
-          {isXLScreen ? (
+          {isLgScreen ? (
             <Box display="flex" gap="80px">
               <TransparentButton
-                onClick={() => handleButtonClick(SelectedCentralPages.ExploreGamesScreen)}
-                active={selectedScreen === SelectedCentralPages.ExploreGamesScreen}
+                onClick={() =>
+                  handleButtonClick(ScreenType.GAMES)
+                }
+                active={
+                  selectedScreen === ScreenType.GAMES
+                }
               >
                 <img src={dice} alt="Games Icon" />
                 Games
               </TransparentButton>
               <TransparentButton
-                onClick={() => handleButtonClick(SelectedCentralPages.ExploreQuestionsScreen)}
-                active={selectedScreen === SelectedCentralPages.ExploreQuestionsScreen}
+                onClick={() =>
+                  handleButtonClick(ScreenType.QUESTIONS)
+                }
+                active={
+                  selectedScreen === ScreenType.QUESTIONS
+                }
               >
                 <img src={qmarks} alt="Questions Icon" />
                 Questions
               </TransparentButton>
               <TransparentButton
-                onClick={() => handleButtonClick(SelectedCentralPages.MyLibraryScreen)}
-                active={selectedScreen === SelectedCentralPages.MyLibraryScreen}
+                onClick={() =>
+                  handleButtonClick(ScreenType.LIBRARY)
+                }
+                active={selectedScreen === ScreenType.LIBRARY}
               >
                 <img src={books} alt="My Library Icon" />
                 My Library
@@ -173,12 +201,21 @@ export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }
             </Box>
           ) : (
             <IconButton onClick={handleMenuToggle}>
-              <img src={menuOpen ? hamburgerX : hamburger} alt="Hamburger Menu" />
+              <img
+                src={menuOpen ? hamburgerX : hamburger}
+                alt="Hamburger Menu"
+              />
             </IconButton>
           )}
         </ImageContainer>
-        <ImageContainer align="flex-end" style={{ width: isXLScreen ? 'auto' : '120px', alignItems: 'flex-start' }}>
-          {isXLScreen ? (
+        <ImageContainer
+          align="flex-end"
+          style={{
+            width: isLgScreen ? 'auto' : '120px',
+            alignItems: 'flex-start',
+          }}
+        >
+          {isLgScreen ? (
             <>
               <PrimaryButton2 style={{ marginTop: '12px' }}>
                 <img src={plus} alt="Plus Icon" />
@@ -190,59 +227,80 @@ export default function Header({ screenSize, isXLScreen, menuOpen, setMenuOpen }
             <img src={profile} alt="Profile" />
           )}
         </ImageContainer>
-       
       </HeaderContainer>
-      {menuOpen && 
-           <Box
-           display="flex"
-           flexDirection="column"
-           gap="12px"
-           alignItems= "flex-start"
-           width="200px" // Set a fixed width to the box
-           style={{ margin: '0 auto',}} // This centers the box horizontally
-         >
-           <TransparentButton
-             onClick={() => handleButtonClick(SelectedCentralPages.ExploreGamesScreen)}
-             active={selectedScreen === SelectedCentralPages.ExploreGamesScreen}
-             menuOpen={menuOpen}
-           >
-             <img src={dice} alt="Games Icon" />
-             Games
-           </TransparentButton>
-           <TransparentButton
-             onClick={() => handleButtonClick(SelectedCentralPages.ExploreQuestionsScreen)}
-             active={selectedScreen === SelectedCentralPages.ExploreQuestionsScreen}
-             menuOpen={menuOpen}
-           >
-             <img src={qmarks} alt="Questions Icon" />
-             Questions
-           </TransparentButton>
-           <TransparentButton
-             onClick={() => handleButtonClick(SelectedCentralPages.MyLibraryScreen)}
-             active={selectedScreen === SelectedCentralPages.MyLibraryScreen}
-             menuOpen={menuOpen}
-           >
-             <img src={books} alt="My Library Icon" />
-             My Library
-           </TransparentButton>
-           <CreateBox>
-             <Box style={{ opacity: .8, gap: '8px', display: 'flex', flexDirection: 'row',}}>
-               <img src={plus} alt="Plus Icon" />
-               <PrimaryButton2Text>Create</PrimaryButton2Text>
-             </Box>
-             <Box style={{ padding: '16px 0px 0px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-               <PrimaryButton2 style={{ width: '120px' }}>
-                 <img src={dice} alt="Plus Icon" />
-                 <PrimaryButton2Text>Game</PrimaryButton2Text>
-               </PrimaryButton2>
-               <PrimaryButton2 style={{ width: '150px' }}>
-                 <img src={qmarks} alt="Plus Icon" />
-                 <PrimaryButton2Text>Question</PrimaryButton2Text>
-               </PrimaryButton2>
-             </Box>
-           </CreateBox>
-         </Box>
-        }
-     </Collapse>
+      {menuOpen && (
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="12px"
+          alignItems="flex-start"
+          width="200px" // Set a fixed width to the box
+          style={{ margin: '0 auto' }} // This centers the box horizontally
+        >
+          <TransparentButton
+            onClick={() =>
+              handleButtonClick(ScreenType.GAMES)
+            }
+            active={selectedScreen === ScreenType.GAMES}
+            menuOpen={menuOpen}
+          >
+            <img src={dice} alt="Games Icon" />
+            Games
+          </TransparentButton>
+          <TransparentButton
+            onClick={() =>
+              handleButtonClick(ScreenType.QUESTIONS)
+            }
+            active={
+              selectedScreen === ScreenType.QUESTIONS
+            }
+            menuOpen={menuOpen}
+          >
+            <img src={qmarks} alt="Questions Icon" />
+            Questions
+          </TransparentButton>
+          <TransparentButton
+            onClick={() =>
+              handleButtonClick(ScreenType.LIBRARY)
+            }
+            active={selectedScreen === ScreenType.LIBRARY}
+            menuOpen={menuOpen}
+          >
+            <img src={books} alt="My Library Icon" />
+            My Library
+          </TransparentButton>
+          <CreateBox>
+            <Box
+              style={{
+                opacity: 0.8,
+                gap: '8px',
+                display: 'flex',
+                flexDirection: 'row',
+              }}
+            >
+              <img src={plus} alt="Plus Icon" />
+              <PrimaryButton2Text>Create</PrimaryButton2Text>
+            </Box>
+            <Box
+              style={{
+                padding: '16px 0px 0px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+              }}
+            >
+              <PrimaryButton2 style={{ width: '120px' }}>
+                <img src={dice} alt="Plus Icon" />
+                <PrimaryButton2Text>Game</PrimaryButton2Text>
+              </PrimaryButton2>
+              <PrimaryButton2 style={{ width: '150px' }}>
+                <img src={qmarks} alt="Plus Icon" />
+                <PrimaryButton2Text>Question</PrimaryButton2Text>
+              </PrimaryButton2>
+            </Box>
+          </CreateBox>
+        </Box>
+      )}
+    </Collapse>
   );
 }
