@@ -165,40 +165,34 @@ export abstract class BaseAPIClient {
       gradeTargets?: GradeTarget[] | null,
     ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
-      if (filterString != null) {
-        queryParameters.filter = { title: { contains: filterString } };
-      if (filterString != null && gradeTargets) {
+      const filterStringLowerCase = filterString?.toLowerCase();
+      if (filterStringLowerCase != null) {
+        queryParameters.filter = { lowerCaseTitle: { contains: filterStringLowerCase } };
+      if (filterStringLowerCase != null && gradeTargets) {
           const filters: any[] = [];
-          const gradeFilters: any[] =[];
-          filters.push({ title: { contains: filterString } });
+          const gradeFilters: any[] = [];
+          filters.push({ lowerCaseTitle: { contains: filterStringLowerCase } });
           if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-            filters.push({ description: { contains: filterString } });
+            filters.push({ lowerCaseDescription: { contains: filterStringLowerCase } });
           }
-          filters.push({ ccss: { contains: filterString } });
+          filters.push({ ccss: { contains: filterStringLowerCase } });
           if (gradeTargets.length === 0) {
-            gradeFilters.push({ gradeFilter: { eq: "K" } });
-            gradeFilters.push({ gradeFilter: { eq: "1" } });
-            gradeFilters.push({ gradeFilter: { eq: "2" } });
-            gradeFilters.push({ gradeFilter: { eq: "3" } });
-            gradeFilters.push({ gradeFilter: { eq: "4" } });
-            gradeFilters.push({ gradeFilter: { eq: "5" } });
-            gradeFilters.push({ gradeFilter: { eq: "6" } });
-            gradeFilters.push({ gradeFilter: { eq: "7" } });
-            gradeFilters.push({ gradeFilter: { eq: "8" } });
-            gradeFilters.push({ gradeFilter: { eq: "H" } });
+            queryParameters.filter = { 
+              or: filters 
+            };       // Match at least one of the filters (title, description, etc.)
           } else {
             gradeTargets.forEach((target) => {
               if (target !== null) {
                 gradeFilters.push({ gradeFilter: { eq: target } });
               }
             });
+            queryParameters.filter = {
+              and: [
+                { or: gradeFilters }, // Match one of the specified grades
+                { or: filters }       // Match at least one of the filters (title, description, etc.)
+              ]
+            };
           }
-          queryParameters.filter = {
-            and: [
-              { or: gradeFilters }, // Match one of the specified grades
-              { or: filters }       // Match at least one of the filters (title, description, etc.)
-            ]
-          };
         }
       }
       if (sortDirection != null) {

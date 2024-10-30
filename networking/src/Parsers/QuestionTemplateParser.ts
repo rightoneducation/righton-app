@@ -55,6 +55,7 @@ export class QuestionTemplateParser {
       const {
           id,
           title,
+          lowerCaseTitle,
           owner,
           version,
           answerSettings,
@@ -81,6 +82,7 @@ export class QuestionTemplateParser {
       const questionTemplate: IQuestionTemplate = {
           id,
           title,
+          lowerCaseTitle: lowerCaseTitle ?? '',
           owner,
           version,
           choices,

@@ -15,9 +15,11 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
   onCreatePublicGameTemplate(filter: $filter, owner: $owner) {
     id
     title
+    lowerCaseTitle
     owner
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -35,9 +37,11 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
         publicGameTemplate {
           id
           title
+          lowerCaseTitle
           owner
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -55,9 +59,11 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -82,6 +88,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -122,6 +129,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -141,9 +149,11 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -168,6 +178,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -230,9 +241,11 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
   onUpdatePublicGameTemplate(filter: $filter, owner: $owner) {
     id
     title
+    lowerCaseTitle
     owner
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -250,9 +263,11 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
         publicGameTemplate {
           id
           title
+          lowerCaseTitle
           owner
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -270,9 +285,11 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -297,6 +314,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -337,6 +355,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -356,9 +375,11 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -383,6 +404,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -445,9 +467,11 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
   onDeletePublicGameTemplate(filter: $filter, owner: $owner) {
     id
     title
+    lowerCaseTitle
     owner
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -465,9 +489,11 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
         publicGameTemplate {
           id
           title
+          lowerCaseTitle
           owner
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -485,9 +511,11 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -512,6 +540,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -552,6 +581,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -571,9 +601,11 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -598,6 +630,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -661,8 +694,10 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
     id
     owner
     title
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -681,8 +716,10 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
           id
           owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -701,8 +738,10 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -727,6 +766,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -767,6 +807,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -787,8 +828,10 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -813,6 +856,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -876,8 +920,10 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
     id
     owner
     title
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -896,8 +942,10 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
           id
           owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -916,8 +964,10 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -942,6 +992,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -982,6 +1033,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -1002,8 +1054,10 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1028,6 +1082,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1091,8 +1146,10 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
     id
     owner
     title
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -1111,8 +1168,10 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
           id
           owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1131,8 +1190,10 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1157,6 +1218,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1197,6 +1259,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -1217,8 +1280,10 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1243,6 +1308,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1306,6 +1372,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
@@ -1325,9 +1392,11 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
         publicGameTemplate {
           id
           title
+          lowerCaseTitle
           owner
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1345,9 +1414,11 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1372,6 +1443,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1412,6 +1484,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -1431,9 +1504,11 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1458,6 +1533,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1520,6 +1596,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
@@ -1539,9 +1616,11 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
         publicGameTemplate {
           id
           title
+          lowerCaseTitle
           owner
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1559,9 +1638,11 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1586,6 +1667,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1626,6 +1708,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -1645,9 +1728,11 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1672,6 +1757,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1734,6 +1820,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
@@ -1753,9 +1840,11 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
         publicGameTemplate {
           id
           title
+          lowerCaseTitle
           owner
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1773,9 +1862,11 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1800,6 +1891,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1840,6 +1932,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -1859,9 +1952,11 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
               publicGameTemplate {
                 id
                 title
+                lowerCaseTitle
                 owner
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1886,6 +1981,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -1948,6 +2044,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
@@ -1968,8 +2065,10 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
           id
           owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1988,8 +2087,10 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2014,6 +2115,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -2054,6 +2156,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -2074,8 +2177,10 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2100,6 +2205,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -2162,6 +2268,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
@@ -2182,8 +2289,10 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
           id
           owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -2202,8 +2311,10 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2228,6 +2339,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -2268,6 +2380,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -2288,8 +2401,10 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2314,6 +2429,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -2376,6 +2492,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
@@ -2396,8 +2513,10 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
           id
           owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -2416,8 +2535,10 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2442,6 +2563,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -2482,6 +2604,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
@@ -2502,8 +2625,10 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2528,6 +2653,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
@@ -3391,9 +3517,11 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
     publicGameTemplate {
       id
       title
+      lowerCaseTitle
       owner
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -3411,9 +3539,11 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
           publicGameTemplate {
             id
             title
+            lowerCaseTitle
             owner
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -3431,9 +3561,11 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3454,6 +3586,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -3490,6 +3623,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -3509,9 +3643,11 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3532,6 +3668,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -3582,6 +3719,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
@@ -3601,9 +3739,11 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
           publicGameTemplate {
             id
             title
+            lowerCaseTitle
             owner
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -3621,9 +3761,11 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3644,6 +3786,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -3680,6 +3823,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -3699,9 +3843,11 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3722,6 +3868,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -3788,9 +3935,11 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
     publicGameTemplate {
       id
       title
+      lowerCaseTitle
       owner
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -3808,9 +3957,11 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
           publicGameTemplate {
             id
             title
+            lowerCaseTitle
             owner
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -3828,9 +3979,11 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3851,6 +4004,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -3887,6 +4041,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -3906,9 +4061,11 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3929,6 +4086,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -3979,6 +4137,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
@@ -3998,9 +4157,11 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
           publicGameTemplate {
             id
             title
+            lowerCaseTitle
             owner
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4018,9 +4179,11 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4041,6 +4204,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4077,6 +4241,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -4096,9 +4261,11 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4119,6 +4286,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4185,9 +4353,11 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
     publicGameTemplate {
       id
       title
+      lowerCaseTitle
       owner
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -4205,9 +4375,11 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
           publicGameTemplate {
             id
             title
+            lowerCaseTitle
             owner
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4225,9 +4397,11 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4248,6 +4422,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4284,6 +4459,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -4303,9 +4479,11 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4326,6 +4504,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4376,6 +4555,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
@@ -4395,9 +4575,11 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
           publicGameTemplate {
             id
             title
+            lowerCaseTitle
             owner
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4415,9 +4597,11 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4438,6 +4622,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4474,6 +4659,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -4493,9 +4679,11 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 publicGameTemplate {
                   id
                   title
+                  lowerCaseTitle
                   owner
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4516,6 +4704,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4583,8 +4772,10 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
       id
       owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -4603,8 +4794,10 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             id
             owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4623,8 +4816,10 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4645,6 +4840,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4681,6 +4877,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -4701,8 +4898,10 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4723,6 +4922,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4773,6 +4973,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
@@ -4793,8 +4994,10 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             id
             owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4813,8 +5016,10 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4835,6 +5040,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4871,6 +5077,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -4891,8 +5098,10 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4913,6 +5122,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -4980,8 +5190,10 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
       id
       owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -5000,8 +5212,10 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             id
             owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -5020,8 +5234,10 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5042,6 +5258,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -5078,6 +5295,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -5098,8 +5316,10 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5120,6 +5340,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -5170,6 +5391,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
@@ -5190,8 +5412,10 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             id
             owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -5210,8 +5434,10 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5232,6 +5458,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -5268,6 +5495,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -5288,8 +5516,10 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5310,6 +5540,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -5377,8 +5608,10 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
       id
       owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -5397,8 +5630,10 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             id
             owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -5417,8 +5652,10 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5439,6 +5676,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -5475,6 +5713,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -5495,8 +5734,10 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5517,6 +5758,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -5567,6 +5809,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
@@ -5587,8 +5830,10 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             id
             owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -5607,8 +5852,10 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5629,6 +5876,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
@@ -5665,6 +5913,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
@@ -5685,8 +5934,10 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5707,6 +5958,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions

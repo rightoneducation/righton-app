@@ -113,9 +113,7 @@ export default function ExploreQuestions() {
         handleChooseGrades={handleChooseGrades}
         handleSortChange={handleSortChange}
       />
-      {searchTerms.length > 0 ||
-      searchedQuestions.length > 0 ||
-      selectedGrades.length > 0 ? (
+      {searchTerms.length > 0 ? (
         <CardGallery<IQuestionTemplate>
           screenSize={screenSize}
           searchTerm={searchTerms}
@@ -159,6 +157,7 @@ export default function ExploreQuestions() {
               galleryType={GalleryType.MOST_POPULAR}
               setIsTabsOpen={setIsTabsOpen}
               handleView={handleView}
+              isLoading={isLoading}
             />
           </InfiniteScroll>
         </>

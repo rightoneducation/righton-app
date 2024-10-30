@@ -45,7 +45,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     direction: SortDirection | null;
   }>({
     field: SortType.listGameTemplatesByDate,
-    direction: SortDirection.DESC,
+    direction: null,
   });
   const [isTabsOpen, setIsTabsOpen] = useState(false);
 
@@ -112,7 +112,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
         gradeTargets: GradeTarget[],
         sortType: SortType,
       ) => {
-        setNextToken(null);
+      
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             PublicPrivateType.PUBLIC,
@@ -136,12 +136,16 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
   const handleSearchChange = (searchString: string) => {
     setIsLoading(true);
     setSearchTerms(searchString);
-    debouncedSearch(
-      searchString,
-      sort.direction ?? SortDirection.ASC,
-      selectedGrades,
-      sort.field,
-    );
+    setSearchedGames([]);
+    setNextToken(null);
+    if (searchString !== ''){
+      debouncedSearch(
+        searchString,
+        sort.direction ?? SortDirection.ASC,
+        selectedGrades,
+        sort.field,
+      );
+    }
   };
 
   const loadMoreGames = () => {

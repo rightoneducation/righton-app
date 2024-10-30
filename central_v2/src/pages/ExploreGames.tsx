@@ -55,7 +55,6 @@ export default function ExploreGames() {
     handleSearchChange,
     loadMoreGames,
   } = useExploreGamesStateManager();
-
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
 
@@ -64,7 +63,6 @@ export default function ExploreGames() {
     setGameSet(games);
     setIsTabsOpen(true);
   };
-
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <SearchBar
@@ -73,9 +71,7 @@ export default function ExploreGames() {
         handleChooseGrades={handleChooseGrades}
         handleSortChange={handleSortChange}
       />
-      {searchTerms.length > 0 ||
-      searchedGames.length > 0 ||
-      selectedGrades.length > 0 ? (
+      {searchTerms.length > 0 ? (
         <CardGallery<IGameTemplate>
           screenSize={screenSize}
           searchTerm={searchTerms}
@@ -119,6 +115,7 @@ export default function ExploreGames() {
               galleryType={GalleryType.MOST_POPULAR}
               setIsTabsOpen={setIsTabsOpen}
               handleView={handleView}
+              isLoading={isLoading}
             />
           </InfiniteScroll>
         </>

@@ -22,6 +22,7 @@ type PublicGameTemplate @model
 {
   id: ID!
   title: String!
+  lowerCaseTitle: String!
   owner: String! @index(
       name: "publicGameTemplatesByOwner"
       queryField: "publicGameTemplatesByOwner"
@@ -29,6 +30,7 @@ type PublicGameTemplate @model
     )
   version: Int!
   description: String!
+  lowerCaseDescription: String!
   ccss: String
   domain: String
   cluster: String
@@ -69,8 +71,10 @@ type PrivateGameTemplate @model
     sortKeyFields: ["createdAt"]
   )
   title: String!
+  lowerCaseTitle: String!
   version: Int!
   description: String!
+  lowerCaseDescription: String!
   ccss: String
   domain: String
   cluster: String
@@ -108,6 +112,7 @@ type PublicQuestionTemplate @model
   id: ID!
   owner: String!
   title: String!
+  lowerCaseTitle: String!
   version: Int!
   choices: AWSJSON
   instructions: AWSJSON
@@ -144,6 +149,7 @@ type PrivateQuestionTemplate @model
   id: ID!
   owner: String!
   title: String!
+  lowerCaseTitle: String!
   version: Int!
   choices: AWSJSON
   instructions: AWSJSON
