@@ -175,7 +175,7 @@ export abstract class BaseAPIClient {
           if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
             filters.push({ lowerCaseDescription: { contains: filterStringLowerCase } });
           }
-          // filters.push({ ccss: { contains: filterStringLowerCase } });
+          filters.push({ ccss: { contains: filterStringLowerCase } });
           if (gradeTargets.length === 0) {
             queryParameters.filter = { 
               or: filters 
