@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Button, Typography, Collapse, IconButton } from '@mui/material';
+import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
 import dice from '../images/Dice.svg';
 import qmarks from '../images/qmarks.svg';
@@ -10,8 +10,12 @@ import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
+import createDropdownGame from '../images/createDropdownGame.svg';
+import createDropdownQuestion from '../images/createDropdownQuestion.svg'
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import { SelectedCentralPages } from '../lib/ScreenEnums';
+import CentralButton from './button/Button';
+import { ButtonType } from './button/ButtonModels';
 
 interface HeaderProps {
   currentScreen: ScreenType;
@@ -88,6 +92,20 @@ const CreateBox = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
+const CreateButtonContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const CreateDropDown = styled(Paper)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.smPadding}px`,
+  padding: `${theme.sizing.xSmPadding}px`,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+}));
+
 interface ImageContainerProps {
   align: 'flex-start' | 'center' | 'flex-end';
 }
@@ -108,7 +126,8 @@ export default function Header({
   setMenuOpen,
 }: HeaderProps) {
   const navigate = useNavigate();
-
+  const theme = useTheme();
+  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
     currentScreen
   );
@@ -144,7 +163,7 @@ export default function Header({
         transition: 'height 0.5s ease-in-out',
         height: getHeight(),
         width: '100%',
-        overflow: 'hidden',
+        overflow: !isLgScreen ? 'hidden' : 'visible',
         zIndex: 5,
         position: 'fixed',
         background: 'linear-gradient(360deg, #02215F 0%, #0D68B1 100%)',
@@ -216,13 +235,32 @@ export default function Header({
           }}
         >
           {isLgScreen ? (
-            <>
-              <PrimaryButton2 style={{ marginTop: '12px' }}>
-                <img src={plus} alt="Plus Icon" />
-                <PrimaryButton2Text>Create</PrimaryButton2Text>
-              </PrimaryButton2>
-              <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
-            </>
+            <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
+            <Box display="flex" justifyContent="flex-start" alignItems="flex-start" style={{height: '50%'}} >
+              <CreateButtonContainer>
+                <Box style={{zIndex: 4}}>
+                  <CentralButton buttonType={ButtonType.CREATE} isEnabled onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
+                </Box>
+                <Collapse in={isCreateMenuOpen} style={{position: 'relative', top: '-17px', zIndex: 3}}>
+                  <CreateDropDown>
+                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
+                      <img src={createDropdownGame} alt="Create Game" />
+                      <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+                        Game
+                      </Typography>
+                    </Box>
+                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => navigate('/create/question')}>
+                      <img src={createDropdownQuestion} alt="Create Question" />
+                      <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+                        Question
+                      </Typography>
+                    </Box>
+                  </CreateDropDown>
+                </Collapse>              
+              </CreateButtonContainer>
+            </Box>
+            <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
+            </Box>
           ) : (
             <img src={profile} alt="Profile" />
           )}

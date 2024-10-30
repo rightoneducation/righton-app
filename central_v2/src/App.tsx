@@ -32,6 +32,7 @@ function App() {
             <Route path="/" element={<AppSwitch />} />
             <Route path="/questions" element={<AppSwitch />} />
             <Route path="/signup" element={<AppSwitch />} />
+            <Route path="/create/question" element={<AppSwitch />} />
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />

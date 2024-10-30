@@ -10,6 +10,7 @@
     "getstarted": "Get Started!",
     "resetlink": "Send Reset Link",
     "reset": "Reset",
+    "create": "Create",
     "previousquestion": "Previous Question",
     "backtoexplore": "Back to Explore Questions",
     "favorite": "Favorite",
@@ -28,5 +29,9 @@
     "editpicture": "Edit Picture",
     "editinformation": "Edit Information",
     "changepassword": "Change Password"
+  },
+  "imageButton": {
+    "imageupload": "Upload Image",
+    "imageurl": "Image URL"
   }
 }
