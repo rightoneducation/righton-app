@@ -13,7 +13,6 @@ import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
 //   border: '1px solid red',
 //   flexDirection: 'column',
 //   gap: '20px'
-// }));
 
 
 const UpperSignup = styled(Box)(({ theme }) => ({
