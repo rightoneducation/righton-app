@@ -11,9 +11,8 @@ import {
   ContentContainerStyled,
   ImageStyled,
   ContentRightContainerStyled,
-  CCSSIndicator,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
-import { TextContainerStyled } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import { TextContainerStyled, CCSSIndicator } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
 import ImageButton from '../../button/imagebutton/ImageButton';
 import { ImageButtonType } from '../../button/imagebutton/ImageButtonModels';
@@ -22,6 +21,7 @@ import arrow from '../../../images/SelectArrow.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
+  handleCCSSClick: () => void;
 }
 
 export const ImagePlaceholder = styled(Box)(({ theme }) => ({
@@ -37,6 +37,7 @@ export const ImagePlaceholder = styled(Box)(({ theme }) => ({
 
 export default function CreateQuestionCardBase({
   screenSize,
+  handleCCSSClick
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
@@ -48,7 +49,6 @@ export default function CreateQuestionCardBase({
   ) => {
     setQuestionType((event.target as HTMLInputElement).value);
   };
-console.log(questionType);
   return (
     <BaseCardStyled>
       <TitleBarStyled>
@@ -91,7 +91,7 @@ console.log(questionType);
           </TextContainerStyled>
           <Box style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
             <PublicPrivateButton />
-            <CCSSIndicator>
+            <CCSSIndicator onClick={handleCCSSClick}>
               {ccss}
               <img src={arrow} alt='CCSS' style={{width: '12px', height: '12px'}}/>
             </CCSSIndicator>

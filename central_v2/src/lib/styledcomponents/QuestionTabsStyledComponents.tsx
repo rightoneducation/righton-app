@@ -26,7 +26,7 @@ export const ContentFrame = styled(Box)(({ theme }) => ({
   paddingLeft: '32px',
   paddingRight: '32px',
   boxSizing: 'border-box',
-  height: '100%',
+  height: '280px',
   width: '100%',
 }));
 
@@ -62,12 +62,13 @@ export const DetailedQuestionContainer = styled(Grid)(({ theme }) => ({
 
 export const ContentContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
-  flexGrow: 1,
   height: '100%',
   width: '100%',
   background: '#02215F',
   zIndex: 6,
   borderTopRightRadius: '16px',
+  borderBottomLeftRadius: '16px',
+  borderBottomRightRadius: '16px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

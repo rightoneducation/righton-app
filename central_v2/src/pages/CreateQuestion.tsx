@@ -6,6 +6,8 @@ import { ScreenSize } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
 import { ButtonType } from '../components/button/ButtonModels';
+import CCSSTabs from '../components/ccsstabs/CCSSTabs';
+import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackground';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -58,8 +60,27 @@ const IncorrectAnswerPill = styled(Box)(({theme}) => ({
 export default function CreateQuestion(){
   const theme = useTheme();
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
+  const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
+  const handleCCSSClick = () => {
+    setIsCCSSVisible((prev) => !prev);
+  };
+
+  const handleBackToExplore = () => {
+    setIsCCSSVisible(false);
+  };
+  console.log(isCCSSVisible);
   return (
     <CreateQuestionMainContainer>
+      <>
+        <CCSSTabsModalBackground
+          isTabsOpen={isCCSSVisible}
+          handleBackToExplore={handleBackToExplore}
+        />
+        <CCSSTabs
+          screenSize={ScreenSize.LARGE}
+          isTabsOpen={isCCSSVisible}
+        />
+      </>
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
       <CreateQuestionGridContainer container >
         <Grid
@@ -87,6 +108,7 @@ export default function CreateQuestion(){
         >
           <CreateQuestionCardBase
             screenSize={ScreenSize.LARGE}
+            handleCCSSClick={handleCCSSClick}
           />
           <Grid
             container

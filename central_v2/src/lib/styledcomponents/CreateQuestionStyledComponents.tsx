@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, TextField, styled } from '@mui/material';
+import { Box, Grid, TextField, Button, styled } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
@@ -40,4 +40,26 @@ export const TextContainerStyled = styled(TextField)(({ theme }) => ({
       borderColor: `${theme.palette.primary.extraDarkGrey}`
     }
   }
+}));
+
+export const CCSSIndicator = styled(Button)(({ theme }) => ({
+  width: 'fit-content',
+  height: `${theme.sizing.mdPadding}px`,
+  padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding}px`,
+  gap: `${theme.sizing.xxSmPadding}px`,
+  borderRadius: '12px',
+  background: 'linear-gradient(90deg, #E81144 0%, #E31C5E 100%)',
+  color: '#FFFFFF',
+  textTransform: 'none',
+  fontFamily: 'Rubik',
+  fontSize: '14px',
+  fontWeight: 400,
+  lineHeight: '16.59px',
+  textAlign: 'center',
+  boxShadow: '0px 3px 12px 0px #95002366',
+  zIndex: 2,
+  boxSizing: 'border-box',
+  minWidth: '20px',
+  display: 'flex',
+  alignItems: 'center',
 }));
