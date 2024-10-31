@@ -73,23 +73,28 @@ const MiddleTextFirstRow = styled(Box)(({ theme }) => ({
 }));
 
 const MiddleTextFirstRow1 = styled(FormControl)(({ theme }) => ({
-  border: '2px solid #384466', 
+  border: '2px solid #CCCCCC', 
   borderRadius: '8px', 
   backgroundColor: '#FFFFFF',
   width: '50%'
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
-
+  minWidth: '108px',
   '& .MuiSelect-select': {
-    color: '#CCCCCC', 
+    color: '#CCCCCC',
+     
   },
   '&.Mui-focused .MuiSelect-select': {
     color: '#384466',
   },
 
   '& .MuiSelect-icon': {
-    paddingRight: '10px'
+    transition: 'transform 0.2s ease', // Smooth transition for rotation
+    marginRight: '10px',
+  },
+  '&.Mui-focused .MuiSelect-icon': {
+    transform: 'rotate(-180deg)', // Rotate upward when focused
   },
 }));
 
