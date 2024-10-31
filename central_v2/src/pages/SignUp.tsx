@@ -72,7 +72,7 @@ const MiddleTextFirstRow = styled(Box)(({ theme }) => ({
   gap: '12px',
 }));
 
-const MiddleTextFirstRow1 = styled(TextField)(({ theme }) => ({
+const TitleField = styled(TextField)(({ theme }) => ({
   border: '2px solid #CCCCCC', 
   borderRadius: '8px', 
   backgroundColor: '#FFFFFF',
@@ -282,11 +282,6 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImageBack(file);
   }
 };
-
-// const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//   setTitle(event.target.value as string);
-// };
-
   return (
       <SignUpMainContainer>
         <InnerBodyContainer>
@@ -306,7 +301,7 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
           <MiddleText>
             <MiddleTextFirstRow>
-              <MiddleTextFirstRow1
+              <TitleField
                 select
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
@@ -315,14 +310,6 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                   IconComponent: DropDown,  // Custom icon component
                 }}
                 >
-                {/* <StyledSelect
-                  labelId="title-label"
-                  value={title}
-                  onChange={handleTitleChange}
-                  label="Title"
-                  displayEmpty
-                  IconComponent={DropDown}
-                > */}
                   <MenuItem value="Title...">
                     Title...
                   </MenuItem>
@@ -330,8 +317,7 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                   <MenuItem value="Mrs.">Mrs.</MenuItem>
                   <MenuItem value="Ms.">Ms.</MenuItem>
                   <MenuItem value="Dr.">Dr.</MenuItem>
-                {/* </StyledSelect> */}
-              </MiddleTextFirstRow1>
+              </TitleField>
               <UserTextField
                 variant="outlined"
                 placeholder="First Name"
