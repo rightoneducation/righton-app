@@ -26,7 +26,7 @@ export const ContentFrame = styled(Box)(({ theme }) => ({
   paddingLeft: '32px',
   paddingRight: '32px',
   boxSizing: 'border-box',
-  height: '280px',
+  height: '100%',
   width: '100%',
 }));
 
