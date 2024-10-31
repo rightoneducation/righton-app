@@ -8,11 +8,13 @@ import RightOnLogo from "../images/RightOnLogo.png";
 import Adpic from "../images/@.svg"
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
 
-// const InnerBodyContainer = styled(Box)(({ theme }) => ({
-//   display: 'flex',
-//   border: '1px solid red',
-//   flexDirection: 'column',
-//   gap: '20px'
+const InnerBodyContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  // border: '1px solid blue',
+  flexDirection: 'column',
+  gap: '20px',
+  height: '100vh',
+}));
 
 
 const UpperSignup = styled(Box)(({ theme }) => ({
@@ -21,6 +23,7 @@ const UpperSignup = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   gap: '24px'
+  
 }));
 
 
@@ -41,7 +44,7 @@ const UpperSignupSubGoogle = styled(Typography)(({ theme }) => ({
   border: '2px solid #0966E0', // Set border to 2px with the same color
   borderRadius: '8px', // Set border radius to 8px
   backgroundColor: 'white', // Set background color to white
-  minHeight: '50.19px',
+  minHeight: '52px',
 }));
 
 const OrText = styled(Typography)(({ theme }) => ({
@@ -163,7 +166,6 @@ const UploadImageContainer = styled(Box)(({ theme }) => ({
   paddingRight: '58px',
   paddingBottom: '16px',
   paddingLeft: '58px',
-
 }));
 
 const ImageText = styled(Typography)(({ theme }) => ({
@@ -268,108 +270,110 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 };
 
   return (
-    <SignUpMainContainer>
-        <UpperSignup >
-          <img src={RightOnLogo} alt="Right On Logo" style={{width: '200px', height: '200px'}}/> 
-          <UpperSignupSubStepText>
-            Step 1: New Account Registration
-          </UpperSignupSubStepText>
-          <UpperSignupSubGoogle>
-            Sign Up with Google
-          </UpperSignupSubGoogle>
-        </UpperSignup>
+      <SignUpMainContainer>
+        <InnerBodyContainer>
+          <UpperSignup >
+            <img src={RightOnLogo} alt="Right On Logo" style={{width: '200px', height: '200px'}}/> 
+            <UpperSignupSubStepText>
+              Step 1: New Account Registration
+            </UpperSignupSubStepText>
+            <UpperSignupSubGoogle>
+              Sign Up with Google
+            </UpperSignupSubGoogle>
+          </UpperSignup>
 
-        <OrText>
-            Or
-        </OrText>
+          <OrText>
+              Or
+          </OrText>
 
-        <MiddleText>
-          <MiddleTextFirstRow>
-            <MiddleTextFirstRow1>
-              <StyledSelect
-                labelId="title-label"
-                value={title}
-                onChange={handleChange}
-                label="Title"
-                displayEmpty
-                IconComponent={DropDown}
-              >
-                <MenuItem value="">
-                  <span>Title...</span>
-                </MenuItem>
-                <MenuItem value="Mr.">Mr.</MenuItem>
-                <MenuItem value="Mrs.">Mrs.</MenuItem>
-                <MenuItem value="Ms.">Ms.</MenuItem>
-                <MenuItem value="Dr.">Dr.</MenuItem>
-              </StyledSelect>
-            </MiddleTextFirstRow1>
-            <UserTextField
-              variant="outlined"
-              placeholder="First Name"
-              value={firstName}
-              onChange={handleFirstNameChange} 
-            />
-            <UserTextField
-              variant="outlined"
-              placeholder="Last Name"
-              value={lastName}
-              onChange={handleLastNameChange} 
-            />
-          </MiddleTextFirstRow>
-          <MiddleTextSecondRow>
-              <img src={Adpic} alt="Adpic" style={{width: '26px'}}/>
-              <UserTextField 
+          <MiddleText>
+            <MiddleTextFirstRow>
+              <MiddleTextFirstRow1>
+                <StyledSelect
+                  labelId="title-label"
+                  value={title}
+                  onChange={handleChange}
+                  label="Title"
+                  displayEmpty
+                  IconComponent={DropDown}
+                >
+                  <MenuItem value="">
+                    <span>Title...</span>
+                  </MenuItem>
+                  <MenuItem value="Mr.">Mr.</MenuItem>
+                  <MenuItem value="Mrs.">Mrs.</MenuItem>
+                  <MenuItem value="Ms.">Ms.</MenuItem>
+                  <MenuItem value="Dr.">Dr.</MenuItem>
+                </StyledSelect>
+              </MiddleTextFirstRow1>
+              <UserTextField
                 variant="outlined"
-                placeholder="Username..."
-                value={userName}
-                onChange={handleUserNameChange} 
+                placeholder="First Name"
+                value={firstName}
+                onChange={handleFirstNameChange} 
               />
-          </MiddleTextSecondRow>
-          <UserTextField
-            variant="outlined"
-            placeholder="School Email..."
-            value={schoolEmail}
-            onChange={handleSchoolEmailChange}/>
-          <MiddleTextFourthRow>
-            Teacher ID Image
-          </MiddleTextFourthRow>
-        </MiddleText>
-
-        <UploadImagesAndPassword>
-          <UploadImages >
-              <UploadImageContainer>
-                <ImageText>Front</ImageText>
-                <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadFrontEnabled} />
-              </UploadImageContainer>
-
-              <UploadImageContainer>
-                  <ImageText>Back</ImageText>
-                  <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadBackEnabled} />
-              </UploadImageContainer>
-          </UploadImages>
-          <PasswordContainer>
-            <UserTextField
+              <UserTextField
                 variant="outlined"
-                placeholder="Password..."
-                value={password}
-                onChange={handlePasswordChange} />
+                placeholder="Last Name"
+                value={lastName}
+                onChange={handleLastNameChange} 
+              />
+            </MiddleTextFirstRow>
+            <MiddleTextSecondRow>
+                <img src={Adpic} alt="Adpic" style={{width: '26px'}}/>
+                <UserTextField 
+                  variant="outlined"
+                  placeholder="Username..."
+                  value={userName}
+                  onChange={handleUserNameChange} 
+                />
+            </MiddleTextSecondRow>
             <UserTextField
-                variant="outlined"
-                placeholder="Confirm Password..."
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange} />
-          </PasswordContainer>
-        </UploadImagesAndPassword>
+              variant="outlined"
+              placeholder="School Email..."
+              value={schoolEmail}
+              onChange={handleSchoolEmailChange}/>
+            <MiddleTextFourthRow>
+              Teacher ID Image
+            </MiddleTextFourthRow>
+          </MiddleText>
 
-        <LowerLogin>
-            <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} />
-            <LowestContainer>
-              <HaveAnAccountText>
-                Already have an account?
-              </HaveAnAccountText>
-              <CentralButton buttonType={buttonType} isEnabled={isEnabled} />
-            </LowestContainer>
-        </LowerLogin>
-    </SignUpMainContainer>
+          <UploadImagesAndPassword>
+            <UploadImages >
+                <UploadImageContainer>
+                  <ImageText>Front</ImageText>
+                  <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadFrontEnabled} />
+                </UploadImageContainer>
+
+                <UploadImageContainer>
+                    <ImageText>Back</ImageText>
+                    <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadBackEnabled} />
+                </UploadImageContainer>
+            </UploadImages>
+            <PasswordContainer>
+              <UserTextField
+                  variant="outlined"
+                  placeholder="Password..."
+                  value={password}
+                  onChange={handlePasswordChange} />
+              <UserTextField
+                  variant="outlined"
+                  placeholder="Confirm Password..."
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange} />
+            </PasswordContainer>
+          </UploadImagesAndPassword>
+
+          <LowerLogin>
+              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} />
+              <LowestContainer>
+                <HaveAnAccountText>
+                  Already have an account?
+                </HaveAnAccountText>
+                <CentralButton buttonType={buttonType} isEnabled={isEnabled} />
+              </LowestContainer>
+          </LowerLogin>
+        </InnerBodyContainer>
+      </SignUpMainContainer>
   );
 }

@@ -13,24 +13,19 @@
       "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-69ed3-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
-      "auth": {
-        "mobile6060603c": {}
-      },
       "function": {
-        "createGameTest": {
-          "deploymentBucketName": "amplify-mobile-dev-69ed3-deployment",
-          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
-        },
         "mobile6060603cPostConfirmation": {
           "GROUP": "Teacher_Auth",
           "deploymentBucketName": "amplify-mobile-dev-69ed3-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
-        "mobile": {},
-        "mobile6060603c": {}
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-dev-69ed3-deployment",
+          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
+        }
       },
-      "api": {
-        "mobile": {}
+      "auth": {
+        "mobile6060603c": {}
       }
     }
   }
