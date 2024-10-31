@@ -1,9 +1,10 @@
-import React from 'react';
-import {Grid, Typography, Box, useTheme, styled} from '@mui/material';
+import React, { useState } from 'react';
+import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ScreenSize } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
+import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
 import { ButtonType } from '../components/button/ButtonModels';
 
 type TitleTextProps = {
@@ -23,11 +24,40 @@ const SubCardGridItem = styled(Grid)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.smPadding}px`,
+  gap: `${theme.sizing.xSmPadding}px`,
+}));
+
+const AISwitch = styled(Switch)(({ theme }) => ({
+  '& .MuiSwitch-thumb': {
+    background: theme.palette.primary.aiGradient,
+  },
+  '& .MuiSwitch-track': {
+    backgroundColor: "#111111",
+  },
+  '& .MuiSwitch-switchBase.Mui-checked': {
+    color: '#FFFFFF',
+  },
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: '#111111',
+  },
+}));
+
+const IncorrectAnswerPill = styled(Box)(({theme}) => ({
+  width: 'fit-content',
+  height: '22px',
+  borderRadius: '20px',
+  borderWidth: '2px',
+  borderColor: theme.palette.primary.darkBlue,
+  borderStyle: 'solid',
+  minWidth: '30px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
 }));
 
 export default function CreateQuestion(){
   const theme = useTheme();
+  const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   return (
     <CreateQuestionMainContainer>
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
@@ -67,13 +97,27 @@ export default function CreateQuestion(){
               sm={12}
               md={6}
             >
-          
+              <CorrectAnswerCard />
             </SubCardGridItem>
             <SubCardGridItem
               item
               sm={12}
               md={6}
             >
+              <Box style={{width: '100%', display: 'flex', alignItems: 'center'}}>
+                <Typography style={{textAlign: 'right', fontWeight: 500}}>
+                  Try our AI-Generated Wrong Answer Explanation Prototype
+                </Typography>
+                <AISwitch/>
+              </Box>
+              <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>
+                {incorrectAnswers && incorrectAnswers.map((_, index) => 
+                    <IncorrectAnswerPill>  
+                      {index}
+                    </IncorrectAnswerPill>
+                  )
+                }
+              </Box>
             </SubCardGridItem>
           </Grid>
         </Grid>

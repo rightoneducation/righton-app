@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, styled } from '@mui/material';
+import { Box, Grid, TextField, styled } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
@@ -29,3 +29,15 @@ export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({
   width: '100%',
 }));
 
+export const TextContainerStyled = styled(TextField)(({ theme }) => ({
+  height: '100%',
+  margin: 0,
+  flexGrow: 1,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
+  borderColor: `${theme.palette.primary.extraDarkGrey}`,
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: `${theme.palette.primary.extraDarkGrey}`
+    }
+  }
+}));

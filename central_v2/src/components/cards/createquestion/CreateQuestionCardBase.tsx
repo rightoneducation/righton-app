@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, RadioGroup, Box, TextField, styled, useTheme } from '@mui/material';
+import { Typography, RadioGroup, Box, styled, useTheme } from '@mui/material';
 import { IQuestionTemplate } from '@righton/networking';
 import {
   BaseCardStyled,
@@ -13,6 +13,7 @@ import {
   ContentRightContainerStyled,
   CCSSIndicator,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
+import { TextContainerStyled } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
 import ImageButton from '../../button/imagebutton/ImageButton';
 import { ImageButtonType } from '../../button/imagebutton/ImageButtonModels';
@@ -32,19 +33,6 @@ export const ImagePlaceholder = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   gap: '10px'
-}));
-
-export const TextContainerStyled = styled(TextField)(({ theme }) => ({
-  height: '100%',
-  margin: 0,
-  flexGrow: 1,
-  borderRadius: `${theme.sizing.xSmPadding}px`,
-  borderColor: `${theme.palette.primary.extraDarkGrey}`,
-  "& .MuiOutlinedInput-root": {
-    "&.Mui-focused fieldset": {
-      borderColor: `${theme.palette.primary.extraDarkGrey}`
-    }
-  }
 }));
 
 export default function CreateQuestionCardBase({
