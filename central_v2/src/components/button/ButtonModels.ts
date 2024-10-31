@@ -177,6 +177,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CREATE]: {
     icon: add,
-    textKey: ButtonType.CREATE
+    textKey: ButtonType.CREATE,
+    color: ButtonColor.RED,
   }
 };
