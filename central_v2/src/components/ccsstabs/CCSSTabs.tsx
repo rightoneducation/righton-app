@@ -7,30 +7,24 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import { IQuestionTemplate } from '@righton/networking';
 import tabExploreQuestionsIcon from '../../images/tabExploreQuestions.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
-import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestionCardBase';
-import CentralButton from '../button/Button';
-import { ButtonType } from '../button/ButtonModels';
-import DetailedQuestionSubCard from '../cards/detailedquestion/DetailedQuestionSubCard';
-import { CardType, ScreenSize } from '../../lib/CentralModels';
+import { ScreenSize } from '../../lib/CentralModels';
 import OwnerTag from '../profile/OwnerTag';
 import { 
-  TabContainer, 
-  ContentFrame, 
+  TabContainer,  
   TabContent, 
   StyledTab, 
   DetailedQuestionContainer, 
   ContentContainer, 
-  ButtonContainer,
-  ButtonContainerLeft,
-  ButtonContainerRight,
   CardContainer,
   SubCardGridItem
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
+import {
+  CCSSContentFrame
+} from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
 
 interface TabContainerProps {
   screenSize: ScreenSize;
@@ -74,7 +68,7 @@ export default function CCSSTabs({
       timeout={1000}
     >
       <TabContainer>
-        <ContentFrame>
+        <CCSSContentFrame>
           <TabContent>
             <Tabs
               value={openTab}
@@ -158,7 +152,7 @@ export default function CCSSTabs({
               </CardContainer>
             </ContentContainer>
           </TabContent>
-        </ContentFrame>
+        </CCSSContentFrame>
       </TabContainer>
     </Fade>
   );
