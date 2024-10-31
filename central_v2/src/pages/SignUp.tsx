@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef  } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import {Box, FormControl, Typography, Select, TextField, MenuItem, SelectChangeEvent, Button} from '@mui/material';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
@@ -72,11 +72,24 @@ const MiddleTextFirstRow = styled(Box)(({ theme }) => ({
   gap: '12px',
 }));
 
-const MiddleTextFirstRow1 = styled(FormControl)(({ theme }) => ({
+const MiddleTextFirstRow1 = styled(TextField)(({ theme }) => ({
   border: '2px solid #CCCCCC', 
   borderRadius: '8px', 
   backgroundColor: '#FFFFFF',
-  width: '50%'
+  minWidth: '108px',
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '8px', // Ensure consistent border radius
+  },
+  '& .MuiSelect-select': {
+    color: '#384466',
+  },
+  '& .MuiSelect-icon': {
+    transition: 'transform 0.2s ease', // Smooth transition for rotation
+    marginRight: '10px',
+  },
+  '&.Mui-focused .MuiSelect-icon': {
+    transform: 'rotate(-180deg)', // Rotate upward when focused
+  },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
@@ -210,7 +223,7 @@ const HaveAnAccountText = styled(Typography)(({ theme }) => ({
 
 export default function SignUp() {
 
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('Title...');
   const [firstName, setFirstName] = useState(''); 
   const [lastName, setLastName] = useState(''); 
   const [userName, setUserName] = useState(''); 
@@ -232,11 +245,7 @@ export default function SignUp() {
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
-
-
-  const handleChange = (event: SelectChangeEvent<any>) => {
-    setTitle(event.target.value as string);
-  };
+  
 
 const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setFirstName(event.target.value);
@@ -274,6 +283,10 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   }
 };
 
+// const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//   setTitle(event.target.value as string);
+// };
+
   return (
       <SignUpMainContainer>
         <InnerBodyContainer>
@@ -293,23 +306,31 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
           <MiddleText>
             <MiddleTextFirstRow>
-              <MiddleTextFirstRow1>
-                <StyledSelect
+              <MiddleTextFirstRow1
+                select
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                variant="outlined"
+                SelectProps={{
+                  IconComponent: DropDown,  // Custom icon component
+                }}
+                >
+                {/* <StyledSelect
                   labelId="title-label"
                   value={title}
-                  onChange={handleChange}
+                  onChange={handleTitleChange}
                   label="Title"
                   displayEmpty
                   IconComponent={DropDown}
-                >
-                  <MenuItem value="">
-                    <span>Title...</span>
+                > */}
+                  <MenuItem value="Title...">
+                    Title...
                   </MenuItem>
                   <MenuItem value="Mr.">Mr.</MenuItem>
                   <MenuItem value="Mrs.">Mrs.</MenuItem>
                   <MenuItem value="Ms.">Ms.</MenuItem>
                   <MenuItem value="Dr.">Dr.</MenuItem>
-                </StyledSelect>
+                {/* </StyledSelect> */}
               </MiddleTextFirstRow1>
               <UserTextField
                 variant="outlined"
