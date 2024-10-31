@@ -32,6 +32,7 @@ export enum ButtonType {
   NEXTQUESTION = 'nextquestion',
   SAVE = 'save',
   DISCARD = 'discard',
+  DISCARDBLUE = 'discardblue',
   ADDSTEP = 'addstep',
   BROWSEFILES = 'browsefiles',
   CHANGEIMAGE = 'changeimage',
@@ -128,6 +129,10 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: discard,
     textKey: ButtonType.DISCARD,
     color: ButtonColor.RED,
+  },
+  [ButtonType.DISCARDBLUE]: {
+    icon: discard,
+    textKey: ButtonType.DISCARD
   },
   [ButtonType.ADDSTEP]: {
     icon: add,

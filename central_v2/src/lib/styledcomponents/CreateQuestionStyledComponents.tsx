@@ -7,7 +7,8 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-start',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
   backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
@@ -16,6 +17,8 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
+  gap: `${theme.sizing.lgPadding}px`,
+  paddingTop: `${theme.sizing.lgPadding}px`
 }));
 
 export const CreateQuestionCard = styled(Box)(({theme}) => ({

@@ -51,6 +51,7 @@ type RadioLabelProps = {
 export const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(
   ({ theme, isSelected }) => ({
     cursor: 'default',
+    margin: 0,
     color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
     '& .MuiTypography-root': {
       color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
@@ -120,6 +121,8 @@ export const CCSSIndicator = styled(Box)(({ theme }) => ({
   zIndex: 2,
   boxSizing: 'border-box',
   minWidth: '20px',
+  display: 'flex',
+  alignItems: 'center',
 }));
 
 export const AnswerIndicator = styled(Box)(({ theme }) => ({
