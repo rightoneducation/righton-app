@@ -249,7 +249,7 @@ export default function Header({
                         Game
                       </Typography>
                     </Box>
-                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => navigate('/create/question')}>
+                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => { setIsCreateMenuOpen(false); navigate('/create/question')}}>
                       <img src={createDropdownQuestion} alt="Create Question" />
                       <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
                         Question

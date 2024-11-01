@@ -29,8 +29,11 @@ import {
   CCSSTabContainer,
   CCSSContentContainer,
   CCSSContentFrame,
-  CCSSStyledTabs
+  CCSSStyledTabs,
+  CCSSGradeContainer
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
+import { gradeMap } from '../../lib/CCSSModels';
+import CCSSIndicatorPill from './CCSSIndicatorPill';
 
 interface TabContainerProps {
   screenSize: ScreenSize;
@@ -53,19 +56,6 @@ export default function CCSSTabs({
     3: 'Standard',
   };
 
-  const gradeMap = {
-    'High School': 'HS',
-    '8th': '8',
-    '7th': '7',
-    '6th': '6',
-    '5th': '5',
-    '4th': '4',
-    '3rd': '3',
-    '2nd': '2',
-    '1st': '1',
-    'K': 'K',
-  };
-
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE)
       return value;
@@ -82,7 +72,7 @@ export default function CCSSTabs({
       timeout={1000}
     >
       <CCSSTabContainer>
-        <CCSSContentFrame>
+        <CCSSContentFrame screenSize={screenSize}>
           <TabContent>
             <CCSSStyledTabs
               screenSize={screenSize}
@@ -107,7 +97,15 @@ export default function CCSSTabs({
               })}
             </CCSSStyledTabs>
             <CCSSContentContainer screenSize={screenSize}>
-              <CardContainer />
+              <CCSSGradeContainer container rowSpacing={2}>
+                {
+                  gradeMap.map((grade, index) => {
+                    return (
+                      <CCSSIndicatorPill label={ grade.long} />
+                    )
+                  })
+                }
+              </CCSSGradeContainer>
             </CCSSContentContainer>
           </TabContent>
         </CCSSContentFrame>

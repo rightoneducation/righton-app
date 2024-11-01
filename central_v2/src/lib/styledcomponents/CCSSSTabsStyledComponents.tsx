@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, Tabs, styled } from '@mui/material';
-import { ContentFrame } from './QuestionTabsStyledComponents';
+import { Box, Button, Tabs, Grid, styled, Typography } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 
 export const CCSSTabContainer = styled(Box)(({ theme }) => ({
@@ -36,10 +35,15 @@ export const CCSSContentContainer = styled(Box)<CCSSContentContainerProps>(({ th
   gap: `${theme.sizing.mdPadding}px`,
 }));
 
-export const CCSSContentFrame = styled(Box)(({theme}) => ({ // eslint-disable-line
+interface CCSSContentFrameProps {
+  screenSize: ScreenSize
+}
+
+export const CCSSContentFrame = styled(Box)<CCSSContentFrameProps>(({theme, screenSize}) => ({ // eslint-disable-line
   boxSizing: 'border-box',
-  height: '300px',
-  minWidth: '672px',
+  height: 'fit-content',
+  width: screenSize === ScreenSize.LARGE ? '672px' : '100%',
+  padding: screenSize === ScreenSize.LARGE ? '0px' : '21px'
 }));
 
 export const CCSSTabsStyled = styled(Tabs)(({ theme }) => ({
@@ -71,3 +75,54 @@ export const CCSSStyledTabs = styled((props: CCSSStyledTabsProps) => (
     gap: '8px'
   }
 });
+
+export const CCSSGradeContainer = styled(Grid)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  overflow: 'auto',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '32px',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  '-ms-overflow-style': 'none', // IE and Edge
+}));
+
+export const CCSSGridItem = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}));
+
+export const GradeIndicator = styled(Button)(({ theme }) => ({
+  width: 'fit-content',
+  height: '38px',
+  borderRadius: '54px',
+  textTransform: 'none',
+  boxShadow: ' 0px 5px 22px 0px rgba(71, 217, 255, 0.37)',
+  paddingTop: '4px',
+  paddingBottom: '4px',
+  paddingLeft: '32px',
+  paddingRight: '32px',
+  boxSizing: 'border-box',
+  background: `${theme.palette.primary.buttonGradientBlue}`,
+  ':hover': {
+    background: `${theme.palette.primary.buttonGradientBlue}`,
+  },
+  '&:disabled': {
+    background: `${theme.palette.primary.buttonGradientGrey}`,
+  },
+}));
+
+export const CCSSIndicatorPillText = styled(Typography)(({theme}) => ({
+  fontSize: '20px',
+  fontWeight: 600,
+  color: '#FFF',
+  textAlign: 'center',
+  textWrap: 'nowrap',
+  width: 'fit-content'
+}));
