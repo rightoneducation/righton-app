@@ -12,6 +12,7 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
   height: '100dvh',
   display: 'flex',
   flexDirection: 'column',
+  
 }));
 
 interface BodyContainerProps {
@@ -23,6 +24,12 @@ const BodyContainer = styled(Box)<BodyContainerProps>(
     width: '100%',
     flexGrow: 1,
     overflowY: 'auto',
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none',
   }),
 );
 
