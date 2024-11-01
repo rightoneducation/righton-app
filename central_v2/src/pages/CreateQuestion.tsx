@@ -83,7 +83,7 @@ export default function CreateQuestion({
           handleBackToExplore={handleBackToExplore}
         />
         <CCSSTabs
-          screenSize={ScreenSize.LARGE}
+          screenSize={screenSize}
           isTabsOpen={isCCSSVisible}
         />
       </>
