@@ -35,6 +35,27 @@ export const ImagePlaceholder = styled(Box)(({ theme }) => ({
   gap: '10px'
 }));
 
+interface CreateQuestionTitleBarStyledProps {
+  screenSize: ScreenSize;
+}
+
+export const CreateQuestionTitleBarStyled = styled(Box)<CreateQuestionTitleBarStyledProps>(({ theme, screenSize }) => ({
+  width: '100%',
+  height: 'fit-content',
+  display: 'flex',
+  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  justifyContent: 'space-between',
+  alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
+  gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.xSmPadding}px` : `${theme.sizing.smPadding}px`,
+}));
+
+export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.xSmPadding}px`,
+}));
+
 export default function CreateQuestionCardBase({
   screenSize,
   handleCCSSClick
@@ -51,7 +72,7 @@ export default function CreateQuestionCardBase({
   };
   return (
     <BaseCardStyled>
-      <TitleBarStyled>
+      <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>
           <RadioGroup
@@ -63,20 +84,20 @@ export default function CreateQuestionCardBase({
             <RadioLabelStyled
               value="A"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
-              label={screenSize === ScreenSize.SMALL ? "M.C." : "Multiple Choice"}
+              label="Multiple Choice"
               isSelected={questionType === 'A'}
               style={{cursor: 'pointer'}}
             />
             <RadioLabelStyled
               value="B"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
-              label={screenSize === ScreenSize.SMALL ? "S.A." : "Short Answer"}
+              label="Short Answer"
               isSelected={questionType === 'B'}
               style={{cursor: 'pointer'}}
             />
           </RadioGroup>
         </RadioContainerStyled>
-      </TitleBarStyled>
+      </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
         {imageUrl 
           ? <ImageStyled src={imageUrl ?? ''} alt="image" />
@@ -85,8 +106,8 @@ export default function CreateQuestionCardBase({
               <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled/>
             </ImagePlaceholder>
         }
-        <ContentRightContainerStyled>
-          <TextContainerStyled multiline variant="outlined" rows='4'>
+        <CreateQuestionContentRightContainerStyled>
+          <TextContainerStyled multiline variant="outlined" rows='4' placeholder="Question Contents...">
             <Typography>{title}</Typography>
           </TextContainerStyled>
           <Box style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
@@ -96,7 +117,7 @@ export default function CreateQuestionCardBase({
               <img src={arrow} alt='CCSS' style={{width: '12px', height: '12px'}}/>
             </CCSSIndicator>
           </Box>
-        </ContentRightContainerStyled>
+        </CreateQuestionContentRightContainerStyled>
       </ContentContainerStyled>
     </BaseCardStyled>
   );

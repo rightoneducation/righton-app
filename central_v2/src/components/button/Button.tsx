@@ -13,12 +13,14 @@ import {
 interface CentralButtonProps {
   buttonType: ButtonType;
   isEnabled: boolean;
+  smallScreenOverride?: boolean;
   onClick?: () => void;
 }
 
 export default function CentralButton({
   buttonType,
   isEnabled,
+  smallScreenOverride,
   onClick,
 }: CentralButtonProps) {
   const { t } = useTranslation();
@@ -28,7 +30,7 @@ export default function CentralButton({
     ? t(`button.${buttonObj.textKey}`)
     : null;
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride;
 
   return (
     <ButtonStyled
