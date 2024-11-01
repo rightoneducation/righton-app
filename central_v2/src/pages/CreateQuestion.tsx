@@ -55,27 +55,40 @@ const IncorrectAnswerPill = styled(Box)(({theme}) => ({
   alignItems: 'center'
 }));
 
-export default function CreateQuestion(){
+interface CreateQuestionProps {
+  screenSize: ScreenSize;
+}
+
+export default function CreateQuestion({
+  screenSize
+}:CreateQuestionProps){
   const theme = useTheme();
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   return (
     <CreateQuestionMainContainer>
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
       <CreateQuestionGridContainer container >
+        { screenSize === ScreenSize.SMALL &&
+            <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
+              <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride/>
+              <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride/>
+            </Box>
+          }
         <Grid
           sm
           md
           item
           style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end', paddingTop: '16px', paddingRight: '30px'}}
         >
-          <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
-            <CentralButton buttonType={ButtonType.SAVE} isEnabled/>
-            <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled/>
-          </Box>
+          { screenSize !== ScreenSize.SMALL &&
+            <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
+              <CentralButton buttonType={ButtonType.SAVE} isEnabled/>
+              <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled/>
+            </Box>
+          }
         </Grid>
         <Grid
-          sm={10}
-          md={12}
+          sm={12}
           item
           style={{
             width: '100%',
@@ -86,7 +99,7 @@ export default function CreateQuestion(){
           }}
         >
           <CreateQuestionCardBase
-            screenSize={ScreenSize.LARGE}
+            screenSize={screenSize}
           />
           <Grid
             container

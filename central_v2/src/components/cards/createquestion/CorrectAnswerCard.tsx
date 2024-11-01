@@ -36,7 +36,7 @@ export default function DetailedQuestionSubCard() {
         >
           {index + 1}
         </Typography>
-        <TextContainerStyled variant="outlined" rows='1'>
+        <TextContainerStyled variant="outlined" rows='1' placeholder="Step Contents...">
           {step}
         </TextContainerStyled>
       </Box>
@@ -52,7 +52,7 @@ export default function DetailedQuestionSubCard() {
       <QuestionTitleStyled>
         Correct Answer
       </QuestionTitleStyled>
-      <TextContainerStyled variant="outlined" rows='1' />
+      <TextContainerStyled variant="outlined" rows='1' placeholder="Correct Answer..."/>
       <QuestionTitleStyled>
         Solution Steps
       </QuestionTitleStyled>

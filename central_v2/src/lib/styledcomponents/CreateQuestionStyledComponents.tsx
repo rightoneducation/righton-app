@@ -18,7 +18,10 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
   gap: `${theme.sizing.lgPadding}px`,
-  paddingTop: `${theme.sizing.lgPadding}px`
+  paddingTop: `${theme.sizing.lgPadding}px`,
+  paddingLeft: `${theme.sizing.mdPadding}px`,
+  paddingRight: `${theme.sizing.mdPadding}px`,
+  boxSizing: 'border-box',
 }));
 
 export const CreateQuestionCard = styled(Box)(({theme}) => ({
@@ -30,9 +33,10 @@ export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({
 }));
 
 export const TextContainerStyled = styled(TextField)(({ theme }) => ({
-  height: '100%',
+  width: '100%',
   margin: 0,
-  flexGrow: 1,
+  padding: 0,
+  boxSizing: 'border-box',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   borderColor: `${theme.palette.primary.extraDarkGrey}`,
   "& .MuiOutlinedInput-root": {

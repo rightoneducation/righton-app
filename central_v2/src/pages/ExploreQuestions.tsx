@@ -22,17 +22,16 @@ import SearchBar from '../components/searchbar/SearchBar';
 import QuestionTabs from '../components/questiontabs/QuestionTabs';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 
-export default function ExploreQuestions() {
+interface ExploreQuestionsProps {
+  screenSize: ScreenSize;
+}
+
+export default function ExploreQuestions({
+  screenSize
+}:ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const screenSize = isLargeScreen // eslint-disable-line
-    ? ScreenSize.LARGE
-    : isMediumScreen
-      ? ScreenSize.MEDIUM
-      : ScreenSize.SMALL;
   const {
     recommendedQuestions,
     mostPopularQuestions,
