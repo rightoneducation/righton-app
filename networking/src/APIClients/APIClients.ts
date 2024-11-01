@@ -3,7 +3,7 @@ import {
 } from './auth/interfaces';
 import {
   IUserAPIClient
-} from './user/interfaces';
+} from './user/interfaces/IUserAPIClient';
 import { 
   IGameTemplateAPIClient, 
   IQuestionTemplateAPIClient, 
