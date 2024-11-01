@@ -99,10 +99,10 @@ export default function CreateQuestion({
           sm
           md
           item
-          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end', paddingTop: '16px', paddingRight: '30px'}}
+          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end', paddingTop: '16px'}}
         >
           { screenSize !== ScreenSize.SMALL &&
-            <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
+            <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled/>
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled/>
             </Box>

@@ -4,6 +4,8 @@ import {
   Fade,
   Tabs,
   Grid,
+  TextField,
+  Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,6 +15,7 @@ import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import { ScreenSize } from '../../lib/CentralModels';
 import OwnerTag from '../profile/OwnerTag';
+import LabelCircle from './LabelCircle';
 import { 
   TabContainer,  
   TabContent, 
@@ -23,7 +26,10 @@ import {
   SubCardGridItem
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import {
-  CCSSContentFrame
+  CCSSTabContainer,
+  CCSSContentContainer,
+  CCSSContentFrame,
+  CCSSStyledTabs
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
 
 interface TabContainerProps {
@@ -41,18 +47,25 @@ export default function CCSSTabs({
     setOpenTab(newValue);
   };
   const tabMap: { [key: number]: string } = {
-    0: 'Explore Questions',
-    1: 'My Questions',
-    2: 'Drafts',
-    3: 'Favorites',
+    0: 'Grade',
+    1: 'Domain',
+    2: 'Cluster',
+    3: 'Standard',
   };
 
-  const tabIconMap: { [key: number]: string } = {
-    0: tabExploreQuestionsIcon,
-    1: tabMyQuestionsIcon,
-    2: tabDraftsIcon,
-    3: tabFavoritesIcon,
+  const gradeMap = {
+    'High School': 'HS',
+    '8th': '8',
+    '7th': '7',
+    '6th': '6',
+    '5th': '5',
+    '4th': '4',
+    '3rd': '3',
+    '2nd': '2',
+    '1st': '1',
+    'K': 'K',
   };
+
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE)
       return value;
@@ -60,6 +73,7 @@ export default function CCSSTabs({
      return value;
     return '';
   }
+
   return (
     <Fade
       in={isTabsOpen}
@@ -67,17 +81,13 @@ export default function CCSSTabs({
       unmountOnExit
       timeout={1000}
     >
-      <TabContainer>
+      <CCSSTabContainer>
         <CCSSContentFrame>
           <TabContent>
-            <Tabs
+            <CCSSStyledTabs
+              screenSize={screenSize}
               value={openTab}
               onChange={handleChange}
-              TabIndicatorProps={{
-                style: {
-                  display: 'none',
-                },
-              }}
             >
               {Object.entries(tabMap).map(([key, value], index) => {
                 const numericKey = Number(key);
@@ -86,74 +96,22 @@ export default function CCSSTabs({
                   <StyledTab
                     key={uuidv4()}
                     icon={
-                      <img
-                        src={tabIconMap[numericKey]}
-                        alt={value}
-                        style={{ opacity: openTab === numericKey ? 1 : 0.5, padding: 0 }}
-                      />
+                      <LabelCircle selectedValue='A' isSelected={isSelected}/>
                     }
-                    iconPosition="start"
+                    iconPosition="end"
                     label={getLabel(screenSize, isSelected, value)}
                     isSelected={isSelected}
-                    style={{ marginRight: '8px' }}
+                    style={{ fontSize: '20px',  textTransform: 'none', gap: '8px' }}
                   />
                 );
               })}
-            </Tabs>
-            <ContentContainer>
-              <CardContainer>
-                {screenSize !== ScreenSize.LARGE &&
-                  <OwnerTag screenSize={screenSize}/>
-                }
-                <DetailedQuestionContainer
-                  container
-                >
-                  <Grid
-                    sm
-                    md
-                    item
-                    style={{ display: 'flex', justifyContent: 'flex-end' }}
-                  >
-                    {screenSize === ScreenSize.LARGE &&
-                      <OwnerTag screenSize={screenSize}/>
-                    }
-                  </Grid>
-                  <Grid
-                    sm={10}
-                    md={12}
-                    item
-                    style={{
-                      width: '100%',
-                      maxWidth: '672px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: `${theme.sizing.smPadding}px`,
-                    }}
-                  >
-                    
-                    <Grid
-                      container
-                      spacing={`${theme.sizing.smPadding}px`}
-                    >
-                      <SubCardGridItem 
-                        item
-                        sm={12}
-                        md={6}
-                      />
-                      <SubCardGridItem
-                        item
-                        sm={12}
-                        md={6}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid sm md item />
-                </DetailedQuestionContainer>
-              </CardContainer>
-            </ContentContainer>
+            </CCSSStyledTabs>
+            <CCSSContentContainer screenSize={screenSize}>
+              <CardContainer />
+            </CCSSContentContainer>
           </TabContent>
         </CCSSContentFrame>
-      </TabContainer>
+      </CCSSTabContainer>
     </Fade>
   );
 }
