@@ -32,7 +32,8 @@ import {
   CCSSStyledTabs,
   CCSSPillContainer
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
-import { gradeMap, ccssMap, CCSSType } from '../../lib/CCSSModels';
+import { gradeMap, CCSSType } from '../../lib/CCSSModels';
+import ccssDictionary from '../../lib/CCSSDictionary';
 import CCSSIndicatorPill from './CCSSIndicatorPill';
 
 interface TabContainerProps {
@@ -85,7 +86,7 @@ export default function CCSSTabs({
   const tabContentSwitch = useCallback(() => {
     switch (openTab) {
       case 3: {
-        const gradeObject = ccssMap.find((ccssGrade) => ccssGrade.key === grade);
+        const gradeObject = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
         if (gradeObject){
           const domainObject = gradeObject.domains.find((ccssDomain) => ccssDomain.key === domain);
           if (domainObject){
@@ -105,7 +106,7 @@ export default function CCSSTabs({
         return null;
       }
       case 2: {
-        const gradeObject = ccssMap.find((ccssGrade) => ccssGrade.key === grade);
+        const gradeObject = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
         if (gradeObject){
           const domainObject = gradeObject.domains.find((ccssDomain) => ccssDomain.key === domain);
           if (domainObject){
@@ -122,7 +123,7 @@ export default function CCSSTabs({
         return null;
       }
       case 1: {
-        const gradeObject = ccssMap.find((ccssGrade) => ccssGrade.key === grade);
+        const gradeObject = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
         if (gradeObject){
           return (
             <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
@@ -139,7 +140,7 @@ export default function CCSSTabs({
       default:
        return (
         <CCSSPillContainer container rowSpacing={2}>
-          {ccssMap.map((ccssGrade) => (
+          {ccssDictionary.map((ccssGrade) => (
             <CCSSIndicatorPill key={ccssGrade.key} description={ccssGrade.desc} onClick={()=> setGrade(ccssGrade.key)}  type={CCSSType.GRADE}/>
           ))}
         </CCSSPillContainer>
