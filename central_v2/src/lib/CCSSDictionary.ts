@@ -4,12 +4,12 @@ const ccssDictionary = [
     desc: 'High School',
     domains: [
       {
-        key: 'N-RN',
-        desc: 'The Real Number System',
+        key: 'N',
+        desc: 'Number and Quantity',
         clusters: [
           {
-            key: 'A',
-            desc: 'Extend the properties of exponents to rational exponents.',
+            key: 'RN',
+            desc: 'The Real Number System',
             standards: [
               {
                 key: '1',
@@ -18,302 +18,200 @@ const ccssDictionary = [
               {
                 key: '2',
                 desc: 'Rewrite expressions involving radicals and rational exponents using the properties of exponents.'
-              }
-            ]
-          },
-          {
-            key: 'B',
-            desc: 'Use properties of rational and irrational numbers.',
-            standards: [
+              },
               {
                 key: '3',
                 desc: 'Explain why the sum or product of two rational numbers is rational; that the sum of a rational number and an irrational number is irrational; and that the product of a nonzero rational number and an irrational number is irrational.'
               }
             ]
-          }
-        ]
-      },
-      {
-        key: 'N-Q',
-        desc: 'Quantities',
-        clusters: [
-          {
-            key: 'A',
-            desc: 'Reason quantitatively and use units to solve problems.',
-            standards: [
-              {
-                key: '1',
-                desc: 'Use units as a way to understand problems and to guide the solution of multi-step problems; choose and interpret units consistently in formulas; choose and interpret the scale and the origin in graphs and data displays.'
-              },
-              {
-                key: '2',
-                desc: 'Define appropriate quantities for the purpose of descriptive modeling.'
-              },
-              {
-                key: '3',
-                desc: 'Choose a level of accuracy appropriate to limitations on measurement when reporting quantities.'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        key: 'N-CN',
-        desc: 'The Complex Number System',
-        clusters: [
-          {
-            key: 'A',
-            desc: 'Perform arithmetic operations with complex numbers.',
-            standards: [
-              {
-                key: '1',
-                desc: 'Know there is a complex number i such that i² = –1, and every complex number has the form a + bi with a and b real.'
-              },
-              {
-                key: '2',
-                desc: 'Use the relation i² = –1 and the commutative, associative, and distributive properties to add, subtract, and multiply complex numbers.'
-              },
-              {
-                key: '3',
-                desc: 'Find the conjugate of a complex number; use conjugates to find moduli and quotients of complex numbers.'
-              }
-            ]
           },
           {
-            key: 'B',
-            desc: 'Represent complex numbers and their operations on the complex plane.',
-            standards: [
-              {
-                key: '4',
-                desc: 'Represent complex numbers on the complex plane in rectangular and polar form (including real and imaginary numbers), and explain why the rectangular and polar forms of a given complex number represent the same number.'
-              },
-              {
-                key: '5',
-                desc: 'Represent addition, subtraction, multiplication, and conjugation of complex numbers geometrically on the complex plane; use properties of this representation for computation. For example, (–1 + √3 i)³ = 8 because (–1 + √3 i) has modulus 2 and argument 120°.'
-              },
-              {
-                key: '6',
-                desc: 'Calculate the distance between numbers in the complex plane as the modulus of the difference, and the midpoint of a segment as the average of the numbers at its endpoints.'
-              }
-            ]
-          },
-          {
-            key: 'C',
-            desc: 'Use complex numbers in polynomial identities and equations.',
-            standards: [
-              {
-                key: '7',
-                desc: 'Solve quadratic equations with real coefficients that have complex solutions.'
-              },
-              {
-                key: '8',
-                desc: 'Extend polynomial identities to the complex numbers. For example, rewrite x² + 4 as (x + 2i)(x – 2i).'
-              },
-              {
-                key: '9',
-                desc: 'Know the Fundamental Theorem of Algebra; show that it is true for quadratic polynomials.'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        key: 'N-VM',
-        desc: 'Vector and Matrix Quantities',
-        clusters: [
-          {
-            key: 'A',
-            desc: 'Represent and model with vector quantities.',
-            standards: [
-              {
-                key: '1',
-                desc: 'Recognize vector quantities as having both magnitude and direction. Represent vector quantities by directed line segments, and use appropriate symbols for vectors and their magnitudes (e.g., v, |v|, ||v||, v).'
-              },
-              {
-                key: '2',
-                desc: 'Find the components of a vector by subtracting the coordinates of an initial point from the coordinates of a terminal point.'
-              },
-              {
-                key: '3',
-                desc: 'Solve problems involving velocity and other quantities that can be represented by vectors.'
-              }
-            ]
-          },
-          {
-            key: 'B',
-            desc: 'Perform operations on vectors.',
-            standards: [
-              {
-                key: '4',
-                desc: 'Add and subtract vectors.'
-              },
-              {
-                key: '5',
-                desc: 'Multiply a vector by a scalar.',
-                subStandards: [
-                  {
-                    key: '5a',
-                    desc: 'Add vectors end-to-end, component-wise, and by the parallelogram rule. Understand that the magnitude of a sum of two vectors is typically not the sum of the magnitudes.'
-                  },
-                  {
-                    key: '5b',
-                    desc: 'Given two vectors in magnitude and direction form, determine the magnitude and direction of their sum.'
-                  },
-                  {
-                    key: '5c',
-                    desc: 'Understand vector subtraction v – w as v + (–w), where –w is the additive inverse of w, with the same magnitude as w and pointing in the opposite direction. Represent vector subtraction graphically by connecting the tips in the appropriate order, and perform vector subtraction component-wise.'
-                  },
-                  {
-                    key: '5d',
-                    desc: 'Represent scalar multiplication graphically by scaling vectors and possibly reversing their direction; perform scalar multiplication component-wise, e.g., as c(vx, vy) = (cvx, cvy).'
-                  },
-                  {
-                    key: '5e',
-                    desc: 'Compute the magnitude of a scalar multiple cv using ||cv|| = |c|v. Compute the direction of cv knowing that when |c|v ≠ 0, the direction of cv is either along v (for c > 0) or against v (for c < 0).'
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            key: 'C',
-            desc: 'Perform operations on matrices and use matrices in applications.',
-            standards: [
-              {
-                key: '6',
-                desc: 'Use matrices to represent and manipulate data, e.g., to represent payoffs or incidence relationships in a network.'
-              },
-              {
-                key: '7',
-                desc: 'Multiply matrices by scalars to produce new matrices, e.g., as when all of the payoffs in a game are doubled.'
-              },
-              {
-                key: '8',
-                desc: 'Add, subtract, and multiply matrices of appropriate dimensions.'
-              },
-              {
-                key: '9',
-                desc: 'Understand that, unlike multiplication of numbers, matrix multiplication for square matrices is not a commutative operation, but still satisfies the associative and distributive properties.'
-              },
-              {
-                key: '10',
-                desc: 'Understand that the zero and identity matrices play a role in matrix addition and multiplication similar to the role of 0 and 1 in the real numbers. The determinant of a square matrix is nonzero if and only if the matrix has a multiplicative inverse.'
-              },
-              {
-                key: '11',
-                desc: 'Multiply a vector (regarded as a matrix with one column) by a matrix of suitable dimensions to produce another vector. Work with matrices as transformations of vectors.'
-              },
-              {
-                key: '12',
-                desc: 'Work with 2 × 2 matrices as transformations of the plane, and interpret the absolute value of the determinant in terms of area.'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        key: 'EE',
-        desc: 'Expressions and Equations',
-        clusters: [
-          {
-            key: 'A',
-            desc: 'Work with radicals and integer exponents.',
-            standards: [
-              {
-                key: '1',
-                desc: 'Know and apply the properties of integer exponents to generate equivalent numerical expressions. For example, 3² × 3⁻⁵ = 3⁻³ = 1/3³ = 1/27.'
-              },
-              {
-                key: '2',
-                desc: 'Use square root and cube root symbols to represent solutions to equations of the form x² = p and x³ = p, where p is a positive rational number. Evaluate square roots of small perfect squares and cube roots of small perfect cubes. Know that √2 is irrational.'
-              },
-              {
-                key: '3',
-                desc: 'Use numbers expressed in the form of a single digit times an integer power of 10 to estimate very large or very small quantities, and to express how many times as much one is than the other. For example, estimate the population of the United States as 3 × 10⁸ and the population of the world as 7 × 10⁹, and determine that the world population is more than 20 times larger.'
-              },
-              {
-                key: '4',
-                desc: 'Perform operations with numbers expressed in scientific notation, including problems where both decimal and scientific notation are used. Use scientific notation and choose units of appropriate size for measurements of very large or very small quantities (e.g., use millimeters per year for seafloor spreading). Interpret scientific notation that has been generated by technology.'
-              },
-              {
-                key: '5',
-                desc: 'Understand the connections between proportional relationships, lines, and linear equations.',
-                subStandards: [
-                  {
-                    key: '5a',
-                    desc: 'Graph proportional relationships, interpreting the unit rate as the slope of the graph. Compare two different proportional relationships represented in different ways.'
-                  },
-                  {
-                    key: '5b',
-                    desc: 'Use similar triangles to explain why the slope m is the same between any two distinct points on a non-vertical line in the coordinate plane; derive the equation y = mx for a line through the origin and the equation y = mx + b for a line intercepting the vertical axis at b.'
-                  }
-                ]
-              },
-              {
-                key: '6',
-                desc: 'Analyze and solve linear equations and pairs of simultaneous linear equations.',
-                subStandards: [
-                  {
-                    key: '6a',
-                    desc: 'Solve linear equations in one variable. Give examples of linear equations in one variable with one solution, infinitely many solutions, or no solutions. Show which of these possibilities is the case by successively transforming the given equation into simpler forms, until an equivalent equation of the form x = a, a = a, or a = b results (where a and b are different numbers).'
-                  },
-                  {
-                    key: '6b',
-                    desc: 'Solve linear equations with rational number coefficients, including equations whose solutions require expanding expressions using the distributive property and collecting like terms.'
-                  },
-                  {
-                    key: '6c',
-                    desc: 'Apply the properties of operations to generate equivalent expressions. For example, apply the distributive property to the expression 3(2 + x) to produce the equivalent expression 6 + 3x; apply the distributive property to the expression 24x + 18y to produce the equivalent expression 6(4x + 3y); apply properties of operations to y + y + y to produce the equivalent expression 3y.'
-                  },
-                  {
-                    key: '6d',
-                    desc: 'Identify when two expressions are equivalent (i.e., when the two expressions name the same number regardless of which value is substituted into them). For example, the expressions y + y + y and 3y are equivalent because they name the same number regardless of which number y stands for.'
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            key: 'F',
-            desc: 'Functions',
+            key: 'Q',
+            desc: 'Quantities',
             clusters: [
               {
                 key: 'A',
-                desc: 'Define, evaluate, and compare functions.',
+                desc: 'Reason quantitatively and use units to solve problems.',
                 standards: [
                   {
                     key: '1',
-                    desc: 'Understand that a function is a rule that assigns to each input exactly one output. The graph of a function is the set of ordered pairs consisting of an input and the corresponding output.'
+                    desc: 'Use units as a way to understand problems and to guide the solution of multi-step problems; choose and interpret units consistently in formulas; choose and interpret the scale and the origin in graphs and data displays.'
                   },
                   {
                     key: '2',
-                    desc: 'Use function notation, evaluate functions for inputs in their domains, and interpret statements that use function notation in terms of a context.'
+                    desc: 'Define appropriate quantities for the purpose of descriptive modeling.'
                   },
                   {
                     key: '3',
-                    desc: 'Recognize that sequences are functions, sometimes defined recursively, whose domain is a subset of the integers. For example, the Fibonacci sequence is defined recursively by f(0) = f(1) = 1, f(n+1) = f(n) + f(n-1) for n ≥ 1.'
+                    desc: 'Choose a level of accuracy appropriate to limitations on measurement when reporting quantities.'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            key: 'CN',
+            desc: 'The Complex Number System',
+            clusters: [
+              {
+                key: 'A',
+                desc: 'Perform arithmetic operations with complex numbers.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Know there is a complex number i such that i² = –1, and every complex number has the form a + bi with a and b real.'
+                  },
+                  {
+                    key: '2',
+                    desc: 'Use the relation i² = –1 and the commutative, associative, and distributive properties to add, subtract, and multiply complex numbers.'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Find the conjugate of a complex number; use conjugates to find moduli and quotients of complex numbers.'
                   }
                 ]
               },
               {
                 key: 'B',
-                desc: 'Use functions to model relationships between quantities.',
+                desc: 'Represent complex numbers and their operations on the complex plane.',
                 standards: [
                   {
                     key: '4',
-                    desc: 'Construct a function to model a linear relationship between two quantities. Determine the rate of change and initial value of the function from a description of a relationship or from two (x, y) values, including reading these from a table or from a graph. Interpret the rate of change and initial value of a linear function in terms of the situation it models, and in terms of its graph or a table of values.'
+                    desc: 'Represent complex numbers on the complex plane in rectangular and polar form (including real and imaginary numbers), and explain why the rectangular and polar forms of a given complex number represent the same number.'
                   },
                   {
                     key: '5',
-                    desc: 'Describe qualitatively the functional relationship between two quantities by analyzing a graph (e.g., where the function is increasing or decreasing, linear or nonlinear). Sketch a graph that exhibits the qualitative features of a function that has been described verbally.'
+                    desc: 'Represent addition, subtraction, multiplication, and conjugation of complex numbers geometrically on the complex plane; use properties of this representation for computation. For example, (–1 + √3 i)^3 = 8 because (–1 + √3 i) has modulus 2 and argument 120°.'
+                  },
+                  {
+                    key: '6',
+                    desc: 'Calculate the distance between numbers in the complex plane as the modulus of the difference, and the midpoint of a segment as the average of the numbers at its endpoints.'
+                  }
+                ]
+              },
+              {
+                key: 'C',
+                desc: 'Use complex numbers in polynomial identities and equations.',
+                standards: [
+                  {
+                    key: '7',
+                    desc: 'Solve quadratic equations with real coefficients that have complex solutions.'
+                  },
+                  {
+                    key: '8',
+                    desc: 'Extend polynomial identities to the complex numbers. For example, rewrite x² + 4 as (x + 2i)(x – 2i).'
+                  },
+                  {
+                    key: '9',
+                    desc: 'Know the Fundamental Theorem of Algebra; show that it is true for quadratic polynomials.'
                   }
                 ]
               }
             ]
           },
           {
-            key: 'a-SSe',
-            desc: 'Seeing Structure in Expressions a-SSe',
+            key: 'VM',
+            desc: 'Vector and Matrix Quantities',
+            clusters: [
+              {
+                key: 'A',
+                desc: 'Represent and model with vector quantities.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Recognize vector quantities as having both magnitude and direction. Represent vector quantities by directed line segments, and use appropriate symbols for vectors and their magnitudes (e.g., v, |v|, ||v||, v).'
+                  },
+                  {
+                    key: '2',
+                    desc: 'Find the components of a vector by subtracting the coordinates of an initial point from the coordinates of a terminal point.'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Solve problems involving velocity and other quantities that can be represented by vectors.'
+                  }
+                ]
+              },
+              {
+                key: 'B',
+                desc: 'Perform operations on vectors.',
+                standards: [
+                  {
+                    key: '4',
+                    desc: 'Add and subtract vectors.'
+                  },
+                  {
+                    key: '5',
+                    desc: 'Multiply a vector by a scalar.',
+                    subStandards: [
+                      {
+                        key: '5a',
+                        desc: 'Add vectors end-to-end, component-wise, and by the parallelogram rule. Understand that the magnitude of a sum of two vectors is typically not the sum of the magnitudes.'
+                      },
+                      {
+                        key: '5b',
+                        desc: 'Given two vectors in magnitude and direction form, determine the magnitude and direction of their sum.'
+                      },
+                      {
+                        key: '5c',
+                        desc: 'Understand vector subtraction v – w as v + (–w), where –w is the additive inverse of w, with the same magnitude as w and pointing in the opposite direction. Represent vector subtraction graphically by connecting the tips in the appropriate order, and perform vector subtraction component-wise.'
+                      },
+                      {
+                        key: '5d',
+                        desc: 'Represent scalar multiplication graphically by scaling vectors and possibly reversing their direction; perform scalar multiplication component-wise, e.g., as c(vx, vy) = (cvx, cvy).'
+                      },
+                      {
+                        key: '5e',
+                        desc: 'Compute the magnitude of a scalar multiple cv using ||cv|| = |c|v. Compute the direction of cv knowing that when |c|v ≠ 0, the direction of cv is either along v (for c > 0) or against v (for c < 0).'
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                key: 'C',
+                desc: 'Perform operations on matrices and use matrices in applications.',
+                standards: [
+                  {
+                    key: '6',
+                    desc: 'Use matrices to represent and manipulate data, e.g., to represent payoffs or incidence relationships in a network.'
+                  },
+                  {
+                    key: '7',
+                    desc: 'Multiply matrices by scalars to produce new matrices, e.g., as when all of the payoffs in a game are doubled.'
+                  },
+                  {
+                    key: '8',
+                    desc: 'Add, subtract, and multiply matrices of appropriate dimensions.'
+                  },
+                  {
+                    key: '9',
+                    desc: 'Understand that, unlike multiplication of numbers, matrix multiplication for square matrices is not a commutative operation, but still satisfies the associative and distributive properties.'
+                  },
+                  {
+                    key: '10',
+                    desc: 'Understand that the zero and identity matrices play a role in matrix addition and multiplication similar to the role of 0 and 1 in the real numbers. The determinant of a square matrix is nonzero if and only if the matrix has a multiplicative inverse.'
+                  },
+                  {
+                    key: '11',
+                    desc: 'Multiply a vector (regarded as a matrix with one column) by a matrix of suitable dimensions to produce another vector. Work with matrices as transformations of vectors.'
+                  },
+                  {
+                    key: '12',
+                    desc: 'Work with 2 × 2 matrices as transformations of the plane, and interpret the absolute value of the determinant in terms of area.'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        key: 'A',
+        desc: 'Algebra',
+        clusters: [
+          {
+            key: 'SSE',
+            desc: 'Seeing Structure in Expressions',
             clusters: [
               {
                 key: 'A',
@@ -370,8 +268,8 @@ const ccssDictionary = [
             ]
           },
           {
-            key: 'a-aPr',
-            desc: 'Arithmetic with Polynomials and Rational Expressions a-aPr',
+            key: 'APR',
+            desc: 'Arithmetic with Polynomials and Rational Expressions',
             clusters: [
               {
                 key: 'A',
@@ -428,8 +326,8 @@ const ccssDictionary = [
             ]
           },
           {
-            key: 'a-reI',
-            desc: 'Reasoning with Equations and Inequalities a-reI',
+            key: 'REI',
+            desc: 'Reasoning with Equations and Inequalities',
             clusters: [
               {
                 key: 'A',
@@ -476,8 +374,138 @@ const ccssDictionary = [
             ]
           },
           {
-            key: 'f-Le',
-            desc: 'Linear, Quadratic, and Exponential Models★ f-Le',
+            key: 'CED',
+            desc: 'Creating Equations',
+            clusters: [
+              {
+                key: 'A',
+                desc: 'Create equations that describe numbers or relationships.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Create equations and inequalities in one variable and use them to solve problems. Include equations arising from linear and quadratic functions, and simple rational and exponential functions.'
+                  },
+                  {
+                    key: '2',
+                    desc: 'Create equations in two or more variables to represent relationships between quantities; graph equations on coordinate axes with labels and scales.'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Represent constraints by equations or inequalities, and by systems of equations and/or inequalities, and interpret solutions as viable or non-viable options in a modeling context. For example, represent inequalities describing nutritional and cost constraints on combinations of different foods.'
+                  },
+                  {
+                    key: '4',
+                    desc: 'Rearrange formulas to highlight a quantity of interest, using the same reasoning as in solving equations. For example, rearrange Ohm’s law V = IR to highlight resistance R.'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        key: 'F',
+        desc: 'Functions',
+        clusters: [
+          {
+            key: 'IF',
+            desc: 'Interpreting Functions',
+            clusters: [
+              {
+                key: 'A',
+                desc: 'Understand the concept of a function and use function notation.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Understand that a function from one set (called the domain) to another set (called the range) assigns to each element of the domain exactly one element of the range. If f is a function and x is an element of its domain, then f(x) denotes the output of f corresponding to the input x. The graph of f is the graph of the equation y = f(x).'
+                  },
+                  {
+                    key: '2',
+                    desc: 'Use function notation, evaluate functions for inputs in their domains, and interpret statements that use function notation in terms of a context.'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Recognize that sequences are functions, sometimes defined recursively, whose domain is a subset of the integers. For example, the Fibonacci sequence is defined recursively by f(0) = f(1) = 1, f(n+1) = f(n) + f(n-1) for n ≥ 1.'
+                  }
+                ]
+              },
+              {
+                key: 'B',
+                desc: 'Interpret functions that arise in applications in terms of the context.',
+                standards: [
+                  {
+                    key: '4',
+                    desc: 'For a function that models a relationship between two quantities, interpret key features of graphs and tables in terms of the quantities, and sketch graphs showing key features given a verbal description of the relationship. Key features include: intercepts; intervals where the function is increasing, decreasing, positive, or negative; relative maximums and minimums; symmetries; end behavior; and periodicity.'
+                  },
+                  {
+                    key: '5',
+                    desc: 'Relate the domain of a function to its graph and, where applicable, to the quantitative relationship it describes. For example, if the function h(n) gives the number of person-hours it takes to assemble n engines in a factory, then the positive integers would be an appropriate domain for the function.'
+                  },
+                  {
+                    key: '6',
+                    desc: 'Calculate and interpret the average rate of change of a function (presented symbolically or as a table) over a specified interval. Estimate the rate of change from a graph.'
+                  },
+                  {
+                    key: '7',
+                    desc: 'Graph functions expressed symbolically and show key features of the graph, by hand in simple cases and using technology for more complicated cases. Include recognizing even and odd functions from their graphs and algebraic expressions for them.'
+                  },
+                  {
+                    key: '8',
+                    desc: 'Write a function defined by an expression in different but equivalent forms to reveal and explain different properties of the function.'
+                  },
+                  {
+                    key: '9',
+                    desc: 'Compare properties of two functions each represented in a different way (algebraically, graphically, numerically in tables, or by verbal descriptions). For example, given a graph of one quadratic function and an algebraic expression for another, say which has the larger maximum.'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            key: 'BF',
+            desc: 'Building Functions',
+            clusters: [
+              {
+                key: 'A',
+                desc: 'Build a function that models a relationship between two quantities.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Write a function that describes a relationship between two quantities. Determine an explicit expression, a recursive process, or steps for calculation from a context. Combine standard function types using arithmetic operations.'
+                  },
+                  {
+                    key: '2',
+                    desc: 'Construct linear and exponential functions, including arithmetic and geometric sequences, given a graph, a description of a relationship, or two input-output pairs (include reading these from a table).'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Construct linear and exponential functions, including arithmetic and geometric sequences, given a graph, a description of a relationship, or two input-output pairs (include reading these from a table).'
+                  },
+                  {
+                    key: '4',
+                    desc: 'Construct linear and exponential functions, including arithmetic and geometric sequences, given a graph, a description of a relationship, or two input-output pairs (include reading these from a table).'
+                  }
+                ]
+              },
+              {
+                key: 'B',
+                desc: 'Build new functions from existing functions.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Build new functions by combining existing functions using addition, subtraction, multiplication, division, and composition.'
+                  },
+                  {
+                    key: '2',
+                    desc: 'Understand that the inverse relationship exists between exponents and logarithms and use this relationship to solve problems involving logarithms and exponents.'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            key: 'LE',
+            desc: 'Linear, Quadratic, and Exponential Models',
             clusters: [
               {
                 key: 'A',
@@ -522,8 +550,8 @@ const ccssDictionary = [
             ]
           },
           {
-            key: 'f-tf',
-            desc: 'Trigonometric Functions f-tf',
+            key: 'TF',
+            desc: 'Trigonometric Functions',
             clusters: [
               {
                 key: 'A',
@@ -571,7 +599,7 @@ const ccssDictionary = [
                 standards: [
                   {
                     key: '8',
-                    desc: 'Prove the Pythagorean identity sin²θ + cos²θ = 1 and use it to find sinθ, cosθ, or tanθ given sinθ, cosθ, or tanθ and the quadrant of the angle.'
+                    desc: 'Prove the Pythagorean identity sin²(θ) + cos²(θ) = 1 and use it to find sin(θ), cos(θ), or tan(θ) given sin(θ), cos(θ), or tan(θ) and the quadrant of the angle.'
                   },
                   {
                     key: '9',
@@ -580,260 +608,266 @@ const ccssDictionary = [
                 ]
               }
             ]
-          },
-      {
-        key: 'G-Co',
-        desc: 'Congruence G-Co',
-        clusters: [
-          {
-            key: 'A',
-            desc: 'Experiment with transformations in the plane.',
-            standards: [
-              {
-                key: '1',
-                desc: 'Know precise definitions of angle, circle, perpendicular line, parallel line, and line segment, based on the undefined notions of point, line, distance along a line, and distance around a circular arc.'
-              },
-              {
-                key: '2',
-                desc: 'Represent transformations in the plane using, e.g., transparencies and geometry software; describe transformations as functions that take points in the plane as inputs and give other points as outputs. Compare transformations that preserve distance and angle to those that do not (e.g., translation versus horizontal stretch).'
-              },
-              {
-                key: '3',
-                desc: 'Given a rectangle, parallelogram, trapezoid, or regular polygon, describe the rotations and reflections that carry it onto itself.'
-              },
-              {
-                key: '4',
-                desc: 'Develop definitions of rotations, reflections, and translations in terms of angles, circles, perpendicular lines, parallel lines, and line segments.'
-              },
-              {
-                key: '5',
-                desc: 'Given a geometric figure and a rotation, reflection, or translation, draw the transformed figure using, e.g., graph paper, tracing paper, or geometry software. Specify a sequence of transformations that will carry a given figure onto another.'
-              }
-            ]
-          },
-          {
-            key: 'B',
-            desc: 'Understand congruence in terms of rigid motions.',
-            standards: [
-              {
-                key: '6',
-                desc: 'Use geometric descriptions of rigid motions to transform figures and to predict the effect of a given rigid motion on a given figure; given two figures, use the definition of congruence in terms of rigid motions to decide if they are congruent.'
-              },
-              {
-                key: '7',
-                desc: 'Use the definition of congruence in terms of rigid motions to show that two triangles are congruent if and only if corresponding pairs of sides and corresponding pairs of angles are congruent.'
-              },
-              {
-                key: '8',
-                desc: 'Explain how the criteria for triangle congruence (ASA, SAS, and SSS) follow from the definition of congruence in terms of rigid motions.'
-              }
-            ]
-          },
-          {
-            key: 'C',
-            desc: 'Prove geometric theorems.',
-            standards: [
-              {
-                key: '9',
-                desc: 'Prove theorems about lines and angles. Theorems include: vertical angles are congruent; when a transversal crosses parallel lines, alternate interior angles are congruent and corresponding angles are congruent; points on a perpendicular bisector of a line segment are exactly those equidistant from the segment’s endpoints.'
-              },
-              {
-                key: '10',
-                desc: 'Prove theorems about triangles. Theorems include: measures of interior angles of a triangle sum to 180°; base angles of isosceles triangles are congruent; the segment joining midpoints of two sides of a triangle is parallel to the third side and half the length; the medians of a triangle meet at a point.'
-              },
-              {
-                key: '11',
-                desc: 'Prove theorems about parallelograms. Theorems include: opposite sides are congruent, opposite angles are congruent, the diagonals of a parallelogram bisect each other, and conversely, rectangles are parallelograms with congruent diagonals.'
-              }
-            ]
-          },
-          {
-            key: 'D',
-            desc: 'Make geometric constructions.',
-            standards: [
-              {
-                key: '12',
-                desc: 'Make formal geometric constructions with a variety of tools and methods (compass and straightedge, string, reflective devices, paper folding, dynamic geometric software, etc.). Copying a segment; copying an angle; bisecting a segment; bisecting an angle; constructing perpendicular lines, including the perpendicular bisector of a line segment; and constructing a line parallel to a given line through a point not on the line.'
-              },
-              {
-                key: '13',
-                desc: 'Construct an equilateral triangle, a square, and a regular hexagon inscribed in a circle.'
-              }
-            ]
           }
         ]
       },
       {
-        key: 'G-Srt',
-        desc: 'Similarity, Right Triangles, and Trigonometry G-Srt',
+        key: 'G',
+        desc: 'Geometry',
         clusters: [
           {
-            key: 'A',
-            desc: 'Understand similarity in terms of similarity transformations.',
-            standards: [
+            key: 'CO',
+            desc: 'Congruence',
+            clusters: [
               {
-                key: '1',
-                desc: 'Verify experimentally the properties of dilations given by a center and a scale factor.',
-                subStandards: [
+                key: 'A',
+                desc: 'Experiment with transformations in the plane.',
+                standards: [
                   {
-                    key: '1a',
-                    desc: 'A dilation takes a line not passing through the center of the dilation to a parallel line, and leaves a line passing through the center unchanged.'
+                    key: '1',
+                    desc: 'Know precise definitions of angle, circle, perpendicular line, parallel line, and line segment, based on the undefined notions of point, line, distance along a line, and distance around a circular arc.'
                   },
                   {
-                    key: '1b',
-                    desc: 'The dilation of a line segment is longer or shorter in the ratio given by the scale factor.'
+                    key: '2',
+                    desc: 'Represent transformations in the plane using, e.g., transparencies and geometry software; describe transformations as functions that take points in the plane as inputs and give other points as outputs. Compare transformations that preserve distance and angle to those that do not (e.g., translation versus horizontal stretch).'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Given a rectangle, parallelogram, trapezoid, or regular polygon, describe the rotations and reflections that carry it onto itself.'
+                  },
+                  {
+                    key: '4',
+                    desc: 'Develop definitions of rotations, reflections, and translations in terms of angles, circles, perpendicular lines, parallel lines, and line segments.'
+                  },
+                  {
+                    key: '5',
+                    desc: 'Given a geometric figure and a rotation, reflection, or translation, draw the transformed figure using, e.g., graph paper, tracing paper, or geometry software. Specify a sequence of transformations that will carry a given figure onto another.'
                   }
                 ]
               },
               {
-                key: '2',
-                desc: 'Given two figures, use the definition of similarity in terms of similarity transformations to decide if they are similar; explain using similarity transformations the meaning of similarity for triangles as the equality of all corresponding pairs of angles and the proportionality of all corresponding pairs of sides.'
+                key: 'B',
+                desc: 'Understand congruence in terms of rigid motions.',
+                standards: [
+                  {
+                    key: '6',
+                    desc: 'Use geometric descriptions of rigid motions to transform figures and to predict the effect of a given rigid motion on a given figure; given two figures, use the definition of congruence in terms of rigid motions to decide if they are congruent.'
+                  },
+                  {
+                    key: '7',
+                    desc: 'Use the definition of congruence in terms of rigid motions to show that two triangles are congruent if and only if corresponding pairs of sides and corresponding pairs of angles are congruent.'
+                  },
+                  {
+                    key: '8',
+                    desc: 'Explain how the criteria for triangle congruence (ASA, SAS, and SSS) follow from the definition of congruence in terms of rigid motions.'
+                  }
+                ]
               },
               {
-                key: '3',
-                desc: 'Use the properties of similarity transformations to establish the AA criterion for two triangles to be similar.'
-              }
-            ]
-          },
-          {
-            key: 'B',
-            desc: 'Prove theorems involving similarity.',
-            standards: [
-              {
-                key: '4',
-                desc: 'Prove theorems about triangles. Theorems include: a line parallel to one side of a triangle divides the other two proportionally, and conversely; the Pythagorean Theorem proved using triangle similarity.'
+                key: 'C',
+                desc: 'Prove geometric theorems.',
+                standards: [
+                  {
+                    key: '9',
+                    desc: 'Prove theorems about lines and angles. Theorems include: vertical angles are congruent; when a transversal crosses parallel lines, alternate interior angles are congruent and corresponding angles are congruent; points on a perpendicular bisector of a line segment are exactly those equidistant from the segment’s endpoints.'
+                  },
+                  {
+                    key: '10',
+                    desc: 'Prove theorems about triangles. Theorems include: measures of interior angles of a triangle sum to 180°; base angles of isosceles triangles are congruent; the segment joining midpoints of two sides of a triangle is parallel to the third side and half the length; the medians of a triangle meet at a point.'
+                  },
+                  {
+                    key: '11',
+                    desc: 'Prove theorems about parallelograms. Theorems include: opposite sides are congruent, opposite angles are congruent, the diagonals of a parallelogram bisect each other, and conversely, rectangles are parallelograms with congruent diagonals.'
+                  }
+                ]
               },
               {
-                key: '5',
-                desc: 'Use congruence and similarity criteria for triangles to solve problems and to prove relationships in geometric figures.'
-              }
-            ]
-          },
-          {
-            key: 'C',
-            desc: 'Define trigonometric ratios and solve problems involving right triangles.',
-            standards: [
-              {
-                key: '6',
-                desc: 'Understand that by similarity, side ratios in right triangles are properties of the angles in the triangle, leading to definitions of trigonometric ratios for acute angles.'
-              },
-              {
-                key: '7',
-                desc: 'Explain and use the relationship between the sine and cosine of complementary angles.'
-              },
-              {
-                key: '8',
-                desc: 'Use trigonometric ratios and the Pythagorean Theorem to solve right triangles in applied problems.'
-              }
-            ]
-          },
-          {
-            key: 'D',
-            desc: 'Apply trigonometry to general triangles.',
-            standards: [
-              {
-                key: '9',
-                desc: 'Derive the formula A = (1/2)ab sin(C) for the area of a triangle by drawing an auxiliary line from a vertex perpendicular to the opposite side.'
-              },
-              {
-                key: '10',
-                desc: 'Prove the Laws of Sines and Cosines and use them to solve problems.'
-              },
-              {
-                key: '11',
-                desc: 'Understand and apply the Law of Sines and the Law of Cosines to find unknown measurements in right and non-right triangles (e.g., surveying problems, resultant forces).'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        key: 'G-C',
-        desc: 'Circles G-C',
-        clusters: [
-          {
-            key: 'A',
-            desc: 'Understand and apply theorems about circles.',
-            standards: [
-              {
-                key: '1',
-                desc: 'Prove that all circles are similar.'
-              },
-              {
-                key: '2',
-                desc: 'Identify and describe relationships among inscribed angles, radii, and chords. Include the relationship between central, inscribed, and circumscribed angles; inscribed angles on a diameter are right angles; the radius of a circle is perpendicular to the tangent where the radius intersects the circle.'
-              },
-              {
-                key: '3',
-                desc: 'Construct the inscribed and circumscribed circles of a triangle, and prove properties of angles for a quadrilateral inscribed in a circle.'
-              },
-              {
-                key: '4',
-                desc: 'Construct a tangent line from a point outside a given circle to the circle.'
-              }
-            ]
-          },
-          {
-            key: 'B',
-            desc: 'Find arc lengths and areas of sectors of circles.',
-            standards: [
-              {
-                key: '5',
-                desc: 'Derive using similarity the fact that the length of the arc intercepted by an angle is proportional to the radius, and define the radian measure of the angle as the constant of proportionality; derive the formula for the area of a sector.'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        key: 'G-GPe',
-        desc: 'Expressing Geometric Properties with Equations G-GPe',
-        clusters: [
-          {
-            key: 'A',
-            desc: 'Translate between the geometric description and the equation for a conic section.',
-            standards: [
-              {
-                key: '1',
-                desc: 'Derive the equation of a circle of given center and radius using the Pythagorean Theorem; complete the square to find the center and radius of a circle given by an equation.'
-              },
-              {
-                key: '2',
-                desc: 'Derive the equation of a parabola given a focus and directrix.'
-              },
-              {
-                key: '3',
-                desc: 'Derive the equations of ellipses and hyperbolas given the foci, using the fact that the sum or difference of distances from the foci is constant.'
-              }
-            ]
-          },
-          {
-            key: 'B',
-            desc: 'Use coordinates to prove simple geometric theorems algebraically.',
-            standards: [
-              {
-                key: '4',
-                desc: 'Use coordinates to prove simple geometric theorems algebraically. For example, prove or disprove that a figure defined by four given points in the coordinate plane is a rectangle; prove or disprove that the point (1, √3) lies on the circle centered at the origin and containing the point (0, 2).'
-              },
-              {
-                key: '5',
-                desc: 'Prove the slope criteria for parallel and perpendicular lines and use them to solve geometric problems (e.g., find the equation of a line parallel or perpendicular to a given line that passes through a given point).'
-              },
-              {
-                key: '6',
-                desc: 'Find the point on a directed line segment between two given points that partitions the segment in a given ratio.'
-              },
-              {
-                key: '7',
-                desc: 'Use coordinates to compute perimeters of polygons and areas of triangles and rectangles, e.g., using the distance formula.'
-              }
+                key: 'D',
+                desc: 'Make geometric constructions.',
+                standards: [
+                  {
+                    key: '12',
+                    desc: 'Make formal geometric constructions with a variety of tools and methods (compass and straightedge, string, reflective devices, paper folding, dynamic geometric software, etc.). Copying a segment; copying an angle; bisecting a segment; bisecting an angle; constructing perpendicular lines, including the perpendicular bisector of a line segment; and constructing a line parallel to a given line through a point not on the line.'
+                  },
+                  {
+                    key: '13',
+                    desc: 'Construct an equilateral triangle, a square, and a regular hexagon inscribed in a circle.'
+                  }
                 ]
               }
             ]
           },
           {
-            key: 'G-Gmd',
-            desc: 'Geometric Measurement and Dimension G-Gmd',
+            key: 'SRT',
+            desc: 'Similarity, Right Triangles, and Trigonometry',
+            clusters: [
+              {
+                key: 'A',
+                desc: 'Understand similarity in terms of similarity transformations.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Verify experimentally the properties of dilations given by a center and a scale factor.',
+                    subStandards: [
+                      {
+                        key: '1a',
+                        desc: 'A dilation takes a line not passing through the center of the dilation to a parallel line, and leaves a line passing through the center unchanged.'
+                      },
+                      {
+                        key: '1b',
+                        desc: 'The dilation of a line segment is longer or shorter in the ratio given by the scale factor.'
+                      }
+                    ]
+                  },
+                  {
+                    key: '2',
+                    desc: 'Given two figures, use the definition of similarity in terms of similarity transformations to decide if they are similar; explain using similarity transformations the meaning of similarity for triangles as the equality of all corresponding pairs of angles and the proportionality of all corresponding pairs of sides.'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Use the properties of similarity transformations to establish the AA criterion for two triangles to be similar.'
+                  }
+                ]
+              },
+              {
+                key: 'B',
+                desc: 'Prove theorems involving similarity.',
+                standards: [
+                  {
+                    key: '4',
+                    desc: 'Prove theorems about triangles. Theorems include: a line parallel to one side of a triangle divides the other two proportionally, and conversely; the Pythagorean Theorem proved using triangle similarity.'
+                  },
+                  {
+                    key: '5',
+                    desc: 'Use congruence and similarity criteria for triangles to solve problems and to prove relationships in geometric figures.'
+                  }
+                ]
+              },
+              {
+                key: 'C',
+                desc: 'Define trigonometric ratios and solve problems involving right triangles.',
+                standards: [
+                  {
+                    key: '6',
+                    desc: 'Understand that by similarity, side ratios in right triangles are properties of the angles in the triangle, leading to definitions of trigonometric ratios for acute angles.'
+                  },
+                  {
+                    key: '7',
+                    desc: 'Explain and use the relationship between the sine and cosine of complementary angles.'
+                  },
+                  {
+                    key: '8',
+                    desc: 'Use trigonometric ratios and the Pythagorean Theorem to solve right triangles in applied problems.'
+                  }
+                ]
+              },
+              {
+                key: 'D',
+                desc: 'Apply trigonometry to general triangles.',
+                standards: [
+                  {
+                    key: '9',
+                    desc: 'Derive the formula A = (1/2)ab sin(C) for the area of a triangle by drawing an auxiliary line from a vertex perpendicular to the opposite side.'
+                  },
+                  {
+                    key: '10',
+                    desc: 'Prove the Laws of Sines and Cosines and use them to solve problems.'
+                  },
+                  {
+                    key: '11',
+                    desc: 'Understand and apply the Law of Sines and the Law of Cosines to find unknown measurements in right and non-right triangles (e.g., surveying problems, resultant forces).'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            key: 'C',
+            desc: 'Circles',
+            clusters: [
+              {
+                key: 'A',
+                desc: 'Understand and apply theorems about circles.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Prove that all circles are similar.'
+                  },
+                  {
+                    key: '2',
+                    desc: 'Identify and describe relationships among inscribed angles, radii, and chords. Include the relationship between central, inscribed, and circumscribed angles; inscribed angles on a diameter are right angles; the radius of a circle is perpendicular to the tangent where the radius intersects the circle.'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Construct the inscribed and circumscribed circles of a triangle, and prove properties of angles for a quadrilateral inscribed in a circle.'
+                  },
+                  {
+                    key: '4',
+                    desc: 'Construct a tangent line from a point outside a given circle to the circle.'
+                  }
+                ]
+              },
+              {
+                key: 'B',
+                desc: 'Find arc lengths and areas of sectors of circles.',
+                standards: [
+                  {
+                    key: '5',
+                    desc: 'Derive using similarity the fact that the length of the arc intercepted by an angle is proportional to the radius, and define the radian measure of the angle as the constant of proportionality; derive the formula for the area of a sector.'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            key: 'GPE',
+            desc: 'Expressing Geometric Properties with Equations',
+            clusters: [
+              {
+                key: 'A',
+                desc: 'Translate between the geometric description and the equation for a conic section.',
+                standards: [
+                  {
+                    key: '1',
+                    desc: 'Derive the equation of a circle of given center and radius using the Pythagorean Theorem; complete the square to find the center and radius of a circle given by an equation.'
+                  },
+                  {
+                    key: '2',
+                    desc: 'Derive the equation of a parabola given a focus and directrix.'
+                  },
+                  {
+                    key: '3',
+                    desc: 'Derive the equations of ellipses and hyperbolas given the foci, using the fact that the sum or difference of distances from the foci is constant.'
+                  }
+                ]
+              },
+              {
+                key: 'B',
+                desc: 'Use coordinates to prove simple geometric theorems algebraically.',
+                standards: [
+                  {
+                    key: '4',
+                    desc: 'Use coordinates to prove simple geometric theorems algebraically. For example, prove or disprove that a figure defined by four given points in the coordinate plane is a rectangle; prove or disprove that the point (1, √3) lies on the circle centered at the origin and containing the point (0, 2).'
+                  },
+                  {
+                    key: '5',
+                    desc: 'Prove the slope criteria for parallel and perpendicular lines and use them to solve geometric problems (e.g., find the equation of a line parallel or perpendicular to a given line that passes through a given point).'
+                  },
+                  {
+                    key: '6',
+                    desc: 'Find the point on a directed line segment between two given points that partitions the segment in a given ratio.'
+                  },
+                  {
+                    key: '7',
+                    desc: 'Use coordinates to compute perimeters of polygons and areas of triangles and rectangles, e.g., using the distance formula.'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            key: 'GMD',
+            desc: 'Geometric Measurement and Dimension',
             clusters: [
               {
                 key: 'A',
@@ -866,8 +900,8 @@ const ccssDictionary = [
             ]
           },
           {
-            key: 'G-mG',
-            desc: 'Modeling with Geometry G-mG',
+            key: 'mG',
+            desc: 'Modeling with Geometry',
             clusters: [
               {
                 key: 'A',
@@ -888,10 +922,16 @@ const ccssDictionary = [
                 ]
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        key: 'S',
+        desc: 'Statistics',
+        clusters: [
           {
-            key: 'S-Id',
-            desc: 'Interpreting Categorical and Quantitative Data S-Id',
+            key: 'Id',
+            desc: 'Interpreting Categorical and Quantitative Data',
             clusters: [
               {
                 key: 'A',
@@ -958,8 +998,8 @@ const ccssDictionary = [
             ]
           },
           {
-            key: 'S-IC',
-            desc: 'Making Inferences and Justifying Conclusions S-IC',
+            key: 'IC',
+            desc: 'Making Inferences and Justifying Conclusions',
             clusters: [
               {
                 key: 'A',
@@ -992,8 +1032,8 @@ const ccssDictionary = [
             ]
           },
           {
-            key: 'S-CP',
-            desc: 'Conditional Probability and the Rules of Probability S-CP',
+            key: 'CP',
+            desc: 'Conditional Probability and the Rules of Probability',
             clusters: [
               {
                 key: 'A',
@@ -1080,8 +1120,8 @@ const ccssDictionary = [
             ]
           },
           {
-            key: 'S-md',
-            desc: 'Using Probability to Make Decisions S-md',
+            key: 'md',
+            desc: 'Using Probability to Make Decisions',
             clusters: [
               {
                 key: 'A',
@@ -1137,17 +1177,13 @@ const ccssDictionary = [
             standards: [
               {
                 key: '1',
-                desc: 'Know that there are numbers that are not rational, and approximate them by rational numbers.',
-                subStandards: [
-                  {
-                    key: '1a',
-                    desc: 'Know that numbers that are not rational are called irrational. Understand informally that every number has a decimal expansion; for rational numbers show that the decimal expansion repeats eventually, and convert a decimal expansion which repeats eventually into a rational number.'
-                  },
-                  {
-                    key: '1b',
-                    desc: 'Use rational approximations of irrational numbers to compare the size of irrational numbers, locate them approximately on a number line diagram, and estimate the value of expressions (e.g., π²). For example, by truncating the decimal expansion of √2, show that √2 is between 1 and 2, then between 1.4 and 1.5, and explain how to continue on to get better approximations.'
-                  }
-                ]
+                desc: 'Know that numbers that are not rational are called irrational. Understand informally that every number has a decimal expansion; for rational numbers show that the decimal expansion repeats eventually, and convert a decimal expansion which repeats eventually into a rational number.'
+                // No subStandards since there are no a, b, c parts
+              },
+              {
+                key: '2',
+                desc: 'Use rational approximations of irrational numbers to compare the size of irrational numbers, locate them approximately on a number line diagram, and estimate the value of expressions (e.g., π²). For example, by truncating the decimal expansion of √2, show that √2 is between 1 and 2, then between 1.4 and 1.5, and explain how to continue on to get better approximations.'
+                // No subStandards
               }
             ]
           }
@@ -1164,18 +1200,22 @@ const ccssDictionary = [
               {
                 key: '1',
                 desc: 'Know and apply the properties of integer exponents to generate equivalent numerical expressions. For example, 3² × 3⁻⁵ = 3⁻³ = 1/3³ = 1/27.'
+                // No subStandards
               },
               {
                 key: '2',
                 desc: 'Use square root and cube root symbols to represent solutions to equations of the form x² = p and x³ = p, where p is a positive rational number. Evaluate square roots of small perfect squares and cube roots of small perfect cubes. Know that √2 is irrational.'
+                // No subStandards
               },
               {
                 key: '3',
                 desc: 'Use numbers expressed in the form of a single digit times an integer power of 10 to estimate very large or very small quantities, and to express how many times as much one is than the other. For example, estimate the population of the United States as 3 × 10⁸ and the population of the world as 7 × 10⁹, and determine that the world population is more than 20 times larger.'
+                // No subStandards
               },
               {
                 key: '4',
                 desc: 'Perform operations with numbers expressed in scientific notation, including problems where both decimal and scientific notation are used. Use scientific notation and choose units of appropriate size for measurements of very large or very small quantities (e.g., use millimeters per year for seafloor spreading). Interpret scientific notation that has been generated by technology.'
+                // No subStandards
               },
               {
                 key: '5',
@@ -1226,14 +1266,17 @@ const ccssDictionary = [
                   {
                     key: '1',
                     desc: 'Understand that a function is a rule that assigns to each input exactly one output. The graph of a function is the set of ordered pairs consisting of an input and the corresponding output.'
+                    // No subStandards
                   },
                   {
                     key: '2',
                     desc: 'Compare properties of two functions each represented in a different way (algebraically, graphically, numerically in tables, or by verbal descriptions). For example, given a linear function represented by a table of values and a linear function represented by an algebraic expression, determine which function has the greater rate of change.'
+                    // No subStandards
                   },
                   {
                     key: '3',
                     desc: 'Interpret the equation y = mx + b as defining a linear function, whose graph is a straight line; give examples of functions that are not linear. For example, the function A = s² giving the area of a square as a function of its side length is not linear because its graph contains the points (1,1), (2,4) and (3,9), which are not on a straight line.'
+                    // No subStandards
                   }
                 ]
               },
@@ -1244,10 +1287,12 @@ const ccssDictionary = [
                   {
                     key: '4',
                     desc: 'Construct a function to model a linear relationship between two quantities. Determine the rate of change and initial value of the function from a description of a relationship or from two (x, y) values, including reading these from a table or from a graph. Interpret the rate of change and initial value of a linear function in terms of the situation it models, and in terms of its graph or a table of values.'
+                    // No subStandards
                   },
                   {
                     key: '5',
                     desc: 'Describe qualitatively the functional relationship between two quantities by analyzing a graph (e.g., where the function is increasing or decreasing, linear or nonlinear). Sketch a graph that exhibits the qualitative features of a function that has been described verbally.'
+                    // No subStandards
                   }
                 ]
               }
@@ -1259,23 +1304,65 @@ const ccssDictionary = [
             clusters: [
               {
                 key: 'A',
-                desc: 'Solve real-world and mathematical problems involving area, surface area, and volume.',
+                desc: 'Understand congruence and similarity using physical models, transparencies, or geometry software.',
                 standards: [
                   {
                     key: '1',
-                    desc: 'Find the area of right triangles, other triangles, special quadrilaterals, and polygons by composing into rectangles or decomposing into triangles and other shapes; apply these techniques in the context of solving real-world and mathematical problems.'
+                    desc: 'Verify experimentally the properties of rotations, reflections, and translations:',
+                    subStandards: [
+                      {
+                        key: '1a',
+                        desc: 'Lines are taken to lines, and line segments to line segments of the same length.'
+                      },
+                      {
+                        key: '1b',
+                        desc: 'Angles are taken to angles of the same measure.'
+                      },
+                      {
+                        key: '1c',
+                        desc: 'Parallel lines are taken to parallel lines.'
+                      }
+                    ]
                   },
                   {
                     key: '2',
-                    desc: 'Find the volume of right rectangular prisms with fractional edge lengths by packing it with unit cubes of the appropriate unit fraction edge lengths, and show that the volume is the same as would be found by multiplying the edge lengths of the prism. Apply the formulas V = l × w × h and V = b × h for rectangular prisms to find volumes of right rectangular prisms with fractional edge lengths in the context of solving real-world and mathematical problems.'
+                    desc: 'Understand that a two-dimensional figure is congruent to another if the second can be obtained from the first by a sequence of rotations, reflections, and translations; given two congruent figures, describe a sequence that exhibits the congruence between them.'
+                    // No subStandards
                   },
                   {
                     key: '3',
-                    desc: 'Draw polygons in the coordinate plane given coordinates for the vertices; use coordinates to find the length of a side joining points with the same first coordinate or the same second coordinate. Apply these techniques in the context of solving real-world and mathematical problems.'
+                    desc: 'Describe the effect of dilations, translations, rotations, and reflections on two-dimensional figures using coordinates.'
+                    // No subStandards
                   },
                   {
                     key: '4',
-                    desc: 'Represent three-dimensional figures using nets made up of rectangles and triangles, and use the nets to find the surface area of these figures. Apply these techniques in the context of solving real-world and mathematical problems.'
+                    desc: 'Understand that a two-dimensional figure is similar to another if the second can be obtained from the first by a sequence of rotations, reflections, translations, and dilations; given two similar two-dimensional figures, describe a sequence that exhibits the similarity between them.'
+                    // No subStandards
+                  },
+                  {
+                    key: '5',
+                    desc: 'Use informal arguments to establish facts about the angle sum and exterior angle of triangles, about the angles created when parallel lines are cut by a transversal, and the angle-angle criterion for similarity of triangles. For example, arrange three copies of the same triangle so that the sum of the three angles appears to form a line, and give an argument in terms of transversals why this is so.'
+                    // No subStandards
+                  },
+                  {
+                    key: '6',
+                    desc: 'Explain a proof of the Pythagorean Theorem and its converse.'
+                    // No subStandards
+                  },
+                  {
+                    key: '7',
+                    desc: 'Apply the Pythagorean Theorem to determine unknown side lengths in right triangles in real-world and mathematical problems in two and three dimensions.'
+                    // No subStandards
+                  },
+                  {
+                    key: '8',
+                    desc: 'Apply the Pythagorean Theorem to find the distance between two points in a coordinate system.'
+                    // No subStandards
+                  },
+                  {
+                    key: '9',
+                    desc: 'Solve real-world and mathematical problems involving volume of cylinders, cones, and spheres. Know the formulas for the volumes of cones, cylinders, and spheres and use them to solve real-world and mathematical problems.'
+                    // No subStandards
                   }
                 ]
               }
@@ -1287,19 +1374,27 @@ const ccssDictionary = [
             clusters: [
               {
                 key: 'A',
-                desc: 'Develop understanding of statistical variability.',
+                desc: 'Investigate patterns of association in bivariate data.',
                 standards: [
                   {
                     key: '1',
-                    desc: 'Recognize a statistical question as one that anticipates variability in the data related to the question and accounts for it in the answers. For example, “How old am I?” is not a statistical question, but “How old are the students in my school?” is a statistical question because one anticipates variability in students’ ages.'
+                    desc: 'Construct and interpret scatter plots for bivariate measurement data to investigate patterns of association between two quantities. Describe patterns such as clustering, outliers, positive or negative association, linear association, and nonlinear association.'
+                    // No subStandards
                   },
                   {
                     key: '2',
-                    desc: 'Understand that a set of data collected to answer a statistical question has a distribution which can be described by its center, spread, and overall shape.'
+                    desc: 'Know that straight lines are widely used to model relationships between two quantitative variables. For scatter plots that suggest a linear association, informally fit a straight line, and informally assess the model fit by judging the closeness of the data points to the line.'
+                    // No subStandards
                   },
                   {
                     key: '3',
-                    desc: 'Recognize that a measure of center for a numerical data set summarizes all of its values with a single number, while a measure of variation describes how its values vary with a single number.'
+                    desc: 'Use the equation of a linear model to solve problems in the context of bivariate measurement data, interpreting the slope and intercept. For example, in a linear model for a biology experiment, interpret a slope of 1.5 cm/hr as meaning that an additional hour of sunlight each day is associated with an additional 1.5 cm in mature plant height.'
+                    // No subStandards
+                  },
+                  {
+                    key: '4',
+                    desc: 'Understand that patterns of association can also be seen in bivariate categorical data by displaying frequencies and relative frequencies in a two-way table. Construct and interpret a two-way table summarizing data on two categorical variables collected from the same subjects. Use relative frequencies calculated for rows or columns to describe possible association between the two variables. For example, collect data from students in your class on whether or not they have a curfew on school nights and whether or not they have assigned chores at home. Is there evidence that those who have a curfew also tend to have chores?'
+                    // No subStandards
                   }
                 ]
               },
@@ -1310,6 +1405,7 @@ const ccssDictionary = [
                   {
                     key: '4',
                     desc: 'Display numerical data in plots on a number line, including dot plots, histograms, and box plots.'
+                    // No subStandards
                   },
                   {
                     key: '5',
@@ -1342,14 +1438,17 @@ const ccssDictionary = [
                   {
                     key: '6',
                     desc: 'Construct and interpret scatter plots for bivariate measurement data to investigate patterns of association between two quantities. Describe patterns such as clustering, outliers, positive or negative association, linear association, and nonlinear association.'
+                    // No subStandards
                   },
                   {
                     key: '7',
                     desc: 'Know that straight lines are widely used to model relationships between two quantitative variables. For scatter plots that suggest a linear association, informally fit a straight line, and informally assess the model fit by judging the closeness of the data points to the line.'
+                    // No subStandards
                   },
                   {
                     key: '8',
                     desc: 'Use the equation of a linear model to solve problems in the context of bivariate measurement data, interpreting the slope and intercept. For example, in a linear model for a biology experiment, interpret a slope of 1.5 cm/hr as meaning that an additional hour of sunlight each day is associated with an additional 1.5 cm in mature plant height.'
+                    // No subStandards
                   }
                 ]
               }
