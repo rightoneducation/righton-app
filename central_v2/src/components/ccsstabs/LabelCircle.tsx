@@ -22,7 +22,7 @@ export default function LabelCircle({selectedValue, isSelected}: LabelCircleProp
       }}
     >
       <Typography style={{
-        fontSize: '20px',
+        fontSize: selectedValue.length < 3 ? '20px' : '15px',
         color: '#4700B2',
         fontWeight: 'bold',
       }}>

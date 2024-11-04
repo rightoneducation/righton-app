@@ -4,7 +4,7 @@ const ccssDictionary = [
     desc: 'High School',
     domains: [
       {
-        key: 'n-rn',
+        key: 'N-RN',
         desc: 'The Real Number System',
         clusters: [
           {
@@ -34,8 +34,8 @@ const ccssDictionary = [
         ]
       },
       {
-        key: 'n-Q',
-        desc: 'Quantities★',
+        key: 'N-Q',
+        desc: 'Quantities',
         clusters: [
           {
             key: 'A',
@@ -58,7 +58,7 @@ const ccssDictionary = [
         ]
       },
       {
-        key: 'n-Cn',
+        key: 'N-CN',
         desc: 'The Complex Number System',
         clusters: [
           {
@@ -118,7 +118,7 @@ const ccssDictionary = [
         ]
       },
       {
-        key: 'n-Vm',
+        key: 'N-VM',
         desc: 'Vector and Matrix Quantities',
         clusters: [
           {
@@ -212,7 +212,7 @@ const ccssDictionary = [
         ]
       },
       {
-        key: '8.ee',
+        key: 'EE',
         desc: 'Expressions and Equations',
         clusters: [
           {

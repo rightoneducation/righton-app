@@ -167,7 +167,6 @@ export default function CCSSTabs({
                 const numericKey = Number(key);
                 const isSelected = openTab === numericKey;
                 const selectedValue = getSelectedValue(value);
-                console.log(selectedValue)
                 return (
                   <StyledTab
                     key={uuidv4()}
