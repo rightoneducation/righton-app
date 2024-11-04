@@ -1,6 +1,6 @@
 import React from 'react';
 import { CCSSType } from '../../lib/CCSSModels';
-import {  GradeIndicator, CCSSGridItem, CCSSIndicatorPillText } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
+import {  GradeIndicator, CCSSGridItem, CCSSIndicatorPillText, CCSSIndicatorDescText } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
 
 interface CCSSIndicatorPillProps {
   label?: string
@@ -29,17 +29,18 @@ export default function CCSSIndicatorPill ({
         style={{ 
           gap: type === CCSSType.GRADE ? '0px' : '32px', 
           textWrap: type === CCSSType.GRADE ? 'nowrap' : 'wrap',
+          alignItems: 'center'
         }}
         >
-          <div>
-          { type !== CCSSType.GRADE && (
-              label
-            )
+          { type === CCSSType.GRADE 
+            ? description 
+            : <>
+                {label}
+                <CCSSIndicatorDescText>
+                {description}
+                </CCSSIndicatorDescText>
+              </>
           }
-          </div>
-          <div>
-          {description}
-          </div>
         </CCSSIndicatorPillText>
       </GradeIndicator>
     </CCSSGridItem>

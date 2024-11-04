@@ -84,6 +84,43 @@ export default function CCSSTabs({
 
   const tabContentSwitch = useCallback(() => {
     switch (openTab) {
+      case 3: {
+        const gradeObject = ccssMap.find((ccssGrade) => ccssGrade.key === grade);
+        if (gradeObject){
+          const domainObject = gradeObject.domains.find((ccssDomain) => ccssDomain.key === domain);
+          if (domainObject){
+            const clusterObject = domainObject.clusters.find((ccssCluster) => ccssCluster.key === cluster);
+            if (clusterObject){
+              return (
+                <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
+                  {clusterObject.standards?.map((ccssStandard) => (
+                      <CCSSIndicatorPill key={ccssStandard.key} description={ccssStandard.desc} label={ccssStandard.key} onClick={()=> setStandard(ccssStandard.key)} type={CCSSType.STANDARD}/>
+                    ))
+                  }
+                </CCSSPillContainer>
+              )
+            }
+          }
+        }
+        return null;
+      }
+      case 2: {
+        const gradeObject = ccssMap.find((ccssGrade) => ccssGrade.key === grade);
+        if (gradeObject){
+          const domainObject = gradeObject.domains.find((ccssDomain) => ccssDomain.key === domain);
+          if (domainObject){
+            return (
+              <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
+                {domainObject.clusters.map((ccssCluster) => (
+                    <CCSSIndicatorPill key={ccssCluster.key} description={ccssCluster.desc} label={ccssCluster.key} onClick={()=> setCluster(ccssCluster.key)} type={CCSSType.CLUSTER}/>
+                  ))
+                }
+              </CCSSPillContainer>
+            )
+          }
+        }
+        return null;
+      }
       case 1: {
         const gradeObject = ccssMap.find((ccssGrade) => ccssGrade.key === grade);
         if (gradeObject){

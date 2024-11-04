@@ -100,7 +100,7 @@ export const CCSSGridItem = styled(Grid)(({ theme }) => ({
 
 export const GradeIndicator = styled(Button)(({ theme }) => ({
   width: 'fit-content',
-  height: '38px',
+  minHeight: '38px',
   borderRadius: '54px',
   textTransform: 'none',
   boxShadow: ' 0px 5px 22px 0px rgba(71, 217, 255, 0.37)',
@@ -124,4 +124,13 @@ export const CCSSIndicatorPillText = styled(Typography)(({theme}) => ({
   color: '#FFF',
   width: 'fit-content',
   display: 'flex',
+}));
+
+export const CCSSIndicatorDescText = styled(Typography)(({theme}) => ({
+  fontSize: '16px',
+  fontWeight: 400,
+  color: '#FFF',
+  width: 'fit-content',
+  display: 'flex',
+  textAlign: 'left'
 }));
