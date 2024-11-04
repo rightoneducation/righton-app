@@ -40,6 +40,14 @@ export const gradeMap = [
     short: 'K'
   }
 ];
+
+export enum CCSSType {
+  GRADE = 'Grade',
+  DOMAIN = 'Domain',
+  CLUSTER = 'Cluster',
+  STANDARD = 'Standard'
+}
+
 export const ccssMap = [
   {
     key: 'HS',

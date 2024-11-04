@@ -30,9 +30,9 @@ import {
   CCSSContentContainer,
   CCSSContentFrame,
   CCSSStyledTabs,
-  CCSSGradeContainer
+  CCSSPillContainer
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
-import { gradeMap, ccssMap } from '../../lib/CCSSModels';
+import { gradeMap, ccssMap, CCSSType } from '../../lib/CCSSModels';
 import CCSSIndicatorPill from './CCSSIndicatorPill';
 
 interface TabContainerProps {
@@ -67,16 +67,48 @@ export default function CCSSTabs({
      return value;
     return '';
   }
-  console.log(grade);
+  
+  const getSelectedValue = (value: string) => {
+    switch (value){
+      case 'Domain':
+        return domain;
+      case 'Cluster':
+        return cluster;
+      case 'Standard':
+        return standard;
+      case 'Grade':
+      default:
+        return grade;
+    }
+  }
+
   const tabContentSwitch = useCallback(() => {
     switch (openTab) {
+      case 1: {
+        const gradeObject = ccssMap.find((ccssGrade) => ccssGrade.key === grade);
+        if (gradeObject){
+          return (
+            <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
+              {gradeObject.domains.map((ccssDomain) => (
+                  <CCSSIndicatorPill key={ccssDomain.key} description={ccssDomain.desc} label={ccssDomain.key} onClick={()=> setDomain(ccssDomain.key)} type={CCSSType.DOMAIN}/>
+                ))
+              }
+            </CCSSPillContainer>
+          )
+        }
+        return null;
+      }
       case 0:
       default:
-       return ccssMap.map((ccssGrade) => (
-          <CCSSIndicatorPill key={ccssGrade.key} label={ccssGrade.desc} onClick={()=> setGrade(ccssGrade.key)}/>
-        ))
+       return (
+        <CCSSPillContainer container rowSpacing={2}>
+          {ccssMap.map((ccssGrade) => (
+            <CCSSIndicatorPill key={ccssGrade.key} description={ccssGrade.desc} onClick={()=> setGrade(ccssGrade.key)}  type={CCSSType.GRADE}/>
+          ))}
+        </CCSSPillContainer>
+      )
     }
-  },[openTab]);
+  },[openTab]); // eslint-disable-line 
 
   return (
     <Fade
@@ -96,11 +128,13 @@ export default function CCSSTabs({
               {Object.entries(tabMap).map(([key, value], index) => {
                 const numericKey = Number(key);
                 const isSelected = openTab === numericKey;
+                const selectedValue = getSelectedValue(value);
+                console.log(selectedValue)
                 return (
                   <StyledTab
                     key={uuidv4()}
                     icon={
-                      <LabelCircle selectedValue='A' isSelected={isSelected}/>
+                      <LabelCircle selectedValue={selectedValue} isSelected={isSelected}/>
                     }
                     iconPosition="end"
                     label={getLabel(screenSize, isSelected, value)}
@@ -111,9 +145,7 @@ export default function CCSSTabs({
               })}
             </CCSSStyledTabs>
             <CCSSContentContainer screenSize={screenSize}>
-              <CCSSGradeContainer container rowSpacing={2}>
                {tabContentSwitch()}
-              </CCSSGradeContainer>
             </CCSSContentContainer>
           </TabContent>
         </CCSSContentFrame>

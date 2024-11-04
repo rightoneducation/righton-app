@@ -76,8 +76,8 @@ export const CCSSStyledTabs = styled((props: CCSSStyledTabsProps) => (
   }
 });
 
-export const CCSSGradeContainer = styled(Grid)(({ theme }) => ({
-  width: '100%',
+export const CCSSPillContainer = styled(Grid)(({ theme }) => ({
+  width: 'fit-content',
   height: '100%',
   overflow: 'auto',
   display: 'flex',
@@ -122,7 +122,6 @@ export const CCSSIndicatorPillText = styled(Typography)(({theme}) => ({
   fontSize: '20px',
   fontWeight: 600,
   color: '#FFF',
-  textAlign: 'center',
-  textWrap: 'nowrap',
-  width: 'fit-content'
+  width: 'fit-content',
+  display: 'flex',
 }));
