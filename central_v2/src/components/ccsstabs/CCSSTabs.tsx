@@ -67,27 +67,16 @@ export default function CCSSTabs({
      return value;
     return '';
   }
-
+  console.log(grade);
   const tabContentSwitch = useCallback(() => {
     switch (openTab) {
       case 0:
       default:
-        return (
-          gradeMap.map((grade, index) => {
-            return (
-              <CCSSIndicatorPill label={ grade.long} />
-            )
-          })
-        );
-      // case 2:
-      //   return ();
-      // case 3:
-      //   return <ComponentForTab4 />;
-      // case 0:
-      // default:
-      //   return <ComponentForTab1 />;
+       return ccssMap.map((ccssGrade) => (
+          <CCSSIndicatorPill key={ccssGrade.key} label={ccssGrade.desc} onClick={()=> setGrade(ccssGrade.key)}/>
+        ))
     }
-    },[openTab]);
+  },[openTab]);
 
   return (
     <Fade

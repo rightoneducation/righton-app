@@ -3,10 +3,12 @@ import {  GradeIndicator, CCSSGridItem, CCSSIndicatorPillText } from '../../lib/
 
 interface CCSSIndicatorPillProps {
   label: string
+  onClick: () => void
 }
 
 export default function CCSSIndicatorPill ({
-  label
+  label,
+  onClick
 }: CCSSIndicatorPillProps){
   return (
     <CCSSGridItem
@@ -15,7 +17,7 @@ export default function CCSSIndicatorPill ({
       md={3}
     >
       <GradeIndicator
-        onClick={() => {}}
+        onClick={() => onClick()}
       >
         <CCSSIndicatorPillText>
           {label}
