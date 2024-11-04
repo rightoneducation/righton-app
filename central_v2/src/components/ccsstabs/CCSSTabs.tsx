@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Box,
   Fade,
@@ -32,7 +32,7 @@ import {
   CCSSStyledTabs,
   CCSSGradeContainer
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
-import { gradeMap } from '../../lib/CCSSModels';
+import { gradeMap, ccssMap } from '../../lib/CCSSModels';
 import CCSSIndicatorPill from './CCSSIndicatorPill';
 
 interface TabContainerProps {
@@ -55,6 +55,10 @@ export default function CCSSTabs({
     2: 'Cluster',
     3: 'Standard',
   };
+  const [grade, setGrade] = React.useState('');
+  const [domain, setDomain] = React.useState('');
+  const [cluster, setCluster] = React.useState('');
+  const [standard, setStandard] = React.useState('');
 
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE)
@@ -63,6 +67,27 @@ export default function CCSSTabs({
      return value;
     return '';
   }
+
+  const tabContentSwitch = useCallback(() => {
+    switch (openTab) {
+      case 0:
+      default:
+        return (
+          gradeMap.map((grade, index) => {
+            return (
+              <CCSSIndicatorPill label={ grade.long} />
+            )
+          })
+        );
+      // case 2:
+      //   return ();
+      // case 3:
+      //   return <ComponentForTab4 />;
+      // case 0:
+      // default:
+      //   return <ComponentForTab1 />;
+    }
+    },[openTab]);
 
   return (
     <Fade
@@ -98,13 +123,7 @@ export default function CCSSTabs({
             </CCSSStyledTabs>
             <CCSSContentContainer screenSize={screenSize}>
               <CCSSGradeContainer container rowSpacing={2}>
-                {
-                  gradeMap.map((grade, index) => {
-                    return (
-                      <CCSSIndicatorPill label={ grade.long} />
-                    )
-                  })
-                }
+               {tabContentSwitch()}
               </CCSSGradeContainer>
             </CCSSContentContainer>
           </TabContent>
