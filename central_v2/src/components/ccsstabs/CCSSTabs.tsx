@@ -47,7 +47,6 @@ export default function CCSSTabs({
   const [standard, setStandard] = React.useState('');
 
   const isTabTextValid = (value: string) => {
-    console.log(value);
     switch (openTab){
       case 3: {
         const gradeObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
