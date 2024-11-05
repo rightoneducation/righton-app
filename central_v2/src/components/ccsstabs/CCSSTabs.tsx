@@ -24,17 +24,16 @@ import CCSSIndicatorPill from './CCSSIndicatorPill';
 interface TabContainerProps {
   screenSize: ScreenSize;
   isTabsOpen: boolean;
+  handleCCSSSubmit: (ccss: string) => void;
 }
 
 export default function CCSSTabs({
   screenSize,
   isTabsOpen,
+  handleCCSSSubmit
 }: TabContainerProps) {
   const theme = useTheme();
   const [openTab, setOpenTab] = React.useState(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setOpenTab(newValue);
-  };
   const tabMap: { [key: number]: string } = {
     0: 'Grade',
     1: 'Domain',
@@ -46,6 +45,52 @@ export default function CCSSTabs({
   const [cluster, setCluster] = React.useState('');
   const [standard, setStandard] = React.useState('');
 
+  const handleTabClick = (event: React.SyntheticEvent, newValue: number) => {
+    setOpenTab(newValue);
+    switch (newValue){
+      case 1:
+        setCluster('');
+        setStandard('');
+        break;
+      case 2:
+        setStandard('');
+        break;
+      case 0:
+      default:
+        setDomain('');
+        setCluster('');
+        setStandard('');
+        break;
+    }
+  };
+
+  const handlePillClick = (value: string, type: CCSSType) => {
+    switch (type){
+      case CCSSType.DOMAIN:
+        setDomain(value);
+        setCluster('');
+        setStandard('');
+        setOpenTab(2);
+        break;
+      case CCSSType.CLUSTER:
+        setCluster(value);
+        setStandard('');
+        setOpenTab(3);
+        break;
+      case CCSSType.STANDARD:
+        setStandard(value);
+        handleCCSSSubmit(`${grade}.${domain}.${cluster}.${value}`);
+        break;
+      case CCSSType.GRADE:
+      default:
+        setGrade(value);
+        setDomain('');
+        setCluster('');
+        setStandard('');
+        setOpenTab(1);
+        break;
+    }
+  };
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE)
       return value;
@@ -82,10 +127,10 @@ export default function CCSSTabs({
                   {clusterObject.standards?.map((ccssStandard) => (
                       ccssStandard.subStandards && ccssStandard.subStandards.length > 0 ? (
                           ccssStandard.subStandards.map((subStandard) => (
-                            <CCSSIndicatorPill key={subStandard.key} description={subStandard.desc} label={subStandard.key} onClick={()=> setStandard(subStandard.key)} type={CCSSType.STANDARD}/>
+                            <CCSSIndicatorPill key={subStandard.key} description={subStandard.desc} label={subStandard.key} onClick={()=> handlePillClick(subStandard.key, CCSSType.STANDARD)} type={CCSSType.STANDARD}/>
                           ))
                       ) : (
-                      <CCSSIndicatorPill key={ccssStandard.key} description={ccssStandard.desc} label={ccssStandard.key} onClick={()=> setStandard(ccssStandard.key)} type={CCSSType.STANDARD}/>
+                      <CCSSIndicatorPill key={ccssStandard.key} description={ccssStandard.desc} label={ccssStandard.key} onClick={()=> handlePillClick(ccssStandard.key, CCSSType.STANDARD)} type={CCSSType.STANDARD}/>
                     )))
                   }
                 </CCSSPillContainer>
@@ -103,7 +148,7 @@ export default function CCSSTabs({
             return (
               <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
                 {domainObject.clusters.map((ccssCluster) => (
-                    <CCSSIndicatorPill key={ccssCluster.key} description={ccssCluster.desc} label={ccssCluster.key} onClick={()=> setCluster(ccssCluster.key)} type={CCSSType.CLUSTER}/>
+                    <CCSSIndicatorPill key={ccssCluster.key} description={ccssCluster.desc} label={ccssCluster.key} onClick={()=> handlePillClick(ccssCluster.key, CCSSType.CLUSTER)} type={CCSSType.CLUSTER}/>
                   ))
                 }
               </CCSSPillContainer>
@@ -118,7 +163,7 @@ export default function CCSSTabs({
           return (
             <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
               {gradeObject.domains.map((ccssDomain) => (
-                  <CCSSIndicatorPill key={ccssDomain.key} description={ccssDomain.desc} label={ccssDomain.key} onClick={()=> setDomain(ccssDomain.key)} type={CCSSType.DOMAIN}/>
+                  <CCSSIndicatorPill key={ccssDomain.key} description={ccssDomain.desc} label={ccssDomain.key} onClick={()=> handlePillClick(ccssDomain.key, CCSSType.DOMAIN)} type={CCSSType.DOMAIN}/>
                 ))
               }
             </CCSSPillContainer>
@@ -131,7 +176,7 @@ export default function CCSSTabs({
        return (
         <CCSSPillContainer container rowSpacing={2}>
           {ccssDictionary.map((ccssGrade) => (
-            <CCSSIndicatorPill key={ccssGrade.key} description={ccssGrade.desc} onClick={()=> setGrade(ccssGrade.key)}  type={CCSSType.GRADE}/>
+            <CCSSIndicatorPill key={ccssGrade.key} description={ccssGrade.desc} onClick={()=> handlePillClick(ccssGrade.key, CCSSType.GRADE)}  type={CCSSType.GRADE}/>
           ))}
         </CCSSPillContainer>
       )
@@ -151,7 +196,7 @@ export default function CCSSTabs({
             <CCSSStyledTabs
               screenSize={screenSize}
               value={openTab}
-              onChange={handleChange}
+              onChange={handleTabClick}
             >
               {Object.entries(tabMap).map(([key, value], index) => {
                 const numericKey = Number(key);

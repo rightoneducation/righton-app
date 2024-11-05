@@ -22,6 +22,7 @@ import arrow from '../../../images/SelectArrow.svg';
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
   handleCCSSClick: () => void;
+  ccss: string;
 }
 
 export const ImagePlaceholder = styled(Box)(({ theme }) => ({
@@ -58,13 +59,13 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 
 export default function CreateQuestionCardBase({
   screenSize,
-  handleCCSSClick
+  handleCCSSClick,
+  ccss
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [imageUrl, setImageUrl] = React.useState<string | null>(null);
   const [title, setTitle] = React.useState<string | null>(null);
-  const [ccss, setCCSS] = React.useState<string | null>('CCSS');
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {

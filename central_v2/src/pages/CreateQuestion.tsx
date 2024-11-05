@@ -67,6 +67,7 @@ export default function CreateQuestion({
   const theme = useTheme();
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
+  const [ccss, setCCSS] = useState<string>('CCSS');
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
   };
@@ -74,6 +75,12 @@ export default function CreateQuestion({
   const handleBackToExplore = () => {
     setIsCCSSVisible(false);
   };
+
+  const handleCCSSSubmit = (ccssString: string) => {
+    setCCSS(ccssString);
+    setIsCCSSVisible(false);
+  };
+
   console.log(isCCSSVisible);
   return (
     <CreateQuestionMainContainer>
@@ -85,6 +92,7 @@ export default function CreateQuestion({
         <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={isCCSSVisible}
+          handleCCSSSubmit={handleCCSSSubmit}
         />
       </>
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
@@ -122,6 +130,7 @@ export default function CreateQuestion({
           <CreateQuestionCardBase
             screenSize={screenSize}
             handleCCSSClick={handleCCSSClick}
+            ccss={ccss}
           />
           <Grid
             container
