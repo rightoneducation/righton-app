@@ -8,6 +8,7 @@ import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerC
 import { ButtonType } from '../components/button/ButtonModels';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackground';
+import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -161,6 +162,7 @@ export default function CreateQuestion({
                   )
                 }
               </Box>
+              <IncorrectAnswerCardStack />
             </SubCardGridItem>
           </Grid>
         </Grid>
