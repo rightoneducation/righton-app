@@ -87,11 +87,17 @@ export default function CCSSTabs({
     switch (openTab) {
       case 3: {
         const gradeObject = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
+        console.log('gradeObject');
+        console.log(gradeObject);
         if (gradeObject){
           const domainObject = gradeObject.domains.find((ccssDomain) => ccssDomain.key === domain);
+          console.log('domainObject');
+          console.log(domainObject);
           if (domainObject){
             const clusterObject = domainObject.clusters.find((ccssCluster) => ccssCluster.key === cluster);
             if (clusterObject){
+              console.log('selected cluser');
+              console.log(clusterObject);
               return (
                 <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
                   {clusterObject.standards?.map((ccssStandard) => (
