@@ -81,7 +81,6 @@ export default function CreateQuestion({
     setIsCCSSVisible(false);
   };
 
-  console.log(isCCSSVisible);
   return (
     <CreateQuestionMainContainer>
       <>
