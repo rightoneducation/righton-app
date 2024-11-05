@@ -101,8 +101,13 @@ export default function CCSSTabs({
               return (
                 <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
                   {clusterObject.standards?.map((ccssStandard) => (
+                      ccssStandard.subStandards && ccssStandard.subStandards.length > 0 ? (
+                          ccssStandard.subStandards.map((subStandard) => (
+                            <CCSSIndicatorPill key={subStandard.key} description={subStandard.desc} label={subStandard.key} onClick={()=> setStandard(subStandard.key)} type={CCSSType.STANDARD}/>
+                          ))
+                      ) : (
                       <CCSSIndicatorPill key={ccssStandard.key} description={ccssStandard.desc} label={ccssStandard.key} onClick={()=> setStandard(ccssStandard.key)} type={CCSSType.STANDARD}/>
-                    ))
+                    )))
                   }
                 </CCSSPillContainer>
               )
