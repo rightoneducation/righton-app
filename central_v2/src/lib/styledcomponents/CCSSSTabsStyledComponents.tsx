@@ -84,7 +84,7 @@ export const CCSSPillContainer = styled(Grid)(({ theme }) => ({
   maxHeight: '500px',
   overflowY: 'auto',
   display: 'flex',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   alignItems: 'center',
   padding: '32px',
   '&::-webkit-scrollbar': {
@@ -104,7 +104,7 @@ export const CCSSGridItem = styled(Grid)(({ theme }) => ({
 export const GradeIndicator = styled(Button)(({ theme }) => ({
   width: 'fit-content',
   minHeight: '38px',
-  borderRadius: '54px',
+  borderRadius: '25px',
   textTransform: 'none',
   boxShadow: ' 0px 5px 22px 0px rgba(71, 217, 255, 0.37)',
   paddingTop: '4px',

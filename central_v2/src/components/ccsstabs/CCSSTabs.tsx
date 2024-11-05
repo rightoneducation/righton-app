@@ -149,8 +149,8 @@ export default function CCSSTabs({
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE)
       return value;
-    if (screen === ScreenSize.MEDIUM && isSelected)
-     return value;
+    if (screen === ScreenSize.MEDIUM)
+     return value.charAt(0);
     return '';
   }
   
