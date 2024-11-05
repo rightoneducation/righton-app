@@ -3,7 +3,6 @@ import {
   Fade,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { debounce } from 'lodash';
 import { ScreenSize } from '../../lib/CentralModels';
 import LabelCircle from './LabelCircle';
 import { 
@@ -20,7 +19,6 @@ import {
 import { CCSSType } from '../../lib/CCSSModels';
 import ccssDictionary from '../../lib/CCSSDictionary';
 import CCSSIndicatorPill from './CCSSIndicatorPill';
-
 
 interface TabContainerProps {
   screenSize: ScreenSize;
