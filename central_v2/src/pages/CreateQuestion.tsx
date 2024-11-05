@@ -96,8 +96,8 @@ export default function CreateQuestion({
       </>
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
       <CreateQuestionGridContainer container >
-        { screenSize === ScreenSize.SMALL &&
-            <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
+        { (screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) &&
+            <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingBottom: '16px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride/>
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride/>
             </Box>
@@ -108,7 +108,7 @@ export default function CreateQuestion({
           item
           style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end', paddingTop: '16px'}}
         >
-          { screenSize !== ScreenSize.SMALL &&
+          { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
             <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled/>
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled/>
