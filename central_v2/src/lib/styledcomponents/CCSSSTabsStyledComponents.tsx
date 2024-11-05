@@ -22,7 +22,6 @@ interface CCSSContentContainerProps {
 
 export const CCSSContentContainer = styled(Box)<CCSSContentContainerProps>(({ theme, screenSize }) => ({
   position: 'relative',
-  height: '100%',
   width: '100%',
   background: '#02215F',
   zIndex: 6,
@@ -33,6 +32,10 @@ export const CCSSContentContainer = styled(Box)<CCSSContentContainerProps>(({ th
   flexDirection: 'column',
   alignItems: 'center',
   gap: `${theme.sizing.mdPadding}px`,
+  maxHeight: '100%',
+  overflow: 'auto',
+  paddingTop: '32px',
+  paddingBottom: '32px',
 }));
 
 interface CCSSContentFrameProps {
@@ -78,10 +81,10 @@ export const CCSSStyledTabs = styled((props: CCSSStyledTabsProps) => (
 
 export const CCSSPillContainer = styled(Grid)(({ theme }) => ({
   width: 'fit-content',
-  height: '100%',
-  overflow: 'auto',
+  maxHeight: '500px',
+  overflowY: 'auto',
   display: 'flex',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   alignItems: 'center',
   padding: '32px',
   '&::-webkit-scrollbar': {

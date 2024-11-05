@@ -1,29 +1,14 @@
 import React, { useCallback } from 'react';
 import {
-  Box,
   Fade,
-  Tabs,
-  Grid,
-  TextField,
-  Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import tabExploreQuestionsIcon from '../../images/tabExploreQuestions.svg';
-import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
-import tabDraftsIcon from '../../images/tabDrafts.svg';
-import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import { ScreenSize } from '../../lib/CentralModels';
-import OwnerTag from '../profile/OwnerTag';
 import LabelCircle from './LabelCircle';
 import { 
-  TabContainer,  
   TabContent, 
   StyledTab, 
-  DetailedQuestionContainer, 
-  ContentContainer, 
-  CardContainer,
-  SubCardGridItem
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import {
   CCSSTabContainer,
@@ -32,7 +17,7 @@ import {
   CCSSStyledTabs,
   CCSSPillContainer
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
-import { gradeMap, CCSSType } from '../../lib/CCSSModels';
+import { CCSSType } from '../../lib/CCSSModels';
 import ccssDictionary from '../../lib/CCSSDictionary';
 import CCSSIndicatorPill from './CCSSIndicatorPill';
 
@@ -87,19 +72,13 @@ export default function CCSSTabs({
     switch (openTab) {
       case 3: {
         const gradeObject = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
-        console.log('gradeObject');
-        console.log(gradeObject);
         if (gradeObject){
           const domainObject = gradeObject.domains.find((ccssDomain) => ccssDomain.key === domain);
-          console.log('domainObject');
-          console.log(domainObject);
           if (domainObject){
             const clusterObject = domainObject.clusters.find((ccssCluster) => ccssCluster.key === cluster);
             if (clusterObject){
-              console.log('selected cluser');
-              console.log(clusterObject);
               return (
-                <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
+                <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start', flexWrap: 'nowrap'}}>
                   {clusterObject.standards?.map((ccssStandard) => (
                       ccssStandard.subStandards && ccssStandard.subStandards.length > 0 ? (
                           ccssStandard.subStandards.map((subStandard) => (
