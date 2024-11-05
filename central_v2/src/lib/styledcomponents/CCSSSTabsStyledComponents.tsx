@@ -4,8 +4,8 @@ import { ScreenSize } from '../CentralModels';
 
 export const CCSSTabContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  top: 0,
-  height: '100dvh',
+  top: '20dvh',
+  maxHeight: '100dvh',
   width: '100dvw',
   zIndex: 6,
   overflow: 'hidden',
@@ -13,7 +13,7 @@ export const CCSSTabContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
 }));
 
 interface CCSSContentContainerProps {
