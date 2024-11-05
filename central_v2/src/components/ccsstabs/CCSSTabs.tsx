@@ -3,7 +3,7 @@ import {
   Fade,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { v4 as uuidv4 } from 'uuid';
+import { debounce } from 'lodash';
 import { ScreenSize } from '../../lib/CentralModels';
 import LabelCircle from './LabelCircle';
 import { 
@@ -20,6 +20,7 @@ import {
 import { CCSSType } from '../../lib/CCSSModels';
 import ccssDictionary from '../../lib/CCSSDictionary';
 import CCSSIndicatorPill from './CCSSIndicatorPill';
+
 
 interface TabContainerProps {
   screenSize: ScreenSize;
@@ -44,6 +45,63 @@ export default function CCSSTabs({
   const [domain, setDomain] = React.useState('');
   const [cluster, setCluster] = React.useState('');
   const [standard, setStandard] = React.useState('');
+
+  const isTabTextValid = (value: string) => {
+    console.log(value);
+    switch (openTab){
+      case 3: {
+        const gradeObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
+        const domainObj = gradeObj?.domains.find((ccssDomain) => ccssDomain.key === domain);
+        const clusterObj = domainObj?.clusters.find((ccssCluster) => ccssCluster.key === cluster);
+        const testObj = clusterObj?.standards.find((ccssStandard) => ccssStandard.key === value);
+        return testObj !== undefined;
+      }
+      case 2:{
+        const gradeObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
+        const domainObj = gradeObj?.domains.find((ccssDomain) => ccssDomain.key === domain);
+        const testObj = domainObj?.clusters.find((ccssCluster) => ccssCluster.key === value);
+        return testObj !== undefined;
+      }
+      case 1:{
+        const gradeObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
+        const testObj = gradeObj?.domains.find((ccssDomain) => ccssDomain.key === value);
+        return testObj !== undefined;
+      }
+      case 0:
+      default:{
+        const testObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === value);
+        return testObj !== undefined;
+      }
+    }
+  };
+
+  const handleTabTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    switch (openTab){
+      case 3:
+        setStandard(value);
+        if (isTabTextValid(value))
+          handleCCSSSubmit(`${grade}.${domain}.${cluster}.${value}`);
+        break;
+      case 2:
+        setCluster(value);
+        if (isTabTextValid(value))
+          setOpenTab(3);
+        break;
+      case 1:
+        setDomain(value);
+        if (isTabTextValid(value))
+          setOpenTab(2);
+        break;
+      case 0:
+      default:{
+        setGrade(value);
+        if (isTabTextValid(value))
+          setOpenTab(1);
+        break;
+      }
+    }
+  }
 
   const handleTabClick = (event: React.SyntheticEvent, newValue: number) => {
     setOpenTab(newValue);
@@ -204,9 +262,9 @@ export default function CCSSTabs({
                 const selectedValue = getSelectedValue(value);
                 return (
                   <StyledTab
-                    key={uuidv4()}
+                    key={numericKey}
                     icon={
-                      <LabelCircle selectedValue={selectedValue} isSelected={isSelected}/>
+                      <LabelCircle selectedValue={selectedValue} isSelected={isSelected} handleOnChange={handleTabTextChange}/>
                     }
                     iconPosition="end"
                     label={getLabel(screenSize, isSelected, value)}
