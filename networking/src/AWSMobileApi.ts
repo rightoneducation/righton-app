@@ -2,54 +2,33 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreatePublicGameTemplateInput = {
+export type CreateUserInput = {
   id?: string | null,
-  title: string,
-  lowerCaseTitle: string,
-  owner: string,
-  version: number,
-  description: string,
-  lowerCaseDescription: string,
-  ccss?: string | null,
-  domain?: string | null,
-  cluster?: string | null,
-  grade?: string | null,
-  gradeFilter?: string | null,
-  standard?: string | null,
-  phaseOneTime?: number | null,
-  phaseTwoTime?: number | null,
-  imageUrl?: string | null,
-  questionTemplatesCount: number,
-  questionTemplatesOrder?: string | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-  type?: string | null,
+  userName: string,
+  title?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
+  email: string,
+  password?: string | null,
+  gamesMade?: number | null,
+  questionsMade?: number | null,
 };
 
-export type ModelPublicGameTemplateConditionInput = {
+export type ModelUserConditionInput = {
+  userName?: ModelStringInput | null,
   title?: ModelStringInput | null,
-  lowerCaseTitle?: ModelStringInput | null,
-  owner?: ModelStringInput | null,
-  version?: ModelIntInput | null,
-  description?: ModelStringInput | null,
-  lowerCaseDescription?: ModelStringInput | null,
-  ccss?: ModelStringInput | null,
-  domain?: ModelStringInput | null,
-  cluster?: ModelStringInput | null,
-  grade?: ModelStringInput | null,
-  gradeFilter?: ModelStringInput | null,
-  standard?: ModelStringInput | null,
-  phaseOneTime?: ModelIntInput | null,
-  phaseTwoTime?: ModelIntInput | null,
-  imageUrl?: ModelStringInput | null,
-  questionTemplatesCount?: ModelIntInput | null,
-  questionTemplatesOrder?: ModelStringInput | null,
+  firstName?: ModelStringInput | null,
+  lastName?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  password?: ModelStringInput | null,
+  gamesMade?: ModelIntInput | null,
+  questionsMade?: ModelIntInput | null,
+  and?: Array< ModelUserConditionInput | null > | null,
+  or?: Array< ModelUserConditionInput | null > | null,
+  not?: ModelUserConditionInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
-  type?: ModelStringInput | null,
-  and?: Array< ModelPublicGameTemplateConditionInput | null > | null,
-  or?: Array< ModelPublicGameTemplateConditionInput | null > | null,
-  not?: ModelPublicGameTemplateConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelStringInput = {
@@ -102,6 +81,88 @@ export type ModelIntInput = {
   between?: Array< number | null > | null,
   attributeExists?: boolean | null,
   attributeType?: ModelAttributeTypes | null,
+};
+
+export type User = {
+  __typename: "User",
+  id: string,
+  userName: string,
+  title?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
+  email: string,
+  password?: string | null,
+  gamesMade?: number | null,
+  questionsMade?: number | null,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type UpdateUserInput = {
+  id: string,
+  userName?: string | null,
+  title?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
+  email?: string | null,
+  password?: string | null,
+  gamesMade?: number | null,
+  questionsMade?: number | null,
+};
+
+export type DeleteUserInput = {
+  id: string,
+};
+
+export type CreatePublicGameTemplateInput = {
+  id?: string | null,
+  title: string,
+  lowerCaseTitle: string,
+  owner: string,
+  version: number,
+  description: string,
+  lowerCaseDescription: string,
+  ccss?: string | null,
+  domain?: string | null,
+  cluster?: string | null,
+  grade?: string | null,
+  gradeFilter?: string | null,
+  standard?: string | null,
+  phaseOneTime?: number | null,
+  phaseTwoTime?: number | null,
+  imageUrl?: string | null,
+  questionTemplatesCount: number,
+  questionTemplatesOrder?: string | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+  type?: string | null,
+};
+
+export type ModelPublicGameTemplateConditionInput = {
+  title?: ModelStringInput | null,
+  lowerCaseTitle?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
+  version?: ModelIntInput | null,
+  description?: ModelStringInput | null,
+  lowerCaseDescription?: ModelStringInput | null,
+  ccss?: ModelStringInput | null,
+  domain?: ModelStringInput | null,
+  cluster?: ModelStringInput | null,
+  grade?: ModelStringInput | null,
+  gradeFilter?: ModelStringInput | null,
+  standard?: ModelStringInput | null,
+  phaseOneTime?: ModelIntInput | null,
+  phaseTwoTime?: ModelIntInput | null,
+  imageUrl?: ModelStringInput | null,
+  questionTemplatesCount?: ModelIntInput | null,
+  questionTemplatesOrder?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  and?: Array< ModelPublicGameTemplateConditionInput | null > | null,
+  or?: Array< ModelPublicGameTemplateConditionInput | null > | null,
+  not?: ModelPublicGameTemplateConditionInput | null,
 };
 
 export type PublicGameTemplate = {
@@ -973,6 +1034,36 @@ export type CreateGameSessionFromTemplateInput = {
   publicPrivate: string,
 };
 
+export type ModelUserFilterInput = {
+  id?: ModelIDInput | null,
+  userName?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  firstName?: ModelStringInput | null,
+  lastName?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  password?: ModelStringInput | null,
+  gamesMade?: ModelIntInput | null,
+  questionsMade?: ModelIntInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelUserFilterInput | null > | null,
+  or?: Array< ModelUserFilterInput | null > | null,
+  not?: ModelUserFilterInput | null,
+  owner?: ModelStringInput | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
+export type ModelUserConnection = {
+  __typename: "ModelUserConnection",
+  items:  Array<User | null >,
+  nextToken?: string | null,
+};
+
 export type ModelPublicGameTemplateFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -1015,12 +1106,6 @@ export type ModelStringKeyConditionInput = {
   between?: Array< string | null > | null,
   beginsWith?: string | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelIntKeyConditionInput = {
   eq?: number | null,
@@ -1266,29 +1351,20 @@ export type ModelPrivateGameQuestionsFilterInput = {
   owner?: ModelStringInput | null,
 };
 
-export type ModelSubscriptionPublicGameTemplateFilterInput = {
+export type ModelSubscriptionUserFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  userName?: ModelSubscriptionStringInput | null,
   title?: ModelSubscriptionStringInput | null,
-  lowerCaseTitle?: ModelSubscriptionStringInput | null,
-  version?: ModelSubscriptionIntInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  lowerCaseDescription?: ModelSubscriptionStringInput | null,
-  ccss?: ModelSubscriptionStringInput | null,
-  domain?: ModelSubscriptionStringInput | null,
-  cluster?: ModelSubscriptionStringInput | null,
-  grade?: ModelSubscriptionStringInput | null,
-  gradeFilter?: ModelSubscriptionStringInput | null,
-  standard?: ModelSubscriptionStringInput | null,
-  phaseOneTime?: ModelSubscriptionIntInput | null,
-  phaseTwoTime?: ModelSubscriptionIntInput | null,
-  imageUrl?: ModelSubscriptionStringInput | null,
-  questionTemplatesCount?: ModelSubscriptionIntInput | null,
-  questionTemplatesOrder?: ModelSubscriptionStringInput | null,
+  firstName?: ModelSubscriptionStringInput | null,
+  lastName?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  password?: ModelSubscriptionStringInput | null,
+  gamesMade?: ModelSubscriptionIntInput | null,
+  questionsMade?: ModelSubscriptionIntInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPublicGameTemplateFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPublicGameTemplateFilterInput | null > | null,
+  and?: Array< ModelSubscriptionUserFilterInput | null > | null,
+  or?: Array< ModelSubscriptionUserFilterInput | null > | null,
   owner?: ModelStringInput | null,
 };
 
@@ -1332,6 +1408,32 @@ export type ModelSubscriptionIntInput = {
   between?: Array< number | null > | null,
   in?: Array< number | null > | null,
   notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionPublicGameTemplateFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  lowerCaseTitle?: ModelSubscriptionStringInput | null,
+  version?: ModelSubscriptionIntInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  lowerCaseDescription?: ModelSubscriptionStringInput | null,
+  ccss?: ModelSubscriptionStringInput | null,
+  domain?: ModelSubscriptionStringInput | null,
+  cluster?: ModelSubscriptionStringInput | null,
+  grade?: ModelSubscriptionStringInput | null,
+  gradeFilter?: ModelSubscriptionStringInput | null,
+  standard?: ModelSubscriptionStringInput | null,
+  phaseOneTime?: ModelSubscriptionIntInput | null,
+  phaseTwoTime?: ModelSubscriptionIntInput | null,
+  imageUrl?: ModelSubscriptionStringInput | null,
+  questionTemplatesCount?: ModelSubscriptionIntInput | null,
+  questionTemplatesOrder?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  type?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionPublicGameTemplateFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPublicGameTemplateFilterInput | null > | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionPrivateGameTemplateFilterInput = {
@@ -1502,6 +1604,75 @@ export type ModelSubscriptionPrivateGameQuestionsFilterInput = {
   and?: Array< ModelSubscriptionPrivateGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionPrivateGameQuestionsFilterInput | null > | null,
   owner?: ModelStringInput | null,
+};
+
+export type CreateUserMutationVariables = {
+  input: CreateUserInput,
+  condition?: ModelUserConditionInput | null,
+};
+
+export type CreateUserMutation = {
+  createUser?:  {
+    __typename: "User",
+    id: string,
+    userName: string,
+    title?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
+    email: string,
+    password?: string | null,
+    gamesMade?: number | null,
+    questionsMade?: number | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateUserMutationVariables = {
+  input: UpdateUserInput,
+  condition?: ModelUserConditionInput | null,
+};
+
+export type UpdateUserMutation = {
+  updateUser?:  {
+    __typename: "User",
+    id: string,
+    userName: string,
+    title?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
+    email: string,
+    password?: string | null,
+    gamesMade?: number | null,
+    questionsMade?: number | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteUserMutationVariables = {
+  input: DeleteUserInput,
+  condition?: ModelUserConditionInput | null,
+};
+
+export type DeleteUserMutation = {
+  deleteUser?:  {
+    __typename: "User",
+    id: string,
+    userName: string,
+    title?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
+    email: string,
+    password?: string | null,
+    gamesMade?: number | null,
+    questionsMade?: number | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
 };
 
 export type CreatePublicGameTemplateMutationVariables = {
@@ -7588,6 +7759,118 @@ export type CreateGameSessionFromTemplateMutationVariables = {
 
 export type CreateGameSessionFromTemplateMutation = {
   createGameSessionFromTemplate?: string | null,
+};
+
+export type GetUserQueryVariables = {
+  id: string,
+};
+
+export type GetUserQuery = {
+  getUser?:  {
+    __typename: "User",
+    id: string,
+    userName: string,
+    title?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
+    email: string,
+    password?: string | null,
+    gamesMade?: number | null,
+    questionsMade?: number | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListUsersQueryVariables = {
+  id?: string | null,
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListUsersQuery = {
+  listUsers?:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      userName: string,
+      title?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      email: string,
+      password?: string | null,
+      gamesMade?: number | null,
+      questionsMade?: number | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type UserByUserNameQueryVariables = {
+  userName: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type UserByUserNameQuery = {
+  userByUserName?:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      userName: string,
+      title?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      email: string,
+      password?: string | null,
+      gamesMade?: number | null,
+      questionsMade?: number | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type UserByEmailQueryVariables = {
+  email: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type UserByEmailQuery = {
+  userByEmail?:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      userName: string,
+      title?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      email: string,
+      password?: string | null,
+      gamesMade?: number | null,
+      questionsMade?: number | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
 };
 
 export type GetPublicGameTemplateQueryVariables = {
@@ -14544,6 +14827,75 @@ export type ListPrivateGameQuestionsQuery = {
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type OnCreateUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateUserSubscription = {
+  onCreateUser?:  {
+    __typename: "User",
+    id: string,
+    userName: string,
+    title?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
+    email: string,
+    password?: string | null,
+    gamesMade?: number | null,
+    questionsMade?: number | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateUserSubscription = {
+  onUpdateUser?:  {
+    __typename: "User",
+    id: string,
+    userName: string,
+    title?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
+    email: string,
+    password?: string | null,
+    gamesMade?: number | null,
+    questionsMade?: number | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteUserSubscription = {
+  onDeleteUser?:  {
+    __typename: "User",
+    id: string,
+    userName: string,
+    title?: string | null,
+    firstName?: string | null,
+    lastName?: string | null,
+    email: string,
+    password?: string | null,
+    gamesMade?: number | null,
+    questionsMade?: number | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 

@@ -1,3 +1,25 @@
+type User @model
+@auth(
+  rules: [
+    { allow: owner, provider: userPools },
+    { allow: private, operations: [read, create, update, delete], provider: userPools }
+  ]
+)
+@aws_iam
+@aws_cognito_user_pools
+{
+  id: ID! @primaryKey
+  userName: String! @index(name: "userNameIndex", queryField: "userByUserName")
+  title: String
+  firstName: String
+  lastName: String
+  email: String! @index(name: "emailIndex", queryField: "userByEmail")
+  password: String
+  gamesMade: Int
+  questionsMade: Int
+}
+
+
 type Mutation {
   createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String 
   @function(name: "createGameTest-${env}") 
