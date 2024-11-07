@@ -25,16 +25,15 @@ interface IncorrectAnswerCardProps {
 
 export default function IncorrectAnswerCard({answer} : IncorrectAnswerCardProps) {
   return (
-      <AnswerCard elevation={6}>
-        <QuestionTitleStyled>
-          Incorrect Answer {answer}
-        </QuestionTitleStyled>
-        <TextContainerStyled variant="outlined" rows='1' placeholder="Distractor..."/>
-        <QuestionTitleStyled>
-          Mistake Explanation
-        </QuestionTitleStyled>
-        <TextContainerStyled variant="outlined" rows='1' placeholder="Explanation..."/>
-      </AnswerCard>
-    
+    <AnswerCard elevation={6}>
+      <QuestionTitleStyled>
+        Incorrect Answer {answer}
+      </QuestionTitleStyled>
+      <TextContainerStyled variant="outlined" rows='1' placeholder="Distractor..."/>
+      <QuestionTitleStyled>
+        Mistake Explanation
+      </QuestionTitleStyled>
+      <TextContainerStyled variant="outlined" rows='1' placeholder="Explanation..."/>
+    </AnswerCard>
   )
 }
