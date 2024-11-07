@@ -45,19 +45,6 @@ const AISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const IncorrectAnswerPill = styled(Box)(({theme}) => ({
-  width: 'fit-content',
-  height: '22px',
-  borderRadius: '20px',
-  borderWidth: '2px',
-  borderColor: theme.palette.primary.darkBlue,
-  borderStyle: 'solid',
-  minWidth: '30px',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
-}));
-
 interface CreateQuestionProps {
   screenSize: ScreenSize;
 }
@@ -153,14 +140,6 @@ export default function CreateQuestion({
                   Try our AI-Generated Wrong Answer Explanation Prototype
                 </Typography>
                 <AISwitch/>
-              </Box>
-              <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>
-                {incorrectAnswers && incorrectAnswers.map((_, index) => 
-                    <IncorrectAnswerPill>  
-                      {index}
-                    </IncorrectAnswerPill>
-                  )
-                }
               </Box>
               <IncorrectAnswerCardStack />
             </SubCardGridItem>

@@ -7,12 +7,7 @@ import {
 } from '../../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import { TextContainerStyled } from '../../../../lib/styledcomponents/CreateQuestionStyledComponents';
 
-interface AnswerCardProps {
-  index?: number;
-  isCompleted: boolean;
-}
-
-const AnswerCard = styled(Paper)<AnswerCardProps>(({ theme, index, isCompleted }) => ({
+const AnswerCard = styled(Paper)(({ theme }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   background: '#FFFFFF',
@@ -26,13 +21,11 @@ const AnswerCard = styled(Paper)<AnswerCardProps>(({ theme, index, isCompleted }
 
 interface IncorrectAnswerCardProps {
   answer: string;
-  index?: number;
-  isCompleted: boolean;
 }
 
-export default function IncorrectAnswerCard({answer, index, isCompleted} : IncorrectAnswerCardProps) {
+export default function IncorrectAnswerCard({answer} : IncorrectAnswerCardProps) {
   return (
-      <AnswerCard elevation={6} isCompleted={isCompleted} index={index}>
+      <AnswerCard elevation={6}>
         <QuestionTitleStyled>
           Incorrect Answer {answer}
         </QuestionTitleStyled>
