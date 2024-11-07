@@ -28,7 +28,7 @@ interface BaseCardStyledProps {
   isSelected: boolean
 }
 
-export const BaseCardStyled = styled(Box)<BaseCardStyledProps>(({ theme, isSelected }) => ({
+export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isSelected }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',

@@ -17,6 +17,11 @@ export default function DetailedQuestionSubCard({isSelected}: DetailedQuestionSu
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [solutionSteps, setSolutionSteps] = React.useState(['','','']);
+  const [isCardComplete, setIsCardComplete] = React.useState<boolean>(false);
+
+  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  };
 
   const solutionStepsComponent = (step: string, index: number) => {
     return (
@@ -48,10 +53,13 @@ export default function DetailedQuestionSubCard({isSelected}: DetailedQuestionSu
 
   const addStep = () => {
     setSolutionSteps((prev) => [...prev, ''])
+    // if (solutionSteps.length) {
+
+    // }
   }
   
   return (
-    <BaseCardStyled isSelected={isSelected}>
+    <BaseCardStyled elevation={6} isSelected={isSelected}>
       <QuestionTitleStyled>
         Correct Answer
       </QuestionTitleStyled>
