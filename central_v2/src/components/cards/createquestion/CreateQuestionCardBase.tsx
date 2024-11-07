@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, RadioGroup, Box, styled, useTheme } from '@mui/material';
 import { IQuestionTemplate } from '@righton/networking';
 import {
-  BaseCardStyled,
   TitleBarStyled,
   QuestionTitleStyled,
   RadioContainerStyled,
@@ -12,7 +11,11 @@ import {
   ImageStyled,
   ContentRightContainerStyled,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
-import { TextContainerStyled, CCSSIndicator } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import { 
+  BaseCardStyled,
+  TextContainerStyled,
+  CCSSIndicator
+} from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
 import ImageButton from '../../button/imagebutton/ImageButton';
 import { ImageButtonType } from '../../button/imagebutton/ImageButtonModels';
@@ -22,6 +25,7 @@ import arrow from '../../../images/SelectArrow.svg';
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
   handleCCSSClick: () => void;
+  isSelected: boolean;
   ccss: string;
 }
 
@@ -60,6 +64,7 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function CreateQuestionCardBase({
   screenSize,
   handleCCSSClick,
+  isSelected,
   ccss
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
@@ -72,7 +77,7 @@ export default function CreateQuestionCardBase({
     setQuestionType((event.target as HTMLInputElement).value);
   };
   return (
-    <BaseCardStyled>
+    <BaseCardStyled isSelected={isSelected}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>

@@ -3,14 +3,17 @@ import { Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  BaseCardStyled,
   QuestionTitleStyled,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
-import { TextContainerStyled } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import { TextContainerStyled, BaseCardStyled } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 
-export default function DetailedQuestionSubCard() {
+interface DetailedQuestionSubCardProps {
+  isSelected: boolean;
+}
+
+export default function DetailedQuestionSubCard({isSelected}: DetailedQuestionSubCardProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [solutionSteps, setSolutionSteps] = React.useState(['','','']);
@@ -48,7 +51,7 @@ export default function DetailedQuestionSubCard() {
   }
   
   return (
-    <BaseCardStyled>
+    <BaseCardStyled isSelected={isSelected}>
       <QuestionTitleStyled>
         Correct Answer
       </QuestionTitleStyled>

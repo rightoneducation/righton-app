@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, TextField, Button, styled } from '@mui/material';
+import { Box, Grid, TextField, Paper, Button, styled } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
@@ -24,8 +24,22 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
-export const CreateQuestionCard = styled(Box)(({theme}) => ({
+interface BaseCardStyledProps {
+  isSelected: boolean
+}
 
+export const BaseCardStyled = styled(Box)<BaseCardStyledProps>(({ theme, isSelected }) => ({
+  width: '100%',
+  padding: `${theme.sizing.mdPadding}px`,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.xSmPadding}px`,
+  background: '#FFFFFF',
+  borderRadius: `${theme.sizing.smPadding}px`,
+  boxSizing: 'border-box',
+  height: 'fit-content',
+  boxShadow: isSelected ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
+  transition: 'box-shadow 0.6s',
 }));
 
 export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({

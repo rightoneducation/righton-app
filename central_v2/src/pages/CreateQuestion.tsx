@@ -56,6 +56,7 @@ export default function CreateQuestion({
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [ccss, setCCSS] = useState<string>('CCSS');
+  const [selectedCard, setSelectedCard] = useState<string>('');
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
   };
@@ -67,6 +68,10 @@ export default function CreateQuestion({
   const handleCCSSSubmit = (ccssString: string) => {
     setCCSS(ccssString);
     setIsCCSSVisible(false);
+  };
+
+  const handleClick = (cardType: string) => {
+    setSelectedCard(cardType);
   };
 
   return (
@@ -114,11 +119,14 @@ export default function CreateQuestion({
             gap: `${theme.sizing.smPadding}px`,
           }}
         >
-          <CreateQuestionCardBase
-            screenSize={screenSize}
-            handleCCSSClick={handleCCSSClick}
-            ccss={ccss}
-          />
+          <Box onClick={() => handleClick('CreateQuestionCard')} style={{ width: '100%' }}>
+            <CreateQuestionCardBase
+              screenSize={screenSize}
+              handleCCSSClick={handleCCSSClick}
+              ccss={ccss}
+              isSelected={selectedCard==='CreateQuestionCard'}
+            />
+          </Box>
           <Grid
             container
             spacing={`${theme.sizing.smPadding}px`}
@@ -128,7 +136,9 @@ export default function CreateQuestion({
               sm={12}
               md={6}
             >
-              <CorrectAnswerCard />
+              <Box onClick={() => handleClick('CorrectAnswerCard')} style={{ width: '100%' }}>
+                <CorrectAnswerCard isSelected={selectedCard === 'CorrectAnswerCard'} />
+              </Box>
             </SubCardGridItem>
             <SubCardGridItem
               item
@@ -141,7 +151,9 @@ export default function CreateQuestion({
                 </Typography>
                 <AISwitch/>
               </Box>
-              <IncorrectAnswerCardStack />
+              <Box onClick={() => handleClick('IncorrectAnswerCard')} style={{ width: '100%' }}>
+                <IncorrectAnswerCardStack />
+              </Box>
             </SubCardGridItem>
           </Grid>
         </Grid>
