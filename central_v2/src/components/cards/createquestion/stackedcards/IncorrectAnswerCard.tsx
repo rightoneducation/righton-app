@@ -7,7 +7,11 @@ import {
 } from '../../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import { TextContainerStyled } from '../../../../lib/styledcomponents/CreateQuestionStyledComponents';
 
-const AnswerCard = styled(Paper)(({ theme }) => ({
+interface StyledCardProps {
+  isSelected: boolean;
+}
+
+const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isSelected }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   background: '#FFFFFF',
@@ -17,15 +21,17 @@ const AnswerCard = styled(Paper)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: `${theme.sizing.smPadding}px`,
+  boxShadow: isSelected ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
 }));
 
 interface IncorrectAnswerCardProps {
   answer: string;
+  isSelected?: boolean;
 }
 
-export default function IncorrectAnswerCard({answer} : IncorrectAnswerCardProps) {
+export default function IncorrectAnswerCard({answer, isSelected} : IncorrectAnswerCardProps) {
   return (
-    <AnswerCard elevation={6}>
+    <AnswerCard elevation={6} isSelected={isSelected ?? false}>
       <QuestionTitleStyled>
         Incorrect Answer {answer}
       </QuestionTitleStyled>

@@ -14,7 +14,11 @@ const CardStackContainer = styled(Box)({
   gap: '16px',
 });
 
-export default function IncorrectAnswerCardStack() {
+interface IncorrectAnswerCardStackProps {
+  isSelected: boolean;
+}
+
+export default function IncorrectAnswerCardStack({isSelected}: IncorrectAnswerCardStackProps) {
   type IncorrectAnswer = {
     id: string;
     text: string;
@@ -66,7 +70,7 @@ export default function IncorrectAnswerCardStack() {
                     zIndex: incompleteAnswers.length - index,
                   }}
                 >
-                  <IncorrectAnswerCard answer={card.text} />
+                  <IncorrectAnswerCard answer={card.text} isSelected={isSelected}/>
                 </motion.div>
               );
             }

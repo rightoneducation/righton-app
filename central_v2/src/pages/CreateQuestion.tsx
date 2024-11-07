@@ -152,7 +152,7 @@ export default function CreateQuestion({
                 <AISwitch/>
               </Box>
               <Box onClick={() => handleClick('IncorrectAnswerCard')} style={{ width: '100%' }}>
-                <IncorrectAnswerCardStack />
+                <IncorrectAnswerCardStack isSelected={selectedCard === 'IncorrectAnswerCard'}/>
               </Box>
             </SubCardGridItem>
           </Grid>
