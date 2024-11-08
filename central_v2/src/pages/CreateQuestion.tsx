@@ -8,6 +8,7 @@ import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerC
 import { ButtonType } from '../components/button/ButtonModels';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackground';
+import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -44,19 +45,6 @@ const AISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const IncorrectAnswerPill = styled(Box)(({theme}) => ({
-  width: 'fit-content',
-  height: '22px',
-  borderRadius: '20px',
-  borderWidth: '2px',
-  borderColor: theme.palette.primary.darkBlue,
-  borderStyle: 'solid',
-  minWidth: '30px',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
-}));
-
 interface CreateQuestionProps {
   screenSize: ScreenSize;
 }
@@ -68,6 +56,7 @@ export default function CreateQuestion({
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [ccss, setCCSS] = useState<string>('CCSS');
+  const [selectedCard, setSelectedCard] = useState<string>('');
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
   };
@@ -79,6 +68,10 @@ export default function CreateQuestion({
   const handleCCSSSubmit = (ccssString: string) => {
     setCCSS(ccssString);
     setIsCCSSVisible(false);
+  };
+
+  const handleClick = (cardType: string) => {
+    setSelectedCard(cardType);
   };
 
   return (
@@ -126,11 +119,14 @@ export default function CreateQuestion({
             gap: `${theme.sizing.smPadding}px`,
           }}
         >
-          <CreateQuestionCardBase
-            screenSize={screenSize}
-            handleCCSSClick={handleCCSSClick}
-            ccss={ccss}
-          />
+          <Box onClick={() => handleClick('CreateQuestionCard')} style={{ width: '100%' }}>
+            <CreateQuestionCardBase
+              screenSize={screenSize}
+              handleCCSSClick={handleCCSSClick}
+              ccss={ccss}
+              isSelected={selectedCard==='CreateQuestionCard'}
+            />
+          </Box>
           <Grid
             container
             spacing={`${theme.sizing.smPadding}px`}
@@ -140,7 +136,9 @@ export default function CreateQuestion({
               sm={12}
               md={6}
             >
-              <CorrectAnswerCard />
+              <Box onClick={() => handleClick('CorrectAnswerCard')} style={{ width: '100%' }}>
+                <CorrectAnswerCard isSelected={selectedCard === 'CorrectAnswerCard'} setSelectedCard={setSelectedCard}/>
+              </Box>
             </SubCardGridItem>
             <SubCardGridItem
               item
@@ -153,13 +151,8 @@ export default function CreateQuestion({
                 </Typography>
                 <AISwitch/>
               </Box>
-              <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>
-                {incorrectAnswers && incorrectAnswers.map((_, index) => 
-                    <IncorrectAnswerPill>  
-                      {index}
-                    </IncorrectAnswerPill>
-                  )
-                }
+              <Box onClick={() => handleClick('IncorrectAnswerCard')} style={{ width: '100%' }}>
+                <IncorrectAnswerCardStack isSelected={selectedCard === 'IncorrectAnswerCard'}/>
               </Box>
             </SubCardGridItem>
           </Grid>
