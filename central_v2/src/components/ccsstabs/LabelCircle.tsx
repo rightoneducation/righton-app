@@ -5,9 +5,10 @@ interface LabelCircleProps {
   selectedValue: string;
   isSelected: boolean;
   handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  autoFocus?: boolean;
 }
 
-export default function LabelCircle({selectedValue, isSelected, handleOnChange}: LabelCircleProps) {
+export default function LabelCircle({selectedValue, isSelected, handleOnChange, autoFocus = false,}: LabelCircleProps) {
   return (
     <Box
       style={{
@@ -22,7 +23,7 @@ export default function LabelCircle({selectedValue, isSelected, handleOnChange}:
         opacity: isSelected ? 1 : 0.5,
       }}
     >
-      <TextField value={selectedValue} onChange={handleOnChange} size="small" style={{
+      <TextField autoFocus={autoFocus} value={selectedValue} onChange={handleOnChange} size="small" style={{
         fontSize: selectedValue.length < 3 ? '20px' : '15px',
         color: '#4700B2',
         fontWeight: 700,

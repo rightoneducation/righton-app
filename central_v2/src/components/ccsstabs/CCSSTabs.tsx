@@ -279,7 +279,7 @@ export default function CCSSTabs({
                   <StyledTab
                     key={numericKey}
                     icon={
-                      <LabelCircle selectedValue={selectedValue} isSelected={isSelected} handleOnChange={handleTabTextChange(tabType)}/>
+                      <LabelCircle key={`label-circle-${numericKey}-${isSelected}`} selectedValue={selectedValue} isSelected={isSelected} handleOnChange={handleTabTextChange(tabType)} autoFocus={isSelected}/>
                     }
                     iconPosition="end"
                     label={getLabel(screenSize, isSelected, value)}
