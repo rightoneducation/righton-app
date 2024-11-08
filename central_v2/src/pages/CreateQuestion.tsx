@@ -137,7 +137,7 @@ export default function CreateQuestion({
               md={6}
             >
               <Box onClick={() => handleClick('CorrectAnswerCard')} style={{ width: '100%' }}>
-                <CorrectAnswerCard isSelected={selectedCard === 'CorrectAnswerCard'} />
+                <CorrectAnswerCard isSelected={selectedCard === 'CorrectAnswerCard'} setSelectedCard={setSelectedCard}/>
               </Box>
             </SubCardGridItem>
             <SubCardGridItem

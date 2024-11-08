@@ -25,10 +25,11 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface BaseCardStyledProps {
-  isSelected: boolean
+  isSelected: boolean,
+  isCardComplete: boolean
 }
 
-export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isSelected }) => ({
+export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isSelected, isCardComplete }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
@@ -39,7 +40,8 @@ export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isSel
   boxSizing: 'border-box',
   height: 'fit-content',
   boxShadow: isSelected ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
-  transition: 'box-shadow 0.6s',
+  opacity: isCardComplete ? 0.6 : 1,
+  transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
 
 export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({

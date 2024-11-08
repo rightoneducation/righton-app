@@ -77,7 +77,7 @@ export default function CreateQuestionCardBase({
     setQuestionType((event.target as HTMLInputElement).value);
   };
   return (
-    <BaseCardStyled  elevation={6} isSelected={isSelected}>
+    <BaseCardStyled  elevation={6} isSelected={isSelected} isCardComplete={false}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>
