@@ -26,20 +26,16 @@ import Recommended from '../components/explore/Recommended';
 import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
 
-// interface ExploreGamesProps {
-// }
+interface ExploreGamesProps {
+  screenSize: ScreenSize;
+}
 
-export default function ExploreGames() {
+export default function ExploreGames({
+  screenSize
+} : ExploreGamesProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const screenSize = isLargeScreen // eslint-disable-line
-    ? ScreenSize.LARGE
-    : isMediumScreen
-      ? ScreenSize.MEDIUM
-      : ScreenSize.SMALL;
   const {
     recommendedGames,
     mostPopularGames,

@@ -10,6 +10,7 @@
     "getstarted": "Get Started!",
     "resetlink": "Send Reset Link",
     "reset": "Reset",
+    "create": "Create",
     "previousquestion": "Previous Question",
     "backtoexplore": "Back to Explore Questions",
     "favorite": "Favorite",
@@ -17,6 +18,7 @@
     "nextquestion": "Next Question",
     "save": "Save",
     "discard": "Discard",
+    "discardblue": "Discard",
     "addstep": "Add Step",
     "browsefiles": "Browse Files",
     "changeimage": "Change Image",
@@ -28,5 +30,13 @@
     "editpicture": "Edit Picture",
     "editinformation": "Edit Information",
     "changepassword": "Change Password"
+  },
+  "imageButton": {
+    "imageupload": "Upload Image",
+    "imageurl": "Image URL"
+  },
+  "publicPrivateButton": {
+    "public": "Public",
+    "private": "Private"
   }
 }
