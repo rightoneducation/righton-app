@@ -44,57 +44,73 @@ export default function CCSSTabs({
   const [cluster, setCluster] = React.useState('');
   const [standard, setStandard] = React.useState('');
 
-  const isTabTextValid = (value: string) => {
-    switch (openTab){
-      case 3: {
+  const isTabTextValid = (value: string, tabType: CCSSType): boolean => {
+    switch (tabType){
+      case CCSSType.STANDARD: {
+        let standardText = value;
+        if (standardText.length > 1)
+          standardText = standardText.charAt(0);
         const gradeObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
         const domainObj = gradeObj?.domains.find((ccssDomain) => ccssDomain.key === domain);
         const clusterObj = domainObj?.clusters.find((ccssCluster) => ccssCluster.key === cluster);
-        const testObj = clusterObj?.standards.find((ccssStandard) => ccssStandard.key === value);
-        return testObj !== undefined;
+        const testObj = clusterObj?.standards.find((ccssStandard) => ccssStandard.key === standardText);
+        if (testObj?.subStandards && testObj.subStandards.length > 0){
+          const subTestObj = testObj.subStandards.find((subStandard) => subStandard.key === value);
+          return subTestObj !== undefined;
+        }
+        return testObj !== undefined
       }
-      case 2:{
+      case CCSSType.CLUSTER:{
         const gradeObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
         const domainObj = gradeObj?.domains.find((ccssDomain) => ccssDomain.key === domain);
         const testObj = domainObj?.clusters.find((ccssCluster) => ccssCluster.key === value);
         return testObj !== undefined;
       }
-      case 1:{
+      case CCSSType.DOMAIN:{
         const gradeObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
         const testObj = gradeObj?.domains.find((ccssDomain) => ccssDomain.key === value);
         return testObj !== undefined;
       }
-      case 0:
+      case CCSSType.GRADE:
       default:{
         const testObj = ccssDictionary.find((ccssGrade) => ccssGrade.key === value);
-        return testObj !== undefined;
+        console.log(testObj);
+        return !(!testObj || testObj === undefined);
       }
     }
   };
-
-  const handleTabTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  
+  const handleTabTextChange = (tab: CCSSType) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value } = event.target;
-    switch (openTab){
-      case 3:
+    switch (tab){
+      case CCSSType.STANDARD:
         setStandard(value);
-        if (isTabTextValid(value))
+        if (isTabTextValid(value, tab))
           handleCCSSSubmit(`${grade}.${domain}.${cluster}.${value}`);
         break;
-      case 2:
+      case CCSSType.CLUSTER:
         setCluster(value);
-        if (isTabTextValid(value))
+        if (isTabTextValid(value, tab)){
+          setStandard('');
           setOpenTab(3);
+        }
         break;
-      case 1:
+      case CCSSType.DOMAIN:
         setDomain(value);
-        if (isTabTextValid(value))
+        if (isTabTextValid(value, tab)){
+          setCluster('');
           setOpenTab(2);
+        }
         break;
-      case 0:
+      case CCSSType.GRADE:
       default:{
         setGrade(value);
-        if (isTabTextValid(value))
+        if (isTabTextValid(value, tab)){
+          setDomain('');
           setOpenTab(1);
+        }
         break;
       }
     }
@@ -178,7 +194,7 @@ export default function CCSSTabs({
             const clusterObject = domainObject.clusters.find((ccssCluster) => ccssCluster.key === cluster);
             if (clusterObject){
               return (
-                <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start', flexWrap: 'nowrap'}}>
+                <CCSSPillContainer container rowSpacing={2} direction="column" style={{justifyContent: 'flex-start', alignItems: 'flex-start', flexWrap: 'nowrap'}}>
                   {clusterObject.standards?.map((ccssStandard) => (
                       ccssStandard.subStandards && ccssStandard.subStandards.length > 0 ? (
                           ccssStandard.subStandards.map((subStandard) => (
@@ -257,11 +273,13 @@ export default function CCSSTabs({
                 const numericKey = Number(key);
                 const isSelected = openTab === numericKey;
                 const selectedValue = getSelectedValue(value);
+                const tabType = value as CCSSType; 
+
                 return (
                   <StyledTab
                     key={numericKey}
                     icon={
-                      <LabelCircle selectedValue={selectedValue} isSelected={isSelected} handleOnChange={handleTabTextChange}/>
+                      <LabelCircle selectedValue={selectedValue} isSelected={isSelected} handleOnChange={handleTabTextChange(tabType)}/>
                     }
                     iconPosition="end"
                     label={getLabel(screenSize, isSelected, value)}
