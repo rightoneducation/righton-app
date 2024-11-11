@@ -129,9 +129,7 @@ export default function Generator() {
     }
     console.log(formData);
     generateWrongAnswerExplanations(formData, discardedExplanations).then((response) => {
-      console.log(response);
-      const explanations = JSON.parse(response?.content ?? '{}');
-      const explanationsArray = explanations.map((obj:any) => Object.values(obj)[0]);
+      const explanationsArray = response ?? [];
       const wrongAnswersArray =  explanationsArray.map((explanation: string, index: number) => {
         const adjustedIndex = index + 1;
         const answerKey = `wrongAnswer${adjustedIndex}` as keyof typeof formData;
