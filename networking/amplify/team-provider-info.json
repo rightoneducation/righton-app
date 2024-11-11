@@ -26,6 +26,12 @@
       },
       "auth": {
         "mobile6060603c": {}
+      },
+      "api": {
+        "mobile": {}
+      },
+      "storage": {
+        "gamequestionimages": {}
       }
     }
   }

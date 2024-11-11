@@ -130,5 +130,12 @@
         }
       ]
     }
+  },
+  "storage": {
+    "gamequestionimages": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
   }
 }
