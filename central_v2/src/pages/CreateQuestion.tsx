@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
+import Modal from 'react-modal';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ScreenSize } from '../lib/CentralModels';
@@ -9,6 +10,8 @@ import { ButtonType } from '../components/button/ButtonModels';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackground';
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
+import ModalBackground from '../components/modal/ModalBackground';
+import ImageUploadModal from '../components/modal/ImageUploadModal';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -54,12 +57,20 @@ export default function CreateQuestion({
 }:CreateQuestionProps){
   const theme = useTheme();
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
+  const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [ccss, setCCSS] = useState<string>('CCSS');
   const [selectedCard, setSelectedCard] = useState<string>('');
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
   };
+  const handleImageUploadClick = () => {
+    setIsImageUploadVisible(true);
+  }
+
+  const handleCloseModal = () => {
+    setIsImageUploadVisible(false);
+  }
 
   const handleBackToExplore = () => {
     setIsCCSSVisible(false);
@@ -76,6 +87,8 @@ export default function CreateQuestion({
 
   return (
     <CreateQuestionMainContainer>
+       <ModalBackground isModalOpen={isImageUploadVisible} handleCloseModal={handleCloseModal}/>
+       <ImageUploadModal isModalOpen={isImageUploadVisible} handleCloseModal={handleCloseModal} />
       <>
         <CCSSTabsModalBackground
           isTabsOpen={isCCSSVisible}
@@ -125,6 +138,7 @@ export default function CreateQuestion({
               handleCCSSClick={handleCCSSClick}
               ccss={ccss}
               isSelected={selectedCard==='CreateQuestionCard'}
+              handleImageUploadClick={handleImageUploadClick}
             />
           </Box>
           <Grid
