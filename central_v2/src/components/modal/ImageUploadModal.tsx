@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Fade, Typography, styled } from '@mui/material';
 import imageUploadIcon from '../../images/imageUploadIcon.svg';
+import imageUploadClose from '../../images/imageUploadClose.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 
@@ -33,6 +34,15 @@ const DragText = styled(Typography)(({ theme }) => ({
   fontSize: '24px',
   fontWeight: 700,
 }));
+
+const CloseButton = styled('img')(({ theme }) => ({
+  width: '30px',
+  height: '30px',
+  position: 'absolute',
+  top: '40px',
+  right: '40px',
+  cursor: 'pointer'
+}))
 
 interface ImageUploadModalProps {
   isModalOpen: boolean;
@@ -71,7 +81,7 @@ export default function ImageUploadModal({
             vectorEffect="non-scaling-stroke"
           />
         </svg>
-
+        <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
         <UploadIcon src={imageUploadIcon} alt="imageUploadIcon" />
         <DragText>Drag & Drop File here</DragText>
         <DragText style={{ fontSize: '20px' }}>or</DragText>
