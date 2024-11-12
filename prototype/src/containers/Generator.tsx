@@ -9,6 +9,7 @@ import { version, date, model, ExplanationRegenType } from '../lib/Constants';
 import ExplanationCard from '../components/ExplanationCard';
 import RightonLogo from '../img/RightonLogo.svg';
 import OpenAI from '../img/OpenAI.svg';
+import { GamePlayButtonStyled } from '../lib/GamePlayButtonStyled';
 
 export default function Generator() {
   const [formData, setFormData] = React.useState({
@@ -222,6 +223,24 @@ export default function Generator() {
     const result = saveDiscardedExplanation(discardedQuestionInput);
     console.log(result);
   }
+
+  const clearFields = () => {
+    setFormData({  
+      question: '',
+      correctAnswer: '',
+      wrongAnswer1: '',
+      wrongAnswer2: '',
+      wrongAnswer3: ''
+    })
+    setIsSubmitted(false);
+    setQuestionToSave(blankQuestion);
+    setIsQuestionSaved(false);
+  }
+
+  const handleSwitch = () => {
+    clearFields();
+    setIsCustomQuestion(!isCustomQuestion)
+  }
   const premadeQuestion = [
     <>
           <Box style={{display: 'flex', flexDirection: 'column', alignItems: 'start', paddingTop: '10px'}}>
@@ -340,7 +359,7 @@ export default function Generator() {
                 <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', fontSize: '15px', color: 'black'}} >
                   {isCustomQuestion ? 'Create Your Own Question' : 'Sample Question'}
                 </Typography>
-              <Switch defaultChecked onChange={() => setIsCustomQuestion(!isCustomQuestion)}/>
+              <Switch defaultChecked onChange={handleSwitch}/>
               </Box>
               {isCustomQuestion ? customQuestion : premadeQuestion}  
             </Card>
@@ -372,16 +391,28 @@ export default function Generator() {
                 )
               })}
             </Box>
+            <Box style={{display: 'flex', gap: '16px'}}>
             <ButtonSaveQuestion
               isSubmitted={false}
               isQuestionRegenerating={isQuestionRegenerating}
               handleSaveQuestion={handleSaveQuestion}
             /> 
+            <GamePlayButtonStyled
+              onClick={clearFields}
+              animate={false}
+              style={{ background: `linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)`}}
+            >
+              <Typography sx={{ textTransform: 'none' }} variant="button">
+                Discard Question
+              </Typography>
+            </GamePlayButtonStyled>
+            </Box>
             {isQuestionSaved &&
               <Typography style={{  fontFamily: 'Poppins',  fontWeight: '600', fontSize: '14px', color: 'white', marginTop: '20px'}} >
               Question Saved!
             </Typography>
             }
+             
           </Grid>
         </Grid>
         <img src={OpenAI} style={{position: 'absolute', bottom: 20, left: '50%', transform: 'translate(-50%)', maxHeight: '32px'}}/>
