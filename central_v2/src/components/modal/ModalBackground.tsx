@@ -23,7 +23,7 @@ const TabContainer = styled(Box)(({ theme }) => ({
 const ModalBackgroundContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   top: 0,
-  height: '100%',
+  height: '100dvh',
   width: '100%',
   background: 'rgba(0,0,0,0.5)',
   zIndex: 5,

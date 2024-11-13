@@ -15,6 +15,7 @@ const IntegratedContainer = styled(Box)(({ theme }) => ({
   marginRight: '20px',
   width: '100%',
   height: 'auto',
+  maxHeight: '80%',
   maxWidth: '800px',
   background: '#FFF',
   paddingTop: '16px',
@@ -27,11 +28,6 @@ const IntegratedContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   gap: '16px'
-}));
-
-const UploadIcon = styled('img')(({ theme }) => ({
-  width: '60px',
-  height: '60px',
 }));
 
 const DragText = styled(Typography)(({ theme }) => ({
@@ -85,7 +81,9 @@ export default function ImageURLModal({
         <TextContainerStyled value={url} variant="outlined" rows='1' placeholder="Image URL..." onChange={(e)=> setUrl(e.target.value)}/>
         {url.length > 0 && 
           <Fade in={url.length > 0} mountOnEnter unmountOnExit timeout={1000}>
-            <img src={url} alt="preview" width="100%" height="auto"/>
+            <Box style={{width: '100%', height: '50%', overflowY: 'auto'}}>
+              <img src={url} alt="preview" width="100%" height="100%"/>
+            </Box>
           </Fade>
         }
         <CentralButton buttonType={ButtonType.SAVE} onClick={handleSaveClick} isEnabled/>
