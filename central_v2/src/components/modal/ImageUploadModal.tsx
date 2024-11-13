@@ -10,11 +10,10 @@ import ImageUploadDashedBorder from './ImageUploadDashedBorder';
 
 const IntegratedContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  margin: 'auto',
   borderRadius: '16px',
-  marginLeft: '20px',
-  marginRight: '20px',
-  width: '100%',
+  width: 'calc(100% - 48px)',
+  top: '50%',
+  transform: 'translateY(-50%)',
   height: 'auto',
   minHeight: '400px',
   maxWidth: '800px',
@@ -25,6 +24,7 @@ const IntegratedContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'stretch',
   alignItems: 'center',
+  boxSizing: 'border-box',
 }));
 
 const UploadIcon = styled('img')(({ theme }) => ({

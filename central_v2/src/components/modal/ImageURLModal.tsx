@@ -9,13 +9,12 @@ import { TextContainerStyled } from '../../lib/styledcomponents/CreateQuestionSt
 
 const IntegratedContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  margin: 'auto',
   borderRadius: '16px',
-  marginLeft: '20px',
-  marginRight: '20px',
-  width: '100%',
+  width: 'calc(100% - 48px)',
   height: 'auto',
-  maxHeight: '80%',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  maxHeight: '100%',
   maxWidth: '800px',
   background: '#FFF',
   paddingTop: '16px',
@@ -27,7 +26,8 @@ const IntegratedContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  gap: '16px'
+  gap: '16px',
+  boxSizing: 'border-box'
 }));
 
 const DragText = styled(Typography)(({ theme }) => ({
