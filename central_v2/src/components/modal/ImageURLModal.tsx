@@ -55,6 +55,7 @@ export default function ImageURLModal({
   handleCloseModal
 }: ImageURLModalProps) {
   const [url, setUrl] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSaveClick = async  () => {
     const response = await fetch(url);
@@ -79,13 +80,11 @@ export default function ImageURLModal({
           <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
         </Box>
         <TextContainerStyled value={url} variant="outlined" rows='1' placeholder="Image URL..." onChange={(e)=> setUrl(e.target.value)}/>
-        {url.length > 0 && 
-          <Fade in={url.length > 0} mountOnEnter unmountOnExit timeout={1000}>
-            <Box style={{width: '100%', height: '50%', overflowY: 'auto'}}>
-              <img src={url} alt="preview" width="100%" height="100%"/>
-            </Box>
-          </Fade>
-        }
+        <Fade in={url.length > 0} mountOnEnter unmountOnExit timeout={1000}>
+          <Box style={{width: '100%', height: '50%', overflowY: 'auto'}}>
+            <img src={url} alt="preview" width="100%" height="100%"/>
+          </Box>
+        </Fade>
         <CentralButton buttonType={ButtonType.SAVE} onClick={handleSaveClick} isEnabled/>
       </IntegratedContainer>      
     </Fade>
