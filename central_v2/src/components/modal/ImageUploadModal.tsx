@@ -1,9 +1,12 @@
 import React from 'react';
 import { Box, Fade, Typography, styled } from '@mui/material';
+import { FileUploader } from 'react-drag-drop-files';
 import imageUploadIcon from '../../images/imageUploadIcon.svg';
 import imageUploadClose from '../../images/imageUploadClose.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
+import DropImageUpload from '../DropImageUpload';
+import ImageUploadDashedBorder from './ImageUploadDashedBorder';
 
 const IntegratedContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -12,17 +15,16 @@ const IntegratedContainer = styled(Box)(({ theme }) => ({
   marginLeft: '20px',
   marginRight: '20px',
   width: '100%',
-  height: '100%',
+  height: 'auto',
+  minHeight: '400px',
   maxWidth: '800px',
-  maxHeight: '400px',
   background: '#FFF',
   padding: '25px',
   zIndex: 7,
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'stretch',
   alignItems: 'center',
-  justifyContent: 'center',
-  gap: '24px',
 }));
 
 const UploadIcon = styled('img')(({ theme }) => ({
@@ -46,47 +48,90 @@ const CloseButton = styled('img')(({ theme }) => ({
 
 interface ImageUploadModalProps {
   isModalOpen: boolean;
+  handleImageSave: (file: File) => void;
   handleCloseModal: () => void;
 }
 
 export default function ImageUploadModal({
   isModalOpen,
-  handleCloseModal,
+  handleImageSave,
+  handleCloseModal
 }: ImageUploadModalProps) {
+  const fileTypes = ['JPG', 'JPEG', 'PNG', 'GIF'];
+  const [image, setImage] = React.useState<File | null>(null);
+
+  const handleImageChange = (file: File) => {
+    if (file){
+      setImage(file);
+    }
+  }
+
+  const handleSaveClick = () => {
+    if (image) {
+      handleImageSave(image);
+    }
+  }
+
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
       <IntegratedContainer>
-        <svg
-          width="calc(100% - 50px)" 
-          height="calc(100% - 50px)"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{
-            position: 'absolute',
-            top: '25px',
-            left: '25px',
-            boxSizing: 'border-box',
-          }}
-        >
-          <rect
-            x="5"
-            y="5"
-            width="calc(100% - 10px)"
-            height="calc(100% - 10px)"
-            fill="none"
-            stroke="#333"
-            strokeWidth="5"
-            strokeDasharray="20, 20"
-            strokeDashoffset="10"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-          />
-        </svg>
-        <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
-        <UploadIcon src={imageUploadIcon} alt="imageUploadIcon" />
-        <DragText>Drag & Drop File here</DragText>
-        <DragText style={{ fontSize: '20px' }}>or</DragText>
-        <CentralButton buttonType={ButtonType.UPLOAD} isEnabled onClick={() => {}} />
-      </IntegratedContainer>
+          <ImageUploadDashedBorder />
+          <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
+          {image ? (
+            <Box style={{width: '100%', height: '100%', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+              <DragText>Image Preview</DragText>
+              <img
+                src={URL.createObjectURL(image)}
+                alt="Uploaded"
+                style={{
+                  maxWidth: '400px',
+                  height: 'auto',
+                  borderRadius: '8px',
+                  marginTop: '16px',
+                }}
+              />
+              <Box style={{
+                display: 'flex',
+                gap: '16px',
+                marginTop: '16px',
+              }}>
+                <CentralButton
+                  buttonType={ButtonType.CHANGEIMAGE}
+                  isEnabled
+                  type="file"
+                  handleFileChange={handleImageChange}
+                />
+                <CentralButton
+                  buttonType={ButtonType.SAVE}
+                  isEnabled
+                  onClick={handleSaveClick}
+                />
+              </Box>
+            </Box>
+          ) : (
+            <DropImageUpload handleImageSave={handleImageChange}>
+              <Box style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+                gap: '16px',
+              }}>
+                <UploadIcon src={imageUploadIcon} alt="imageUploadIcon" />
+                <DragText>Drag & Drop File here</DragText>
+                <DragText style={{ fontSize: '20px' }}>or</DragText>
+                <CentralButton
+                  type="file"
+                  buttonType={ButtonType.UPLOAD}
+                  isEnabled
+                  handleFileChange={handleImageChange}
+                />
+              </Box>
+            </DropImageUpload>   
+          )}
+      </IntegratedContainer>      
     </Fade>
   );
 }

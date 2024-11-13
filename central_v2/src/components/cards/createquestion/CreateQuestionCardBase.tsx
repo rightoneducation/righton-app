@@ -24,6 +24,7 @@ import arrow from '../../../images/SelectArrow.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
+  questionImage: File | null;
   handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
   isSelected: boolean;
@@ -64,6 +65,7 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 
 export default function CreateQuestionCardBase({
   screenSize,
+  questionImage,
   handleCCSSClick,
   handleImageUploadClick,
   isSelected,
@@ -71,7 +73,6 @@ export default function CreateQuestionCardBase({
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
-  const [imageUrl, setImageUrl] = React.useState<string | null>(null);
   const [title, setTitle] = React.useState<string | null>(null);
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -107,8 +108,8 @@ export default function CreateQuestionCardBase({
         </RadioContainerStyled>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        {imageUrl 
-          ? <ImageStyled src={imageUrl ?? ''} alt="image" />
+        {questionImage 
+          ? <ImageStyled src={URL.createObjectURL(questionImage) ?? ''} alt="image" />
           : <ImagePlaceholder>
               <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
               <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled/>

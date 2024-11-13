@@ -58,6 +58,7 @@ export default function CreateQuestion({
   const theme = useTheme();
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
+  const [questionImage, setQuestionImage] = useState<File | null>(null);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [ccss, setCCSS] = useState<string>('CCSS');
   const [selectedCard, setSelectedCard] = useState<string>('');
@@ -66,6 +67,12 @@ export default function CreateQuestion({
   };
   const handleImageUploadClick = () => {
     setIsImageUploadVisible(true);
+  }
+
+  const handleImageSave = (image: File) => {
+    setIsImageUploadVisible(false);
+    if (image)
+      setQuestionImage(image);
   }
 
   const handleCloseModal = () => {
@@ -88,7 +95,7 @@ export default function CreateQuestion({
   return (
     <CreateQuestionMainContainer>
        <ModalBackground isModalOpen={isImageUploadVisible} handleCloseModal={handleCloseModal}/>
-       <ImageUploadModal isModalOpen={isImageUploadVisible} handleCloseModal={handleCloseModal} />
+       <ImageUploadModal isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
       <>
         <CCSSTabsModalBackground
           isTabsOpen={isCCSSVisible}
@@ -135,6 +142,7 @@ export default function CreateQuestion({
           <Box onClick={() => handleClick('CreateQuestionCard')} style={{ width: '100%' }}>
             <CreateQuestionCardBase
               screenSize={screenSize}
+              questionImage={questionImage}
               handleCCSSClick={handleCCSSClick}
               ccss={ccss}
               isSelected={selectedCard==='CreateQuestionCard'}
