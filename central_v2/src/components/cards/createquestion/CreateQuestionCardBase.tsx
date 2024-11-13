@@ -27,6 +27,7 @@ interface CreateQuestionCardBaseProps {
   questionImage: File | null;
   handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
+  handleImageURLClick: () => void;
   isSelected: boolean;
   ccss: string;
 }
@@ -68,6 +69,7 @@ export default function CreateQuestionCardBase({
   questionImage,
   handleCCSSClick,
   handleImageUploadClick,
+  handleImageURLClick,
   isSelected,
   ccss
 }: CreateQuestionCardBaseProps) {
@@ -112,7 +114,7 @@ export default function CreateQuestionCardBase({
           ? <ImageStyled src={URL.createObjectURL(questionImage) ?? ''} alt="image" />
           : <ImagePlaceholder>
               <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
-              <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled/>
+              <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled onClick={handleImageURLClick}/>
             </ImagePlaceholder>
         }
         <CreateQuestionContentRightContainerStyled>

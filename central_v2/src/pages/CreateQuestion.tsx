@@ -12,6 +12,7 @@ import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackgro
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 import ModalBackground from '../components/modal/ModalBackground';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
+import ImageURLModal from '../components/modal/ImageURLModal';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -58,6 +59,7 @@ export default function CreateQuestion({
   const theme = useTheme();
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
+  const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [questionImage, setQuestionImage] = useState<File | null>(null);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [ccss, setCCSS] = useState<string>('CCSS');
@@ -69,14 +71,20 @@ export default function CreateQuestion({
     setIsImageUploadVisible(true);
   }
 
+  const handleImageURLClick = () => {
+    setIsImageURLVisible(true);
+  }
+
   const handleImageSave = (image: File) => {
     setIsImageUploadVisible(false);
+    setIsImageURLVisible(false);
     if (image)
       setQuestionImage(image);
   }
 
   const handleCloseModal = () => {
     setIsImageUploadVisible(false);
+    setIsImageURLVisible(false);
   }
 
   const handleBackToExplore = () => {
@@ -94,8 +102,9 @@ export default function CreateQuestion({
 
   return (
     <CreateQuestionMainContainer>
-       <ModalBackground isModalOpen={isImageUploadVisible} handleCloseModal={handleCloseModal}/>
+       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible} handleCloseModal={handleCloseModal}/>
        <ImageUploadModal isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
+       <ImageURLModal isModalOpen={isImageURLVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
       <>
         <CCSSTabsModalBackground
           isTabsOpen={isCCSSVisible}
@@ -147,6 +156,7 @@ export default function CreateQuestion({
               ccss={ccss}
               isSelected={selectedCard==='CreateQuestionCard'}
               handleImageUploadClick={handleImageUploadClick}
+              handleImageURLClick={handleImageURLClick}
             />
           </Box>
           <Grid
