@@ -22,8 +22,6 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   paddingLeft: `${theme.sizing.mdPadding}px`,
   paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
-  position: 'relative',
-  overflowY: 'hidden'
 }));
 
 interface BaseCardStyledProps {
