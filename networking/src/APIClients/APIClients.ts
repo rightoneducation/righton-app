@@ -33,6 +33,7 @@ import { HostDataManagerAPIClient } from './datamanagers/HostDataManagerAPIClien
 import { IHostDataManagerAPIClient } from './datamanagers/interfaces/IHostDataManagerAPIClient';
 import { CentralDataManagerAPIClient } from './datamanagers/CentralDataManagerAPIClient';
 import { ICentralDataManagerAPIClient } from './datamanagers/interfaces/ICentralDataManagerAPIClient';
+
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 
@@ -69,6 +70,8 @@ export class APIClients {
     this.team = new TeamAPIClient(env, this.auth);
     this.teamMember = new TeamMemberAPIClient(env, this.auth);
     this.teamAnswer = new TeamAnswerAPIClient(env, this.auth);
+    this.user = new UserAPIClient(env, this.auth )
+
     if (appType === AppType.PLAY) {
       this.playDataManager = new PlayDataManagerAPIClient(env, this.gameSession);
     } else if (appType ===AppType.HOST) {

@@ -1,8 +1,9 @@
 type User @model
 @auth(
-  rules: [
+  rules:  [
+    { allow: public, provider: iam  },
     { allow: owner, provider: userPools },
-    { allow: private, operations: [read, create, update, delete], provider: userPools }
+    { allow: private, operations: [read], provider: userPools },  
   ]
 )
 @aws_iam

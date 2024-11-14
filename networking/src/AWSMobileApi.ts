@@ -14,6 +14,8 @@ export type CreateUserInput = {
   questionsMade?: number | null,
 };
 
+
+
 export type ModelUserConditionInput = {
   userName?: ModelStringInput | null,
   title?: ModelStringInput | null,

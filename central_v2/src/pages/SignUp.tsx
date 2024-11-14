@@ -7,6 +7,8 @@ import CentralButton from "../components/button/Button";
 import RightOnLogo from "../images/RightOnLogo.png";
 import Adpic from "../images/@.svg"
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -234,6 +236,7 @@ export default function SignUp() {
 
   const [password, setPassword] = useState(''); 
   const [confirmPassword, setConfirmPassword] = useState(''); 
+  const [passwordError, setPasswordError] = useState('')
 
   const buttonType = ButtonType.LOGIN;
   const [isEnabled, setIsEnabled] = useState(true);
@@ -245,7 +248,8 @@ export default function SignUp() {
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
-  
+
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
 
 const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setFirstName(event.target.value);
@@ -258,16 +262,17 @@ const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 }
 const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setPassword(event.target.value);
+  setPasswordError('');
 }
 
 const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setConfirmPassword(event.target.value);
+  setPasswordError('');
 }
 
 const handleSchoolEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setSchoolEmail(event.target.value);
 }
-
 
 const handleImageFrontChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   const file = event.target.files?.[0];
@@ -282,6 +287,33 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImageBack(file);
   }
 };
+const handleSubmit = () => {
+  if (password !== confirmPassword){
+    setPasswordError("Passwords don't match")
+    return;
+  }
+
+  const user = {
+    userName,
+    title,
+    firstName,
+    lastName,
+    email: schoolEmail,
+    password,
+    gamesMade: 77, 
+    questionsMade: 16 
+  };
+  
+  apiClients.user.createUser(user)
+  .then(response => {
+    console.log('User Created:', response)
+  }).catch(error => {
+    console.error('Error creating user:', error)
+  })
+};
+
+
+
   return (
       <SignUpMainContainer>
         <InnerBodyContainer>
@@ -367,12 +399,17 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                   variant="outlined"
                   placeholder="Password..."
                   value={password}
-                  onChange={handlePasswordChange} />
+                  onChange={handlePasswordChange} 
+                  error = {!!passwordError}
+                  />
               <UserTextField
                   variant="outlined"
                   placeholder="Confirm Password..."
                   value={confirmPassword}
-                  onChange={handleConfirmPasswordChange} />
+                  onChange={handleConfirmPasswordChange}
+                  error={!!passwordError}
+                  // helperText={passwordError}
+                  />
             </PasswordContainer>
           </UploadImagesAndPassword>
 
@@ -382,7 +419,7 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 <HaveAnAccountText>
                   Already have an account?
                 </HaveAnAccountText>
-                <CentralButton buttonType={buttonType} isEnabled={isEnabled} />
+                <CentralButton buttonType={buttonType} isEnabled={isEnabled} onClick={handleSubmit} />
               </LowestContainer>
           </LowerLogin>
         </InnerBodyContainer>
