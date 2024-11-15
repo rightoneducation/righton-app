@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import DebugAuth from '../components/debug/DebugAuth';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ScreenSize } from '../lib/CentralModels';
@@ -119,6 +120,7 @@ export default function CreateQuestion({
 
   return (
     <CreateQuestionMainContainer>
+       <DebugAuth />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible} handleCloseModal={handleCloseModal}/>
        <ImageUploadModal isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
        <ImageURLModal isModalOpen={isImageURLVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
