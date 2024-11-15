@@ -25,7 +25,8 @@
         }
       },
       "auth": {
-        "mobile6060603c": {}
+        "mobile6060603c": {},
+        "userPoolGroups": {}
       },
       "api": {
         "mobile": {}

@@ -38,7 +38,9 @@
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
     "hostedUI": true,
-    "userPoolGroupList": [],
+    "userPoolGroupList": [
+      "authusers"
+    ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,

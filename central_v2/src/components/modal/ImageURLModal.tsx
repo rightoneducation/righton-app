@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Fade, Typography, styled } from '@mui/material';
+import { Box, Paper, Fade, Typography, styled } from '@mui/material';
 import { debounce } from 'lodash';
 import imageUploadClose from '../../images/imageUploadClose.svg';
 import CentralButton from '../button/Button';
@@ -7,7 +7,7 @@ import { ButtonType } from '../button/ButtonModels';
 import { TextContainerStyled } from '../../lib/styledcomponents/CreateQuestionStyledComponents';
 
 
-const IntegratedContainer = styled(Box)(({ theme }) => ({
+const IntegratedContainer = styled(Paper)(({ theme }) => ({
   position: 'absolute',
   borderRadius: '16px',
   width: 'calc(100% - 48px)',
@@ -15,7 +15,7 @@ const IntegratedContainer = styled(Box)(({ theme }) => ({
   top: '50%',
   transform: 'translateY(-50%)',
   maxHeight: '100%',
-  maxWidth: '800px',
+  maxWidth: '672px',
   background: '#FFF',
   paddingTop: '16px',
   paddingBottom: '16px',
@@ -71,7 +71,7 @@ export default function ImageURLModal({
 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
-      <IntegratedContainer>
+      <IntegratedContainer elevation={12}>
         <Box style={{
           width: '100%',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'

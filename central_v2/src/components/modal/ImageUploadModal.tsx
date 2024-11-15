@@ -1,30 +1,29 @@
 import React from 'react';
-import { Box, Fade, Typography, styled } from '@mui/material';
+import { Box, Paper, Fade, Typography, styled } from '@mui/material';
 import { FileUploader } from 'react-drag-drop-files';
 import imageUploadIcon from '../../images/imageUploadIcon.svg';
 import imageUploadClose from '../../images/imageUploadClose.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import DropImageUpload from '../DropImageUpload';
-import ImageUploadDashedBorder from './ImageUploadDashedBorder';
 
-const IntegratedContainer = styled(Box)(({ theme }) => ({
+const IntegratedContainer = styled(Paper)(({ theme }) => ({
   position: 'absolute',
-  borderRadius: '16px',
   width: 'calc(100% - 48px)',
+  maxWidth: '750px',
   top: '50%',
   transform: 'translateY(-50%)',
   height: 'auto',
   minHeight: '400px',
-  maxWidth: '800px',
   background: '#FFF',
-  padding: '25px',
   zIndex: 7,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'stretch',
   alignItems: 'center',
+  borderRadius: '16px',
   boxSizing: 'border-box',
+  overflow: 'hidden'
 }));
 
 const UploadIcon = styled('img')(({ theme }) => ({
@@ -41,9 +40,10 @@ const CloseButton = styled('img')(({ theme }) => ({
   width: '30px',
   height: '30px',
   position: 'absolute',
-  top: '40px',
-  right: '40px',
-  cursor: 'pointer'
+  top: '16px',
+  right: '16px',
+  cursor: 'pointer',
+  zIndex: 1
 }))
 
 interface ImageUploadModalProps {
@@ -57,7 +57,6 @@ export default function ImageUploadModal({
   handleImageSave,
   handleCloseModal
 }: ImageUploadModalProps) {
-  const fileTypes = ['JPG', 'JPEG', 'PNG', 'GIF'];
   const [image, setImage] = React.useState<File | null>(null);
 
   const handleImageChange = (file: File) => {
@@ -74,8 +73,7 @@ export default function ImageUploadModal({
 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
-      <IntegratedContainer>
-          <ImageUploadDashedBorder />
+      <IntegratedContainer elevation={12}>
           <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
           {image ? (
             <Box style={{width: '100%', height: '100%', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>

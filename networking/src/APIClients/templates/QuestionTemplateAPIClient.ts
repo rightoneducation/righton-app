@@ -1,3 +1,4 @@
+import { uploadData } from 'aws-amplify/storage';
 import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
 import { QuestionTemplateType, questionTemplateRuntimeMap, IQuestionTemplateAPIClient } from "./interfaces/IQuestionTemplateAPIClient";
 import { IQuestionTemplate } from "../../Models";
@@ -21,6 +22,7 @@ export class QuestionTemplateAPIClient
         queryFunction,
         variables
     ) as { data: any };
+    
     if (
         isNullOrUndefined(questionTemplate?.data)
     ) {
@@ -28,6 +30,10 @@ export class QuestionTemplateAPIClient
     }
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data[createType] as AWSQuestionTemplate, type);
   }
+
+  async storeImageInS3 (image: File) {
+    uploadData({path: image.name, data: image, options: {contentType: image.type}});
+  };
 
   async getQuestionTemplate<T extends PublicPrivateType>(
     type: T,
