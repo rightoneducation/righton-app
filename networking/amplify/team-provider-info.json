@@ -25,7 +25,9 @@
         }
       },
       "auth": {
-        "mobile6060603c": {},
+        "mobile6060603c": {
+          "googleClientId": "23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com"
+        },
         "userPoolGroups": {}
       },
       "api": {
