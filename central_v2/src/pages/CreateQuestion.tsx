@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
-import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ScreenSize } from '../lib/CentralModels';
@@ -59,6 +59,7 @@ export default function CreateQuestion({
   screenSize
 }:CreateQuestionProps){
   const theme = useTheme();
+  const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
@@ -113,15 +114,7 @@ export default function CreateQuestion({
   }
 
   const handleDiscardQuestion = () => {
-    console.log('click');
-    try {
-    apiClients.auth.awsSignIn();
-    } catch (e) {
-      console.log(e);
-    }
-    const verify = apiClients.auth.verifyAuth();
-    console.log(verify);
-    console.log('end');
+    navigate('/questions');
   }
 
   return (
