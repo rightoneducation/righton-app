@@ -2,7 +2,8 @@ export enum ScreenType {
   GAMES,
   QUESTIONS,
   LIBRARY,
-  SIGNUP
+  SIGNUP, 
+  CONFIRMATION
 }
 
 export enum ScreenSize {

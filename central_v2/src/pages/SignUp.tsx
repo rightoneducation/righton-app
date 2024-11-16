@@ -249,6 +249,8 @@ export default function SignUp() {
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
 
+  const [loading, setLoading] = React.useState(false);
+
   const apiClients = useTSAPIClientsContext(APIClientsContext);
 
 const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -287,7 +289,8 @@ const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImageBack(file);
   }
 };
-const handleSubmit = () => {
+const handleSubmit = async() => {
+  setLoading(true)
   if (password !== confirmPassword){
     setPasswordError("Passwords don't match")
     return;
@@ -303,7 +306,12 @@ const handleSubmit = () => {
     gamesMade: 77, 
     questionsMade: 16 
   };
-  
+  try {
+    await apiClients.auth.awsSignUp(userName, schoolEmail, password);
+  } catch (error) {
+    console.error(error);
+  }
+  setLoading(false);
   apiClients.user.createUser(user)
   .then(response => {
     console.log('User Created:', response)
@@ -312,7 +320,7 @@ const handleSubmit = () => {
   })
 };
 
-
+// apiClients.auth.awsConfirmSignUp(schoolEmail, 'code');
 
   return (
       <SignUpMainContainer>
