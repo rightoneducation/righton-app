@@ -8,6 +8,132 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
+export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    id
+    userName
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    questionsMade
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedQuery<APITypes.GetUserQueryVariables, APITypes.GetUserQuery>;
+export const listUsers = /* GraphQL */ `query ListUsers(
+  $id: ID
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+  $sortDirection: ModelSortDirection
+) {
+  listUsers(
+    id: $id
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    sortDirection: $sortDirection
+  ) {
+    items {
+      id
+      userName
+      title
+      firstName
+      lastName
+      email
+      password
+      gamesMade
+      questionsMade
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<APITypes.ListUsersQueryVariables, APITypes.ListUsersQuery>;
+export const userByUserName = /* GraphQL */ `query UserByUserName(
+  $userName: String!
+  $sortDirection: ModelSortDirection
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  userByUserName(
+    userName: $userName
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userName
+      title
+      firstName
+      lastName
+      email
+      password
+      gamesMade
+      questionsMade
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.UserByUserNameQueryVariables,
+  APITypes.UserByUserNameQuery
+>;
+export const userByEmail = /* GraphQL */ `query UserByEmail(
+  $email: String!
+  $sortDirection: ModelSortDirection
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  userByEmail(
+    email: $email
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userName
+      title
+      firstName
+      lastName
+      email
+      password
+      gamesMade
+      questionsMade
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.UserByEmailQueryVariables,
+  APITypes.UserByEmailQuery
+>;
 export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate($id: ID!) {
   getPublicGameTemplate(id: $id) {
     id
