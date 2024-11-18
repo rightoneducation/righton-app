@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import DebugAuth from '../components/debug/DebugAuth';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
-import { ScreenSize } from '../lib/CentralModels';
+import { ScreenSize, BorderStyle } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -109,6 +109,7 @@ export default function CreateQuestion({
     try {
     if (questionImage)
       apiClients.questionTemplate.storeImageInS3(questionImage);
+      navigate('/questions');
     } catch (e) {
       console.log(e);
     }
@@ -120,9 +121,9 @@ export default function CreateQuestion({
 
   return (
     <CreateQuestionMainContainer>
-       <DebugAuth />
+       
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible} handleCloseModal={handleCloseModal}/>
-       <ImageUploadModal isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
+       <ImageUploadModal screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
        <ImageURLModal isModalOpen={isImageURLVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
       <>
         <CCSSTabsModalBackground

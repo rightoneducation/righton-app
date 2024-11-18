@@ -44,10 +44,16 @@ export default function DebugAuth(){
   const handleLogin = async () => {
     
     setIsLoading(true);
-    if (checked){
-      apiClients.auth.awsSignIn('debuguser', 'debugpassword123');
+    if (!checked){
+      const response = apiClients.auth.awsSignIn('debuguser', 'debugpassword123');
+      console.log(response);
       apiClients.auth.verifyAuth().then((isAuth) => {
-        return isAuth ? setChecked(true) : setChecked(false);
+        if (isAuth) {
+          console.log('User Login Confirmed')
+          return setChecked(true);
+        }
+        console.log('User Login Failed');
+        return setChecked(false);
       });
       setIsLoading(false);
       return;

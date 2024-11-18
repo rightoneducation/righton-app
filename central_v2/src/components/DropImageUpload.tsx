@@ -30,17 +30,15 @@ function FileDropZone({ onFilesDropped, children }: FileDropZoneProps){
       ref={drop}
       style={{
         textAlign: 'center',
-        backgroundColor: isOver && canDrop ? 'rgba(0,0,0,0.15)' : '#FFF',
+        backgroundColor: isOver && canDrop ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0)',
         transition: 'background-color 1s ease-in',
         width: '100%',
-        height: '100%',
         flexGrow: 1,
-        position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '16px'
+        gap: '16px',
       }}
     >
       {children}
