@@ -1,8 +1,9 @@
 import React from 'react';
-import { Paper, styled } from '@mui/material';
+import { Paper, styled, InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import errorIcon from '../../../../images/errorIcon.svg';
+import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
 import {
-  BaseCardStyled,
   QuestionTitleStyled,
 } from '../../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import { TextContainerStyled } from '../../../../lib/styledcomponents/CreateQuestionStyledComponents';
@@ -35,11 +36,47 @@ export default function IncorrectAnswerCard({answer, isSelected} : IncorrectAnsw
       <QuestionTitleStyled>
         Incorrect Answer {answer}
       </QuestionTitleStyled>
-      <TextContainerStyled variant="outlined" rows='1' placeholder="Distractor..."/>
+      <TextContainerStyled 
+        multiline 
+        variant="outlined" 
+        rows='1' 
+        placeholder="Distractor..." 
+        error
+        InputProps={{
+          startAdornment: 
+            <InputAdornment
+              position="start" 
+              sx={{ 
+                alignSelf: 'flex-start',
+                mt: '10px'
+              }}
+            >
+              <ErrorIcon src={errorIcon} alt='error icon'/>
+            </InputAdornment>
+        }}
+      />
       <QuestionTitleStyled>
         Mistake Explanation
       </QuestionTitleStyled>
-      <TextContainerStyled variant="outlined" rows='1' placeholder="Explanation..."/>
+      <TextContainerStyled 
+        multiline 
+        variant="outlined" 
+        rows='1' 
+        placeholder="Explanation..." 
+        error
+        InputProps={{
+          startAdornment: 
+            <InputAdornment
+              position="start" 
+              sx={{ 
+                alignSelf: 'flex-start',
+                mt: '10px'
+              }}
+            >
+              <ErrorIcon src={errorIcon} alt='error icon'/>
+            </InputAdornment>
+        }}
+      />
     </AnswerCard>
   )
 }

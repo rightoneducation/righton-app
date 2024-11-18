@@ -58,8 +58,12 @@ export const TextContainerStyled = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
     "&.Mui-focused fieldset": {
       borderColor: `${theme.palette.primary.extraDarkGrey}`
-    }
-  }
+    },
+    '&.Mui-error fieldset': {
+      borderWidth: '2px',
+      borderColor: theme.palette.error.main,
+    },
+  },
 }));
 
 export const CCSSIndicator = styled(Button)(({ theme }) => ({

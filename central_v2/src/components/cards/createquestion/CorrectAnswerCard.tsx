@@ -1,13 +1,20 @@
 import React, { useEffect } from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import {
   QuestionTitleStyled,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
-import { TextContainerStyled, BaseCardStyled } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import { 
+  TextContainerStyled, 
+  BaseCardStyled 
+} from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import {
+  ErrorIcon
+} from '../../../lib/styledcomponents/CentralStyledComponents';
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
+import errorIcon from '../../../images/errorIcon.svg';
 
 interface DetailedQuestionSubCardProps {
   isSelected: boolean;
@@ -41,7 +48,25 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
         >
           {index + 1}
         </Typography>
-        <TextContainerStyled value={step} variant="outlined" rows='1' placeholder="Step Contents..." onChange={(e)=> handleChange(index, e.target.value)}/>
+        <TextContainerStyled 
+            multiline 
+            variant="outlined" 
+            rows='1' 
+            placeholder="Step Contents" 
+            error
+            InputProps={{
+              startAdornment: 
+                <InputAdornment
+                  position="start" 
+                  sx={{ 
+                    alignSelf: 'flex-start',
+                    mt: '10px'
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt='error icon'/>
+                </InputAdornment>
+            }}
+          />
       </Box>
     );
   };
@@ -82,7 +107,26 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
       <QuestionTitleStyled>
         Correct Answer
       </QuestionTitleStyled>
-      <TextContainerStyled variant="outlined" rows='1' placeholder="Correct Answer..." onChange={(e) => handleCorrectChange(e.target.value)}/>
+      <TextContainerStyled 
+        multiline 
+        variant="outlined" 
+        rows='1' 
+        placeholder="Correct Answer..." 
+        error
+        InputProps={{
+          startAdornment: 
+            <InputAdornment
+              position="start" 
+              sx={{ 
+                alignSelf: 'flex-start',
+                mt: '10px'
+              }}
+            >
+              <ErrorIcon src={errorIcon} alt='error icon'/>
+            </InputAdornment>
+        }}
+        onChange={(e) => handleCorrectChange(e.target.value)}
+      />
       <QuestionTitleStyled>
         Solution Steps
       </QuestionTitleStyled>

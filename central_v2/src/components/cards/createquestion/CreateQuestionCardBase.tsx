@@ -1,6 +1,5 @@
 import React from 'react';
-import { Typography, RadioGroup, Box, Fade, styled, useTheme } from '@mui/material';
-import { IQuestionTemplate } from '@righton/networking';
+import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment } from '@mui/material';
 import {
   TitleBarStyled,
   QuestionTitleStyled,
@@ -16,11 +15,15 @@ import {
   TextContainerStyled,
   CCSSIndicator
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import {
+  ErrorIcon
+} from '../../../lib/styledcomponents/CentralStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
 import ImageButton from '../../button/imagebutton/ImageButton';
 import { ImageButtonType } from '../../button/imagebutton/ImageButtonModels';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import arrow from '../../../images/SelectArrow.svg';
+import errorIcon from '../../../images/errorIcon.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -154,7 +157,25 @@ export default function CreateQuestionCardBase({
             </ImagePlaceholder>
         }
         <CreateQuestionContentRightContainerStyled>
-          <TextContainerStyled multiline variant="outlined" rows='4' placeholder="Question Contents...">
+          <TextContainerStyled 
+            multiline 
+            variant="outlined" 
+            rows='4' 
+            placeholder="Question Contents..." 
+            error
+            InputProps={{
+              startAdornment: 
+                <InputAdornment
+                  position="start" 
+                  sx={{ 
+                    alignSelf: 'flex-start',
+                    mt: '10px'
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt='error icon'/>
+                </InputAdornment>
+            }}
+          >
             <Typography>{title}</Typography>
           </TextContainerStyled>
           <Box style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
