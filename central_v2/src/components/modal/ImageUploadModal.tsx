@@ -193,8 +193,8 @@ export default function ImageUploadModal({
               >
                 {modalContents}
               </StyledDiv>
-    }
-    {(borderStyle === BorderStyle.DASHED_BORDER || borderStyle === BorderStyle.SOLID_BORDER) &&
+            }
+            {(borderStyle === BorderStyle.DASHED_BORDER || borderStyle === BorderStyle.SOLID_BORDER) &&
               <Box style={{     
                 position: 'relative',
                 width: '100%', 
@@ -209,28 +209,28 @@ export default function ImageUploadModal({
               >
                {modalContents}
               </Box>
-  }
-  {borderStyle === BorderStyle.SVG &&
-  <Box style={{width: '100%', height: '100%', position: 'relative'}}>
-      <DashedBorderSVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect
-          x="2.5" 
-          y="2.5"
-          width="95" 
-          height="95"
-          fill="none"
-          stroke="#333"
-          strokeWidth="5"
-          strokeDasharray="25 25"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
-      </DashedBorderSVG>
-      <Box style={{position: 'absolute', paddingTop: '50px', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 6, width: '100%', height: '100%'}}>
-       {modalContents}
-      </Box>
-    </Box>
-  }
+            }
+            {borderStyle === BorderStyle.SVG &&
+            <Box style={{width: '100%', height: '100%', position: 'relative'}}>
+                <DashedBorderSVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <rect
+                    x="2.5" 
+                    y="2.5"
+                    width="95" 
+                    height="95"
+                    fill="none"
+                    stroke="#333"
+                    strokeWidth="5"
+                    strokeDasharray="25 25"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </DashedBorderSVG>
+                <Box style={{position: 'absolute', paddingTop: '50px', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 6, width: '100%', height: '100%'}}>
+                {modalContents}
+                </Box>
+              </Box>
+            }
           <CentralButton buttonType={ButtonType.SAVE} isEnabled={!!image} onClick={handleSaveClick} />
       </IntegratedContainer>      
     </Fade>
