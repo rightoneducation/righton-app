@@ -1,0 +1,34 @@
+name: Notify Slack on Issue Status Changes
+
+on:
+  project_card:
+    types: [moved]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get Column Names
+        uses: actions/github-script@v6
+        id: get_columns
+        with:
+          script: |
+            const project_id = ${{ github.event.project_card.project_id }};
+            const from_column_id = ${{ github.event.changes.column_id.from }};
+            const to_column_id = ${{ github.event.changes.column_id.to }};
+            const columns = await github.rest.projects.listColumns({
+              project_id: project_id
+            });
+            const from_column = columns.data.find(col => col.id === from_column_id)?.name || 'Unknown';
+            const to_column = columns.data.find(col => col.id === to_column_id)?.name || 'Unknown';
+            return { from_column, to_column };
+
+      - name: Send Slack Notification
+        if: steps.get_columns.outputs.from_column == 'BACKLOG' && steps.get_columns.outputs.to_column != 'BACKLOG'
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{
+            \"text\": \"🚀 *Issue Moved*: <${{ github.event.project_card.content_url }}|Issue #${{ github.event.project_card.content_number }}> has been moved from *BACKLOG* to *${{ steps.get_columns.outputs.to_column }}*.\" 
+          }" $SLACK_WEBHOOK_URL
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
