@@ -56,36 +56,16 @@ const CloseButton = styled('img')(({ theme }) => ({
   zIndex: 1
 }))
 
-const DashedBorderSVG = styled('svg')(({ theme }) => ({
+const DashedBox = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%', 
   height: '278px',
+  borderStyle: 'dashed',
+  borderWidth: '1px',
   boxSizing: 'border-box',
   flexGrow: 1,
   display: 'flex',
   flexDirection: 'column',
-  borderRadius: '16px', // Matches the container's border-radius
-  pointerEvents: 'none', // Allows clicks through the SVG
-  zIndex: 6, // Positioned behind the content
-}));
-
-const StyledDiv = styled('div')(({ theme }) => ({
-  position: 'relative',
-  margin: '20px auto',
-  width: '20%',
-  backgroundColor: 'white',
-  border: '2px solid black',
-  '&:before': {
-    content: '""',
-    position: 'absolute',
-    top: '-2px',
-    left: '-2px',
-    border: '2px solid #fff',
-    height: '100%',
-    width: '100%',
-    borderRadius: '10%',
-    pointerEvents: 'none',
-  },
 }));
 
 interface ImageUploadModalProps {
@@ -180,57 +160,63 @@ export default function ImageUploadModal({
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
       <IntegratedContainer elevation={12} screenSize={screenSize}>
           <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
-            {borderStyle === BorderStyle.CORNER_BORDER &&
-              <StyledDiv style={{
-                position: 'relative',
-                width: '100%', 
-                height: '278px',
-                boxSizing: 'border-box',
-                flexGrow: 1,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-              >
-                {modalContents}
-              </StyledDiv>
-            }
-            {(borderStyle === BorderStyle.DASHED_BORDER || borderStyle === BorderStyle.SOLID_BORDER) &&
-              <Box style={{     
-                position: 'relative',
-                width: '100%', 
-                height: '278px',
-                borderStyle: borderStyle === BorderStyle.DASHED_BORDER ? 'dashed' : 'solid',
-                borderWidth: borderStyle === BorderStyle.DASHED_BORDER ? '2px' : '1px',
-                boxSizing: 'border-box',
-                flexGrow: 1,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-              >
-               {modalContents}
-              </Box>
-            }
-            {borderStyle === BorderStyle.SVG &&
-            <Box style={{width: '100%', height: '100%', position: 'relative'}}>
-                <DashedBorderSVG xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                  <rect
-                    x="2.5" 
-                    y="2.5"
-                    width="95" 
-                    height="95"
-                    fill="none"
-                    stroke="#333"
-                    strokeWidth="5"
-                    strokeDasharray="25 25"
-                    strokeLinecap="round"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </DashedBorderSVG>
-                <Box style={{position: 'absolute', paddingTop: '50px', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 6, width: '100%', height: '100%'}}>
-                {modalContents}
-                </Box>
-              </Box>
-            }
+              <DashedBox>
+               {image ? (
+                  <Box style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={() => setIsMouseOver(true)}
+                  onMouseLeave={() => setIsMouseOver(false)}
+                  >
+                    <Box 
+                      style={{
+                        position: 'absolute',
+                        top: '0',
+                        left: '0',
+                        height: '100%',
+                        width: '100%',
+                        backgroundColor: isMouseOver ? 'rgba(0,0,0,0.72)' : 'rgba(0,0,0,0)',
+                        transition: 'background-color 0.75s',
+                      }} 
+                    />
+                    <Fade in={isMouseOver} mountOnEnter unmountOnExit timeout={750} >
+                      <Box style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 1,
+                      }}>
+                        <CentralButton type="file" buttonType={ButtonType.CHANGEIMAGE} isEnabled handleFileChange={handleImageChange} />
+                      </Box>
+                    </Fade>
+                    <img
+                      src={URL.createObjectURL(image)}
+                      alt="Uploaded"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                  
+                    />
+                  </Box>
+                ) : (
+                  <DropImageUpload handleImageSave={handleImageChange} >
+                    <UploadIcon src={imageUploadIcon} alt="imageUploadIcon" />
+                    <DragText>Drag & Drop File here</DragText>
+                    <DragText style={{ fontSize: '20px' }}>or</DragText>
+                    <CentralButton
+                      type="file"
+                      buttonType={ButtonType.UPLOAD}
+                      isEnabled
+                      handleFileChange={handleImageChange}
+                    />
+                  </DropImageUpload>   
+                )}
+              </DashedBox>
           <CentralButton buttonType={ButtonType.SAVE} isEnabled={!!image} onClick={handleSaveClick} />
       </IntegratedContainer>      
     </Fade>
