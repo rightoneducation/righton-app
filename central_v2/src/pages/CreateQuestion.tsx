@@ -63,7 +63,6 @@ export default function CreateQuestion({
   const theme = useTheme();
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
@@ -74,7 +73,11 @@ export default function CreateQuestion({
     image: null,
     correctAnswer: '',
     correctAnswerSteps: [],
-    incorrectAnswers: [],
+    incorrectAnswers: [
+      {answer: '', explanation: ''},
+      {answer: '', explanation: ''},
+      {answer: '', explanation: ''},
+    ],
     ccss: 'CCSS'
   });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
@@ -136,15 +139,34 @@ export default function CreateQuestion({
     }, 1000),
     [] 
   )
-  const handleClick = (cardType: string) => {
-    setSelectedCard(cardType);
-  };
-
- 
 
   const verifyCorrectAnswerCard = () => {
     
   }
+
+  // incorrect answer card functions
+  const handleDebouncedIncorrectAnswerChange = useCallback( // eslint-disable-line
+    debounce((draftQuestionInput: CreateQuestionTemplateInput, index: number, incorrectAnswer: string) => {
+      const prevAnswers = [...draftQuestionInput.incorrectAnswers];
+      prevAnswers[index] = {answer: incorrectAnswer, explanation: prevAnswers[index].explanation};
+      console.log(prevAnswers);
+      setDraftQuestion((prev) => ({...prev, incorrectAnswers: prevAnswers}));
+    }, 1000),
+    [] 
+  )
+
+  const handleDebouncedIncorrectExplanationChange = useCallback( // eslint-disable-line
+    debounce((draftQuestionInput: CreateQuestionTemplateInput, index: number, explanation: string) => {
+      const prevAnswers = [...draftQuestionInput.incorrectAnswers];
+      prevAnswers[index] = {answer: prevAnswers[index].answer, explanation};
+      setDraftQuestion((prev) => ({...prev, incorrectAnswers: prevAnswers}));
+    }, 1000),
+    [] 
+  )
+
+  const handleClick = (cardType: string) => {
+    setSelectedCard(cardType);
+  };
 
   const handleBackToExplore = () => {
     setIsCCSSVisible(false);
@@ -260,7 +282,7 @@ export default function CreateQuestion({
                 <AISwitch/>
               </Box>
               <Box onClick={() => handleClick('IncorrectAnswerCard')} style={{ width: '100%' }}>
-                <IncorrectAnswerCardStack isSelected={selectedCard === 'IncorrectAnswerCard'}/>
+                <IncorrectAnswerCardStack isSelected={selectedCard === 'IncorrectAnswerCard'} draftQuestion={draftQuestion} handleIncorrectAnswerChange={handleDebouncedIncorrectAnswerChange} handleIncorrectExplanationChange={handleDebouncedIncorrectExplanationChange} isCardSubmitted={isCardSubmitted}/>
               </Box>
             </SubCardGridItem>
           </Grid>

@@ -41,6 +41,6 @@ export type CreateQuestionTemplateInput = {
   image: File | null;
   correctAnswer: string;
   correctAnswerSteps: string[];
-  incorrectAnswers: string[];
+  incorrectAnswers: {answer: string, explanation: string}[];
   ccss: string;
 }
