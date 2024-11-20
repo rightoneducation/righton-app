@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { IQuestion } from '@righton/networking';
 import DebugAuth from '../components/debug/DebugAuth';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
-import { ScreenSize, BorderStyle, CreateQuestionErrorCheck } from '../lib/CentralModels';
+import { CreateQuestionTemplateInput, ScreenSize, BorderStyle, CreateQuestionErrorCheck } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -66,21 +65,18 @@ export default function CreateQuestion({
   const [incorrectAnswers, setIncorrectAnswers] = useState(['','','']);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
-  const [questionImage, setQuestionImage] = useState<File | null>(null);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [ccss, setCCSS] = useState<string>('CCSS');
   const [selectedCard, setSelectedCard] = useState<string>('');
-  const [isQuestionComplete, setIsQuestionComplete] = useState<CreateQuestionErrorCheck>(
-    {
-      isQuestionSubmitted: false,
-      isQuestionCardComplete: false,
-      isCorrectAnswerComplete: false,
-      isIncorrectAnswer1Complete: false,
-      isIncorrectAnswer2Complete: false,
-      isIncorrectAnswer3Complete: false
-    }
-  );
-  const [draftQuestion, setDraftQuestion] = useState<IQuestion | null>(null);
+  const [draftQuestion, setDraftQuestion] = useState<CreateQuestionTemplateInput>({
+    title: '',
+    image: null,
+    correctAnswer: '',
+    correctAnswerSteps: [],
+    incorrectAnswers: [],
+    ccss: 'CCSS'
+  });
+  const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
   };
@@ -92,14 +88,20 @@ export default function CreateQuestion({
     setIsImageURLVisible(true);
   }
 
-  const handleImageSave = (image: File) => {
+  const handleImageSave = (inputImage: File) => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
-    if (image)
-      setQuestionImage(image);
+    console.log('here');
+    console.log(inputImage);
+    if (inputImage){
+      setDraftQuestion((prev) => ({...prev, image: inputImage}));
+    }
   }
 
-  // const handle
+  const handleTitleChange = (title: string) => {
+    if (draftQuestion && title)
+      setDraftQuestion((prev) => ({...prev, title}));
+  }
 
   const handleCloseModal = () => {
     setIsImageUploadVisible(false);
@@ -111,7 +113,7 @@ export default function CreateQuestion({
   };
 
   const handleCCSSSubmit = (ccssString: string) => {
-    setCCSS(ccssString);
+    setDraftQuestion((prev) => ({...prev, ccss: ccssString}));
     setIsCCSSVisible(false);
   };
 
@@ -119,12 +121,9 @@ export default function CreateQuestion({
     setSelectedCard(cardType);
   };
 
-  const verifyQuestion = () => {
-    if (!questionImage || !ccss || !questionText) {
-      const { isQuestionSubmitted, isQuestionCardComplete, ...rest } = isQuestionComplete;
-      setIsQuestionComplete((prev) => ({isQuestionSubmitted: true, isQuestionCardComplete: false, ...rest }));
+  const verifyQuestionCard = () => {
+    if (!draftQuestion.image || !draftQuestion.ccss || !draftQuestion.title)
       return false;
-    }
     return true;
   };
 
@@ -134,9 +133,10 @@ export default function CreateQuestion({
 
   const handleSaveQuestion = () => {
     try {
-      const isQuestionVerified = verifyQuestion();
-      if (questionImage && isQuestionVerified) {
-        apiClients.questionTemplate.storeImageInS3(questionImage);
+      const isQuestionVerified = verifyQuestionCard();
+      setIsCardSubmitted(true);
+      if (draftQuestion.image && isQuestionVerified) {
+        apiClients.questionTemplate.storeImageInS3(draftQuestion.image);
         navigate('/questions');
       }
     } catch (e) {
@@ -200,13 +200,13 @@ export default function CreateQuestion({
           <Box onClick={() => handleClick('CreateQuestionCard')} style={{ width: '100%' }}>
             <CreateQuestionCardBase
               screenSize={screenSize}
-              questionImage={questionImage}
+              draftQuestion={draftQuestion}
+              handleTitleChange={handleTitleChange}
               handleCCSSClick={handleCCSSClick}
-              ccss={ccss}
               isSelected={selectedCard==='CreateQuestionCard'}
               handleImageUploadClick={handleImageUploadClick}
               handleImageURLClick={handleImageURLClick}
-              isCardErrored={!isQuestionComplete.isQuestionCardComplete && isQuestionComplete.isQuestionSubmitted}
+              isCardSubmitted={isCardSubmitted}
             />
           </Box>
           <Grid
