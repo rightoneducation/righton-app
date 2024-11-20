@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, RadioGroup, Box, styled, useTheme } from '@mui/material';
+import { Typography, RadioGroup, Box, Fade, styled, useTheme } from '@mui/material';
 import { IQuestionTemplate } from '@righton/networking';
 import {
   TitleBarStyled,
@@ -24,7 +24,10 @@ import arrow from '../../../images/SelectArrow.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
+  questionImage: File | null;
   handleCCSSClick: () => void;
+  handleImageUploadClick: () => void;
+  handleImageURLClick: () => void;
   isSelected: boolean;
   ccss: string;
 }
@@ -63,19 +66,57 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 
 export default function CreateQuestionCardBase({
   screenSize,
+  questionImage,
   handleCCSSClick,
+  handleImageUploadClick,
+  handleImageURLClick,
   isSelected,
   ccss
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
-  const [imageUrl, setImageUrl] = React.useState<string | null>(null);
   const [title, setTitle] = React.useState<string | null>(null);
+  const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setQuestionType((event.target as HTMLInputElement).value);
   };
+
+  const imageContents = [
+    questionImage &&
+      <Box 
+        onMouseEnter={() => setIsImageHovered(true)}
+        onMouseLeave={() => setIsImageHovered(false)}
+        style={{  
+          width: '100%',
+          height: '175px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '16px',
+          position: 'relative'
+      }}>
+            <ImageStyled 
+              src={URL.createObjectURL(questionImage) ?? ''} 
+              alt="image" 
+              style={{
+                opacity: isImageHovered ? 0.6: 1,
+                transition: 'opacity 0.75s'
+              }}
+            />
+            <Fade in={isImageHovered} >
+              <div>
+                <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
+                <Box style={{paddingTop: '16px'}}>
+                  <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled onClick={handleImageURLClick}/>
+                </Box>
+              </div>
+            </Fade>
+      </Box>
+  ]
+
   return (
     <BaseCardStyled  elevation={6} isSelected={isSelected} isCardComplete={false}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
@@ -105,11 +146,11 @@ export default function CreateQuestionCardBase({
         </RadioContainerStyled>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        {imageUrl 
-          ? <ImageStyled src={imageUrl ?? ''} alt="image" />
+        {questionImage 
+          ? imageContents
           : <ImagePlaceholder>
-              <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled/>
-              <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled/>
+              <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
+              <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled onClick={handleImageURLClick}/>
             </ImagePlaceholder>
         }
         <CreateQuestionContentRightContainerStyled>

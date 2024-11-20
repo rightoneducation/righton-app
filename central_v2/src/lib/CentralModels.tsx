@@ -15,3 +15,10 @@ export enum CardType {
   CORRECT,
   INCORRECT,
 }
+
+export enum BorderStyle {
+  DASHED_BORDER = 'dashedBorder',
+  SOLID_BORDER = 'solid',
+  CORNER_BORDER = 'corner',
+  SVG = 'svg',
+}

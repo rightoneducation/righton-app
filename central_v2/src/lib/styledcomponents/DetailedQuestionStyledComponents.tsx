@@ -83,8 +83,11 @@ export const ContentContainerStyled = styled(Box)<ContentContainerProps>(({ them
 
 export const ImageStyled = styled('img')({
   width: '100%',
-  height: '175px',
+  height: '100%',
   objectFit: 'cover',
+  position: 'absolute',
+  top: 0,
+  left: 0
 });
 
 export const ContentRightContainerStyled = styled(Box)(({ theme }) => ({
