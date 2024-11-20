@@ -5,7 +5,7 @@
 ### Installation Instructions:
 
 <strong> install packages per package.json: </strong>
-.
+
 1. cd host_v2
 2. yarn install
 
