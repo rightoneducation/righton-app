@@ -77,6 +77,7 @@ export default function CreateQuestionCardBase({
   isCardSubmitted
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
+  const [title, setTitle] = React.useState<string>('');
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const handleQuestionTypeChange = (
@@ -85,7 +86,12 @@ export default function CreateQuestionCardBase({
     setQuestionType((event.target as HTMLInputElement).value);
   };
 
-  const isCardComplete = draftQuestion.ccss.length > 0 && draftQuestion.title.length > 0 && draftQuestion.image !== null;
+  const handleLocalTitleChange = (value: string) => {
+    setTitle((prev) => value);
+    handleTitleChange(value);
+  }
+
+  const isCardComplete = draftQuestion.ccss.length > 0 && draftQuestion.ccss !== 'CCSS' && draftQuestion.title.length > 0 && draftQuestion.image !== null;
   const imageContents = [
     draftQuestion.image &&
       <Box 
@@ -163,8 +169,8 @@ export default function CreateQuestionCardBase({
             rows='4' 
             placeholder="Question Contents..." 
             error={isCardSubmitted && (!draftQuestion.title || draftQuestion.title.length === 0)}
-            value={draftQuestion.title}
-            onChange = {(e) => handleTitleChange(e.target.value)}
+            value={title}
+            onChange = {(e) => handleLocalTitleChange(e.target.value)}
             InputProps={{
               startAdornment: 
                 isCardSubmitted && (!draftQuestion.title || draftQuestion.title.length === 0) &&

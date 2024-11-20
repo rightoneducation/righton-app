@@ -15,19 +15,46 @@ import {
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import errorIcon from '../../../images/errorIcon.svg';
+import { CreateQuestionTemplateInput } from '../../../lib/CentralModels';
 
 interface DetailedQuestionSubCardProps {
+  draftQuestion: CreateQuestionTemplateInput;
+  isCardSubmitted: boolean;
   isSelected: boolean;
   setSelectedCard: (selectedCard: string) => void;
+  handleCorrectAnswerChange: (correctAnswer: string) => void;
+  handleCorrectAnswerStepsChange: (steps: string[]) => void;
 }
 
-export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: DetailedQuestionSubCardProps) {
+export default function DetailedQuestionSubCard({
+  draftQuestion,
+  isCardSubmitted,
+  isSelected, 
+  setSelectedCard,
+  handleCorrectAnswerChange,
+  handleCorrectAnswerStepsChange,
+}: DetailedQuestionSubCardProps) {
   const theme = useTheme();
   const [correctAnswer, setCorrectAnswer] = React.useState<string>('');
   const [solutionSteps, setSolutionSteps] = React.useState(['','','']);
-  const [isCardComplete, setIsCardComplete] = React.useState<boolean>(false);
+  const isCardComplete = draftQuestion.correctAnswer.length > 0 && draftQuestion.correctAnswerSteps.length > 0 && draftQuestion.correctAnswerSteps.every(step => step.length > 0);
+  const addStep = () => {
+    setSolutionSteps((prev) => [...prev, ''])
+  };
 
-  const solutionStepsComponent = (step: string, index: number, handleChange: (index: number, event: string) => void) => {
+  const handleCorrectChange = (value: string ) => {
+    setCorrectAnswer((prev) => value);
+    handleCorrectAnswerChange(value);
+  };
+
+  const handleStepChange = (index: number, value: string): void => {
+    const newSteps = [...solutionSteps];
+    newSteps[index] = value;
+    setSolutionSteps(newSteps);
+    handleCorrectAnswerStepsChange(newSteps);
+  };
+
+  const solutionStepsComponent = (step: string, index: number) => {
     return (
       <Box
         sx={{
@@ -37,7 +64,7 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
           marginTop: `${theme.sizing.xSmPadding}px`,
           gap: `${theme.sizing.xSmPadding}px`,
         }}
-        key={uuidv4()}
+        key={index}
       >
         <Typography
           sx={{
@@ -51,11 +78,14 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
         <TextContainerStyled 
             multiline 
             variant="outlined" 
+            value={solutionSteps[index]}
+            onChange={(e) => handleStepChange(index, e.target.value)}
             rows='1' 
             placeholder="Step Contents" 
-            error
+            error={isCardSubmitted && (!draftQuestion.correctAnswerSteps[index] || draftQuestion.correctAnswerSteps[index].length === 0)}
             InputProps={{
               startAdornment: 
+              isCardSubmitted && (!draftQuestion.correctAnswerSteps[index] || draftQuestion.correctAnswerSteps[index].length === 0) &&
                 <InputAdornment
                   position="start" 
                   sx={{ 
@@ -70,37 +100,6 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
       </Box>
     );
   };
-
-  const addStep = () => {
-    setSolutionSteps((prev) => [...prev, ''])
-  }
-
-  // normally we try to minimize the use of effects in our components
-  // this seems like such a typical use case for a useEffect
-  useEffect(() => {
-    let cardComplete = true;
-    solutionSteps.forEach(step => {
-      if (step === '') {
-        cardComplete = false;
-      }
-    });
-    if (correctAnswer === '') {
-      cardComplete = false;
-    }
-    setIsCardComplete(cardComplete);
-    if (cardComplete)
-      setSelectedCard('');
-  },[solutionSteps, correctAnswer, setSelectedCard]);
-
-  const handleCorrectChange = (value: string ) => {
-    setCorrectAnswer((prev) => value);
-  }
-
-  const handleStepChange = (index: number, value: string): void => {
-    const newSteps = [...solutionSteps];
-    newSteps[index] = value;
-    setSolutionSteps(newSteps);
-  };
   
   return (
     <BaseCardStyled elevation={6} isSelected={isSelected} isCardComplete={isCardComplete}>
@@ -112,9 +111,12 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
         variant="outlined" 
         rows='1' 
         placeholder="Correct Answer..." 
-        error
+        value={correctAnswer}
+        onChange={(e) => handleCorrectChange(e.target.value)}
+        error={isCardSubmitted && (!draftQuestion.correctAnswer || draftQuestion.correctAnswer.length === 0)}
         InputProps={{
           startAdornment: 
+          isCardSubmitted && (!draftQuestion.correctAnswer || draftQuestion.correctAnswer.length === 0) &&
             <InputAdornment
               position="start" 
               sx={{ 
@@ -125,14 +127,13 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
               <ErrorIcon src={errorIcon} alt='error icon'/>
             </InputAdornment>
         }}
-        onChange={(e) => handleCorrectChange(e.target.value)}
       />
       <QuestionTitleStyled>
         Solution Steps
       </QuestionTitleStyled>
       {solutionSteps && 
         solutionSteps.map((step, index) => 
-          solutionStepsComponent(step, index, handleStepChange)
+          solutionStepsComponent(step, index)
         )
       }
       <Box style = {{width: '100%', display: 'flex', justifyContent: 'center'}}>

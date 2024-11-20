@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 import DebugAuth from '../components/debug/DebugAuth';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
@@ -77,6 +78,8 @@ export default function CreateQuestion({
     ccss: 'CCSS'
   });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
+
+  // question card functions
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
   };
@@ -91,34 +94,26 @@ export default function CreateQuestion({
   const handleImageSave = (inputImage: File) => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
-    console.log('here');
-    console.log(inputImage);
     if (inputImage){
       setDraftQuestion((prev) => ({...prev, image: inputImage}));
     }
   }
 
-  const handleTitleChange = (title: string) => {
-    if (draftQuestion && title)
+  const handleDebouncedTitleChange = useCallback( // eslint-disable-line
+    debounce((title: string) => {
       setDraftQuestion((prev) => ({...prev, title}));
-  }
+    }, 1000),
+    [] 
+  )
 
   const handleCloseModal = () => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
   }
 
-  const handleBackToExplore = () => {
-    setIsCCSSVisible(false);
-  };
-
   const handleCCSSSubmit = (ccssString: string) => {
     setDraftQuestion((prev) => ({...prev, ccss: ccssString}));
     setIsCCSSVisible(false);
-  };
-
-  const handleClick = (cardType: string) => {
-    setSelectedCard(cardType);
   };
 
   const verifyQuestionCard = () => {
@@ -127,9 +122,33 @@ export default function CreateQuestion({
     return true;
   };
 
+  // correct answer card functions
+  const handleDebouncedCorrectAnswerChange = useCallback( // eslint-disable-line
+    debounce((correctAnswer: string) => {
+      setDraftQuestion((prev) => ({...prev, correctAnswer}));
+    }, 1000),
+    [] 
+  )
+  
+  const handleDebouncedCorrectAnswerStepsChange = useCallback( // eslint-disable-line
+    debounce((steps: string[]) => {
+      setDraftQuestion((prev) => ({...prev, correctAnswerSteps: steps}));
+    }, 1000),
+    [] 
+  )
+  const handleClick = (cardType: string) => {
+    setSelectedCard(cardType);
+  };
+
+ 
+
   const verifyCorrectAnswerCard = () => {
     
   }
+
+  const handleBackToExplore = () => {
+    setIsCCSSVisible(false);
+  };
 
   const handleSaveQuestion = () => {
     try {
@@ -201,7 +220,7 @@ export default function CreateQuestion({
             <CreateQuestionCardBase
               screenSize={screenSize}
               draftQuestion={draftQuestion}
-              handleTitleChange={handleTitleChange}
+              handleTitleChange={handleDebouncedTitleChange}
               handleCCSSClick={handleCCSSClick}
               isSelected={selectedCard==='CreateQuestionCard'}
               handleImageUploadClick={handleImageUploadClick}
@@ -219,7 +238,14 @@ export default function CreateQuestion({
               md={6}
             >
               <Box onClick={() => handleClick('CorrectAnswerCard')} style={{ width: '100%' }}>
-                <CorrectAnswerCard isSelected={selectedCard === 'CorrectAnswerCard'} setSelectedCard={setSelectedCard}/>
+                <CorrectAnswerCard
+                  draftQuestion={draftQuestion} 
+                  isCardSubmitted={isCardSubmitted}
+                  isSelected={selectedCard === 'CorrectAnswerCard'}
+                  setSelectedCard={setSelectedCard}
+                  handleCorrectAnswerChange={handleDebouncedCorrectAnswerChange}
+                  handleCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
+                />
               </Box>
             </SubCardGridItem>
             <SubCardGridItem

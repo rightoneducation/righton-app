@@ -200,7 +200,6 @@ export default function ImageUploadModal({
                         height: '100%',
                         objectFit: 'cover',
                       }}
-                  
                     />
                   </Box>
                 ) : (
