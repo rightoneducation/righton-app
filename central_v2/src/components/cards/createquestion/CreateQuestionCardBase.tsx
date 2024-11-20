@@ -33,6 +33,7 @@ interface CreateQuestionCardBaseProps {
   handleImageURLClick: () => void;
   isSelected: boolean;
   ccss: string;
+  isCardErrored: boolean;
 }
 
 export const ImagePlaceholder = styled(Box)(({ theme }) => ({
@@ -74,7 +75,8 @@ export default function CreateQuestionCardBase({
   handleImageUploadClick,
   handleImageURLClick,
   isSelected,
-  ccss
+  ccss,
+  isCardErrored
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const [questionType, setQuestionType] = React.useState<string>('A');
@@ -121,7 +123,7 @@ export default function CreateQuestionCardBase({
   ]
 
   return (
-    <BaseCardStyled  elevation={6} isSelected={isSelected} isCardComplete={false}>
+    <BaseCardStyled elevation={6} isSelected={isSelected} isCardComplete={false}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>
@@ -162,7 +164,9 @@ export default function CreateQuestionCardBase({
             variant="outlined" 
             rows='4' 
             placeholder="Question Contents..." 
-            error
+            error={isCardErrored && (!title || title.length === 0)}
+            value={title}
+            onChange = {(e) => setTitle(e.target.value)}
             InputProps={{
               startAdornment: 
                 <InputAdornment
