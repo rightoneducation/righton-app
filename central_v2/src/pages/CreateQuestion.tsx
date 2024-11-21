@@ -145,24 +145,19 @@ export default function CreateQuestion({
   }
 
   // incorrect answer card functions
-  const handleDebouncedIncorrectAnswerChange = useCallback( // eslint-disable-line
-    debounce((draftQuestionInput: CreateQuestionTemplateInput, index: number, incorrectAnswer: string) => {
-      const prevAnswers = [...draftQuestionInput.incorrectAnswers];
-      prevAnswers[index] = {answer: incorrectAnswer, explanation: prevAnswers[index].explanation};
-      console.log(prevAnswers);
-      setDraftQuestion((prev) => ({...prev, incorrectAnswers: prevAnswers}));
-    }, 1000),
-    [] 
-  )
+  const handleDraftQuestionIncorrectAnswerUpdate = (index: number, incorrectAnswer: string) => {
+    const prevAnswers = [...draftQuestion.incorrectAnswers];
+    prevAnswers[index] = {answer: incorrectAnswer, explanation: prevAnswers[index].explanation};
+    setDraftQuestion((prev) => ({...prev, incorrectAnswers: prevAnswers}));
+  }
 
-  const handleDebouncedIncorrectExplanationChange = useCallback( // eslint-disable-line
-    debounce((draftQuestionInput: CreateQuestionTemplateInput, index: number, explanation: string) => {
-      const prevAnswers = [...draftQuestionInput.incorrectAnswers];
-      prevAnswers[index] = {answer: prevAnswers[index].answer, explanation};
-      setDraftQuestion((prev) => ({...prev, incorrectAnswers: prevAnswers}));
-    }, 1000),
-    [] 
-  )
+  const handleDraftQuestionIncorrectExplanationUpdate = (index: number, explanation: string) => {
+    console.log('updating explanation');
+    const prevAnswers = [...draftQuestion.incorrectAnswers];
+    prevAnswers[index] = {answer: prevAnswers[index].answer, explanation};
+    console.log(prevAnswers);
+    setDraftQuestion((prev) => ({...prev, incorrectAnswers: prevAnswers}));
+  }
 
   const handleClick = (cardType: string) => {
     setSelectedCard(cardType);
@@ -282,7 +277,7 @@ export default function CreateQuestion({
                 <AISwitch/>
               </Box>
               <Box onClick={() => handleClick('IncorrectAnswerCard')} style={{ width: '100%' }}>
-                <IncorrectAnswerCardStack isSelected={selectedCard === 'IncorrectAnswerCard'} draftQuestion={draftQuestion} handleIncorrectAnswerChange={handleDebouncedIncorrectAnswerChange} handleIncorrectExplanationChange={handleDebouncedIncorrectExplanationChange} isCardSubmitted={isCardSubmitted}/>
+                <IncorrectAnswerCardStack isSelected={selectedCard === 'IncorrectAnswerCard'} draftQuestion={draftQuestion} handleDraftQuestionIncorrectAnswerUpdate={handleDraftQuestionIncorrectAnswerUpdate} handleDraftQuestionIncorrectExplanationUpdate={handleDraftQuestionIncorrectExplanationUpdate} isCardSubmitted={isCardSubmitted}/>
               </Box>
             </SubCardGridItem>
           </Grid>

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useMemo} from 'react';
 import { Paper, styled, InputAdornment } from '@mui/material';
-import { CreateQuestionTemplateInput } from '../../../../lib/CentralModels';
+import { debounce } from 'lodash';
+import { IncorrectAnswer } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
 import {
@@ -27,25 +28,50 @@ const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isSelected }) => ({
 }));
 
 interface IncorrectAnswerCardProps {
-  index: number;
-  answer: string;
-  explanation: string;
+  answerData: IncorrectAnswer;
   isSelected?: boolean;
-  handleLocalAnswerChange: (index: number, value: string) => void;
-  handleLocalExplanationChange: (index: number, value: string) => void;
+  isCardComplete: boolean;
   isCardSubmitted: boolean;
+  handleUpdateCardData: (cardData: IncorrectAnswer, isCardComplete: boolean) => void;
 }
 
 export default function IncorrectAnswerCard({
-  index,
-  answer,
-  explanation, 
+  answerData,
   isSelected,
-  handleLocalAnswerChange,
-  handleLocalExplanationChange,
+  isCardComplete,
   isCardSubmitted,
+  handleUpdateCardData
 } : IncorrectAnswerCardProps) {
-  const [incorrectAnswer, setIncorrectAnswer] = React.useState<string>('');
+
+  const [cardData, setCardData] = useState<IncorrectAnswer>({
+    id: answerData.id,
+    answer: answerData.answer,
+    explanation: answerData.explanation,
+  })
+
+  const debouncedCardChanges = useMemo(() => 
+    debounce((debounceCardData: IncorrectAnswer, debounceIsCardComplete: boolean) => {
+      handleUpdateCardData(debounceCardData, debounceIsCardComplete);
+    }, 1000)
+  , [handleUpdateCardData]);
+
+  const handleLocalAnswerChange = (value: string) => {
+    setCardData({
+      ...cardData,
+      answer: value,
+    })
+    if (value.length > 0 && cardData.explanation.length > 0)
+      debouncedCardChanges({...cardData, answer: value, isCardComplete: true}, isCardComplete);
+  }
+
+  const handleLocalExplanationChange = (value: string) => {
+    setCardData({
+      ...cardData,
+      explanation: value,
+    })
+    if (value.length > 0 && cardData.explanation.length > 0)
+      debouncedCardChanges({...cardData, explanation: value, isCardComplete: true}, isCardComplete);
+  }
 
   return (
     <AnswerCard elevation={6} isSelected={isSelected ?? false}>
@@ -57,11 +83,12 @@ export default function IncorrectAnswerCard({
         variant="outlined" 
         rows='1' 
         placeholder="Distractor..." 
-        value={answer}
-        onChange={(e) => handleLocalAnswerChange(index, e.target.value)}
-        error={isCardSubmitted && answer.length === 0}
+        value={cardData.answer}
+        onChange={(e) => handleLocalAnswerChange(e.target.value)}
+        error={isCardSubmitted && answerData.answer.length === 0}
         InputProps={{
           startAdornment: 
+           isCardSubmitted && answerData.answer.length === 0 &&
             <InputAdornment
               position="start" 
               sx={{ 
@@ -81,11 +108,12 @@ export default function IncorrectAnswerCard({
         variant="outlined" 
         rows='1' 
         placeholder="Explanation..." 
-        value={explanation}
-        onChange={(e) => handleLocalExplanationChange(index, e.target.value)}
-        error={isCardSubmitted && answer.length === 0}
+        value={cardData.explanation}
+        onChange={(e) => handleLocalExplanationChange(e.target.value)}
+        error={isCardSubmitted && answerData.answer.length === 0}
         InputProps={{
           startAdornment: 
+            isCardSubmitted && answerData.explanation.length === 0 &&
             <InputAdornment
               position="start" 
               sx={{ 

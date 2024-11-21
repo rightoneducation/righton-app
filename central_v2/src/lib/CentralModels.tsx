@@ -35,12 +35,19 @@ export type CreateQuestionErrorCheck = {
 }
 
 // object that handles all input variables in the create question flow for the client side exclusively
+export type IncorrectAnswer = {
+  id?: string;
+  answer: string;
+  explanation: string;
+  isCardComplete?: boolean;
+}
+
 // these then get based into the more structured IQuestion/AWSQuestion objects when the API request is made
 export type CreateQuestionTemplateInput = {
   title: string;
   image: File | null;
   correctAnswer: string;
   correctAnswerSteps: string[];
-  incorrectAnswers: {answer: string, explanation: string}[];
+  incorrectAnswers: IncorrectAnswer[];
   ccss: string;
 }
