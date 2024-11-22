@@ -35,7 +35,6 @@ export default function DetailedQuestionSubCard({
   const theme = useTheme();
   const [correctAnswer, setCorrectAnswer] = React.useState<string>('');
   const [solutionSteps, setSolutionSteps] = React.useState(['','','']);
-  const isCardComplete = draftQuestion.correctAnswer.length > 0 && draftQuestion.correctAnswerSteps.length > 0 && draftQuestion.correctAnswerSteps.every(step => step.length > 0);
   const addStep = () => {
     setSolutionSteps((prev) => [...prev, ''])
   };
@@ -80,10 +79,10 @@ export default function DetailedQuestionSubCard({
             onChange={(e) => handleStepChange(index, e.target.value)}
             rows='1' 
             placeholder="Step Contents" 
-            error={isCardSubmitted && (!draftQuestion.correctAnswerSteps[index] || draftQuestion.correctAnswerSteps[index].length === 0)}
+            error={isCardSubmitted && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0)}
             InputProps={{
               startAdornment: 
-              isCardSubmitted && (!draftQuestion.correctAnswerSteps[index] || draftQuestion.correctAnswerSteps[index].length === 0) &&
+              isCardSubmitted && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0) &&
                 <InputAdornment
                   position="start" 
                   sx={{ 
@@ -100,7 +99,7 @@ export default function DetailedQuestionSubCard({
   };
   
   return (
-    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={isCardComplete}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.correctCard.isCardComplete}>
       <QuestionTitleStyled>
         Correct Answer
       </QuestionTitleStyled>
@@ -111,10 +110,10 @@ export default function DetailedQuestionSubCard({
         placeholder="Correct Answer..." 
         value={correctAnswer}
         onChange={(e) => handleCorrectChange(e.target.value)}
-        error={isCardSubmitted && (!draftQuestion.correctAnswer || draftQuestion.correctAnswer.length === 0)}
+        error={isCardSubmitted && (!draftQuestion.correctCard || draftQuestion.correctCard.answer.length === 0)}
         InputProps={{
           startAdornment: 
-          isCardSubmitted && (!draftQuestion.correctAnswer || draftQuestion.correctAnswer.length === 0) &&
+          isCardSubmitted && (!draftQuestion.correctCard || draftQuestion.correctCard.answer.length === 0) &&
             <InputAdornment
               position="start" 
               sx={{ 

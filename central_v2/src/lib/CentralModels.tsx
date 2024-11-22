@@ -32,20 +32,36 @@ export enum CreateQuestionHighlightCard {
   INCORRECTANSWER3 = 'card-3',
 }
 
-// object that handles all input variables in the create question flow for the client side exclusively
-export type IncorrectAnswer = {
+// type to handle input variables for question card on createquestion flow
+export type QuestionCard = {
+  title: string;
+  image?: File;
+  ccss: string;
+  isFirstEdit: boolean;
+  isCardComplete: boolean;
+}
+
+// type to handle input variables for correct card on createquestion flow
+export type CorrectCard = {
+  answer: string;
+  answerSteps: string[];
+  isFirstEdit: boolean;
+  isCardComplete: boolean;
+}
+
+// type to handle input variables for correct card on createquestion flow
+export type IncorrectCard = {
   id?: string;
   answer: string;
   explanation: string;
-  isCardComplete?: boolean;
+  isFirstEdit?: boolean;
+  isCardComplete: boolean;
 }
 
+// object that handles all input variables in the create question flow for the client side exclusively
 // these then get based into the more structured IQuestion/AWSQuestion objects when the API request is made
 export type CreateQuestionTemplateInput = {
-  title: string;
-  image: File | null;
-  correctAnswer: string;
-  correctAnswerSteps: string[];
-  incorrectAnswers: IncorrectAnswer[];
-  ccss: string;
+  questionCard: QuestionCard;
+  correctCard: CorrectCard;
+  incorrectCards: IncorrectCard[];
 }

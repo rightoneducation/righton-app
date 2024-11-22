@@ -31,7 +31,6 @@ interface CreateQuestionCardBaseProps {
   handleImageUploadClick: () => void;
   handleImageURLClick: () => void;
   isHighlight: boolean;
-  isCardComplete: boolean;
   isCardSubmitted: boolean;
 }
 
@@ -75,7 +74,6 @@ export default function CreateQuestionCardBase({
   handleImageUploadClick,
   handleImageURLClick,
   isHighlight,
-  isCardComplete,
   isCardSubmitted
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
@@ -94,7 +92,7 @@ export default function CreateQuestionCardBase({
   }
 
   const imageContents = [
-    draftQuestion.image &&
+    draftQuestion.questionCard.image &&
       <Box 
         onMouseEnter={() => setIsImageHovered(true)}
         onMouseLeave={() => setIsImageHovered(false)}
@@ -109,7 +107,7 @@ export default function CreateQuestionCardBase({
           position: 'relative'
       }}>
             <ImageStyled 
-              src={URL.createObjectURL(draftQuestion.image) ?? ''} 
+              src={URL.createObjectURL(draftQuestion.questionCard.image) ?? ''} 
               alt="image" 
               style={{
                 opacity: isImageHovered ? 0.6: 1,
@@ -128,7 +126,7 @@ export default function CreateQuestionCardBase({
   ]
 
   return (
-    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={isCardComplete}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>
@@ -156,7 +154,7 @@ export default function CreateQuestionCardBase({
         </RadioContainerStyled>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        {draftQuestion.image 
+        {draftQuestion.questionCard.image 
           ? imageContents
           : <ImagePlaceholder>
               <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
@@ -169,12 +167,12 @@ export default function CreateQuestionCardBase({
             variant="outlined" 
             rows='4' 
             placeholder="Question Contents..." 
-            error={isCardSubmitted && (!draftQuestion.title || draftQuestion.title.length === 0)}
+            error={isCardSubmitted && (!draftQuestion.questionCard.title || draftQuestion.questionCard.title.length === 0)}
             value={title}
             onChange = {(e) => handleLocalTitleChange(e.target.value)}
             InputProps={{
               startAdornment: 
-                isCardSubmitted && (!draftQuestion.title || draftQuestion.title.length === 0) &&
+                isCardSubmitted && (!draftQuestion.questionCard.title || draftQuestion.questionCard.title.length === 0) &&
                 <InputAdornment
                   position="start" 
                   sx={{ 
@@ -186,12 +184,12 @@ export default function CreateQuestionCardBase({
                 </InputAdornment>
             }}
           >
-            <Typography>{draftQuestion.title}</Typography>
+            <Typography>{draftQuestion.questionCard.title}</Typography>
           </TextContainerStyled>
           <Box style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
             <PublicPrivateButton />
             <CCSSIndicator onClick={handleCCSSClick}>
-              {draftQuestion.ccss}
+              {draftQuestion.questionCard.ccss}
               <img src={arrow} alt='CCSS' style={{width: '12px', height: '12px'}}/>
             </CCSSIndicator>
           </Box>
