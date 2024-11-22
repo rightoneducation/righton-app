@@ -20,17 +20,15 @@ import { CreateQuestionTemplateInput } from '../../../lib/CentralModels';
 interface DetailedQuestionSubCardProps {
   draftQuestion: CreateQuestionTemplateInput;
   isCardSubmitted: boolean;
-  isSelected: boolean;
-  setSelectedCard: (selectedCard: string) => void;
-  handleCorrectAnswerChange: (correctAnswer: string) => void;
-  handleCorrectAnswerStepsChange: (steps: string[]) => void;
+  isHighlight: boolean;
+  handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CreateQuestionTemplateInput) => void;
+  handleCorrectAnswerStepsChange: (steps: string[], draftQuestion: CreateQuestionTemplateInput) => void;
 }
 
 export default function DetailedQuestionSubCard({
   draftQuestion,
   isCardSubmitted,
-  isSelected, 
-  setSelectedCard,
+  isHighlight, 
   handleCorrectAnswerChange,
   handleCorrectAnswerStepsChange,
 }: DetailedQuestionSubCardProps) {
@@ -44,14 +42,14 @@ export default function DetailedQuestionSubCard({
 
   const handleCorrectChange = (value: string ) => {
     setCorrectAnswer((prev) => value);
-    handleCorrectAnswerChange(value);
+    handleCorrectAnswerChange(value, draftQuestion);
   };
 
   const handleStepChange = (index: number, value: string): void => {
     const newSteps = [...solutionSteps];
     newSteps[index] = value;
     setSolutionSteps(newSteps);
-    handleCorrectAnswerStepsChange(newSteps);
+    handleCorrectAnswerStepsChange(newSteps, draftQuestion);
   };
 
   const solutionStepsComponent = (step: string, index: number) => {
@@ -102,7 +100,7 @@ export default function DetailedQuestionSubCard({
   };
   
   return (
-    <BaseCardStyled elevation={6} isSelected={isSelected} isCardComplete={isCardComplete}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={isCardComplete}>
       <QuestionTitleStyled>
         Correct Answer
       </QuestionTitleStyled>

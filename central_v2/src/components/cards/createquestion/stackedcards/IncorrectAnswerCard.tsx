@@ -1,7 +1,7 @@
 import React, { useState, useMemo} from 'react';
 import { Paper, styled, InputAdornment } from '@mui/material';
 import { debounce } from 'lodash';
-import { IncorrectAnswer } from '../../../../lib/CentralModels';
+import { CreateQuestionHighlightCard, IncorrectAnswer } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
 import {
@@ -10,10 +10,10 @@ import {
 import { TextContainerStyled } from '../../../../lib/styledcomponents/CreateQuestionStyledComponents';
 
 interface StyledCardProps {
-  isSelected: boolean;
+  isHighlight: boolean;
 }
 
-const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isSelected }) => ({
+const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   background: '#FFFFFF',
@@ -23,24 +23,26 @@ const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isSelected }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: `${theme.sizing.smPadding}px`,
-  boxShadow: isSelected ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
+  boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
   transition: 'box-shadow 0.6s',
 }));
 
 interface IncorrectAnswerCardProps {
   answerData: IncorrectAnswer;
-  isSelected?: boolean;
+  isHighlight?: boolean;
   isCardComplete: boolean;
   isCardSubmitted: boolean;
   handleUpdateCardData: (cardData: IncorrectAnswer, isCardComplete: boolean) => void;
+  handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
 }
 
 export default function IncorrectAnswerCard({
   answerData,
-  isSelected,
+  isHighlight,
   isCardComplete,
   isCardSubmitted,
-  handleUpdateCardData
+  handleUpdateCardData,
+  handleCardClick
 } : IncorrectAnswerCardProps) {
 
   const [cardData, setCardData] = useState<IncorrectAnswer>({
@@ -48,6 +50,17 @@ export default function IncorrectAnswerCard({
     answer: answerData.answer,
     explanation: answerData.explanation,
   })
+  const getCardType = () => {
+    switch(answerData.id){
+      case 'card-2':
+        return CreateQuestionHighlightCard.INCORRECTANSWER2;
+      case 'card-3':
+        return CreateQuestionHighlightCard.INCORRECTANSWER3;
+      case 'card-1':
+      default:
+        return CreateQuestionHighlightCard.INCORRECTANSWER1;
+    }
+  } 
 
   const debouncedCardChanges = useMemo(() => 
     debounce((debounceCardData: IncorrectAnswer, debounceIsCardComplete: boolean) => {
@@ -74,7 +87,7 @@ export default function IncorrectAnswerCard({
   }
 
   return (
-    <AnswerCard elevation={6} isSelected={isSelected ?? false}>
+    <AnswerCard elevation={6} isHighlight={isHighlight ?? false} onClick={() => handleCardClick(getCardType())}>
       <QuestionTitleStyled>
         Incorrect Answer
       </QuestionTitleStyled>

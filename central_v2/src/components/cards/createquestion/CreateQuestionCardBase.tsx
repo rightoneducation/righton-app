@@ -26,11 +26,12 @@ import errorIcon from '../../../images/errorIcon.svg';
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
   draftQuestion: CreateQuestionTemplateInput;
-  handleTitleChange: (title: string) => void;
+  handleTitleChange: (title: string, draftQuestion: CreateQuestionTemplateInput) => void;
   handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
   handleImageURLClick: () => void;
-  isSelected: boolean;
+  isHighlight: boolean;
+  isCardComplete: boolean;
   isCardSubmitted: boolean;
 }
 
@@ -73,7 +74,8 @@ export default function CreateQuestionCardBase({
   handleCCSSClick,
   handleImageUploadClick,
   handleImageURLClick,
-  isSelected,
+  isHighlight,
+  isCardComplete,
   isCardSubmitted
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
@@ -88,10 +90,9 @@ export default function CreateQuestionCardBase({
 
   const handleLocalTitleChange = (value: string) => {
     setTitle((prev) => value);
-    handleTitleChange(value);
+    handleTitleChange(value, draftQuestion);
   }
 
-  const isCardComplete = draftQuestion.ccss.length > 0 && draftQuestion.ccss !== 'CCSS' && draftQuestion.title.length > 0 && draftQuestion.image !== null;
   const imageContents = [
     draftQuestion.image &&
       <Box 
@@ -127,7 +128,7 @@ export default function CreateQuestionCardBase({
   ]
 
   return (
-    <BaseCardStyled elevation={6} isSelected={isSelected} isCardComplete={isCardComplete}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>

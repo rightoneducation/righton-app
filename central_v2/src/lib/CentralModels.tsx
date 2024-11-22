@@ -23,15 +23,13 @@ export enum BorderStyle {
   SVG = 'svg',
 }
 
-// object to handle error checking for create question flow
-// respective booleans are passed to individual components to trigger styling changes
-export type CreateQuestionErrorCheck = {
-  isQuestionSubmitted: boolean;
-  isQuestionCardComplete: boolean;
-  isCorrectAnswerComplete: boolean;
-  isIncorrectAnswer1Complete: boolean;
-  isIncorrectAnswer2Complete: boolean;
-  isIncorrectAnswer3Complete: boolean;
+// enum to track the highlight card in the create question flow
+export enum CreateQuestionHighlightCard {
+  QUESTIONCARD = 'questionCard',
+  CORRECTANSWER = 'correctAnswer',
+  INCORRECTANSWER1 = 'card-1',
+  INCORRECTANSWER2 = 'card-2',
+  INCORRECTANSWER3 = 'card-3',
 }
 
 // object that handles all input variables in the create question flow for the client side exclusively

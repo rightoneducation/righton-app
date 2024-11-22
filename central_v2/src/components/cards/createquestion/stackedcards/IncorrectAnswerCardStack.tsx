@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, styled } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CreateQuestionTemplateInput, IncorrectAnswer } from '../../../../lib/CentralModels';
+import { CreateQuestionHighlightCard, CreateQuestionTemplateInput, IncorrectAnswer } from '../../../../lib/CentralModels';
 import IncorrectAnswerCard from './IncorrectAnswerCard';
 import CentralButton from '../../../button/Button';
 import { ButtonType } from '../../../button/ButtonModels';
@@ -16,18 +16,18 @@ const CardStackContainer = styled(Box)({
 });
 
 interface IncorrectAnswerCardStackProps {
-  isSelected: boolean;
+  highlightCard: CreateQuestionHighlightCard;
   draftQuestion: CreateQuestionTemplateInput;
-  handleDraftQuestionIncorrectAnswerUpdate: ( index: number, value: string) => void;
-  handleDraftQuestionIncorrectExplanationUpdate: (index: number, value: string) => void;
+  handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
+  handleDraftQuestionIncorrectUpdate: ( newAnswers: IncorrectAnswer[]) => void;
   isCardSubmitted: boolean;
 }
 
 export default function IncorrectAnswerCardStack({
-  isSelected,
+  highlightCard,
   draftQuestion,
-  handleDraftQuestionIncorrectAnswerUpdate,
-  handleDraftQuestionIncorrectExplanationUpdate,
+  handleDraftQuestionIncorrectUpdate,
+  handleCardClick,
   isCardSubmitted
 }: IncorrectAnswerCardStackProps) {
 
@@ -52,32 +52,29 @@ export default function IncorrectAnswerCardStack({
   };
 
   const handleUpdateCardData = (cardData: IncorrectAnswer, isCardComplete: boolean) => {
-    console.log(isCardComplete)
+    const prevCompleteAnswers = [...completeAnswers];
+    const prevIncompleteAnswers = [...incompleteAnswers];
     if (isCardComplete){
-      const prevAnswers = [...completeAnswers];
-      console.log(prevAnswers);
-      const newAnswers = prevAnswers.map((answer) => {
+      const newAnswers = prevCompleteAnswers.map((answer) => {
         if (answer.id === cardData.id) {
           return cardData;
         }
         return answer;
       });
-      console.log(newAnswers);
       setCompleteAnswers(newAnswers);
     } else { 
-      const prevAnswers = [...incompleteAnswers];
-      const newAnswers = prevAnswers.map((answer) => {
+      const newAnswers = prevIncompleteAnswers.map((answer) => {
         if (answer.id === cardData.id) {
           return cardData;
         }
         return answer;
       });
       setIncompleteAnswers(newAnswers);
+      handleDraftQuestionIncorrectUpdate([...newAnswers, ...completeAnswers]);
       handleNextCardClick(newAnswers);
     }
   }
 
-  console.log(completeAnswers);
   return (
     <CardStackContainer>
       <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>
@@ -107,10 +104,11 @@ export default function IncorrectAnswerCardStack({
                 >
                   <IncorrectAnswerCard
                     answerData={card} 
-                    isSelected={isSelected} 
+                    isHighlight={highlightCard === card.id}
                     isCardComplete={false}
                     isCardSubmitted={isCardSubmitted}
                     handleUpdateCardData={handleUpdateCardData}
+                    handleCardClick={handleCardClick}
                   />
                 </motion.div>
               );
@@ -127,10 +125,11 @@ export default function IncorrectAnswerCardStack({
               >
                 <IncorrectAnswerCard   
                   answerData={card} 
-                  isSelected={isSelected} 
+                  isHighlight={highlightCard === card.id}
                   isCardComplete={false}
                   isCardSubmitted={isCardSubmitted}
                   handleUpdateCardData={handleUpdateCardData}
+                  handleCardClick={handleCardClick}
                 />
               </Box>
             );
@@ -162,10 +161,11 @@ export default function IncorrectAnswerCardStack({
           >
             <IncorrectAnswerCard   
               answerData={card} 
-              isSelected={isSelected} 
+              isHighlight={highlightCard === card.id}
               isCardComplete
               isCardSubmitted={isCardSubmitted}
               handleUpdateCardData={handleUpdateCardData}
+              handleCardClick={handleCardClick}
             />
           </motion.div>
         ))}

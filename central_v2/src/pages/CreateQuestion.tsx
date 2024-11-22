@@ -5,7 +5,7 @@ import { debounce } from 'lodash';
 import DebugAuth from '../components/debug/DebugAuth';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
-import { CreateQuestionTemplateInput, ScreenSize, BorderStyle, CreateQuestionErrorCheck } from '../lib/CentralModels';
+import { CreateQuestionTemplateInput, ScreenSize, BorderStyle, CreateQuestionHighlightCard, IncorrectAnswer } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -67,7 +67,9 @@ export default function CreateQuestion({
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [ccss, setCCSS] = useState<string>('CCSS');
-  const [selectedCard, setSelectedCard] = useState<string>('');
+  const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
+  const [isQuestionCardComplete, setIsQuestionCardComplete] = useState<boolean>(false);
+  const [isCorrectCardComplete, setIsCorrectCardComplete] = useState<boolean>(false);
   const [draftQuestion, setDraftQuestion] = useState<CreateQuestionTemplateInput>({
     title: '',
     image: null,
@@ -99,12 +101,21 @@ export default function CreateQuestion({
     setIsImageURLVisible(false);
     if (inputImage){
       setDraftQuestion((prev) => ({...prev, image: inputImage}));
+      if (draftQuestion.ccss.length > 0 && draftQuestion.ccss !== 'CCSS' && draftQuestion.title){
+        setIsQuestionCardComplete(true);
+        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+      }
     }
   }
 
   const handleDebouncedTitleChange = useCallback( // eslint-disable-line
-    debounce((title: string) => {
+    debounce((title: string, draftQuestionInput: CreateQuestionTemplateInput) => {
       setDraftQuestion((prev) => ({...prev, title}));
+      // we're doing this circular passing of draftQuestion here to avoid stale state
+      if (draftQuestionInput.ccss.length > 0 && draftQuestionInput.ccss !== 'CCSS' && draftQuestionInput.image){
+        setIsQuestionCardComplete(true);
+        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+      }
     }, 1000),
     [] 
   )
@@ -117,6 +128,10 @@ export default function CreateQuestion({
   const handleCCSSSubmit = (ccssString: string) => {
     setDraftQuestion((prev) => ({...prev, ccss: ccssString}));
     setIsCCSSVisible(false);
+    if (ccssString && draftQuestion.image && draftQuestion.title){
+      setIsQuestionCardComplete(true);
+      setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+    }
   };
 
   const verifyQuestionCard = () => {
@@ -127,40 +142,42 @@ export default function CreateQuestion({
 
   // correct answer card functions
   const handleDebouncedCorrectAnswerChange = useCallback( // eslint-disable-line
-    debounce((correctAnswer: string) => {
+    debounce((correctAnswer: string, draftQuestionInput: CreateQuestionTemplateInput) => {
       setDraftQuestion((prev) => ({...prev, correctAnswer}));
+      if (draftQuestionInput.incorrectAnswers.every((answer) => answer.answer.length > 0) && correctAnswer.length > 0){
+        setIsCorrectCardComplete(true);
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+      }
     }, 1000),
     [] 
   )
   
   const handleDebouncedCorrectAnswerStepsChange = useCallback( // eslint-disable-line
-    debounce((steps: string[]) => {
+    debounce((steps: string[], draftQuestionInput: CreateQuestionTemplateInput) => {
       setDraftQuestion((prev) => ({...prev, correctAnswerSteps: steps}));
+      if (draftQuestionInput.correctAnswer.length > 0 && steps.every((step) => step.length > 0)){
+        setIsCorrectCardComplete(true);
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+      }
     }, 1000),
     [] 
   )
 
-  const verifyCorrectAnswerCard = () => {
-    
-  }
-
   // incorrect answer card functions
-  const handleDraftQuestionIncorrectAnswerUpdate = (index: number, incorrectAnswer: string) => {
-    const prevAnswers = [...draftQuestion.incorrectAnswers];
-    prevAnswers[index] = {answer: incorrectAnswer, explanation: prevAnswers[index].explanation};
-    setDraftQuestion((prev) => ({...prev, incorrectAnswers: prevAnswers}));
+  const handleDraftQuestionIncorrectUpdate = (newAnswers: IncorrectAnswer[]) => {
+    console.log(newAnswers);
+    setDraftQuestion((prev) => ({...prev, incorrectAnswers: newAnswers}));
   }
 
-  const handleDraftQuestionIncorrectExplanationUpdate = (index: number, explanation: string) => {
-    console.log('updating explanation');
-    const prevAnswers = [...draftQuestion.incorrectAnswers];
-    prevAnswers[index] = {answer: prevAnswers[index].answer, explanation};
-    console.log(prevAnswers);
-    setDraftQuestion((prev) => ({...prev, incorrectAnswers: prevAnswers}));
-  }
-
-  const handleClick = (cardType: string) => {
-    setSelectedCard(cardType);
+  const handleClick = (cardType: CreateQuestionHighlightCard) => {
+    console.log(draftQuestion);
+    if ((cardType === CreateQuestionHighlightCard.QUESTIONCARD && isQuestionCardComplete)
+      || (cardType === CreateQuestionHighlightCard.CORRECTANSWER && isCorrectCardComplete)
+      || (cardType === CreateQuestionHighlightCard.INCORRECTANSWER1 && draftQuestion.incorrectAnswers[0].answer.length > 0 && draftQuestion.incorrectAnswers[0].explanation.length > 0)
+      || (cardType === CreateQuestionHighlightCard.INCORRECTANSWER2 && draftQuestion.incorrectAnswers[1].answer.length > 0 && draftQuestion.incorrectAnswers[1].explanation.length > 0)
+      || (cardType === CreateQuestionHighlightCard.INCORRECTANSWER3 && draftQuestion.incorrectAnswers[2].answer.length > 0 && draftQuestion.incorrectAnswers[2].explanation.length > 0)) 
+      return;
+    setHighlightCard(cardType);
   };
 
   const handleBackToExplore = () => {
@@ -233,16 +250,17 @@ export default function CreateQuestion({
             gap: `${theme.sizing.smPadding}px`,
           }}
         >
-          <Box onClick={() => handleClick('CreateQuestionCard')} style={{ width: '100%' }}>
+          <Box onClick={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)} style={{ width: '100%' }}>
             <CreateQuestionCardBase
               screenSize={screenSize}
               draftQuestion={draftQuestion}
               handleTitleChange={handleDebouncedTitleChange}
               handleCCSSClick={handleCCSSClick}
-              isSelected={selectedCard==='CreateQuestionCard'}
+              isHighlight={highlightCard === CreateQuestionHighlightCard.QUESTIONCARD}
               handleImageUploadClick={handleImageUploadClick}
               handleImageURLClick={handleImageURLClick}
               isCardSubmitted={isCardSubmitted}
+              isCardComplete={isQuestionCardComplete}
             />
           </Box>
           <Grid
@@ -254,12 +272,11 @@ export default function CreateQuestion({
               sm={12}
               md={6}
             >
-              <Box onClick={() => handleClick('CorrectAnswerCard')} style={{ width: '100%' }}>
+              <Box onClick={() => handleClick(CreateQuestionHighlightCard.CORRECTANSWER)} style={{ width: '100%' }}>
                 <CorrectAnswerCard
                   draftQuestion={draftQuestion} 
                   isCardSubmitted={isCardSubmitted}
-                  isSelected={selectedCard === 'CorrectAnswerCard'}
-                  setSelectedCard={setSelectedCard}
+                  isHighlight={highlightCard === CreateQuestionHighlightCard.CORRECTANSWER}
                   handleCorrectAnswerChange={handleDebouncedCorrectAnswerChange}
                   handleCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
                 />
@@ -276,9 +293,7 @@ export default function CreateQuestion({
                 </Typography>
                 <AISwitch/>
               </Box>
-              <Box onClick={() => handleClick('IncorrectAnswerCard')} style={{ width: '100%' }}>
-                <IncorrectAnswerCardStack isSelected={selectedCard === 'IncorrectAnswerCard'} draftQuestion={draftQuestion} handleDraftQuestionIncorrectAnswerUpdate={handleDraftQuestionIncorrectAnswerUpdate} handleDraftQuestionIncorrectExplanationUpdate={handleDraftQuestionIncorrectExplanationUpdate} isCardSubmitted={isCardSubmitted}/>
-              </Box>
+                <IncorrectAnswerCardStack highlightCard={highlightCard} draftQuestion={draftQuestion} handleDraftQuestionIncorrectUpdate={handleDraftQuestionIncorrectUpdate} handleCardClick={handleClick} isCardSubmitted={isCardSubmitted}/>
             </SubCardGridItem>
           </Grid>
         </Grid>
