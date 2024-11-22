@@ -34,8 +34,10 @@ interface IncorrectAnswerCardProps {
   isHighlight?: boolean;
   isCardComplete: boolean;
   isCardSubmitted: boolean;
-  handleUpdateCardData: (cardData: IncorrectCard, isCardComplete: boolean) => void;
+  handleUpdateCardData: (cardData: IncorrectCard, isCardComplete: boolean, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
+  completeAnswers: IncorrectCard[];
+  incompleteAnswers: IncorrectCard[];
 }
 
 export default function IncorrectAnswerCard({
@@ -44,7 +46,9 @@ export default function IncorrectAnswerCard({
   isCardComplete,
   isCardSubmitted,
   handleUpdateCardData,
-  handleCardClick
+  handleCardClick,
+  completeAnswers,
+  incompleteAnswers
 } : IncorrectAnswerCardProps) {
 
   const [cardData, setCardData] = useState<IncorrectCard>({
@@ -67,8 +71,8 @@ export default function IncorrectAnswerCard({
   } 
 
   const debouncedCardChanges = useMemo(() => 
-    debounce((debounceCardData: IncorrectCard, debounceIsCardComplete: boolean) => {
-      handleUpdateCardData(debounceCardData, debounceIsCardComplete);
+    debounce((debounceCardData: IncorrectCard, debounceIsCardComplete: boolean, debounceCompleteAnswers: IncorrectCard[], debounceIncompleteAnswers: IncorrectCard[]) => {
+      handleUpdateCardData(debounceCardData, debounceIsCardComplete, debounceCompleteAnswers, debounceIncompleteAnswers);
     }, 1000)
   , [handleUpdateCardData]);
 
@@ -78,7 +82,7 @@ export default function IncorrectAnswerCard({
       answer: value,
     })
     if (value.length > 0 && cardData.explanation.length > 0)
-      debouncedCardChanges({...cardData, answer: value, isCardComplete: true}, cardData.isCardComplete);
+      debouncedCardChanges({...cardData, answer: value, isCardComplete: true}, cardData.isCardComplete, completeAnswers, incompleteAnswers);
   }
 
   const handleLocalExplanationChange = (value: string) => {
@@ -87,7 +91,7 @@ export default function IncorrectAnswerCard({
       explanation: value,
     })
     if (value.length > 0 && cardData.explanation.length > 0)
-      debouncedCardChanges({...cardData, explanation: value, isCardComplete: true}, cardData.isCardComplete);
+      debouncedCardChanges({...cardData, explanation: value, isCardComplete: true}, cardData.isCardComplete, completeAnswers, incompleteAnswers);
   }
 
   return (

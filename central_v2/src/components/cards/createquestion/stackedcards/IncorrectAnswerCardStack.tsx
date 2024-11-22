@@ -47,9 +47,9 @@ export default function IncorrectAnswerCardStack({
     setCompleteAnswers([updatedMovingCard, ...completeAnswers]);
   };
 
-  const handleUpdateCardData = (cardData: IncorrectCard, isCardComplete: boolean) => {
-    const prevCompleteAnswers = [...completeAnswers];
-    const prevIncompleteAnswers = [...incompleteAnswers];
+  const handleUpdateCardData = (cardData: IncorrectCard, isCardComplete: boolean, completeAnswersInput: IncorrectCard[], incompleteAnswersInput: IncorrectCard[]) => {
+    const prevCompleteAnswers = [...completeAnswersInput];
+    const prevIncompleteAnswers = [...incompleteAnswersInput];
     if (isCardComplete){
       const newAnswers = prevCompleteAnswers.map((answer) => {
         if (answer.id === cardData.id) {
@@ -106,6 +106,8 @@ export default function IncorrectAnswerCardStack({
                     isCardSubmitted={isCardSubmitted}
                     handleUpdateCardData={handleUpdateCardData}
                     handleCardClick={handleCardClick}
+                    completeAnswers={completeAnswers}
+                    incompleteAnswers={incompleteAnswers}
                   />
                 </motion.div>
               );
@@ -127,6 +129,8 @@ export default function IncorrectAnswerCardStack({
                   isCardSubmitted={isCardSubmitted}
                   handleUpdateCardData={handleUpdateCardData}
                   handleCardClick={handleCardClick}
+                  completeAnswers={completeAnswers}
+                  incompleteAnswers={incompleteAnswers}
                 />
               </Box>
             );
@@ -162,6 +166,8 @@ export default function IncorrectAnswerCardStack({
               isCardSubmitted={isCardSubmitted}
               handleUpdateCardData={handleUpdateCardData}
               handleCardClick={handleCardClick}
+              completeAnswers={completeAnswers}
+              incompleteAnswers={incompleteAnswers}
             />
           </motion.div>
         ))}

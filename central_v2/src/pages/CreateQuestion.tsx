@@ -215,9 +215,7 @@ export default function CreateQuestion({
   }
 
   const handleDraftQuestionIncorrectUpdate = (newAnswers: IncorrectCard[], cardData: IncorrectCard) => {
-    const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
-    const currentIndex = newAnswers.findIndex((card) => card.id === cardData.id);
-    if (cardData.isFirstEdit){
+      const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
       const updatedCard = {...cardData, isCardComplete: true, isFirstEdit: false};
       const updatedAnswers = newAnswers.map((answer) => { 
         if (answer.id === cardData.id) {
@@ -225,18 +223,10 @@ export default function CreateQuestion({
         }
         return answer;
       });
+      console.log(updatedAnswers);
       setDraftQuestion((prev) => ({...prev, incorrectCards: [...updatedAnswers]}));
-      setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
-    } else {
-      const updatedCard = {...cardData, isCardComplete: true};
-      const updatedAnswers = newAnswers.map((answer) => { 
-        if (answer.id === cardData.id) {
-          return updatedCard;
-        }
-        return answer;
-      });
-      setDraftQuestion((prev) => ({...prev, incorrectCards: [...updatedAnswers]}));
-    }
+      if (cardData.isFirstEdit)
+        setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
   }
   console.log(draftQuestion);
   // TODO: lay out the cases based on the various states and the boolean variables i have to track them
