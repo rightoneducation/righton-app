@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
+import { CreateQuestionHighlightCard, CreateQuestionTemplateInput, IncorrectCard } from '../../../../lib/CentralModels';
 import IncorrectAnswerCard from './IncorrectAnswerCard';
 import CentralButton from '../../../button/Button';
 import { ButtonType } from '../../../button/ButtonModels';
@@ -15,34 +16,62 @@ const CardStackContainer = styled(Box)({
 });
 
 interface IncorrectAnswerCardStackProps {
-  isSelected: boolean;
+  highlightCard: CreateQuestionHighlightCard;
+  draftQuestion: CreateQuestionTemplateInput;
+  handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
+  handleDraftQuestionIncorrectUpdate: ( newAnswers: IncorrectCard[], cardData: IncorrectCard ) => void;
+  isCardSubmitted: boolean;
 }
 
-export default function IncorrectAnswerCardStack({isSelected}: IncorrectAnswerCardStackProps) {
-  type IncorrectAnswer = {
-    id: string;
-    text: string;
-    explanation: string;
-  };
+export default function IncorrectAnswerCardStack({
+  highlightCard,
+  draftQuestion,
+  handleDraftQuestionIncorrectUpdate,
+  handleCardClick,
+  isCardSubmitted
+}: IncorrectAnswerCardStackProps) {
+  
+  const [incompleteAnswers, setIncompleteAnswers] = useState<IncorrectCard[]>(draftQuestion.incorrectCards);
 
-  const [incompleteAnswers, setIncompleteAnswers] = useState<IncorrectAnswer[]>([
-    { id: 'card-1', text: 'A', explanation: 'Explanation A'},
-    { id: 'card-2', text: 'B', explanation: 'Explanation B'},
-    { id: 'card-3', text: 'C', explanation: 'Explanation C'},
-  ]);
-
-  const [completeAnswers, setCompleteAnswers] = useState<IncorrectAnswer[]>([]);
+  const [completeAnswers, setCompleteAnswers] = useState<IncorrectCard[]>([]);
 
   const allAnswers = [...incompleteAnswers, ...completeAnswers];
   const isAllCompleted = incompleteAnswers.length === 0;
 
-  const handleNextCardClick = () => {
-    if (incompleteAnswers.length === 0) return;
-    const [movingCard, ...remainingCards] = incompleteAnswers;
+  const handleNextCardClick = (newAnswers: IncorrectCard[]) => {
+    if (newAnswers.length === 0) return;
+    const [movingCard, ...remainingCards] = newAnswers;
+    const updatedMovingCard = { ...movingCard, isCardComplete: true };
+  
     setIncompleteAnswers(remainingCards);
-    setCompleteAnswers([movingCard, ...completeAnswers]);
+    setCompleteAnswers([updatedMovingCard, ...completeAnswers]);
   };
 
+  const handleUpdateCardData = (cardData: IncorrectCard, isCardComplete: boolean, completeAnswersInput: IncorrectCard[], incompleteAnswersInput: IncorrectCard[]) => {
+    const prevCompleteAnswers = [...completeAnswersInput];
+    const prevIncompleteAnswers = [...incompleteAnswersInput];
+    if (isCardComplete){
+      const newAnswers = prevCompleteAnswers.map((answer) => {
+        if (answer.id === cardData.id) {
+          return cardData;
+        }
+        return answer;
+      });
+      setCompleteAnswers(newAnswers);
+      handleDraftQuestionIncorrectUpdate([...newAnswers], cardData);
+    } else { 
+      console.log('sup');
+      const newAnswers = prevIncompleteAnswers.map((answer) => {
+        if (answer.id === cardData.id) {
+          return cardData;
+        }
+        return answer;
+      });
+      setIncompleteAnswers(newAnswers);
+      handleDraftQuestionIncorrectUpdate([...completeAnswers, ...newAnswers], cardData);
+      handleNextCardClick(newAnswers);
+    }
+  }
   return (
     <CardStackContainer>
       <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>
@@ -70,7 +99,16 @@ export default function IncorrectAnswerCardStack({isSelected}: IncorrectAnswerCa
                     zIndex: incompleteAnswers.length - index,
                   }}
                 >
-                  <IncorrectAnswerCard answer={card.text} isSelected={isSelected}/>
+                  <IncorrectAnswerCard
+                    answerData={card} 
+                    isCardComplete={false}
+                    isHighlight={highlightCard === card.id}
+                    isCardSubmitted={isCardSubmitted}
+                    handleUpdateCardData={handleUpdateCardData}
+                    handleCardClick={handleCardClick}
+                    completeAnswers={completeAnswers}
+                    incompleteAnswers={incompleteAnswers}
+                  />
                 </motion.div>
               );
             }
@@ -84,7 +122,16 @@ export default function IncorrectAnswerCardStack({isSelected}: IncorrectAnswerCa
                   zIndex: incompleteAnswers.length - index - 1
                 }}
               >
-                <IncorrectAnswerCard answer={card.text} />
+                <IncorrectAnswerCard   
+                  answerData={card} 
+                  isCardComplete={false}
+                  isHighlight={highlightCard === card.id}
+                  isCardSubmitted={isCardSubmitted}
+                  handleUpdateCardData={handleUpdateCardData}
+                  handleCardClick={handleCardClick}
+                  completeAnswers={completeAnswers}
+                  incompleteAnswers={incompleteAnswers}
+                />
               </Box>
             );
           })}
@@ -97,27 +144,33 @@ export default function IncorrectAnswerCardStack({isSelected}: IncorrectAnswerCa
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
-          opacity: isAllCompleted ? 0.6 : 1,
         }}
       >
-        <AnimatePresence>
-          {completeAnswers.map((card, index) => (
-            <motion.div
-              key={card.id}
-              layoutId={card.id}
-              initial={{ opacity: 1, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0.6 }}
-              transition={{ duration: 0.6, ease: 'easeInOut' }}
-              style={{
-                zIndex: completeAnswers.length - index,
-                width: '100%',
-              }}
-            >
-              <IncorrectAnswerCard answer={card.text} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        {completeAnswers.map((card, index) => (
+          <motion.div
+            key={card.id}
+            layoutId={card.id}
+            initial={{ opacity: 1, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            style={{
+              zIndex: completeAnswers.length - index,
+              width: '100%',
+            }}
+          >
+            <IncorrectAnswerCard   
+              answerData={draftQuestion.incorrectCards.find((answer) => answer.id === card.id) ?? card} 
+              isHighlight={highlightCard === card.id}
+              isCardComplete={draftQuestion.incorrectCards.find((answer) => answer.id === card.id)?.isCardComplete ?? false}
+              isCardSubmitted={isCardSubmitted}
+              handleUpdateCardData={handleUpdateCardData}
+              handleCardClick={handleCardClick}
+              completeAnswers={completeAnswers}
+              incompleteAnswers={incompleteAnswers}
+            />
+          </motion.div>
+        ))}
       </Box>
       {incompleteAnswers.length !== 0 && (
       <Box
@@ -134,7 +187,7 @@ export default function IncorrectAnswerCardStack({isSelected}: IncorrectAnswerCa
         <CentralButton
           buttonType={ButtonType.NEXTCARD}
           isEnabled={incompleteAnswers.length > 0}
-          onClick={handleNextCardClick}
+          onClick={() => handleNextCardClick(incompleteAnswers)}
         />
       </Box>
       )}

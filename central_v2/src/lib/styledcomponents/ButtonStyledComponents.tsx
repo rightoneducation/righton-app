@@ -26,6 +26,7 @@ export const ButtonStyled = styled(Button, {
   '&:disabled': {
     background: `${theme.palette.primary.buttonGradientGrey}`,
   },
+  pointerEvents: 'auto'
 }));
 
 export const ButtonContent = styled(Box)(({ theme }) => ({

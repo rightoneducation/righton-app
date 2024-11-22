@@ -1,32 +1,37 @@
 import React from 'react';
-import { Typography, RadioGroup, Box, styled, useTheme } from '@mui/material';
-import { IQuestionTemplate } from '@righton/networking';
+import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment } from '@mui/material';
 import {
-  TitleBarStyled,
   QuestionTitleStyled,
   RadioContainerStyled,
   RadioLabelStyled,
   RadioStyled,
   ContentContainerStyled,
   ImageStyled,
-  ContentRightContainerStyled,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import { 
   BaseCardStyled,
   TextContainerStyled,
   CCSSIndicator
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
-import { ScreenSize } from '../../../lib/CentralModels';
+import {
+  ErrorIcon
+} from '../../../lib/styledcomponents/CentralStyledComponents';
+import { CreateQuestionTemplateInput, ScreenSize } from '../../../lib/CentralModels';
 import ImageButton from '../../button/imagebutton/ImageButton';
 import { ImageButtonType } from '../../button/imagebutton/ImageButtonModels';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import arrow from '../../../images/SelectArrow.svg';
+import errorIcon from '../../../images/errorIcon.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
+  draftQuestion: CreateQuestionTemplateInput;
+  handleTitleChange: (title: string, draftQuestion: CreateQuestionTemplateInput) => void;
   handleCCSSClick: () => void;
-  isSelected: boolean;
-  ccss: string;
+  handleImageUploadClick: () => void;
+  handleImageURLClick: () => void;
+  isHighlight: boolean;
+  isCardSubmitted: boolean;
 }
 
 export const ImagePlaceholder = styled(Box)(({ theme }) => ({
@@ -63,21 +68,65 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 
 export default function CreateQuestionCardBase({
   screenSize,
+  draftQuestion,
+  handleTitleChange,
   handleCCSSClick,
-  isSelected,
-  ccss
+  handleImageUploadClick,
+  handleImageURLClick,
+  isHighlight,
+  isCardSubmitted
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
+  const [title, setTitle] = React.useState<string>('');
   const [questionType, setQuestionType] = React.useState<string>('A');
-  const [imageUrl, setImageUrl] = React.useState<string | null>(null);
-  const [title, setTitle] = React.useState<string | null>(null);
+  const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setQuestionType((event.target as HTMLInputElement).value);
   };
+
+  const handleLocalTitleChange = (value: string) => {
+    setTitle((prev) => value);
+    handleTitleChange(value, draftQuestion);
+  }
+
+  const imageContents = [
+    draftQuestion.questionCard.image &&
+      <Box 
+        onMouseEnter={() => setIsImageHovered(true)}
+        onMouseLeave={() => setIsImageHovered(false)}
+        style={{  
+          width: '100%',
+          height: '175px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '16px',
+          position: 'relative'
+      }}>
+            <ImageStyled 
+              src={URL.createObjectURL(draftQuestion.questionCard.image) ?? ''} 
+              alt="image" 
+              style={{
+                opacity: isImageHovered ? 0.6: 1,
+                transition: 'opacity 0.75s'
+              }}
+            />
+            <Fade in={isImageHovered} >
+              <div>
+                <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
+                <Box style={{paddingTop: '16px'}}>
+                  <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled onClick={handleImageURLClick}/>
+                </Box>
+              </div>
+            </Fade>
+      </Box>
+  ]
+
   return (
-    <BaseCardStyled  elevation={6} isSelected={isSelected} isCardComplete={false}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <RadioContainerStyled>
@@ -105,21 +154,42 @@ export default function CreateQuestionCardBase({
         </RadioContainerStyled>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        {imageUrl 
-          ? <ImageStyled src={imageUrl ?? ''} alt="image" />
+        {draftQuestion.questionCard.image 
+          ? imageContents
           : <ImagePlaceholder>
-              <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled/>
-              <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled/>
+              <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
+              <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled onClick={handleImageURLClick}/>
             </ImagePlaceholder>
         }
         <CreateQuestionContentRightContainerStyled>
-          <TextContainerStyled multiline variant="outlined" rows='4' placeholder="Question Contents...">
-            <Typography>{title}</Typography>
+          <TextContainerStyled 
+            multiline 
+            variant="outlined" 
+            rows='4' 
+            placeholder="Question Contents..." 
+            error={isCardSubmitted && (!draftQuestion.questionCard.title || draftQuestion.questionCard.title.length === 0)}
+            value={title}
+            onChange = {(e) => handleLocalTitleChange(e.target.value)}
+            InputProps={{
+              startAdornment: 
+                isCardSubmitted && (!draftQuestion.questionCard.title || draftQuestion.questionCard.title.length === 0) &&
+                <InputAdornment
+                  position="start" 
+                  sx={{ 
+                    alignSelf: 'flex-start',
+                    mt: '10px'
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt='error icon'/>
+                </InputAdornment>
+            }}
+          >
+            <Typography>{draftQuestion.questionCard.title}</Typography>
           </TextContainerStyled>
           <Box style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
             <PublicPrivateButton />
             <CCSSIndicator onClick={handleCCSSClick}>
-              {ccss}
+              {draftQuestion.questionCard.ccss}
               <img src={arrow} alt='CCSS' style={{width: '12px', height: '12px'}}/>
             </CCSSIndicator>
           </Box>
