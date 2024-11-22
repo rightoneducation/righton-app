@@ -26,7 +26,7 @@ const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight, isCardC
   gap: `${theme.sizing.smPadding}px`,
   boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
   opacity: isCardComplete ? 0.6 : 1,
-  transition: 'opacity 0.6s box-shadow 0.6s',
+  transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
 
 interface IncorrectAnswerCardProps {
