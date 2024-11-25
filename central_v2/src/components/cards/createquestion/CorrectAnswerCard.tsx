@@ -36,8 +36,8 @@ export default function DetailedQuestionSubCard({
   isCardErrored
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
-  const [correctAnswer, setCorrectAnswer] = React.useState<string>('');
-  const [answerSteps, setAnswerSteps] = React.useState(['','','']);
+  const [correctAnswer, setCorrectAnswer] = React.useState<string>(draftQuestion.correctCard.answer ?? '');
+  const [answerSteps, setAnswerSteps] = React.useState(draftQuestion.correctCard.answerSteps ?? ['','','']);
   const addStep = () => {
     setAnswerSteps((prev) => [...prev, ''])
   };

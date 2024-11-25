@@ -31,3 +31,6 @@ export enum CreateQuestionHighlightCard {
   INCORRECTANSWER2 = 'card-2',
   INCORRECTANSWER3 = 'card-3',
 }
+
+// key for storage to localStorage  
+export const StorageKey = 'rightOnCentral';

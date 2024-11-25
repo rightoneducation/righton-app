@@ -6,7 +6,6 @@ import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
   QuestionCard,
-  CorrectCard,
   IncorrectCard,
 } from '@righton/networking';
 import DebugAuth from '../components/debug/DebugAuth';
@@ -16,6 +15,7 @@ import {
   ScreenSize,
   BorderStyle,
   CreateQuestionHighlightCard,
+  StorageKey
 } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
@@ -79,43 +79,55 @@ export default function CreateQuestion({
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
-  const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>({
-    questionCard: {
-      title: '',
-      ccss: 'CCSS',
-      isFirstEdit: true,
-      isCardComplete: false,
-    },
-    correctCard: {
-      answer: '',
-      answerSteps: [],
-      isFirstEdit: true,
-      isCardComplete: false,
-    },
-    incorrectCards: [
-      {
-        id: 'card-1',
-        answer: '', 
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-      {
-        id: 'card-2',
-        answer: '', 
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-      {
-        id: 'card-3',
-        answer: '', 
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-    ]
-  });
+
+  const retrieveStorage = () => {
+    const storageObject = window.localStorage.getItem(StorageKey);
+    if (storageObject){
+      return JSON.parse(storageObject);
+    }
+    return null;
+  }
+
+  const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
+    return retrieveStorage() ?? {
+        questionCard: {
+          title: '',
+          ccss: 'CCSS',
+          isFirstEdit: true,
+          isCardComplete: false,
+        },
+        correctCard: {
+          answer: '',
+          answerSteps: [],
+          isFirstEdit: true,
+          isCardComplete: false,
+        },
+        incorrectCards: [
+          {
+            id: 'card-1',
+            answer: '', 
+            explanation: '',
+            isFirstEdit: true,
+            isCardComplete: false,
+          },
+          {
+            id: 'card-2',
+            answer: '', 
+            explanation: '',
+            isFirstEdit: true,
+            isCardComplete: false,
+          },
+          {
+            id: 'card-3',
+            answer: '', 
+            explanation: '',
+            isFirstEdit: true,
+            isCardComplete: false,
+          },
+        ]
+      }
+    }
+  );
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
 
@@ -142,13 +154,25 @@ export default function CreateQuestion({
     if (inputImage){
       if (draftQuestion.questionCard.ccss.length > 0 && draftQuestion.questionCard.ccss !== 'CCSS' && draftQuestion.questionCard.title){
         if (draftQuestion.correctCard.isFirstEdit){
-          setDraftQuestion((prev) => ({...prev, questionCard: {...prev.questionCard, image: inputImage, isCardComplete: true, isFirstEdit: false}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = {...prev, questionCard: {...prev.questionCard, image: inputImage, isCardComplete: true, isFirstEdit: false}};
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return ({...prev, updatedQuestion})
+          });
           setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
         } else {
-          setDraftQuestion((prev) => ({...prev, questionCard: {...prev.questionCard, image: inputImage, isCardComplete: true}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = {...prev, questionCard: {...prev.questionCard, image: inputImage, isCardComplete: true}};
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return ({...prev, updatedQuestion})
+          });
         }
       } else {
-        setDraftQuestion((prev) => ({...prev, questionCard: {...prev.questionCard, image: inputImage}}));
+        setDraftQuestion((prev) => {
+          const updatedQuestion = {...prev, questionCard: {...prev.questionCard, image: inputImage}};
+          window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+          return ({...prev, updatedQuestion})
+        });
       }
     }
   }
@@ -158,15 +182,26 @@ export default function CreateQuestion({
       // we're doing this circular passing of draftQuestion here to avoid stale state
       if (draftQuestionInput.questionCard.ccss.length > 0 && draftQuestionInput.questionCard.ccss !== 'CCSS' && draftQuestionInput.questionCard.image){
         if (draftQuestionInput.correctCard.isFirstEdit){
-          setDraftQuestion((prev) => ({...prev, questionCard: { ...prev.questionCard, title, isCardComplete: true, isFirstEdit: false}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = {...prev, questionCard: {...prev.questionCard, title, isCardComplete: true, isFirstEdit: false}};
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return ({...prev, updatedQuestion})
+          });
           setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
         } else {
-          setDraftQuestion((prev) => ({...prev, questionCard: { ...prev.questionCard, title, isCardComplete: true}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = {...prev, questionCard: {...prev.questionCard, title, isCardComplete: true}};
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return ({...prev, updatedQuestion})
+          });
         }
       } else {
-        setDraftQuestion((prev) => ({...prev, questionCard: { ...prev.questionCard, title}}));
+        setDraftQuestion((prev) => {
+          const updatedQuestion = {...prev, questionCard: {...prev.questionCard, title}};
+          window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+          return ({...prev, updatedQuestion})
+        });
       }
-      
     }, 1000),
     [] 
   )
@@ -180,13 +215,25 @@ export default function CreateQuestion({
     setIsCCSSVisible(false);
     if (ccssString && draftQuestion.questionCard.image && draftQuestion.questionCard.title){
       if (draftQuestion.correctCard.isFirstEdit){
-        setDraftQuestion((prev) => ({...prev, questionCard: {...prev.questionCard, ccss: ccssString, isCardComplete: true, isFirstEdit: false}}));
+        setDraftQuestion((prev) => {
+          const updatedQuestion = {...prev, questionCard: {...prev.questionCard, ccss: ccssString, isCardComplete: true, isFirstEdit: false}};
+          window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+          return ({...prev, updatedQuestion})
+        });
         setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
       } else {
-        setDraftQuestion((prev) => ({...prev, questionCard: {...prev.questionCard, ccss: ccssString, isCardComplete: true}}));
+        setDraftQuestion((prev) => {
+          const updatedQuestion = {...prev, questionCard: {...prev.questionCard, ccss: ccssString, isCardComplete: true}};
+          window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+          return ({...prev, updatedQuestion})
+        });
       }
     } else {
-      setDraftQuestion((prev) => ({...prev, questionCard: {...prev.questionCard, ccss: ccssString}}));
+      setDraftQuestion((prev) => {
+        const updatedQuestion = {...prev, questionCard: {...prev.questionCard, ccss: ccssString}};
+        window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+        return ({...prev, updatedQuestion})
+      });
     }
   };
 
@@ -195,13 +242,25 @@ export default function CreateQuestion({
     debounce((correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
       if (draftQuestionInput.correctCard.answerSteps.length > 0 && draftQuestionInput.correctCard.answerSteps.every((answer) => answer.length > 0) && correctAnswer.length > 0){
         if (draftQuestionInput.incorrectCards[0].isFirstEdit){
-          setDraftQuestion((prev) => ({...prev, correctCard: { ...prev.correctCard, answer: correctAnswer, isCardComplete: true, isFirstEdit: false}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answer: correctAnswer, isCardComplete: true, isFirstEdit: false}};
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return {...prev, updatedQuestion}
+          });
           setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
         } else {
-          setDraftQuestion((prev) => ({...prev, correctCard: { ...prev.correctCard, answer: correctAnswer, isCardComplete: true}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answer: correctAnswer, isCardComplete: true}};
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return {...prev, updatedQuestion}
+          });
         }
       }
-      setDraftQuestion((prev) => ({...prev, correctCard: { ...prev.correctCard, answer: correctAnswer}}));
+      setDraftQuestion((prev) => {
+        const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answer: correctAnswer }};
+        window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+        return {...prev, updatedQuestion}
+      });
     }, 1000),
     [] 
   )
@@ -210,13 +269,25 @@ export default function CreateQuestion({
     debounce((steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
       if (draftQuestionInput.correctCard.answer.length > 0 && steps.length > 0 && steps.every((step) => step.length > 0)){
         if (draftQuestionInput.incorrectCards[0].isFirstEdit){
-          setDraftQuestion((prev) => ({...prev, correctCard: { ...prev.correctCard, answerSteps: steps, isCardComplete: true, isFirstEdit: false}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answerSteps: steps, isCardComplete: true, isFirstEdit: false}};
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return {...prev, updatedQuestion}
+          });
           setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
         } else {
-          setDraftQuestion((prev) => ({...prev, correctCard: { ...prev.correctCard, answerSteps: steps, isCardComplete: true }}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answerSteps: steps, isCardComplete: true }};
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return {...prev, updatedQuestion}
+          });
         }
       }
-      setDraftQuestion((prev) => ({...prev, correctCard: { ...prev.correctCard, answerSteps: steps}}));
+      setDraftQuestion((prev) => {
+        const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answerSteps: steps}};
+        window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+        return {...prev, updatedQuestion}
+      });
     }, 1000),
     [] 
   )
@@ -240,8 +311,11 @@ export default function CreateQuestion({
         }
         return answer;
       });
-      console.log(updatedAnswers);
-      setDraftQuestion((prev) => ({...prev, incorrectCards: [...updatedAnswers]}));
+      setDraftQuestion((prev) => {
+        const updatedQuestion = {...prev, incorrectCards: [...updatedAnswers]};
+        window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+        return {...prev, updatedQuestion}
+      });
       if (cardData.isFirstEdit)
         setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
   }
@@ -254,7 +328,11 @@ export default function CreateQuestion({
     switch(cardType){
       case CreateQuestionHighlightCard.CORRECTANSWER:
         if (draftQuestion.correctCard.isCardComplete){
-          setDraftQuestion((prev) => ({...prev, correctCard: {...prev.correctCard, isCardComplete: false}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = ({...prev, correctCard: {...prev.correctCard, isCardComplete: false}})
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return updatedQuestion;
+          });
         }
         break;
       case CreateQuestionHighlightCard.INCORRECTANSWER1:{
@@ -268,7 +346,11 @@ export default function CreateQuestion({
             }
             return answer;
           });
-          setDraftQuestion((prev) => ({...prev, incorrectCards: updatedAnswers}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = ({...prev, incorrectCards: updatedAnswers})
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return updatedQuestion;
+          });
         }
         break;
       }
@@ -283,7 +365,11 @@ export default function CreateQuestion({
             }
             return answer;
           });
-          setDraftQuestion((prev) => ({...prev, incorrectCards: updatedAnswers}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = ({...prev, incorrectCards: updatedAnswers});
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return updatedQuestion;
+          });
         }
         break;
       }
@@ -298,14 +384,22 @@ export default function CreateQuestion({
             }
             return answer;
           });
-          setDraftQuestion((prev) => ({...prev, incorrectCards: updatedAnswers}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = ({...prev, incorrectCards: updatedAnswers});
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return updatedQuestion;
+        });
         }
         break;
       }
       case CreateQuestionHighlightCard.QUESTIONCARD:
       default:
         if (draftQuestion.questionCard.isCardComplete){
-          setDraftQuestion((prev) => ({...prev, questionCard: {...prev.questionCard, isCardComplete: false}}));
+          setDraftQuestion((prev) => {
+            const updatedQuestion = ({...prev, questionCard: {...prev.questionCard, isCardComplete: false}})
+            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
+            return updatedQuestion;
+          });
         }
         break;
     }
@@ -348,16 +442,15 @@ export default function CreateQuestion({
   };
 
   const handleSaveQuestion = async () => {
-    console.log(apiClients.auth.verifyAuth());
     try {
       setIsCardSubmitted(true);
       if (verifyQuestionCard(draftQuestion.questionCard) && verifyCorrectCard(draftQuestion.correctCard) && verifyIncorrectCards(draftQuestion.incorrectCards)){
-        console.log('verified')
         if (draftQuestion.questionCard.image) {
           const image = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
           // have to do a nested await here because aws-storage returns a nested promise object
           const result = await image.result;
           if (result && result.path && result.path.length > 0){
+            window.localStorage.setItem(StorageKey, '');
             const imageUrl = result.path;
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, imageUrl, draftQuestion);
           }
@@ -372,6 +465,7 @@ export default function CreateQuestion({
   }
 
   const handleDiscardQuestion = () => {
+    window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   }
 

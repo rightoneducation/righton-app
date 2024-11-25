@@ -91,7 +91,7 @@ export default function CreateQuestionCardBase({
   isCardErrored
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
-  const [title, setTitle] = React.useState<string>('');
+  const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const handleQuestionTypeChange = (
