@@ -1,3 +1,4 @@
+import { UploadDataWithPathOutput } from 'aws-amplify/storage';
 import { PublicPrivateType, GradeTarget } from "../../BaseAPIClient";
 import { CentralQuestionTemplateInput, IQuestionTemplate } from "../../../Models";
 import {
@@ -151,10 +152,11 @@ export type QuestionTemplateType<T extends PublicPrivateType> = T extends 'Publi
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
+    imageUrl: string,
     createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate>;
 
-  storeImageInS3(image: File): void;
+  storeImageInS3(image: File): Promise<UploadDataWithPathOutput>;
 
   getQuestionTemplate<T extends PublicPrivateType>(
     type: T,

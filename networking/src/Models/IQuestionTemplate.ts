@@ -28,11 +28,11 @@ export interface IQuestionTemplate {
   updatedAt?: Date | null
 }
 
-
 // type to handle input variables for question card on createquestion flow
 export type QuestionCard = {
   title: string;
   image?: File;
+  imageUrl?: string;
   ccss: string;
   isFirstEdit: boolean;
   isCardComplete: boolean;

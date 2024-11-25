@@ -347,19 +347,21 @@ export default function CreateQuestion({
     return false;
   };
 
-  const handleSaveQuestion = () => {
-    if (draftQuestion.questionCard.image) {
-      const image = apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
-    }
+  const handleSaveQuestion = async () => {
+    console.log(apiClients.auth.verifyAuth());
     try {
       setIsCardSubmitted(true);
       if (verifyQuestionCard(draftQuestion.questionCard) && verifyCorrectCard(draftQuestion.correctCard) && verifyIncorrectCards(draftQuestion.incorrectCards)){
         console.log('verified')
         if (draftQuestion.questionCard.image) {
-          const image = apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
-          console.log(image);
-          // apiClients.questionTemplate.createQuestionTemplate(publicPrivate, draftQuestion);
-          navigate('/questions');
+          const image = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
+          // have to do a nested await here because aws-storage returns a nested promise object
+          const result = await image.result;
+          if (result && result.path && result.path.length > 0){
+            const imageUrl = result.path;
+            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, imageUrl, draftQuestion);
+          }
+          // navigate('/questions');
         }
       } else {
         setIsCardErrored(true);
@@ -375,7 +377,7 @@ export default function CreateQuestion({
 
   return (
     <CreateQuestionMainContainer>
-       
+       <DebugAuth />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible} handleCloseModal={handleCloseModal}/>
        <ImageUploadModal screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
        <ImageURLModal isModalOpen={isImageURLVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />

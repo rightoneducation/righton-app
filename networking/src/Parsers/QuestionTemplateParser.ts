@@ -1,14 +1,16 @@
 import { isNullOrUndefined } from "../global";
 import { IQuestionTemplate, IGameTemplate, CentralQuestionTemplateInput } from "../Models";
+import { QuestionTemplateType } from "../APIClients/templates/interfaces/IQuestionTemplateAPIClient";
 import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
 import { PublicPrivateType } from "../APIClients";
 import { IChoice } from "../Models/IQuestion";
 
 export class QuestionTemplateParser {
-    static centralQuestionTemplateInputToIQuestionTemplate(
+    static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
+        imageUrl: string,
         createQuestionTemplateInput: CentralQuestionTemplateInput
-    ): IQuestionTemplate {
+    ): QuestionTemplateType<T>['create']['input']{
         const {title, ccss } = createQuestionTemplateInput.questionCard;
         const lowerCaseTitle = title.toLowerCase();
         const deconstructCCSS = (ccss: string): { domain: string, cluster: string, grade: string, standard: string } => {
@@ -16,7 +18,7 @@ export class QuestionTemplateParser {
             return { domain, cluster, grade, standard }
         }
         const {domain, cluster, grade, standard} = deconstructCCSS(ccss);
-        const instructions = createQuestionTemplateInput.correctCard.answerSteps;
+        const instructions = JSON.stringify(createQuestionTemplateInput.correctCard.answerSteps);
         const choicesIncorrect = createQuestionTemplateInput.incorrectCards.map(card => {
             return {
                 isAnswer: false,
@@ -25,10 +27,8 @@ export class QuestionTemplateParser {
             }
         });
         const choicesCorrect = {isAnswer: true, reason: '', text: createQuestionTemplateInput.correctCard.answer}; 
-        const choices = [choicesCorrect, ...choicesIncorrect];
-        const imageUrl = '';
-        const questionTemplate: IQuestionTemplate = {
-            id: '',
+        const choices = JSON.stringify([choicesCorrect, ...choicesIncorrect]);
+        const questionTemplate: QuestionTemplateType<T>['create']['input'] = {
             title,
             lowerCaseTitle,
             version: 0,
@@ -41,11 +41,9 @@ export class QuestionTemplateParser {
             gradeFilter: grade,
             standard,
             imageUrl,
-            gameTemplates: [],
             gameTemplatesCount: 0,
-            createdAt: new Date(),
-            updatedAt: new Date()
         }
+        console.log(questionTemplate);
         return questionTemplate
     }
 
