@@ -1,7 +1,7 @@
 import { uploadData } from 'aws-amplify/storage';
 import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
 import { QuestionTemplateType, questionTemplateRuntimeMap, IQuestionTemplateAPIClient } from "./interfaces/IQuestionTemplateAPIClient";
-import { IQuestionTemplate } from "../../Models";
+import { CentralQuestionTemplateInput, IQuestionTemplate } from "../../Models";
 import { QuestionTemplateParser } from "../../Parsers/QuestionTemplateParser";
 import { AWSQuestionTemplate } from "../../Models";
 import { isNullOrUndefined } from "../../global";
@@ -13,9 +13,10 @@ export class QuestionTemplateAPIClient
 {
   async createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
-    createQuestionTemplateInput: QuestionTemplateType<T>['create']['input'] | IQuestionTemplate
+    createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate> {
-    const variables: GraphQLOptions = { input: createQuestionTemplateInput as QuestionTemplateType<T>['create']['input'] };
+    const parsedInput = QuestionTemplateParser.centralQuestionTemplateInputToIQuestionTemplate(createQuestionTemplateInput);
+    const variables: GraphQLOptions = { input: parsedInput as QuestionTemplateType<T>['create']['input'] };
     const queryFunction = questionTemplateRuntimeMap[type].create.queryFunction;
     const createType = `create${type}QuestionTemplate`;
     const questionTemplate = await this.callGraphQL<QuestionTemplateType<T>['create']['query']>(
@@ -32,7 +33,8 @@ export class QuestionTemplateAPIClient
   }
 
   async storeImageInS3 (image: File) {
-    uploadData({path: image.name, data: image, options: {contentType: image.type}});
+    const response = uploadData({path: image.name, data: image, options: {contentType: image.type}})
+    console.log(response);
   };
 
   async getQuestionTemplate<T extends PublicPrivateType>(

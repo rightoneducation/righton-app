@@ -1,5 +1,5 @@
 import { PublicPrivateType, GradeTarget } from "../../BaseAPIClient";
-import { IQuestionTemplate } from "../../../Models";
+import { CentralQuestionTemplateInput, IQuestionTemplate } from "../../../Models";
 import {
   createPublicQuestionTemplate,
   createPrivateQuestionTemplate,
@@ -151,7 +151,7 @@ export type QuestionTemplateType<T extends PublicPrivateType> = T extends 'Publi
 export interface IQuestionTemplateAPIClient {
   createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
-    createQuestionTemplateInput: QuestionTemplateType<T>['create']['input'] | IQuestionTemplate
+    createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate>;
 
   storeImageInS3(image: File): void;

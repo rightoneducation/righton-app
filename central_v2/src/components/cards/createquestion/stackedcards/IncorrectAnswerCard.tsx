@@ -1,7 +1,8 @@
 import React, { useState, useMemo} from 'react';
 import { Paper, styled, InputAdornment } from '@mui/material';
 import { debounce } from 'lodash';
-import { CreateQuestionHighlightCard, IncorrectCard } from '../../../../lib/CentralModels';
+import { IncorrectCard } from '@righton/networking';
+import { CreateQuestionHighlightCard, } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
 import {
@@ -106,10 +107,10 @@ export default function IncorrectAnswerCard({
         placeholder="Distractor..." 
         value={cardData.answer}
         onChange={(e) => handleLocalAnswerChange(e.target.value)}
-        error={isCardSubmitted && answerData.answer.length === 0}
+        error={isCardSubmitted && cardData.answer.length === 0}
         InputProps={{
           startAdornment: 
-           isCardSubmitted && answerData.answer.length === 0 &&
+           isCardSubmitted && cardData.answer.length === 0 &&
             <InputAdornment
               position="start" 
               sx={{ 
@@ -131,10 +132,10 @@ export default function IncorrectAnswerCard({
         placeholder="Explanation..." 
         value={cardData.explanation}
         onChange={(e) => handleLocalExplanationChange(e.target.value)}
-        error={isCardSubmitted && answerData.answer.length === 0}
+        error={isCardSubmitted && cardData.explanation.length === 0}
         InputProps={{
           startAdornment: 
-            isCardSubmitted && answerData.explanation.length === 0 &&
+            isCardSubmitted && cardData.explanation.length === 0 &&
             <InputAdornment
               position="start" 
               sx={{ 

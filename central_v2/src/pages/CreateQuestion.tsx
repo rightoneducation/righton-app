@@ -2,10 +2,21 @@ import React, { useState, useCallback } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { debounce, set } from 'lodash';
+import {
+  PublicPrivateType,
+  CentralQuestionTemplateInput,
+  QuestionCard,
+  CorrectCard,
+  IncorrectCard,
+} from '@righton/networking';
 import DebugAuth from '../components/debug/DebugAuth';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
-import { CreateQuestionTemplateInput, ScreenSize, BorderStyle, CreateQuestionHighlightCard, IncorrectCard } from '../lib/CentralModels';
+import { 
+  ScreenSize,
+  BorderStyle,
+  CreateQuestionHighlightCard,
+} from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -67,7 +78,8 @@ export default function CreateQuestion({
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
-  const [draftQuestion, setDraftQuestion] = useState<CreateQuestionTemplateInput>({
+  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
+  const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>({
     questionCard: {
       title: '',
       ccss: 'CCSS',
@@ -105,6 +117,7 @@ export default function CreateQuestion({
     ]
   });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
+  const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
 
   // question card functions
   const handleCCSSClick = () => {
@@ -117,6 +130,10 @@ export default function CreateQuestion({
 
   const handleImageURLClick = () => {
     setIsImageURLVisible(true);
+  }
+
+  const handlePublicPrivateChange = (value: PublicPrivateType) => {
+    setPublicPrivate((prev) => value);
   }
 
   const handleImageSave = (inputImage: File) => {
@@ -137,7 +154,7 @@ export default function CreateQuestion({
   }
 
   const handleDebouncedTitleChange = useCallback( // eslint-disable-line
-    debounce((title: string, draftQuestionInput: CreateQuestionTemplateInput) => {
+    debounce((title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
       // we're doing this circular passing of draftQuestion here to avoid stale state
       if (draftQuestionInput.questionCard.ccss.length > 0 && draftQuestionInput.questionCard.ccss !== 'CCSS' && draftQuestionInput.questionCard.image){
         if (draftQuestionInput.correctCard.isFirstEdit){
@@ -175,7 +192,7 @@ export default function CreateQuestion({
 
   // correct answer card functions
   const handleDebouncedCorrectAnswerChange = useCallback( // eslint-disable-line
-    debounce((correctAnswer: string, draftQuestionInput: CreateQuestionTemplateInput) => {
+    debounce((correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
       if (draftQuestionInput.correctCard.answerSteps.length > 0 && draftQuestionInput.correctCard.answerSteps.every((answer) => answer.length > 0) && correctAnswer.length > 0){
         if (draftQuestionInput.incorrectCards[0].isFirstEdit){
           setDraftQuestion((prev) => ({...prev, correctCard: { ...prev.correctCard, answer: correctAnswer, isCardComplete: true, isFirstEdit: false}}));
@@ -190,7 +207,7 @@ export default function CreateQuestion({
   )
   
   const handleDebouncedCorrectAnswerStepsChange = useCallback( // eslint-disable-line
-    debounce((steps: string[], draftQuestionInput: CreateQuestionTemplateInput) => {
+    debounce((steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
       if (draftQuestionInput.correctCard.answer.length > 0 && steps.length > 0 && steps.every((step) => step.length > 0)){
         if (draftQuestionInput.incorrectCards[0].isFirstEdit){
           setDraftQuestion((prev) => ({...prev, correctCard: { ...prev.correctCard, answerSteps: steps, isCardComplete: true, isFirstEdit: false}}));
@@ -298,13 +315,54 @@ export default function CreateQuestion({
     setIsCCSSVisible(false);
   };
 
+  const verifyQuestionCard = (questionCard: QuestionCard): boolean => {
+    if ( 
+      questionCard.title 
+      && questionCard.title.length > 0 
+      && questionCard.ccss 
+      && questionCard.ccss.length > 0
+      && questionCard.ccss !== 'CCSS'
+      && questionCard.image){
+      return true;
+    }
+    return false;
+  };
+
+  const verifyCorrectCard = (correctCard: CentralQuestionTemplateInput['correctCard']): boolean => {
+    if (
+      correctCard.answer 
+      && correctCard.answer.length > 0 
+      && correctCard.answerSteps.length > 0 
+      && correctCard.answerSteps.every((step) => step.length > 0
+    )){
+      return true;
+    }
+    return false;
+  };
+
+  const verifyIncorrectCards = (incorrectCards: CentralQuestionTemplateInput['incorrectCards']): boolean => {
+    if (incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)){
+      return true;
+    }
+    return false;
+  };
+
   const handleSaveQuestion = () => {
+    if (draftQuestion.questionCard.image) {
+      const image = apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
+    }
     try {
-      // todo: verify entire card and trigger errors as needed
       setIsCardSubmitted(true);
-      if (draftQuestion.questionCard.image) {
-        apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
-        navigate('/questions');
+      if (verifyQuestionCard(draftQuestion.questionCard) && verifyCorrectCard(draftQuestion.correctCard) && verifyIncorrectCards(draftQuestion.incorrectCards)){
+        console.log('verified')
+        if (draftQuestion.questionCard.image) {
+          const image = apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
+          console.log(image);
+          // apiClients.questionTemplate.createQuestionTemplate(publicPrivate, draftQuestion);
+          navigate('/questions');
+        }
+      } else {
+        setIsCardErrored(true);
       }
     } catch (e) {
       console.log(e);
@@ -373,7 +431,9 @@ export default function CreateQuestion({
               isHighlight={highlightCard === CreateQuestionHighlightCard.QUESTIONCARD}
               handleImageUploadClick={handleImageUploadClick}
               handleImageURLClick={handleImageURLClick}
+              handlePublicPrivateChange={handlePublicPrivateChange}
               isCardSubmitted={isCardSubmitted}
+              isCardErrored={isCardErrored}
             />
           </Box>
           <Grid
@@ -387,11 +447,12 @@ export default function CreateQuestion({
             >
               <Box onClick={() => handleClick(CreateQuestionHighlightCard.CORRECTANSWER)} style={{ width: '100%' }}>
                 <CorrectAnswerCard
-                  draftQuestion={draftQuestion} 
-                  isCardSubmitted={isCardSubmitted}
+                  draftQuestion={draftQuestion}                   
                   isHighlight={highlightCard === CreateQuestionHighlightCard.CORRECTANSWER}
                   handleCorrectAnswerChange={handleDebouncedCorrectAnswerChange}
                   handleCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
+                  isCardSubmitted={isCardSubmitted}
+                  isCardErrored={isCardErrored}
                 />
               </Box>
             </SubCardGridItem>
@@ -406,7 +467,13 @@ export default function CreateQuestion({
                 </Typography>
                 <AISwitch/>
               </Box>
-                <IncorrectAnswerCardStack highlightCard={highlightCard} draftQuestion={draftQuestion} handleDraftQuestionIncorrectUpdate={handleDraftQuestionIncorrectUpdate} handleCardClick={handleClick} isCardSubmitted={isCardSubmitted}/>
+                <IncorrectAnswerCardStack 
+                  highlightCard={highlightCard} 
+                  draftQuestion={draftQuestion} 
+                  handleDraftQuestionIncorrectUpdate={handleDraftQuestionIncorrectUpdate} 
+                  handleCardClick={handleClick} 
+                  isCardSubmitted={isCardSubmitted}
+                />
             </SubCardGridItem>
           </Grid>
         </Grid>
