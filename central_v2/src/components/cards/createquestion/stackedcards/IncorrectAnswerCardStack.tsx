@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Box, styled } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CreateQuestionHighlightCard, CreateQuestionTemplateInput, IncorrectCard } from '../../../../lib/CentralModels';
+import { CentralQuestionTemplateInput, IncorrectCard } from '@righton/networking';
+import { CreateQuestionHighlightCard } from '../../../../lib/CentralModels';
 import IncorrectAnswerCard from './IncorrectAnswerCard';
 import CentralButton from '../../../button/Button';
 import { ButtonType } from '../../../button/ButtonModels';
@@ -17,7 +18,7 @@ const CardStackContainer = styled(Box)({
 
 interface IncorrectAnswerCardStackProps {
   highlightCard: CreateQuestionHighlightCard;
-  draftQuestion: CreateQuestionTemplateInput;
+  draftQuestion: CentralQuestionTemplateInput;
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
   handleDraftQuestionIncorrectUpdate: ( newAnswers: IncorrectCard[], cardData: IncorrectCard ) => void;
   isCardSubmitted: boolean;
