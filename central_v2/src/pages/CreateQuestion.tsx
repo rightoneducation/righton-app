@@ -98,7 +98,7 @@ export default function CreateQuestion({
         },
         correctCard: {
           answer: '',
-          answerSteps: [],
+          answerSteps: ['','',''],
           isFirstEdit: true,
           isCardComplete: false,
         },
@@ -319,12 +319,8 @@ export default function CreateQuestion({
       if (cardData.isFirstEdit)
         setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
   }
-  console.log(draftQuestion);
-  // TODO: lay out the cases based on the various states and the boolean variables i have to track them
-  // TODO: I think on this click, I can scan the other cards and confirm if they are complete or not to adjust the values. 
-  // We're going to have to do it this way, because I dont want to have onleave events and all that
+  
   const handleClick = (cardType: CreateQuestionHighlightCard) => {
-    console.log(cardType);
     switch(cardType){
       case CreateQuestionHighlightCard.CORRECTANSWER:
         if (draftQuestion.correctCard.isCardComplete){
