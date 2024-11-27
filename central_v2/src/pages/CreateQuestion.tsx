@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLoaderData } from 'react-router-dom';
 import { debounce, set, update } from 'lodash';
 import {
   PublicPrivateType,
@@ -9,6 +9,7 @@ import {
   IncorrectCard,
 } from '@righton/networking';
 import DebugAuth from '../components/debug/DebugAuth';
+import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import { 
@@ -82,35 +83,11 @@ export default function CreateQuestion({
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
-  const retrieveStorage = (): {retreivedDraftQuestion: CentralQuestionTemplateInput | null, retreivedIncompleteAnswers: IncorrectCard[] | null, retreivedCompleteAnswers: IncorrectCard[] | null} | null => {
-    try{ 
-      const storageObject = window.localStorage.getItem(StorageKey);
-      let incompleteAnswers = null;
-      let completeAnswers = null;
-      let parsedObject = null;
-      if (storageObject){
-        parsedObject = JSON.parse(storageObject) as CentralQuestionTemplateInput;
-        incompleteAnswers = parsedObject.incorrectCards.filter((card) =>  card.isCardComplete === false);
-        completeAnswers = parsedObject.incorrectCards.filter((card) => card.isCardComplete);
-      }
-      return {retreivedDraftQuestion: parsedObject, retreivedIncompleteAnswers: incompleteAnswers, retreivedCompleteAnswers: completeAnswers }
-    } catch (e) {
-      console.error(e);
-    }
-    return null;
-  }
-  const retreivedData = retrieveStorage(); 
-  let retreivedDraftQuestion: CentralQuestionTemplateInput | null = null;
-  let retreivedIncompleteAnswers: IncorrectCard[] | null = null;
-  let retreivedCompleteAnswers: IncorrectCard[] | null = null;
-  if (retreivedData){
-    retreivedDraftQuestion = retreivedData.retreivedDraftQuestion;
-    retreivedIncompleteAnswers = retreivedData.retreivedIncompleteAnswers;
-    retreivedCompleteAnswers = retreivedData.retreivedCompleteAnswers;
-  }
+  const localData = useCreateQuestionLoader();
+  
 
   const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>( 
-    retreivedIncompleteAnswers ??
+    localData.incompleteCards ??
     [
       {
         id: 'card-1',
@@ -136,12 +113,12 @@ export default function CreateQuestion({
     ]
   );
   const [completeIncorrectAnswers, setCompleteIncorrectAnswers] = useState<IncorrectCard[]>(
-    retreivedCompleteAnswers ??
+    localData.completeCards ??
     []
   );
 
   const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
-    return  retreivedDraftQuestion ?? {
+    return  localData.draftQuestion ?? {
         questionCard: {
           title: '',
           ccss: 'CCSS',

@@ -1,3 +1,5 @@
+import { CentralQuestionTemplateInput, IncorrectCard } from "@righton/networking";
+
 export enum ScreenType {
   GAMES,
   QUESTIONS,
@@ -34,3 +36,10 @@ export enum CreateQuestionHighlightCard {
 
 // key for storage to localStorage  
 export const StorageKey = 'rightOnCentral';
+
+// type that shapes retreived storage for createQuestion 
+export type CreateQuestionLocalData = {
+  draftQuestion?: CentralQuestionTemplateInput | null,
+  incompleteCards?: IncorrectCard[] | null,
+  completeCards?: IncorrectCard[] | null
+}
