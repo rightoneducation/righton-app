@@ -70,7 +70,7 @@ export class APIClients {
     this.team = new TeamAPIClient(env, this.auth);
     this.teamMember = new TeamMemberAPIClient(env, this.auth);
     this.teamAnswer = new TeamAnswerAPIClient(env, this.auth);
-    this.user = new UserAPIClient(env, this.auth )
+    this.user = new UserAPIClient(env, this.auth)
 
     if (appType === AppType.PLAY) {
       this.playDataManager = new PlayDataManagerAPIClient(env, this.gameSession);

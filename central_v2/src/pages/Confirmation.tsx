@@ -1,55 +1,169 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { useTheme, styled } from '@mui/material/styles';
+import { TextField, Box, Typography } from '@mui/material';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { ButtonType } from '../components/button/ButtonModels';
+import CentralButton from "../components/button/Button";
+import RightOnLogo from "../images/RightOnLogo.png";
 
-export default function Confirmation() {
-    const [code, setCode] = useState('');
-    const [username, setUsername] = useState('muqureshar')
+// Styled components
+const OuterBody = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: '100%',
+    boxSizing: 'border-box',
+    justifyContent: 'center',
+}));
+
+const InnerBody = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '24px',
+}));
+
+const ImageContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+}));
+
+const VerifyText = styled(Typography)(({ theme }) => ({
+    color: '#02215F',
+    fontFamily: 'Poppins, sans-serif',
+    fontWeight: 700,
+    fontSize: '24px',
+    lineHeight: '36px',
+    textAlign: 'center',
+}));
+
+const EnterText = styled(Typography)(({ theme }) => ({
+    fontWeight: 400,
+    fontSize: '16px',
+    lineHeight: '20px',
+    fontFamily: 'Rubik, sans-serif',
+    color: '#02215F',
+}));
+
+const CodeandResendContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+}));
+
+const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '8px',
+}));
+
+const UserCodeTextBoxes = styled(TextField)(({ theme }) => ({
+    width: '40px',
+    height: '54px',
+    borderRadius: '8px',
+    border: '2px solid #FFFFFF',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    input: {
+        textAlign: 'center',
+    },
+}));
+
+const ResendCodeText = styled(Typography)(({ theme }) => ({
+    fontFamily: 'Rubik, sans-serif',
+    fontWeight: 400,
+    fontSize: '16px',
+    color: '#02215F',
+    textDecoration: 'underline',
+    textAlign: 'center',
+}));
+
+const VerifyBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+}));
+
+// Props interface
+interface ConfirmationProps {
+    userName?: string;
+}
+
+// Use function declaration for the component
+function Confirmation({ userName = '' }: ConfirmationProps) {
+    const [code, setCode] = useState(Array(6).fill(''));
     const apiClients = useTSAPIClientsContext(APIClientsContext);
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        await apiClients.auth.awsConfirmSignUp(username, code);
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
 
+    const handleChange = (value: string, index: number) => {
+        if (!/^[0-9]*$/.test(value)) return; // Only allow numeric input
+        const newCode = [...code];
+        newCode[index] = value;
+        setCode(newCode);
+
+        // Automatically move to the next input box if a character is entered
+        if (value && index < 5) {
+            inputRefs.current[index + 1]?.focus();
+        }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+        if (e.key === 'Backspace' && !code[index] && index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
+    };
+
+    const handleSubmit = async () => {
+        const fullCode = code.join('');
+        if (fullCode.length < 6) {
+            alert('Please enter all 6 digits of the confirmation code.');
+            return;
+        }
+        try {
+            await apiClients.auth.awsConfirmSignUp(userName, fullCode);
+            console.log('Confirmation successful!');
+        } catch (error) {
+            console.error('Error confirming sign-up:', error);
+        }
+    };
+
+    const setInputRef = (index: number, el: HTMLInputElement | null) => {
+        inputRefs.current[index] = el;
+    };
+
+    const uniqueKeys = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const buttonTypeVerify = ButtonType.VERIFY;
+    const [isVerify, setIsVerify] = useState(true);
+
     return (
-        <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            sx={{ minHeight: '100vh', padding: 2 }}
-        >
-            <Typography variant="h5" component="h1" gutterBottom>
-                Confirm Your Email
-            </Typography>
-            <Box
-                component="form"
-                onSubmit={handleSubmit}
-                sx={{ width: '100%', maxWidth: 400 }}
-            >
-                <TextField
-                    label="Confirmation Code"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    placeholder="Enter your code"
-                    required
-                />
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    sx={{ mt: 2 }}
-                >
-                    Verify
-                </Button>
-            </Box>
-        </Box>
+        <OuterBody>
+            <InnerBody>
+                <ImageContainer>
+                    <img src={RightOnLogo} alt="Right On Logo" style={{ width: '280px', height: '280px' }} />
+                </ImageContainer>
+                <VerifyText>Step 2: Verify Email</VerifyText>
+                <EnterText>Enter the verification code you have received in your email</EnterText>
+                <CodeandResendContainer>
+                    <UserCodeTextBoxesContainer>
+                        {code.map((value, index) => (
+                            <UserCodeTextBoxes
+                                key={`code-${uniqueKeys[index]}`}
+                                inputRef={(el) => setInputRef(index, el)}
+                                value={value}
+                                onChange={(e) => handleChange(e.target.value, index)}
+                                onKeyDown={(e) => handleKeyDown(e, index)}
+                                inputProps={{ maxLength: 1 }}
+                            />
+                        ))}
+                    </UserCodeTextBoxesContainer>
+                    <ResendCodeText>Resend Code</ResendCodeText>
+                </CodeandResendContainer>
+                <VerifyBox>
+                    <CentralButton buttonType={buttonTypeVerify} isEnabled={isVerify} onClick={handleSubmit} />
+                </VerifyBox>
+            </InnerBody>
+        </OuterBody>
     );
 }
+
+export default Confirmation;
