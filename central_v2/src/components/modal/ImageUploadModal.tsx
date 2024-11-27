@@ -8,6 +8,7 @@ import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import DropImageUpload from '../DropImageUpload';
 import { ScreenSize, BorderStyle } from '../../lib/CentralModels';
+import { base64ToFile } from '../../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 
 interface IntegratedContainerProps {
   screenSize: ScreenSize
@@ -97,7 +98,7 @@ export default function ImageUploadModal({
 
   const handleSaveClick = () => {
     if (image) {
-      handleImageSave(image, null);
+      handleImageSave(base64ToFile(image, 'image', 'image/jpg'), null);
     }
   } 
   return (
@@ -137,7 +138,7 @@ export default function ImageUploadModal({
                       </Box>
                     </Fade>
                     <img
-                      src={URL.createObjectURL(image)}
+                      src={image} 
                       alt="Uploaded"
                       style={{
                         width: '100%',

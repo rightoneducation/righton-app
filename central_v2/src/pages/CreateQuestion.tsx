@@ -29,7 +29,7 @@ import ImageUploadModal from '../components/modal/ImageUploadModal';
 import ImageURLModal from '../components/modal/ImageURLModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 
@@ -144,9 +144,10 @@ export default function CreateQuestion({
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
 
   // QuestionCardBase handler functions
-  const handleImageChange = (inputImage: File, inputUrl: string | null) => {
-    if (inputImage){
-      const newDraftQuestion = updateDQwithImageChange(draftQuestion, inputImage, inputUrl);
+  const handleImageChange = async (inputImage: File, inputUrl: string | null) => {
+    const base64Image = inputImage ? await fileToBase64(inputImage) : null;
+    if (base64Image){
+      const newDraftQuestion = updateDQwithImageChange(draftQuestion, base64Image, inputUrl);
       setDraftQuestion(newDraftQuestion);
     }
   }
@@ -160,12 +161,13 @@ export default function CreateQuestion({
     [] 
   )
 
-  const handleImageSave = (inputImage: File | null, inputUrl: string | null) => {
+  const handleImageSave = async (inputImage: File | null, inputUrl: string | null) => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
-    if (inputImage){
+    const base64Image = inputImage ? await fileToBase64(inputImage) : null;
+    if (base64Image){
       const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImage(draftQuestion, inputImage, inputUrl);
+      const newDraftQuestion = updateDQwithImage(draftQuestion, base64Image, inputUrl);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
       console.log(newDraftQuestion);
@@ -330,7 +332,8 @@ export default function CreateQuestion({
       setIsCardSubmitted(true);
       if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && draftQuestion.incorrectCards.every((card) => card.isCardComplete)){
         if (draftQuestion.questionCard.image) {
-          const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
+          const file = base64ToFile(draftQuestion.questionCard.image, 'image.jpg', 'image/jpg');
+          const img = await apiClients.questionTemplate.storeImageInS3(file);
           // have to do a nested await here because aws-storage returns a nested promise object
           const result = await img.result;
           if (result && result.path && result.path.length > 0){

@@ -105,6 +105,7 @@ export default function CreateQuestionCardBase({
     setTitle((prev) => value);
     handleTitleChange(value, draftQuestion);
   }
+
   const imageContents = [
     draftQuestion.questionCard.image &&
       <Box 
@@ -121,7 +122,7 @@ export default function CreateQuestionCardBase({
           position: 'relative',
       }}>
             <ImageStyled 
-              src={URL.createObjectURL(draftQuestion.questionCard.image) ?? ''} 
+              src={draftQuestion.questionCard.image} 
               alt="image" 
               style={{
                 opacity: isImageHovered ? 0.6: 1,
