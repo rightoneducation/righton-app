@@ -30,6 +30,7 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswers } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -81,6 +82,32 @@ export default function CreateQuestion({
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
+  const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>(
+    [
+      {
+        id: 'card-1',
+        answer: '', 
+        explanation: '',
+        isFirstEdit: true,
+        isCardComplete: false,
+      },
+      {
+        id: 'card-2',
+        answer: '', 
+        explanation: '',
+        isFirstEdit: true,
+        isCardComplete: false,
+      },
+      {
+        id: 'card-3',
+        answer: '', 
+        explanation: '',
+        isFirstEdit: true,
+        isCardComplete: false,
+      },
+    ]
+  );
+  const [completeIncorrectAnswers, setCompleteIncorrectAnswers] = useState<IncorrectCard[]>([]);
 
   const retrieveStorage = () => {
     const storageObject = window.localStorage.getItem(StorageKey);
@@ -107,27 +134,8 @@ export default function CreateQuestion({
           isCardComplete: false,
         },
         incorrectCards: [
-          {
-            id: 'card-1',
-            answer: '', 
-            explanation: '',
-            isFirstEdit: true,
-            isCardComplete: false,
-          },
-          {
-            id: 'card-2',
-            answer: '', 
-            explanation: '',
-            isFirstEdit: true,
-            isCardComplete: false,
-          },
-          {
-            id: 'card-3',
-            answer: '', 
-            explanation: '',
-            isFirstEdit: true,
-            isCardComplete: false,
-          },
+          ...incompleteIncorrectAnswers, 
+          ...completeIncorrectAnswers
         ]
       }
     }
@@ -236,29 +244,29 @@ export default function CreateQuestion({
   )
 
   // incorrect answer card functions
-  const getNextHighlightCard =(currentId: CreateQuestionHighlightCard): CreateQuestionHighlightCard | null  => {
-    const values = Object.values(CreateQuestionHighlightCard);
-    const currentIndex = values.indexOf(currentId);
-    if (currentIndex === -1 || currentIndex === values.length - 1) {
-      return null; // No next value or current is the last
-    }
-    return values[currentIndex + 1] as CreateQuestionHighlightCard;
-  }
+  const handleNextCardButtonClick = () => {
+    const { newIncompleteAnswers, newCompleteAnswers }= handleMoveAnswerToComplete(incompleteIncorrectAnswers, completeIncorrectAnswers);
+    setIncompleteIncorrectAnswers(newIncompleteAnswers);
+    setCompleteIncorrectAnswers(newCompleteAnswers);
+  };
 
-  const handleDraftQuestionIncorrectUpdate = (newAnswers: IncorrectCard[], cardData: IncorrectCard) => {
+  const handleIncorrectCardStackUpdate = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => {
       const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
-      const updatedCard = {...cardData, isCardComplete: true, isFirstEdit: false};
-      const updatedAnswers = newAnswers.map((answer) => { 
+      const updatedAnswers = incompleteAnswers.map((answer) => {
         if (answer.id === cardData.id) {
-          return updatedCard;
+          return cardData;
         }
         return answer;
       });
-      setDraftQuestion((prev) => {
-        const updatedQuestion = {...prev, incorrectCards: [...updatedAnswers]};
-        window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-        return {...prev, updatedQuestion}
-      });
+      // adjust incomplete and complete arrays, moving completed card over
+      const { newIncompleteAnswers, newCompleteAnswers }= handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
+      // adjust local state for the cards so that they animate properly through the stack
+      setIncompleteIncorrectAnswers(newIncompleteAnswers);
+      setCompleteIncorrectAnswers(newCompleteAnswers);
+      // adjust draftQuestion and localstorage for use in API call and retrieval, respectively
+      const newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, newIncompleteAnswers, newCompleteAnswers);
+      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+      setDraftQuestion(newDraftQuestion);
       if (cardData.isFirstEdit)
         setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
   }
@@ -478,9 +486,12 @@ export default function CreateQuestion({
                 <AISwitch/>
               </Box>
               <IncorrectAnswerCardStack 
+                draftQuestion={draftQuestion}
+                completeIncorrectAnswers={completeIncorrectAnswers}
+                incompleteIncorrectAnswers={incompleteIncorrectAnswers}
                 highlightCard={highlightCard} 
-                draftQuestion={draftQuestion} 
-                handleDraftQuestionIncorrectUpdate={handleDraftQuestionIncorrectUpdate} 
+                handleNextCardButtonClick={handleNextCardButtonClick}
+                handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                 handleCardClick={handleClick} 
                 isCardSubmitted={isCardSubmitted}
               />

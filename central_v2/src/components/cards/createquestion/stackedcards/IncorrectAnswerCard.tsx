@@ -1,7 +1,7 @@
 import React, { useState, useMemo} from 'react';
 import { Paper, styled, InputAdornment } from '@mui/material';
 import { debounce } from 'lodash';
-import { IncorrectCard } from '@righton/networking';
+import { CentralQuestionTemplateInput, IncorrectCard } from '@righton/networking';
 import { CreateQuestionHighlightCard, } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
@@ -32,10 +32,11 @@ const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight, isCardC
 
 interface IncorrectAnswerCardProps {
   answerData: IncorrectCard;
+  draftQuestion: CentralQuestionTemplateInput;
   isHighlight?: boolean;
   isCardComplete: boolean;
   isCardSubmitted: boolean;
-  handleUpdateCardData: (cardData: IncorrectCard, isCardComplete: boolean, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
+  handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
   completeAnswers: IncorrectCard[];
   incompleteAnswers: IncorrectCard[];
@@ -43,10 +44,11 @@ interface IncorrectAnswerCardProps {
 
 export default function IncorrectAnswerCard({
   answerData,
+  draftQuestion,
   isHighlight,
   isCardComplete,
   isCardSubmitted,
-  handleUpdateCardData,
+  handleIncorrectCardStackUpdate,
   handleCardClick,
   completeAnswers,
   incompleteAnswers
@@ -72,10 +74,10 @@ export default function IncorrectAnswerCard({
   } 
 
   const debouncedCardChanges = useMemo(() => 
-    debounce((debounceCardData: IncorrectCard, debounceIsCardComplete: boolean, debounceCompleteAnswers: IncorrectCard[], debounceIncompleteAnswers: IncorrectCard[]) => {
-      handleUpdateCardData(debounceCardData, debounceIsCardComplete, debounceCompleteAnswers, debounceIncompleteAnswers);
+    debounce((debounceCardData: IncorrectCard, debouncedDraftQuestion: CentralQuestionTemplateInput, debounceCompleteAnswers: IncorrectCard[], debounceIncompleteAnswers: IncorrectCard[]) => {
+      handleIncorrectCardStackUpdate(debounceCardData, debouncedDraftQuestion, debounceCompleteAnswers, debounceIncompleteAnswers);
     }, 1000)
-  , [handleUpdateCardData]);
+  , [handleIncorrectCardStackUpdate]);
 
   const handleLocalAnswerChange = (value: string) => {
     setCardData({
@@ -83,7 +85,7 @@ export default function IncorrectAnswerCard({
       answer: value,
     })
     if (value.length > 0 && cardData.explanation.length > 0)
-      debouncedCardChanges({...cardData, answer: value, isCardComplete: true}, cardData.isCardComplete, completeAnswers, incompleteAnswers);
+      debouncedCardChanges({...cardData, answer: value, isCardComplete: true}, draftQuestion, completeAnswers, incompleteAnswers);
   }
 
   const handleLocalExplanationChange = (value: string) => {
@@ -92,7 +94,7 @@ export default function IncorrectAnswerCard({
       explanation: value,
     })
     if (value.length > 0 && cardData.explanation.length > 0)
-      debouncedCardChanges({...cardData, explanation: value, isCardComplete: true}, cardData.isCardComplete, completeAnswers, incompleteAnswers);
+      debouncedCardChanges({...cardData, explanation: value, isCardComplete: true}, draftQuestion, completeAnswers, incompleteAnswers);
   }
 
   return (
