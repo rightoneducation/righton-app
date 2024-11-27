@@ -28,9 +28,9 @@ import ImageUploadModal from '../components/modal/ImageUploadModal';
 import ImageURLModal from '../components/modal/ImageURLModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
-import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswers } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
+import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -82,7 +82,35 @@ export default function CreateQuestion({
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
-  const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>(
+  const retrieveStorage = (): {retreivedDraftQuestion: CentralQuestionTemplateInput | null, retreivedIncompleteAnswers: IncorrectCard[] | null, retreivedCompleteAnswers: IncorrectCard[] | null} | null => {
+    try{ 
+      const storageObject = window.localStorage.getItem(StorageKey);
+      let incompleteAnswers = null;
+      let completeAnswers = null;
+      let parsedObject = null;
+      if (storageObject){
+        parsedObject = JSON.parse(storageObject) as CentralQuestionTemplateInput;
+        incompleteAnswers = parsedObject.incorrectCards.filter((card) =>  card.isCardComplete === false);
+        completeAnswers = parsedObject.incorrectCards.filter((card) => card.isCardComplete);
+      }
+      return {retreivedDraftQuestion: parsedObject, retreivedIncompleteAnswers: incompleteAnswers, retreivedCompleteAnswers: completeAnswers }
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+  }
+  const retreivedData = retrieveStorage(); 
+  let retreivedDraftQuestion: CentralQuestionTemplateInput | null = null;
+  let retreivedIncompleteAnswers: IncorrectCard[] | null = null;
+  let retreivedCompleteAnswers: IncorrectCard[] | null = null;
+  if (retreivedData){
+    retreivedDraftQuestion = retreivedData.retreivedDraftQuestion;
+    retreivedIncompleteAnswers = retreivedData.retreivedIncompleteAnswers;
+    retreivedCompleteAnswers = retreivedData.retreivedCompleteAnswers;
+  }
+
+  const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>( 
+    retreivedIncompleteAnswers ??
     [
       {
         id: 'card-1',
@@ -107,18 +135,13 @@ export default function CreateQuestion({
       },
     ]
   );
-  const [completeIncorrectAnswers, setCompleteIncorrectAnswers] = useState<IncorrectCard[]>([]);
-
-  const retrieveStorage = () => {
-    const storageObject = window.localStorage.getItem(StorageKey);
-    if (storageObject){
-      return JSON.parse(storageObject);
-    }
-    return null;
-  }
+  const [completeIncorrectAnswers, setCompleteIncorrectAnswers] = useState<IncorrectCard[]>(
+    retreivedCompleteAnswers ??
+    []
+  );
 
   const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
-    return retrieveStorage() ?? {
+    return  retreivedDraftQuestion ?? {
         questionCard: {
           title: '',
           ccss: 'CCSS',
@@ -252,101 +275,70 @@ export default function CreateQuestion({
 
   const handleIncorrectCardStackUpdate = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => {
       const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
-      const updatedAnswers = incompleteAnswers.map((answer) => {
-        if (answer.id === cardData.id) {
-          return cardData;
-        }
-        return answer;
-      });
-      // adjust incomplete and complete arrays, moving completed card over
-      const { newIncompleteAnswers, newCompleteAnswers }= handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
-      // adjust local state for the cards so that they animate properly through the stack
-      setIncompleteIncorrectAnswers(newIncompleteAnswers);
-      setCompleteIncorrectAnswers(newCompleteAnswers);
+      const isUpdateInIncompleteCards = incompleteAnswers.find(answer => answer.id === cardData.id);
+      let newDraftQuestion = null;
+      // we need to break this up so we don't change the stateful arrays when a card is not being passed across them. 
+      // everytime we update those arrays, we're going to trigger an animation, so we have to only manipulate them when we want that
+      // so in this case, if the card that is being edited is already complete, we are only going to update the draftQuestion object and leave the arrays alone
+      if (isUpdateInIncompleteCards){
+        const updatedAnswers = incompleteAnswers.map((answer) => {
+          if (answer.id === cardData.id) {
+            return cardData;
+          }
+          return answer;
+        });
+        // adjust incomplete and complete arrays, moving completed card over
+        const { newIncompleteAnswers, newCompleteAnswers } = handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
+        // adjust local state for the cards so that they animate properly through the stack
+        setIncompleteIncorrectAnswers(newIncompleteAnswers);
+        setCompleteIncorrectAnswers(newCompleteAnswers);
+
+        newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, newIncompleteAnswers, newCompleteAnswers);
+        if (cardData.isFirstEdit)
+          setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
+      } else {
+        const newCompleteAnswers = completeAnswers.map((answer) => {
+          if (answer.id === cardData.id) {
+            return cardData;
+          }
+          return answer;
+        })
+        newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, incompleteAnswers, newCompleteAnswers);
+      }
+    
       // adjust draftQuestion and localstorage for use in API call and retrieval, respectively
-      const newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, newIncompleteAnswers, newCompleteAnswers);
-      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
-      setDraftQuestion(newDraftQuestion);
-      if (cardData.isFirstEdit)
-        setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
+      if (newDraftQuestion){
+        setDraftQuestion(newDraftQuestion);
+        window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+      }
+   
   }
   
   const handleClick = (cardType: CreateQuestionHighlightCard) => {
     switch(cardType){
       case CreateQuestionHighlightCard.CORRECTANSWER:
         if (draftQuestion.correctCard.isCardComplete){
-          setDraftQuestion((prev) => {
-            const updatedQuestion = ({...prev, correctCard: {...prev.correctCard, isCardComplete: false}})
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return updatedQuestion;
-          });
+          const newDraftQuestion = updateDQwithCorrectAnswerClick(draftQuestion);
+          window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+          setDraftQuestion(newDraftQuestion);
         }
         break;
-      case CreateQuestionHighlightCard.INCORRECTANSWER1:{
-        const newAnswers = [...draftQuestion.incorrectCards];
-        const incorrectCard = newAnswers.find((card) => card.id === 'card-1');
-        if (incorrectCard && incorrectCard.isCardComplete){
-          incorrectCard.isCardComplete = false;
-          const updatedAnswers = newAnswers.map((answer) => {
-            if (answer.id === 'card-1') {
-              return incorrectCard;
-            }
-            return answer;
-          });
-          setDraftQuestion((prev) => {
-            const updatedQuestion = ({...prev, incorrectCards: updatedAnswers})
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return updatedQuestion;
-          });
-        }
-        break;
-      }
-      case CreateQuestionHighlightCard.INCORRECTANSWER2: {
-        const newAnswers = [...draftQuestion.incorrectCards];
-        const incorrectCard = newAnswers.find((card) => card.id === 'card-2');
-        if (incorrectCard && incorrectCard.isCardComplete){
-          incorrectCard.isCardComplete = false;
-          const updatedAnswers = newAnswers.map((answer) => {
-            if (answer.id === 'card-2') {
-              return incorrectCard;
-            }
-            return answer;
-          });
-          setDraftQuestion((prev) => {
-            const updatedQuestion = ({...prev, incorrectCards: updatedAnswers});
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return updatedQuestion;
-          });
-        }
-        break;
-      }
-      case CreateQuestionHighlightCard.INCORRECTANSWER3:{
-        const newAnswers = [...draftQuestion.incorrectCards];
-        const incorrectCard = newAnswers.find((card) => card.id === 'card-3');
-        if (incorrectCard && incorrectCard.isCardComplete){
-          incorrectCard.isCardComplete = false;
-          const updatedAnswers = newAnswers.map((answer) => {
-            if (answer.id === 'card-3') {
-              return incorrectCard;
-            }
-            return answer;
-          });
-          setDraftQuestion((prev) => {
-            const updatedQuestion = ({...prev, incorrectCards: updatedAnswers});
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return updatedQuestion;
-        });
-        }
+      case CreateQuestionHighlightCard.INCORRECTANSWER1:
+      case CreateQuestionHighlightCard.INCORRECTANSWER2:
+      case CreateQuestionHighlightCard.INCORRECTANSWER3:
+      {
+        // then we can update the draftQuestion for the api call and the localStorage for retreival, respectively
+        const newDraftQuestion = updateDQwithIncorrectAnswerClick(draftQuestion, cardType);
+        window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+        setDraftQuestion(newDraftQuestion);
         break;
       }
       case CreateQuestionHighlightCard.QUESTIONCARD:
       default:
         if (draftQuestion.questionCard.isCardComplete){
-          setDraftQuestion((prev) => {
-            const updatedQuestion = ({...prev, questionCard: {...prev.questionCard, isCardComplete: false}})
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return updatedQuestion;
-          });
+          const newDraftQuestion = updateDQwithQuestionClick(draftQuestion);
+          window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+          setDraftQuestion(newDraftQuestion);
         }
         break;
     }
@@ -356,17 +348,10 @@ export default function CreateQuestion({
     setIsCCSSVisible(false);
   };
 
-  const verifyIncorrectCards = (incorrectCards: CentralQuestionTemplateInput['incorrectCards']): boolean => {
-    if (incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)){
-      return true;
-    }
-    return false;
-  };
-
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && verifyIncorrectCards(draftQuestion.incorrectCards)){
+      if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && draftQuestion.incorrectCards.every((card) => card.isCardComplete)){
         if (draftQuestion.questionCard.image) {
           const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
           // have to do a nested await here because aws-storage returns a nested promise object

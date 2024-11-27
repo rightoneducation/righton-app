@@ -42,3 +42,7 @@ export const updateDQwithCCSS = (draftQuestion: CentralQuestionTemplateInput, in
   }
   return {...draftQuestion, questionCard: {...draftQuestion.questionCard, ccss: inputCCSS}};
 }
+
+export const updateDQwithQuestionClick = (draftQuestion: CentralQuestionTemplateInput): CentralQuestionTemplateInput => {
+  return {...draftQuestion, questionCard: {...draftQuestion.questionCard, isCardComplete: false}}
+}

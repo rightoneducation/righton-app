@@ -70,7 +70,6 @@ export default function IncorrectAnswerCardStack({
                   <IncorrectAnswerCard
                     answerData={card} 
                     draftQuestion={draftQuestion}
-                    isCardComplete={false}
                     isHighlight={highlightCard === card.id}
                     isCardSubmitted={isCardSubmitted}
                     handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
@@ -94,7 +93,6 @@ export default function IncorrectAnswerCardStack({
                 <IncorrectAnswerCard   
                   answerData={card} 
                   draftQuestion={draftQuestion}
-                  isCardComplete={false}
                   isHighlight={highlightCard === card.id}
                   isCardSubmitted={isCardSubmitted}
                   handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
@@ -133,7 +131,6 @@ export default function IncorrectAnswerCardStack({
               answerData={card} 
               draftQuestion={draftQuestion}
               isHighlight={highlightCard === card.id}
-              isCardComplete
               isCardSubmitted={isCardSubmitted}
               handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
               handleCardClick={handleCardClick}

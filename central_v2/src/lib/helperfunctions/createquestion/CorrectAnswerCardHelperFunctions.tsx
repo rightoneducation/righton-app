@@ -19,3 +19,7 @@ export const updateDQwithCorrectAnswerSteps = (draftQuestionInput: CentralQuesti
   }
   return {...draftQuestionInput, correctCard: { ...draftQuestionInput.correctCard, answerSteps: steps}};
 }
+
+export const updateDQwithCorrectAnswerClick = (draftQuestion: CentralQuestionTemplateInput): CentralQuestionTemplateInput => {
+  return {...draftQuestion, correctCard: {...draftQuestion.correctCard, isCardComplete: false}}
+}

@@ -26,6 +26,24 @@ export const updateDQwithIncorrectAnswers = (draftQuestionInput: CentralQuestion
   const complete = completeAnswers.map(answer => {
     return {...answer, isCardComplete: true}
   })
-  const newDraftQuestion = {...draftQuestionInput, inCorrectCards: [...complete, ...incomplete]}
+  const newDraftQuestion = {...draftQuestionInput, incorrectCards: [...complete, ...incomplete]}
+  return newDraftQuestion;
+}
+
+export const handleIncorrectCardClick = (completeAnswers: IncorrectCard[], clickedCard: CreateQuestionHighlightCard): IncorrectCard | null  => {
+  const clickedAnswer = completeAnswers.find((answer) => answer.id === clickedCard);
+  let newCompleteAnswer = null;
+  if (clickedAnswer)
+    newCompleteAnswer = {...clickedAnswer, isCardComplete: false};
+  return newCompleteAnswer;
+}
+
+export const updateDQwithIncorrectAnswerClick = (draftQuestion: CentralQuestionTemplateInput, clickedCard: CreateQuestionHighlightCard): CentralQuestionTemplateInput => {
+  const newCards = draftQuestion.incorrectCards.map((answer) => {
+    if (answer.id === clickedCard)
+      return { ...answer, isCardComplete: false };
+    return answer;
+  });
+  const newDraftQuestion = {...draftQuestion, incorrectCards: [...newCards]}
   return newDraftQuestion;
 }
