@@ -29,6 +29,7 @@ import ImageURLModal from '../components/modal/ImageURLModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -90,7 +91,7 @@ export default function CreateQuestion({
   }
 
   const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
-    return {
+    return retrieveStorage() ?? {
         questionCard: {
           title: '',
           ccss: 'CCSS',
@@ -134,7 +135,7 @@ export default function CreateQuestion({
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
 
-  // CreateQuestionCardBase handler functions
+  // QuestionCardBase handler functions
   const handleImageChange = (inputImage: File, inputUrl: string | null) => {
     if (inputImage){
       const newDraftQuestion = updateDQwithImageChange(draftQuestion, inputImage, inputUrl);
@@ -184,13 +185,10 @@ export default function CreateQuestion({
     const newDraftQuestion = updateDQwithCCSS(draftQuestion, ccssString);
     window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
     setDraftQuestion(newDraftQuestion);
-    console.log(newDraftQuestion);
     if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
       setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
   };
 
-
-  // question card functions
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
   }
@@ -212,57 +210,27 @@ export default function CreateQuestion({
     setIsImageURLVisible(false);
   }
 
-  // correct answer card functions
+  // CorrectAnswerCard handler functions
   const handleDebouncedCorrectAnswerChange = useCallback( // eslint-disable-line
     debounce((correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
-      if (draftQuestionInput.correctCard.answerSteps.length > 0 && draftQuestionInput.correctCard.answerSteps.every((answer) => answer.length > 0) && correctAnswer.length > 0){
-        if (draftQuestionInput.incorrectCards[0].isFirstEdit){
-          setDraftQuestion((prev) => {
-            const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answer: correctAnswer, isCardComplete: true, isFirstEdit: false}};
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return {...prev, updatedQuestion}
-          });
-          setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
-        } else {
-          setDraftQuestion((prev) => {
-            const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answer: correctAnswer, isCardComplete: true}};
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return {...prev, updatedQuestion}
-          });
-        }
-      }
-      setDraftQuestion((prev) => {
-        const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answer: correctAnswer }};
-        window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-        return {...prev, updatedQuestion}
-      });
+      const { isFirstEdit } = draftQuestionInput.correctCard;
+      const newDraftQuestion = updateDQwithCorrectAnswer(draftQuestionInput, correctAnswer);
+      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+      setDraftQuestion(newDraftQuestion);
+      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
     }, 1000),
     [] 
   )
   
   const handleDebouncedCorrectAnswerStepsChange = useCallback( // eslint-disable-line
     debounce((steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
-      if (draftQuestionInput.correctCard.answer.length > 0 && steps.length > 0 && steps.every((step) => step.length > 0)){
-        if (draftQuestionInput.incorrectCards[0].isFirstEdit){
-          setDraftQuestion((prev) => {
-            const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answerSteps: steps, isCardComplete: true, isFirstEdit: false}};
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return {...prev, updatedQuestion}
-          });
-          setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
-        } else {
-          setDraftQuestion((prev) => {
-            const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answerSteps: steps, isCardComplete: true }};
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return {...prev, updatedQuestion}
-          });
-        }
-      }
-      setDraftQuestion((prev) => {
-        const updatedQuestion = {...prev, correctCard: { ...prev.correctCard, answerSteps: steps}};
-        window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-        return {...prev, updatedQuestion}
-      });
+      const { isFirstEdit } = draftQuestionInput.correctCard;
+      const newDraftQuestion = updateDQwithCorrectAnswerSteps(draftQuestionInput, steps);
+      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+      setDraftQuestion(newDraftQuestion);
+      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
     }, 1000),
     [] 
   )
@@ -380,18 +348,6 @@ export default function CreateQuestion({
     setIsCCSSVisible(false);
   };
 
-  const verifyCorrectCard = (correctCard: CentralQuestionTemplateInput['correctCard']): boolean => {
-    if (
-      correctCard.answer 
-      && correctCard.answer.length > 0 
-      && correctCard.answerSteps.length > 0 
-      && correctCard.answerSteps.every((step) => step.length > 0
-    )){
-      return true;
-    }
-    return false;
-  };
-
   const verifyIncorrectCards = (incorrectCards: CentralQuestionTemplateInput['incorrectCards']): boolean => {
     if (incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)){
       return true;
@@ -402,7 +358,7 @@ export default function CreateQuestion({
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      if (draftQuestion.questionCard.isCardComplete && verifyCorrectCard(draftQuestion.correctCard) && verifyIncorrectCards(draftQuestion.incorrectCards)){
+      if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && verifyIncorrectCards(draftQuestion.incorrectCards)){
         if (draftQuestion.questionCard.image) {
           const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
           // have to do a nested await here because aws-storage returns a nested promise object
@@ -521,7 +477,13 @@ export default function CreateQuestion({
                 </Typography>
                 <AISwitch/>
               </Box>
-          
+              <IncorrectAnswerCardStack 
+                highlightCard={highlightCard} 
+                draftQuestion={draftQuestion} 
+                handleDraftQuestionIncorrectUpdate={handleDraftQuestionIncorrectUpdate} 
+                handleCardClick={handleClick} 
+                isCardSubmitted={isCardSubmitted}
+              />
             </SubCardGridItem>
           </Grid>
         </Grid>
