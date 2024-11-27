@@ -97,15 +97,14 @@ export default function CreateQuestionCardBase({
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setQuestionType(PublicPrivateType[event.target.value as keyof typeof PublicPrivateType]);
-    handlePublicPrivateChange(PublicPrivateType[event.target.value as keyof typeof PublicPrivateType]);
+    setQuestionType(event.target.value as PublicPrivateType);
+    handlePublicPrivateChange(event.target.value as PublicPrivateType);
   };
 
   const handleLocalTitleChange = (value: string) => {
     setTitle((prev) => value);
     handleTitleChange(value, draftQuestion);
   }
-
   const imageContents = [
     draftQuestion.questionCard.image &&
       <Box 
@@ -152,14 +151,14 @@ export default function CreateQuestionCardBase({
             style={{overflow: 'hidden', flexWrap: 'nowrap'}}
           >
             <RadioLabelStyled
-              value="Public"
+              value={PublicPrivateType.PUBLIC}
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Multiple Choice"
               isSelected={questionType === PublicPrivateType.PUBLIC}
               style={{cursor: 'pointer'}}
             />
             <RadioLabelStyled
-              value="Private"
+              value={PublicPrivateType.PRIVATE}
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Short Answer"
               isSelected={questionType === PublicPrivateType.PRIVATE}

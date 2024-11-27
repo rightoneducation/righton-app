@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Paper, Fade, Typography, styled } from '@mui/material';
+import { CentralQuestionTemplateInput } from '@righton/networking';
 import { FileUploader } from 'react-drag-drop-files';
 import imageUploadIcon from '../../images/imageUploadIcon.svg';
 import imageUploadClose from '../../images/imageUploadClose.svg';
@@ -71,7 +72,9 @@ const DashedBox = styled(Box)(({ theme }) => ({
 interface ImageUploadModalProps {
   screenSize: ScreenSize;
   isModalOpen: boolean;
-  handleImageSave: (file: File) => void;
+  draftQuestion: CentralQuestionTemplateInput;
+  handleImageChange: (file: File, url: null) => void;
+  handleImageSave: (file: File, url: null) => void;
   handleCloseModal: () => void;
   borderStyle: BorderStyle;
 }
@@ -79,89 +82,30 @@ interface ImageUploadModalProps {
 export default function ImageUploadModal({
   screenSize,
   isModalOpen,
+  draftQuestion,
+  handleImageChange,
   handleImageSave,
   handleCloseModal,
   borderStyle
 }: ImageUploadModalProps) {
-  const [image, setImage] = React.useState<File | null>(null);
   const [isMouseOver, setIsMouseOver] = React.useState<boolean>(false);
+  const {image, imageUrl} = draftQuestion.questionCard;
 
-  const handleImageChange = (file: File) => {
-    if (file){
-      setImage(file);
-    }
+  const handleChangeClick = (newImage: File) => {
+    handleImageChange(newImage, null);
   }
 
   const handleSaveClick = () => {
     if (image) {
-      handleImageSave(image);
+      handleImageSave(image, null);
     }
-  }
-
-  const modalContents = [
-    image ? (
-      <Box style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-      }}
-      onMouseEnter={() => setIsMouseOver(true)}
-      onMouseLeave={() => setIsMouseOver(false)}
-      >
-        <Box 
-          style={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            height: '100%',
-            width: '100%',
-            backgroundColor: isMouseOver ? 'rgba(0,0,0,0.72)' : 'rgba(0,0,0,0)',
-            transition: 'background-color 0.75s',
-          }} 
-        />
-        <Fade in={isMouseOver} mountOnEnter unmountOnExit timeout={750} >
-          <Box style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 1,
-          }}>
-            <CentralButton type="file" buttonType={ButtonType.CHANGEIMAGE} isEnabled handleFileChange={handleImageChange} />
-          </Box>
-        </Fade>
-        <img
-          src={URL.createObjectURL(image)}
-          alt="Uploaded"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-      
-        />
-      </Box>
-    ) : (
-      <DropImageUpload handleImageSave={handleImageChange} >
-        <UploadIcon src={imageUploadIcon} alt="imageUploadIcon" />
-        <DragText>Drag & Drop File here</DragText>
-        <DragText style={{ fontSize: '20px' }}>or</DragText>
-        <CentralButton
-          type="file"
-          buttonType={ButtonType.UPLOAD}
-          isEnabled
-          handleFileChange={handleImageChange}
-        />
-      </DropImageUpload>   
-    )
-  ];
-  
+  } 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
       <IntegratedContainer elevation={12} screenSize={screenSize}>
           <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
               <DashedBox>
-               {image ? (
+               {(image && imageUrl === null) ? (
                   <Box style={{
                     width: '100%',
                     height: '100%',
@@ -189,7 +133,7 @@ export default function ImageUploadModal({
                         transform: 'translate(-50%, -50%)',
                         zIndex: 1,
                       }}>
-                        <CentralButton type="file" buttonType={ButtonType.CHANGEIMAGE} isEnabled handleFileChange={handleImageChange} />
+                        <CentralButton type="file" buttonType={ButtonType.CHANGEIMAGE} isEnabled handleFileChange={handleChangeClick} />
                       </Box>
                     </Fade>
                     <img
@@ -203,7 +147,7 @@ export default function ImageUploadModal({
                     />
                   </Box>
                 ) : (
-                  <DropImageUpload handleImageSave={handleImageChange} >
+                  <DropImageUpload handleImageSave={handleChangeClick} >
                     <UploadIcon src={imageUploadIcon} alt="imageUploadIcon" />
                     <DragText>Drag & Drop File here</DragText>
                     <DragText style={{ fontSize: '20px' }}>or</DragText>
@@ -211,7 +155,7 @@ export default function ImageUploadModal({
                       type="file"
                       buttonType={ButtonType.UPLOAD}
                       isEnabled
-                      handleFileChange={handleImageChange}
+                      handleFileChange={handleChangeClick}
                     />
                   </DropImageUpload>   
                 )}

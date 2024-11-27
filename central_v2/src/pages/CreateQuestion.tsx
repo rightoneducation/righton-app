@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { debounce, set } from 'lodash';
+import { debounce, set, update } from 'lodash';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
@@ -28,6 +28,7 @@ import ImageUploadModal from '../components/modal/ImageUploadModal';
 import ImageURLModal from '../components/modal/ImageURLModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -89,10 +90,12 @@ export default function CreateQuestion({
   }
 
   const [draftQuestion, setDraftQuestion] = useState<CentralQuestionTemplateInput>(() => {
-    return retrieveStorage() ?? {
+    return {
         questionCard: {
           title: '',
           ccss: 'CCSS',
+          image: null,
+          imageUrl: null,
           isFirstEdit: true,
           isCardComplete: false,
         },
@@ -131,6 +134,62 @@ export default function CreateQuestion({
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
 
+  // CreateQuestionCardBase handler functions
+  const handleImageChange = (inputImage: File, inputUrl: string | null) => {
+    if (inputImage){
+      const newDraftQuestion = updateDQwithImageChange(draftQuestion, inputImage, inputUrl);
+      setDraftQuestion(newDraftQuestion);
+    }
+  }
+
+  const handleImageUrlChange = useCallback( // eslint-disable-line
+    debounce((debouncedQuestion: CentralQuestionTemplateInput, url: string) => {
+      const newDraftQuestion = updateDQwithImageChange(debouncedQuestion, null, url);
+      setDraftQuestion(newDraftQuestion);
+      console.log(newDraftQuestion);
+    }, 500),
+    [] 
+  )
+
+  const handleImageSave = (inputImage: File | null, inputUrl: string | null) => {
+    setIsImageUploadVisible(false);
+    setIsImageURLVisible(false);
+    if (inputImage){
+      const { isFirstEdit } = draftQuestion.questionCard;
+      const newDraftQuestion = updateDQwithImage(draftQuestion, inputImage, inputUrl);
+      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+      setDraftQuestion(newDraftQuestion);
+      console.log(newDraftQuestion);
+      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+    }
+  }
+
+  const handleDebouncedTitleChange = useCallback( // eslint-disable-line
+    debounce((title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
+      const { isFirstEdit } = draftQuestionInput.questionCard;
+      const newDraftQuestion = updateDQwithTitle(draftQuestionInput, title);
+      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+      setDraftQuestion(newDraftQuestion);
+      console.log(newDraftQuestion);
+      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+    }, 1000),
+    [] 
+  )
+
+  const handleCCSSSubmit = (ccssString: string) => {
+    setIsCCSSVisible(false);
+    const { isFirstEdit } = draftQuestion.questionCard;
+    const newDraftQuestion = updateDQwithCCSS(draftQuestion, ccssString);
+    window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+    setDraftQuestion(newDraftQuestion);
+    console.log(newDraftQuestion);
+    if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+      setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+  };
+
+
   // question card functions
   const handleCCSSClick = () => {
     setIsCCSSVisible((prev) => !prev);
@@ -148,94 +207,10 @@ export default function CreateQuestion({
     setPublicPrivate((prev) => value);
   }
 
-  const handleImageSave = (inputImage: File) => {
-    setIsImageUploadVisible(false);
-    setIsImageURLVisible(false);
-    if (inputImage){
-      if (draftQuestion.questionCard.ccss.length > 0 && draftQuestion.questionCard.ccss !== 'CCSS' && draftQuestion.questionCard.title){
-        if (draftQuestion.correctCard.isFirstEdit){
-          setDraftQuestion((prev) => {
-            const updatedQuestion = {...prev, questionCard: {...prev.questionCard, image: inputImage, isCardComplete: true, isFirstEdit: false}};
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return ({...prev, updatedQuestion})
-          });
-          setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-        } else {
-          setDraftQuestion((prev) => {
-            const updatedQuestion = {...prev, questionCard: {...prev.questionCard, image: inputImage, isCardComplete: true}};
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return ({...prev, updatedQuestion})
-          });
-        }
-      } else {
-        setDraftQuestion((prev) => {
-          const updatedQuestion = {...prev, questionCard: {...prev.questionCard, image: inputImage}};
-          window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-          return ({...prev, updatedQuestion})
-        });
-      }
-    }
-  }
-
-  const handleDebouncedTitleChange = useCallback( // eslint-disable-line
-    debounce((title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
-      // we're doing this circular passing of draftQuestion here to avoid stale state
-      if (draftQuestionInput.questionCard.ccss.length > 0 && draftQuestionInput.questionCard.ccss !== 'CCSS' && draftQuestionInput.questionCard.image){
-        if (draftQuestionInput.correctCard.isFirstEdit){
-          setDraftQuestion((prev) => {
-            const updatedQuestion = {...prev, questionCard: {...prev.questionCard, title, isCardComplete: true, isFirstEdit: false}};
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return ({...prev, updatedQuestion})
-          });
-          setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-        } else {
-          setDraftQuestion((prev) => {
-            const updatedQuestion = {...prev, questionCard: {...prev.questionCard, title, isCardComplete: true}};
-            window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-            return ({...prev, updatedQuestion})
-          });
-        }
-      } else {
-        setDraftQuestion((prev) => {
-          const updatedQuestion = {...prev, questionCard: {...prev.questionCard, title}};
-          window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-          return ({...prev, updatedQuestion})
-        });
-      }
-    }, 1000),
-    [] 
-  )
-
   const handleCloseModal = () => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
   }
-
-  const handleCCSSSubmit = (ccssString: string) => {
-    setIsCCSSVisible(false);
-    if (ccssString && draftQuestion.questionCard.image && draftQuestion.questionCard.title){
-      if (draftQuestion.correctCard.isFirstEdit){
-        setDraftQuestion((prev) => {
-          const updatedQuestion = {...prev, questionCard: {...prev.questionCard, ccss: ccssString, isCardComplete: true, isFirstEdit: false}};
-          window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-          return ({...prev, updatedQuestion})
-        });
-        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-      } else {
-        setDraftQuestion((prev) => {
-          const updatedQuestion = {...prev, questionCard: {...prev.questionCard, ccss: ccssString, isCardComplete: true}};
-          window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-          return ({...prev, updatedQuestion})
-        });
-      }
-    } else {
-      setDraftQuestion((prev) => {
-        const updatedQuestion = {...prev, questionCard: {...prev.questionCard, ccss: ccssString}};
-        window.localStorage.setItem(StorageKey, JSON.stringify(updatedQuestion));
-        return ({...prev, updatedQuestion})
-      });
-    }
-  };
 
   // correct answer card functions
   const handleDebouncedCorrectAnswerChange = useCallback( // eslint-disable-line
@@ -405,19 +380,6 @@ export default function CreateQuestion({
     setIsCCSSVisible(false);
   };
 
-  const verifyQuestionCard = (questionCard: QuestionCard): boolean => {
-    if ( 
-      questionCard.title 
-      && questionCard.title.length > 0 
-      && questionCard.ccss 
-      && questionCard.ccss.length > 0
-      && questionCard.ccss !== 'CCSS'
-      && questionCard.image){
-      return true;
-    }
-    return false;
-  };
-
   const verifyCorrectCard = (correctCard: CentralQuestionTemplateInput['correctCard']): boolean => {
     if (
       correctCard.answer 
@@ -440,15 +402,15 @@ export default function CreateQuestion({
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      if (verifyQuestionCard(draftQuestion.questionCard) && verifyCorrectCard(draftQuestion.correctCard) && verifyIncorrectCards(draftQuestion.incorrectCards)){
+      if (draftQuestion.questionCard.isCardComplete && verifyCorrectCard(draftQuestion.correctCard) && verifyIncorrectCards(draftQuestion.incorrectCards)){
         if (draftQuestion.questionCard.image) {
-          const image = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
+          const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
           // have to do a nested await here because aws-storage returns a nested promise object
-          const result = await image.result;
+          const result = await img.result;
           if (result && result.path && result.path.length > 0){
             window.localStorage.setItem(StorageKey, '');
-            const imageUrl = result.path;
-            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, imageUrl, draftQuestion);
+            const url = result.path;
+            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
           }
           // navigate('/questions');
         }
@@ -469,8 +431,8 @@ export default function CreateQuestion({
     <CreateQuestionMainContainer>
        <DebugAuth />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible} handleCloseModal={handleCloseModal}/>
-       <ImageUploadModal screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
-       <ImageURLModal isModalOpen={isImageURLVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
+       <ImageUploadModal draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
+       <ImageURLModal draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
       <>
         <CCSSTabsModalBackground
           isTabsOpen={isCCSSVisible}
@@ -559,13 +521,7 @@ export default function CreateQuestion({
                 </Typography>
                 <AISwitch/>
               </Box>
-                <IncorrectAnswerCardStack 
-                  highlightCard={highlightCard} 
-                  draftQuestion={draftQuestion} 
-                  handleDraftQuestionIncorrectUpdate={handleDraftQuestionIncorrectUpdate} 
-                  handleCardClick={handleClick} 
-                  isCardSubmitted={isCardSubmitted}
-                />
+          
             </SubCardGridItem>
           </Grid>
         </Grid>
