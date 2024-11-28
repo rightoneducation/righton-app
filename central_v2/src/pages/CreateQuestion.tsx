@@ -35,6 +35,7 @@ import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQ
 import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
+import ErrorCard from '../components/cards/ErrorCard';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -390,22 +391,32 @@ export default function CreateQuestion({
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
       <CreateQuestionGridContainer container >
         { (screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) &&
-            <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingBottom: '16px'}}>
-              <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
-              <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
-            </Box>
+            <>
+              {isCardErrored &&
+                <ErrorCard />
+              }  
+              <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingBottom: '16px'}}>
+                <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
+                <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
+              </Box>
+            </>
           }
         <Grid
           sm
           md
           item
-          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end', paddingTop: '16px'}}
+          style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', paddingTop: '16px', gap: '20px'}}
         >
           { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
+            <>
+            { isCardErrored &&
+              <ErrorCard />
+            }
             <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
             </Box>
+            </>
           }
         </Grid>
         <Grid
