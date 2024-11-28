@@ -271,15 +271,20 @@ export default function CreateQuestion({
           }
           return answer;
         });
-        // adjust incomplete and complete arrays, moving completed card over
-        const { newIncompleteAnswers, newCompleteAnswers } = handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
-        // adjust local state for the cards so that they animate properly through the stack
-        setIncompleteIncorrectAnswers(newIncompleteAnswers);
-        setCompleteIncorrectAnswers(newCompleteAnswers);
+        if (cardData.isCardComplete){
+          // adjust incomplete and complete arrays, moving completed card over
+          const { newIncompleteAnswers, newCompleteAnswers } = handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
+          // adjust local state for the cards so that they animate properly through the stack
+          setIncompleteIncorrectAnswers(newIncompleteAnswers);
+          setCompleteIncorrectAnswers(newCompleteAnswers);
+          newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, newIncompleteAnswers, newCompleteAnswers);
 
-        newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, newIncompleteAnswers, newCompleteAnswers);
-        if (cardData.isFirstEdit)
-          setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
+          if (cardData.isFirstEdit)
+            setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
+        } else {
+          newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, updatedAnswers, completeAnswers);
+        }
+
       } else {
         const newCompleteAnswers = completeAnswers.map((answer) => {
           if (answer.id === cardData.id) {

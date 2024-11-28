@@ -95,7 +95,7 @@ export default function IncorrectAnswerCard({
       ...cardData,
       explanation: value,
     })
-    if (value.length > 0 && cardData.explanation.length > 0)
+    if (value.length > 0 && cardData.answer.length > 0)
       debouncedCardChanges({...cardData, explanation: value, isCardComplete: true}, draftQuestion, completeAnswers, incompleteAnswers);
   }
 
