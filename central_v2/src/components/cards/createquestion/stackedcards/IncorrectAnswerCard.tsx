@@ -86,8 +86,7 @@ export default function IncorrectAnswerCard({
       ...cardData,
       answer: value,
     })
-    if (value.length > 0 && cardData.explanation.length > 0)
-      debouncedCardChanges({...cardData, answer: value, isCardComplete: true}, draftQuestion, completeAnswers, incompleteAnswers);
+      debouncedCardChanges({...cardData, answer: value}, draftQuestion, completeAnswers, incompleteAnswers);
   }
 
   const handleLocalExplanationChange = (value: string) => {
@@ -95,8 +94,7 @@ export default function IncorrectAnswerCard({
       ...cardData,
       explanation: value,
     })
-    if (value.length > 0 && cardData.answer.length > 0)
-      debouncedCardChanges({...cardData, explanation: value, isCardComplete: true}, draftQuestion, completeAnswers, incompleteAnswers);
+      debouncedCardChanges({...cardData, explanation: value}, draftQuestion, completeAnswers, incompleteAnswers);
   }
 
   const handleLocalCardClick = () => {

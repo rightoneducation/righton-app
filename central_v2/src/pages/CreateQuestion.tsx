@@ -261,6 +261,7 @@ export default function CreateQuestion({
       const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
       const isUpdateInIncompleteCards = incompleteAnswers.find(answer => answer.id === cardData.id);
       let newDraftQuestion = null;
+      const isCardComplete = cardData.answer.length >0 && cardData.explanation.length > 0;
       // we need to break this up so we don't change the stateful arrays when a card is not being passed across them. 
       // everytime we update those arrays, we're going to trigger an animation, so we have to only manipulate them when we want that
       // so in this case, if the card that is being edited is already complete, we are only going to update the draftQuestion object and leave the arrays alone
@@ -271,7 +272,7 @@ export default function CreateQuestion({
           }
           return answer;
         });
-        if (cardData.isCardComplete){
+        if (isCardComplete){
           // adjust incomplete and complete arrays, moving completed card over
           const { newIncompleteAnswers, newCompleteAnswers } = handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
           // adjust local state for the cards so that they animate properly through the stack
