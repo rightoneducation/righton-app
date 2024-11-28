@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { debounce, set, update } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
@@ -16,7 +17,8 @@ import {
   ScreenSize,
   BorderStyle,
   CreateQuestionHighlightCard,
-  StorageKey
+  StorageKey,
+  TemplateType
 } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
@@ -32,6 +34,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
+import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -80,6 +83,7 @@ export default function CreateQuestion({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
+  const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
@@ -142,7 +146,6 @@ export default function CreateQuestion({
   );
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
-
   // QuestionCardBase handler functions
   const handleImageChange = async (inputImage: File, inputUrl: string | null) => {
     const base64Image = inputImage ? await fileToBase64(inputImage) : null;
@@ -218,6 +221,7 @@ export default function CreateQuestion({
   const handleCloseModal = () => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
+    setIsCreatingTemplate(false);
   }
 
   // CorrectAnswerCard handler functions
@@ -333,7 +337,8 @@ export default function CreateQuestion({
       setIsCardSubmitted(true);
       if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && draftQuestion.incorrectCards.every((card) => card.isCardComplete)){
         if (draftQuestion.questionCard.image) {
-          const file = base64ToFile(draftQuestion.questionCard.image, 'image.jpg', 'image/jpg');
+          setIsCreatingTemplate(true);
+          const file = base64ToFile(draftQuestion.questionCard.image, `${uuidv4()}.jpg`, 'image/jpg');
           const img = await apiClients.questionTemplate.storeImageInS3(file);
           // have to do a nested await here because aws-storage returns a nested promise object
           const result = await img.result;
@@ -342,7 +347,8 @@ export default function CreateQuestion({
             const url = result.path;
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
           }
-          // navigate('/questions');
+          setIsCreatingTemplate(false);
+          navigate('/questions');
         }
       } else {
         setIsCardErrored(true);
@@ -360,9 +366,10 @@ export default function CreateQuestion({
   return (
     <CreateQuestionMainContainer>
        <DebugAuth />
-       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible} handleCloseModal={handleCloseModal}/>
+       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
        <ImageUploadModal draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
        <ImageURLModal draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
+       <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
       <>
         <CCSSTabsModalBackground
           isTabsOpen={isCCSSVisible}

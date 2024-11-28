@@ -34,6 +34,12 @@ export enum CreateQuestionHighlightCard {
   INCORRECTANSWER3 = 'card-3',
 }
 
+// enum to determine between game templates and question templates for generic components like modals
+export enum TemplateType {
+  GAME,
+  QUESTION
+}
+
 // key for storage to localStorage  
 export const StorageKey = 'rightOnCentral';
 
