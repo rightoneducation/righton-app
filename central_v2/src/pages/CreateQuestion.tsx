@@ -225,9 +225,10 @@ export default function CreateQuestion({
     debounce((correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
       const { isFirstEdit } = draftQuestionInput.correctCard;
       const newDraftQuestion = updateDQwithCorrectAnswer(draftQuestionInput, correctAnswer);
+      console.log(newDraftQuestion);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
-      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+      if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
     }, 1000),
     [] 
@@ -239,7 +240,7 @@ export default function CreateQuestion({
       const newDraftQuestion = updateDQwithCorrectAnswerSteps(draftQuestionInput, steps);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
-      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+      if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
     }, 1000),
     [] 
