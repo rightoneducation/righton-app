@@ -34,7 +34,7 @@ const ErrorSVG = styled('img')(({ theme }) => ({
 export default function ErrorCard(){
   return (
     <ErrorCardContainer elevation={6}>
-      <ErrorText>
+      <ErrorText style={{width: '75%'}}>
         Looks like you missed something.
       </ErrorText>
       <ErrorText>
