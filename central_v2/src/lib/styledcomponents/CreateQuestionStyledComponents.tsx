@@ -46,6 +46,8 @@ export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isHig
 
 export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({
   width: '100%',
+  display: 'flex',
+  justifyContent: 'center'
 }));
 
 export const TextContainerStyled = styled(TextField)(({ theme }) => ({

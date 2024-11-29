@@ -1,3 +1,5 @@
+import { CentralQuestionTemplateInput, IncorrectCard } from "@righton/networking";
+
 export enum ScreenType {
   GAMES,
   QUESTIONS,
@@ -32,5 +34,18 @@ export enum CreateQuestionHighlightCard {
   INCORRECTANSWER3 = 'card-3',
 }
 
+// enum to determine between game templates and question templates for generic components like modals
+export enum TemplateType {
+  GAME,
+  QUESTION
+}
+
 // key for storage to localStorage  
 export const StorageKey = 'rightOnCentral';
+
+// type that shapes retreived storage for createQuestion 
+export type CreateQuestionLocalData = {
+  draftQuestion?: CentralQuestionTemplateInput | null,
+  incompleteCards?: IncorrectCard[] | null,
+  completeCards?: IncorrectCard[] | null
+}

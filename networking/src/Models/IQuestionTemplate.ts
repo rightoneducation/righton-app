@@ -32,7 +32,7 @@ export interface IQuestionTemplate {
 export type QuestionCard = {
   title: string;
   image?: File;
-  imageUrl?: string;
+  imageUrl: string | null;
   ccss: string;
   isFirstEdit: boolean;
   isCardComplete: boolean;
