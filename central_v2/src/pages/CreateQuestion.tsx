@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import {Grid, Typography, Box, Switch, useTheme, styled} from '@mui/material';
+import {Grid, Typography, Box, Switch, useTheme, styled, Fade} from '@mui/material';
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { debounce, set, update } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,7 +9,6 @@ import {
   QuestionCard,
   IncorrectCard,
 } from '@righton/networking';
-import DebugAuth from '../components/debug/DebugAuth';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
 import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
@@ -372,7 +371,6 @@ export default function CreateQuestion({
 
   return (
     <CreateQuestionMainContainer>
-       <DebugAuth />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
        <ImageUploadModal draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
        <ImageURLModal draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
@@ -389,29 +387,44 @@ export default function CreateQuestion({
         />
       </>
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
-      <CreateQuestionGridContainer container >
-        { (screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) &&
+      { (screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) &&
             <>
-              {isCardErrored &&
-                <ErrorCard />
-              }  
+              <Fade 
+                in={isCardErrored}
+                mountOnEnter
+                unmountOnExit
+                timeout={500}
+              >
+                <div>
+                  <ErrorCard />
+                </div>
+              </Fade>  
               <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingBottom: '16px'}}>
                 <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
             </>
           }
+      <CreateQuestionGridContainer container  wrap="nowrap" >
         <Grid
           sm
-          md
+          md={1}
+          lg={4}
           item
           style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', paddingTop: '16px', gap: '20px'}}
         >
           { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
             <>
-            { isCardErrored &&
-              <ErrorCard />
-            }
+              <Fade 
+                in={isCardErrored}
+                mountOnEnter
+                unmountOnExit
+                timeout={500}
+              >
+                <div>
+                  <ErrorCard />
+                </div>
+              </Fade>  
             <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
@@ -421,6 +434,8 @@ export default function CreateQuestion({
         </Grid>
         <Grid
           sm={12}
+          md={10}
+          lg={4}
           item
           style={{
             width: '100%',
@@ -488,7 +503,10 @@ export default function CreateQuestion({
             </SubCardGridItem>
           </Grid>
         </Grid>
-        <Grid sm md item />
+        <Grid  
+          sm
+          md={1}
+          lg={4} item />
       </CreateQuestionGridContainer>
     </CreateQuestionMainContainer>
   );
