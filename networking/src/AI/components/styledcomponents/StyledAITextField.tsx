@@ -1,5 +1,5 @@
 import { TextField, styled } from '@mui/material';
-import { AIPalette } from '../AIModels';
+import { AIPalette } from '../../lib/AIModels';
 
 export const StyledAITextField = styled(TextField)(({
   width: '100%',
