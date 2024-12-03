@@ -1,9 +1,9 @@
 ---
-name: Central_v2  - Bug report
-about: Create a report to help us improve
-title: ''
+name: Central_v2  - Bug Report
+about: QA Bug Report
+title: "[Central_v2] - Bug Report - # "
 labels: bug
-assignees: ''
+assignees: drewjhart
 
 ---
 
