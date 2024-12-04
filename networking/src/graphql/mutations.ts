@@ -88,7 +88,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
     id
     title
     lowerCaseTitle
-    owner
     version
     description
     lowerCaseDescription
@@ -110,7 +109,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           id
           title
           lowerCaseTitle
-          owner
           version
           description
           lowerCaseDescription
@@ -132,7 +130,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -154,6 +151,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -195,6 +193,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
@@ -222,7 +221,6 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -244,6 +242,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -299,6 +298,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -314,7 +314,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
     id
     title
     lowerCaseTitle
-    owner
     version
     description
     lowerCaseDescription
@@ -336,7 +335,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           id
           title
           lowerCaseTitle
-          owner
           version
           description
           lowerCaseDescription
@@ -358,7 +356,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -380,6 +377,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -421,6 +419,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
@@ -448,7 +447,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -470,6 +468,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -525,6 +524,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -540,7 +540,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
     id
     title
     lowerCaseTitle
-    owner
     version
     description
     lowerCaseDescription
@@ -562,7 +561,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           id
           title
           lowerCaseTitle
-          owner
           version
           description
           lowerCaseDescription
@@ -584,7 +582,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -606,6 +603,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -647,6 +645,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
@@ -674,7 +673,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -696,6 +694,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -751,6 +750,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1465,7 +1465,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           id
           title
           lowerCaseTitle
-          owner
           version
           description
           lowerCaseDescription
@@ -1487,7 +1486,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -1509,6 +1507,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -1550,6 +1549,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
@@ -1577,7 +1577,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -1599,6 +1598,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -1689,7 +1689,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           id
           title
           lowerCaseTitle
-          owner
           version
           description
           lowerCaseDescription
@@ -1711,7 +1710,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -1733,6 +1731,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -1774,6 +1773,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
@@ -1801,7 +1801,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -1823,6 +1822,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -1913,7 +1913,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           id
           title
           lowerCaseTitle
-          owner
           version
           description
           lowerCaseDescription
@@ -1935,7 +1934,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -1957,6 +1955,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -1998,6 +1997,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
@@ -2025,7 +2025,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -2047,6 +2046,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -3695,7 +3695,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -3717,7 +3716,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -3739,7 +3737,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3757,6 +3754,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3794,6 +3792,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -3821,7 +3820,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3839,6 +3837,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3890,6 +3889,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     publicQuestionTemplate {
@@ -3917,7 +3917,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -3939,7 +3938,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3957,6 +3955,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3994,6 +3993,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -4021,7 +4021,6 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4039,6 +4038,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -4113,7 +4113,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -4135,7 +4134,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -4157,7 +4155,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4175,6 +4172,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -4212,6 +4210,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -4239,7 +4238,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4257,6 +4255,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -4308,6 +4307,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     publicQuestionTemplate {
@@ -4335,7 +4335,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -4357,7 +4356,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4375,6 +4373,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -4412,6 +4411,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -4439,7 +4439,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4457,6 +4456,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -4531,7 +4531,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -4553,7 +4552,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -4575,7 +4573,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4593,6 +4590,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -4630,6 +4628,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -4657,7 +4656,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4675,6 +4673,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -4726,6 +4725,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     publicQuestionTemplate {
@@ -4753,7 +4753,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -4775,7 +4774,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4793,6 +4791,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -4830,6 +4829,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -4857,7 +4857,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -4875,6 +4874,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {

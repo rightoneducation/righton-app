@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
+    "@aws-sdk/client-s3": "^3.705.0",
     "aws-amplify": "^6.6.4",
+    "aws-sdk": "^2.1692.0",
     "jwt-decode": "^4.0.0",
     "mathjs": "^11.11.2",
     "openai": "^4.38.3",
