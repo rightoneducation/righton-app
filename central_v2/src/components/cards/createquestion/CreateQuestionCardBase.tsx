@@ -94,6 +94,13 @@ export default function CreateQuestionCardBase({
   const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
+  const getImage = () => {
+    if (draftQuestion.questionCard.image && draftQuestion.questionCard.image instanceof File)
+      return URL.createObjectURL(draftQuestion.questionCard.image);
+    return draftQuestion.questionCard.imageUrl;
+  }
+  const imageLink = getImage();
+
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -107,7 +114,7 @@ export default function CreateQuestionCardBase({
   }
 
   const imageContents = [
-    draftQuestion.questionCard.image &&
+    imageLink &&
       <Box 
         onMouseEnter={() => setIsImageHovered(true)}
         onMouseLeave={() => setIsImageHovered(false)}
@@ -122,7 +129,7 @@ export default function CreateQuestionCardBase({
           position: 'relative',
       }}>
             <ImageStyled 
-              src={draftQuestion.questionCard.image} 
+              src={imageLink}
               alt="image" 
               style={{
                 opacity: isImageHovered ? 0.6: 1,
@@ -169,7 +176,7 @@ export default function CreateQuestionCardBase({
         </RadioContainerStyled>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        {draftQuestion.questionCard.image 
+        {imageLink 
           ? imageContents
           : <ImagePlaceholder isCardErrored={isCardErrored}>
               <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>

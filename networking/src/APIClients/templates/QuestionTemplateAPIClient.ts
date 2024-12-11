@@ -34,8 +34,23 @@ export class QuestionTemplateAPIClient
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data[createType] as AWSQuestionTemplate, type);
   }
 
-  async storeImageInS3 (image: File): Promise<UploadDataWithPathOutput> {
-    return uploadData({path: image.name, data: image, options: {contentType: image.type}});
+  private async getImageByProxy(imageUrl: string): Promise<File> {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    return new File([blob], imageUrl.split('/').pop() as string, { type: blob.type });
+  }
+
+  async storeImageInS3 (
+    image: File,
+    imageUrl: string
+  ): Promise<UploadDataWithPathOutput> {
+    // if the image is provided by the uploader
+    if (image) {
+      return uploadData({path: image.name, data: image, options: {contentType: image.type}});
+    }
+    // otherwise, the user is just using the URL and we need to fetch via a server-side proxy to avoid CORS issues
+    const imageFile = await this.getImageByProxy(imageUrl);
+    return uploadData({path: imageFile.name, data: imageFile, options: {contentType: imageFile.type}});
   };
 
   async getQuestionTemplate<T extends PublicPrivateType>(

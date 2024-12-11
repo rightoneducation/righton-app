@@ -89,7 +89,6 @@ export default function CreateQuestion({
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const localData = useCreateQuestionLoader();
   
-
   const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>( 
     localData.incompleteCards ??
     [
@@ -126,8 +125,6 @@ export default function CreateQuestion({
         questionCard: {
           title: '',
           ccss: 'CCSS',
-          image: null,
-          imageUrl: null,
           isFirstEdit: true,
           isCardComplete: false,
         },
@@ -147,33 +144,41 @@ export default function CreateQuestion({
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
   // QuestionCardBase handler functions
-  const handleImageChange = async (inputImage: File, inputUrl: string | null) => {
-    const base64Image = inputImage ? await fileToBase64(inputImage) : null;
-    if (base64Image){
-      const newDraftQuestion = updateDQwithImageChange(draftQuestion, base64Image, inputUrl);
-      setDraftQuestion(newDraftQuestion);
-    }
+  const [modalImage, setModalImage] = useState<File | null>(null);
+  const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
+
+  const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
+    if (inputImage)
+      setModalImage(inputImage);
   }
 
   const handleImageUrlChange = useCallback( // eslint-disable-line
     debounce((debouncedQuestion: CentralQuestionTemplateInput, url: string) => {
-      const newDraftQuestion = updateDQwithImageChange(debouncedQuestion, null, url);
-      setDraftQuestion(newDraftQuestion);
-      console.log(newDraftQuestion);
+      if (url.length > 0)
+        setModalImageUrl(url);
     }, 500),
     [] 
   )
 
-  const handleImageSave = async (inputImage: File | null, inputUrl: string | null) => {
+  const handleImageSave = async (
+    inputImage?: File, 
+    inputUrl?: string
+  ) => {
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
-    const base64Image = inputImage ? await fileToBase64(inputImage) : null;
-    if (base64Image){
+    if (inputImage){
       const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImage(draftQuestion, base64Image, inputUrl);
+      const newDraftQuestion = updateDQwithImage(draftQuestion, undefined, inputImage);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
-      console.log(newDraftQuestion);
+      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+    }
+    if (inputUrl){
+      const { isFirstEdit } = draftQuestion.questionCard;
+      const newDraftQuestion = updateDQwithImage(draftQuestion, inputUrl);
+      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+      setDraftQuestion(newDraftQuestion);
       if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
     }
@@ -207,10 +212,12 @@ export default function CreateQuestion({
   }
 
   const handleImageUploadClick = () => {
+    setModalImageUrl(null);
     setIsImageUploadVisible(true);
   }
 
   const handleImageURLClick = () => {
+    setModalImage(null);
     setIsImageURLVisible(true);
   }
 
@@ -219,6 +226,8 @@ export default function CreateQuestion({
   }
 
   const handleCloseModal = () => {
+    setModalImage(null);
+    setModalImageUrl(null);
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
     setIsCreatingTemplate(false);
@@ -337,15 +346,14 @@ export default function CreateQuestion({
   const handleBackToExplore = () => {
     setIsCCSSVisible(false);
   };
-
+  // TODO: implement to save question on imageurl
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
       if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && draftQuestion.incorrectCards.every((card) => card.isCardComplete)){
         if (draftQuestion.questionCard.image) {
           setIsCreatingTemplate(true);
-          const file = base64ToFile(draftQuestion.questionCard.image, `${uuidv4()}.jpg`, 'image/jpg');
-          const img = await apiClients.questionTemplate.storeImageInS3(file);
+          const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
           // have to do a nested await here because aws-storage returns a nested promise object
           const result = await img.result;
           if (result && result.path && result.path.length > 0){
@@ -372,8 +380,8 @@ export default function CreateQuestion({
   return (
     <CreateQuestionMainContainer>
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
-       <ImageUploadModal draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
-       <ImageURLModal draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
+       <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
+       <ImageURLModal modalImageUrl={modalImageUrl} draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
       <>
         <CCSSTabsModalBackground

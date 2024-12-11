@@ -20,20 +20,16 @@
         "userPoolGroups": {}
       },
       "function": {
-        "createGameTest": {
-          "deploymentBucketName": "amplify-mobile-dev-0def8-deployment",
-          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
-        },
         "mobile6060603cPostConfirmation": {
           "GROUP": "Teacher_Auth",
           "deploymentBucketName": "amplify-mobile-dev-0def8-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
-        "mobile": {},
-        "mobile6060603c": {}
-      },
-      "api": {
-        "mobile": {}
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-dev-0def8-deployment",
+          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
+        },
+        "fetchImage": {}
       },
       "storage": {
         "gamequestionimages": {}
