@@ -6128,3 +6128,10 @@ export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameS
   APITypes.CreateGameSessionFromTemplateMutationVariables,
   APITypes.CreateGameSessionFromTemplateMutation
 >;
+export const uploadExternalImageToS3 = /* GraphQL */ `mutation UploadExternalImageToS3($input: UploadExternalImageToS3Input) {
+  uploadExternalImageToS3(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.UploadExternalImageToS3MutationVariables,
+  APITypes.UploadExternalImageToS3Mutation
+>;

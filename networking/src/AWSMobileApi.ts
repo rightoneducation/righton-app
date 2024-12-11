@@ -971,6 +971,10 @@ export type CreateGameSessionFromTemplateInput = {
   publicPrivate: string,
 };
 
+export type UploadExternalImageToS3Input = {
+  imageUrl: string,
+};
+
 export type ModelPublicGameTemplateFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -7586,6 +7590,14 @@ export type CreateGameSessionFromTemplateMutationVariables = {
 
 export type CreateGameSessionFromTemplateMutation = {
   createGameSessionFromTemplate?: string | null,
+};
+
+export type UploadExternalImageToS3MutationVariables = {
+  input?: UploadExternalImageToS3Input | null,
+};
+
+export type UploadExternalImageToS3Mutation = {
+  uploadExternalImageToS3?: string | null,
 };
 
 export type GetPublicGameTemplateQueryVariables = {

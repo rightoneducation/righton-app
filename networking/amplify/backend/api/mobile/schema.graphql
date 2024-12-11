@@ -7,6 +7,18 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+  uploadExternalImageToS3(input: UploadExternalImageToS3Input): String
+  @function(name: "uploadExternalImageToS3-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+}
+
+input UploadExternalImageToS3Input {
+  imageUrl: String!
 }
 
 type PublicGameTemplate @model

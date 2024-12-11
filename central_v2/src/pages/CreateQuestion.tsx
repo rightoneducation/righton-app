@@ -159,7 +159,7 @@ export default function CreateQuestion({
     }, 500),
     [] 
   )
-
+  console.log(draftQuestion);
   const handleImageSave = async (
     inputImage?: File, 
     inputUrl?: string
@@ -348,22 +348,34 @@ export default function CreateQuestion({
   };
   // TODO: implement to save question on imageurl
   const handleSaveQuestion = async () => {
+    console.log('clicked');
+    console.log(draftQuestion.questionCard.imageUrl);
     try {
       setIsCardSubmitted(true);
       if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && draftQuestion.incorrectCards.every((card) => card.isCardComplete)){
-        if (draftQuestion.questionCard.image) {
+        if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
           setIsCreatingTemplate(true);
-          const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image);
-          // have to do a nested await here because aws-storage returns a nested promise object
-          const result = await img.result;
-          if (result && result.path && result.path.length > 0){
-            window.localStorage.setItem(StorageKey, '');
-            const url = result.path;
+          let result = null;
+          let url = null;
+          if (draftQuestion.questionCard.image){
+            const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+            // have to do a nested await here because aws-storage returns a nested promise object
+            result = await img.result;
+            if (result && result.path && result.path.length > 0)
+              url = result.path;
+          } else if (draftQuestion.questionCard.imageUrl){
+            console.log('here');
+            url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+            console.log('url');
+          }
+          window.localStorage.setItem(StorageKey, '');
+          console.log(draftQuestion.questionCard.imageUrl);
+          if (url){
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
           }
           setIsCreatingTemplate(false);
           navigate('/questions');
-        }
+        }   
       } else {
         setIsCardErrored(true);
       }
