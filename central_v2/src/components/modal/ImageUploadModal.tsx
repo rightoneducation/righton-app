@@ -1,14 +1,12 @@
 import React from 'react';
 import { Box, Paper, Fade, Typography, styled } from '@mui/material';
 import { CentralQuestionTemplateInput } from '@righton/networking';
-import { FileUploader } from 'react-drag-drop-files';
 import imageUploadIcon from '../../images/imageUploadIcon.svg';
 import imageUploadClose from '../../images/imageUploadClose.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import DropImageUpload from '../DropImageUpload';
 import { ScreenSize, BorderStyle } from '../../lib/CentralModels';
-import { base64ToFile } from '../../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 
 interface IntegratedContainerProps {
   screenSize: ScreenSize
@@ -73,9 +71,10 @@ const DashedBox = styled(Box)(({ theme }) => ({
 interface ImageUploadModalProps {
   screenSize: ScreenSize;
   isModalOpen: boolean;
+  modalImage: File | null;
   draftQuestion: CentralQuestionTemplateInput;
-  handleImageChange: (file: File, url: null) => void;
-  handleImageSave: (file: File, url: null) => void;
+  handleImageChange: (file: File) => void;
+  handleImageSave: (file: File) => void;
   handleCloseModal: () => void;
   borderStyle: BorderStyle;
 }
@@ -83,6 +82,7 @@ interface ImageUploadModalProps {
 export default function ImageUploadModal({
   screenSize,
   isModalOpen,
+  modalImage,
   draftQuestion,
   handleImageChange,
   handleImageSave,
@@ -90,23 +90,31 @@ export default function ImageUploadModal({
   borderStyle
 }: ImageUploadModalProps) {
   const [isMouseOver, setIsMouseOver] = React.useState<boolean>(false);
-  const {image, imageUrl} = draftQuestion.questionCard;
+  const { image } = draftQuestion.questionCard;
+  let imageLink: string | null = null;
+  if (modalImage && modalImage instanceof File)
+    imageLink = URL.createObjectURL(modalImage);
+   else if (image && image instanceof File)
+     imageLink = URL.createObjectURL(image);
 
   const handleChangeClick = (newImage: File) => {
-    handleImageChange(newImage, null);
+    handleImageChange(newImage);
   }
 
   const handleSaveClick = () => {
-    if (image) {
-      handleImageSave(base64ToFile(image, 'image', 'image/jpg'), null);
+    if (modalImage) {
+      handleImageSave(modalImage);
+    } else if (image) {
+      handleImageSave(image);
     }
   } 
+
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
       <IntegratedContainer elevation={12} screenSize={screenSize}>
           <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
               <DashedBox>
-               {(image && imageUrl === null) ? (
+               {(imageLink) ? (
                   <Box style={{
                     width: '100%',
                     height: '100%',
@@ -138,7 +146,7 @@ export default function ImageUploadModal({
                       </Box>
                     </Fade>
                     <img
-                      src={image} 
+                      src={imageLink} 
                       alt="Uploaded"
                       style={{
                         width: '100%',
@@ -161,7 +169,7 @@ export default function ImageUploadModal({
                   </DropImageUpload>   
                 )}
               </DashedBox>
-          <CentralButton buttonType={ButtonType.SAVE} isEnabled={!!image} onClick={handleSaveClick} />
+          <CentralButton buttonType={ButtonType.SAVE} isEnabled={!!imageLink} onClick={handleSaveClick} />
       </IntegratedContainer>      
     </Fade>
   );

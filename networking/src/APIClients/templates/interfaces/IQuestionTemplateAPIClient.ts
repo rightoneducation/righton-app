@@ -156,7 +156,10 @@ export interface IQuestionTemplateAPIClient {
     createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate>;
 
-  storeImageInS3(image: File): Promise<UploadDataWithPathOutput>;
+  storeImageInS3(
+    image?: File,
+    imageUrl?: string
+  ): Promise<UploadDataWithPathOutput>;
 
   getQuestionTemplate<T extends PublicPrivateType>(
     type: T,
