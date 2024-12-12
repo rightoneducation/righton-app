@@ -152,14 +152,20 @@ export default function CreateQuestion({
       setModalImage(inputImage);
   }
 
-  const handleImageUrlChange = useCallback( // eslint-disable-line
+  const handledebouncedImageUrlChange = useCallback( // eslint-disable-line
     debounce((debouncedQuestion: CentralQuestionTemplateInput, url: string) => {
+      const newDraftQuestion = updateDQwithImageChange(debouncedQuestion, url);
       if (url.length > 0)
-        setModalImageUrl(url);
+        setDraftQuestion(newDraftQuestion);
     }, 500),
     [] 
   )
-  console.log(draftQuestion);
+
+  const handleImageUrlChange = (inputQuestion: CentralQuestionTemplateInput, url: string) => {
+    setModalImageUrl(url);
+    handledebouncedImageUrlChange(inputQuestion, url);
+  }
+  
   const handleImageSave = async (
     inputImage?: File, 
     inputUrl?: string
