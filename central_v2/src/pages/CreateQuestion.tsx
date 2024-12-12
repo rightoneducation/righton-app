@@ -146,6 +146,7 @@ export default function CreateQuestion({
   // QuestionCardBase handler functions
   const [modalImage, setModalImage] = useState<File | null>(null);
   const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
+  const [debouncedModalImageUrl, setDebouncedModalImageUrl] = useState<string | null>(null);
 
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
     if (inputImage)
@@ -154,9 +155,7 @@ export default function CreateQuestion({
 
   const handledebouncedImageUrlChange = useCallback( // eslint-disable-line
     debounce((debouncedQuestion: CentralQuestionTemplateInput, url: string) => {
-      const newDraftQuestion = updateDQwithImageChange(debouncedQuestion, url);
-      if (url.length > 0)
-        setDraftQuestion(newDraftQuestion);
+      setDebouncedModalImageUrl(url);
     }, 500),
     [] 
   )
@@ -399,7 +398,7 @@ export default function CreateQuestion({
     <CreateQuestionMainContainer>
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
        <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
-       <ImageURLModal modalImageUrl={modalImageUrl} draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
+       <ImageURLModal modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
       <>
         <CCSSTabsModalBackground

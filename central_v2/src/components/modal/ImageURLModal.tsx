@@ -47,6 +47,7 @@ interface ImageURLModalProps {
   isModalOpen: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   modalImageUrl: string | null;
+  debouncedModalImageUrl: string | null;
   handleImageUrlChange: (debouncedQuestion: CentralQuestionTemplateInput, url: string) => void;
   handleImageSave: (image: undefined, inputUrl: string) => void;
   handleCloseModal: () => void;
@@ -56,6 +57,7 @@ export default function ImageURLModal({
   isModalOpen,
   draftQuestion,
   modalImageUrl,
+  debouncedModalImageUrl,
   handleImageUrlChange,
   handleImageSave,
   handleCloseModal
@@ -81,7 +83,7 @@ export default function ImageURLModal({
         <TextContainerStyled value={imageUrl} variant="outlined" rows='1' placeholder="Image URL..." onChange={(e)=> handleImageUrlChange(draftQuestion, e.target.value)}/>
         <Fade in={imageUrl !== undefined && imageUrl !== null && imageUrl.length > 0} mountOnEnter unmountOnExit timeout={1000}>
           <Box style={{width: '100%', height: '50%', overflowY: 'auto'}}>
-            <img src={draftQuestion.questionCard.imageUrl ?? ''} alt="preview" width="100%" height="100%"/>
+            <img src={debouncedModalImageUrl ?? ''} alt="preview" width="100%" height="100%"/>
           </Box>
         </Fade>
         <CentralButton buttonType={ButtonType.SAVE} onClick={handleSaveClick} isEnabled/>
