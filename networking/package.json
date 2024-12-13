@@ -13,10 +13,13 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
-  "dependencies": {
-    "@aws-crypto/sha256-js": "^5.2.0",
+  "peerDependencies": {
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
+    "react": "^18.3.1"
+  },
+  "dependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
     "@mui/material": "^5.16.7",
     "@types/lodash": "^4.17.13",
     "amplify": "^0.0.11",
@@ -25,7 +28,6 @@
     "lodash": "^4.17.21",
     "mathjs": "^11.11.2",
     "openai": "^4.76.2",
-    "react": "^18.3.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "stopword": "^2.0.8",
@@ -41,8 +43,5 @@
   ],
   "main": "./lib/src/index.js",
   "module": "./lib/src/index.js",
-  "types": "./lib/src/index.d.ts",
-  "peerDependencies": {
-    "react": "^18.3.1"
-  }
+  "types": "./lib/src/index.d.ts"
 }

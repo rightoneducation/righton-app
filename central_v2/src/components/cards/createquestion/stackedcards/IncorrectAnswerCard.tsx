@@ -1,7 +1,7 @@
 import React, { useState, useMemo} from 'react';
 import { Paper, Box, styled, InputAdornment } from '@mui/material';
 import { debounce } from 'lodash';
-import { CentralQuestionTemplateInput, IncorrectCard, AIButton } from '@righton/networking';
+import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients } from '@righton/networking';
 import { CreateQuestionHighlightCard, } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
@@ -32,6 +32,7 @@ const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight, isCardC
 }));
 
 interface IncorrectAnswerCardProps {
+  apiClients: IAPIClients;
   answerData: IncorrectCard;
   draftQuestion: CentralQuestionTemplateInput;
   isHighlight?: boolean;
@@ -43,6 +44,7 @@ interface IncorrectAnswerCardProps {
 }
 
 export default function IncorrectAnswerCard({
+  apiClients,
   answerData,
   draftQuestion,
   isHighlight,
@@ -133,7 +135,10 @@ export default function IncorrectAnswerCard({
       <QuestionTitleStyled>
         Mistake Explanation
       </QuestionTitleStyled>
-      <AIButton />
+      <AIButton 
+        apiClients={apiClients}
+        handleClickOutput={(output) => handleLocalExplanationChange(output)}
+      />
       </Box>
       <TextContainerStyled 
         multiline 

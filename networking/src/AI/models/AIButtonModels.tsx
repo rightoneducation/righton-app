@@ -1,5 +1,5 @@
-import wae_gen from '../img/button/waeGen.svg';
-import wae_regen from '../img/button/waeRegen.svg';
+import waeGenIcon from '../icons/button/waeGen';
+import waeRegenIcon from '../icons/button/waeRegen';
 
 export enum AIButtonType {
   WAE_GEN = 'wae_gen',
@@ -8,7 +8,7 @@ export enum AIButtonType {
 
 type AIButtonContentMapProps = {
   [key in AIButtonType]: {
-    icon?: string;
+    icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string }>;
     textKey?: string;
     color?: string;
   };
@@ -16,10 +16,10 @@ type AIButtonContentMapProps = {
 
 export const aiButtonContentMap: AIButtonContentMapProps = {
   [AIButtonType.WAE_GEN]: {
-    icon: wae_gen,
+    icon: waeGenIcon,
   },
   [AIButtonType.WAE_REGEN]: {
-    icon: wae_regen,
+    icon: waeRegenIcon,
   }
 }
 

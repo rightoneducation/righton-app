@@ -18,7 +18,7 @@ export default function AISwitch({
     <StyledAISwitch 
       defaultChecked
       value={switchValue}
-      onChange={(e) => handleSwitchChange(e.target.checked)}
+      onChange={(e: any) => handleSwitchChange(e.target.checked)}
     />
   );
 }

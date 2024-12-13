@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Box, styled } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CentralQuestionTemplateInput, IncorrectCard } from '@righton/networking';
+import { APIClientsContext } from '../../../../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../../../../hooks/context/useAPIClientsContext';
 import { CreateQuestionHighlightCard } from '../../../../lib/CentralModels';
 import IncorrectAnswerCard from './IncorrectAnswerCard';
 import CentralButton from '../../../button/Button';
@@ -39,6 +41,8 @@ export default function IncorrectAnswerCardStack({
 }: IncorrectAnswerCardStackProps) {
 
   const allAnswers = [...incompleteIncorrectAnswers, ...completeIncorrectAnswers];
+  // need to pass the apiClients created at app init to the AI components
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
 
   return (
     <CardStackContainer>
@@ -68,6 +72,7 @@ export default function IncorrectAnswerCardStack({
                   }}
                 >
                   <IncorrectAnswerCard
+                    apiClients={apiClients}
                     answerData={card} 
                     draftQuestion={draftQuestion}
                     isHighlight={highlightCard === card.id}
@@ -90,7 +95,8 @@ export default function IncorrectAnswerCardStack({
                   zIndex: incompleteIncorrectAnswers.length - index - 1
                 }}
               >
-                <IncorrectAnswerCard   
+                <IncorrectAnswerCard
+                  apiClients={apiClients}   
                   answerData={card} 
                   draftQuestion={draftQuestion}
                   isHighlight={highlightCard === card.id}
@@ -127,7 +133,8 @@ export default function IncorrectAnswerCardStack({
               width: '100%',
             }}
           >
-            <IncorrectAnswerCard   
+            <IncorrectAnswerCard
+              apiClients={apiClients}   
               answerData={card} 
               draftQuestion={draftQuestion}
               isHighlight={highlightCard === card.id}

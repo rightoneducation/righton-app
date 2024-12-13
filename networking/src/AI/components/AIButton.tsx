@@ -8,7 +8,7 @@ interface AIButtonProps {
   handleClickOutput: (outputs: string) => void;
 }
 
-export default function AIButton({
+export function AIButton({
   waegenInput,
   apiClients,
   handleClickOutput

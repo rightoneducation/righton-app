@@ -20,7 +20,7 @@ export default function AITextField ({
   return (
     <StyledAITextField 
       value={text}
-      onChange={(e) => handleUpdateText(e.target.value)}
+      onChange={(e: any) => handleUpdateText(e.target.value)}
       label="AI Text Field"
       variant="outlined"
       error={text.length > 10}
