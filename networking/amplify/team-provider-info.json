@@ -34,7 +34,9 @@
           "s3Key": "amplify-builds/uploadExternalImageToS3-4e55784e7a75437a4e33-build.zip"
         },
         "mobile": {},
-        "mobile6060603c": {}
+        "mobile6060603c": {},
+        "waegen": {},
+        "waeregen": {}
       },
       "api": {
         "mobile": {}
