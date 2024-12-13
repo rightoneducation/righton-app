@@ -1,5 +1,5 @@
 import { TextField, styled } from '@mui/material';
-import { AIPalette } from '../../lib/AIModels';
+import { aiGradient } from '../../lib/AITheme';
 
 export const StyledAITextField = styled(TextField)(({
   width: '100%',
@@ -7,14 +7,14 @@ export const StyledAITextField = styled(TextField)(({
   padding: 0,
   boxSizing: 'border-box',
   borderRadius: `16px`,
-  borderColor: AIPalette.gradient,
+  borderColor: aiGradient,
   "& .MuiOutlinedInput-root": {
     "&.Mui-focused fieldset": {
-      borderColor: AIPalette.gradient
+      borderColor: aiGradient
     },
     '&.Mui-error fieldset': {
       borderWidth: '2px',
-      borderColor:  AIPalette.gradient
+      borderColor:  aiGradient
     },
   },
 }));

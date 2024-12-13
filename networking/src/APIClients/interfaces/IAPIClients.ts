@@ -11,8 +11,8 @@ import { ICentralDataManagerAPIClient, IHostDataManagerAPIClient, IPlayDataManag
 import IAIAPIClient from '../AI/interfaces/IAIAPIClient';
 
 export interface IAPIClients {
-  AI: IAIAPIClient;
   auth: IAuthAPIClient;
+  AI: IAIAPIClient;
   gameTemplate: IGameTemplateAPIClient;
   questionTemplate: IQuestionTemplateAPIClient;
   gameQuestions: IGameQuestionsAPIClient;

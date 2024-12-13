@@ -1,9 +1,9 @@
 import { Switch, styled } from '@mui/material';
-import { AIPalette } from '../../lib/AIModels';
+import { aiGradient } from '../../lib/AITheme';
 
 export const StyledAISwitch = styled(Switch)(({
   '& .MuiSwitch-thumb': {
-    background: AIPalette.gradient,
+    background: aiGradient,
   },
   '& .MuiSwitch-track': {
     backgroundColor: "#111111",
