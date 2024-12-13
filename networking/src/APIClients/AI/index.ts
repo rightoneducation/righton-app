@@ -1,4 +1,4 @@
 // created from 'create-ts-index'
 
-export * from './aiAPIClient';
+export * from './AIAPIClient';
 export * from './interfaces';

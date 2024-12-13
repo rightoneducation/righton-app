@@ -107,5 +107,5 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "include": ["./src/**/*", "./src/amplifyconfiguration.json"],
-  "exclude": ["node_modules", "lib", "src/img"]
+  "exclude": ["node_modules", "lib"]
 }

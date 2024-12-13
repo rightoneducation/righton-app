@@ -42,7 +42,7 @@ export enum AppType {
 
 export class APIClients {
   auth: IAuthAPIClient;
-  ai: IAIAPIClient;
+  AI: IAIAPIClient;
   gameTemplate: IGameTemplateAPIClient;
   questionTemplate: IQuestionTemplateAPIClient;
   gameQuestions: IGameQuestionsAPIClient;
@@ -58,7 +58,7 @@ export class APIClients {
   constructor(env: Environment,  authClient: IAuthAPIClient, appType: AppType) {
     this.configAmplify(awsconfig);
     this.auth = authClient;
-    this.ai = new AIAPIClient(env, this.auth);
+    this.AI = new AIAPIClient(env, this.auth);
     this.gameTemplate = new GameTemplateAPIClient(env, this.auth);
     this.questionTemplate = new QuestionTemplateAPIClient(env, this.auth);
     this.gameQuestions = new GameQuestionsAPIClient(env, this.auth);
