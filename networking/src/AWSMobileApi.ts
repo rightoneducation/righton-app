@@ -975,6 +975,14 @@ export type UploadExternalImageToS3Input = {
   imageUrl: string,
 };
 
+export type WaeGenInput = {
+  waegenInput: string,
+};
+
+export type WaeRegenInput = {
+  waegenInput: string,
+};
+
 export type ModelPublicGameTemplateFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -7598,6 +7606,22 @@ export type UploadExternalImageToS3MutationVariables = {
 
 export type UploadExternalImageToS3Mutation = {
   uploadExternalImageToS3?: string | null,
+};
+
+export type WaegenMutationVariables = {
+  input?: WaeGenInput | null,
+};
+
+export type WaegenMutation = {
+  waegen?: string | null,
+};
+
+export type WaeregenMutationVariables = {
+  input?: WaeRegenInput | null,
+};
+
+export type WaeregenMutation = {
+  waeregen?: string | null,
 };
 
 export type GetPublicGameTemplateQueryVariables = {

@@ -218,7 +218,6 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onCreatePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -240,6 +239,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -251,7 +251,6 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onUpdatePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -273,6 +272,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -284,7 +284,6 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onDeletePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -306,6 +305,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -798,7 +798,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -816,6 +815,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -860,7 +860,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -878,6 +877,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -922,7 +922,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -940,6 +939,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt

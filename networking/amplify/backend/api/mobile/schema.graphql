@@ -15,10 +15,36 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+
+  waegen(input: WaeGenInput): String
+  @function(name: "waegen-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+
+  waeregen(input: WaeRegenInput): String
+  @function(name: "waeregen-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
 }
 
 input UploadExternalImageToS3Input {
   imageUrl: String!
+}
+
+input WaeGenInput {
+  waegenInput: String!
+}
+
+input WaeRegenInput {
+  waegenInput: String!
 }
 
 type PublicGameTemplate @model

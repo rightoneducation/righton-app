@@ -22,3 +22,12 @@ export const aiButtonContentMap: AIButtonContentMapProps = {
     icon: wae_regen,
   }
 }
+
+export type waegenInput = {
+  question: {
+    question: string;
+    correctAnswer: string;
+    wrongAnswer: string;
+    discardedExplanations: string[];
+  }
+}

@@ -11,15 +11,11 @@ export async function handler(event) {
     // Parse input data from the event object
     const question = JSON.parse(event.body).question.question;
     const correctAnswer = JSON.parse(event.body).question.correctAnswer;
-    const wrongAnswer1 = JSON.parse(event.body).question.wrongAnswer1;
-    const wrongAnswer2 = JSON.parse(event.body).question.wrongAnswer2;
-    const wrongAnswer3 = JSON.parse(event.body).question.wrongAnswer3;
+    const wrongAnswer = JSON.parse(event.body).question.wrongAnswer;
     const discardedExplanations = JSON.parse(event.body).discardedExplanations;
 
     const StructuredResponse = z.object({
-        wrongAnswerExplanation1: z.string(),
-        wrongAnswerExplanation2: z.string(),
-        wrongAnswerExplanation3: z.string(),
+        wrongAnswerExplanation: z.string(),
       });
 
     // prompt for open ai
@@ -38,7 +34,7 @@ export async function handler(event) {
         Input Parameters:
         - Math Question: ${question} - The problem posed to the student.
         - Correct Answer: ${correctAnswer} - The accurate solution.
-        - Wrong Answers Provided: ${wrongAnswer1}, ${wrongAnswer2}, ${wrongAnswer3} - The incorrect responses given by students.
+        - Wrong Answers Provided: ${wrongAnswer} - The incorrect response given by students.
         - Discarded Explanations: ${discardedExplanations} - Rejected explanations that should never be regenerated. For each of these, review the discardText and discardType fields and ensure that your generated answer explanations do not follow the same logic. This is the highest priority. For discardType: "0" refers to an incorrect mathematical operation, "1" refers to tone/clarity, and "2" refers to other (and should include a discardText explanation).        
 
         Steps to generate explanations:
@@ -65,7 +61,7 @@ export async function handler(event) {
         - After generating an explanation, pause. Review the mathematical operations and ensure they are correct. Avoid introducing additional, unrelated mathematical errors or random guesses from the student. For example, "for no reason" and the like are not acceptable methods of error.
         - After reviewing above, pause. Review that the output is a valid JSON string and that running JSON.parse will not result in an error. Pay special consideration to escape characters and do not embed any Latex formatting that could compromise this.
 
-        Please ensure each explanation for the incorrect answers adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
+        Please ensure that the explanation for the incorrect answer adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
         `,
     });
     console.log(messages);
@@ -78,17 +74,11 @@ export async function handler(event) {
         });
         const content = JSON.parse(completion.choices[0].message.content);
         const structuredData = StructuredResponse.parse(content);
-        const explanationsArray = [
-            structuredData.wrongAnswerExplanation1,
-            structuredData.wrongAnswerExplanation2,
-            structuredData.wrongAnswerExplanation3,
-          ];
+        const explanation = structuredData.wrongAnswerExplanation;
         // Return the response
         return {
             statusCode: 200,
-            body: JSON.stringify({
-                wrongAnswerExplanations: explanationsArray
-            }),
+            body: explanation,
         };
     } catch (error) {
         console.error(error);

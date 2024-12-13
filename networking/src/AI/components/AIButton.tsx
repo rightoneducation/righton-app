@@ -1,16 +1,21 @@
 import { ButtonStyled } from './styledcomponents/StyledAIButton';
+import { waegenInput } from '../models/AIButtonModels';
+import { IAPIClients } from '../../APIClients';
 
 interface AIButtonProps {
+  waegenInput?: waegenInput;
+  apiClients: IAPIClients;
   handleClickOutput: (outputs: string) => void;
 }
 
 export default function AIButton({
+  waegenInput,
+  apiClients,
   handleClickOutput
 }: AIButtonProps) {
-  const handleButtonClick = () => {
-    // do AI stuff
-    const outputs = 'ouputsfromAImodels';
-    handleClickOutput(outputs);
+  const handleButtonClick = async () => {
+    const explanation = await apiClients.AI.waegen(waegenInput);
+    handleClickOutput(explanation);
   }
 
   return (

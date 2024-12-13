@@ -6135,3 +6135,17 @@ export const uploadExternalImageToS3 = /* GraphQL */ `mutation UploadExternalIma
   APITypes.UploadExternalImageToS3MutationVariables,
   APITypes.UploadExternalImageToS3Mutation
 >;
+export const waegen = /* GraphQL */ `mutation Waegen($input: WaeGenInput) {
+  waegen(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.WaegenMutationVariables,
+  APITypes.WaegenMutation
+>;
+export const waeregen = /* GraphQL */ `mutation Waeregen($input: WaeRegenInput) {
+  waeregen(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.WaeregenMutationVariables,
+  APITypes.WaeregenMutation
+>;
