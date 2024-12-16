@@ -1,26 +1,60 @@
 import React, { useEffect } from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { CentralQuestionTemplateInput } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import {
   QuestionTitleStyled,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
-import { TextContainerStyled, BaseCardStyled } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import { 
+  TextContainerStyled, 
+  BaseCardStyled 
+} from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import {
+  ErrorIcon
+} from '../../../lib/styledcomponents/CentralStyledComponents';
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
+import errorIcon from '../../../images/errorIcon.svg';
+
 
 interface DetailedQuestionSubCardProps {
-  isSelected: boolean;
-  setSelectedCard: (selectedCard: string) => void;
+  draftQuestion: CentralQuestionTemplateInput;
+  isHighlight: boolean;
+  handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CentralQuestionTemplateInput) => void;
+  handleCorrectAnswerStepsChange: (steps: string[], draftQuestion: CentralQuestionTemplateInput) => void;
+  isCardSubmitted: boolean;
+  isCardErrored: boolean;
 }
 
-export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: DetailedQuestionSubCardProps) {
+export default function DetailedQuestionSubCard({
+  draftQuestion,
+  isHighlight, 
+  handleCorrectAnswerChange,
+  handleCorrectAnswerStepsChange,
+  isCardSubmitted,
+  isCardErrored
+}: DetailedQuestionSubCardProps) {
   const theme = useTheme();
-  const [correctAnswer, setCorrectAnswer] = React.useState<string>('');
-  const [solutionSteps, setSolutionSteps] = React.useState(['','','']);
-  const [isCardComplete, setIsCardComplete] = React.useState<boolean>(false);
+  const [correctAnswer, setCorrectAnswer] = React.useState<string>(draftQuestion.correctCard.answer ?? '');
+  const [answerSteps, setAnswerSteps] = React.useState(draftQuestion.correctCard.answerSteps ?? ['','','']);
+  const addStep = () => {
+    setAnswerSteps((prev) => [...prev, ''])
+  };
 
-  const solutionStepsComponent = (step: string, index: number, handleChange: (index: number, event: string) => void) => {
+  const handleCorrectChange = (value: string ) => {
+    setCorrectAnswer((prev) => value);
+    handleCorrectAnswerChange(value, draftQuestion);
+  };
+
+  const handleStepChange = (index: number, value: string): void => {
+    const newSteps = [...answerSteps];
+    newSteps[index] = value;
+    setAnswerSteps(newSteps);
+    handleCorrectAnswerStepsChange(newSteps, draftQuestion);
+  };
+
+  const answerStepsComponent = (step: string, index: number) => {
     return (
       <Box
         sx={{
@@ -30,7 +64,7 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
           marginTop: `${theme.sizing.xSmPadding}px`,
           gap: `${theme.sizing.xSmPadding}px`,
         }}
-        key={uuidv4()}
+        key={index}
       >
         <Typography
           sx={{
@@ -41,54 +75,65 @@ export default function DetailedQuestionSubCard({isSelected, setSelectedCard}: D
         >
           {index + 1}
         </Typography>
-        <TextContainerStyled value={step} variant="outlined" rows='1' placeholder="Step Contents..." onChange={(e)=> handleChange(index, e.target.value)}/>
+        <TextContainerStyled 
+            multiline 
+            variant="outlined" 
+            value={answerSteps[index]}
+            onChange={(e) => handleStepChange(index, e.target.value)}
+            rows='1' 
+            placeholder="Step Contents" 
+            error={isCardErrored && (!answerSteps[index] || answerSteps[index].length === 0)}
+            InputProps={{
+              startAdornment: 
+              isCardErrored && (!answerSteps[index] || answerSteps[index].length === 0) &&
+                <InputAdornment
+                  position="start" 
+                  sx={{ 
+                    alignSelf: 'flex-start',
+                    mt: '10px',
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt='error icon'/>
+                </InputAdornment>
+            }}
+          />
       </Box>
     );
   };
-
-  const addStep = () => {
-    setSolutionSteps((prev) => [...prev, ''])
-  }
-
-  // normally we try to minimize the use of effects in our components
-  // this seems like such a typical use case for a useEffect
-  useEffect(() => {
-    let cardComplete = true;
-    solutionSteps.forEach(step => {
-      if (step === '') {
-        cardComplete = false;
-      }
-    });
-    if (correctAnswer === '') {
-      cardComplete = false;
-    }
-    setIsCardComplete(cardComplete);
-    if (cardComplete)
-      setSelectedCard('');
-  },[solutionSteps, correctAnswer, setSelectedCard]);
-
-  const handleCorrectChange = (value: string ) => {
-    setCorrectAnswer((prev) => value);
-  }
-
-  const handleStepChange = (index: number, value: string): void => {
-    const newSteps = [...solutionSteps];
-    newSteps[index] = value;
-    setSolutionSteps(newSteps);
-  };
   
   return (
-    <BaseCardStyled elevation={6} isSelected={isSelected} isCardComplete={isCardComplete}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.correctCard.isCardComplete}>
       <QuestionTitleStyled>
         Correct Answer
       </QuestionTitleStyled>
-      <TextContainerStyled variant="outlined" rows='1' placeholder="Correct Answer..." onChange={(e) => handleCorrectChange(e.target.value)}/>
+      <TextContainerStyled 
+        multiline 
+        variant="outlined" 
+        rows='1' 
+        placeholder="Correct Answer..." 
+        value={correctAnswer}
+        onChange={(e) => handleCorrectChange(e.target.value)}
+        error={isCardSubmitted && (!correctAnswer || correctAnswer.length === 0)}
+        InputProps={{
+          startAdornment: 
+          isCardSubmitted && (!correctAnswer || correctAnswer.length === 0) &&
+            <InputAdornment
+              position="start" 
+              sx={{ 
+                alignSelf: 'flex-start',
+                mt: '10px'
+              }}
+            >
+              <ErrorIcon src={errorIcon} alt='error icon'/>
+            </InputAdornment>
+        }}
+      />
       <QuestionTitleStyled>
         Solution Steps
       </QuestionTitleStyled>
-      {solutionSteps && 
-        solutionSteps.map((step, index) => 
-          solutionStepsComponent(step, index, handleStepChange)
+      {answerSteps && 
+        answerSteps.map((step, index) => 
+          answerStepsComponent(step, index)
         )
       }
       <Box style = {{width: '100%', display: 'flex', justifyContent: 'center'}}>

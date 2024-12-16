@@ -151,7 +151,6 @@ export type PublicGameQuestions = {
 export type PublicQuestionTemplate = {
   __typename: "PublicQuestionTemplate",
   id: string,
-  owner: string,
   title: string,
   lowerCaseTitle: string,
   version: number,
@@ -170,6 +169,7 @@ export type PublicQuestionTemplate = {
   createdAt?: string | null,
   updatedAt?: string | null,
   type?: string | null,
+  owner?: string | null,
 };
 
 export type UpdatePublicGameTemplateInput = {
@@ -348,7 +348,6 @@ export type DeletePrivateGameTemplateInput = {
 
 export type CreatePublicQuestionTemplateInput = {
   id?: string | null,
-  owner: string,
   title: string,
   lowerCaseTitle: string,
   version: number,
@@ -369,7 +368,6 @@ export type CreatePublicQuestionTemplateInput = {
 };
 
 export type ModelPublicQuestionTemplateConditionInput = {
-  owner?: ModelStringInput | null,
   title?: ModelStringInput | null,
   lowerCaseTitle?: ModelStringInput | null,
   version?: ModelIntInput | null,
@@ -390,11 +388,11 @@ export type ModelPublicQuestionTemplateConditionInput = {
   and?: Array< ModelPublicQuestionTemplateConditionInput | null > | null,
   or?: Array< ModelPublicQuestionTemplateConditionInput | null > | null,
   not?: ModelPublicQuestionTemplateConditionInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type UpdatePublicQuestionTemplateInput = {
   id: string,
-  owner?: string | null,
   title?: string | null,
   lowerCaseTitle?: string | null,
   version?: number | null,
@@ -973,6 +971,10 @@ export type CreateGameSessionFromTemplateInput = {
   publicPrivate: string,
 };
 
+export type UploadExternalImageToS3Input = {
+  imageUrl: string,
+};
+
 export type ModelPublicGameTemplateFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -1066,7 +1068,6 @@ export type ModelPrivateGameTemplateConnection = {
 
 export type ModelPublicQuestionTemplateFilterInput = {
   id?: ModelIDInput | null,
-  owner?: ModelStringInput | null,
   title?: ModelStringInput | null,
   lowerCaseTitle?: ModelStringInput | null,
   version?: ModelIntInput | null,
@@ -1087,6 +1088,7 @@ export type ModelPublicQuestionTemplateFilterInput = {
   and?: Array< ModelPublicQuestionTemplateFilterInput | null > | null,
   or?: Array< ModelPublicQuestionTemplateFilterInput | null > | null,
   not?: ModelPublicQuestionTemplateFilterInput | null,
+  owner?: ModelStringInput | null,
 };
 
 export type ModelPublicQuestionTemplateConnection = {
@@ -1591,7 +1593,6 @@ export type CreatePublicGameTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -1613,6 +1614,7 @@ export type CreatePublicGameTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -1629,7 +1631,6 @@ export type CreatePublicGameTemplateMutation = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -1681,7 +1682,6 @@ export type CreatePublicGameTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -1703,6 +1703,7 @@ export type CreatePublicGameTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -1714,6 +1715,7 @@ export type CreatePublicGameTemplateMutation = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -1816,7 +1818,6 @@ export type UpdatePublicGameTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -1838,6 +1839,7 @@ export type UpdatePublicGameTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -1854,7 +1856,6 @@ export type UpdatePublicGameTemplateMutation = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -1906,7 +1907,6 @@ export type UpdatePublicGameTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -1928,6 +1928,7 @@ export type UpdatePublicGameTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -1939,6 +1940,7 @@ export type UpdatePublicGameTemplateMutation = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -2041,7 +2043,6 @@ export type DeletePublicGameTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -2063,6 +2064,7 @@ export type DeletePublicGameTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -2079,7 +2081,6 @@ export type DeletePublicGameTemplateMutation = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -2131,7 +2132,6 @@ export type DeletePublicGameTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -2153,6 +2153,7 @@ export type DeletePublicGameTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -2164,6 +2165,7 @@ export type DeletePublicGameTemplateMutation = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -2863,7 +2865,6 @@ export type CreatePublicQuestionTemplateMutation = {
   createPublicQuestionTemplate?:  {
     __typename: "PublicQuestionTemplate",
     id: string,
-    owner: string,
     title: string,
     lowerCaseTitle: string,
     version: number,
@@ -2940,7 +2941,6 @@ export type CreatePublicQuestionTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -2962,6 +2962,7 @@ export type CreatePublicQuestionTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -2978,7 +2979,6 @@ export type CreatePublicQuestionTemplateMutation = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -3030,7 +3030,6 @@ export type CreatePublicQuestionTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -3052,6 +3051,7 @@ export type CreatePublicQuestionTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -3063,6 +3063,7 @@ export type CreatePublicQuestionTemplateMutation = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -3074,6 +3075,7 @@ export type CreatePublicQuestionTemplateMutation = {
     createdAt?: string | null,
     updatedAt?: string | null,
     type?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -3086,7 +3088,6 @@ export type UpdatePublicQuestionTemplateMutation = {
   updatePublicQuestionTemplate?:  {
     __typename: "PublicQuestionTemplate",
     id: string,
-    owner: string,
     title: string,
     lowerCaseTitle: string,
     version: number,
@@ -3163,7 +3164,6 @@ export type UpdatePublicQuestionTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -3185,6 +3185,7 @@ export type UpdatePublicQuestionTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -3201,7 +3202,6 @@ export type UpdatePublicQuestionTemplateMutation = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -3253,7 +3253,6 @@ export type UpdatePublicQuestionTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -3275,6 +3274,7 @@ export type UpdatePublicQuestionTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -3286,6 +3286,7 @@ export type UpdatePublicQuestionTemplateMutation = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -3297,6 +3298,7 @@ export type UpdatePublicQuestionTemplateMutation = {
     createdAt?: string | null,
     updatedAt?: string | null,
     type?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -3309,7 +3311,6 @@ export type DeletePublicQuestionTemplateMutation = {
   deletePublicQuestionTemplate?:  {
     __typename: "PublicQuestionTemplate",
     id: string,
-    owner: string,
     title: string,
     lowerCaseTitle: string,
     version: number,
@@ -3386,7 +3387,6 @@ export type DeletePublicQuestionTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -3408,6 +3408,7 @@ export type DeletePublicQuestionTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -3424,7 +3425,6 @@ export type DeletePublicQuestionTemplateMutation = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -3476,7 +3476,6 @@ export type DeletePublicQuestionTemplateMutation = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -3498,6 +3497,7 @@ export type DeletePublicQuestionTemplateMutation = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -3509,6 +3509,7 @@ export type DeletePublicQuestionTemplateMutation = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -3520,6 +3521,7 @@ export type DeletePublicQuestionTemplateMutation = {
     createdAt?: string | null,
     updatedAt?: string | null,
     type?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -5168,7 +5170,6 @@ export type CreatePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -5186,6 +5187,7 @@ export type CreatePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -5202,7 +5204,6 @@ export type CreatePublicGameQuestionsMutation = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -5250,7 +5251,6 @@ export type CreatePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -5268,6 +5268,7 @@ export type CreatePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -5279,6 +5280,7 @@ export type CreatePublicGameQuestionsMutation = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -5295,7 +5297,6 @@ export type CreatePublicGameQuestionsMutation = {
     publicQuestionTemplate:  {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -5368,7 +5369,6 @@ export type CreatePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -5386,6 +5386,7 @@ export type CreatePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -5402,7 +5403,6 @@ export type CreatePublicGameQuestionsMutation = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -5450,7 +5450,6 @@ export type CreatePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -5468,6 +5467,7 @@ export type CreatePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -5479,6 +5479,7 @@ export type CreatePublicGameQuestionsMutation = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -5490,6 +5491,7 @@ export type CreatePublicGameQuestionsMutation = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -5585,7 +5587,6 @@ export type UpdatePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -5603,6 +5604,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -5619,7 +5621,6 @@ export type UpdatePublicGameQuestionsMutation = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -5667,7 +5668,6 @@ export type UpdatePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -5685,6 +5685,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -5696,6 +5697,7 @@ export type UpdatePublicGameQuestionsMutation = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -5712,7 +5714,6 @@ export type UpdatePublicGameQuestionsMutation = {
     publicQuestionTemplate:  {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -5785,7 +5786,6 @@ export type UpdatePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -5803,6 +5803,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -5819,7 +5820,6 @@ export type UpdatePublicGameQuestionsMutation = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -5867,7 +5867,6 @@ export type UpdatePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -5885,6 +5884,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -5896,6 +5896,7 @@ export type UpdatePublicGameQuestionsMutation = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -5907,6 +5908,7 @@ export type UpdatePublicGameQuestionsMutation = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -6002,7 +6004,6 @@ export type DeletePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -6020,6 +6021,7 @@ export type DeletePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -6036,7 +6038,6 @@ export type DeletePublicGameQuestionsMutation = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -6084,7 +6085,6 @@ export type DeletePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -6102,6 +6102,7 @@ export type DeletePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -6113,6 +6114,7 @@ export type DeletePublicGameQuestionsMutation = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -6129,7 +6131,6 @@ export type DeletePublicGameQuestionsMutation = {
     publicQuestionTemplate:  {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -6202,7 +6203,6 @@ export type DeletePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -6220,6 +6220,7 @@ export type DeletePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -6236,7 +6237,6 @@ export type DeletePublicGameQuestionsMutation = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -6284,7 +6284,6 @@ export type DeletePublicGameQuestionsMutation = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -6302,6 +6301,7 @@ export type DeletePublicGameQuestionsMutation = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -6313,6 +6313,7 @@ export type DeletePublicGameQuestionsMutation = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -6324,6 +6325,7 @@ export type DeletePublicGameQuestionsMutation = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -7590,6 +7592,14 @@ export type CreateGameSessionFromTemplateMutation = {
   createGameSessionFromTemplate?: string | null,
 };
 
+export type UploadExternalImageToS3MutationVariables = {
+  input?: UploadExternalImageToS3Input | null,
+};
+
+export type UploadExternalImageToS3Mutation = {
+  uploadExternalImageToS3?: string | null,
+};
+
 export type GetPublicGameTemplateQueryVariables = {
   id: string,
 };
@@ -7676,7 +7686,6 @@ export type GetPublicGameTemplateQuery = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -7698,6 +7707,7 @@ export type GetPublicGameTemplateQuery = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -7714,7 +7724,6 @@ export type GetPublicGameTemplateQuery = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -7766,7 +7775,6 @@ export type GetPublicGameTemplateQuery = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -7788,6 +7796,7 @@ export type GetPublicGameTemplateQuery = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -7799,6 +7808,7 @@ export type GetPublicGameTemplateQuery = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -7900,7 +7910,6 @@ export type ListPublicGameTemplatesQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -7918,6 +7927,7 @@ export type ListPublicGameTemplatesQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -7934,7 +7944,6 @@ export type ListPublicGameTemplatesQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -7982,7 +7991,6 @@ export type ListPublicGameTemplatesQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8000,6 +8008,7 @@ export type ListPublicGameTemplatesQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8011,6 +8020,7 @@ export type ListPublicGameTemplatesQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -8117,7 +8127,6 @@ export type PublicGameTemplatesByOwnerQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8135,6 +8144,7 @@ export type PublicGameTemplatesByOwnerQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8151,7 +8161,6 @@ export type PublicGameTemplatesByOwnerQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -8199,7 +8208,6 @@ export type PublicGameTemplatesByOwnerQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8217,6 +8225,7 @@ export type PublicGameTemplatesByOwnerQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8228,6 +8237,7 @@ export type PublicGameTemplatesByOwnerQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -8334,7 +8344,6 @@ export type PublicGameTemplatesByDateQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8352,6 +8361,7 @@ export type PublicGameTemplatesByDateQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8368,7 +8378,6 @@ export type PublicGameTemplatesByDateQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -8416,7 +8425,6 @@ export type PublicGameTemplatesByDateQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8434,6 +8442,7 @@ export type PublicGameTemplatesByDateQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8445,6 +8454,7 @@ export type PublicGameTemplatesByDateQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -8551,7 +8561,6 @@ export type PublicGameTemplatesByGradeQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8569,6 +8578,7 @@ export type PublicGameTemplatesByGradeQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8585,7 +8595,6 @@ export type PublicGameTemplatesByGradeQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -8633,7 +8642,6 @@ export type PublicGameTemplatesByGradeQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8651,6 +8659,7 @@ export type PublicGameTemplatesByGradeQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8662,6 +8671,7 @@ export type PublicGameTemplatesByGradeQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -8768,7 +8778,6 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8786,6 +8795,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8802,7 +8812,6 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -8850,7 +8859,6 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -8868,6 +8876,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -8879,6 +8888,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -10210,7 +10220,6 @@ export type GetPublicQuestionTemplateQuery = {
   getPublicQuestionTemplate?:  {
     __typename: "PublicQuestionTemplate",
     id: string,
-    owner: string,
     title: string,
     lowerCaseTitle: string,
     version: number,
@@ -10287,7 +10296,6 @@ export type GetPublicQuestionTemplateQuery = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -10309,6 +10317,7 @@ export type GetPublicQuestionTemplateQuery = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -10325,7 +10334,6 @@ export type GetPublicQuestionTemplateQuery = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -10377,7 +10385,6 @@ export type GetPublicQuestionTemplateQuery = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -10399,6 +10406,7 @@ export type GetPublicQuestionTemplateQuery = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -10410,6 +10418,7 @@ export type GetPublicQuestionTemplateQuery = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -10421,6 +10430,7 @@ export type GetPublicQuestionTemplateQuery = {
     createdAt?: string | null,
     updatedAt?: string | null,
     type?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -10436,7 +10446,6 @@ export type ListPublicQuestionTemplatesQuery = {
     items:  Array< {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -10509,7 +10518,6 @@ export type ListPublicQuestionTemplatesQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -10527,6 +10535,7 @@ export type ListPublicQuestionTemplatesQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -10543,7 +10552,6 @@ export type ListPublicQuestionTemplatesQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -10591,7 +10599,6 @@ export type ListPublicQuestionTemplatesQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -10609,6 +10616,7 @@ export type ListPublicQuestionTemplatesQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -10620,6 +10628,7 @@ export type ListPublicQuestionTemplatesQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -10631,6 +10640,7 @@ export type ListPublicQuestionTemplatesQuery = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -10651,7 +10661,6 @@ export type PublicQuestionTemplatesByDateQuery = {
     items:  Array< {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -10724,7 +10733,6 @@ export type PublicQuestionTemplatesByDateQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -10742,6 +10750,7 @@ export type PublicQuestionTemplatesByDateQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -10758,7 +10767,6 @@ export type PublicQuestionTemplatesByDateQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -10806,7 +10814,6 @@ export type PublicQuestionTemplatesByDateQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -10824,6 +10831,7 @@ export type PublicQuestionTemplatesByDateQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -10835,6 +10843,7 @@ export type PublicQuestionTemplatesByDateQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -10846,6 +10855,7 @@ export type PublicQuestionTemplatesByDateQuery = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -10866,7 +10876,6 @@ export type PublicQuestionTemplatesByGradeQuery = {
     items:  Array< {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -10939,7 +10948,6 @@ export type PublicQuestionTemplatesByGradeQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -10957,6 +10965,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -10973,7 +10982,6 @@ export type PublicQuestionTemplatesByGradeQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -11021,7 +11029,6 @@ export type PublicQuestionTemplatesByGradeQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -11039,6 +11046,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -11050,6 +11058,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -11061,6 +11070,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -11081,7 +11091,6 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
     items:  Array< {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -11154,7 +11163,6 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -11172,6 +11180,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -11188,7 +11197,6 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -11236,7 +11244,6 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -11254,6 +11261,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -11265,6 +11273,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -11276,6 +11285,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -13326,7 +13336,6 @@ export type GetPublicGameQuestionsQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -13344,6 +13353,7 @@ export type GetPublicGameQuestionsQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -13360,7 +13370,6 @@ export type GetPublicGameQuestionsQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -13408,7 +13417,6 @@ export type GetPublicGameQuestionsQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -13426,6 +13434,7 @@ export type GetPublicGameQuestionsQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -13437,6 +13446,7 @@ export type GetPublicGameQuestionsQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -13453,7 +13463,6 @@ export type GetPublicGameQuestionsQuery = {
     publicQuestionTemplate:  {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -13526,7 +13535,6 @@ export type GetPublicGameQuestionsQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -13544,6 +13552,7 @@ export type GetPublicGameQuestionsQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -13560,7 +13569,6 @@ export type GetPublicGameQuestionsQuery = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -13608,7 +13616,6 @@ export type GetPublicGameQuestionsQuery = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -13626,6 +13633,7 @@ export type GetPublicGameQuestionsQuery = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -13637,6 +13645,7 @@ export type GetPublicGameQuestionsQuery = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -13648,6 +13657,7 @@ export type GetPublicGameQuestionsQuery = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -13734,7 +13744,6 @@ export type ListPublicGameQuestionsQuery = {
             publicQuestionTemplate:  {
               __typename: "PublicQuestionTemplate",
               id: string,
-              owner: string,
               title: string,
               lowerCaseTitle: string,
               version: number,
@@ -13765,6 +13774,7 @@ export type ListPublicGameQuestionsQuery = {
               createdAt?: string | null,
               updatedAt?: string | null,
               type?: string | null,
+              owner?: string | null,
             },
             createdAt: string,
             updatedAt: string,
@@ -13781,7 +13791,6 @@ export type ListPublicGameQuestionsQuery = {
       publicQuestionTemplate:  {
         __typename: "PublicQuestionTemplate",
         id: string,
-        owner: string,
         title: string,
         lowerCaseTitle: string,
         version: number,
@@ -13842,7 +13851,6 @@ export type ListPublicGameQuestionsQuery = {
             publicQuestionTemplate:  {
               __typename: "PublicQuestionTemplate",
               id: string,
-              owner: string,
               title: string,
               lowerCaseTitle: string,
               version: number,
@@ -13873,6 +13881,7 @@ export type ListPublicGameQuestionsQuery = {
               createdAt?: string | null,
               updatedAt?: string | null,
               type?: string | null,
+              owner?: string | null,
             },
             createdAt: string,
             updatedAt: string,
@@ -13884,6 +13893,7 @@ export type ListPublicGameQuestionsQuery = {
         createdAt?: string | null,
         updatedAt?: string | null,
         type?: string | null,
+        owner?: string | null,
       },
       createdAt: string,
       updatedAt: string,
@@ -14634,7 +14644,6 @@ export type OnCreatePublicGameTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -14656,6 +14665,7 @@ export type OnCreatePublicGameTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -14672,7 +14682,6 @@ export type OnCreatePublicGameTemplateSubscription = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -14724,7 +14733,6 @@ export type OnCreatePublicGameTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -14746,6 +14754,7 @@ export type OnCreatePublicGameTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -14757,6 +14766,7 @@ export type OnCreatePublicGameTemplateSubscription = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -14859,7 +14869,6 @@ export type OnUpdatePublicGameTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -14881,6 +14890,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -14897,7 +14907,6 @@ export type OnUpdatePublicGameTemplateSubscription = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -14949,7 +14958,6 @@ export type OnUpdatePublicGameTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -14971,6 +14979,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -14982,6 +14991,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -15084,7 +15094,6 @@ export type OnDeletePublicGameTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -15106,6 +15115,7 @@ export type OnDeletePublicGameTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -15122,7 +15132,6 @@ export type OnDeletePublicGameTemplateSubscription = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -15174,7 +15183,6 @@ export type OnDeletePublicGameTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -15196,6 +15204,7 @@ export type OnDeletePublicGameTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -15207,6 +15216,7 @@ export type OnDeletePublicGameTemplateSubscription = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -15906,7 +15916,6 @@ export type OnCreatePublicQuestionTemplateSubscription = {
   onCreatePublicQuestionTemplate?:  {
     __typename: "PublicQuestionTemplate",
     id: string,
-    owner: string,
     title: string,
     lowerCaseTitle: string,
     version: number,
@@ -15983,7 +15992,6 @@ export type OnCreatePublicQuestionTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -16005,6 +16013,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -16021,7 +16030,6 @@ export type OnCreatePublicQuestionTemplateSubscription = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -16073,7 +16081,6 @@ export type OnCreatePublicQuestionTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -16095,6 +16102,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -16106,6 +16114,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -16117,6 +16126,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
     createdAt?: string | null,
     updatedAt?: string | null,
     type?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -16129,7 +16139,6 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
   onUpdatePublicQuestionTemplate?:  {
     __typename: "PublicQuestionTemplate",
     id: string,
-    owner: string,
     title: string,
     lowerCaseTitle: string,
     version: number,
@@ -16206,7 +16215,6 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -16228,6 +16236,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -16244,7 +16253,6 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -16296,7 +16304,6 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -16318,6 +16325,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -16329,6 +16337,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -16340,6 +16349,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
     createdAt?: string | null,
     updatedAt?: string | null,
     type?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -16352,7 +16362,6 @@ export type OnDeletePublicQuestionTemplateSubscription = {
   onDeletePublicQuestionTemplate?:  {
     __typename: "PublicQuestionTemplate",
     id: string,
-    owner: string,
     title: string,
     lowerCaseTitle: string,
     version: number,
@@ -16429,7 +16438,6 @@ export type OnDeletePublicQuestionTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -16451,6 +16459,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -16467,7 +16476,6 @@ export type OnDeletePublicQuestionTemplateSubscription = {
         publicQuestionTemplate:  {
           __typename: "PublicQuestionTemplate",
           id: string,
-          owner: string,
           title: string,
           lowerCaseTitle: string,
           version: number,
@@ -16519,7 +16527,6 @@ export type OnDeletePublicQuestionTemplateSubscription = {
               publicQuestionTemplate:  {
                 __typename: "PublicQuestionTemplate",
                 id: string,
-                owner: string,
                 title: string,
                 lowerCaseTitle: string,
                 version: number,
@@ -16541,6 +16548,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
                 createdAt?: string | null,
                 updatedAt?: string | null,
                 type?: string | null,
+                owner?: string | null,
               },
               createdAt: string,
               updatedAt: string,
@@ -16552,6 +16560,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
           createdAt?: string | null,
           updatedAt?: string | null,
           type?: string | null,
+          owner?: string | null,
         },
         createdAt: string,
         updatedAt: string,
@@ -16563,6 +16572,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
     createdAt?: string | null,
     updatedAt?: string | null,
     type?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -18115,7 +18125,6 @@ export type OnCreatePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18133,6 +18142,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18149,7 +18159,6 @@ export type OnCreatePublicGameQuestionsSubscription = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -18197,7 +18206,6 @@ export type OnCreatePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18215,6 +18223,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18226,6 +18235,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -18242,7 +18252,6 @@ export type OnCreatePublicGameQuestionsSubscription = {
     publicQuestionTemplate:  {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -18315,7 +18324,6 @@ export type OnCreatePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18333,6 +18341,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18349,7 +18358,6 @@ export type OnCreatePublicGameQuestionsSubscription = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -18397,7 +18405,6 @@ export type OnCreatePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18415,6 +18422,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18426,6 +18434,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -18437,6 +18446,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -18532,7 +18542,6 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18550,6 +18559,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18566,7 +18576,6 @@ export type OnUpdatePublicGameQuestionsSubscription = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -18614,7 +18623,6 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18632,6 +18640,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18643,6 +18652,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -18659,7 +18669,6 @@ export type OnUpdatePublicGameQuestionsSubscription = {
     publicQuestionTemplate:  {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -18732,7 +18741,6 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18750,6 +18758,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18766,7 +18775,6 @@ export type OnUpdatePublicGameQuestionsSubscription = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -18814,7 +18822,6 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18832,6 +18839,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18843,6 +18851,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -18854,6 +18863,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -18949,7 +18959,6 @@ export type OnDeletePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -18967,6 +18976,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -18983,7 +18993,6 @@ export type OnDeletePublicGameQuestionsSubscription = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -19031,7 +19040,6 @@ export type OnDeletePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -19049,6 +19057,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -19060,6 +19069,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -19076,7 +19086,6 @@ export type OnDeletePublicGameQuestionsSubscription = {
     publicQuestionTemplate:  {
       __typename: "PublicQuestionTemplate",
       id: string,
-      owner: string,
       title: string,
       lowerCaseTitle: string,
       version: number,
@@ -19149,7 +19158,6 @@ export type OnDeletePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -19167,6 +19175,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -19183,7 +19192,6 @@ export type OnDeletePublicGameQuestionsSubscription = {
           publicQuestionTemplate:  {
             __typename: "PublicQuestionTemplate",
             id: string,
-            owner: string,
             title: string,
             lowerCaseTitle: string,
             version: number,
@@ -19231,7 +19239,6 @@ export type OnDeletePublicGameQuestionsSubscription = {
                 publicQuestionTemplate:  {
                   __typename: "PublicQuestionTemplate",
                   id: string,
-                  owner: string,
                   title: string,
                   lowerCaseTitle: string,
                   version: number,
@@ -19249,6 +19256,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   createdAt?: string | null,
                   updatedAt?: string | null,
                   type?: string | null,
+                  owner?: string | null,
                 },
                 createdAt: string,
                 updatedAt: string,
@@ -19260,6 +19268,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
             createdAt?: string | null,
             updatedAt?: string | null,
             type?: string | null,
+            owner?: string | null,
           },
           createdAt: string,
           updatedAt: string,
@@ -19271,6 +19280,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
       createdAt?: string | null,
       updatedAt?: string | null,
       type?: string | null,
+      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,

@@ -85,29 +85,36 @@ export default function CCSSTabs({
   ) => {
     const { value } = event.target;
     switch (tab){
-      case CCSSType.STANDARD:
-        setStandard(value);
-        if (isTabTextValid(value, tab))
-          handleCCSSSubmit(`${grade}.${domain}.${cluster}.${value}`);
+      case CCSSType.STANDARD:{
+        const text = value.toLowerCase();
+        setStandard(text);
+        if (isTabTextValid(text, tab))
+          handleCCSSSubmit(`${grade}.${domain}.${cluster}.${text}`);
         break;
-      case CCSSType.CLUSTER:
-        setCluster(value);
-        if (isTabTextValid(value, tab)){
+      }
+      case CCSSType.CLUSTER:{
+        const text = value.toUpperCase();
+        setCluster(text);
+        if (isTabTextValid(text, tab)){
           setStandard('');
           setOpenTab(3);
         }
         break;
-      case CCSSType.DOMAIN:
-        setDomain(value);
-        if (isTabTextValid(value, tab)){
+      }
+      case CCSSType.DOMAIN:{
+        const text = value.toUpperCase();
+        setDomain(text);
+        if (isTabTextValid(text, tab)){
           setCluster('');
           setOpenTab(2);
         }
         break;
+      }
       case CCSSType.GRADE:
       default:{
-        setGrade(value);
-        if (isTabTextValid(value, tab)){
+        const text = value.toUpperCase();
+        setGrade(text);
+        if (isTabTextValid(text, tab)){
           setDomain('');
           setOpenTab(1);
         }
