@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { Box, Paper, Fade, Typography, styled } from '@mui/material';
-import { debounce } from 'lodash';
+import { CentralQuestionTemplateInput } from '@righton/networking';
 import imageUploadClose from '../../images/imageUploadClose.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
@@ -45,28 +45,29 @@ const CloseButton = styled('img')(({ theme }) => ({
 
 interface ImageURLModalProps {
   isModalOpen: boolean;
-  handleImageSave: (file: File) => void;
+  draftQuestion: CentralQuestionTemplateInput;
+  modalImageUrl: string | null;
+  debouncedModalImageUrl: string | null;
+  handleImageUrlChange: (debouncedQuestion: CentralQuestionTemplateInput, url: string) => void;
+  handleImageSave: (image: undefined, inputUrl: string) => void;
   handleCloseModal: () => void;
 }
 
 export default function ImageURLModal({
   isModalOpen,
+  draftQuestion,
+  modalImageUrl,
+  debouncedModalImageUrl,
+  handleImageUrlChange,
   handleImageSave,
   handleCloseModal
 }: ImageURLModalProps) {
-  const [url, setUrl] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const imageUrl = modalImageUrl ?? draftQuestion.questionCard.imageUrl;
   const handleSaveClick = async  () => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const metadata = {
-      type: blob.type
-    };
-    const image = new File ([blob], 'image', metadata);
-    if (image) {
-      handleImageSave(image);
+    if (!imageUrl) {
+      return;
     }
+    handleImageSave(undefined, imageUrl);
   }
 
   return (
@@ -79,10 +80,10 @@ export default function ImageURLModal({
           <DragText>Image URL</DragText>
           <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
         </Box>
-        <TextContainerStyled value={url} variant="outlined" rows='1' placeholder="Image URL..." onChange={(e)=> setUrl(e.target.value)}/>
-        <Fade in={url.length > 0} mountOnEnter unmountOnExit timeout={1000}>
+        <TextContainerStyled value={imageUrl} variant="outlined" rows='1' placeholder="Image URL..." onChange={(e)=> handleImageUrlChange(draftQuestion, e.target.value)}/>
+        <Fade in={imageUrl !== undefined && imageUrl !== null && imageUrl.length > 0} mountOnEnter unmountOnExit timeout={1000}>
           <Box style={{width: '100%', height: '50%', overflowY: 'auto'}}>
-            <img src={url} alt="preview" width="100%" height="100%"/>
+            <img src={debouncedModalImageUrl ?? ''} alt="preview" width="100%" height="100%"/>
           </Box>
         </Fade>
         <CentralButton buttonType={ButtonType.SAVE} onClick={handleSaveClick} isEnabled/>

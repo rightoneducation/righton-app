@@ -86,7 +86,6 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -108,6 +107,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -127,7 +127,6 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
         }
         publicQuestionTemplate {
           id
-          owner
           title
           lowerCaseTitle
           version
@@ -176,7 +175,6 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -198,6 +196,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -212,6 +211,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -312,7 +312,6 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -334,6 +333,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -353,7 +353,6 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
         }
         publicQuestionTemplate {
           id
-          owner
           title
           lowerCaseTitle
           version
@@ -402,7 +401,6 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -424,6 +422,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -438,6 +437,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -538,7 +538,6 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -560,6 +559,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -579,7 +579,6 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
         }
         publicQuestionTemplate {
           id
-          owner
           title
           lowerCaseTitle
           version
@@ -628,7 +627,6 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -650,6 +648,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -664,6 +663,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1370,7 +1370,6 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
 ) {
   onCreatePublicQuestionTemplate(filter: $filter, owner: $owner) {
     id
-    owner
     title
     lowerCaseTitle
     version
@@ -1441,7 +1440,6 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -1463,6 +1461,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1482,7 +1481,6 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
         }
         publicQuestionTemplate {
           id
-          owner
           title
           lowerCaseTitle
           version
@@ -1531,7 +1529,6 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -1553,6 +1550,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1567,6 +1565,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1581,6 +1580,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1594,7 +1594,6 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
 ) {
   onUpdatePublicQuestionTemplate(filter: $filter, owner: $owner) {
     id
-    owner
     title
     lowerCaseTitle
     version
@@ -1665,7 +1664,6 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -1687,6 +1685,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1706,7 +1705,6 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
         }
         publicQuestionTemplate {
           id
-          owner
           title
           lowerCaseTitle
           version
@@ -1755,7 +1753,6 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -1777,6 +1774,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1791,6 +1789,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1805,6 +1804,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1818,7 +1818,6 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
 ) {
   onDeletePublicQuestionTemplate(filter: $filter, owner: $owner) {
     id
-    owner
     title
     lowerCaseTitle
     version
@@ -1889,7 +1888,6 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -1911,6 +1909,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1930,7 +1929,6 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
         }
         publicQuestionTemplate {
           id
-          owner
           title
           lowerCaseTitle
           version
@@ -1979,7 +1977,6 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -2001,6 +1998,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -2015,6 +2013,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -2029,6 +2028,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -3584,7 +3584,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -3602,6 +3601,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3621,7 +3621,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
           }
           publicQuestionTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -3666,7 +3665,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -3684,6 +3682,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3698,6 +3697,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -3717,7 +3717,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
     }
     publicQuestionTemplate {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -3784,7 +3783,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -3802,6 +3800,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3821,7 +3820,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
           }
           publicQuestionTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -3866,7 +3864,6 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -3884,6 +3881,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3898,6 +3896,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -3912,6 +3911,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt
@@ -4002,7 +4002,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4020,6 +4019,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4039,7 +4039,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
           }
           publicQuestionTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -4084,7 +4083,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4102,6 +4100,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4116,6 +4115,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4135,7 +4135,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
     }
     publicQuestionTemplate {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -4202,7 +4201,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4220,6 +4218,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4239,7 +4238,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
           }
           publicQuestionTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -4284,7 +4282,6 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4302,6 +4299,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4316,6 +4314,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4330,6 +4329,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt
@@ -4420,7 +4420,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4438,6 +4437,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4457,7 +4457,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
           }
           publicQuestionTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -4502,7 +4501,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4520,6 +4518,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4534,6 +4533,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4553,7 +4553,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
     }
     publicQuestionTemplate {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -4620,7 +4619,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4638,6 +4636,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4657,7 +4656,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
           }
           publicQuestionTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -4702,7 +4700,6 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4720,6 +4717,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4734,6 +4732,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4748,6 +4747,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt

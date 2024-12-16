@@ -1,3 +1,5 @@
+import { CentralQuestionTemplateInput, IncorrectCard } from "@righton/networking";
+
 export enum ScreenType {
   GAMES,
   QUESTIONS,
@@ -32,36 +34,18 @@ export enum CreateQuestionHighlightCard {
   INCORRECTANSWER3 = 'card-3',
 }
 
-// type to handle input variables for question card on createquestion flow
-export type QuestionCard = {
-  title: string;
-  image?: File;
-  ccss: string;
-  isFirstEdit: boolean;
-  isCardComplete: boolean;
+// enum to determine between game templates and question templates for generic components like modals
+export enum TemplateType {
+  GAME,
+  QUESTION
 }
 
-// type to handle input variables for correct card on createquestion flow
-export type CorrectCard = {
-  answer: string;
-  answerSteps: string[];
-  isFirstEdit: boolean;
-  isCardComplete: boolean;
-}
+// key for storage to localStorage  
+export const StorageKey = 'rightOnCentral';
 
-// type to handle input variables for correct card on createquestion flow
-export type IncorrectCard = {
-  id?: string;
-  answer: string;
-  explanation: string;
-  isFirstEdit?: boolean;
-  isCardComplete: boolean;
-}
-
-// object that handles all input variables in the create question flow for the client side exclusively
-// these then get based into the more structured IQuestion/AWSQuestion objects when the API request is made
-export type CreateQuestionTemplateInput = {
-  questionCard: QuestionCard;
-  correctCard: CorrectCard;
-  incorrectCards: IncorrectCard[];
+// type that shapes retreived storage for createQuestion 
+export type CreateQuestionLocalData = {
+  draftQuestion?: CentralQuestionTemplateInput | null,
+  incompleteCards?: IncorrectCard[] | null,
+  completeCards?: IncorrectCard[] | null
 }

@@ -45,7 +45,7 @@ export default function DebugAuth(){
     
     setIsLoading(true);
     if (!checked){
-      const response = apiClients.auth.awsSignIn('debuguser', 'debugpassword123');
+      const response = await apiClients.auth.awsSignIn('debuguser', 'debugpassword123');
       console.log(response);
       apiClients.auth.verifyAuth().then((isAuth) => {
         if (isAuth) {

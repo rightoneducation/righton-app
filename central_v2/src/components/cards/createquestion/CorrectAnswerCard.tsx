@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Typography, Box, InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { CentralQuestionTemplateInput } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import {
   QuestionTitleStyled,
@@ -15,28 +16,30 @@ import {
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import errorIcon from '../../../images/errorIcon.svg';
-import { CreateQuestionTemplateInput } from '../../../lib/CentralModels';
+
 
 interface DetailedQuestionSubCardProps {
-  draftQuestion: CreateQuestionTemplateInput;
-  isCardSubmitted: boolean;
+  draftQuestion: CentralQuestionTemplateInput;
   isHighlight: boolean;
-  handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CreateQuestionTemplateInput) => void;
-  handleCorrectAnswerStepsChange: (steps: string[], draftQuestion: CreateQuestionTemplateInput) => void;
+  handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CentralQuestionTemplateInput) => void;
+  handleCorrectAnswerStepsChange: (steps: string[], draftQuestion: CentralQuestionTemplateInput) => void;
+  isCardSubmitted: boolean;
+  isCardErrored: boolean;
 }
 
 export default function DetailedQuestionSubCard({
   draftQuestion,
-  isCardSubmitted,
   isHighlight, 
   handleCorrectAnswerChange,
   handleCorrectAnswerStepsChange,
+  isCardSubmitted,
+  isCardErrored
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
-  const [correctAnswer, setCorrectAnswer] = React.useState<string>('');
-  const [solutionSteps, setSolutionSteps] = React.useState(['','','']);
+  const [correctAnswer, setCorrectAnswer] = React.useState<string>(draftQuestion.correctCard.answer ?? '');
+  const [answerSteps, setAnswerSteps] = React.useState(draftQuestion.correctCard.answerSteps ?? ['','','']);
   const addStep = () => {
-    setSolutionSteps((prev) => [...prev, ''])
+    setAnswerSteps((prev) => [...prev, ''])
   };
 
   const handleCorrectChange = (value: string ) => {
@@ -45,13 +48,13 @@ export default function DetailedQuestionSubCard({
   };
 
   const handleStepChange = (index: number, value: string): void => {
-    const newSteps = [...solutionSteps];
+    const newSteps = [...answerSteps];
     newSteps[index] = value;
-    setSolutionSteps(newSteps);
+    setAnswerSteps(newSteps);
     handleCorrectAnswerStepsChange(newSteps, draftQuestion);
   };
 
-  const solutionStepsComponent = (step: string, index: number) => {
+  const answerStepsComponent = (step: string, index: number) => {
     return (
       <Box
         sx={{
@@ -75,19 +78,19 @@ export default function DetailedQuestionSubCard({
         <TextContainerStyled 
             multiline 
             variant="outlined" 
-            value={solutionSteps[index]}
+            value={answerSteps[index]}
             onChange={(e) => handleStepChange(index, e.target.value)}
             rows='1' 
             placeholder="Step Contents" 
-            error={isCardSubmitted && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0)}
+            error={isCardErrored && (!answerSteps[index] || answerSteps[index].length === 0)}
             InputProps={{
               startAdornment: 
-              isCardSubmitted && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0) &&
+              isCardErrored && (!answerSteps[index] || answerSteps[index].length === 0) &&
                 <InputAdornment
                   position="start" 
                   sx={{ 
                     alignSelf: 'flex-start',
-                    mt: '10px'
+                    mt: '10px',
                   }}
                 >
                   <ErrorIcon src={errorIcon} alt='error icon'/>
@@ -110,10 +113,10 @@ export default function DetailedQuestionSubCard({
         placeholder="Correct Answer..." 
         value={correctAnswer}
         onChange={(e) => handleCorrectChange(e.target.value)}
-        error={isCardSubmitted && (!draftQuestion.correctCard || draftQuestion.correctCard.answer.length === 0)}
+        error={isCardSubmitted && (!correctAnswer || correctAnswer.length === 0)}
         InputProps={{
           startAdornment: 
-          isCardSubmitted && (!draftQuestion.correctCard || draftQuestion.correctCard.answer.length === 0) &&
+          isCardSubmitted && (!correctAnswer || correctAnswer.length === 0) &&
             <InputAdornment
               position="start" 
               sx={{ 
@@ -128,9 +131,9 @@ export default function DetailedQuestionSubCard({
       <QuestionTitleStyled>
         Solution Steps
       </QuestionTitleStyled>
-      {solutionSteps && 
-        solutionSteps.map((step, index) => 
-          solutionStepsComponent(step, index)
+      {answerSteps && 
+        answerSteps.map((step, index) => 
+          answerStepsComponent(step, index)
         )
       }
       <Box style = {{width: '100%', display: 'flex', justifyContent: 'center'}}>
