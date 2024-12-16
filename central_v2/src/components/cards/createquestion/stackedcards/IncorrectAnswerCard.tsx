@@ -140,11 +140,6 @@ export default function IncorrectAnswerCard({
         <QuestionTitleStyled>
           Mistake Explanation
         </QuestionTitleStyled>
-        <AIButton 
-          apiClients={apiClients}
-          type={AIButtonType.WAE_GEN}
-          handleClickOutput={(output) => handleLocalExplanationChange(output)}
-        />
       </Box>
       <TextContainerStyled 
         multiline 
