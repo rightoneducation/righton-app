@@ -103,6 +103,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "uploadExternalImageToS3": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -151,6 +156,22 @@
         {
           "category": "function",
           "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_uploadExternalImageToS3_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "uploadExternalImageToS3"
+        }
+      ]
+    },
+    "AMPLIFY_function_uploadExternalImageToS3_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "uploadExternalImageToS3"
         }
       ]
     }

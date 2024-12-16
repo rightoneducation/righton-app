@@ -517,7 +517,6 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
   query GetPublicQuestionTemplate($id: ID!) {
     getPublicQuestionTemplate(id: $id) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -539,6 +538,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -556,7 +556,6 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
     ) {
       items {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -574,6 +573,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       nextToken
@@ -600,7 +600,6 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
     ) {
       items {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -618,6 +617,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       nextToken
@@ -644,7 +644,6 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
     ) {
       items {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -662,6 +661,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       nextToken
@@ -688,7 +688,6 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
     ) {
       items {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -706,6 +705,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       nextToken
@@ -1309,7 +1309,6 @@ export const getPublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1327,6 +1326,7 @@ export const getPublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt

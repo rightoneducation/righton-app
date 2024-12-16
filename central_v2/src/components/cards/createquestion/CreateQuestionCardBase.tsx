@@ -94,11 +94,18 @@ export default function CreateQuestionCardBase({
   const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
+  const getImage = () => {
+    if (draftQuestion.questionCard.image && draftQuestion.questionCard.image instanceof File)
+      return URL.createObjectURL(draftQuestion.questionCard.image);
+    return draftQuestion.questionCard.imageUrl;
+  }
+  const imageLink = getImage();
+
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setQuestionType(PublicPrivateType[event.target.value as keyof typeof PublicPrivateType]);
-    handlePublicPrivateChange(PublicPrivateType[event.target.value as keyof typeof PublicPrivateType]);
+    setQuestionType(event.target.value as PublicPrivateType);
+    handlePublicPrivateChange(event.target.value as PublicPrivateType);
   };
 
   const handleLocalTitleChange = (value: string) => {
@@ -107,7 +114,7 @@ export default function CreateQuestionCardBase({
   }
 
   const imageContents = [
-    draftQuestion.questionCard.image &&
+    imageLink &&
       <Box 
         onMouseEnter={() => setIsImageHovered(true)}
         onMouseLeave={() => setIsImageHovered(false)}
@@ -122,7 +129,7 @@ export default function CreateQuestionCardBase({
           position: 'relative',
       }}>
             <ImageStyled 
-              src={URL.createObjectURL(draftQuestion.questionCard.image) ?? ''} 
+              src={imageLink}
               alt="image" 
               style={{
                 opacity: isImageHovered ? 0.6: 1,
@@ -152,14 +159,14 @@ export default function CreateQuestionCardBase({
             style={{overflow: 'hidden', flexWrap: 'nowrap'}}
           >
             <RadioLabelStyled
-              value="Public"
+              value={PublicPrivateType.PUBLIC}
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Multiple Choice"
               isSelected={questionType === PublicPrivateType.PUBLIC}
               style={{cursor: 'pointer'}}
             />
             <RadioLabelStyled
-              value="Private"
+              value={PublicPrivateType.PRIVATE}
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Short Answer"
               isSelected={questionType === PublicPrivateType.PRIVATE}
@@ -169,7 +176,7 @@ export default function CreateQuestionCardBase({
         </RadioContainerStyled>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        {draftQuestion.questionCard.image 
+        {imageLink 
           ? imageContents
           : <ImagePlaceholder isCardErrored={isCardErrored}>
               <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
