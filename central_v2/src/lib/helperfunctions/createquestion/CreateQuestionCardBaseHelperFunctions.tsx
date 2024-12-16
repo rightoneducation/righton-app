@@ -2,14 +2,14 @@ import React, { useCallback } from 'react';
 import { debounce } from 'lodash';
 import { CentralQuestionTemplateInput } from '@righton/networking'; 
 
-export const updateDQwithImageChange = (draftQuestion: CentralQuestionTemplateInput, inputImage: string | null, inputUrl: string | null): CentralQuestionTemplateInput => {
+export const updateDQwithImageChange = (draftQuestion: CentralQuestionTemplateInput, inputUrl?: string, inputImage?: File,): CentralQuestionTemplateInput => {
   if (inputImage || inputUrl){
     return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: inputImage, imageUrl: inputUrl}};
   }
   return draftQuestion;
 }
 
-export const updateDQwithImage = (draftQuestion: CentralQuestionTemplateInput, inputImage: string | null, inputUrl: string | null): CentralQuestionTemplateInput => {
+export const updateDQwithImage = (draftQuestion: CentralQuestionTemplateInput, inputUrl?: string, inputImage?: File,): CentralQuestionTemplateInput => {
   if (inputImage || inputUrl){
     if (draftQuestion.questionCard.ccss.length > 0 && draftQuestion.questionCard.ccss !== 'CCSS' && draftQuestion.questionCard.title){
       if (draftQuestion.correctCard.isFirstEdit){
