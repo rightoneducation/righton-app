@@ -9,10 +9,10 @@ import { z } from 'zod';
 export async function handler(event) {
      const openai = new OpenAI(process.env.OPENAI_API_KEY);
     // Parse input data from the event object
-    const question = JSON.parse(event.body).question.question;
-    const correctAnswer = JSON.parse(event.body).question.correctAnswer;
-    const wrongAnswer = JSON.parse(event.body).question.wrongAnswer;
-    const discardedExplanations = JSON.parse(event.body).discardedExplanations;
+    const question = JSON.parse(event.body).input.question;
+    const correctAnswer = JSON.parse(event.body).input.correctAnswer;
+    const wrongAnswer = JSON.parse(event.body).input.wrongAnswer;
+    const discardedExplanations = JSON.parse(event.body).input.discardedExplanations;
 
     const StructuredResponse = z.object({
         wrongAnswerExplanation: z.string(),

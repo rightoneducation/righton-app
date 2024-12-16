@@ -976,7 +976,10 @@ export type UploadExternalImageToS3Input = {
 };
 
 export type WaeGenInput = {
-  waegenInput: string,
+  question: string,
+  correctAnswer: string,
+  wrongAnswer: string,
+  discaredExplanations: string,
 };
 
 export type WaeRegenInput = {

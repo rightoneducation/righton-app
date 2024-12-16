@@ -40,7 +40,10 @@ input UploadExternalImageToS3Input {
 }
 
 input WaeGenInput {
-  waegenInput: String!
+  question: String!
+  correctAnswer: String!
+  wrongAnswer: String!
+  discaredExplanations: AWSJSON!
 }
 
 input WaeRegenInput {

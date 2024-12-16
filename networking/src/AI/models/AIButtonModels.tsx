@@ -8,7 +8,7 @@ export enum AIButtonType {
 
 type AIButtonContentMapProps = {
   [key in AIButtonType]: {
-    icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string }>;
+    icon?: React.FC<React.SVGProps<SVGSVGElement>>;
     textKey?: string;
     color?: string;
   };

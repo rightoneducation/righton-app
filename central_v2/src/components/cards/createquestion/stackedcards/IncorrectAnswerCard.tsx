@@ -1,7 +1,7 @@
 import React, { useState, useMemo} from 'react';
 import { Paper, Box, styled, InputAdornment } from '@mui/material';
 import { debounce } from 'lodash';
-import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients } from '@righton/networking';
+import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients, AIButtonType } from '@righton/networking';
 import { CreateQuestionHighlightCard, } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
@@ -131,14 +131,20 @@ export default function IncorrectAnswerCard({
             </InputAdornment>
         }}
       />
-      <Box>
-      <QuestionTitleStyled>
-        Mistake Explanation
-      </QuestionTitleStyled>
-      <AIButton 
-        apiClients={apiClients}
-        handleClickOutput={(output) => handleLocalExplanationChange(output)}
-      />
+      <Box style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <QuestionTitleStyled>
+          Mistake Explanation
+        </QuestionTitleStyled>
+        <AIButton 
+          apiClients={apiClients}
+          type={AIButtonType.WAE_GEN}
+          handleClickOutput={(output) => handleLocalExplanationChange(output)}
+        />
       </Box>
       <TextContainerStyled 
         multiline 
