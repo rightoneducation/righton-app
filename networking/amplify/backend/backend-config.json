@@ -108,16 +108,6 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    },
-    "waegen": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "waeregen": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     }
   },
   "parameters": {
@@ -182,38 +172,6 @@
         {
           "category": "function",
           "resourceName": "uploadExternalImageToS3"
-        }
-      ]
-    },
-    "AMPLIFY_function_waegen_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "waegen"
-        }
-      ]
-    },
-    "AMPLIFY_function_waegen_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "waegen"
-        }
-      ]
-    },
-    "AMPLIFY_function_waeregen_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "waeregen"
-        }
-      ]
-    },
-    "AMPLIFY_function_waeregen_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "waeregen"
         }
       ]
     }
