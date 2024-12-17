@@ -101,6 +101,11 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "teacherIdAuthRead": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -141,6 +146,22 @@
         {
           "category": "function",
           "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_teacherIdAuthRead_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "teacherIdAuthRead"
+        }
+      ]
+    },
+    "AMPLIFY_function_teacherIdAuthRead_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "teacherIdAuthRead"
         }
       ]
     },

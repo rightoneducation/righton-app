@@ -224,6 +224,14 @@ const HaveAnAccountText = styled(Typography)(({ theme }) => ({
   fontSize: '16px', 
 }));
 
+const FileInput = styled('input')({
+  position: 'absolute',
+  opacity: 0,
+  width: '100%',
+  height: '100%',
+  cursor: 'pointer',
+});
+
 
 function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void }) {
   const [title, setTitle] = useState('Title...');
@@ -241,6 +249,11 @@ function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void
 
   const buttonType = ButtonType.LOGIN;
   const [isEnabled, setIsEnabled] = useState(true);
+
+  const buttonTypeUpload = ButtonType.UPLOAD;
+  const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
+
+  const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
 
   const apiClients = useTSAPIClientsContext(APIClientsContext);
 
@@ -273,6 +286,10 @@ function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void
     setLoading(false);
   };
 
+  const handlerImageUpload = async (file: File) => {
+    const response = await apiClients.user.uploadTeacherId(file)
+    return response
+  }
   return (
     <SignUpMainContainer>
       <InnerBodyContainer>
@@ -333,6 +350,28 @@ function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void
         </MiddleText>
 
         <UploadImagesAndPassword>
+        <UploadImages >
+        <UploadImageContainer>
+                  <ImageText>Front</ImageText>
+                  <FileInput
+                    type="file"
+                    accept="image/*"
+                    onChange={async (event) => {
+                      const file = event.target.files?.[0];
+                      if (file) {
+                        const response = await handlerImageUpload(file);
+                        console.log("File uploaded successfully:", response);
+                      }
+                    }}
+                  />
+                  <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadFrontEnabled} />
+                </UploadImageContainer>
+
+                <UploadImageContainer>
+                    <ImageText>Back</ImageText>
+                    <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadBackEnabled} />
+                </UploadImageContainer>
+        </UploadImages>
           <PasswordContainer>
             <UserTextField
               variant="outlined"
@@ -366,6 +405,7 @@ function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void
 }
 
 export default function SignUpSwitch() {
+
   const [userName, setUserName] = useState(''); // Track the submitted username
   const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
 

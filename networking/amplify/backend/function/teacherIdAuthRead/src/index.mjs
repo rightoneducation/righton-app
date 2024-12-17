@@ -1,44 +1,44 @@
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-
 import AWS from 'aws-sdk'; // Use ES Module syntax
 
 // Initialize the S3 client
 const s3 = new AWS.S3();
 
 export const handler = async (event) => {
+    console.log('Reading file from S3...');
+
     const bucketName = 'teachersimages'; // Your bucket name
-    const key = 'example2.txt';          // File name in S3
-    const content = 'example2 text is here now!';       // Content to write to the file
+    const key = 'example.txt';          // File name in S3
 
     try {
-        // Uploading the file to S3
+        // Fetching the file from S3
         const params = {
             Bucket: bucketName,
             Key: key,
-            Body: content,
         };
 
-        const data = await s3.putObject(params).promise();
+        const data = await s3.getObject(params).promise();
 
-        console.log('Successfully uploaded data to S3:', data);
+        console.log('Successfully read data from S3:', data.Body.toString());
 
         return {
             statusCode: 200,
             body: JSON.stringify({
-                message: 'File successfully written to S3!',
+                message: 'File successfully read from S3!',
+                fileContent: data.Body.toString(), // Convert buffer to string
                 bucketName,
                 key,
             }),
         };
     } catch (error) {
-        console.error('Error uploading to S3:', error);
+        console.error('Error reading from S3:', error);
 
         return {
             statusCode: 500,
             body: JSON.stringify({
-                message: 'Failed to write to S3',
+                message: 'Failed to read from S3',
                 error: error.message,
             }),
         };

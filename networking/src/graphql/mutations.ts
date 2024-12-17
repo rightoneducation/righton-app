@@ -6200,3 +6200,10 @@ export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameS
   APITypes.CreateGameSessionFromTemplateMutationVariables,
   APITypes.CreateGameSessionFromTemplateMutation
 >;
+export const teacherIdAuth = /* GraphQL */ `mutation TeacherIdAuth($input: TeacherIdAuthInput!) {
+  teacherIdAuth(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.TeacherIdAuthMutationVariables,
+  APITypes.TeacherIdAuthMutation
+>;

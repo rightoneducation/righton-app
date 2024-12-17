@@ -1030,6 +1030,10 @@ export type CreateGameSessionFromTemplateInput = {
   publicPrivate: string,
 };
 
+export type TeacherIdAuthInput = {
+  teacherImage: string,
+};
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   userName?: ModelStringInput | null,
@@ -7755,6 +7759,14 @@ export type CreateGameSessionFromTemplateMutationVariables = {
 
 export type CreateGameSessionFromTemplateMutation = {
   createGameSessionFromTemplate?: string | null,
+};
+
+export type TeacherIdAuthMutationVariables = {
+  input: TeacherIdAuthInput,
+};
+
+export type TeacherIdAuthMutation = {
+  teacherIdAuth?: string | null,
 };
 
 export type GetUserQueryVariables = {

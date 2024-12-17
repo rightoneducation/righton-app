@@ -8,6 +8,9 @@ import {
   DeleteUserInput,
   DeleteUserMutation,
   DeleteUserMutationVariables,
+  TeacherIdAuthInput,
+  TeacherIdAuthMutation,
+  TeacherIdAuthMutationVariables,
   UpdateUserInput,
   UpdateUserMutation,
   UpdateUserMutationVariables
@@ -17,7 +20,8 @@ import {
 import {
   createUser,
   deleteUser,
-  updateUser
+  updateUser, 
+  teacherIdAuth
 } from "../../graphql";
 
 // interface IUser {
@@ -80,6 +84,45 @@ export class UserAPIClient
         variables
     )
     return user as IUser;
+  }
+
+  // Function to convert a Base64 string to a File
+  async base64ToFile(base64: string, fileName: string, mimeType: string): Promise<File> {
+    const byteString = atob(base64.split(',')[1]); // Decode Base64
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([uint8Array], { type: mimeType });
+    return new File([blob], fileName, { type: mimeType });
+  }
+
+  // Function to convert a File to a Base64 string
+  async fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+
+      reader.readAsDataURL(file);
+    });
+  }
+  async uploadTeacherId <String>(
+    teacherIdImage: File
+  ): Promise<String> {
+    const teacherImage = await this.fileToBase64(teacherIdImage)
+
+    const input: TeacherIdAuthInput = {teacherImage}
+    const variables: TeacherIdAuthMutationVariables = { input }
+    const imagePath = await this.callGraphQL<TeacherIdAuthMutation>(
+        teacherIdAuth,
+        variables
+    )
+    return imagePath as String
   }
 }
 

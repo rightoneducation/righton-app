@@ -30,7 +30,11 @@
         "mobile6060603c": {},
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-test-68558-deployment",
-          "s3Key": "amplify-builds/teacherIdAuth-6e3430584875745a7575-build.zip"
+          "s3Key": "amplify-builds/teacherIdAuth-7346474f343042454a57-build.zip"
+        },
+        "teacherIdAuthRead": {
+          "deploymentBucketName": "amplify-mobile-test-68558-deployment",
+          "s3Key": "amplify-builds/teacherIdAuthRead-6c6e48695a5a4771354f-build.zip"
         }
       },
       "api": {
