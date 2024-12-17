@@ -43,7 +43,7 @@ input WaeGenInput {
   question: String!
   correctAnswer: String!
   wrongAnswer: String!
-  discaredExplanations: AWSJSON!
+  discardedExplanations: AWSJSON!
 }
 
 input WaeRegenInput {
