@@ -1,7 +1,7 @@
 import React, { useState, useMemo} from 'react';
 import { Paper, Box, styled, InputAdornment } from '@mui/material';
 import { debounce } from 'lodash';
-import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients, AIButtonType } from '@righton/networking';
+import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients, AIButtonType, WaegenInput } from '@righton/networking';
 import { CreateQuestionHighlightCard, } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
@@ -64,6 +64,13 @@ export default function IncorrectAnswerCard({
     isCardComplete: answerData.isCardComplete,
   })
   
+  const waegenInput: WaegenInput = {
+    question: draftQuestion.questionCard.title,
+    correctAnswer: draftQuestion.correctCard.answer,
+    wrongAnswer: cardData.answer,
+    discardedExplanations: JSON.stringify([cardData.explanation])
+  }
+
   const getCardType = () => {
     switch(answerData.id){
       case 'card-2':
@@ -142,6 +149,7 @@ export default function IncorrectAnswerCard({
         </QuestionTitleStyled>
         <AIButton 
           apiClients={apiClients}
+          waegenInput={waegenInput}
           type={AIButtonType.WAE_GEN}
           handleClickOutput={(output) => handleLocalExplanationChange(output)}
         />

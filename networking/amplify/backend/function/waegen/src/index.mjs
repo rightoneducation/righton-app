@@ -17,7 +17,6 @@ export async function handler(event) {
     const StructuredResponse = z.object({
         wrongAnswerExplanation: z.string(),
       });
-    console.log('here');
     // prompt for open ai
     // first specify the format returned via the role
     let messages = [{
@@ -76,10 +75,7 @@ export async function handler(event) {
         const structuredData = StructuredResponse.parse(content);
         const explanation = structuredData.wrongAnswerExplanation;
         // Return the response
-        return {
-            statusCode: 200,
-            body: explanation,
-        };
+        return explanation;
     } catch (error) {
         console.error(error);
         // Handle any errors
