@@ -45,6 +45,7 @@ const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-ca
 const answerBarBackgroundColor = 'rgba(8, 69, 143, 0.20)';
 const progressBarColor = '#08458F';
 const progressBarBackgroundColor = '#D0DAE7';
+const errorColor = '#F60E44';
 const buttonGradientBlue = 'linear-gradient(270deg, #1C94C3 0%, #3153C7 100%)';
 const buttonGradientRed = 'linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)';
 const buttonGradientGrey = 'linear-gradient(90deg, #969696 0%, #515151 100%)';
@@ -404,6 +405,7 @@ declare module '@mui/material/styles' {
     graphAccentColor: string;
     dropdownInfoBackgroundColor: string;
     answerBarBackgroundColor: string;
+    errorColor: string;
     progressBarColor: string;
     progressBarBackgroundColor: string;
     countdownColor: string;
@@ -443,6 +445,7 @@ declare module '@mui/material/styles' {
     graphAccentColor?: string;
     dropdownInfoBackgroundColor?: string;
     answerBarBackgroundColor?: string;
+    errorColor?: string;
     progressBarColor?: string;
     progressBarBackgroundColor?: string;
     countdownColor: string;
@@ -520,6 +523,7 @@ export default createTheme({
       answerBarBackgroundColor,
       progressBarColor,
       progressBarBackgroundColor,
+      errorColor,
       countdownColor,
       radialTimerArray,
       buttonGradientBlue,

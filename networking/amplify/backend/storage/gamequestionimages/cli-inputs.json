@@ -1,0 +1,16 @@
+{
+  "resourceName": "gamequestionimages",
+  "policyUUID": "ad80062f",
+  "bucketName": "mobile7beb09a31ef04dd79b15b081c36ef050",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

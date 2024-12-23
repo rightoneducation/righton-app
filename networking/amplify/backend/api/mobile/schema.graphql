@@ -7,6 +7,47 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+  uploadExternalImageToS3(input: UploadExternalImageToS3Input): String
+  @function(name: "uploadExternalImageToS3-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+
+  waegen(input: WaeGenInput): String
+  @function(name: "waegen-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+
+  waeregen(input: WaeRegenInput): String
+  @function(name: "waeregen-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+}
+
+input UploadExternalImageToS3Input {
+  imageUrl: String!
+}
+
+input WaeGenInput {
+  question: String!
+  correctAnswer: String!
+  wrongAnswer: String!
+  discaredExplanations: AWSJSON!
+}
+
+input WaeRegenInput {
+  waegenInput: String!
 }
 
 type PublicGameTemplate @model
@@ -110,7 +151,6 @@ type PublicQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String!
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -350,3 +390,4 @@ type Subscription {
       ]
     )
 }
+

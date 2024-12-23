@@ -13,7 +13,9 @@ import {
   ITeamMemberAPIClient,
   ITeamAnswerAPIClient
 } from './gamesession/interfaces';
+import IAIAPIClient from './AI/interfaces/IAIAPIClient';
 import { AuthAPIClient } from './auth/AuthAPIClient';
+import { AIAPIClient } from './AI/AIAPIClient';
 import { GameTemplateAPIClient } from './templates/GameTemplateAPIClient';
 import { QuestionTemplateAPIClient } from './templates/QuestionTemplateAPIClient';
 import { GameQuestionsAPIClient } from './templates/GameQuestionsAPIClient';
@@ -40,6 +42,7 @@ export enum AppType {
 
 export class APIClients {
   auth: IAuthAPIClient;
+  AI: IAIAPIClient;
   gameTemplate: IGameTemplateAPIClient;
   questionTemplate: IQuestionTemplateAPIClient;
   gameQuestions: IGameQuestionsAPIClient;
@@ -55,6 +58,7 @@ export class APIClients {
   constructor(env: Environment,  authClient: IAuthAPIClient, appType: AppType) {
     this.configAmplify(awsconfig);
     this.auth = authClient;
+    this.AI = new AIAPIClient(env, this.auth);
     this.gameTemplate = new GameTemplateAPIClient(env, this.auth);
     this.questionTemplate = new QuestionTemplateAPIClient(env, this.auth);
     this.gameQuestions = new GameQuestionsAPIClient(env, this.auth);

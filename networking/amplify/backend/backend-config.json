@@ -65,6 +65,22 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    },
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
     }
   },
   "function": {
@@ -87,9 +103,22 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "uploadExternalImageToS3": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
+    "AMPLIFY_auth_mobile6060603c_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ]
+    },
     "AMPLIFY_function_createGameTest_deploymentBucketName": {
       "usedBy": [
         {
@@ -129,7 +158,29 @@
           "resourceName": "mobile6060603cPostConfirmation"
         }
       ]
+    },
+    "AMPLIFY_function_uploadExternalImageToS3_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "uploadExternalImageToS3"
+        }
+      ]
+    },
+    "AMPLIFY_function_uploadExternalImageToS3_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "uploadExternalImageToS3"
+        }
+      ]
     }
   },
-  "storage": {}
+  "storage": {
+    "gamequestionimages": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
 }

@@ -25,11 +25,11 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface BaseCardStyledProps {
-  isSelected: boolean,
+  isHighlight: boolean,
   isCardComplete: boolean
 }
 
-export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isSelected, isCardComplete }) => ({
+export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
@@ -39,13 +39,15 @@ export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isSel
   borderRadius: `${theme.sizing.smPadding}px`,
   boxSizing: 'border-box',
   height: 'fit-content',
-  boxShadow: isSelected ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
+  boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
   opacity: isCardComplete ? 0.6 : 1,
   transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
 
 export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({
   width: '100%',
+  display: 'flex',
+  justifyContent: 'center'
 }));
 
 export const TextContainerStyled = styled(TextField)(({ theme }) => ({
@@ -58,8 +60,12 @@ export const TextContainerStyled = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
     "&.Mui-focused fieldset": {
       borderColor: `${theme.palette.primary.extraDarkGrey}`
-    }
-  }
+    },
+    '&.Mui-error fieldset': {
+      borderWidth: '2px',
+      borderColor: theme.palette.error.main,
+    },
+  },
 }));
 
 export const CCSSIndicator = styled(Button)(({ theme }) => ({
