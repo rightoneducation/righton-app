@@ -979,7 +979,7 @@ export type WaeGenInput = {
   question: string,
   correctAnswer: string,
   wrongAnswer: string,
-  discaredExplanations: string,
+  discardedExplanations: string,
 };
 
 export type WaeRegenInput = {

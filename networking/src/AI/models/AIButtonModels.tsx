@@ -23,11 +23,9 @@ export const aiButtonContentMap: AIButtonContentMapProps = {
   }
 }
 
-export type waegenInput = {
-  question: {
-    question: string;
-    correctAnswer: string;
-    wrongAnswer: string;
-    discardedExplanations: string[];
-  }
+export type WaegenInput = {
+  question: string;
+  correctAnswer: string;
+  wrongAnswer: string;
+  discardedExplanations: string;
 }
