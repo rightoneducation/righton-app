@@ -50,16 +50,25 @@ export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({
   justifyContent: 'center'
 }));
 
-export const TextContainerStyled = styled(TextField)(({ theme }) => ({
+interface TextContainerStyledProps {
+  isAIEnabled?: boolean,
+}
+
+
+export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>(({ theme, isAIEnabled }) => ({
   width: '100%',
   margin: 0,
   padding: 0,
   boxSizing: 'border-box',
   borderRadius: `${theme.sizing.xSmPadding}px`,
-  borderColor: `${theme.palette.primary.extraDarkGrey}`,
   "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderWidth: `2px`,
+      borderColor: isAIEnabled ? `${theme.palette.primary.darkPurple}`: `${theme.palette.primary.grey}`,
+     },
     "&.Mui-focused fieldset": {
-      borderColor: `${theme.palette.primary.extraDarkGrey}`
+      borderWidth: `2px`,
+      borderColor: isAIEnabled ? `${theme.palette.primary.darkPurple}`: `${theme.palette.primary.grey}`,
     },
     '&.Mui-error fieldset': {
       borderWidth: '2px',

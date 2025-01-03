@@ -34,6 +34,7 @@ const mediumBlueColor = '#3958BF'; // checked radio button
 const extraDarkBlueColor = '#02215F'; // upper explore games screen background
 const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
+const greyColor = 'CCCCCC'; // text field borders
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
@@ -397,6 +398,7 @@ declare module '@mui/material/styles' {
     extraDarkBlue: string;
     extraDarkGrey: string;
     darkGrey: string;
+    grey: string;
     lightGrey: string;
     correctColor: string;
     baseQuestionColor: string;
@@ -437,6 +439,7 @@ declare module '@mui/material/styles' {
     purple?: string;
     extraDarkGrey?: string;
     darkGrey?: string;
+    grey?: string;
     lightGrey?: string;
     correctColor?: string;
     baseQuestionColor?: string;
@@ -513,6 +516,7 @@ export default createTheme({
       extraDarkBlue: extraDarkBlueColor,
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
+      grey: greyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
       baseQuestionColor,

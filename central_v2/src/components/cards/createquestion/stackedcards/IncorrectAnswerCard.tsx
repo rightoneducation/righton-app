@@ -1,5 +1,5 @@
 import React, { useState, useMemo} from 'react';
-import { Paper, Box, styled, InputAdornment } from '@mui/material';
+import { Paper, Box, styled, InputAdornment, useTheme } from '@mui/material';
 import { debounce } from 'lodash';
 import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients, AIButtonType, WaegenInput } from '@righton/networking';
 import { CreateQuestionHighlightCard, } from '../../../../lib/CentralModels';
@@ -56,7 +56,7 @@ export default function IncorrectAnswerCard({
   completeAnswers,
   incompleteAnswers
 } : IncorrectAnswerCardProps) {
-
+  const theme = useTheme();
   const [isCardClicked, setIsCardClicked] = useState<boolean>(false);
   const [cardData, setCardData] = useState<IncorrectCard>({
     id: answerData.id,
@@ -167,6 +167,7 @@ export default function IncorrectAnswerCard({
         value={cardData.explanation}
         onChange={(e) => handleLocalExplanationChange(e.target.value)}
         error={isCardSubmitted && cardData.explanation.length === 0}
+        isAIEnabled={isAIEnabled}
         InputProps={{
           startAdornment: 
             isCardSubmitted && cardData.explanation.length === 0 &&
