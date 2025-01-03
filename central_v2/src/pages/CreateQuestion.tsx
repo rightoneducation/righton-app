@@ -85,6 +85,7 @@ export default function CreateQuestion({
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
+  const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const localData = useCreateQuestionLoader();
@@ -513,7 +514,7 @@ export default function CreateQuestion({
                 <Typography style={{textAlign: 'right', fontWeight: 500}}>
                   Try our AI-Generated Wrong Answer Explanation Prototype
                 </Typography>
-                <AISwitch/>
+                <AISwitch checked={isAIEnabled} onChange={(prev) => setIsAIEnabled(!isAIEnabled)}/>
               </Box>
               <IncorrectAnswerCardStack 
                 draftQuestion={draftQuestion}
@@ -524,6 +525,7 @@ export default function CreateQuestion({
                 handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                 handleCardClick={handleClick} 
                 isCardSubmitted={isCardSubmitted}
+                isAIEnabled={isAIEnabled}
               />
             </SubCardGridItem>
           </Grid>

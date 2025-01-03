@@ -25,7 +25,7 @@ const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight, isCardC
   height: 'fit-content',
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.smPadding}px`,
+  gap: `10px`,
   boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
   opacity: isCardComplete && !isCardClicked ? 0.6 : 1,
   transition: 'box-shadow 0.6s, opacity  0.6s',
@@ -37,6 +37,7 @@ interface IncorrectAnswerCardProps {
   draftQuestion: CentralQuestionTemplateInput;
   isHighlight?: boolean;
   isCardSubmitted: boolean;
+  isAIEnabled: boolean;
   handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
   completeAnswers: IncorrectCard[];
@@ -49,6 +50,7 @@ export default function IncorrectAnswerCard({
   draftQuestion,
   isHighlight,
   isCardSubmitted,
+  isAIEnabled,
   handleIncorrectCardStackUpdate,
   handleCardClick,
   completeAnswers,
@@ -140,6 +142,7 @@ export default function IncorrectAnswerCard({
       />
       <Box style={{
         width: '100%',
+        height: '38px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -147,12 +150,14 @@ export default function IncorrectAnswerCard({
         <QuestionTitleStyled>
           Mistake Explanation
         </QuestionTitleStyled>
-        <AIButton 
-          apiClients={apiClients}
-          waegenInput={waegenInput}
-          type={AIButtonType.WAE_GEN}
-          handleClickOutput={(output) => handleLocalExplanationChange(output)}
-        />
+        { isAIEnabled &&
+          <AIButton 
+            apiClients={apiClients}
+            waegenInput={waegenInput}
+            type={AIButtonType.WAE_GEN}
+            handleClickOutput={(output) => handleLocalExplanationChange(output)}
+          />
+        }
       </Box>
       <TextContainerStyled 
         multiline 

@@ -27,6 +27,7 @@ interface IncorrectAnswerCardStackProps {
   handleNextCardButtonClick: () => void;
   handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
   isCardSubmitted: boolean;
+  isAIEnabled: boolean;
 }
 
 export default function IncorrectAnswerCardStack({
@@ -37,7 +38,8 @@ export default function IncorrectAnswerCardStack({
   handleCardClick,
   handleNextCardButtonClick,
   handleIncorrectCardStackUpdate,
-  isCardSubmitted
+  isCardSubmitted,
+  isAIEnabled
 }: IncorrectAnswerCardStackProps) {
 
   const allAnswers = [...incompleteIncorrectAnswers, ...completeIncorrectAnswers];
@@ -77,6 +79,7 @@ export default function IncorrectAnswerCardStack({
                     draftQuestion={draftQuestion}
                     isHighlight={highlightCard === card.id}
                     isCardSubmitted={isCardSubmitted}
+                    isAIEnabled={isAIEnabled}
                     handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                     handleCardClick={handleCardClick}
                     completeAnswers={completeIncorrectAnswers}
@@ -101,6 +104,7 @@ export default function IncorrectAnswerCardStack({
                   draftQuestion={draftQuestion}
                   isHighlight={highlightCard === card.id}
                   isCardSubmitted={isCardSubmitted}
+                  isAIEnabled={isAIEnabled}
                   handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                   handleCardClick={handleCardClick}
                   completeAnswers={completeIncorrectAnswers}
@@ -139,6 +143,7 @@ export default function IncorrectAnswerCardStack({
               draftQuestion={draftQuestion}
               isHighlight={highlightCard === card.id}
               isCardSubmitted={isCardSubmitted}
+              isAIEnabled={isAIEnabled}
               handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
               handleCardClick={handleCardClick}
               completeAnswers={completeIncorrectAnswers}
