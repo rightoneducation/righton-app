@@ -1,9 +1,12 @@
 import React, { useState, useMemo} from 'react';
 import { Paper, Box, styled, InputAdornment, useTheme } from '@mui/material';
 import { debounce } from 'lodash';
+import {AnimatePresence, motion} from 'framer-motion';
 import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients, AIButtonType, WaegenInput } from '@righton/networking';
 import { CreateQuestionHighlightCard, } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
+import aiMonster from '../../../../images/aiMonster.svg';
+import aiMonsterSpeech from '../../../../images/aiMonsterSpeech.svg';
 import { ErrorIcon } from '../../../../lib/styledcomponents/CentralStyledComponents';
 import {
   QuestionTitleStyled,
@@ -14,21 +17,26 @@ interface StyledCardProps {
   isHighlight: boolean;
   isCardComplete: boolean;
   isCardClicked: boolean;
+  isAIEnabled: boolean;
+  isAIExplanationGenerated: boolean;
+  isTopCard?: boolean;
 }
 
-const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight, isCardComplete, isCardClicked }) => ({
+const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight, isCardComplete, isCardClicked, isAIEnabled, isAIExplanationGenerated, isTopCard }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
+  paddingBottom: isAIEnabled && isAIExplanationGenerated && isTopCard ? '120px' : `${theme.sizing.mdPadding}px`,
   background: '#FFFFFF',
   borderRadius: `${theme.sizing.smPadding}px`,
   boxSizing: 'border-box',
-  height: 'fit-content',
   display: 'flex',
   flexDirection: 'column',
   gap: `10px`,
   boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
   opacity: isCardComplete && !isCardClicked ? 0.6 : 1,
-  transition: 'box-shadow 0.6s, opacity  0.6s',
+  transition: 'box-shadow 0.6s, opacity  0.6s, padding-bottom 0.6s',
+  position: 'relative',
+  overflow: 'hidden'
 }));
 
 interface IncorrectAnswerCardProps {
@@ -38,6 +46,7 @@ interface IncorrectAnswerCardProps {
   isHighlight?: boolean;
   isCardSubmitted: boolean;
   isAIEnabled: boolean;
+  isTopCard?: boolean;
   handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
   completeAnswers: IncorrectCard[];
@@ -51,6 +60,7 @@ export default function IncorrectAnswerCard({
   isHighlight,
   isCardSubmitted,
   isAIEnabled,
+  isTopCard,
   handleIncorrectCardStackUpdate,
   handleCardClick,
   completeAnswers,
@@ -58,20 +68,21 @@ export default function IncorrectAnswerCard({
 } : IncorrectAnswerCardProps) {
   const theme = useTheme();
   const [isCardClicked, setIsCardClicked] = useState<boolean>(false);
+  const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState<boolean>(false);
   const [cardData, setCardData] = useState<IncorrectCard>({
     id: answerData.id,
     answer: answerData.answer,
     explanation: answerData.explanation,
     isFirstEdit: answerData.isFirstEdit,
     isCardComplete: answerData.isCardComplete,
-  })
+  });
   
   const waegenInput: WaegenInput = {
     question: draftQuestion.questionCard.title,
     correctAnswer: draftQuestion.correctCard.answer,
     wrongAnswer: cardData.answer,
     discardedExplanations: JSON.stringify([cardData.explanation])
-  }
+  };
 
   const getCardType = () => {
     switch(answerData.id){
@@ -108,13 +119,21 @@ export default function IncorrectAnswerCard({
       debouncedCardChanges({...cardData, explanation: value}, draftQuestion, completeAnswers, incompleteAnswers);
   }
 
+  const handleAIExplanationChange = (value: string ) => {
+    setCardData({
+      ...cardData,
+      explanation: value,
+    });
+    setIsAIExplanationGenerated(true);
+  }
+
   const handleLocalCardClick = () => {
     setIsCardClicked(true);
     // handleCardClick(getCardType())
   }
 
   return (
-    <AnswerCard elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} onClick={handleLocalCardClick}>
+    <AnswerCard elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIExplanationGenerated} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
       <QuestionTitleStyled>
         Incorrect Answer
       </QuestionTitleStyled>
@@ -155,19 +174,22 @@ export default function IncorrectAnswerCard({
             apiClients={apiClients}
             waegenInput={waegenInput}
             type={AIButtonType.WAE_GEN}
-            handleClickOutput={(output) => handleLocalExplanationChange(output)}
+            handleClickOutput={(output) => handleAIExplanationChange(output)}
           />
         }
       </Box>
       <TextContainerStyled 
         multiline 
         variant="outlined" 
-        rows='1' 
         placeholder="Explanation..." 
         value={cardData.explanation}
         onChange={(e) => handleLocalExplanationChange(e.target.value)}
         error={isCardSubmitted && cardData.explanation.length === 0}
         isAIEnabled={isAIEnabled}
+        // style={{
+        //   height: isAIExplanationGenerated && isAIEnabled ? '120px' : '38px',
+        //   transition: 'height 0.6s'
+        // }}
         InputProps={{
           startAdornment: 
             isCardSubmitted && cardData.explanation.length === 0 &&
@@ -182,6 +204,38 @@ export default function IncorrectAnswerCard({
             </InputAdornment>
         }}
       />
+      
+      <AnimatePresence>
+        {isAIExplanationGenerated && isAIEnabled && isTopCard &&
+          <>
+            <img
+              src={aiMonsterSpeech} 
+              alt='AI Monster Speech'
+              style={{height: '20px', width: '20px', marginTop: '-16px', marginBottom: '-16px', transform: 'translateX(20px)', zIndex: 10}}
+            />
+            <motion.div
+              initial={{ opacity: 0, bottom: '-110px' }}
+              animate={{ opacity: 1, bottom: '-50px' }}
+              transition={{ duration: 0.6, ease: 'easeInOut', delay: 0.6 }}
+              style={{
+                position: 'absolute',
+                bottom: '-50px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '160px',
+                height: 'auto',
+                objectFit: 'cover',
+                zIndex: 1,
+              }}
+            >
+              <img
+                src={aiMonster} 
+                alt='AI Monster'
+              />
+            </motion.div>
+          </>
+        }
+      </AnimatePresence>
     </AnswerCard>
   )
 }

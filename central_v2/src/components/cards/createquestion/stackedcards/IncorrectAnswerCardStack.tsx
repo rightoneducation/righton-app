@@ -65,7 +65,7 @@ export default function IncorrectAnswerCardStack({
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, y: 274 }}
-                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  transition={{ duration: isAIEnabled ? 0.6 : 0.6, ease: 'easeInOut' }}
                   style={{
                     position: 'absolute',
                     width: '100%',
@@ -80,6 +80,7 @@ export default function IncorrectAnswerCardStack({
                     isHighlight={highlightCard === card.id}
                     isCardSubmitted={isCardSubmitted}
                     isAIEnabled={isAIEnabled}
+                    isTopCard
                     handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                     handleCardClick={handleCardClick}
                     completeAnswers={completeIncorrectAnswers}
@@ -94,8 +95,9 @@ export default function IncorrectAnswerCardStack({
                 style={{
                   width: '100%',
                   position: 'absolute',
-                  top: `${index * 50}px`,
-                  zIndex: incompleteIncorrectAnswers.length - index - 1
+                  top: isAIEnabled ? `${(index * 50) + 110}px` : `${index * 50}px`,
+                  zIndex: incompleteIncorrectAnswers.length - index - 1,
+                  transition: 'top 0.6s ease-in-out',
                 }}
               >
                 <IncorrectAnswerCard
@@ -152,7 +154,7 @@ export default function IncorrectAnswerCardStack({
           </motion.div>
         ))}
       </Box>
-      {incompleteIncorrectAnswers.length !== 0 && (
+      {incompleteIncorrectAnswers.length === 0 && (
       <Box
         style={{
           position: 'absolute',
