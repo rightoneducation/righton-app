@@ -70,6 +70,10 @@ export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>((
       borderWidth: `2px`,
       borderColor: isAIEnabled ? `${theme.palette.primary.darkPurple}`: `${theme.palette.primary.grey}`,
     },
+    "&:hover fieldset": {
+      borderWidth: `2px`,
+      borderColor: isAIEnabled ? `${theme.palette.primary.extraDarkPurple}`: `${theme.palette.primary.extraDarkGrey}`,
+    },
     '&.Mui-error fieldset': {
       borderWidth: '2px',
       borderColor: theme.palette.error.main,

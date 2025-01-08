@@ -27,6 +27,7 @@ const secondaryTextColor = '#384466'; // secondary text (question text, answer t
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
 const playerNameTextColor = '#AEAEAE'; // player name
 const darkPurpleColor = '#4700B2'; // phase results, selected answer
+const extraDarkPurpleColor = '#340380'; // hover state for dark purple text fields
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
 const blueColor = '#22ADFF'; // highlights around selected answer, pagination bullet
@@ -34,7 +35,7 @@ const mediumBlueColor = '#3958BF'; // checked radio button
 const extraDarkBlueColor = '#02215F'; // upper explore games screen background
 const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
-const greyColor = 'CCCCCC'; // text field borders
+const greyColor = '#CCCCCC'; // text field borders
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
@@ -392,6 +393,7 @@ declare module '@mui/material/styles' {
     red: string;
     green: string;
     darkPurple: string;
+    extraDarkPurple: string;
     blue: string;
     mediumBlue: string;
     darkBlue: string;
@@ -432,6 +434,7 @@ declare module '@mui/material/styles' {
     red?: string;
     green?: string;
     darkPurple?: string;
+    extraDarkPurple?: string;
     blue?: string;
     mediumBlue?: string;
     darkBlue?: string;
@@ -510,6 +513,7 @@ export default createTheme({
       red: redColor,
       green: greenColor,
       darkPurple: darkPurpleColor,
+      extraDarkPurple: extraDarkPurpleColor,
       blue: blueColor,
       mediumBlue: mediumBlueColor,
       darkBlue: secondaryTextColor,
