@@ -45,29 +45,36 @@ export default function IncorrectAnswerCardStack({
   const allAnswers = [...incompleteIncorrectAnswers, ...completeIncorrectAnswers];
   // need to pass the apiClients created at app init to the AI components
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const [topCardHeight, setTopCardHeight] = useState(0);
+  const [textFieldHeight, setTextFieldHeight] = useState(0);
   const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState(false);
-  const getContainerHeight = () => {
+  const getTopCardHeight = () => {
     let height = 0;
+    console.log('incompleteIncorrectAnswers.length inside function');
+    console.log(incompleteIncorrectAnswers.length)
     if (incompleteIncorrectAnswers.length !== 0) {
-      height = incompleteIncorrectAnswers.length-1 * 50 + 244;
+      height = 244;
       if (isAIExplanationGenerated)
-        height += topCardHeight;
+        height += textFieldHeight - 56;
       if (isAIEnabled && incompleteIncorrectAnswers[0].explanation.length > 0) // todo: this needs more thought
-        height += 110;
+        height += 144;
     }
     return height;
   }
-
+  const topCardHeight = getTopCardHeight();
   const handleTopCardHeightChange = (height: number) => {
     console.log(height);
-    setTopCardHeight(height);
+    setTextFieldHeight(height);
   }
 
   const handleAIExplanationGenerated = (isGenerated: boolean) => {
     setIsAIExplanationGenerated(isGenerated);
   }
 
+  const handleIncorrectCardStackUpdateLocal = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => {
+    handleIncorrectCardStackUpdate(cardData, draftQuestionInput, completeAnswers, incompleteAnswers);
+    setIsAIExplanationGenerated(false);
+  }
+  console.log(topCardHeight);
   return (
     <CardStackContainer>
       <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>
@@ -76,7 +83,7 @@ export default function IncorrectAnswerCardStack({
           )
         }
       </Box>
-      <Box style={{ width: '100%', height: getContainerHeight(), position: 'relative' }}>
+      <Box style={{ width: '100%', height: incompleteIncorrectAnswers.length > 0 ?  topCardHeight + ((incompleteIncorrectAnswers.length - 1) * 50) : 0, position: 'relative' }}>
         <AnimatePresence initial={false}>
           {incompleteIncorrectAnswers.map((card, index) => {
             if (index === 0) {
@@ -105,7 +112,7 @@ export default function IncorrectAnswerCardStack({
                     isCardSubmitted={isCardSubmitted}
                     isAIEnabled={isAIEnabled}
                     isTopCard
-                    handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
+                    handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdateLocal}
                     handleCardClick={handleCardClick}
                     handleTopCardHeightChange={handleTopCardHeightChange}
                     handleAIExplanationGenerated={handleAIExplanationGenerated}
@@ -122,7 +129,7 @@ export default function IncorrectAnswerCardStack({
                 style={{
                   width: '100%',
                   position: 'absolute',
-                  top: isAIEnabled && isAIExplanationGenerated ? `${(index * 50) + 110 + (topCardHeight-56)}px` : `${(index * 50 + (topCardHeight-56))}px`,
+                  top:  isAIEnabled && isAIExplanationGenerated ?  `${(index * 50 + (textFieldHeight - 56) + 105)}px` : `${(index * 50 + (textFieldHeight - 56))}px`,
                   zIndex: incompleteIncorrectAnswers.length - index - 1,
                   transition: 'top 0.6s ease-in-out',
                 }}
@@ -152,7 +159,7 @@ export default function IncorrectAnswerCardStack({
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
-          paddingTop: (incompleteIncorrectAnswers.length - 1) * 50 // todo: this doesn't work when length === 1
+          paddingTop: isAIEnabled && isAIExplanationGenerated ? '110px' : '10px',
         }}
       >
         {completeIncorrectAnswers.map((card, index) => (
