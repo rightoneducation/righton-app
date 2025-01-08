@@ -22,7 +22,7 @@
       "function": {
         "createGameTest": {
           "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",
-          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
+          "s3Key": "amplify-builds/createGameTest-324a487a7167484b6331-build.zip"
         },
         "mobile6060603cPostConfirmation": {
           "GROUP": "",
@@ -35,7 +35,7 @@
         },
         "waegen": {
           "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",
-          "s3Key": "amplify-builds/waegen-557a616b6e6d6247632b-build.zip"
+          "s3Key": "amplify-builds/waegen-31652f6b6d6f354c374f-build.zip"
         },
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",

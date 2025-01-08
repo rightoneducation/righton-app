@@ -61,6 +61,8 @@ export async function handler(event) {
         - After reviewing above, pause. Review that the output is a valid JSON string and that running JSON.parse will not result in an error. Pay special consideration to escape characters and do not embed any Latex formatting that could compromise this.
 
         Please ensure that the explanation for the incorrect answer adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
+
+        Limit your response to 30 words.
         `,
     });
     console.log(messages);

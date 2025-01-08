@@ -1,4 +1,4 @@
-import React, { useState, useMemo} from 'react';
+import React, { useState, useMemo, useRef, useEffect} from 'react';
 import { Paper, Box, styled, InputAdornment, useTheme } from '@mui/material';
 import { debounce } from 'lodash';
 import {AnimatePresence, motion} from 'framer-motion';
@@ -49,6 +49,8 @@ interface IncorrectAnswerCardProps {
   isTopCard?: boolean;
   handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
+  handleTopCardHeightChange?: (height: number) => void;
+  handleAIExplanationGenerated: (isGenerated: boolean) => void;
   completeAnswers: IncorrectCard[];
   incompleteAnswers: IncorrectCard[];
 }
@@ -63,12 +65,15 @@ export default function IncorrectAnswerCard({
   isTopCard,
   handleIncorrectCardStackUpdate,
   handleCardClick,
+  handleTopCardHeightChange,
+  handleAIExplanationGenerated,
   completeAnswers,
   incompleteAnswers
 } : IncorrectAnswerCardProps) {
   const theme = useTheme();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isAIGeneratedLocal, setIsAIGeneratedLocal] = useState<boolean>(false);
   const [isCardClicked, setIsCardClicked] = useState<boolean>(false);
-  const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState<boolean>(false);
   const [cardData, setCardData] = useState<IncorrectCard>({
     id: answerData.id,
     answer: answerData.answer,
@@ -95,6 +100,26 @@ export default function IncorrectAnswerCard({
         return CreateQuestionHighlightCard.INCORRECTANSWER1;
     }
   } 
+
+  useEffect(() => {
+    if (!cardRef.current || !isTopCard) return undefined;
+    const resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        if (handleTopCardHeightChange) {
+          handleTopCardHeightChange(entry.contentRect.height);
+        }
+      });
+    });
+
+    resizeObserver.observe(cardRef.current);
+    if (handleTopCardHeightChange) {
+      handleTopCardHeightChange(cardRef.current.getBoundingClientRect().height);
+    }
+    return () => {
+        if (!resizeObserver) return;
+        resizeObserver.disconnect();
+    };
+  }, [isTopCard, handleTopCardHeightChange])
 
   const debouncedCardChanges = useMemo(() => 
     debounce((debounceCardData: IncorrectCard, debouncedDraftQuestion: CentralQuestionTemplateInput, debounceCompleteAnswers: IncorrectCard[], debounceIncompleteAnswers: IncorrectCard[]) => {
@@ -124,7 +149,8 @@ export default function IncorrectAnswerCard({
       ...cardData,
       explanation: value,
     });
-    setIsAIExplanationGenerated(true);
+    handleAIExplanationGenerated(true);
+    setIsAIGeneratedLocal(true);
   }
 
   const handleLocalCardClick = () => {
@@ -133,7 +159,7 @@ export default function IncorrectAnswerCard({
   }
 
   return (
-    <AnswerCard elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIExplanationGenerated} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
+    <AnswerCard elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIGeneratedLocal} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
       <QuestionTitleStyled>
         Incorrect Answer
       </QuestionTitleStyled>
@@ -179,6 +205,7 @@ export default function IncorrectAnswerCard({
         }
       </Box>
       <TextContainerStyled 
+        ref={cardRef}
         multiline 
         variant="outlined" 
         placeholder="Explanation..." 
@@ -186,10 +213,6 @@ export default function IncorrectAnswerCard({
         onChange={(e) => handleLocalExplanationChange(e.target.value)}
         error={isCardSubmitted && cardData.explanation.length === 0}
         isAIEnabled={isAIEnabled}
-        // style={{
-        //   height: isAIExplanationGenerated && isAIEnabled ? '120px' : '38px',
-        //   transition: 'height 0.6s'
-        // }}
         InputProps={{
           startAdornment: 
             isCardSubmitted && cardData.explanation.length === 0 &&
@@ -206,7 +229,7 @@ export default function IncorrectAnswerCard({
       />
       
       <AnimatePresence>
-        {isAIExplanationGenerated && isAIEnabled && isTopCard &&
+        {isAIGeneratedLocal && isAIEnabled && isTopCard &&
           <>
             <img
               src={aiMonsterSpeech} 

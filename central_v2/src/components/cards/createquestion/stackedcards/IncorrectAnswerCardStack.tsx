@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Box, styled } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CentralQuestionTemplateInput, IncorrectCard } from '@righton/networking';
@@ -45,6 +45,28 @@ export default function IncorrectAnswerCardStack({
   const allAnswers = [...incompleteIncorrectAnswers, ...completeIncorrectAnswers];
   // need to pass the apiClients created at app init to the AI components
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const [topCardHeight, setTopCardHeight] = useState(0);
+  const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState(false);
+  const getContainerHeight = () => {
+    let height = 0;
+    if (incompleteIncorrectAnswers.length !== 0) {
+      height = incompleteIncorrectAnswers.length-1 * 50 + 244;
+      if (isAIExplanationGenerated)
+        height += topCardHeight;
+      if (isAIEnabled && incompleteIncorrectAnswers[0].explanation.length > 0) // todo: this needs more thought
+        height += 110;
+    }
+    return height;
+  }
+
+  const handleTopCardHeightChange = (height: number) => {
+    console.log(height);
+    setTopCardHeight(height);
+  }
+
+  const handleAIExplanationGenerated = (isGenerated: boolean) => {
+    setIsAIExplanationGenerated(isGenerated);
+  }
 
   return (
     <CardStackContainer>
@@ -54,18 +76,20 @@ export default function IncorrectAnswerCardStack({
           )
         }
       </Box>
-      <Box style={{ width: '100%', height: incompleteIncorrectAnswers.length !== 0 ? `calc(${(incompleteIncorrectAnswers.length-1) * 50}px + 244px )` : 0, position: 'relative' }}>
-        <AnimatePresence>
+      <Box style={{ width: '100%', height: getContainerHeight(), position: 'relative' }}>
+        <AnimatePresence initial={false}>
           {incompleteIncorrectAnswers.map((card, index) => {
             if (index === 0) {
               return (
                 <motion.div
                   key={card.id}
                   layoutId={card.id}
-                  initial={{ opacity: 1 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, y: 274 }}
-                  transition={{ duration: isAIEnabled ? 0.6 : 0.6, ease: 'easeInOut' }}
+                  initial={false}
+                  exit={{ 
+                    opacity: 0, 
+                    y: 274,
+                    transition: { duration: 0.6, ease: 'easeInOut' }
+                   }}
                   style={{
                     position: 'absolute',
                     width: '100%',
@@ -83,9 +107,12 @@ export default function IncorrectAnswerCardStack({
                     isTopCard
                     handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                     handleCardClick={handleCardClick}
+                    handleTopCardHeightChange={handleTopCardHeightChange}
+                    handleAIExplanationGenerated={handleAIExplanationGenerated}
                     completeAnswers={completeIncorrectAnswers}
-                    incompleteAnswers={incompleteIncorrectAnswers}
+                    incompleteAnswers={incompleteIncorrectAnswers}                    
                   />
+                
                 </motion.div>
               );
             }
@@ -95,7 +122,7 @@ export default function IncorrectAnswerCardStack({
                 style={{
                   width: '100%',
                   position: 'absolute',
-                  top: isAIEnabled ? `${(index * 50) + 110}px` : `${index * 50}px`,
+                  top: isAIEnabled && isAIExplanationGenerated ? `${(index * 50) + 110 + (topCardHeight-56)}px` : `${(index * 50 + (topCardHeight-56))}px`,
                   zIndex: incompleteIncorrectAnswers.length - index - 1,
                   transition: 'top 0.6s ease-in-out',
                 }}
@@ -109,6 +136,7 @@ export default function IncorrectAnswerCardStack({
                   isAIEnabled={isAIEnabled}
                   handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                   handleCardClick={handleCardClick}
+                  handleAIExplanationGenerated={handleAIExplanationGenerated}
                   completeAnswers={completeIncorrectAnswers}
                   incompleteAnswers={incompleteIncorrectAnswers}
                 />
@@ -124,6 +152,7 @@ export default function IncorrectAnswerCardStack({
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
+          paddingTop: (incompleteIncorrectAnswers.length - 1) * 50 // todo: this doesn't work when length === 1
         }}
       >
         {completeIncorrectAnswers.map((card, index) => (
@@ -148,6 +177,7 @@ export default function IncorrectAnswerCardStack({
               isAIEnabled={isAIEnabled}
               handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
               handleCardClick={handleCardClick}
+              handleAIExplanationGenerated={handleAIExplanationGenerated}
               completeAnswers={completeIncorrectAnswers}
               incompleteAnswers={incompleteIncorrectAnswers}
             />
