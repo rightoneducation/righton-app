@@ -47,23 +47,7 @@ export default function IncorrectAnswerCardStack({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [topCardHeight, setTopCardHeight] = useState(258);
   const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState(false);
-  console.log('topCardHeight:');
-  console.log(topCardHeight);
-  // const getTopCardHeight = () => {
-  //   let height = 0;
-  //   if (incompleteIncorrectAnswers.length !== 0) {
-  //     height = topCardHeight;
-  //     if (isAIExplanationGenerated)
-  //       height += topCardHeight - 56;
-  //     if (isAIEnabled && incompleteIncorrectAnswers[0].explanation.length > 0) // todo: this needs more thought
-  //       height += 104;
-  //   }
-  //   return height;
-  // }
-  // const topCardHeight = getTopCardHeight();
   const handleTopCardHeightChange = (height: number) => {
-    console.log('handleTopCardHeightChange:');
-    console.log(height);
     setTopCardHeight(height);
   }
 
