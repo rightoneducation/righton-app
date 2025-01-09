@@ -4,6 +4,7 @@ import waeRegenIcon from '../icons/button/waeRegen';
 export enum AIButtonType {
   WAE_GEN = 'wae_gen',
   WAE_REGEN = 'wae_regen',
+  WAE_REGENSUBMIT = 'wae_regensubmit',
 }
 
 type AIButtonContentMapProps = {
@@ -20,7 +21,8 @@ export const aiButtonContentMap: AIButtonContentMapProps = {
   },
   [AIButtonType.WAE_REGEN]: {
     icon: waeRegenIcon,
-  }
+  },
+  [AIButtonType.WAE_REGENSUBMIT]: {},
 }
 
 export type WaegenInput = {

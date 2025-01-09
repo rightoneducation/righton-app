@@ -39,6 +39,7 @@ const greyColor = '#CCCCCC'; // text field borders
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
+const greyPurpleColor = '#EDE9F2'; // AI regen text field
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
 const playerFeedbackLabelColor = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
 const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
@@ -392,6 +393,7 @@ declare module '@mui/material/styles' {
     circularProgress: string;
     red: string;
     green: string;
+    greyPurple: string;
     darkPurple: string;
     extraDarkPurple: string;
     blue: string;
@@ -433,6 +435,7 @@ declare module '@mui/material/styles' {
     circularProgress?: string;
     red?: string;
     green?: string;
+    greyPurple?: string;
     darkPurple?: string;
     extraDarkPurple?: string;
     blue?: string;
@@ -512,6 +515,7 @@ export default createTheme({
       circularProgress,
       red: redColor,
       green: greenColor,
+      greyPurple: greyPurpleColor,
       darkPurple: darkPurpleColor,
       extraDarkPurple: extraDarkPurpleColor,
       blue: blueColor,

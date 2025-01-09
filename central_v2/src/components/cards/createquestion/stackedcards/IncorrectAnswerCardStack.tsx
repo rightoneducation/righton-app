@@ -49,20 +49,17 @@ export default function IncorrectAnswerCardStack({
   const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState(false);
   const getTopCardHeight = () => {
     let height = 0;
-    console.log('incompleteIncorrectAnswers.length inside function');
-    console.log(incompleteIncorrectAnswers.length)
     if (incompleteIncorrectAnswers.length !== 0) {
       height = 244;
       if (isAIExplanationGenerated)
         height += textFieldHeight - 56;
       if (isAIEnabled && incompleteIncorrectAnswers[0].explanation.length > 0) // todo: this needs more thought
-        height += 144;
+        height += 104;
     }
     return height;
   }
   const topCardHeight = getTopCardHeight();
   const handleTopCardHeightChange = (height: number) => {
-    console.log(height);
     setTextFieldHeight(height);
   }
 
@@ -74,7 +71,6 @@ export default function IncorrectAnswerCardStack({
     handleIncorrectCardStackUpdate(cardData, draftQuestionInput, completeAnswers, incompleteAnswers);
     setIsAIExplanationGenerated(false);
   }
-  console.log(topCardHeight);
   return (
     <CardStackContainer>
       <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px'}}>

@@ -1,4 +1,4 @@
-import { ButtonStyled } from './styledcomponents/StyledAIButton';
+import { ButtonStyled, RegenButtonStyled, RegenButtonTextStyled } from './styledcomponents/StyledAIButton';
 import { AIButtonType, WaegenInput, aiButtonContentMap } from '../models/AIButtonModels';
 import { IAPIClients } from '../../APIClients';
 
@@ -6,30 +6,59 @@ interface AIButtonProps {
   waegenInput?: WaegenInput;
   type: AIButtonType;
   apiClients: IAPIClients;
-  handleClickOutput: (outputs: string) => void;
+  handleClickOutput?: (outputs: string) => void;
+  handleAIEnabled?: (isAIEnabled: boolean) => void;
 }
 
 export function AIButton({
   waegenInput,
   type,
   apiClients,
-  handleClickOutput
+  handleClickOutput,
+  handleAIEnabled
 }: AIButtonProps) {
   const IconComponent = aiButtonContentMap[type].icon;
   const handleButtonClick = async () => {
-    const explanation = await apiClients.AI.waegen(waegenInput);
-    console.log(explanation);
-    handleClickOutput(explanation);
-  }
-  console.log(waegenInput);
-  return (
-    <ButtonStyled
-      disabled={false}
-      onClick={handleButtonClick}
-    >
-      {IconComponent && 
-        <IconComponent />
+    switch(type){
+      case AIButtonType.WAE_REGEN: {
+        if (handleAIEnabled){
+          handleAIEnabled(true);
+        }
+        break;
       }
-   </ButtonStyled> 
+      case AIButtonType.WAE_REGENSUBMIT: {
+        break;
+      }
+      case AIButtonType.WAE_GEN:
+      default: {
+        if (waegenInput && handleClickOutput){
+          const explanation = await apiClients.AI.waegen(waegenInput);
+          handleClickOutput(explanation);
+        }
+        break;
+      }
+    };
+  }
+  return (
+    <>
+    { type === AIButtonType.WAE_REGENSUBMIT
+      ? <RegenButtonStyled
+          disabled={false}
+          onClick={handleButtonClick}
+        >
+          <RegenButtonTextStyled>
+            Submit
+          </RegenButtonTextStyled>
+        </RegenButtonStyled>
+      : <ButtonStyled
+          disabled={false}
+          onClick={handleButtonClick}
+        >
+          {IconComponent && 
+            <IconComponent />
+          }
+        </ButtonStyled> 
+    }
+   </>
   )
 }

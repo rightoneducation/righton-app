@@ -81,6 +81,17 @@ export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>((
   },
 }));
 
+export const RegenTextContainerStyled = styled(TextField)(({ theme }) => ({
+  width: '100%',
+  margin: 0,
+  padding: 0,
+  boxSizing: 'border-box',
+  borderRadius: `${theme.sizing.xSmPadding}px`,
+  "& .MuiOutlinedInput-root": {
+    backgroundColor: `${theme.palette.primary.greyPurple}`,
+  },
+}));
+
 export const CCSSIndicator = styled(Button)(({ theme }) => ({
   width: 'fit-content',
   height: `${theme.sizing.mdPadding}px`,
