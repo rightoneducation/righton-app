@@ -45,22 +45,26 @@ export default function IncorrectAnswerCardStack({
   const allAnswers = [...incompleteIncorrectAnswers, ...completeIncorrectAnswers];
   // need to pass the apiClients created at app init to the AI components
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const [textFieldHeight, setTextFieldHeight] = useState(0);
+  const [topCardHeight, setTopCardHeight] = useState(258);
   const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState(false);
-  const getTopCardHeight = () => {
-    let height = 0;
-    if (incompleteIncorrectAnswers.length !== 0) {
-      height = 244;
-      if (isAIExplanationGenerated)
-        height += textFieldHeight - 56;
-      if (isAIEnabled && incompleteIncorrectAnswers[0].explanation.length > 0) // todo: this needs more thought
-        height += 104;
-    }
-    return height;
-  }
-  const topCardHeight = getTopCardHeight();
+  console.log('topCardHeight:');
+  console.log(topCardHeight);
+  // const getTopCardHeight = () => {
+  //   let height = 0;
+  //   if (incompleteIncorrectAnswers.length !== 0) {
+  //     height = topCardHeight;
+  //     if (isAIExplanationGenerated)
+  //       height += topCardHeight - 56;
+  //     if (isAIEnabled && incompleteIncorrectAnswers[0].explanation.length > 0) // todo: this needs more thought
+  //       height += 104;
+  //   }
+  //   return height;
+  // }
+  // const topCardHeight = getTopCardHeight();
   const handleTopCardHeightChange = (height: number) => {
-    setTextFieldHeight(height);
+    console.log('handleTopCardHeightChange:');
+    console.log(height);
+    setTopCardHeight(height);
   }
 
   const handleAIExplanationGenerated = (isGenerated: boolean) => {
@@ -125,8 +129,8 @@ export default function IncorrectAnswerCardStack({
                 style={{
                   width: '100%',
                   position: 'absolute',
-                  top:  isAIEnabled && isAIExplanationGenerated ?  `${(index * 50 + (textFieldHeight - 56) + 105)}px` : `${(index * 50 + (textFieldHeight - 56))}px`,
-                  zIndex: incompleteIncorrectAnswers.length - index - 1,
+                  top:  (topCardHeight - 258) + ((incompleteIncorrectAnswers.length - (index)) * 50),
+                  // zIndex: incompleteIncorrectAnswers.length - (index+1),
                   transition: 'top 0.6s ease-in-out',
                 }}
               >
@@ -155,7 +159,6 @@ export default function IncorrectAnswerCardStack({
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
-          paddingTop: isAIEnabled && isAIExplanationGenerated ? '110px' : '10px',
         }}
       >
         {completeIncorrectAnswers.map((card, index) => (

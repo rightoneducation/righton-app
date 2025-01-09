@@ -121,14 +121,17 @@ export default function IncorrectAnswerCard({
     if (!cardRef.current || !isTopCard) return undefined;
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
-        if (handleTopCardHeightChange) {
-          handleTopCardHeightChange(entry.contentRect.height);
+        console.log(entry);
+        if (handleTopCardHeightChange ) {
+          handleTopCardHeightChange(entry.borderBoxSize[0].blockSize);
         }
       });
     });
 
     resizeObserver.observe(cardRef.current);
     if (handleTopCardHeightChange) {
+      console.log('cardRef.current.getBoundingClientRect().height:');
+      console.log(cardRef.current.getBoundingClientRect().height);
       handleTopCardHeightChange(cardRef.current.getBoundingClientRect().height);
     }
     return () => {
@@ -202,7 +205,7 @@ export default function IncorrectAnswerCard({
   }
 
   return (
-    <AnswerCard elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIGeneratedLocal} isAIRegenEnabled={isAIRegenEnabled} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
+    <AnswerCard ref={cardRef} elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIGeneratedLocal} isAIRegenEnabled={isAIRegenEnabled} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
       <QuestionTitleStyled>
         Incorrect Answer
       </QuestionTitleStyled>
@@ -248,7 +251,6 @@ export default function IncorrectAnswerCard({
         }
       </Box>
       <TextContainerStyled 
-        ref={cardRef}
         multiline 
         variant="outlined" 
         placeholder="Explanation..." 
