@@ -1,9 +1,10 @@
 import { ButtonStyled, RegenButtonStyled, RegenButtonTextStyled } from './styledcomponents/StyledAIButton';
-import { AIButtonType, WaegenInput, aiButtonContentMap } from '../models/AIButtonModels';
+import { AIButtonType, WaegenInput, RegenInput, aiButtonContentMap } from '../models/AIButtonModels';
 import { IAPIClients } from '../../APIClients';
 
 interface AIButtonProps {
   waegenInput?: WaegenInput;
+  regenInput?: RegenInput;
   type: AIButtonType;
   apiClients: IAPIClients;
   handleClickOutput?: (outputs: string) => void;
@@ -12,6 +13,7 @@ interface AIButtonProps {
 
 export function AIButton({
   waegenInput,
+  regenInput,
   type,
   apiClients,
   handleClickOutput,
@@ -27,6 +29,10 @@ export function AIButton({
         break;
       }
       case AIButtonType.WAE_REGENSUBMIT: {
+        if (regenInput && handleClickOutput){
+          const regenExplanation = await apiClients.AI.waegen(regenInput);
+          handleClickOutput(regenExplanation);
+        }
         break;
       }
       case AIButtonType.WAE_GEN:

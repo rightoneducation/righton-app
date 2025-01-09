@@ -31,3 +31,10 @@ export type WaegenInput = {
   wrongAnswer: string;
   discardedExplanations: string;
 }
+
+export type RegenInput = {
+  question: string;
+  correctAnswer: string;
+  wrongAnswer: string;
+  discardedExplanations: string;
+}

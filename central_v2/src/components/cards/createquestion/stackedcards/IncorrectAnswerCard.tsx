@@ -36,7 +36,7 @@ const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight, isCardC
   gap: `10px`,
   boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
   opacity: isCardComplete && !isCardClicked ? 0.6 : 1,
-  transition: 'box-shadow 0.6s, opacity  0.6s, padding-bottom 0.6s',
+  transition: 'box-shadow 0.6s, opacity  0.6s',
   position: 'relative',
   overflow: 'hidden'
 }));
@@ -255,29 +255,29 @@ export default function IncorrectAnswerCard({
         }}
       />
       { isAIRegenEnabled 
-        ? <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, ease: 'easeInOut' }}
-            exit={{ 
-              opacity: 0, 
-              transition: { 
-                duration: 0.6, 
-                ease: 'easeInOut'
-              } 
-            }}
-          >
-            <RegenExplanationCard 
-              setIsAIRegenEnabled={setIsAIRegenEnabled}
-              regenData={regenData}
-              setRegenData={setRegenData}
-              isCardSubmitted={isCardSubmitted}
-              handleAIRegenCheckboxesChange={handleAIRegenCheckboxesChange}
-              handleAIExplanationChange={handleAIExplanationChange}
-              apiClients={apiClients}
-              waegenInput={waegenInput}
-            />
-          </motion.div>
+      ? <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          exit={{ 
+            opacity: 0, 
+            transition: { 
+              duration: 0.6, 
+              ease: 'easeInOut'
+            } 
+          }}
+        >
+          <RegenExplanationCard 
+            setIsAIRegenEnabled={setIsAIRegenEnabled}
+            regenData={regenData}
+            setRegenData={setRegenData}
+            isCardSubmitted={isCardSubmitted}
+            handleAIRegenCheckboxesChange={handleAIRegenCheckboxesChange}
+            handleAIExplanationChange={handleAIExplanationChange}
+            apiClients={apiClients}
+            waegenInput={waegenInput}
+          />
+        </motion.div>
       : <AnimatePresence>
             {isAIGeneratedLocal && isAIEnabled && isTopCard &&
               <>

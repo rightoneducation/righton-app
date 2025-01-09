@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, styled } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CentralQuestionTemplateInput, IncorrectCard } from '@righton/networking';
@@ -48,6 +48,8 @@ export default function IncorrectAnswerCardStack({
   const [topCardHeight, setTopCardHeight] = useState(258);
   const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState(false);
   const handleTopCardHeightChange = (height: number) => {
+    console.log(height);
+    console.log(incompleteIncorrectAnswers.length);
     setTopCardHeight(height);
   }
 
@@ -74,6 +76,7 @@ export default function IncorrectAnswerCardStack({
               return (
                 <motion.div
                   key={card.id}
+                  layout
                   layoutId={card.id}
                   initial={false}
                   exit={{ 
@@ -113,8 +116,8 @@ export default function IncorrectAnswerCardStack({
                 style={{
                   width: '100%',
                   position: 'absolute',
-                  top:  (topCardHeight - 258) + ((incompleteIncorrectAnswers.length - (index)) * 50),
-                  // zIndex: incompleteIncorrectAnswers.length - (index+1),
+                  top:  (topCardHeight - 258) + ((index) * 50),
+                  zIndex: incompleteIncorrectAnswers.length - index,
                   transition: 'top 0.6s ease-in-out',
                 }}
               >
