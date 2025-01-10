@@ -6,8 +6,6 @@ import { APIClientsContext } from '../../../../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../../../../hooks/context/useAPIClientsContext';
 import { CreateQuestionHighlightCard } from '../../../../lib/CentralModels';
 import IncorrectAnswerCard from './IncorrectAnswerCard';
-import CentralButton from '../../../button/Button';
-import { ButtonType } from '../../../button/ButtonModels';
 import IncorrectAnswerPill from './IncorrectAnswerPill';
 
 const CardStackContainer = styled(Box)({
@@ -24,7 +22,7 @@ interface IncorrectAnswerCardStackProps {
   incompleteIncorrectAnswers: IncorrectCard[];
   completeIncorrectAnswers: IncorrectCard[];
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
-  handleNextCardButtonClick: () => void;
+  handleNextCardButtonClick: (cardData: IncorrectCard) => void;
   handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
   isCardSubmitted: boolean;
   isAIEnabled: boolean;
@@ -86,7 +84,7 @@ export default function IncorrectAnswerCardStack({
                     position: 'absolute',
                     width: '100%',
                     top: 0,
-                    zIndex: incompleteIncorrectAnswers.length - index,
+                    zIndex: 3,
                   }}
                 >
                   <IncorrectAnswerCard
@@ -97,6 +95,7 @@ export default function IncorrectAnswerCardStack({
                     isCardSubmitted={isCardSubmitted}
                     isAIEnabled={isAIEnabled}
                     isTopCard
+                    handleNextCardButtonClick={handleNextCardButtonClick}
                     handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdateLocal}
                     handleCardClick={handleCardClick}
                     handleTopCardHeightChange={handleTopCardHeightChange}
@@ -175,25 +174,6 @@ export default function IncorrectAnswerCardStack({
           </motion.div>
         ))}
       </Box>
-      {incompleteIncorrectAnswers.length === 0 && (
-      <Box
-        style={{
-          position: 'absolute',
-          zIndex: 3,
-          top: '274px',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <CentralButton
-          buttonType={ButtonType.NEXTCARD}
-          isEnabled={incompleteIncorrectAnswers.length > 0}
-          onClick={handleNextCardButtonClick}
-        />
-      </Box>
-      )}
     </CardStackContainer>
   );
 }

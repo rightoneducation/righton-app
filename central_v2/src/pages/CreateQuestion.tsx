@@ -266,13 +266,19 @@ export default function CreateQuestion({
   )
 
   // incorrect answer card functions
-  const handleNextCardButtonClick = () => {
-    const { newIncompleteAnswers, newCompleteAnswers }= handleMoveAnswerToComplete(incompleteIncorrectAnswers, completeIncorrectAnswers);
+  const handleNextCardButtonClick = (cardData: IncorrectCard) => {
+    const updatedAnswers = incompleteIncorrectAnswers.map((answer) => {
+      if (answer.id === cardData.id) {
+        return cardData;
+      }
+      return answer;
+    });
+    const { newIncompleteAnswers, newCompleteAnswers } = handleMoveAnswerToComplete(updatedAnswers, completeIncorrectAnswers);
     setIncompleteIncorrectAnswers(newIncompleteAnswers);
     setCompleteIncorrectAnswers(newCompleteAnswers);
   };
 
-  const handleIncorrectCardStackUpdate = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => {
+  const handleIncorrectCardStackUpdate = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[], isAIEnabledCard?: boolean) => {
       const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
       const isUpdateInIncompleteCards = incompleteAnswers.find(answer => answer.id === cardData.id);
       let newDraftQuestion = null;
@@ -287,7 +293,7 @@ export default function CreateQuestion({
           }
           return answer;
         });
-        if (isCardComplete){
+        if (isCardComplete && !isAIEnabledCard){
           // adjust incomplete and complete arrays, moving completed card over
           const { newIncompleteAnswers, newCompleteAnswers } = handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
           // adjust local state for the cards so that they animate properly through the stack
@@ -300,7 +306,6 @@ export default function CreateQuestion({
         } else {
           newDraftQuestion = updateDQwithIncorrectAnswers(draftQuestionInput, updatedAnswers, completeAnswers);
         }
-
       } else {
         const newCompleteAnswers = completeAnswers.map((answer) => {
           if (answer.id === cardData.id) {
@@ -354,8 +359,6 @@ export default function CreateQuestion({
   };
   // TODO: implement to save question on imageurl
   const handleSaveQuestion = async () => {
-    console.log('clicked');
-    console.log(draftQuestion.questionCard.imageUrl);
     try {
       setIsCardSubmitted(true);
       if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && draftQuestion.incorrectCards.every((card) => card.isCardComplete)){

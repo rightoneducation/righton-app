@@ -3,6 +3,8 @@ import { Paper, Box, styled, InputAdornment, useTheme } from '@mui/material';
 import { debounce } from 'lodash';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients, AIButtonType, WaegenInput, RegenInput } from '@righton/networking';
+import CentralButton from '../../../button/Button';
+import { ButtonType } from '../../../button/ButtonModels';
 import RegenExplanationCard from './RegenExplanationCard';
 import { CreateQuestionHighlightCard } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
@@ -53,6 +55,7 @@ interface IncorrectAnswerCardProps {
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
   handleTopCardHeightChange?: (height: number) => void;
   handleAIExplanationGenerated: (isGenerated: boolean) => void;
+  handleNextCardButtonClick?: (cardData: IncorrectCard) => void;
   completeAnswers: IncorrectCard[];
   incompleteAnswers: IncorrectCard[];
 }
@@ -66,6 +69,7 @@ export default function IncorrectAnswerCard({
   isAIEnabled,
   isTopCard,
   handleIncorrectCardStackUpdate,
+  handleNextCardButtonClick,
   handleCardClick,
   handleTopCardHeightChange,
   handleAIExplanationGenerated,
@@ -191,146 +195,165 @@ export default function IncorrectAnswerCard({
   }
 
   return (
-    <AnswerCard ref={cardRef} elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIGeneratedLocal} isAIRegenEnabled={isAIRegenEnabled} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
-      <QuestionTitleStyled>
-        Incorrect Answer
-      </QuestionTitleStyled>
-      <TextContainerStyled 
-        multiline 
-        variant="outlined" 
-        rows='1' 
-        placeholder="Distractor..." 
-        value={cardData.answer}
-        onChange={(e) => handleLocalAnswerChange(e.target.value)}
-        error={isCardSubmitted && cardData.answer.length === 0}
-        InputProps={{
-          startAdornment: 
-           isCardSubmitted && cardData.answer.length === 0 &&
-            <InputAdornment
-              position="start" 
-              sx={{ 
-                alignSelf: 'flex-start',
-                mt: '10px'
-              }}
-            >
-              <ErrorIcon src={errorIcon} alt='error icon'/>
-            </InputAdornment>
-        }}
-      />
-      <Box style={{
-        width: '100%',
-        height: '38px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
+    <Box style={{display: 'flex', flexDirection: 'column', gap: '30px'}}>
+      <AnswerCard ref={cardRef} elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIGeneratedLocal} isAIRegenEnabled={isAIRegenEnabled} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
         <QuestionTitleStyled>
-          Mistake Explanation
+          Incorrect Answer
         </QuestionTitleStyled>
-        { isAIEnabled &&
-          <AIButton 
-            apiClients={apiClients}
-            waegenInput={waegenInput}
-            type={AIButtonType.WAE_GEN}
-            handleClickOutput={(output) => handleAIExplanationChange(output)}
-          />
-        }
-      </Box>
-      <TextContainerStyled 
-        multiline 
-        variant="outlined" 
-        placeholder="Explanation..." 
-        value={cardData.explanation}
-        onChange={(e) => handleLocalExplanationChange(e.target.value)}
-        error={isCardSubmitted && cardData.explanation.length === 0}
-        isAIEnabled={isAIEnabled}
-        InputProps={{
-          startAdornment: 
-            isCardSubmitted && cardData.explanation.length === 0 &&
-            <InputAdornment
-              position="start" 
-              sx={{ 
-                alignSelf: 'flex-start',
-                mt: '10px'
-              }}
-            >
-              <ErrorIcon src={errorIcon} alt='error icon'/>
-            </InputAdornment>
-        }}
-      />
-      { isAIRegenEnabled 
-      ? <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-          exit={{ 
-            opacity: 0, 
-            transition: { 
-              duration: 0.6, 
-              ease: 'easeInOut'
-            } 
+        <TextContainerStyled 
+          multiline 
+          variant="outlined" 
+          rows='1' 
+          placeholder="Distractor..." 
+          value={cardData.answer}
+          onChange={(e) => handleLocalAnswerChange(e.target.value)}
+          error={isCardSubmitted && cardData.answer.length === 0}
+          InputProps={{
+            startAdornment: 
+            isCardSubmitted && cardData.answer.length === 0 &&
+              <InputAdornment
+                position="start" 
+                sx={{ 
+                  alignSelf: 'flex-start',
+                  mt: '10px'
+                }}
+              >
+                <ErrorIcon src={errorIcon} alt='error icon'/>
+              </InputAdornment>
+          }}
+        />
+        <Box style={{
+          width: '100%',
+          height: '38px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <QuestionTitleStyled>
+            Mistake Explanation
+          </QuestionTitleStyled>
+          { isAIEnabled &&
+            <AIButton 
+              apiClients={apiClients}
+              waegenInput={waegenInput}
+              type={AIButtonType.WAE_GEN}
+              handleClickOutput={(output) => handleAIExplanationChange(output)}
+            />
+          }
+        </Box>
+        <TextContainerStyled 
+          multiline 
+          variant="outlined" 
+          placeholder="Explanation..." 
+          value={cardData.explanation}
+          onChange={(e) => handleLocalExplanationChange(e.target.value)}
+          error={isCardSubmitted && cardData.explanation.length === 0}
+          isAIEnabled={isAIEnabled}
+          InputProps={{
+            startAdornment: 
+              isCardSubmitted && cardData.explanation.length === 0 &&
+              <InputAdornment
+                position="start" 
+                sx={{ 
+                  alignSelf: 'flex-start',
+                  mt: '10px'
+                }}
+              >
+                <ErrorIcon src={errorIcon} alt='error icon'/>
+              </InputAdornment>
+          }}
+        />
+        { isAIRegenEnabled 
+        ? <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            exit={{ 
+              opacity: 0, 
+              transition: { 
+                duration: 0.6, 
+                ease: 'easeInOut'
+              } 
+            }}
+          >
+            <RegenExplanationCard 
+              setIsAIRegenEnabled={setIsAIRegenEnabled}
+              regenData={regenData}
+              setRegenData={setRegenData}
+              isCardSubmitted={isCardSubmitted}
+              handleAIRegenCheckboxesChange={handleAIRegenCheckboxesChange}
+              handleAIExplanationChange={handleAIExplanationChange}
+              apiClients={apiClients}
+              waegenInput={waegenInput}
+            />
+          </motion.div>
+        : <AnimatePresence>
+              {isAIGeneratedLocal && isAIEnabled && isTopCard &&
+                <>
+                  <img
+                    src={aiMonsterSpeech} 
+                    alt='AI Monster Speech'
+                    style={{height: '20px', width: '20px', marginTop: '-16px', marginBottom: '-16px', transform: 'translateX(20px)', zIndex: 10}}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, ease: 'easeInOut' }}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <AIButton 
+                      apiClients={apiClients}
+                      waegenInput={waegenInput}
+                      type={AIButtonType.WAE_REGEN}
+                      handleAIEnabled={(output) => setIsAIRegenEnabled(output)}
+                    />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, bottom: '-110px' }}
+                    animate={{ opacity: 1, bottom: '-50px' }}
+                    transition={{ duration: 0.6, ease: 'easeInOut', delay: 0.6 }}
+                    style={{
+                      position: 'absolute',
+                      bottom: '-50px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '160px',
+                      height: 'auto',
+                      objectFit: 'cover',
+                      zIndex: 1,
+                    }}
+                  >
+                    <img
+                      src={aiMonster} 
+                      alt='AI Monster'
+                    />
+                  </motion.div>
+                </>
+              }
+            </AnimatePresence>
+          }
+      </AnswerCard>
+      { isTopCard &&
+        <Box
+          style={{
+            zIndex: 5,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <RegenExplanationCard 
-            setIsAIRegenEnabled={setIsAIRegenEnabled}
-            regenData={regenData}
-            setRegenData={setRegenData}
-            isCardSubmitted={isCardSubmitted}
-            handleAIRegenCheckboxesChange={handleAIRegenCheckboxesChange}
-            handleAIExplanationChange={handleAIExplanationChange}
-            apiClients={apiClients}
-            waegenInput={waegenInput}
+          <CentralButton
+            buttonType={ButtonType.NEXTCARD}
+            isEnabled={incompleteAnswers.length > 0}
+            onClick={() => handleNextCardButtonClick && handleNextCardButtonClick(cardData)}
           />
-        </motion.div>
-      : <AnimatePresence>
-            {isAIGeneratedLocal && isAIEnabled && isTopCard &&
-              <>
-                <img
-                  src={aiMonsterSpeech} 
-                  alt='AI Monster Speech'
-                  style={{height: '20px', width: '20px', marginTop: '-16px', marginBottom: '-16px', transform: 'translateX(20px)', zIndex: 10}}
-                />
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, ease: 'easeInOut' }}
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <AIButton 
-                    apiClients={apiClients}
-                    waegenInput={waegenInput}
-                    type={AIButtonType.WAE_REGEN}
-                    handleAIEnabled={(output) => setIsAIRegenEnabled(output)}
-                  />
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, bottom: '-110px' }}
-                  animate={{ opacity: 1, bottom: '-50px' }}
-                  transition={{ duration: 0.6, ease: 'easeInOut', delay: 0.6 }}
-                  style={{
-                    position: 'absolute',
-                    bottom: '-50px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '160px',
-                    height: 'auto',
-                    objectFit: 'cover',
-                    zIndex: 1,
-                  }}
-                >
-                  <img
-                    src={aiMonster} 
-                    alt='AI Monster'
-                  />
-                </motion.div>
-              </>
-            }
-          </AnimatePresence>
-        }
-    </AnswerCard>
+        </Box>
+      }
+    </Box>
   )
 }
