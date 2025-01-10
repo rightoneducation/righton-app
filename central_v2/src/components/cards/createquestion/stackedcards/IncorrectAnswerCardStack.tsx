@@ -48,8 +48,6 @@ export default function IncorrectAnswerCardStack({
   const [topCardHeight, setTopCardHeight] = useState(258);
   const [isAIExplanationGenerated, setIsAIExplanationGenerated] = useState(false);
   const handleTopCardHeightChange = (height: number) => {
-    console.log(height);
-    console.log(incompleteIncorrectAnswers.length);
     setTopCardHeight(height);
   }
 

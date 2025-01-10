@@ -49,11 +49,3 @@ export type CreateQuestionLocalData = {
   incompleteCards?: IncorrectCard[] | null,
   completeCards?: IncorrectCard[] | null
 }
-
-// required data for regenerating AI explanations
-export interface RegenData {
-  incorrectMath: boolean;
-  toneClarity: boolean;
-  other: boolean;
-  explanation: string;
-}

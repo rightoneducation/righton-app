@@ -1,20 +1,19 @@
 import React from 'react';
 import { Box, Typography, Checkbox, FormControl, FormControlLabel, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
-import { AIButton, AIButtonType, WaegenInput, IAPIClients } from '@righton/networking';
+import { AIButton, AIButtonType, WaegenInput, IAPIClients, RegenInput } from '@righton/networking';
 import { RegenTextContainerStyled } from '../../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { RegenExplanationStyledCard } from '../../../../lib/styledcomponents/RegenExplanationStyledCard';
-import { RegenData } from '../../../../lib/CentralModels';
 import closeX from '../../../../images/closeX.svg';
 import aiMonsterRegen from '../../../../images/aiMonsterRegen.svg';
 
 interface RegenExplanationCardProps {
   setIsAIRegenEnabled: (isAIRegenEnabled: boolean) => void;
-  regenData: RegenData;
-  setRegenData: (regenData: RegenData) => void;
+  regenData: RegenInput;
+  setRegenData: (regenData: RegenInput) => void;
   isCardSubmitted: boolean;
   handleAIRegenCheckboxesChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleAIExplanationChange: (output: string) => void;
+  handleAIExplanationChange: (output: string, isRegen?: boolean) => void;
   apiClients: IAPIClients;
   waegenInput: WaegenInput;
 }
@@ -117,9 +116,8 @@ export default function RegenExplanationCard({
         multiline 
         variant="outlined" 
         placeholder="Explanation..." 
-        value={regenData.explanation}
-        onChange={(e) => setRegenData({...regenData, explanation: e.target.value})}
-        error={isCardSubmitted && regenData.explanation.length === 0}
+        value={regenData.currentExplanation}
+        onChange={(e) => setRegenData({...regenData, currentPrompt: e.target.value})}
       />
       <Box
         style={{
@@ -131,9 +129,9 @@ export default function RegenExplanationCard({
       > 
         <AIButton 
           apiClients={apiClients}
-          waegenInput={waegenInput}
+          regenInput={regenData}
           type={AIButtonType.WAE_REGENSUBMIT}
-          handleClickOutput={(output) => handleAIExplanationChange(output)}
+          handleClickOutput={(output) => handleAIExplanationChange(output, true)}
         />
       </Box>
       <motion.div

@@ -65,7 +65,6 @@ export async function handler(event) {
         Limit your response to 30 words.
         `,
     });
-    console.log(messages);
     try {
         // Make the API call to OpenAI
         const completion = await openai.chat.completions.create({

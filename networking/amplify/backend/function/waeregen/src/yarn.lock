@@ -123,10 +123,10 @@ node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-openai@^4.76.2:
-  version "4.76.2"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.76.2.tgz#aeadbe2d51277579e0825fe97b9494aacb2c974f"
-  integrity sha512-T9ZyxAFwLNZz3onC+SFvSR0POF18egIsY8lLze9e2YBe1wzQNf8IHcIgFPWizGPpoCGv/9i3IdTAx3EnLmTL4A==
+openai@^4.78.0:
+  version "4.78.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.78.0.tgz#79a021de5247944f63c250bdc78e9aa74c8b2236"
+  integrity sha512-4rRsKkx++5m1zayxkryVH+K/z91cv1sRbaNJAhSQjZiSCQOR7eaM8KpfIssXrS9Hlpta7+VcuO/fi57pW8xGjA==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"

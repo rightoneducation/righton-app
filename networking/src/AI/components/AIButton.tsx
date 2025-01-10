@@ -30,7 +30,9 @@ export function AIButton({
       }
       case AIButtonType.WAE_REGENSUBMIT: {
         if (regenInput && handleClickOutput){
-          const regenExplanation = await apiClients.AI.waegen(regenInput);
+          console.log('regenInput', regenInput);
+          const regenExplanation = await apiClients.AI.waeregen(regenInput);
+          console.log(regenExplanation);
           handleClickOutput(regenExplanation);
         }
         break;
@@ -39,6 +41,7 @@ export function AIButton({
       default: {
         if (waegenInput && handleClickOutput){
           const explanation = await apiClients.AI.waegen(waegenInput);
+          console.log(explanation);
           handleClickOutput(explanation);
         }
         break;

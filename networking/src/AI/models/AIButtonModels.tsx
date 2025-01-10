@@ -32,9 +32,22 @@ export type WaegenInput = {
   discardedExplanations: string;
 }
 
+export type DiscardExplanation = {
+  explanation: string;
+  prompt: string;
+  incorrectMath: boolean;
+  toneClarity: boolean;
+  other: boolean;
+}
+
 export type RegenInput = {
   question: string;
   correctAnswer: string;
   wrongAnswer: string;
-  discardedExplanations: string;
+  currentExplanation: string;
+  currentPrompt: string;
+  incorrectMath: boolean;
+  toneClarity: boolean;
+  other: boolean
+  discardedExplanations?: DiscardExplanation[];
 }

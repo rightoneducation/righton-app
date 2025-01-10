@@ -10,6 +10,7 @@ import { GraphQLOptions } from "../BaseAPIClient";
 import { waegen, waeregen } from '../../graphql';
 import { BaseAPIClient } from '../BaseAPIClient';
 import IAIAPIClient from './interfaces/IAIAPIClient';
+import { RegenInput } from '../../AI/models/AIButtonModels';
 
 export class AIAPIClient
   extends BaseAPIClient
@@ -33,10 +34,11 @@ export class AIAPIClient
   }
 
   async waeregen(
-    waeregenInput: WaeRegenInput
+    waeregenInput: RegenInput
   ): Promise<string> {
     try{
-      const input: WaeRegenInput = waeregenInput
+      const awsInput = {...waeregenInput, discardedExplanations: JSON.stringify(waeregenInput.discardedExplanations)}
+      const input: WaeRegenInput = awsInput
       const variables: WaeregenMutationVariables = { input }
       const response = await this.callGraphQL<WaeregenMutation>(
           waeregen,

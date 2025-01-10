@@ -2,9 +2,9 @@ import React, { useState, useMemo, useRef, useEffect} from 'react';
 import { Paper, Box, styled, InputAdornment, useTheme } from '@mui/material';
 import { debounce } from 'lodash';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients, AIButtonType, WaegenInput } from '@righton/networking';
+import { CentralQuestionTemplateInput, IncorrectCard, AIButton, IAPIClients, AIButtonType, WaegenInput, RegenInput } from '@righton/networking';
 import RegenExplanationCard from './RegenExplanationCard';
-import { CreateQuestionHighlightCard, RegenData } from '../../../../lib/CentralModels';
+import { CreateQuestionHighlightCard } from '../../../../lib/CentralModels';
 import errorIcon from '../../../../images/errorIcon.svg';
 import aiMonster from '../../../../images/aiMonster.svg';
 import aiMonsterSpeech from '../../../../images/aiMonsterSpeech.svg';
@@ -85,11 +85,16 @@ export default function IncorrectAnswerCard({
     isCardComplete: answerData.isCardComplete,
   });
   
-  const [regenData, setRegenData] = useState<RegenData>({
+  // inits the regenData with the current card's data
+  const [regenData, setRegenData] = useState<RegenInput>({
+    question: draftQuestion.questionCard.title,
+    correctAnswer: draftQuestion.correctCard.answer,
+    wrongAnswer: answerData.answer,
     incorrectMath: false,
     toneClarity: false,
     other: false,
-    explanation: ''
+    currentExplanation: '',
+    currentPrompt: '',
   })
   
   const waegenInput: WaegenInput = {
@@ -104,7 +109,6 @@ export default function IncorrectAnswerCard({
     if (!cardRef.current || !isTopCard) return undefined;
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
-        console.log(entry);
         if (handleTopCardHeightChange ) {
           handleTopCardHeightChange(entry.borderBoxSize[0].blockSize);
         }
@@ -113,8 +117,6 @@ export default function IncorrectAnswerCard({
 
     resizeObserver.observe(cardRef.current);
     if (handleTopCardHeightChange) {
-      console.log('cardRef.current.getBoundingClientRect().height:');
-      console.log(cardRef.current.getBoundingClientRect().height);
       handleTopCardHeightChange(cardRef.current.getBoundingClientRect().height);
     }
     return () => {
@@ -146,11 +148,13 @@ export default function IncorrectAnswerCard({
       debouncedCardChanges({...cardData, explanation: value}, draftQuestion, completeAnswers, incompleteAnswers);
   }
 
-  const handleAIExplanationChange = (value: string ) => {
+  const handleAIExplanationChange = (value: string, isRegen?: boolean ) => {
     setCardData({
       ...cardData,
       explanation: value,
     });
+    if (isRegen)
+      setIsAIRegenEnabled(false);
     handleAIExplanationGenerated(true);
     setIsAIGeneratedLocal(true);
   }
