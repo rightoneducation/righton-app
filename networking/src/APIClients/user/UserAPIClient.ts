@@ -112,12 +112,15 @@ export class UserAPIClient
     });
   }
   async uploadTeacherId <String>(
-    teacherIdImage: File
+    teacherIdImage: File,
+    fileName: string,
+    fileType: string
   ): Promise<String> {
     const teacherImage = await this.fileToBase64(teacherIdImage)
-
-    const input: TeacherIdAuthInput = {teacherImage}
+    console.log(teacherImage)
+    const input: TeacherIdAuthInput = {teacherImage, fileName, fileType}
     const variables: TeacherIdAuthMutationVariables = { input }
+    console.log("printing variables:" ,variables)
     const imagePath = await this.callGraphQL<TeacherIdAuthMutation>(
         teacherIdAuth,
         variables

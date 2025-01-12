@@ -34,7 +34,6 @@ type Mutation {
   @function(name: "teacherIdAuth-${env}") 
   @auth(
     rules: [
-      { allow: public, provider: iam  },
       { allow: private, provider: userPools }
     ]
   )
@@ -42,6 +41,8 @@ type Mutation {
 
 input TeacherIdAuthInput {
   teacherImage: String!
+  fileName: String!
+  fileType: String!
 }
 
 type PublicGameTemplate @model

@@ -1032,6 +1032,8 @@ export type CreateGameSessionFromTemplateInput = {
 
 export type TeacherIdAuthInput = {
   teacherImage: string,
+  fileName: string,
+  fileType: string,
 };
 
 export type ModelUserFilterInput = {
