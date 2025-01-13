@@ -99,7 +99,9 @@ export default function IncorrectAnswerCard({
     other: false,
     currentExplanation: '',
     currentPrompt: '',
-  })
+  });
+  console.log(regenData);
+  console.log(draftQuestion.questionCard.title);
   
   const waegenInput: WaegenInput = {
     question: draftQuestion.questionCard.title,
@@ -161,33 +163,6 @@ export default function IncorrectAnswerCard({
       setIsAIRegenEnabled(false);
     handleAIExplanationGenerated(true);
     setIsAIGeneratedLocal(true);
-  }
-
-  const handleAIRegenCheckboxesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checkboxValue = Number(e.target.value);
-    const isChecked = e.target.checked;
-
-    switch(checkboxValue){
-      case(1):
-        setRegenData({
-          ...regenData,
-          toneClarity: isChecked,
-        });
-        break;
-      case(2):
-        setRegenData({
-          ...regenData,
-          other: isChecked,
-        });
-        break;
-      case(0):
-      default:
-        setRegenData({
-          ...regenData,
-          incorrectMath: isChecked,
-        });
-        break;
-    }
   }
 
   const handleLocalCardClick = () => {
@@ -278,13 +253,12 @@ export default function IncorrectAnswerCard({
           >
             <RegenExplanationCard 
               setIsAIRegenEnabled={setIsAIRegenEnabled}
-              regenData={regenData}
-              setRegenData={setRegenData}
-              isCardSubmitted={isCardSubmitted}
-              handleAIRegenCheckboxesChange={handleAIRegenCheckboxesChange}
+              question={draftQuestion.questionCard.title}
+              correctAnswer={draftQuestion.correctCard.answer}
+              wrongAnswer={cardData.answer}
+              currentExplanation={cardData.explanation}
               handleAIExplanationChange={handleAIExplanationChange}
               apiClients={apiClients}
-              waegenInput={waegenInput}
             />
           </motion.div>
         : <AnimatePresence>

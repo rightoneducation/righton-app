@@ -9,26 +9,62 @@ import aiMonsterRegen from '../../../../images/aiMonsterRegen.svg';
 
 interface RegenExplanationCardProps {
   setIsAIRegenEnabled: (isAIRegenEnabled: boolean) => void;
-  regenData: RegenInput;
-  setRegenData: (regenData: RegenInput) => void;
-  isCardSubmitted: boolean;
-  handleAIRegenCheckboxesChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  question: string;
+  correctAnswer: string;
+  wrongAnswer: string;
+  currentExplanation: string;
   handleAIExplanationChange: (output: string, isRegen?: boolean) => void;
   apiClients: IAPIClients;
-  waegenInput: WaegenInput;
 }
 
 export default function RegenExplanationCard({
   setIsAIRegenEnabled,
-  regenData,
-  setRegenData,
-  isCardSubmitted,
-  handleAIRegenCheckboxesChange,
+  question,
+  correctAnswer,
+  wrongAnswer,
+  currentExplanation,
   handleAIExplanationChange,
-  apiClients,
-  waegenInput
+  apiClients
 }: RegenExplanationCardProps) {
   const theme = useTheme();
+  const [regenData, setRegenData] = React.useState<RegenInput>({
+    question,
+    correctAnswer,
+    wrongAnswer,
+    currentExplanation,
+    incorrectMath: false,
+    toneClarity: false,
+    other: false,
+    currentPrompt: ''
+  });
+
+  const handleAIRegenCheckboxesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checkboxValue = Number(e.target.value);
+    const isChecked = e.target.checked;
+
+    switch(checkboxValue){
+      case(1):
+        setRegenData({
+          ...regenData,
+          toneClarity: isChecked,
+        });
+        break;
+      case(2):
+        setRegenData({
+          ...regenData,
+          other: isChecked,
+        });
+        break;
+      case(0):
+      default:
+        setRegenData({
+          ...regenData,
+          incorrectMath: isChecked,
+        });
+        break;
+    }
+  }
+  
   return (
     <RegenExplanationStyledCard>
       <Box
@@ -116,7 +152,7 @@ export default function RegenExplanationCard({
         multiline 
         variant="outlined" 
         placeholder="Explanation..." 
-        value={regenData.currentExplanation}
+        value={regenData.currentPrompt}
         onChange={(e) => setRegenData({...regenData, currentPrompt: e.target.value})}
       />
       <Box

@@ -32,6 +32,8 @@ export async function handler(event) {
       content: "You are a helpful teacher's assistant working side-by-side with a teacher. You are designed to output exclusively JSON per the schema defined in response_format."
     }];
     // then provide the actual content
+    console.log(wrongAnswer);
+    console.log(incorrectMath);
     messages.push({
       role: "user",
       content: 
@@ -41,14 +43,14 @@ export async function handler(event) {
         Here are the details you'll work with:
         - Math Question: ${question}. This is the problem the student faced.
         - Correct Answer: ${correctAnswer}. This is the accurate solution to the question.
-        - Submitted Wrong Answer: ${wrongAnswer}. The student arrived at this incorrect solution.
+        - Submitted Wrong Answer: ${wrongAnswer}. The student arrived at this incorrect solution. All regenerated explanations should be based on this answer.
         - Previously Rejected Explanation: ${currentExplanation}. This explanation was deemed inadequate for its lack of realism or logical consistency.
         - Discarded Explanations: ${discardedExplanations} - Rejected explanations that should never be regenerated. For each of these, review the discardText and discardType fields and ensure that your generated answer explanations do not follow the same logic. This is the highest priority. For discardType: "0" refers to an incorrect mathematical operation, "1" refers to tone/clarity, and "2" refers to other (and should include a discardText explanation).
 
         Steps for New Wrong Answer Explanation:
         - If ${currentPrompt} is provided, it contains specific instructions about the previous explanation. Use this as a foundation for your revised explanation.
-        - if ${incorrectMath} review the provided explanation and correct the math so that it is accurate.
-        - if ${toneClarity} review the provided explanation and ensure that the tone and clarity are appropriate for a middle school student.
+        - if ${incorrectMath} review the provided explanation and correct the math so that it is accurate. ENSURE THAT ANY RESULT MATCH ${wrongAnswer}. THIS IS IMPORTANT.
+        - if ${toneClarity} review the provided explanation and ensure that the tone and clarity are appropriate for a middle school student. Or that they match the notes in ${currentPrompt}.
         - if ${other} review the provided explanation and the ${currentPrompt} and ensure that the guidance is followed.
         - Avoidance of Discarded Explanations: Some explanations have been completely rejected (${discardedExplanations}). Your new explanation should offer a different perspective, ensuring it does not echo the core misconception communicated in these discarded attempts.
         - Review the unacceptable explanations and do not use the same logic or reasoning.
@@ -72,10 +74,13 @@ export async function handler(event) {
 
         - After generating an explanation, pause. Review the mathematical operations and ensure they are correct. Avoid introducing additional, unrelated mathematical errors or random guesses from the student. For example, "for no reason" and the like are not acceptable methods of error.
         - After generating an explanation, pause. Ensure that the wrongAnswerPrompt is addressed in the explanation and no discardedExplanations are repeated. For example, if the wrongAnswerPrompt is "shorten to 1 sentence" adjust the output to be a maximum of one sentence in length. 
+        - NEVER INCLUDE AN ANSWER THAT IS THEN "ADJUSTED DOWN OR UP" TO THE WRONG ANSWER. THIS MEANS THAT THE EXPLANATION IS INVALID.
         - If the wrongAnswePrompt is "shorten the explanation" or "shorten this" or the like, reduce the total number of words of the explanation without losing the underlying meaning.
+        - Always ensure that the explanation connects back to the provided wrong answer: ${wrongAnswer}. The explanation should be based on this incorrect answer.
+        - Always ensure that any math in the explanation resolves to ${wrongAnswer}. Do not generate other answers. This is incredibly important.
 
         Please ensure each explanation for the incorrect answers adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
-
+        NEVER CALCULATE AN ANSWER AND THEN ADJUST IT AS A FINAL STEP TO THE WRONG ANSWER. ALL MATH SHOULD RESOLVE EXCLUSIVELY TO THE WRONG ANSWER. ADJUST EXPLANATIONS ACCORDINGLY
         Limit your response to 30 words.
         `,
     });

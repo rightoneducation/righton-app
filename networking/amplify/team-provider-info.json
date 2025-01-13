@@ -39,7 +39,7 @@
         },
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",
-          "s3Key": "amplify-builds/waeregen-2b77774876705a466458-build.zip"
+          "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
         },
         "mobile": {},
         "mobile6060603c": {}
