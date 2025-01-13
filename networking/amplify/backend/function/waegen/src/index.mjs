@@ -9,15 +9,14 @@ import { z } from 'zod';
 export async function handler(event) {
      const openai = new OpenAI(process.env.OPENAI_API_KEY);
     // Parse input data from the event object
-    const question = JSON.parse(event.body).input.question;
-    const correctAnswer = JSON.parse(event.body).input.correctAnswer;
-    const wrongAnswer = JSON.parse(event.body).input.wrongAnswer;
-    const discardedExplanations = JSON.parse(event.body).input.discardedExplanations;
+    const question = event.arguments.input.question;
+    const correctAnswer = event.arguments.input.correctAnswer;
+    const wrongAnswer = event.arguments.input.wrongAnswer;
+    const discardedExplanations = event.arguments.input.discardedExplanations;
 
     const StructuredResponse = z.object({
         wrongAnswerExplanation: z.string(),
       });
-
     // prompt for open ai
     // first specify the format returned via the role
     let messages = [{
@@ -62,9 +61,10 @@ export async function handler(event) {
         - After reviewing above, pause. Review that the output is a valid JSON string and that running JSON.parse will not result in an error. Pay special consideration to escape characters and do not embed any Latex formatting that could compromise this.
 
         Please ensure that the explanation for the incorrect answer adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
+
+        Limit your response to 30 words.
         `,
     });
-    console.log(messages);
     try {
         // Make the API call to OpenAI
         const completion = await openai.chat.completions.create({
@@ -76,10 +76,7 @@ export async function handler(event) {
         const structuredData = StructuredResponse.parse(content);
         const explanation = structuredData.wrongAnswerExplanation;
         // Return the response
-        return {
-            statusCode: 200,
-            body: explanation,
-        };
+        return explanation;
     } catch (error) {
         console.error(error);
         // Handle any errors

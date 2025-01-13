@@ -979,11 +979,19 @@ export type WaeGenInput = {
   question: string,
   correctAnswer: string,
   wrongAnswer: string,
-  discaredExplanations: string,
+  discardedExplanations: string,
 };
 
 export type WaeRegenInput = {
-  waegenInput: string,
+  question: string,
+  correctAnswer: string,
+  wrongAnswer: string,
+  currentExplanation: string,
+  currentPrompt?: string | null,
+  incorrectMath?: boolean | null,
+  toneClarity?: boolean | null,
+  other?: boolean | null,
+  discardedExplanations?: string | null,
 };
 
 export type ModelPublicGameTemplateFilterInput = {

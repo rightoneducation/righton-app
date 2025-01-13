@@ -27,6 +27,7 @@ const secondaryTextColor = '#384466'; // secondary text (question text, answer t
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
 const playerNameTextColor = '#AEAEAE'; // player name
 const darkPurpleColor = '#4700B2'; // phase results, selected answer
+const extraDarkPurpleColor = '#340380'; // hover state for dark purple text fields
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
 const blueColor = '#22ADFF'; // highlights around selected answer, pagination bullet
@@ -34,9 +35,11 @@ const mediumBlueColor = '#3958BF'; // checked radio button
 const extraDarkBlueColor = '#02215F'; // upper explore games screen background
 const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
+const greyColor = '#CCCCCC'; // text field borders
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
+const greyPurpleColor = '#EDE9F2'; // AI regen text field
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
 const playerFeedbackLabelColor = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
 const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
@@ -390,13 +393,16 @@ declare module '@mui/material/styles' {
     circularProgress: string;
     red: string;
     green: string;
+    greyPurple: string;
     darkPurple: string;
+    extraDarkPurple: string;
     blue: string;
     mediumBlue: string;
     darkBlue: string;
     extraDarkBlue: string;
     extraDarkGrey: string;
     darkGrey: string;
+    grey: string;
     lightGrey: string;
     correctColor: string;
     baseQuestionColor: string;
@@ -429,7 +435,9 @@ declare module '@mui/material/styles' {
     circularProgress?: string;
     red?: string;
     green?: string;
+    greyPurple?: string;
     darkPurple?: string;
+    extraDarkPurple?: string;
     blue?: string;
     mediumBlue?: string;
     darkBlue?: string;
@@ -437,6 +445,7 @@ declare module '@mui/material/styles' {
     purple?: string;
     extraDarkGrey?: string;
     darkGrey?: string;
+    grey?: string;
     lightGrey?: string;
     correctColor?: string;
     baseQuestionColor?: string;
@@ -506,13 +515,16 @@ export default createTheme({
       circularProgress,
       red: redColor,
       green: greenColor,
+      greyPurple: greyPurpleColor,
       darkPurple: darkPurpleColor,
+      extraDarkPurple: extraDarkPurpleColor,
       blue: blueColor,
       mediumBlue: mediumBlueColor,
       darkBlue: secondaryTextColor,
       extraDarkBlue: extraDarkBlueColor,
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
+      grey: greyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
       baseQuestionColor,

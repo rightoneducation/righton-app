@@ -10,6 +10,7 @@ import { GraphQLOptions } from "../BaseAPIClient";
 import { waegen, waeregen } from '../../graphql';
 import { BaseAPIClient } from '../BaseAPIClient';
 import IAIAPIClient from './interfaces/IAIAPIClient';
+import { RegenInput } from '../../AI/models/AIButtonModels';
 
 export class AIAPIClient
   extends BaseAPIClient
@@ -19,26 +20,25 @@ export class AIAPIClient
     waegenInput: WaeGenInput    
   ): Promise<string> {
     try{
-      console.log(waegenInput);
       const input: WaeGenInput = waegenInput
-      console.log(input);
       const variables: WaegenMutationVariables = { input }
-      console.log(variables);
       const response = await this.callGraphQL<WaegenMutation>(
           waegen,
           variables as unknown as GraphQLOptions
       )
       return response.data?.waegen || '';
     } catch (error) {
+      console.log(error);
       throw new Error(`Failed to generate question`)
     }
   }
 
   async waeregen(
-    waeregenInput: WaeRegenInput
+    waeregenInput: RegenInput
   ): Promise<string> {
     try{
-      const input: WaeRegenInput = waeregenInput
+      const awsInput = {...waeregenInput, discardedExplanations: JSON.stringify(waeregenInput.discardedExplanations)}
+      const input: WaeRegenInput = awsInput
       const variables: WaeregenMutationVariables = { input }
       const response = await this.callGraphQL<WaeregenMutation>(
           waeregen,

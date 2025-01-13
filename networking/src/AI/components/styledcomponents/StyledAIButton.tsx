@@ -1,5 +1,5 @@
-import { Button, styled } from '@mui/material';
-import { aiGradient } from '../../lib/AITheme';
+import { Button, Typography, styled } from '@mui/material';
+import { aiGradient, darkPurple } from '../../lib/AITheme';
 
 export const ButtonStyled = styled(Button)(() => ({
   width: '38px',
@@ -16,4 +16,24 @@ export const ButtonStyled = styled(Button)(() => ({
     background: aiGradient,
   },
   pointerEvents: 'auto'
+}));
+
+export const RegenButtonStyled = styled(Button)(() => ({
+  width: 'fit-content',
+  borderRadius: '54px',
+  textTransform: 'none',
+  background: '#FFF',
+  ':hover': {
+    background: '#FFF',
+  },
+  '&:disabled': {
+    background: '#FFF',
+  },
+  pointerEvents: 'auto'
+}));
+
+export const RegenButtonTextStyled = styled(Typography)(() => ({
+  color: darkPurple,
+  fontWeight: 700,
+  fontSize: '20px'
 }));

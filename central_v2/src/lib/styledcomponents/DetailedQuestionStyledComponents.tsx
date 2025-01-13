@@ -32,6 +32,7 @@ export const TitleBarStyled = styled(Box)(({ theme }) => ({
 
 export const QuestionTitleStyled = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
+  lineHeight: '30px',
   fontWeight: 700,
   color: '#000',
 }));

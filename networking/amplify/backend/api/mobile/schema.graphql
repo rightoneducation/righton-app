@@ -43,11 +43,19 @@ input WaeGenInput {
   question: String!
   correctAnswer: String!
   wrongAnswer: String!
-  discaredExplanations: AWSJSON!
+  discardedExplanations: AWSJSON!
 }
 
 input WaeRegenInput {
-  waegenInput: String!
+  question: String!
+  correctAnswer: String!
+  wrongAnswer: String!
+  currentExplanation: String!
+  currentPrompt: String
+  incorrectMath: Boolean
+  toneClarity: Boolean
+  other: Boolean
+  discardedExplanations: AWSJSON
 }
 
 type PublicGameTemplate @model

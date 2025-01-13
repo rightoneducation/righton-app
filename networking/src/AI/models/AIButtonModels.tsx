@@ -4,6 +4,7 @@ import waeRegenIcon from '../icons/button/waeRegen';
 export enum AIButtonType {
   WAE_GEN = 'wae_gen',
   WAE_REGEN = 'wae_regen',
+  WAE_REGENSUBMIT = 'wae_regensubmit',
 }
 
 type AIButtonContentMapProps = {
@@ -20,14 +21,33 @@ export const aiButtonContentMap: AIButtonContentMapProps = {
   },
   [AIButtonType.WAE_REGEN]: {
     icon: waeRegenIcon,
-  }
+  },
+  [AIButtonType.WAE_REGENSUBMIT]: {},
 }
 
-export type waegenInput = {
-  question: {
-    question: string;
-    correctAnswer: string;
-    wrongAnswer: string;
-    discardedExplanations: string[];
-  }
+export type WaegenInput = {
+  question: string;
+  correctAnswer: string;
+  wrongAnswer: string;
+  discardedExplanations: string;
+}
+
+export type DiscardExplanation = {
+  explanation: string;
+  prompt: string;
+  incorrectMath: boolean;
+  toneClarity: boolean;
+  other: boolean;
+}
+
+export type RegenInput = {
+  question: string;
+  correctAnswer: string;
+  wrongAnswer: string;
+  currentExplanation: string;
+  currentPrompt: string;
+  incorrectMath: boolean;
+  toneClarity: boolean;
+  other: boolean
+  discardedExplanations?: DiscardExplanation[];
 }
