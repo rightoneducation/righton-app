@@ -15,30 +15,33 @@ interface StyledGameCardProps {
   description: string;
   image: string;
   game: IGameTemplate;
+  isCarousel: boolean;
   handleViewButtonClick: (element: IGameTemplate) => void;
 }
 
 const GameImage = styled('img')({
   width: '100%',
   height: '186px',
+  minHeight: '186px',
   objectFit: 'cover',
+
 });
+
+const CarouselGameImage = styled(GameImage)(({ theme }) => ({
+  borderRadius: `${theme.sizing.xSmPadding}px 0 0 0`,
+  paddingTop: '1px',
+  paddingLeft: '1px',
+  paddingRight: '1px',
+  boxSizing: 'border-box'
+}));
 
 const HeartSVG = styled('img')(({ theme }) => ({
   cursor: 'pointer',
   marginLeft: `${theme.sizing.xxSmPadding}px`,
 }));
 
-const ViewSVG = styled('img')({
-  cursor: 'pointer',
-});
-
-const LaunchSVG = styled('img')({
-  cursor: 'pointer',
-});
-
 const GameCard = styled(Box)(({ theme }) => ({
-  width: '100%',
+  maxWidth: '384px',
   height: '100%',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
@@ -127,19 +130,6 @@ const DescriptionText = styled(Typography, {
   overflow: 'hidden',
 }));
 
-const PrimaryButton1 = styled(Button)(({ theme }) => ({
-  width: 'auto',
-  height: '38px',
-  padding: `${theme.sizing.xxSmPadding}px 12px`,
-  gap: `${theme.sizing.xSmPadding}px`,
-  borderRadius: '54px',
-  background:
-    'linear-gradient(270.1deg, #1C94C3 0.09%, #2A6AC6 64.33%, #2C62C6 76.27%, #3153C7 99.91%)',
-  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
-  color: '#FFFFFF',
-  textTransform: 'none',
-}));
-
 function getDomainAndGrades(game: IGameTemplate) {
   const extractedQuestions = game?.questionTemplates?.map(
     (question) => question.questionTemplate,
@@ -156,13 +146,17 @@ export default function StyledGameCard({
   description,
   image,
   game,
+  isCarousel,
   handleViewButtonClick,
 }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
 
   return (
     <GameCard>
-      <GameImage src={image} alt="Tag" />    
+      {isCarousel 
+        ? <CarouselGameImage src={image} alt="Tag" />  
+        : <GameImage src={image} alt="Tag" />       
+      }
       <ContentContainer>
         <TitleTextTypography>{title}</TitleTextTypography>
         <CCSSButtonContainer>

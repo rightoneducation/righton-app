@@ -55,7 +55,7 @@ function MostPopularGamesComponent({
   handleViewButtonClick,
 }: MostPopularGamesComponentProps) {
   return (
-    <Grid container spacing={2} id="scrollableDiv">
+    <Grid container spacing={2} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: '1120px'}}>
       {(mostPopularElements.length === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
@@ -73,6 +73,7 @@ function MostPopularGamesComponent({
                   title={game.title}
                   description={game.description}
                   image={game.imageUrl || placeHolder}
+                  isCarousel={false}
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
                   }

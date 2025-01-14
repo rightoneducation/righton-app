@@ -34,19 +34,6 @@ export default function CardCarouse<
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
   const maxSlides = 12;
-  const carouselSlideNumMap = {
-    [ElementType.GAME]: {
-      [theme.breakpoints.values.sm]: 1.2,
-      [theme.breakpoints.values.md]: 1.8,
-      [theme.breakpoints.values.lg]: 3.5,
-    },
-    [ElementType.QUESTION]: {
-      [theme.breakpoints.values.sm]: 2.2,
-      [theme.breakpoints.values.md]: 3.8,
-      [theme.breakpoints.values.lg]: 5.5,
-    },
-  };
-
   const handleViewButtonClick = (element: T) => {
     handleView(element, recommendedElements as T[]);
   };
@@ -55,7 +42,6 @@ export default function CardCarouse<
     <Swiper
       style={{
         width: '100%',
-        height: elementType === ElementType.GAME ? '260px' : '385px',
       }}
       modules={[Pagination]}
       pagination={{
@@ -68,23 +54,20 @@ export default function CardCarouse<
         },
       }}
       ref={swiperRef}
-      spaceBetween={theme.sizing.smPadding}
+      spaceBetween={theme.sizing.smPadding}    
       updateOnWindowResize
       centeredSlides
       loop
       navigation
       breakpoints={{
         [theme.breakpoints.values.sm]: {
-          slidesPerView:
-            carouselSlideNumMap[elementType][theme.breakpoints.values.sm],
+          slidesPerView: 1.4,
         },
         [theme.breakpoints.values.md]: {
-          slidesPerView:
-            carouselSlideNumMap[elementType][theme.breakpoints.values.md],
+          slidesPerView: 2.2
         },
         [theme.breakpoints.values.lg]: {
-          slidesPerView:
-            carouselSlideNumMap[elementType][theme.breakpoints.values.lg],
+          slidesPerView: 5.5
         },
       }}
     >
@@ -95,7 +78,7 @@ export default function CardCarouse<
         if (elementType === ElementType.GAME) {
           const gameElement = element as IGameTemplate;
           return (
-            <SwiperSlide key={uuidv4()}>
+            <SwiperSlide key={uuidv4()} style={{width: '385px'}}>
               {gameElement ? (
                 <StyledGameCard
                   game={gameElement}
@@ -103,6 +86,7 @@ export default function CardCarouse<
                   title={gameElement.title}
                   description={gameElement.description}
                   image={gameElement.imageUrl || placeHolder}
+                  isCarousel
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
                   }
