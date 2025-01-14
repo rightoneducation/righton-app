@@ -8,23 +8,17 @@ type ButtonStyledProps = {
 export const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'buttonColor',
 })<ButtonStyledProps>(({ theme, buttonColor }) => ({
-  width: 'fit-content',
+  width: '100%',
   height: '38px',
-  borderRadius: '54px',
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
-  boxShadow: '0px 0px 8px 0px rgba(71, 217, 255, 0.4)',
-  background:
-    buttonColor === ButtonColor.RED
-      ? `${theme.palette.primary.buttonGradientRed}`
-      : `${theme.palette.primary.buttonGradientBlue}`,
+  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
+  backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
   ':hover': {
-    background:
-      buttonColor === ButtonColor.RED
-        ? `${theme.palette.primary.buttonGradientRed}`
-        : `${theme.palette.primary.buttonGradientBlue}`,
+    backgroundColor: `${theme.palette.primary.buttonPrimaryHover}`,
   },
   '&:disabled': {
-    background: `${theme.palette.primary.buttonGradientGrey}`,
+    backgroundColor: `${theme.palette.primary.buttonPrimaryDisable}`,
   },
   pointerEvents: 'auto'
 }));
@@ -53,4 +47,29 @@ export const ButtonTypography = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
   fontWeight: '700',
   color: '#FFFFFF',
+}));
+
+export const ButtonCCSS = styled(Box)(({ theme }) => ({
+  width: 'auto',
+  height: 'auto',
+  padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding + theme.sizing.xxSmPadding}px`,
+  borderRadius: '12px',
+  backgroundColor: `${theme.palette.primary.buttonCCSSDefault}`,
+  color: '#FFFFFF',
+  textTransform: 'none',
+  fontFamily: 'Rubik',
+  fontSize: '16px',
+  fontWeight: 400,
+  lineHeight: `${theme.sizing.smPadding}px`,
+  textAlign: 'center',
+  zIndex: 2,
+  boxSizing: 'border-box',
+  minWidth: '20px',
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: `${theme.palette.primary.buttonCCSSHover}`,
+  },
+  "&:disabled": {
+    backgroundColor: `${theme.palette.primary.buttonCCSSDisable}`,
+  }
 }));

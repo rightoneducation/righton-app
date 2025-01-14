@@ -37,6 +37,7 @@ const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
 const greyColor = '#CCCCCC'; // text field borders
 const lightGreyColor = '#F4F4F4'; // submitted answer
+const blueGreyColor = '#0076AA'; // CCSS buttons on explore game/question pages
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
 const greyPurpleColor = '#EDE9F2'; // AI regen text field
@@ -62,6 +63,15 @@ const radialTimerArray = [
   'rgb(237, 115, 166)',
   'rgb(255, 120, 165)',
 ]; // radial timer color array - appended with '0.x )' opacity when used in countdown
+
+// button colors
+const buttonPrimaryDefault = '#1B376F'; // primary button color
+const buttonPrimaryDisable = '#B5BCCD'; // disabled state for primary buttons
+const buttonPrimaryHover = '#3155C7'; // hover state for primary buttons
+
+const buttonCCSSDefault = '#0076AA'; // CCSS buttons on explore game/question pages
+const buttonCCSSDisable = '#B9D5E3'; // disabled state for CCSS buttons
+const buttonCCSSHover = '#1FBBFF'; // hover state for CCSS buttons
 
 //  borders
 const borderWidth = 1;
@@ -403,6 +413,7 @@ declare module '@mui/material/styles' {
     extraDarkGrey: string;
     darkGrey: string;
     grey: string;
+    blueGrey: string;
     lightGrey: string;
     correctColor: string;
     baseQuestionColor: string;
@@ -420,6 +431,12 @@ declare module '@mui/material/styles' {
     buttonGradientRed: string;
     buttonGradientGrey: string;
     aiGradient: string;
+    buttonPrimaryDefault: string;
+    buttonPrimaryDisable: string;
+    buttonPrimaryHover: string;
+    buttonCCSSDefault: string;
+    buttonCCSSDisable: string;
+    buttonCCSSHover: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -446,6 +463,7 @@ declare module '@mui/material/styles' {
     extraDarkGrey?: string;
     darkGrey?: string;
     grey?: string;
+    blueGrey?: string;
     lightGrey?: string;
     correctColor?: string;
     baseQuestionColor?: string;
@@ -463,6 +481,12 @@ declare module '@mui/material/styles' {
     buttonGradientRed?: string;
     buttonGradientGrey?: string;
     aiGradient?: string;
+    buttonPrimaryDefault?: string;
+    buttonPrimaryDisable?: string;
+    buttonPrimaryHover?: string;
+    buttonCCSSDefault?: string;
+    buttonCCSSDisable?: string;
+    buttonCCSSHover?: string;
   }
 }
 
@@ -525,6 +549,7 @@ export default createTheme({
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
       grey: greyColor,
+      blueGrey: blueGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
       baseQuestionColor,
@@ -541,7 +566,13 @@ export default createTheme({
       buttonGradientBlue,
       buttonGradientRed,
       buttonGradientGrey,
-      aiGradient
+      aiGradient,
+      buttonPrimaryDefault,
+      buttonPrimaryDisable,
+      buttonPrimaryHover,
+      buttonCCSSDefault,
+      buttonCCSSDisable,
+      buttonCCSSHover
     },
   },
   typography: {
