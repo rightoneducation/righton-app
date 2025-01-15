@@ -5,6 +5,7 @@ import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUp from '../pages/SignUp';
+import Login from '../pages/Login'
 import { ScreenType } from '../lib/CentralModels';
 
 // interface AppSwitchProps {
@@ -14,6 +15,8 @@ function AppSwitch() {
   const questionScreen = useMatch('/questions') !== null;
   const libraryScreen = useMatch('/library') !== null;
   const signUpScreen = useMatch('/signup') !== null;
+  const loginScreen = useMatch('/login') !== null;
+
   switch (true) {
     case questionScreen: {
       return (
@@ -37,6 +40,13 @@ function AppSwitch() {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP}>
           <SignUp />
+        </AppContainer>
+      );
+    }
+    case loginScreen: {
+      return (
+        <AppContainer currentScreen={ScreenType.LOGIN}>
+          <Login />
         </AppContainer>
       );
     }

@@ -1,143 +1,46 @@
 import React from 'react';
-import { TextField, Grid, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import { Box, Typography } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import RightOnLogo from '../images/RightOnLogo.png';
 import { GoogleLogin } from '@react-oauth/google';
 import { IAuthAPIClient } from '@righton/networking';
+import RightOnLogo from '../images/RightOnLogo.png';
 
-interface LoginProps {
-  authAPIClient: IAuthAPIClient;
-}
-
-const Login = ({ authAPIClient }: LoginProps) => {
-  const [loading, setLoading] = React.useState(false);
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [adminError, setAdminError] = React.useState(false);
-  const handleGoogleLogin = async (googleToken: string) => {
-    console.log('google signin');
-  };
-
-  const handleSubmit = async (e: React.SyntheticEvent<Element, Event>) => {
-    console.log('submitted');
-  };
-
-  return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <img
-        src={RightOnLogo}
-        style={{
-          marginTop: '3%',
-          width: '15%',
-          minWidth: '200px',
-          marginBottom: '3%',
-        }}
-        alt="Right On"
-      />
-      <Grid item xs={12}>
-        <form
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingLeft: '5vw',
-            paddingRight: '5vw',
-          }}
-          onSubmit={handleSubmit}
-        >
-          <h1 style={{ fontSize: '22px', color: 'grey', textAlign: 'center' }}>
-            {' '}
-            Sign In to an Existing Acccount
-          </h1>
-          <Field
-            variant="outlined"
-            label="Email"
-            value={email}
-            type="email"
-            onChange={(e: any) => setEmail(e.target.value)}
-          />
-          <Field
-            variant="outlined"
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e: any) => setPassword(e.target.value)}
-          />
-          <GoogleLogin
-            onSuccess={(googleToken) => {
-              handleGoogleLogin(googleToken.credential ?? '');
-            }}
-            onError={() => {
-              setAdminError(true);
-            }}
-          />
-        </form>
-      </Grid>
-      {adminError ? (
-        <ErrorType>
-          {' '}
-          There has been an error. Please verify your username/password and
-          contact the administrator for account verification.{' '}
-        </ErrorType>
-      ) : null}
-    </Grid>
-  );
-};
-
-export default Login;
-
-const Field = styled(TextField)({
-  margin: '10px 0',
-  borderRadius: '20px',
-  width: '100%',
-});
-
-const SignUpLink = styled(Link)({
-  backgroundColor: '#FC1047',
-  textDecoration: 'none',
-  color: 'white',
-  borderRadius: '34px',
-  minWidth: '70px',
-  textAlign: 'center',
-  padding: '1vw',
-  whiteSpace: 'nowrap',
-  fontWeight: 'bold',
-});
-
-const LogInLink = styled(Link)({
-  backgroundColor: '#159EFA',
-  textDecoration: 'none',
-  color: 'white',
-  borderRadius: '34px',
-  minWidth: '70px',
-  textAlign: 'center',
-  padding: '1vw',
-  whiteSpace: 'nowrap',
-  fontWeight: 'bold',
-});
-
-const ButtonGrid = styled(Grid)({
+const UpperSignup = styled(Box)(({ theme }) => ({
   display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-  width: '10vw',
-  marginBottom: '2vw',
-  marginTop: '2vw',
-  gap: '10%',
-});
+  // border: '1px solid blue',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '24px'
+  
+}));
+const UpperSignupSubStepText = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Poppins, sans-serif',
+  fontWeight: 700, 
+  fontSize: '24px', 
+  color: '#02215F',
+  textAlign: 'center', 
+}));
 
-const ErrorType = styled(Typography)({
-  fontStyle: 'italic',
-  textAlign: 'center',
-  color: 'grey',
-  paddingLeft: '5vw',
-  paddingRight: '5vw',
-});
+const UpperSignupSubGoogle = styled(Typography)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  color: '#0966E0', 
+  border: '2px solid #0966E0', // Set border to 2px with the same color
+  borderRadius: '8px', // Set border radius to 8px
+  backgroundColor: 'white', // Set background color to white
+  minHeight: '52px',
+}));
+
+
+export default function Login() {
+  return (
+    <UpperSignup>
+      <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
+      <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
+      <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle>
+    </UpperSignup>
+  );
+}
