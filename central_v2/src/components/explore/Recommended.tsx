@@ -6,7 +6,7 @@ import {
 } from '@righton/networking';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
-import CardCarousal from './CardCarousal';
+import CardCarousel from '../cardcarousel/CardCarousel';
 import { ScreenSize } from '../../lib/CentralModels';
 import PaginationContainerStyled from '../../lib/PaginationContainerStyled';
 
@@ -61,7 +61,7 @@ export default function Recommended<
       <Title screenSize={screenSize}>
         Recommended {elementType === ElementType.GAME ? 'Games' : 'Questions'}
       </Title>
-      <CardCarousal
+      <CardCarousel
         recommendedElements={recommendedElements}
         elementType={elementType}
         setIsTabsOpen={setIsTabsOpen}

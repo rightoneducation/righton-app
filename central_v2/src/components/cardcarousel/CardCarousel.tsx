@@ -15,6 +15,7 @@ import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import './CardCarousel.css';
 
 interface CardCarouselProps<T> {
   elementType: ElementType.GAME | ElementType.QUESTION;
@@ -23,7 +24,7 @@ interface CardCarouselProps<T> {
   handleView: (element: T, elements: T[]) => void;
 }
 
-export default function CardCarouse<
+export default function CardCarousel<
   T extends IGameTemplate | IQuestionTemplate,
 >({
   recommendedElements,
@@ -54,22 +55,12 @@ export default function CardCarouse<
         },
       }}
       ref={swiperRef}
-      spaceBetween={theme.sizing.smPadding}    
+      spaceBetween={theme.sizing.smPadding}
+      slidesPerView='auto'
       updateOnWindowResize
       centeredSlides
       loop
       navigation
-      breakpoints={{
-        [theme.breakpoints.values.sm]: {
-          slidesPerView: 1.4,
-        },
-        [theme.breakpoints.values.md]: {
-          slidesPerView: 2.2
-        },
-        [theme.breakpoints.values.lg]: {
-          slidesPerView: 5.5
-        },
-      }}
     >
       {Array.from({ length: maxSlides }).map((_, index) => {
         const element = recommendedElements[index] as
@@ -99,7 +90,7 @@ export default function CardCarouse<
         }
         const questionElement = element as IQuestionTemplate;
         return (
-          <SwiperSlide key={uuidv4()}>
+          <SwiperSlide key={uuidv4()} className="fixed-swiper-slide">
             {questionElement ? (
               <StyledQuestionCard
                 question={questionElement}
