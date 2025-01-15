@@ -25,6 +25,7 @@ import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
 import Recommended from '../components/explore/Recommended';
 import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
+import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 
 interface ExploreGamesProps {
   screenSize: ScreenSize;
@@ -61,12 +62,7 @@ export default function ExploreGames({
   };
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      <SearchBar
-        screenSize={screenSize}
-        handleSearchChange={handleSearchChange}
-        handleChooseGrades={handleChooseGrades}
-        handleSortChange={handleSortChange}
-      />
+
       {searchTerms.length > 0 ? (
         <CardGallery<IGameTemplate>
           screenSize={screenSize}
@@ -82,6 +78,13 @@ export default function ExploreGames({
       ) : (
         <>
           <ExploreGamesUpperContainer screenSize={screenSize}>
+             <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'cover'}} />
+            <SearchBar
+              screenSize={screenSize}
+              handleSearchChange={handleSearchChange}
+              handleChooseGrades={handleChooseGrades}
+              handleSortChange={handleSortChange}
+            />
             <Recommended<IGameTemplate>
               screenSize={screenSize}
               recommendedElements={recommendedGames}

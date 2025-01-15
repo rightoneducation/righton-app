@@ -15,4 +15,5 @@ export default styled('div')(({ theme }) => ({
   '--swiper-pagination-bullet-size': '10px',
   '--swiper-pagination-bullet-horizontal-gap': '4px',
   /* size and shape of bullets handled in <swiper pagination: { renderBullets } /> */
+  zIndex: 1
 }));

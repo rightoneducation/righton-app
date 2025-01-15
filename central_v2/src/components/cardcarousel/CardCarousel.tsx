@@ -51,7 +51,7 @@ export default function CardCarousel<
         bulletActiveClass: 'swiper-pagination-bullet-active',
         clickable: true,
         renderBullet(index: number, className: string) {
-          return `<span class="${className}" style="width:20px; height:6px; border-radius:2px"></span>`;
+          return `<span class="${className}" style="width:20px; height:6px; border-radius:2px;"></span>`;
         },
       }}
       ref={swiperRef}

@@ -4,7 +4,7 @@ import { createTheme } from '@mui/material/styles';
 const mainColor = '#FFFFFF'; // main  (ex white)
 const accentColor = '#312759'; // accent (ex purple)
 const darkBlueCardColor = '#08458F'; // card color for default host cards with student data
-const lightBlueBackgroundColor = '#E9F1FF'; // background color for central pages
+const lightBlueBackgroundColor = '#22366A'; // background color for central pages
 const backgroundGradient =
   'linear-gradient(196deg, rgb(49,109,176) 0%, rgb(11,33,90) 73%)'; // upper header background1
 //   background: linear-gradient(196deg, #0D68B1 0%, #02215F 73.62%);
