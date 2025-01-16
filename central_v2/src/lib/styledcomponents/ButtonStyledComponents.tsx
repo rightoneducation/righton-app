@@ -13,12 +13,12 @@ export const ButtonStyled = styled(Button, {
   borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
   boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
-  backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
+  backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionDefault}` : `${theme.palette.primary.buttonPrimaryDefault}`,
   ':hover': {
-    backgroundColor: `${theme.palette.primary.buttonPrimaryHover}`,
+    backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionHover}` : `${theme.palette.primary.buttonPrimaryHover}`,
   },
   '&:disabled': {
-    backgroundColor: `${theme.palette.primary.buttonPrimaryDisable}`,
+    backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionDisable}` : `${theme.palette.primary.buttonPrimaryDisable}`,
   },
   pointerEvents: 'auto'
 }));

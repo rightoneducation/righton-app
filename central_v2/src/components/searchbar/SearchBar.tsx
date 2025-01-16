@@ -34,12 +34,13 @@ const SearchBarContainer = styled(TextField)<SearchBarProps2>(
     margin: '0',
     backgroundColor: '#FFFFFF',
     height: '44px',
-    borderRadius: '0px 30px 30px 0px',
+    borderRadius: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px 0px`,
     '& .MuiOutlinedInput-root': {
       height: '100%',
       padding: '0 12px',
       boxSizing: 'border-box',
-      borderRadius: '0px 30px 30px 0px',
+      borderRadius: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px 0px`,
+      borderWidth: '0px',
       '& .MuiInputBase-input': {
         padding: 0,
         whiteSpace: screenSize !== ScreenSize.SMALL ? 'nowrap' : 'normal',

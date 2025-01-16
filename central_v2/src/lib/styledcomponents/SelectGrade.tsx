@@ -13,16 +13,16 @@ export const SelectContainer = styled(Box)(() => {
 
 export const SelectGrade = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
   width: screenSize === ScreenSize.SMALL ? '38px' : '240px',
   minHeight: '44px',
-  background: 'linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)',
-  borderTopLeftRadius: '22px',
-  borderBottomLeftRadius: '22px',
+  background: `${theme.palette.primary.searchButtonColor}`,
+  borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
+  borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
   gap: '16px',
   zIndex: 4,
   cursor: 'pointer',
@@ -32,7 +32,7 @@ export const SelectLabel = styled(Typography)(() => {
   return {
     color: 'white',
     fontFamily: 'Poppins',
-    fontSize: '20',
+    fontSize: '20px',
     fontWeight: '700',
   };
 });

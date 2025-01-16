@@ -42,9 +42,8 @@ const HeaderContainer = styled(Box)<HeaderContainerProps>(
     position: 'relative',
     backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
     backgroundImage: `
-    linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%),
-    url(${mathSymbolsBackground})
-    
+      linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%),
+      url(${mathSymbolsBackground})
     `,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'bottom', // Adjust as needed
@@ -68,7 +67,18 @@ const TransparentButton = styled(Button)<{
   lineHeight: '30px',
   textAlign: 'center',
   textTransform: 'none',
-  opacity: active ? 1 : 0.5, // Apply opacity based on active prop
+  borderStyle: 'none',
+  borderColor: `${theme.palette.primary.buttonNavBorder}`,
+  '&:hover': {
+    background: 'none',
+    borderRadius: `${theme.sizing.xSmPadding}px`,
+    borderWidth: '0.75px',
+    borderColor: `${theme.palette.primary.buttonNavBorder}`,
+    borderStyle: 'solid',
+  },
+  '&:disabled': {
+    opacity: 0.3,
+  },
   '& img': {
     marginRight: `${theme.sizing.xSmPadding}px`,
   },
@@ -199,6 +209,7 @@ export default function Header({
           {isLgScreen ? (
             <Box display="flex" gap="80px">
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.GAMES)
                 }
@@ -210,6 +221,7 @@ export default function Header({
                 Games
               </TransparentButton>
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.QUESTIONS)
                 }
@@ -221,6 +233,7 @@ export default function Header({
                 Questions
               </TransparentButton>
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.LIBRARY)
                 }

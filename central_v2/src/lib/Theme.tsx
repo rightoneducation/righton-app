@@ -69,9 +69,19 @@ const buttonPrimaryDefault = '#1B376F'; // primary button color
 const buttonPrimaryDisable = '#B5BCCD'; // disabled state for primary buttons
 const buttonPrimaryHover = '#3155C7'; // hover state for primary buttons
 
+const buttonActionDefault = '#EB147C'; // action button color
+const buttonActionDisable = '#EDBBD7'; // disabled state for action buttons
+const buttonActionHover = '#FF72B6'; // hover state for action buttons
+
 const buttonCCSSDefault = '#0076AA'; // CCSS buttons on explore game/question pages
 const buttonCCSSDisable = '#B9D5E3'; // disabled state for CCSS buttons
 const buttonCCSSHover = '#1FBBFF'; // hover state for CCSS buttons
+
+const buttonNavBorder = '#3155C6'; // selected nav button border color
+
+// search bar colors
+const searchBackgroundColor = '#FFFFFF'; // search bar background color
+const searchButtonColor = '#EB147C'; // search bar button color
 
 //  borders
 const borderWidth = 1;
@@ -434,9 +444,15 @@ declare module '@mui/material/styles' {
     buttonPrimaryDefault: string;
     buttonPrimaryDisable: string;
     buttonPrimaryHover: string;
+    buttonActionDefault: string;
+    buttonActionDisable: string;
+    buttonActionHover: string;
     buttonCCSSDefault: string;
     buttonCCSSDisable: string;
     buttonCCSSHover: string;
+    buttonNavBorder: string;
+    searchBackgroundColor: string;
+    searchButtonColor: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -484,9 +500,15 @@ declare module '@mui/material/styles' {
     buttonPrimaryDefault?: string;
     buttonPrimaryDisable?: string;
     buttonPrimaryHover?: string;
+    buttonActionDefault?: string;
+    buttonActionDisable?: string;
+    buttonActionHover?: string;
     buttonCCSSDefault?: string;
     buttonCCSSDisable?: string;
     buttonCCSSHover?: string;
+    buttonNavBorder?: string;
+    searchBackgroundColor?: string;
+    searchButtonColor?: string;
   }
 }
 
@@ -570,9 +592,15 @@ export default createTheme({
       buttonPrimaryDefault,
       buttonPrimaryDisable,
       buttonPrimaryHover,
+      buttonActionDefault,
+      buttonActionDisable,
+      buttonActionHover,
       buttonCCSSDefault,
       buttonCCSSDisable,
-      buttonCCSSHover
+      buttonCCSSHover,
+      buttonNavBorder,
+      searchBackgroundColor,
+      searchButtonColor,
     },
   },
   typography: {
