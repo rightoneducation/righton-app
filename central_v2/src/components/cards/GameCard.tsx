@@ -24,7 +24,6 @@ const GameImage = styled('img')({
   height: '186px',
   minHeight: '186px',
   objectFit: 'cover',
-
 });
 
 const CarouselGameImage = styled(GameImage)(({ theme }) => ({
