@@ -100,7 +100,7 @@ function SearchBar({
           screenSize={screenSize}
           placeholder={
             screenSize === ScreenSize.SMALL
-              ? 'Search for Games...'
+              ? 'Search Games'
               : 'Search by topics, standards, or games...'
           }
           variant="outlined"
