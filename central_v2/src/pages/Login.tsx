@@ -5,16 +5,26 @@ import { Link } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { IAuthAPIClient } from '@righton/networking';
 import RightOnLogo from '../images/RightOnLogo.png';
+import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 
-const UpperSignup = styled(Box)(({ theme }) => ({
+const InnerBodyContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  // border: '1px solid blue',
+  flexDirection: 'column',
+  gap: '20px',
+  // height: '100vh',
+  border: '1px solid red'
+}));
+
+const UpperLogin = styled(Box)(({ theme }) => ({
   display: 'flex',
   // border: '1px solid blue',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '24px'
-  
+  gap: '24px',
 }));
-const UpperSignupSubStepText = styled(Typography)(({ theme }) => ({
+
+const UpperLoginText = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins, sans-serif',
   fontWeight: 700, 
   fontSize: '24px', 
@@ -22,7 +32,7 @@ const UpperSignupSubStepText = styled(Typography)(({ theme }) => ({
   textAlign: 'center', 
 }));
 
-const UpperSignupSubGoogle = styled(Typography)(({ theme }) => ({
+const UpperLoginGoogleButton = styled(Typography)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
@@ -37,10 +47,18 @@ const UpperSignupSubGoogle = styled(Typography)(({ theme }) => ({
 
 export default function Login() {
   return (
-    <UpperSignup>
-      <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
-      <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
-      <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle>
-    </UpperSignup>
+    <SignUpMainContainer>
+
+      <InnerBodyContainer>
+        <UpperLogin>
+          <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
+          <UpperLoginText>Sign In to an Existing Account</UpperLoginText>
+          <UpperLoginGoogleButton>Sign Up with Google</UpperLoginGoogleButton>
+        </UpperLogin>
+      </InnerBodyContainer>
+
+    </SignUpMainContainer>
+
+
   );
 }
