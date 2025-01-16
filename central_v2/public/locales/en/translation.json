@@ -29,7 +29,8 @@
     "back": "Back",
     "editpicture": "Edit Picture",
     "editinformation": "Edit Information",
-    "changepassword": "Change Password"
+    "changepassword": "Change Password",
+    "choose": "Choose"
   },
   "imageButton": {
     "imageupload": "Upload Image",

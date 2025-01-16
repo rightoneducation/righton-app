@@ -70,20 +70,20 @@ export const SelectArrowContainer = styled(Box, {
 
 export const SelectMenu = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSelectOpen',
-})<{ isSelectOpen: boolean }>(({ isSelectOpen }) => ({
+})<{ isSelectOpen: boolean }>(({ theme, isSelectOpen }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'center',
   zIndex: 3,
   background: 'white',
-  borderTopLeftRadius: '16px',
-  borderBottomLeftRadius: '16px',
-  borderBottomRightRadius: '16px',
+  gap: `${theme.sizing.xxSmPadding}px`,
+  borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
+  borderBottomRightRadius: `${theme.sizing.xSmPadding}px`,
   paddingLeft: '36px',
   paddingRight: '36px',
-  paddingTop: '8px',
-  paddingBottom: '8px',
+  paddingTop: `${theme.sizing.xSmPadding}px`,
+  paddingBottom: `${theme.sizing.xSmPadding}px`,
   position: 'absolute',
   top: '44px',
   left: 0,
@@ -95,19 +95,21 @@ export const SelectMenu = styled(Box, {
     : 'opacity 300ms ease, transform 150ms ease-in-out',
   opacity: isSelectOpen ? 1 : 0,
   transform: isSelectOpen ? 'translateY(0px)' : 'translateY(-20px)',
-  boxShadow: '0px 8px 16px -4px rgba(0, 0, 0, 0.4)',
+  boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.15)',
 }));
 
-export const SelectMenuItem = styled(Box)(() => {
-  return {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    gap: '16px',
-  };
-});
+export const SelectMenuItem = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  gap: `${theme.sizing.xSmPadding}px`,
+  paddingTop: `${theme.sizing.xSmPadding}px`,
+  paddingBottom: `${theme.sizing.xSmPadding}px`,
+  paddingLeft: `${theme.sizing.xSmPadding}px`,
+  borderSizing: 'border-box',
+}));
 
 export const SelectButtonBox = styled(Box)(({ theme }) => ({
   width: '100%',

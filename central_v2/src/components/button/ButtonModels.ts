@@ -44,7 +44,8 @@ export enum ButtonType {
   EDITPICTURE = 'editpicture',
   EDITINFORMATION = 'editinformation',
   CHANGEPASSWORD = 'changepassword',
-  CREATE = 'create'
+  CREATE = 'create',
+  CHOOSE = 'choose',
 }
 
 export enum ButtonColor {
@@ -179,5 +180,9 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: add,
     textKey: ButtonType.CREATE,
     color: ButtonColor.RED,
+  },
+  [ButtonType.CHOOSE]: {
+    icon: add, 
+    textKey: ButtonType.CHOOSE,
   }
 };

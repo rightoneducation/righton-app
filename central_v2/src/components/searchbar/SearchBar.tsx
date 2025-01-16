@@ -41,6 +41,7 @@ const SearchBarContainer = styled(TextField)<SearchBarProps2>(
       boxSizing: 'border-box',
       borderRadius: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px 0px`,
       borderWidth: '0px',
+      "& fieldset": { border: 'none' },
       '& .MuiInputBase-input': {
         padding: 0,
         whiteSpace: screenSize !== ScreenSize.SMALL ? 'nowrap' : 'normal',
@@ -106,6 +107,7 @@ function SearchBar({
           value={searchTerm}
           onChange={handleInputChange}
           InputProps={{
+            disableUnderline: true,
             startAdornment: (
               <InputAdornment position="start">
                 <img src={SearchIcon} alt="Search Icon" />
