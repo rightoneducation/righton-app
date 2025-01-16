@@ -30,7 +30,8 @@
     "editpicture": "Edit Picture",
     "editinformation": "Edit Information",
     "changepassword": "Change Password",
-    "choose": "Choose"
+    "choose": "Choose",
+    "clone": "Clone"
   },
   "imageButton": {
     "imageupload": "Upload Image",

@@ -90,13 +90,14 @@ export default function CardCarousel<
         }
         const questionElement = element as IQuestionTemplate;
         return (
-          <SwiperSlide key={uuidv4()} className="fixed-swiper-slide">
+          <SwiperSlide key={uuidv4()} className="fixed-swiper-slide-question">
             {questionElement ? (
               <StyledQuestionCard
                 question={questionElement}
                 id={questionElement.id}
                 title={questionElement.title}
                 image={questionElement.imageUrl || placeHolder}
+                isCarousel
                 handleViewButtonClick={
                   handleViewButtonClick as (element: IQuestionTemplate) => void
                 }
