@@ -73,3 +73,17 @@ export const ButtonCCSS = styled(Box)(({ theme }) => ({
     backgroundColor: `${theme.palette.primary.buttonCCSSDisable}`,
   }
 }));
+
+export const ButtonFavourite = styled(Box)(({ theme }) => ({
+  width: '26px',
+  height: '26px',
+  borderRadius: '26px',
+  backgroundColor: 'rgba(255,255,255, 0.53)',
+  cursor: 'pointer',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'absolute',
+  top: '8px',
+  right: '4px',
+}));

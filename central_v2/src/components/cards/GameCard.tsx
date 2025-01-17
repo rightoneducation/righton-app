@@ -8,6 +8,7 @@ import rocket from '../../images/rocket.svg';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';
+import FavouriteButton from '../button/favouritebutton/FavouriteButton';
 
 interface StyledGameCardProps {
   id: string;
@@ -18,6 +19,12 @@ interface StyledGameCardProps {
   isCarousel: boolean;
   handleViewButtonClick: (element: IGameTemplate) => void;
 }
+
+const GameImageContainer = styled(Box)({
+  width: '100%',
+  height: '186px',
+  position: 'relative'
+});
 
 const GameImage = styled('img')({
   width: '100%',
@@ -152,10 +159,13 @@ export default function StyledGameCard({
 
   return (
     <GameCard>
+      <GameImageContainer>
       {isCarousel 
-        ? <CarouselGameImage src={image} alt="Tag" />  
-        : <GameImage src={image} alt="Tag" />       
+        ? <CarouselGameImage src={image} alt="Tag" />
+        : <GameImage src={image} alt="Tag" />
       }
+        <FavouriteButton isEnabled/>
+      </GameImageContainer>
       <ContentContainer>
         <TitleTextTypography>{title}</TitleTextTypography>
         <CCSSButtonContainer>
