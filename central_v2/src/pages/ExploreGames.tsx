@@ -1,19 +1,12 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import React, { useState } from 'react';
 import {
   ElementType,
   GalleryType,
   IGameTemplate,
-  GradeTarget,
-  PublicPrivateType,
-  SortType,
-  SortDirection,
 } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
-import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import debounce from 'lodash/debounce';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
@@ -34,9 +27,6 @@ interface ExploreGamesProps {
 export default function ExploreGames({
   screenSize
 } : ExploreGamesProps) {
-  const theme = useTheme();
-  const { t } = useTranslation();
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const {
     recommendedGames,
     mostPopularGames,
@@ -45,7 +35,6 @@ export default function ExploreGames({
     isLoading,
     searchTerms,
     selectedGrades,
-    isTabsOpen,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
@@ -62,23 +51,30 @@ export default function ExploreGames({
   };
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-
       {searchTerms.length > 0 ? (
-        <CardGallery<IGameTemplate>
-          screenSize={screenSize}
-          searchTerm={searchTerms}
-          grades={selectedGrades}
-          galleryElements={searchedGames}
-          isLoading={isLoading}
-          elementType={ElementType.GAME}
-          galleryType={GalleryType.SEARCH_RESULTS}
-          setIsTabsOpen={setIsTabsOpen}
-          handleView={handleView}
-        />
+        <>
+          <SearchBar
+            screenSize={screenSize}
+            handleSearchChange={handleSearchChange}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+          />
+          <CardGallery<IGameTemplate>
+            screenSize={screenSize}
+            searchTerm={searchTerms}
+            grades={selectedGrades}
+            galleryElements={searchedGames}
+            isLoading={isLoading}
+            elementType={ElementType.GAME}
+            galleryType={GalleryType.SEARCH_RESULTS}
+            setIsTabsOpen={setIsTabsOpen}
+            handleView={handleView}
+          />
+        </>
       ) : (
         <>
           <ExploreGamesUpperContainer screenSize={screenSize}>
-             <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'cover'}} />
+            <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'cover'}} />
             <SearchBar
               screenSize={screenSize}
               handleSearchChange={handleSearchChange}
