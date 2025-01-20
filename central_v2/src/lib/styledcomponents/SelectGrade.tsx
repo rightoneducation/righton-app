@@ -78,6 +78,7 @@ export const SelectMenu = styled(Box, {
   zIndex: 3,
   background: 'white',
   gap: `${theme.sizing.xxSmPadding}px`,
+  borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
   borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
   borderBottomRightRadius: `${theme.sizing.xSmPadding}px`,
   paddingLeft: '36px',
