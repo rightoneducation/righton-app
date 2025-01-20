@@ -58,11 +58,11 @@ export class AuthAPIClient
 
   async awsSignUp(username: string, email: string, password: string) {
     await signUp({
-      username: username,
+      username: email,
       password: password,
       options: {
         userAttributes: {
-          preferred_username: username,
+          nickname: username,
           email: email,
         },
       }

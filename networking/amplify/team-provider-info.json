@@ -13,6 +13,45 @@
       "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-test-68558-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
+      "auth": {
+        "mobile6060603c": {}
+      },
+      "function": {
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-test-68558-deployment",
+          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
+        },
+        "mobile6060603cPostConfirmation": {
+          "GROUP": "Teacher_Auth",
+          "deploymentBucketName": "amplify-mobile-test-68558-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
+        },
+        "mobile": {},
+        "mobile6060603c": {},
+        "teacherIdAuth": {
+          "deploymentBucketName": "amplify-mobile-test-68558-deployment",
+          "s3Key": "amplify-builds/teacherIdAuth-6e3430584875745a7575-build.zip"
+        }
+      },
+      "api": {
+        "mobile": {}
+      }
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-test-68558-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-test-68558-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-test-68558-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-test-68558-deployment",
+      "UnauthRoleName": "amplify-mobile-test-68558-unauthRole",
+      "StackName": "amplify-mobile-test-68558",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-test-68558/8e91c560-97fe-11ef-ac8c-12fcc8d3e0bf",
+      "AmplifyAppId": "d2z6928w5qibze",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-test-68558-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
       "function": {
         "mobile6060603cPostConfirmation": {
           "GROUP": "Teacher_Auth",
@@ -20,17 +59,11 @@
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
         "createGameTest": {
-          "deploymentBucketName": "amplify-mobile-test-68558-deployment",
+          "deploymentBucketName": "amplify-mobile-dev-69ed3-deployment",
           "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
         },
-        "teacherIdAuth": {
-          "deploymentBucketName": "amplify-mobile-test-68558-deployment",
-          "s3Key": "amplify-builds/teacherIdAuth-447233614f69494d4634-build.zip"
-        },
-        "teacherIdAuthRead": {
-          "deploymentBucketName": "amplify-mobile-test-68558-deployment",
-          "s3Key": "amplify-builds/teacherIdAuthRead-6c6e48695a5a4771354f-build.zip"
-        }
+        "mobile": {},
+        "mobile6060603c": {}
       },
       "auth": {
         "mobile6060603c": {}

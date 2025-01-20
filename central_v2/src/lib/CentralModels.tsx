@@ -3,7 +3,8 @@ export enum ScreenType {
   QUESTIONS,
   LIBRARY,
   SIGNUP,
-  LOGIN
+  LOGIN,
+  CONFIRMATION
 }
 
 export enum ScreenSize {
