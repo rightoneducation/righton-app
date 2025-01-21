@@ -57,18 +57,18 @@ function MostPopularGamesComponent({
   handleViewButtonClick,
 }: MostPopularGamesComponentProps) {
   return (
-    <Grid container spacing={2} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: '1120px'}}>
+    <Grid container spacing={4} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: '2000px'}}>
       {(mostPopularElements.length === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
-              <Grid item xs={12} md={6} lg={4} key={index}> {/* eslint-disable-line */}
+              <Grid item xs={12} md={6} lg={3} key={index}> {/* eslint-disable-line */}
                 <SkeletonGameCard index={index} />
               </Grid>
             );
           })
         : mostPopularElements.map((game) => {
             return (
-              <Grid item xs={12} md={6} lg={4} key={game.id}>
+              <Grid item key={game.id}>
                 <StyledGameCard
                   screenSize={screenSize}
                   game={game}
