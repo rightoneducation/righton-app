@@ -32,7 +32,7 @@ const CarouselQuestionImage = styled(QuestionImage)(({ theme }) => ({
 }));
 
 const QuestionCard = styled(Box)(({ theme }) => ({
-  maxWidth: '275px',
+  width: '100%',
   height: '100%',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
