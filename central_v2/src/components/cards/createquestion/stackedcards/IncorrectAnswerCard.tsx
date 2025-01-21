@@ -50,6 +50,7 @@ interface IncorrectAnswerCardProps {
   isHighlight?: boolean;
   isCardSubmitted: boolean;
   isAIEnabled: boolean;
+  isAIError: boolean;
   isTopCard?: boolean;
   handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
@@ -67,6 +68,7 @@ export default function IncorrectAnswerCard({
   isHighlight,
   isCardSubmitted,
   isAIEnabled,
+  isAIError,
   isTopCard,
   handleIncorrectCardStackUpdate,
   handleNextCardButtonClick,
@@ -100,8 +102,6 @@ export default function IncorrectAnswerCard({
     currentExplanation: '',
     currentPrompt: '',
   });
-  console.log(regenData);
-  console.log(draftQuestion.questionCard.title);
   
   const waegenInput: WaegenInput = {
     question: draftQuestion.questionCard.title,
@@ -155,6 +155,10 @@ export default function IncorrectAnswerCard({
   }
 
   const handleAIExplanationChange = (value: string, isRegen?: boolean ) => {
+    if (value === 'ERROR') {
+      handleAIExplanationGenerated(false);
+      return;
+    }
     setCardData({
       ...cardData,
       explanation: value,
@@ -182,10 +186,10 @@ export default function IncorrectAnswerCard({
           placeholder="Distractor..." 
           value={cardData.answer}
           onChange={(e) => handleLocalAnswerChange(e.target.value)}
-          error={isCardSubmitted && cardData.answer.length === 0}
+          error={(isCardSubmitted || isAIError) && cardData.answer.length === 0}
           InputProps={{
             startAdornment: 
-            isCardSubmitted && cardData.answer.length === 0 &&
+            (isCardSubmitted || isAIError) && cardData.answer.length === 0 &&
               <InputAdornment
                 position="start" 
                 sx={{ 

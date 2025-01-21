@@ -38,6 +38,7 @@ interface CreateQuestionCardBaseProps {
   isHighlight: boolean;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
+  isAIError: boolean;
 }
 
 type ImagePlaceholderProps = {
@@ -88,7 +89,8 @@ export default function CreateQuestionCardBase({
   handlePublicPrivateChange,
   isHighlight,
   isCardSubmitted,
-  isCardErrored
+  isCardErrored,
+  isAIError
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
@@ -189,12 +191,12 @@ export default function CreateQuestionCardBase({
             variant="outlined" 
             rows='4' 
             placeholder="Question Contents..." 
-            error={isCardSubmitted && (!title || title.length === 0)}
+            error={(isCardSubmitted || isAIError) && (!title || title.length === 0)}
             value={title}
             onChange = {(e) => handleLocalTitleChange(e.target.value)}
             InputProps={{
               startAdornment: 
-                isCardSubmitted && (!title || title.length === 0) &&
+                (isCardSubmitted || isAIError) && (!title || title.length === 0) &&
                 <InputAdornment
                   position="start" 
                   sx={{ 
