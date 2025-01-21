@@ -15,6 +15,7 @@ import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import './CardCarousel.css';
 
 interface CardCarouselProps<T> {
   elementType: ElementType.GAME | ElementType.QUESTION;
@@ -23,7 +24,7 @@ interface CardCarouselProps<T> {
   handleView: (element: T, elements: T[]) => void;
 }
 
-export default function CardCarouse<
+export default function CardCarousel<
   T extends IGameTemplate | IQuestionTemplate,
 >({
   recommendedElements,
@@ -34,19 +35,6 @@ export default function CardCarouse<
   const theme = useTheme();
   const swiperRef = useRef<SwiperRef>(null);
   const maxSlides = 12;
-  const carouselSlideNumMap = {
-    [ElementType.GAME]: {
-      [theme.breakpoints.values.sm]: 1.2,
-      [theme.breakpoints.values.md]: 1.8,
-      [theme.breakpoints.values.lg]: 3.5,
-    },
-    [ElementType.QUESTION]: {
-      [theme.breakpoints.values.sm]: 2.2,
-      [theme.breakpoints.values.md]: 3.8,
-      [theme.breakpoints.values.lg]: 5.5,
-    },
-  };
-
   const handleViewButtonClick = (element: T) => {
     handleView(element, recommendedElements as T[]);
   };
@@ -55,7 +43,6 @@ export default function CardCarouse<
     <Swiper
       style={{
         width: '100%',
-        height: elementType === ElementType.GAME ? '260px' : '385px',
       }}
       modules={[Pagination]}
       pagination={{
@@ -64,29 +51,16 @@ export default function CardCarouse<
         bulletActiveClass: 'swiper-pagination-bullet-active',
         clickable: true,
         renderBullet(index: number, className: string) {
-          return `<span class="${className}" style="width:20px; height:6px; border-radius:2px"></span>`;
+          return `<span class="${className}" style="width:20px; height:6px; border-radius:2px;"></span>`;
         },
       }}
       ref={swiperRef}
       spaceBetween={theme.sizing.smPadding}
+      slidesPerView='auto'
       updateOnWindowResize
       centeredSlides
       loop
       navigation
-      breakpoints={{
-        [theme.breakpoints.values.sm]: {
-          slidesPerView:
-            carouselSlideNumMap[elementType][theme.breakpoints.values.sm],
-        },
-        [theme.breakpoints.values.md]: {
-          slidesPerView:
-            carouselSlideNumMap[elementType][theme.breakpoints.values.md],
-        },
-        [theme.breakpoints.values.lg]: {
-          slidesPerView:
-            carouselSlideNumMap[elementType][theme.breakpoints.values.lg],
-        },
-      }}
     >
       {Array.from({ length: maxSlides }).map((_, index) => {
         const element = recommendedElements[index] as
@@ -95,7 +69,7 @@ export default function CardCarouse<
         if (elementType === ElementType.GAME) {
           const gameElement = element as IGameTemplate;
           return (
-            <SwiperSlide key={uuidv4()}>
+            <SwiperSlide key={uuidv4()} style={{width: '385px'}}>
               {gameElement ? (
                 <StyledGameCard
                   game={gameElement}
@@ -103,6 +77,7 @@ export default function CardCarouse<
                   title={gameElement.title}
                   description={gameElement.description}
                   image={gameElement.imageUrl || placeHolder}
+                  isCarousel
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
                   }
@@ -115,7 +90,7 @@ export default function CardCarouse<
         }
         const questionElement = element as IQuestionTemplate;
         return (
-          <SwiperSlide key={uuidv4()}>
+          <SwiperSlide key={uuidv4()} className="fixed-swiper-slide">
             {questionElement ? (
               <StyledQuestionCard
                 question={questionElement}

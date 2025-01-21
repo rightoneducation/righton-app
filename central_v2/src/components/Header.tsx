@@ -16,6 +16,7 @@ import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import { SelectedCentralPages } from '../lib/ScreenEnums';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
+import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 
 interface HeaderProps {
   currentScreen: ScreenType;
@@ -38,6 +39,16 @@ const HeaderContainer = styled(Box)<HeaderContainerProps>(
     width: '100%',
     padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
     boxSizing: 'border-box',
+    position: 'relative',
+    backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
+    backgroundImage: `
+      linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%),
+      url(${mathSymbolsBackground})
+    `,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'bottom', // Adjust as needed
+    backgroundSize: 'cover',
+    zIndex: 1,
   }),
 );
 
@@ -56,7 +67,18 @@ const TransparentButton = styled(Button)<{
   lineHeight: '30px',
   textAlign: 'center',
   textTransform: 'none',
-  opacity: active ? 1 : 0.5, // Apply opacity based on active prop
+  borderStyle: 'none',
+  borderColor: `${theme.palette.primary.buttonNavBorder}`,
+  '&:hover': {
+    background: 'none',
+    borderRadius: `${theme.sizing.xSmPadding}px`,
+    borderWidth: '0.75px',
+    borderColor: `${theme.palette.primary.buttonNavBorder}`,
+    borderStyle: 'solid',
+  },
+  '&:disabled': {
+    opacity: 0.3,
+  },
   '& img': {
     marginRight: `${theme.sizing.xSmPadding}px`,
   },
@@ -164,9 +186,9 @@ export default function Header({
         height: getHeight(),
         width: '100%',
         overflow: !isLgScreen ? 'hidden' : 'visible',
-        zIndex: 5,
+        zIndex: 0,
         position: 'fixed',
-        background: 'linear-gradient(360deg, #02215F 0%, #0D68B1 100%)',
+        background: 'linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%)',
         padding: '0px 0px 16px 0px',
         display: 'flex',
         justifyContent: 'center', // Center the entire menu box horizontally
@@ -187,6 +209,7 @@ export default function Header({
           {isLgScreen ? (
             <Box display="flex" gap="80px">
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.GAMES)
                 }
@@ -198,6 +221,7 @@ export default function Header({
                 Games
               </TransparentButton>
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.QUESTIONS)
                 }
@@ -209,6 +233,7 @@ export default function Header({
                 Questions
               </TransparentButton>
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.LIBRARY)
                 }

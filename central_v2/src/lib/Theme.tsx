@@ -4,7 +4,7 @@ import { createTheme } from '@mui/material/styles';
 const mainColor = '#FFFFFF'; // main  (ex white)
 const accentColor = '#312759'; // accent (ex purple)
 const darkBlueCardColor = '#08458F'; // card color for default host cards with student data
-const lightBlueBackgroundColor = '#E9F1FF'; // background color for central pages
+const lightBlueBackgroundColor = '#22366A'; // background color for central pages
 const backgroundGradient =
   'linear-gradient(196deg, rgb(49,109,176) 0%, rgb(11,33,90) 73%)'; // upper header background1
 //   background: linear-gradient(196deg, #0D68B1 0%, #02215F 73.62%);
@@ -37,6 +37,7 @@ const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
 const greyColor = '#CCCCCC'; // text field borders
 const lightGreyColor = '#F4F4F4'; // submitted answer
+const blueGreyColor = '#0076AA'; // CCSS buttons on explore game/question pages
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
 const greyPurpleColor = '#EDE9F2'; // AI regen text field
@@ -62,6 +63,25 @@ const radialTimerArray = [
   'rgb(237, 115, 166)',
   'rgb(255, 120, 165)',
 ]; // radial timer color array - appended with '0.x )' opacity when used in countdown
+
+// button colors
+const buttonPrimaryDefault = '#1B376F'; // primary button color
+const buttonPrimaryDisable = '#B5BCCD'; // disabled state for primary buttons
+const buttonPrimaryHover = '#3155C7'; // hover state for primary buttons
+
+const buttonActionDefault = '#EB147C'; // action button color
+const buttonActionDisable = '#EDBBD7'; // disabled state for action buttons
+const buttonActionHover = '#FF72B6'; // hover state for action buttons
+
+const buttonCCSSDefault = '#0076AA'; // CCSS buttons on explore game/question pages
+const buttonCCSSDisable = '#B9D5E3'; // disabled state for CCSS buttons
+const buttonCCSSHover = '#1FBBFF'; // hover state for CCSS buttons
+
+const buttonNavBorder = '#3155C6'; // selected nav button border color
+
+// search bar colors
+const searchBackgroundColor = '#FFFFFF'; // search bar background color
+const searchButtonColor = '#EB147C'; // search bar button color
 
 //  borders
 const borderWidth = 1;
@@ -403,6 +423,7 @@ declare module '@mui/material/styles' {
     extraDarkGrey: string;
     darkGrey: string;
     grey: string;
+    blueGrey: string;
     lightGrey: string;
     correctColor: string;
     baseQuestionColor: string;
@@ -420,6 +441,18 @@ declare module '@mui/material/styles' {
     buttonGradientRed: string;
     buttonGradientGrey: string;
     aiGradient: string;
+    buttonPrimaryDefault: string;
+    buttonPrimaryDisable: string;
+    buttonPrimaryHover: string;
+    buttonActionDefault: string;
+    buttonActionDisable: string;
+    buttonActionHover: string;
+    buttonCCSSDefault: string;
+    buttonCCSSDisable: string;
+    buttonCCSSHover: string;
+    buttonNavBorder: string;
+    searchBackgroundColor: string;
+    searchButtonColor: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -446,6 +479,7 @@ declare module '@mui/material/styles' {
     extraDarkGrey?: string;
     darkGrey?: string;
     grey?: string;
+    blueGrey?: string;
     lightGrey?: string;
     correctColor?: string;
     baseQuestionColor?: string;
@@ -463,6 +497,18 @@ declare module '@mui/material/styles' {
     buttonGradientRed?: string;
     buttonGradientGrey?: string;
     aiGradient?: string;
+    buttonPrimaryDefault?: string;
+    buttonPrimaryDisable?: string;
+    buttonPrimaryHover?: string;
+    buttonActionDefault?: string;
+    buttonActionDisable?: string;
+    buttonActionHover?: string;
+    buttonCCSSDefault?: string;
+    buttonCCSSDisable?: string;
+    buttonCCSSHover?: string;
+    buttonNavBorder?: string;
+    searchBackgroundColor?: string;
+    searchButtonColor?: string;
   }
 }
 
@@ -525,6 +571,7 @@ export default createTheme({
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
       grey: greyColor,
+      blueGrey: blueGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
       baseQuestionColor,
@@ -541,7 +588,19 @@ export default createTheme({
       buttonGradientBlue,
       buttonGradientRed,
       buttonGradientGrey,
-      aiGradient
+      aiGradient,
+      buttonPrimaryDefault,
+      buttonPrimaryDisable,
+      buttonPrimaryHover,
+      buttonActionDefault,
+      buttonActionDisable,
+      buttonActionHover,
+      buttonCCSSDefault,
+      buttonCCSSDisable,
+      buttonCCSSHover,
+      buttonNavBorder,
+      searchBackgroundColor,
+      searchButtonColor,
     },
   },
   typography: {

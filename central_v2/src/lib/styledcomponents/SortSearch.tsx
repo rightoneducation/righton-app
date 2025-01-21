@@ -14,7 +14,7 @@ export const SortContainer = styled(Box)(() => {
 
 export const SortButton = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
@@ -22,8 +22,8 @@ export const SortButton = styled(Box, {
   width: '100%',
   minWidth: '44px',
   minHeight: '44px',
-  background: 'linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)',
-  borderRadius: '22px',
+  background: `${theme.palette.primary.searchButtonColor}`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   paddingTop: '8px',
   paddingBottom: '8px',
   paddingLeft: '12px',
@@ -38,7 +38,7 @@ export const SortLabel = styled(Typography)(() => {
   return {
     color: 'white',
     fontFamily: 'Poppins',
-    fontSize: '20',
+    fontSize: '20px',
     fontWeight: '700',
   };
 });

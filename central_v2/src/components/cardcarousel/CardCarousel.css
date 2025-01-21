@@ -1,0 +1,5 @@
+/* SwiperJS overwrites inline styling via css, so we need to fix slide widths in .css file */
+.fixed-swiper-slide {
+  width: 385px !important;
+  flex: 0 0 auto !important;
+}
