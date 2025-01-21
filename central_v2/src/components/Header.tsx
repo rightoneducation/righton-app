@@ -64,13 +64,6 @@ const TransparentButton = styled(Button)<{
   justifyContent: menuOpen ? 'flex-start' : 'center',
   width: '200px',
   background: 'transparent',
-  color: active ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
-  fontFamily: 'Poppins',
-  fontSize: '20px',
-  fontWeight: 700,
-  lineHeight: '30px',
-  textAlign: 'center',
-  textTransform: 'none',
   borderStyle: 'none',
   borderColor: `${theme.palette.primary.buttonNavBorder}`,
   '&:hover': {
@@ -130,6 +123,24 @@ const CreateDropDown = styled(Paper)(({ theme }) => ({
   padding: `${theme.sizing.xSmPadding}px`,
   borderBottomLeftRadius: '24px',
   borderBottomRightRadius: '24px',
+}));
+
+const PinkIcon = styled('img')(({ theme }) => ({
+  filter: 'brightness(0) saturate(100%) invert(19%) sepia(100%) saturate(2857%) hue-rotate(317deg) brightness(91%) contrast(103%)',
+}));
+
+interface ButtonTextProps {
+  active: boolean;
+}
+
+const ButtonText = styled(Typography)<ButtonTextProps>(({ active, theme }) => ({
+  fontFamily: 'Poppins',
+  fontSize: '20px',
+  fontWeight: 700,
+  lineHeight: '30px',
+  textAlign: 'center',
+  textTransform: 'none',
+  color: active ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
 }));
 
 interface ImageContainerProps {
@@ -222,10 +233,12 @@ export default function Header({
                 }
               >
                 { selectedScreen === ScreenType.GAMES
-                  ? <img src={dicePink} alt="Games Icon" />
+                  ? <PinkIcon src={dice} alt="Games Icon" />
                   : <img src={dice} alt="Games Icon" />
                 }
-                Games
+                <ButtonText active={selectedScreen === ScreenType.GAMES}>
+                  Games
+                </ButtonText>
               </TransparentButton>
               <TransparentButton
                 disableRipple
@@ -236,11 +249,13 @@ export default function Header({
                   selectedScreen === ScreenType.QUESTIONS
                 }
               >
-                 { selectedScreen === ScreenType.QUESTIONS
-                  ? <img src={qmarkPink} alt="Questions Icon" />
+                { selectedScreen === ScreenType.QUESTIONS
+                  ? <PinkIcon src={qmark} alt="Questions Icon" />
                   : <img src={qmark} alt="Questions Icon" />
                 }
-                Questions
+                <ButtonText active={selectedScreen === ScreenType.QUESTIONS}>
+                  Questions
+                </ButtonText>
               </TransparentButton>
               <TransparentButton
                 disableRipple
@@ -250,10 +265,12 @@ export default function Header({
                 active={selectedScreen === ScreenType.LIBRARY}
               >
                  { selectedScreen === ScreenType.LIBRARY
-                  ? <img src={libPink} alt="Library Icon" />
-                  : <img src={lib} alt="Library Icon" />
+                  ? <PinkIcon src={books} alt="Library Icon" />
+                  : <img src={books} alt="Library Icon" />
                 }
-                My Library
+                <ButtonText active={selectedScreen === ScreenType.LIBRARY}>
+                  My Library
+                </ButtonText>
               </TransparentButton>
             </Box>
           ) : (
