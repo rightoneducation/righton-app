@@ -110,7 +110,7 @@ function MostPopularQuestionsComponent({
           })
         : Array.from({ length: numColumns }).map((_, index) => {
             return (
-              <Grid item xs={12} md={4} lg={2.4} key={uuidv4()}>
+              <Grid item xs={12} md={4} lg key={uuidv4()}>
                 <Box
                   style={{
                     display: 'flex',
@@ -127,6 +127,7 @@ function MostPopularQuestionsComponent({
                           id={question.id}
                           title={question.title}
                           image={question.imageUrl || placeHolder}
+                          isCarousel={false}
                           handleViewButtonClick={
                             handleViewButtonClick as (
                               element: IQuestionTemplate,
@@ -164,7 +165,7 @@ export default function CardGallery<
       case ScreenSize.MEDIUM:
         return 3;
       default:
-        return 5;
+        return 8;
     }
   };
   const reformatElements = <T,>( // eslint-disable-line

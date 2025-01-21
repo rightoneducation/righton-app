@@ -22,7 +22,7 @@ export function MostPopularContainer({ // eslint-disable-line
         width: '100%',
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundColor: '#E9F1FF',
+        backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
         padding:
           screenSize === ScreenSize.SMALL
             ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`

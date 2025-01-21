@@ -3,3 +3,8 @@
   width: 385px !important;
   flex: 0 0 auto !important;
 }
+
+.fixed-swiper-slide-question {
+  width: 275px !important;
+  flex: 0 0 auto !important;
+}
