@@ -32,7 +32,6 @@ export function AIButton({
         if (regenInput && handleClickOutput){
           console.log('regenInput', regenInput);
           const regenExplanation = await apiClients.AI.waeregen(regenInput);
-          console.log(regenExplanation);
           handleClickOutput(regenExplanation);
         }
         break;
@@ -40,8 +39,11 @@ export function AIButton({
       case AIButtonType.WAE_GEN:
       default: {
         if (waegenInput && handleClickOutput){
+          if (waegenInput.question.length === 0 || waegenInput.correctAnswer.length === 0 || waegenInput.wrongAnswer.length === 0){
+            handleClickOutput('ERROR');
+            break;
+          }
           const explanation = await apiClients.AI.waegen(waegenInput);
-          console.log(explanation);
           handleClickOutput(explanation);
         }
         break;

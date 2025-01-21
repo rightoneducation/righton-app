@@ -25,6 +25,7 @@ interface DetailedQuestionSubCardProps {
   handleCorrectAnswerStepsChange: (steps: string[], draftQuestion: CentralQuestionTemplateInput) => void;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
+  isAIError: boolean;
 }
 
 export default function DetailedQuestionSubCard({
@@ -33,7 +34,8 @@ export default function DetailedQuestionSubCard({
   handleCorrectAnswerChange,
   handleCorrectAnswerStepsChange,
   isCardSubmitted,
-  isCardErrored
+  isCardErrored,
+  isAIError
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
   const [correctAnswer, setCorrectAnswer] = React.useState<string>(draftQuestion.correctCard.answer ?? '');
@@ -82,7 +84,7 @@ export default function DetailedQuestionSubCard({
             onChange={(e) => handleStepChange(index, e.target.value)}
             rows='1' 
             placeholder="Step Contents" 
-            error={isCardErrored && (!answerSteps[index] || answerSteps[index].length === 0)}
+            error={(isCardErrored) && (!answerSteps[index] || answerSteps[index].length === 0)}
             InputProps={{
               startAdornment: 
               isCardErrored && (!answerSteps[index] || answerSteps[index].length === 0) &&
@@ -113,10 +115,10 @@ export default function DetailedQuestionSubCard({
         placeholder="Correct Answer..." 
         value={correctAnswer}
         onChange={(e) => handleCorrectChange(e.target.value)}
-        error={isCardSubmitted && (!correctAnswer || correctAnswer.length === 0)}
+        error={(isCardSubmitted  || isAIError) && (!correctAnswer || correctAnswer.length === 0)}
         InputProps={{
           startAdornment: 
-          isCardSubmitted && (!correctAnswer || correctAnswer.length === 0) &&
+          (isCardSubmitted || isAIError) && (!correctAnswer || correctAnswer.length === 0) &&
             <InputAdornment
               position="start" 
               sx={{ 

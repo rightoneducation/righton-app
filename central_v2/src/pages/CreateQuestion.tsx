@@ -144,6 +144,7 @@ export default function CreateQuestion({
   );
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
+  const [isAIError, setIsAIError] = useState<boolean>(false);
   // QuestionCardBase handler functions
   const [modalImage, setModalImage] = useState<File | null>(null);
   const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
@@ -196,6 +197,7 @@ export default function CreateQuestion({
       const newDraftQuestion = updateDQwithTitle(draftQuestionInput, title);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
+      setIsAIError(false);
       console.log(newDraftQuestion);
       if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
@@ -247,6 +249,7 @@ export default function CreateQuestion({
       console.log(newDraftQuestion);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
+      setIsAIError(false);
       if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
     }, 1000),
@@ -279,6 +282,8 @@ export default function CreateQuestion({
   };
 
   const handleIncorrectCardStackUpdate = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[], isAIEnabledCard?: boolean) => {
+      if (isAIError)
+        setIsAIError(false);
       const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
       const isUpdateInIncompleteCards = incompleteAnswers.find(answer => answer.id === cardData.id);
       let newDraftQuestion = null;
@@ -398,6 +403,10 @@ export default function CreateQuestion({
     navigate('/questions');
   }
 
+  const handleAIError = () => {
+    setIsAIError(true);
+  }
+
   return (
     <CreateQuestionMainContainer>
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
@@ -486,6 +495,7 @@ export default function CreateQuestion({
               handlePublicPrivateChange={handlePublicPrivateChange}
               isCardSubmitted={isCardSubmitted}
               isCardErrored={isCardErrored}
+              isAIError={isAIError}
             />
           </Box>
           <Grid
@@ -505,6 +515,7 @@ export default function CreateQuestion({
                   handleCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
                   isCardSubmitted={isCardSubmitted}
                   isCardErrored={isCardErrored}
+                  isAIError={isAIError}
                 />
               </Box>
             </SubCardGridItem>
@@ -527,8 +538,10 @@ export default function CreateQuestion({
                 handleNextCardButtonClick={handleNextCardButtonClick}
                 handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                 handleCardClick={handleClick} 
+                handleAIError={handleAIError}
                 isCardSubmitted={isCardSubmitted}
                 isAIEnabled={isAIEnabled}
+                isAIError={isAIError}
               />
             </SubCardGridItem>
           </Grid>

@@ -24,8 +24,10 @@ interface IncorrectAnswerCardStackProps {
   handleCardClick: (cardType: CreateQuestionHighlightCard) => void;
   handleNextCardButtonClick: (cardData: IncorrectCard) => void;
   handleIncorrectCardStackUpdate: (cardData: IncorrectCard, draftQuestion: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[]) => void;
+  handleAIError: () => void;
   isCardSubmitted: boolean;
   isAIEnabled: boolean;
+  isAIError: boolean;
 }
 
 export default function IncorrectAnswerCardStack({
@@ -36,8 +38,10 @@ export default function IncorrectAnswerCardStack({
   handleCardClick,
   handleNextCardButtonClick,
   handleIncorrectCardStackUpdate,
+  handleAIError, 
   isCardSubmitted,
-  isAIEnabled
+  isAIEnabled,
+  isAIError,
 }: IncorrectAnswerCardStackProps) {
 
   const allAnswers = [...incompleteIncorrectAnswers, ...completeIncorrectAnswers];
@@ -50,6 +54,7 @@ export default function IncorrectAnswerCardStack({
   }
 
   const handleAIExplanationGenerated = (isGenerated: boolean) => {
+    handleAIError();
     setIsAIExplanationGenerated(isGenerated);
   }
 
@@ -94,6 +99,7 @@ export default function IncorrectAnswerCardStack({
                     isHighlight={highlightCard === card.id}
                     isCardSubmitted={isCardSubmitted}
                     isAIEnabled={isAIEnabled}
+                    isAIError={isAIError}
                     isTopCard
                     handleNextCardButtonClick={handleNextCardButtonClick}
                     handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdateLocal}
@@ -125,6 +131,7 @@ export default function IncorrectAnswerCardStack({
                   isHighlight={highlightCard === card.id}
                   isCardSubmitted={isCardSubmitted}
                   isAIEnabled={isAIEnabled}
+                  isAIError={false}
                   handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
                   handleCardClick={handleCardClick}
                   handleAIExplanationGenerated={handleAIExplanationGenerated}
@@ -165,6 +172,7 @@ export default function IncorrectAnswerCardStack({
               isHighlight={highlightCard === card.id}
               isCardSubmitted={isCardSubmitted}
               isAIEnabled={isAIEnabled}
+              isAIError={false}
               handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
               handleCardClick={handleCardClick}
               handleAIExplanationGenerated={handleAIExplanationGenerated}
