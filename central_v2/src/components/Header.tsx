@@ -3,9 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
-import dice from '../images/Dice.svg';
-import qmarks from '../images/qmarks.svg';
+import dice from '../images/dice.svg';
+import dicePink from '../images/dicePink.svg';
+import qmark from '../images/qmark.svg';
+import qmarkPink from '../images/qmarkPink.svg';
 import books from '../images/books.svg';
+import lib from '../images/lib.svg';
+import libPink from '../images/libPink.svg';
 import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
@@ -60,7 +64,7 @@ const TransparentButton = styled(Button)<{
   justifyContent: menuOpen ? 'flex-start' : 'center',
   width: '200px',
   background: 'transparent',
-  color: '#FFFFFF',
+  color: active ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
   fontFamily: 'Poppins',
   fontSize: '20px',
   fontWeight: 700,
@@ -217,7 +221,10 @@ export default function Header({
                   selectedScreen === ScreenType.GAMES
                 }
               >
-                <img src={dice} alt="Games Icon" />
+                { selectedScreen === ScreenType.GAMES
+                  ? <img src={dicePink} alt="Games Icon" />
+                  : <img src={dice} alt="Games Icon" />
+                }
                 Games
               </TransparentButton>
               <TransparentButton
@@ -229,7 +236,10 @@ export default function Header({
                   selectedScreen === ScreenType.QUESTIONS
                 }
               >
-                <img src={qmarks} alt="Questions Icon" />
+                 { selectedScreen === ScreenType.QUESTIONS
+                  ? <img src={qmarkPink} alt="Questions Icon" />
+                  : <img src={qmark} alt="Questions Icon" />
+                }
                 Questions
               </TransparentButton>
               <TransparentButton
@@ -239,7 +249,10 @@ export default function Header({
                 }
                 active={selectedScreen === ScreenType.LIBRARY}
               >
-                <img src={books} alt="My Library Icon" />
+                 { selectedScreen === ScreenType.LIBRARY
+                  ? <img src={libPink} alt="Library Icon" />
+                  : <img src={lib} alt="Library Icon" />
+                }
                 My Library
               </TransparentButton>
             </Box>
@@ -307,7 +320,10 @@ export default function Header({
             active={selectedScreen === ScreenType.GAMES}
             menuOpen={menuOpen}
           >
-            <img src={dice} alt="Games Icon" />
+            { selectedScreen === ScreenType.GAMES
+              ? <img src={dicePink} alt="Games Icon" />
+              : <img src={dice} alt="Games Icon" />
+            }
             Games
           </TransparentButton>
           <TransparentButton
@@ -319,7 +335,10 @@ export default function Header({
             }
             menuOpen={menuOpen}
           >
-            <img src={qmarks} alt="Questions Icon" />
+            { selectedScreen === ScreenType.QUESTIONS
+              ? <img src={qmarkPink} alt="Questions Icon" />
+              : <img src={qmark} alt="Questions Icon" />
+            }
             Questions
           </TransparentButton>
           <TransparentButton
@@ -329,7 +348,10 @@ export default function Header({
             active={selectedScreen === ScreenType.LIBRARY}
             menuOpen={menuOpen}
           >
-            <img src={books} alt="My Library Icon" />
+            { selectedScreen === ScreenType.LIBRARY
+              ? <img src={libPink} alt="Library Icon" />
+              : <img src={lib} alt="Library Icon" />
+            }
             My Library
           </TransparentButton>
           <CreateBox>
@@ -357,7 +379,7 @@ export default function Header({
                 <PrimaryButton2Text>Game</PrimaryButton2Text>
               </PrimaryButton2>
               <PrimaryButton2 style={{ width: '150px' }}>
-                <img src={qmarks} alt="Plus Icon" />
+                <img src={qmark} alt="Plus Icon" />
                 <PrimaryButton2Text>Question</PrimaryButton2Text>
               </PrimaryButton2>
             </Box>
