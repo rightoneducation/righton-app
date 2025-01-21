@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { ScreenSize } from '../../lib/CentralModels';
 import heart from '../../images/heart.svg';
 import eyeball from '../../images/eyeball.svg';
 import rocket from '../../images/rocket.svg';
@@ -17,6 +18,7 @@ interface StyledGameCardProps {
   image: string;
   game: IGameTemplate;
   isCarousel: boolean;
+  screenSize: ScreenSize;
   handleViewButtonClick: (element: IGameTemplate) => void;
 }
 
@@ -46,8 +48,13 @@ const HeartSVG = styled('img')(({ theme }) => ({
   marginLeft: `${theme.sizing.xxSmPadding}px`,
 }));
 
-const GameCard = styled(Box)(({ theme }) => ({
-  maxWidth: '384px',
+interface GameCardProps {
+  isCarousel: boolean;
+  screenSize: ScreenSize;
+}
+
+const GameCard = styled(Box)<GameCardProps>(({ isCarousel, screenSize, theme }) => ({
+  maxWidth: (isCarousel && screenSize !== ScreenSize.LARGE) ? '290px' : '384px',
   height: '100%',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
@@ -153,12 +160,13 @@ export default function StyledGameCard({
   image,
   game,
   isCarousel,
+  screenSize,
   handleViewButtonClick,
 }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
 
   return (
-    <GameCard>
+    <GameCard isCarousel={isCarousel} screenSize={screenSize}>
       <GameImageContainer>
       {isCarousel 
         ? <CarouselGameImage src={image} alt="Tag" />

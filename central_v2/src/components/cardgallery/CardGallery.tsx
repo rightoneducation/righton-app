@@ -38,6 +38,7 @@ interface MostPopularComponentProps<T> {
 }
 
 interface MostPopularGamesComponentProps {
+  screenSize: ScreenSize,
   mostPopularElements: IGameTemplate[];
   maxCards: number;
   numColumns: number;
@@ -47,6 +48,7 @@ interface MostPopularGamesComponentProps {
 }
 
 function MostPopularGamesComponent({
+  screenSize,
   mostPopularElements,
   maxCards,
   isLoading,
@@ -68,6 +70,7 @@ function MostPopularGamesComponent({
             return (
               <Grid item xs={12} md={6} lg={4} key={game.id}>
                 <StyledGameCard
+                  screenSize={screenSize}
                   game={game}
                   id={game.id}
                   title={game.title}
@@ -206,6 +209,7 @@ export default function CardGallery<
       />
       {elementType === ElementType.GAME ? (
         <MostPopularGamesComponent
+          screenSize={screenSize}
           isLoading={isLoading ?? false}
           mostPopularElements={galleryElements as IGameTemplate[]}
           maxCards={maxCards}
