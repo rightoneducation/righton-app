@@ -79,6 +79,7 @@ const buttonCCSSDisable = '#B9D5E3'; // disabled state for CCSS buttons
 const buttonCCSSHover = '#1FBBFF'; // hover state for CCSS buttons
 
 const buttonNavBorder = '#3155C6'; // selected nav button border color
+const buttonNavSelected = '#EB147C'; // selected nav button color
 
 // search bar colors
 const searchBackgroundColor = '#FFFFFF'; // search bar background color
@@ -453,6 +454,7 @@ declare module '@mui/material/styles' {
     buttonCCSSDisable: string;
     buttonCCSSHover: string;
     buttonNavBorder: string;
+    buttonNavSelected: string;
     searchBackgroundColor: string;
     searchButtonColor: string;
   }
@@ -510,6 +512,7 @@ declare module '@mui/material/styles' {
     buttonCCSSDisable?: string;
     buttonCCSSHover?: string;
     buttonNavBorder?: string;
+    buttonNavSelected?: string;
     searchBackgroundColor?: string;
     searchButtonColor?: string;
   }
@@ -603,6 +606,7 @@ export default createTheme({
       buttonCCSSDisable,
       buttonCCSSHover,
       buttonNavBorder,
+      buttonNavSelected,
       searchBackgroundColor,
       searchButtonColor,
     },

@@ -20,14 +20,14 @@
         "userPoolGroups": {}
       },
       "function": {
-        "createGameTest": {
-          "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",
-          "s3Key": "amplify-builds/createGameTest-324a487a7167484b6331-build.zip"
-        },
         "mobile6060603cPostConfirmation": {
           "GROUP": "",
           "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
+        },
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",
+          "s3Key": "amplify-builds/createGameTest-324a487a7167484b6331-build.zip"
         },
         "uploadExternalImageToS3": {
           "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",
@@ -40,12 +40,7 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-dev-22e7e-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
-        },
-        "mobile": {},
-        "mobile6060603c": {}
-      },
-      "api": {
-        "mobile": {}
+        }
       },
       "storage": {
         "gamequestionimages": {}

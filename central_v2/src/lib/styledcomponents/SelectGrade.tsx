@@ -69,8 +69,8 @@ export const SelectArrowContainer = styled(Box, {
 }));
 
 export const SelectMenu = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSelectOpen',
-})<{ isSelectOpen: boolean }>(({ theme, isSelectOpen }) => ({
+  shouldForwardProp: (prop) => prop !== 'isSelectOpen' && prop !== 'screenSize',
+})<{ isSelectOpen: boolean, screenSize: ScreenSize }>(({ theme, isSelectOpen, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -78,6 +78,8 @@ export const SelectMenu = styled(Box, {
   zIndex: 3,
   background: 'white',
   gap: `${theme.sizing.xxSmPadding}px`,
+  borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
+  borderTopRightRadius: screenSize === ScreenSize.LARGE ? 0: `${theme.sizing.xSmPadding}px`,
   borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
   borderBottomRightRadius: `${theme.sizing.xSmPadding}px`,
   paddingLeft: '36px',
@@ -87,7 +89,7 @@ export const SelectMenu = styled(Box, {
   position: 'absolute',
   top: '44px',
   left: 0,
-  width: '100%',
+  width: screenSize === ScreenSize.LARGE ? '100%' : `calc(100vw - 16px - 44px - ${theme.sizing.lgPadding}px - ${theme.sizing.lgPadding}px)`,
   minWidth: '240px',
   boxSizing: 'border-box',
   transition: isSelectOpen

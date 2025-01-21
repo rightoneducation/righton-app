@@ -118,7 +118,7 @@ export default function SelectGradesMenu({
         </SelectArrowContainer>
       </SelectGrade>
       <Collapse in={isSelectOpen} timeout={1000}>
-        <SelectMenu isSelectOpen={isSelectOpen}>
+        <SelectMenu isSelectOpen={isSelectOpen} screenSize={screenSize}>
           {Object.keys(gradeMap).map((grade) => (
             <SelectMenuItem onClick={() => handleGradesChange(grade)}>
               <Checkbox

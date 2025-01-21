@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';
+import FavouriteButton from '../button/favouritebutton/FavouriteButton';
 
 interface StyledQuestionCardProps {
   id: string;
@@ -31,7 +32,7 @@ const CarouselQuestionImage = styled(QuestionImage)(({ theme }) => ({
 }));
 
 const QuestionCard = styled(Box)(({ theme }) => ({
-  maxWidth: '275px',
+  width: '100%',
   height: '100%',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
@@ -40,6 +41,7 @@ const QuestionCard = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   boxSizing: 'border-box',
   overflow: 'hidden',
+  position: 'relative'
 }));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
@@ -95,13 +97,13 @@ export default function StyledQuestionCard({
   handleViewButtonClick,
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;
-  console.log(title);
   return (
     <QuestionCard>
       { isCarousel 
         ? <CarouselQuestionImage src={image} alt="Tag" />  
         : <QuestionImage src={image} alt="Tag" />       
       }
+      <FavouriteButton isEnabled/>
       <ContentContainer>
         <TitleContainer>
           <ButtonCCSS key={`${domainAndGrade}-${id}`}>

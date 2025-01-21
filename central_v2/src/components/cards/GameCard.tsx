@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { ScreenSize } from '../../lib/CentralModels';
 import heart from '../../images/heart.svg';
 import eyeball from '../../images/eyeball.svg';
 import rocket from '../../images/rocket.svg';
@@ -17,6 +18,7 @@ interface StyledGameCardProps {
   image: string;
   game: IGameTemplate;
   isCarousel: boolean;
+  screenSize: ScreenSize;
   handleViewButtonClick: (element: IGameTemplate) => void;
 }
 
@@ -46,8 +48,13 @@ const HeartSVG = styled('img')(({ theme }) => ({
   marginLeft: `${theme.sizing.xxSmPadding}px`,
 }));
 
-const GameCard = styled(Box)(({ theme }) => ({
-  maxWidth: '384px',
+interface GameCardProps {
+  isCarousel: boolean;
+  screenSize: ScreenSize;
+}
+
+const GameCard = styled(Box)<GameCardProps>(({ isCarousel, screenSize, theme }) => ({
+  width: screenSize !== ScreenSize.LARGE ? (isCarousel ? '290px' : '327px') : '384px', // eslint-disable-line
   height: '100%',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
@@ -72,12 +79,10 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start'
 }));
 
-const TitleContainer = styled(Box)(() => ({
-  width: '100%',
-  height: '130px',
-  display: 'flex',
-  justifyContent: 'space-between',
-}));
+const ButtonContainer = styled (ContentContainer)({
+  paddingTop: 0,
+  justifyContent: 'flex-end'
+});
 
 const TitleTextTypography = styled(Typography)(({ theme }) => ({
   width: '100%',
@@ -119,11 +124,15 @@ interface DescriptionTextProps {
   buttonCount: number;
 }
 
+interface DescriptionTextProps {
+  isCarousel: boolean;
+}
+
 const DescriptionText = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'buttonCount',
-})<DescriptionTextProps>(({ theme, buttonCount }) => ({
+  shouldForwardProp: (prop) => prop !== 'isCarousel',
+})<DescriptionTextProps>(({ theme, isCarousel }) => ({
   width: '100%',
-  minHeight: '94px',
+  height: 'fit-content',
   fontFamily: 'Rubik',
   fontWeight: '400',
   fontSize: `${theme.sizing.smPadding}px`,
@@ -132,7 +141,7 @@ const DescriptionText = styled(Typography, {
   display: '-webkit-box',
   textOverflow: 'ellipsis',
   WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 5,
+  WebkitLineClamp: isCarousel ? 5 : 3,
   overflow: 'hidden',
 }));
 
@@ -153,12 +162,13 @@ export default function StyledGameCard({
   image,
   game,
   isCarousel,
+  screenSize,
   handleViewButtonClick,
 }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
 
   return (
-    <GameCard>
+    <GameCard isCarousel={isCarousel} screenSize={screenSize}>
       <GameImageContainer>
       {isCarousel 
         ? <CarouselGameImage src={image} alt="Tag" />
@@ -175,9 +185,11 @@ export default function StyledGameCard({
             </ButtonCCSS>
           ))}
         </CCSSButtonContainer>
-        <DescriptionText buttonCount={domainAndGrades.length}>
+        <DescriptionText buttonCount={domainAndGrades.length} isCarousel={isCarousel}>
           {description}
         </DescriptionText>
+      </ContentContainer>
+      <ButtonContainer>
         <CentralButton
           buttonType={ButtonType.VIEW}
           isEnabled
@@ -188,7 +200,7 @@ export default function StyledGameCard({
           isEnabled
           onClick={() => handleViewButtonClick(game)}
         />
-      </ContentContainer>
+        </ButtonContainer>
     </GameCard>
   );
 }

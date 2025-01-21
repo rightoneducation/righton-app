@@ -13,11 +13,13 @@ import StyledQuestionCard from '../cards/QuestionCard';
 import placeHolder from '../../images/placeHolder.svg';
 import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
+import { ScreenSize } from '../../lib/CentralModels';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './CardCarousel.css';
 
 interface CardCarouselProps<T> {
+  screenSize: ScreenSize;
   elementType: ElementType.GAME | ElementType.QUESTION;
   recommendedElements: T[];
   setIsTabsOpen: (isOpen: boolean) => void;
@@ -27,6 +29,7 @@ interface CardCarouselProps<T> {
 export default function CardCarousel<
   T extends IGameTemplate | IQuestionTemplate,
 >({
+  screenSize,
   recommendedElements,
   elementType,
   setIsTabsOpen,
@@ -69,9 +72,10 @@ export default function CardCarousel<
         if (elementType === ElementType.GAME) {
           const gameElement = element as IGameTemplate;
           return (
-            <SwiperSlide key={uuidv4()} style={{width: '385px'}}>
+            <SwiperSlide key={uuidv4()} style={{width: screenSize !== ScreenSize.LARGE ? '290px' : '385px'}}>
               {gameElement ? (
                 <StyledGameCard
+                  screenSize={screenSize}
                   game={gameElement}
                   id={gameElement.id}
                   title={gameElement.title}
