@@ -1,12 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled, Fade} from '@mui/material';
-import { useNavigate, useLoaderData } from 'react-router-dom';
-import { debounce, set, update } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
-  QuestionCard,
   IncorrectCard,
 } from '@righton/networking';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';

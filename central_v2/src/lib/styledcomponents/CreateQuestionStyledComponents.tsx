@@ -9,7 +9,7 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
+  backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -60,11 +60,11 @@ export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>((
   margin: 0,
   padding: 0,
   boxSizing: 'border-box',
-  borderRadius: `${theme.sizing.xSmPadding}px`,
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
       borderWidth: `2px`,
       borderColor: isAIEnabled ? `${theme.palette.primary.darkPurple}`: `${theme.palette.primary.grey}`,
+      borderRadius: `${theme.sizing.xSmPadding}px`,
      },
     "&.Mui-focused fieldset": {
       borderWidth: `2px`,

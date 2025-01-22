@@ -34,6 +34,7 @@ export default function CentralButton({
     ? t(`button.${buttonObj.textKey}`)
     : null;
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
+  const buttonWidth = buttonObj.width ?? '100%';
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride;
 
   const handleButtonClick = () => {
@@ -59,6 +60,7 @@ export default function CentralButton({
       buttonColor={buttonColor}
       disabled={!isEnabled}
       onClick={handleButtonClick}
+      style={{width: buttonWidth}}
     >
       <ButtonContent>
         {buttonObj.icon && (

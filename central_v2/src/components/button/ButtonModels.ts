@@ -20,6 +20,7 @@ export enum ButtonType {
   VIEW = 'view',
   LAUNCH = 'launch',
   UPLOAD = 'upload',
+  UPLOADIMAGE = 'uploadimage',
   NEXTSTEP = 'nextstep',
   VERIFY = 'verify',
   GETSTARTED = 'getstarted',
@@ -60,6 +61,7 @@ type ButtonContentMapProps = {
     textKey?: string;
     color?: ButtonColor;
     rightIcon?: string;
+    width?: string;
   };
 };
 
@@ -85,6 +87,11 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.UPLOAD]: {
     icon: upload,
     textKey: ButtonType.UPLOAD,
+  },
+  [ButtonType.UPLOADIMAGE]: {
+    icon: upload,
+    textKey: ButtonType.UPLOADIMAGE,
+    width: '200px'
   },
   [ButtonType.NEXTSTEP]: {
     textKey: ButtonType.NEXTSTEP,

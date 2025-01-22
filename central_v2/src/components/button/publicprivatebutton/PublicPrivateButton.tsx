@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import globe from '../../../images/buttonIconGlobe.svg';
-import lock from '../../../images/buttonIconLock.svg';
 
 const PublicPrivateContainer = styled(Button)(({theme}) => ({
-  width: '160px',
-  minHeight: '45px',
-  borderRadius: '50px',
-  background: `${theme.palette.primary.extraDarkBlue}`,
+  width: '144px',
+  minHeight: '36px',
+  borderRadius: '24px',
+  background: `${theme.palette.primary.sliderGrey}`,
   ':hover': {
-    background: `${theme.palette.primary.extraDarkBlue}`,
+    background: `${theme.palette.primary.sliderGrey}`,
   },
   padding: 0,
   position: 'relative',
@@ -19,15 +17,15 @@ const PublicPrivateContainer = styled(Button)(({theme}) => ({
 const PublicPrivateSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic',
 })<{ isPublic: boolean }>(({ theme, isPublic }) => ({
-  width: '80px',
-  height: '45px',
-  borderRadius: '50px',
-  background: `${theme.palette.primary.buttonGradientBlue}`,
+  width: '71px',
+  height: '33px',
+  borderRadius: '24px',
+  background: `${theme.palette.primary.sliderBlue}`,
   ':hover': {
-    background: `${theme.palette.primary.buttonGradientBlue}`,
+    background: `${theme.palette.primary.sliderBlue}`,
   },
   position: 'absolute',
-  left: isPublic ? '0' : '80px', 
+  left: isPublic ? '2px' : '70px', 
   transition: 'left 0.3s ease-in-out',   
   boxSizing: 'border-box',
   zIndex: 3,
@@ -54,15 +52,15 @@ const SubContainer = styled(Box, {
   transition: 'opacity 0.3 ease-in-out'
 }));
 
-const PublicPrivateIcon = styled('img')(({theme}) => ({
-  height: '20px',
-  width: '20px'
-}));
+interface PublicPrivateTextProps {
+  isSelected: boolean;
+}
 
-const PublicPrivateText = styled(Typography)(({theme}) => ({
+const PublicPrivateText = styled(Typography)<PublicPrivateTextProps>(({isSelected, theme}) => ({
   fontSize: '14px',
-  color: `${theme.palette.primary.main}`,
-  textTransform: 'none'
+  color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
+  textTransform: 'none',
+  transition: 'color 0.3 ease-in-out'
 }));
 
 export default function PublicPrivateButton() {
@@ -76,15 +74,13 @@ export default function PublicPrivateButton() {
       <PublicPrivateSelectionPill isPublic={isPublic}/>
       <LabelContainer>
         <SubContainer isSelected={isPublic}>     
-          <PublicPrivateIcon src={globe} />   
-          <PublicPrivateText>
+          <PublicPrivateText isSelected={isPublic}>
             {t(`publicPrivateButton.public`)}
           </PublicPrivateText>
         </SubContainer>
         <SubContainer isSelected={!isPublic}>
-          <PublicPrivateIcon src={lock} />
-          <PublicPrivateText>
-            {t(`publicPrivateButton.public`)}
+          <PublicPrivateText isSelected={!isPublic}>
+            {t(`publicPrivateButton.private`)}
           </PublicPrivateText>
         </SubContainer>
       </LabelContainer>

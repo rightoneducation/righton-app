@@ -86,10 +86,17 @@ const searchBackgroundColor = '#FFFFFF'; // search bar background color
 const searchButtonColor = '#EB147C'; // search bar button color
 
 // sort menu colors
-
 const sortHover = '#E6E9EE'; // hover state for sort menu items
 const sortActive = '#02215F'; // active state for sort menu items
 const sortText = '#02215'; // text color for sort menu items
+
+// public/private slider colors
+const sliderGrey = '#D9D9D9'; // slider background
+const sliderBlue = '#02215F'; // slider selected pill, unselected text color
+
+// image upload colors
+const uploadLightGrey = '#F9F9F9'; // background grey
+const uploadDarkGrey = '#CCCCCC'; // border grey
 
 //  borders
 const borderWidth = 1;
@@ -466,6 +473,10 @@ declare module '@mui/material/styles' {
     sortHover: string;
     sortActive: string;
     sortText: string;
+    sliderGrey: string;
+    sliderBlue: string;
+    uploadLightGrey: string;
+    uploadDarkGrey: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -527,6 +538,10 @@ declare module '@mui/material/styles' {
     sortHover?: string;
     sortActive?: string;
     sortText?: string;
+    sliderGrey?: string;
+    sliderBlue?: string;
+    uploadLightGrey?: string;
+    uploadDarkGrey?: string;
   }
 }
 
@@ -624,6 +639,10 @@ export default createTheme({
       sortHover,
       sortActive,
       sortText,
+      sliderGrey,
+      sliderBlue,
+      uploadLightGrey,
+      uploadDarkGrey
     },
   },
   typography: {

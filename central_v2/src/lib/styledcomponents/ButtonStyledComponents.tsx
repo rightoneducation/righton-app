@@ -10,6 +10,7 @@ export const ButtonStyled = styled(Button, {
 })<ButtonStyledProps>(({ theme, buttonColor }) => ({
   width: '100%',
   height: '38px',
+  padding: 0,
   borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
   boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
@@ -20,6 +21,7 @@ export const ButtonStyled = styled(Button, {
   '&:disabled': {
     backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionDisable}` : `${theme.palette.primary.buttonPrimaryDisable}`,
   },
+  boxSizing: 'border-box',
   pointerEvents: 'auto'
 }));
 
@@ -51,7 +53,7 @@ export const ButtonTypography = styled(Typography)(({ theme }) => ({
 
 export const ButtonCCSS = styled(Box)(({ theme }) => ({
   width: 'auto',
-  height: 'auto',
+  height: '24px',
   padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding + theme.sizing.xxSmPadding}px`,
   borderRadius: '12px',
   backgroundColor: `${theme.palette.primary.buttonCCSSDefault}`,
@@ -66,6 +68,9 @@ export const ButtonCCSS = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
   minWidth: '20px',
   cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   '&:hover': {
     backgroundColor: `${theme.palette.primary.buttonCCSSHover}`,
   },
