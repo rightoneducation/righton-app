@@ -78,7 +78,7 @@ export const SortMenuArrowContainer = styled(SortArrowContainer, {
   shouldForwardProp: (prop) =>
     prop !== 'selectedSort' && prop !== 'currentSort',
 })<{
-  selectedSort: { field: SortType; direction: SortDirection };
+  selectedSort: { field: SortType | null; direction: SortDirection };
   currentSort: SortType;
 }>(({ selectedSort, currentSort }) => ({
   transform:
@@ -102,33 +102,40 @@ export const SortMenu = styled(Box, {
   justifyContent: 'center',
   zIndex: 3,
   background: 'white',
-  borderRadius: '16px',
-  padding: '8px',
+  borderRadius: '8px',
+  padding: '20px',
   position: 'absolute',
   top: '44px',
   right: 0,
-  width: '100%',
-  minWidth: '174px',
+  whiteSpace: 'nowrap',
   boxSizing: 'border-box',
   transition: isSortOpen
     ? 'opacity 300ms ease, transform 300ms ease-in-out'
     : 'opacity 300ms ease, transform 150ms ease-in-out',
   opacity: isSortOpen ? 1 : 0,
   transform: isSortOpen ? 'translateY(0px)' : 'translateY(-20px)',
-  boxShadow: '0px 8px 16px -4px rgba(0, 0, 0, 0.4)',
+  boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.15)',
   cursor: isSortOpen ? 'pointer' : 'default',
 }));
 
-export const SortMenuItem = styled(Box)(() => {
-  return {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    gap: '16px',
-  };
-});
+interface SortMenuItemProps {
+  isSelected: boolean;
+}
+
+export const SortMenuItem = styled(Box)<SortMenuItemProps>(({ isSelected, theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  gap: '8px',
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  background: isSelected ? `${theme.palette.primary.sortActive}` : 'transparent',
+  '&:hover': {
+    background: isSelected ? `${theme.palette.primary.sortActive}` : `${theme.palette.primary.sortHover}`,
+  },
+}));
 
 export const SelectButtonBox = styled(Box)(({ theme }) => ({
   width: '100%',
