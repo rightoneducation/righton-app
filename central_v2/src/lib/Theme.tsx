@@ -85,6 +85,12 @@ const buttonNavSelected = '#EB147C'; // selected nav button color
 const searchBackgroundColor = '#FFFFFF'; // search bar background color
 const searchButtonColor = '#EB147C'; // search bar button color
 
+// sort menu colors
+
+const sortHover = '#E6E9EE'; // hover state for sort menu items
+const sortActive = '#02215F'; // active state for sort menu items
+const sortText = '#02215'; // text color for sort menu items
+
 //  borders
 const borderWidth = 1;
 const solidWhite = `${borderWidth}px solid rgba(255, 255, 255, 1)`;
@@ -457,6 +463,9 @@ declare module '@mui/material/styles' {
     buttonNavSelected: string;
     searchBackgroundColor: string;
     searchButtonColor: string;
+    sortHover: string;
+    sortActive: string;
+    sortText: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -515,6 +524,9 @@ declare module '@mui/material/styles' {
     buttonNavSelected?: string;
     searchBackgroundColor?: string;
     searchButtonColor?: string;
+    sortHover?: string;
+    sortActive?: string;
+    sortText?: string;
   }
 }
 
@@ -609,6 +621,9 @@ export default createTheme({
       buttonNavSelected,
       searchBackgroundColor,
       searchButtonColor,
+      sortHover,
+      sortActive,
+      sortText,
     },
   },
   typography: {
