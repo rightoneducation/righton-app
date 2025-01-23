@@ -150,6 +150,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.BROWSEFILES]: {
     icon: upload,
     textKey: ButtonType.BROWSEFILES,
+    width: '200px'
   },
   [ButtonType.CHANGEIMAGE]: {
     icon: upload,

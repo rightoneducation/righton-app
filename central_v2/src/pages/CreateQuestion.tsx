@@ -414,8 +414,7 @@ export default function CreateQuestion({
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
-       <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
-       <ImageURLModal modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
+       <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize}  modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleImageUrlChange={handleImageUrlChange} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
        <Box style={{
           width: '100%',

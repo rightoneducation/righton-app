@@ -38,7 +38,7 @@ function FileDropZone({ onFilesDropped, children }: FileDropZoneProps){
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '16px',
+        gap: '18px',
       }}
     >
       {children}

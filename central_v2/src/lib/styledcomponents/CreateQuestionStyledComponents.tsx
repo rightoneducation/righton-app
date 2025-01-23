@@ -85,6 +85,48 @@ export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>((
   },
 }));
 
+export const ImageURLTextContainerStyled = styled(TextContainerStyled)(({ theme }) => ({
+  height: '60px',
+  input: {
+    color: "#000",
+    zIndex: 1
+  },
+  '& .MuiInputBase-input': {
+    width: `calc(100% - 130px)`,
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      height: '60px',
+      backgroundColor: `${theme.palette.primary.uploadLightGrey}`,
+      zIndeX: 0
+    },
+  }
+}));
+
+export const ImageURLUploadButton = styled(Box)(({ theme }) => ({
+  width: '100px',
+  height: '43px',
+  backgroundColor: '#FFFFFF',
+  borderRadius: '8px',
+  borderColor: `${theme.palette.primary.uploadDarkGrey}`, 
+  borderStyle: 'solid',
+  borderWidth: '2px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  cursor: 'pointer',
+  "&:hover": {
+    backgroundColor: `${theme.palette.primary.uploadLightGrey}`
+  },
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  zIndex: 2,
+  boxSizing: 'border-box',
+  marginTop: '8px',
+  marginRight: '10px'
+}));
+
 export const RegenTextContainerStyled = styled(TextField)(({ theme }) => ({
   width: '100%',
   margin: 0,
