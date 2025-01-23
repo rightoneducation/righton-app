@@ -9,7 +9,7 @@ import {
 } from '@righton/networking';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
-import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
+import { CreateQuestionBackground, CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import { 
   ScreenSize,
   BorderStyle,
@@ -45,6 +45,7 @@ const TitleText = styled(Typography)<TitleTextProps>(({ theme, screenSize }) => 
   fontSize:
     screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
   color: `${theme.palette.primary.extraDarkBlue}`,
+  paddingTop: `${theme.sizing.lgPadding}px`,
 }));
 
 const SubCardGridItem = styled(Grid)(({ theme }) => ({
@@ -411,10 +412,25 @@ export default function CreateQuestion({
 
   return (
     <CreateQuestionMainContainer>
+      <CreateQuestionBackground />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
        <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
        <ImageURLModal modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
+       <Box style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          gap: `${theme.sizing.lgPadding}px`,
+          zIndex: 1,
+          position: 'relative',
+          paddingLeft: `${theme.sizing.mdPadding}px`,
+          paddingRight: `${theme.sizing.mdPadding}px`,
+          boxSizing: 'border-box',
+        }}>
       <>
         <CCSSTabsModalBackground
           isTabsOpen={isCCSSVisible}
@@ -439,7 +455,15 @@ export default function CreateQuestion({
                   <ErrorCard />
                 </div>
               </Fade>  
-              <Box style={{width: '100%', maxWidth: '672px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingBottom: '16px'}}>
+              <Box style={{
+                width: '100%', 
+                maxWidth: '672px',
+                display: 'flex',
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                gap: `${theme.sizing.xSmPadding}px`, 
+                paddingBottom: '16px',
+              }}>
                 <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
@@ -553,6 +577,7 @@ export default function CreateQuestion({
           md={1}
           lg={4} item />
       </CreateQuestionGridContainer>
+      </Box>
     </CreateQuestionMainContainer>
   );
 }

@@ -22,6 +22,7 @@ interface BodyContainerProps {
 const BodyContainer = styled(Box)<BodyContainerProps>(
   ({ theme, screenSize }) => ({
     width: '100%',
+    display: 'flex',
     flexGrow: 1,
     overflowY: 'auto',
     '&::-webkit-scrollbar': {
@@ -30,6 +31,7 @@ const BodyContainer = styled(Box)<BodyContainerProps>(
     },
     scrollbarWidth: 'none', // Firefox
     '-ms-overflow-style': 'none',
+    position: 'relative'
   }),
 );
 
