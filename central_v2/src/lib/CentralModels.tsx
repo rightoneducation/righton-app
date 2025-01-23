@@ -3,8 +3,7 @@ export enum ScreenType {
   QUESTIONS,
   LIBRARY,
   SIGNUP,
-  LOGIN
-  SIGNUP, 
+  LOGIN,
   CONFIRMATION
 }
 
