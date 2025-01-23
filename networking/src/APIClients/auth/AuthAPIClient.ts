@@ -8,7 +8,9 @@ import {
   signInWithRedirect, 
   signOut, 
   fetchAuthSession,
-  getCurrentUser
+  getCurrentUser,
+  resetPassword, 
+  type ResetPasswordOutput
 } from 'aws-amplify/auth';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
@@ -81,6 +83,11 @@ export class AuthAPIClient
     await signInWithRedirect(
       {provider: 'Google'}
     );
+  }
+
+  async awsResetPassword (username: string): Promise<ResetPasswordOutput> {
+    const output = await resetPassword({ username });
+    return output
   }
 
   async awsSignOut(): Promise<void> {

@@ -6,6 +6,8 @@ import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledCompone
 import RightOnLogo from '../images/RightOnLogo.png';
 import CentralButton from "../components/button/Button";
 import { ButtonType } from '../components/button/ButtonModels';
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -63,7 +65,10 @@ const NoAccountText = styled(Typography)(({ theme }) => ({
   }));
 
 export default function ResetPassword() {
-  const [email, setEmail] = useState('');
+
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+
+  const [userName, setUserName] = useState('');
 
   const buttonTypeResetLink = ButtonType.RESETLINK;
   const [isResetLinkEnabled, setIsResetLinkEnabled] = useState(true);
@@ -77,6 +82,15 @@ export default function ResetPassword() {
     navigate('/Signup'); // Navigate to the Signup page
   };
 
+  const handleResetLink = async () => {
+    try {
+      await apiClients.auth.awsResetPassword(userName);
+      console.log('Login successful');
+    } catch (error) {
+      console.error('Error during login:', error);
+      // You can also display an error message to the user if needed
+    }
+  };
 
   return (
     <SignUpMainContainer>
@@ -88,10 +102,10 @@ export default function ResetPassword() {
             <UserTextField
                 variant="outlined"
                 placeholder="Email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                value={userName}
+                onChange={(event) => setUserName(event.target.value)}
             />
-            <CentralButton buttonType={buttonTypeResetLink} isEnabled={isResetLinkEnabled}/>
+            <CentralButton buttonType={buttonTypeResetLink} isEnabled={isResetLinkEnabled} onClick={handleResetLink}/>
             <SignupContainer>
                 <NoAccountText>Dont have an account?</NoAccountText>
                 <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} onClick={handleSignupClick}/>
