@@ -4,6 +4,8 @@ export enum ScreenType {
   LIBRARY,
   SIGNUP,
   LOGIN
+  SIGNUP, 
+  CONFIRMATION
 }
 
 export enum ScreenSize {

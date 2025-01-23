@@ -12,6 +12,7 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
   height: '100dvh',
   display: 'flex',
   flexDirection: 'column',
+  
 }));
 
 interface BodyContainerProps {
@@ -23,6 +24,12 @@ const BodyContainer = styled(Box)<BodyContainerProps>(
     width: '100%',
     flexGrow: 1,
     overflowY: 'auto',
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none',
   }),
 );
 
@@ -33,6 +40,7 @@ interface AppContainerProps {
 
 function AppContainer({ currentScreen, children }: AppContainerProps) {
   const theme = useTheme();
+  console.log('children here:', children)
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));

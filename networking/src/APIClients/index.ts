@@ -7,3 +7,4 @@ export * from './datamanagers';
 export * from './gamesession';
 export * from './interfaces';
 export * from './templates';
+export * from './user';

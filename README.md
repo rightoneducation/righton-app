@@ -1,27 +1,26 @@
 # RightOn Education
 
+<strong><i>RightOn!</i></strong> is a web-based platform that transforms how students think and feel about math, helping them see mistakes as learning opportunities. We do so by using AI to destigmatize errors, spark discussions about shared misconceptions, and bolster social-emotional and cognitive growth. 
+
 ### Our Mission & Vision
-<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do science." Our mission is to unlock every student’s potential in STEM: building self-confidence, developing conceptual understanding, and helping them overcome hurdles in both school & life: whether they'd like to build apps, go to Mars, or become the next Beyonce!
+<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do math." Our mission is to unlock STEM potential in all students: fostering a positive classroom culture of error, building self-efficacy, and deepening conceptual understanding -- helping students overcome hurdles in both school & life, whether they'd like to build apps, go to Mars, or become the next Beyonce! Math is something that everyone can do and can help everyone.
 
-While many apps focus on getting answers as quickly as possible, we're turning things around: RightOn not only makes it OK to make mistakes: players get rewarded for the most popular wrong answers. Through learning from mistakes and misconceptions, everyone takes their learning to the next level.
+While many apps prioritize speed, <strong><i>RightOn!</i></strong> shifts focus from quick recall to metacognition: understanding not only why right answers are right, but also why wrong answers are wrong, in turn helping students take their learning to the next level.
 
-<strong>Vision:</strong> In the future, we envision <a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> to become a multimedia learning platform and game show (spanning mobile apps and livestream video), one that eventually helps connect students of all ages and backgrounds to learn new subjects -- from math today to others in the future. 
+<strong>Vision:</strong> In the future, we envision <strong><i>RightOn!</i></strong> to become a multimedia learning platform that  helps connect students of all ages and backgrounds to learn new subjects -- from math today to others in the future. 
 
 ### Our Values
 We’re a team that sometimes falls down, always gets back up, and never stops having fun.<br>
-<strong>Trust and open communication:</strong> first seeking to understand, then to be understood<br>
-<strong>Integrity:</strong> doing the right thing<br>
-<strong>Compassion:</strong> lending a hand to others, giving back, expressing gratitude<br>
-<strong>Humility:</strong> working together on something bigger than ourselves<br>
-<strong>Beginner’s mindset:</strong> going into things with an open mind, always learning and making new mistakes<br>
-<strong>Fun:</strong> having fun along the way!<br>
+<strong>Trust and open communication:</strong> seeking to understand, then to be understood<br>
+<strong>Positive culture of error:</strong> learning from mistakes, iterating, and improving<br>
+<strong>Gratitude:</strong> keeping a grateful mindset through ups and downs<br>
+<strong>Humble perseverance:</strong> falling down seven times, getting up eight<br>
+<strong>Rising together:</strong> lifting ourselves up by lifting others<br>
+<strong>Beginner's mindset:</strong> embarking on all journeys with an open mind<br>
 
 ### Project Description
-We're currently developing two apps:
-1. A React Native mobile app for middle/high school teachers to use in classroom environments. Think Balderdash/Fibbage + STEM + learning from and having fun with mistakes and misconceptions. 
-2. A React web app that enables teachers to create games/questions that appear in the mobile app and view classroom results.
-
-We're running on AWS, including AppSync/GraphQL, DynamoDB, and Lambda. A future phase might include a livestream game show with elements similar to the following <a href="https://www.tubefilter.com/2020/04/27/mrbeast-youtube-creator-games-nadeshot-ninja/"><strong>online rock-papers-scissors tournament</strong></a>. 
+RightOn! consists of three progressive web apps: a database of games and questions (Central), a teacher dashboard (Host), and a student-facing web app (Play). Our platform runs on AWS, including AppSync/GraphQL, DynamoDB, and Lambda.
+![RightOn Platform Overview](https://github.com/user-attachments/assets/8bac9e7c-6f0c-4bfe-adda-74c7fb3c16c6)
 
 ### Getting Started
 
@@ -61,41 +60,33 @@ Please refer to our [docs](https://github.com/righton-dev/righton-app/tree/maste
 
 We are always happy to hear from people who are also interested in building learning apps and making math more fun and achievable for all. We're building this plane as we fly it, and suggestions are always welcome and appreciated. Give us a shout anytime at info@rightoneducation.com. You're also welcome to join our Slack community -- just let us know!
 
-### Testing
-
-You are welcome to download our latest beta version to test and give feedback. Please use Test Flight to install our app from this link: https://testflight.apple.com/join/2l8414MU
-
-### Deployment
-
-Coming soon!
-
 ### Acknowledgments
 
 #### Meet our team
-<strong>Andy Li</strong> - Mobile App Lead<br>
 <strong>Allison Liu</strong> - Education Research<br>
 <strong>Anna Roberds</strong> - Math Educator / Community Engagement<br>
 <strong>Daz Yang</strong> - Full-Stack Web Developer<br>
 <strong>Drew Hart</strong> - Dev Lead<br>
 <strong>Edward Tan</strong> - Architect Lead<br>
 <strong>Katerina Schenke</strong> - Education Research<br>
-<strong>Mani Ramezan</strong> - Mobile App Lead<br>
+<strong>Mani Ramezan</strong> - Dev Mentor<br>
 <strong>Marizza Bailey</strong> - Math Educator / Content & Pedagogy<br>
 <strong>Mozzie Dosalmas</strong> - Math Educator / Equity & Community Engagement<br>
-<strong>Ryan Booth</strong> - Web App Lead<br>
+<strong>Rod Hinn </strong> - UX Lead<br>
+<strong>Ryan Booth</strong> - Dev Mentor<br>
 <strong>Sinclair Wu </strong> - Product Lead<br>
-<strong>Yong Lin </strong> - UX Lead<br>
+
 #### Advisors
-<strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
-<strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
+<strong>Ay-Nur Najm</strong> - Independent math consultant and software engineer<br>
+<strong>Ben Woodford</strong> - Doctorate from Stanford University in math education<br>
 <strong>Bunmi Esho</strong> - STEM Advocacy Executive Director<br>
-<strong>Esmeralda Ortiz</strong> - Senior Director, Boys & Girls Clubs of the Peninsula<br>
-<strong>Eric Boucher</strong> - Cofounder & CEO of Ovio<br>
+<strong>Esmeralda Ortiz</strong> - Vice President, Boys & Girls Clubs of the Peninsula<br>
 <strong>Iman Howard</strong> - STEM Educator<br>
-<strong>Lybroan James</strong> - Chief Education Officer, STEMulate<br>
-<strong>Paul Chin</strong> - Assistant Professor of Practice, Relay Graduate School of Education<br>
+<strong>Lybroan James</strong> - Chief Education Officer, STEMulate Solutions<br>
+<strong>Paul Chin</strong> - Professor of Clinical Practice, Relay Graduate School of Education<br>
 <strong>Payton Richardson</strong> - Data Officer, Eastside Pathways<br>
 <strong>Ronald Towns</strong> - STEM Administrator<br>
+<strong>Yong Lin</strong> - UX Leader<br>
 <br>
 <br>
 <em>Learn more about RightOn! & our team at https://rightoneducation.com.</em>
