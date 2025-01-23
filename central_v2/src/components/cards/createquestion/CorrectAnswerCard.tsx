@@ -70,6 +70,7 @@ export default function DetailedQuestionSubCard({
       >
         <Typography
           sx={{
+            minWidth: '12px',
             fontSize: `${theme.typography.h3.fontSize}px`,
             fontWeight: `${theme.typography.h3.fontWeight}`,
             color: `${theme.palette.primary.darkPurple}`,

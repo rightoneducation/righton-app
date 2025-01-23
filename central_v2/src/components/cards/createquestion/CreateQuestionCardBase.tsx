@@ -76,7 +76,7 @@ export const CreateQuestionTitleBarStyled = styled(Box)<CreateQuestionTitleBarSt
   gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.xSmPadding}px` : `${theme.sizing.smPadding}px`,
 }));
 
-export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme }) => ({
+export const CreateQuestionContentLeftContainerStyled = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -187,7 +187,7 @@ export default function CreateQuestionCardBase({
         </RadioContainerStyled>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        <CreateQuestionContentRightContainerStyled>
+        <CreateQuestionContentLeftContainerStyled>
           <TextContainerStyled 
             multiline 
             variant="outlined" 
@@ -212,16 +212,23 @@ export default function CreateQuestionCardBase({
           >
             <Typography>{draftQuestion.questionCard.title}</Typography>
           </TextContainerStyled>
-          <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-            <PublicPrivateButton />
-          </Box>
-        </CreateQuestionContentRightContainerStyled>
+          { screenSize !== ScreenSize.SMALL && 
+            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              <PublicPrivateButton />
+            </Box>
+          }
+        </CreateQuestionContentLeftContainerStyled>
         {imageLink 
           ? imageContents
           : <ImagePlaceholder isCardErrored={isCardErrored}>
               <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
             </ImagePlaceholder>
         }
+           { screenSize === ScreenSize.SMALL && 
+            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              <PublicPrivateButton />
+            </Box>
+          }
       </ContentContainerStyled>
     </BaseCardStyled>
   );

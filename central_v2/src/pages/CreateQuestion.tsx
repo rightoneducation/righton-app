@@ -195,7 +195,6 @@ export default function CreateQuestion({
       const newDraftQuestion = updateDQwithTitle(draftQuestionInput, title);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
-      setIsAIError(false);
       console.log(newDraftQuestion);
       if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
@@ -247,7 +246,6 @@ export default function CreateQuestion({
       console.log(newDraftQuestion);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
-      setIsAIError(false);
       if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
     }, 1000),
@@ -268,6 +266,8 @@ export default function CreateQuestion({
 
   // incorrect answer card functions
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
+    if (isAIError)
+      setIsAIError(false);
     const updatedAnswers = incompleteIncorrectAnswers.map((answer) => {
       if (answer.id === cardData.id) {
         return cardData;
@@ -280,8 +280,6 @@ export default function CreateQuestion({
   };
 
   const handleIncorrectCardStackUpdate = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[], isAIEnabledCard?: boolean) => {
-      if (isAIError)
-        setIsAIError(false);
       const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
       const isUpdateInIncompleteCards = incompleteAnswers.find(answer => answer.id === cardData.id);
       let newDraftQuestion = null;
@@ -290,6 +288,7 @@ export default function CreateQuestion({
       // everytime we update those arrays, we're going to trigger an animation, so we have to only manipulate them when we want that
       // so in this case, if the card that is being edited is already complete, we are only going to update the draftQuestion object and leave the arrays alone
       if (isUpdateInIncompleteCards){
+        setIsAIError(false);
         const updatedAnswers = incompleteAnswers.map((answer) => {
           if (answer.id === cardData.id) {
             return cardData;
@@ -405,6 +404,11 @@ export default function CreateQuestion({
     setIsAIError(true);
   }
 
+  const handleAIIsEnabled = () => {
+    setIsAIEnabled((prev) => !prev);
+    setIsAIError(false);
+  }
+
   return (
     <CreateQuestionMainContainer>
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
@@ -435,7 +439,7 @@ export default function CreateQuestion({
                   <ErrorCard />
                 </div>
               </Fade>  
-              <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingBottom: '16px'}}>
+              <Box style={{width: '100%', maxWidth: '672px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingBottom: '16px'}}>
                 <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
@@ -478,7 +482,7 @@ export default function CreateQuestion({
             maxWidth: '672px',
             display: 'flex',
             flexDirection: 'column',
-            gap: `${theme.sizing.smPadding}px`,
+            gap: `${theme.sizing.xLgPadding}px`,
           }}
         >
           <Box onClick={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)} style={{ width: '100%' }}>
@@ -526,7 +530,7 @@ export default function CreateQuestion({
                 <Typography style={{textAlign: 'right', fontWeight: 500}}>
                   Try our AI-Generated Wrong Answer Explanation Prototype
                 </Typography>
-                <AISwitch checked={isAIEnabled} onChange={(prev) => setIsAIEnabled(!isAIEnabled)}/>
+                <AISwitch checked={isAIEnabled} onChange={(prev) => handleAIIsEnabled()}/>
               </Box>
               <IncorrectAnswerCardStack 
                 draftQuestion={draftQuestion}

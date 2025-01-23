@@ -158,6 +158,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.NEXTCARD]: {
     icon: next,
     textKey: ButtonType.NEXTCARD,
+    width: '200px'
   },
   [ButtonType.LAUNCHGAME]: {
     icon: launch,

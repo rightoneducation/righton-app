@@ -203,7 +203,7 @@ export default function IncorrectAnswerCard({
         />
         <Box style={{
           width: '100%',
-          height: '38px',
+          
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
