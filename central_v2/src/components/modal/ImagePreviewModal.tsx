@@ -86,7 +86,7 @@ interface ImageUploadModalProps {
   borderStyle: BorderStyle;
 }
 
-export default function ImageUploadModal({
+export default function ImagePreviewModal({
   screenSize,
   isModalOpen,
   modalImage,
@@ -126,65 +126,46 @@ export default function ImageUploadModal({
       <IntegratedContainer elevation={12} screenSize={screenSize}>
         <Box style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <QuestionTitleStyled style={{fontSize: '27px'}}>
-            Upload file
+            Upload preview
           </QuestionTitleStyled>
           <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
         </Box>
         <DashedBox>
-          {(imageLink) ? (
-            <Box style={{
-              width: '100%',
-              height: '100%',
-              position: 'relative',
-            }}
-            onMouseEnter={() => setIsMouseOver(true)}
-            onMouseLeave={() => setIsMouseOver(false)}
-            >
-              <Box 
-                style={{
-                  position: 'absolute',
-                  top: '0',
-                  left: '0',
-                  height: '100%',
-                  width: '100%',
-                  backgroundColor: isMouseOver ? 'rgba(0,0,0,0.72)' : 'rgba(0,0,0,0)',
-                  transition: 'background-color 0.75s',
-                }} 
-              />
-              <Fade in={isMouseOver} mountOnEnter unmountOnExit timeout={750} >
-                <Box style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  zIndex: 1,
-                }}>
-                  <CentralButton type="file" buttonType={ButtonType.BROWSEFILES} isEnabled handleFileChange={handleChangeClick} />
-                </Box>
-              </Fade>
-              <img
-                src={imageLink} 
-                alt="Uploaded"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
-            </Box>
-          ) : (
-            <DropImageUpload handleImageSave={handleChangeClick} >
-              <UploadIcon src={imageUploadIcon} alt="imageUploadIcon" />
-              <DragText>Drag & drop your file here or</DragText>
-              <CentralButton type="file" buttonType={ButtonType.BROWSEFILES} isEnabled handleFileChange={handleChangeClick} />
-            </DropImageUpload>   
-          )}
+          <Box style={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+          }}
+          >
+            <Box 
+              style={{
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                height: '100%',
+                width: '100%',
+                backgroundColor: isMouseOver ? 'rgba(0,0,0,0.72)' : 'rgba(0,0,0,0)',
+                transition: 'background-color 0.75s',
+              }} 
+            />
+            <img
+              src={imageLink ?? ''} 
+              alt="Uploaded"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+          </Box>
         </DashedBox>
-        <Box style={{width: '100%', position: 'relative'}}>
-        <ImageURLTextContainerStyled value={imageUrl} variant="outlined" rows='1' placeholder="Add Image URL" onChange={(e)=> handleImageUrlChange(draftQuestion, e.target.value)}/>
-        <ImageURLUploadButton>
-          Upload
-        </ImageURLUploadButton>
+        <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.mdPadding}px`}}>
+            <CentralButton 
+              buttonType={ButtonType.CHANGEIMAGE} 
+              isEnabled 
+              smallScreenOverride 
+            />
+            <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride  />
         </Box>
       </IntegratedContainer>      
     </Fade>

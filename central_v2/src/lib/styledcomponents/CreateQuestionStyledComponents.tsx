@@ -106,6 +106,8 @@ export const ImageURLTextContainerStyled = styled(TextContainerStyled)(({ theme 
 export const ImageURLUploadButton = styled(Box)(({ theme }) => ({
   width: '100px',
   height: '43px',
+  fontWeight: 700,
+  fontSize: '18px',
   backgroundColor: '#FFFFFF',
   borderRadius: '8px',
   borderColor: `${theme.palette.primary.uploadDarkGrey}`, 

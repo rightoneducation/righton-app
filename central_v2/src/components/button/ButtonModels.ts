@@ -53,6 +53,7 @@ export enum ButtonType {
 export enum ButtonColor {
   RED,
   BLUE,
+  NULL
 }
 
 type ButtonContentMapProps = {
@@ -133,6 +134,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.SAVE]: {
     icon: save,
     textKey: ButtonType.SAVE,
+    width: '200px'
   },
   [ButtonType.DISCARD]: {
     icon: discard,
@@ -155,6 +157,8 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.CHANGEIMAGE]: {
     icon: upload,
     textKey: ButtonType.CHANGEIMAGE,
+    width: '220px',
+    color: ButtonColor.NULL
   },
   [ButtonType.NEXTCARD]: {
     icon: next,

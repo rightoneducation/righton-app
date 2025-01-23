@@ -25,7 +25,7 @@ import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackgro
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 import ModalBackground from '../components/modal/ModalBackground';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
-import ImageURLModal from '../components/modal/ImageURLModal';
+import ImagePreviewModal from '../components/modal/ImagePreviewModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
@@ -414,7 +414,8 @@ export default function CreateQuestion({
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
-       <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize}  modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleImageUrlChange={handleImageUrlChange} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
+       <ImagePreviewModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize}  modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleImageUrlChange={handleImageUrlChange} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
+       <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize}  modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} isModalOpen={false} handleImageSave={handleImageSave} handleImageUrlChange={handleImageUrlChange} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
        <Box style={{
           width: '100%',

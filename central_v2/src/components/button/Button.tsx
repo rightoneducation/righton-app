@@ -8,6 +8,7 @@ import {
   ButtonContent,
   ButtonIconContainer,
   ButtonTypography,
+  ButtonIconBlue
 } from '../../lib/styledcomponents/ButtonStyledComponents';
 
 interface CentralButtonProps {
@@ -65,13 +66,19 @@ export default function CentralButton({
       <ButtonContent>
         {buttonObj.icon && (
           <ButtonIconContainer>
-            <img src={buttonObj.icon} alt={`${buttonText}`} />
+            { buttonColor === ButtonColor.NULL
+              ? <ButtonIconBlue src={buttonObj.icon}/>
+              : <img src={buttonObj.icon} alt={`${buttonText}`} />
+            }
           </ButtonIconContainer>
         )}
-        {buttonText && !isSmallScreen && <ButtonTypography> {buttonText} </ButtonTypography>}
+        {buttonText && !isSmallScreen && <ButtonTypography buttonColor={buttonColor}> {buttonText} </ButtonTypography>}
         {buttonObj.rightIcon && (
           <ButtonIconContainer>
-            <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
+            { buttonColor === ButtonColor.NULL
+              ? <ButtonIconBlue src={buttonObj.rightIcon}/>
+              : <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
+            }
           </ButtonIconContainer>
         )}
       </ButtonContent>
