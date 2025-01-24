@@ -1,9 +1,38 @@
+type User @model
+@auth(
+  rules:  [
+    { allow: public, provider: iam  },
+    { allow: owner, provider: userPools },
+    { allow: private, operations: [read], provider: userPools },  
+  ]
+)
+@aws_iam
+@aws_cognito_user_pools
+{
+  id: ID! @primaryKey
+  userName: String! @index(name: "userNameIndex", queryField: "userByUserName")
+  title: String
+  firstName: String
+  lastName: String
+  email: String! @index(name: "emailIndex", queryField: "userByEmail")
+  password: String
+  gamesMade: Int
+  questionsMade: Int
+}
+
 type Mutation {
   createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String 
   @function(name: "createGameTest-${env}") 
   @auth(
     rules: [
       { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+  teacherIdAuth(input: TeacherIdAuthInput!): String 
+  @function(name: "teacherIdAuth-${env}") 
+  @auth(
+    rules: [
       { allow: private, provider: userPools }
     ]
   )
@@ -35,6 +64,11 @@ type Mutation {
   )
 }
 
+input TeacherIdAuthInput {
+  teacherImage: String!
+  fileName: String!
+  fileType: String!
+}
 input UploadExternalImageToS3Input {
   imageUrl: String!
 }

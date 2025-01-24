@@ -7,7 +7,7 @@ export const SignUpMainContainer = styled(Box)(({ theme }) => ({ // eslint-disab
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
+  backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
   '&::-webkit-scrollbar': {
     // Chrome and Safari
     display: 'none',

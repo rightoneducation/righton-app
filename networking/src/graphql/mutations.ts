@@ -8,6 +8,78 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createUser = /* GraphQL */ `mutation CreateUser(
+  $input: CreateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  createUser(input: $input, condition: $condition) {
+    id
+    userName
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    questionsMade
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateUserMutationVariables,
+  APITypes.CreateUserMutation
+>;
+export const updateUser = /* GraphQL */ `mutation UpdateUser(
+  $input: UpdateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  updateUser(input: $input, condition: $condition) {
+    id
+    userName
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    questionsMade
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateUserMutationVariables,
+  APITypes.UpdateUserMutation
+>;
+export const deleteUser = /* GraphQL */ `mutation DeleteUser(
+  $input: DeleteUserInput!
+  $condition: ModelUserConditionInput
+) {
+  deleteUser(input: $input, condition: $condition) {
+    id
+    userName
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    questionsMade
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteUserMutationVariables,
+  APITypes.DeleteUserMutation
+>;
 export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGameTemplate(
   $input: CreatePublicGameTemplateInput!
   $condition: ModelPublicGameTemplateConditionInput
@@ -6127,6 +6199,13 @@ export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameS
 ` as GeneratedMutation<
   APITypes.CreateGameSessionFromTemplateMutationVariables,
   APITypes.CreateGameSessionFromTemplateMutation
+>;
+export const teacherIdAuth = /* GraphQL */ `mutation TeacherIdAuth($input: TeacherIdAuthInput!) {
+  teacherIdAuth(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.TeacherIdAuthMutationVariables,
+  APITypes.TeacherIdAuthMutation
 >;
 export const uploadExternalImageToS3 = /* GraphQL */ `mutation UploadExternalImageToS3($input: UploadExternalImageToS3Input) {
   uploadExternalImageToS3(input: $input)

@@ -46,5 +46,71 @@
         "gamequestionimages": {}
       }
     }
+  },
+  "testtemp": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-testtemp-069ec-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-testtemp-069ec-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-testtemp-069ec-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-testtemp-069ec-deployment",
+      "UnauthRoleName": "amplify-mobile-testtemp-069ec-unauthRole",
+      "StackName": "amplify-mobile-testtemp-069ec",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-testtemp-069ec/499d39a0-da0f-11ef-8e95-0e4ed6c4db93",
+      "AmplifyAppId": "d2z6928w5qibze",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-testtemp-069ec-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "mobile6060603c": {
+          "googleClientId": "23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com"
+        },
+        "userPoolGroups": {}
+      },
+      "function": {
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-testtemp-069ec-deployment",
+          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
+        },
+        "mobile6060603cPostConfirmation": {
+          "GROUP": "usergroup",
+          "deploymentBucketName": "amplify-mobile-testtemp-069ec-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
+        },
+        "uploadExternalImageToS3": {
+          "deploymentBucketName": "amplify-mobile-testtemp-069ec-deployment",
+          "s3Key": "amplify-builds/uploadExternalImageToS3-4e55784e7a75437a4e33-build.zip"
+        },
+        "waegen": {
+          "deploymentBucketName": "amplify-mobile-testtemp-069ec-deployment",
+          "s3Key": "amplify-builds/waegen-3657566c447833793575-build.zip"
+        },
+        "waeregen": {
+          "deploymentBucketName": "amplify-mobile-testtemp-069ec-deployment",
+          "s3Key": "amplify-builds/waeregen-3238724877794877452f-build.zip"
+        },
+        "mobile": {},
+        "mobile6060603c": {}
+      },
+      "api": {
+        "mobile": {}
+      },
+      "storage": {
+        "gamequestionimages": {}
+      }
+    }
+  },
+  "test": {
+    "categories": {
+      "function": {
+        "createGameTest": {},
+        "mobile6060603cPostConfirmation": {},
+        "uploadExternalImageToS3": {},
+        "waegen": {},
+        "waeregen": {},
+        "mobile": {},
+        "mobile6060603c": {}
+      }
+    }
   }
 }
