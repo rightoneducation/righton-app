@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import { Box, Typography, CircularProgress, Slider,MenuItem, InputLabel, FormControl } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { APIClients, Environment, AppType, IGameTemplate, GradeTarget } from '@righton/networking';
+import { useAPIClients, Environment, AppType, IGameTemplate, GradeTarget, PublicPrivateType } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import debounce from 'lodash/debounce';
 
@@ -79,7 +79,7 @@ export default function Search(){
     setIsSearching(true);
     switch(sortType){
       case SortType.listGameTemplatesByDate:
-        apiClients.gameTemplate.listGameTemplatesByDate(null, null, sortDirection, search, gradeTargets).then((response) => {
+        apiClients && apiClients.gameTemplate.listGameTemplatesByDate(PublicPrivateType.PUBLIC, null, null, sortDirection, search, gradeTargets).then((response) => {
           setIsSearching(false);
           if (response){
             console.log('Search Terms:');
@@ -91,7 +91,7 @@ export default function Search(){
         });
         break;
       case SortType.listGameTemplatesByGrade:
-        apiClients.gameTemplate.listGameTemplatesByGrade(null, null, sortDirection, search, gradeTargets).then((response) => {
+        apiClients &&  apiClients.gameTemplate.listGameTemplatesByGrade(PublicPrivateType.PUBLIC, null, null, sortDirection, search, gradeTargets).then((response) => {
           setIsSearching(false);
           if (response){
             console.log('Search Terms:');
@@ -103,7 +103,7 @@ export default function Search(){
         });
         break;
       case SortType.listGameTemplatesByQuestionCount:
-        apiClients.gameTemplate.listGameTemplatesByQuestionTemplatesCount(null, null, sortDirection, search, gradeTargets).then((response) => {
+        apiClients && apiClients.gameTemplate.listGameTemplatesByQuestionTemplatesCount(PublicPrivateType.PUBLIC, null, null, sortDirection, search, gradeTargets).then((response) => {
           setIsSearching(false);
           if (response){
             console.log('Search Terms:');
@@ -116,7 +116,7 @@ export default function Search(){
         break;
       case SortType.listGameTemplates:
       default:
-        apiClients.gameTemplate.listGameTemplates(null, null, null, search, gradeTargets).then((response) => {
+        apiClients &&  apiClients.gameTemplate.listGameTemplates(PublicPrivateType.PUBLIC, null, null, null, search, gradeTargets).then((response) => {
           setIsSearching(false);
           if (response){
             console.log('Search Terms:');
@@ -139,7 +139,10 @@ export default function Search(){
     [debounceInterval] 
   );
 
-  const apiClients = new APIClients(Environment.Developing, AppType.HOST);
+  const { apiClients, loading } = useAPIClients(
+    Environment.Developing,
+    AppType.HOST,
+  );
   const gradeTargetsList = Object.values(GradeTarget);
   const gradeTargetsDictonary = {
     [GradeTarget.KINDERGARTEN]: "Kindergarten",

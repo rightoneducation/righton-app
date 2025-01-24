@@ -10,6 +10,7 @@
     "getstarted": "¡Empezar!",
     "resetlink": "Enviar Enlace de Restablecimiento",
     "reset": "Restablecer",
+    "create": "Crear",
     "previousquestion": "Pregunta Anterior",
     "backtoexplore": "Volver a Explorar Preguntas",
     "favorite": "Favorito",
@@ -17,6 +18,7 @@
     "nextquestion": "Siguiente Pregunta",
     "save": "Guardar",
     "discard": "Descartar",
+    "discardblue": "Descartar",
     "addstep": "Agregar Paso",
     "browsefiles": "Explorar Archivos",
     "changeimage": "Cambiar Imagen",
@@ -27,6 +29,8 @@
     "back": "Atrás",
     "editpicture": "Editar Imagen",
     "editinformation": "Editar Información",
-    "changepassword": "Cambiar Contraseña"
+    "changepassword": "Cambiar Contraseña",
+    "choose": "Elegir",
+    "clone": "Clonar"
   }
 }

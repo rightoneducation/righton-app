@@ -2,6 +2,9 @@
 import { OpenAI } from "openai";
 import ExampleQuestions  from "./lib/exampleQuestions.mjs";
 import UnacceptableExplanations from "./lib/UnacceptableExplanations.mjs";
+import { zodResponseFormat } from 'openai/helpers/zod';
+import { z } from 'zod';
+
 
 export async function handler(event) {
      const openai = new OpenAI(process.env.OPENAI_API_KEY);
@@ -12,11 +15,18 @@ export async function handler(event) {
     const wrongAnswer2 = JSON.parse(event.body).question.wrongAnswer2;
     const wrongAnswer3 = JSON.parse(event.body).question.wrongAnswer3;
     const discardedExplanations = JSON.parse(event.body).discardedExplanations;
+
+    const StructuredResponse = z.object({
+        wrongAnswerExplanation1: z.string(),
+        wrongAnswerExplanation2: z.string(),
+        wrongAnswerExplanation3: z.string(),
+      });
+
     // prompt for open ai
     // first specify the format returned via the role
     let messages = [{
       role: "system",
-      content: "You are a helpful teacher's assistant working side-by-side with a teacher. You are designed to output exclusively JSON. Respond with a JSON object following this structure: [{wrongAnswerExplanation1: string}, {wrongAnswerExplanation2: string}, {wrongAnswerExplanation3: string}]"
+      content: "You are a helpful teacher's assistant working side-by-side with a teacher. You are designed to output exclusively JSON per the schema defined in response_format."
     }];
     // then provide the actual content
     messages.push({
@@ -56,8 +66,7 @@ export async function handler(event) {
         - After reviewing above, pause. Review that the output is a valid JSON string and that running JSON.parse will not result in an error. Pay special consideration to escape characters and do not embed any Latex formatting that could compromise this.
 
         Please ensure each explanation for the incorrect answers adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
-        DO NOT ADD MARKUP LIKE '''JSON ''' ENSURE THAT IT IS A VALID JSON OBJECT THAT CAN BE PARSED BY JSON.PARSE
-        `
+        `,
     });
     console.log(messages);
     try {
@@ -65,13 +74,20 @@ export async function handler(event) {
         const completion = await openai.chat.completions.create({
             model: 'gpt-4o', 
             messages: messages,
+            response_format: zodResponseFormat(StructuredResponse, 'structuredResponse')
         });
-        console.log(completion.choices[0].message);
+        const content = JSON.parse(completion.choices[0].message.content);
+        const structuredData = StructuredResponse.parse(content);
+        const explanationsArray = [
+            structuredData.wrongAnswerExplanation1,
+            structuredData.wrongAnswerExplanation2,
+            structuredData.wrongAnswerExplanation3,
+          ];
         // Return the response
         return {
             statusCode: 200,
             body: JSON.stringify({
-                wrongAnswerExplanations: completion.choices[0].message
+                wrongAnswerExplanations: explanationsArray
             }),
         };
     } catch (error) {
@@ -83,3 +99,4 @@ export async function handler(event) {
         };
     }
 };
+

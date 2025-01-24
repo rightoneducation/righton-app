@@ -1,10 +1,18 @@
+import { uploadData, UploadDataWithPathOutput } from 'aws-amplify/storage';
 import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
 import { QuestionTemplateType, questionTemplateRuntimeMap, IQuestionTemplateAPIClient } from "./interfaces/IQuestionTemplateAPIClient";
-import { IQuestionTemplate } from "../../Models";
+import { CentralQuestionTemplateInput, IQuestionTemplate } from "../../Models";
 import { QuestionTemplateParser } from "../../Parsers/QuestionTemplateParser";
 import { AWSQuestionTemplate } from "../../Models";
 import { isNullOrUndefined } from "../../global";
 import { GraphQLOptions } from "../BaseAPIClient";
+import { UploadExternalImageToS3Input, UploadExternalImageToS3Mutation, UploadExternalImageToS3MutationVariables } from '../../AWSMobileApi';
+import { uploadExternalImageToS3 } from '../../graphql';
+
+interface MimeTypes {
+  [key: string]: string;
+}
+
 
 export class QuestionTemplateAPIClient
   extends BaseAPIClient
@@ -12,21 +20,58 @@ export class QuestionTemplateAPIClient
 {
   async createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
-    createQuestionTemplateInput: QuestionTemplateType<T>['create']['input'] | IQuestionTemplate
+    imageUrl: string,
+    createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate> {
-    const variables: GraphQLOptions = { input: createQuestionTemplateInput as QuestionTemplateType<T>['create']['input'] };
+    const parsedInput = QuestionTemplateParser.centralQuestionTemplateInputToIQuestionTemplate<T>(imageUrl, createQuestionTemplateInput);
+    const variables: GraphQLOptions = { input: parsedInput as QuestionTemplateType<T>['create']['input'] };
     const queryFunction = questionTemplateRuntimeMap[type].create.queryFunction;
     const createType = `create${type}QuestionTemplate`;
     const questionTemplate = await this.callGraphQL<QuestionTemplateType<T>['create']['query']>(
         queryFunction,
         variables
     ) as { data: any };
+    
     if (
         isNullOrUndefined(questionTemplate?.data)
     ) {
         throw new Error(`Failed to create question template.`);
     }
     return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data[createType] as AWSQuestionTemplate, type);
+  }
+
+  // function to store image as a File in S3
+  async storeImageInS3 (
+    image: File
+  ): Promise<UploadDataWithPathOutput> {
+    const mimeTypes: MimeTypes = {
+      'image/jpeg': '.jpeg',
+      'image/jpg': '.jpg',
+      'image/png': '.png',
+    };
+    const extension = mimeTypes[image.type] || '';
+    const filename = `image_${Date.now()}${extension}`
+    return uploadData({path: filename, data: image, options: {contentType: image.type}});
+  };
+
+  // function to store imageUrl as a File in S3
+  // image is fetched via a server-side proxy to avoid CORS issues
+  async storeImageUrlInS3 (
+    imageUrl: string
+  ): Promise<string> {
+    const input: UploadExternalImageToS3Input = {imageUrl};
+    const variables: UploadExternalImageToS3MutationVariables = { input }
+    const response = await this.callGraphQL<UploadExternalImageToS3Mutation>(
+        uploadExternalImageToS3,
+        variables as unknown as GraphQLOptions
+    )
+    if (
+        isNullOrUndefined(response?.data) ||
+        isNullOrUndefined(response?.data.uploadExternalImageToS3)
+    ) {
+        throw new Error(`Failed to store image in S3`);
+    }
+    return response.data.uploadExternalImageToS3;
   }
 
   async getQuestionTemplate<T extends PublicPrivateType>(

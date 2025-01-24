@@ -8,7 +8,6 @@ export const ExploreGamesMainContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -31,5 +30,6 @@ export const ExploreGamesUpperContainer = styled(
   width: '100%',
   flexDirection: 'column',
   alignItems: 'center',
-  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
+  backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
+  position: 'relative'
 }));

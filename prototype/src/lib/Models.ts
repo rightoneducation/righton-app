@@ -8,10 +8,7 @@ export interface IQuestion {
   wrongAnswer3: string;
 }
 
-export interface IWrongAnswerExplanations {
-  content: string;
-  role: string;
-}
+export type IWrongAnswerExplanations = string[];
 
 export interface IQuestionToSave {
   question: string;

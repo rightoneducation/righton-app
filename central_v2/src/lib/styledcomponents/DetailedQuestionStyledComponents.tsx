@@ -32,6 +32,7 @@ export const TitleBarStyled = styled(Box)(({ theme }) => ({
 
 export const QuestionTitleStyled = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
+  lineHeight: '30px',
   fontWeight: 700,
   color: '#000',
 }));
@@ -51,6 +52,7 @@ type RadioLabelProps = {
 export const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(
   ({ theme, isSelected }) => ({
     cursor: 'default',
+    margin: 0,
     color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
     '& .MuiTypography-root': {
       color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
@@ -82,8 +84,11 @@ export const ContentContainerStyled = styled(Box)<ContentContainerProps>(({ them
 
 export const ImageStyled = styled('img')({
   width: '100%',
-  height: '175px',
+  height: '100%',
   objectFit: 'cover',
+  position: 'absolute',
+  top: 0,
+  left: 0
 });
 
 export const ContentRightContainerStyled = styled(Box)(({ theme }) => ({
@@ -120,6 +125,8 @@ export const CCSSIndicator = styled(Box)(({ theme }) => ({
   zIndex: 2,
   boxSizing: 'border-box',
   minWidth: '20px',
+  display: 'flex',
+  alignItems: 'center',
 }));
 
 export const AnswerIndicator = styled(Box)(({ theme }) => ({

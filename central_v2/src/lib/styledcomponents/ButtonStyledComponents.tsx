@@ -8,24 +8,19 @@ type ButtonStyledProps = {
 export const ButtonStyled = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'buttonColor',
 })<ButtonStyledProps>(({ theme, buttonColor }) => ({
-  width: 'fit-content',
+  width: '100%',
   height: '38px',
-  borderRadius: '54px',
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
-  boxShadow: '0px 0px 8px 0px rgba(71, 217, 255, 0.4)',
-  background:
-    buttonColor === ButtonColor.RED
-      ? `${theme.palette.primary.buttonGradientRed}`
-      : `${theme.palette.primary.buttonGradientBlue}`,
+  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
+  backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionDefault}` : `${theme.palette.primary.buttonPrimaryDefault}`,
   ':hover': {
-    background:
-      buttonColor === ButtonColor.RED
-        ? `${theme.palette.primary.buttonGradientRed}`
-        : `${theme.palette.primary.buttonGradientBlue}`,
+    backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionHover}` : `${theme.palette.primary.buttonPrimaryHover}`,
   },
   '&:disabled': {
-    background: `${theme.palette.primary.buttonGradientGrey}`,
+    backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionDisable}` : `${theme.palette.primary.buttonPrimaryDisable}`,
   },
+  pointerEvents: 'auto'
 }));
 
 export const ButtonContent = styled(Box)(({ theme }) => ({
@@ -52,4 +47,43 @@ export const ButtonTypography = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
   fontWeight: '700',
   color: '#FFFFFF',
+}));
+
+export const ButtonCCSS = styled(Box)(({ theme }) => ({
+  width: 'auto',
+  height: 'auto',
+  padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding + theme.sizing.xxSmPadding}px`,
+  borderRadius: '12px',
+  backgroundColor: `${theme.palette.primary.buttonCCSSDefault}`,
+  color: '#FFFFFF',
+  textTransform: 'none',
+  fontFamily: 'Rubik',
+  fontSize: '16px',
+  fontWeight: 400,
+  lineHeight: `${theme.sizing.smPadding}px`,
+  textAlign: 'center',
+  zIndex: 2,
+  boxSizing: 'border-box',
+  minWidth: '20px',
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: `${theme.palette.primary.buttonCCSSHover}`,
+  },
+  "&:disabled": {
+    backgroundColor: `${theme.palette.primary.buttonCCSSDisable}`,
+  }
+}));
+
+export const ButtonFavourite = styled(Box)(({ theme }) => ({
+  width: '26px',
+  height: '26px',
+  borderRadius: '26px',
+  backgroundColor: 'rgba(255,255,255, 0.53)',
+  cursor: 'pointer',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'absolute',
+  top: '8px',
+  right: '4px',
 }));

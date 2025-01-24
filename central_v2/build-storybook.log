@@ -1,74 +1,104 @@
-$ storybook build --output-dir=/var/folders/vx/62pcsbgx4s18tdd6ygwrvmgw0000gn/T/chromatic--4707-OOFYzHuVbsLL
+$ storybook build --output-dir=/var/folders/vx/62pcsbgx4s18tdd6ygwrvmgw0000gn/T/chromatic--81009-ZODjrtrR2fbg
 @storybook/core v8.3.5
 
-info => Cleaning outputDir: ../../../../var/folders/vx/62pcsbgx4s18tdd6ygwrvmgw0000gn/T/chromatic--4707-OOFYzHuVbsLL
+info => Cleaning outputDir: ../../../../var/folders/vx/62pcsbgx4s18tdd6ygwrvmgw0000gn/T/chromatic--81009-ZODjrtrR2fbg
 info => Loading presets
 info => Building manager..
-info => Manager built (101 ms)
+WARN unable to find package.json for @mui/icons-material
+info => Manager built (132 ms)
 info => Building preview..
 info Addon-docs: using MDX3
 info => Loading Webpack configuration from `node_modules/react-scripts`
 info => Removing existing JavaScript and TypeScript rules.
 info => Modifying Create React App rules.
+info => Copying static files: public at ../../../../var/folders/vx/62pcsbgx4s18tdd6ygwrvmgw0000gn/T/chromatic--81009-ZODjrtrR2fbg
 info => Using default Webpack5 setup
-info => Copying static files: public at ../../../../var/folders/vx/62pcsbgx4s18tdd6ygwrvmgw0000gn/T/chromatic--4707-OOFYzHuVbsLL
 info Using tsconfig paths for react-docgen
 WARN [eslint] 
+WARN src/components/button/ButtonModels.ts
+WARN   Line 1:10:  'useTranslation' is defined but never used  @typescript-eslint/no-unused-vars
+WARN   Line 56:4:  'key' is defined but never used             @typescript-eslint/no-unused-vars
+WARN 
+WARN src/components/modal/ImageUploadModal.stories.tsx
+WARN   Line 1:17:   'useState' is defined but never used  @typescript-eslint/no-unused-vars
+WARN   Line 40:36:  Unexpected console statement          no-console
+WARN   Line 41:27:  Unexpected console statement          no-console
+WARN   Line 48:36:  Unexpected console statement          no-console
+WARN   Line 49:27:  Unexpected console statement          no-console
+WARN   Line 56:36:  Unexpected console statement          no-console
+WARN   Line 57:27:  Unexpected console statement          no-console
+WARN   Line 64:36:  Unexpected console statement          no-console
+WARN   Line 65:27:  Unexpected console statement          no-console
+WARN 
+WARN src/components/modal/ImageUploadModal.tsx
+WARN   Line 3:10:   'FileUploader' is defined but never used  @typescript-eslint/no-unused-vars
+WARN   Line 15:84:  'theme' is defined but never used         @typescript-eslint/no-unused-vars
+WARN   Line 38:37:  'theme' is defined but never used         @typescript-eslint/no-unused-vars
+WARN   Line 43:40:  'theme' is defined but never used         @typescript-eslint/no-unused-vars
+WARN   Line 49:38:  'theme' is defined but never used         @typescript-eslint/no-unused-vars
+WARN   Line 59:42:  'theme' is defined but never used         @typescript-eslint/no-unused-vars
+WARN   Line 72:36:  'theme' is defined but never used         @typescript-eslint/no-unused-vars
+WARN 
 WARN src/components/searchbar/SearchBar.stories.tsx
 WARN   Line 4:10:  'I18nextProvider' is defined but never used  @typescript-eslint/no-unused-vars
 WARN 
 WARN src/components/searchbar/SearchBar.tsx
-WARN   Line 1:27:    'ChangeEvent' is defined but never used                     @typescript-eslint/no-unused-vars
-WARN   Line 2:43:    'Button' is defined but never used                          @typescript-eslint/no-unused-vars
-WARN   Line 2:51:    'Collapse' is defined but never used                        @typescript-eslint/no-unused-vars
-WARN   Line 2:80:    'MenuItem' is defined but never used                        @typescript-eslint/no-unused-vars
-WARN   Line 2:98:    'Checkbox' is defined but never used                        @typescript-eslint/no-unused-vars
-WARN   Line 2:108:   'Chip' is defined but never used                            @typescript-eslint/no-unused-vars
-WARN   Line 2:114:   'InputLabel' is defined but never used                      @typescript-eslint/no-unused-vars
-WARN   Line 2:126:   'FormControl' is defined but never used                     @typescript-eslint/no-unused-vars
-WARN   Line 2:139:   'OutlinedInput' is defined but never used                   @typescript-eslint/no-unused-vars
-WARN   Line 2:154:   'SelectChangeEvent' is defined but never used               @typescript-eslint/no-unused-vars
-WARN   Line 52:66:   'screenSize' is defined but never used                      @typescript-eslint/no-unused-vars
-WARN   Line 64:7:    'MenuPropsStyled' is assigned a value but never used        @typescript-eslint/no-unused-vars
-WARN   Line 80:7:    'PrimaryButton2' is assigned a value but never used         @typescript-eslint/no-unused-vars
-WARN   Line 94:9:    'PrimaryButton2Text' is assigned a value but never used     @typescript-eslint/no-unused-vars
-WARN   Line 104:11:  'theme' is assigned a value but never used                  @typescript-eslint/no-unused-vars
-WARN   Line 121:11:  'handleSortOptionClick' is assigned a value but never used  @typescript-eslint/no-unused-vars
+WARN   Line 1:27:   'ChangeEvent' is defined but never used                  @typescript-eslint/no-unused-vars
+WARN   Line 6:3:    'Button' is defined but never used                       @typescript-eslint/no-unused-vars
+WARN   Line 7:3:    'Collapse' is defined but never used                     @typescript-eslint/no-unused-vars
+WARN   Line 10:3:   'MenuItem' is defined but never used                     @typescript-eslint/no-unused-vars
+WARN   Line 12:3:   'Checkbox' is defined but never used                     @typescript-eslint/no-unused-vars
+WARN   Line 13:3:   'Chip' is defined but never used                         @typescript-eslint/no-unused-vars
+WARN   Line 14:3:   'InputLabel' is defined but never used                   @typescript-eslint/no-unused-vars
+WARN   Line 15:3:   'FormControl' is defined but never used                  @typescript-eslint/no-unused-vars
+WARN   Line 16:3:   'OutlinedInput' is defined but never used                @typescript-eslint/no-unused-vars
+WARN   Line 17:3:   'SelectChangeEvent' is defined but never used            @typescript-eslint/no-unused-vars
+WARN   Line 20:8:   'debounce' is defined but never used                     @typescript-eslint/no-unused-vars
+WARN   Line 73:6:   'screenSize' is defined but never used                   @typescript-eslint/no-unused-vars
+WARN   Line 86:7:   'MenuPropsStyled' is assigned a value but never used     @typescript-eslint/no-unused-vars
+WARN   Line 102:7:  'PrimaryButton2' is assigned a value but never used      @typescript-eslint/no-unused-vars
+WARN   Line 118:7:  'PrimaryButton2Text' is assigned a value but never used  @typescript-eslint/no-unused-vars
+WARN   Line 133:9:  'theme' is assigned a value but never used               @typescript-eslint/no-unused-vars
 WARN 
 WARN src/components/searchbar/SelectGradesMenu.tsx
-WARN   Line 80:74:  'prev' is defined but never used  @typescript-eslint/no-unused-vars
+WARN   Line 108:19:  'prev' is defined but never used  @typescript-eslint/no-unused-vars
 WARN 
 WARN src/components/searchbar/SortSearchMenu.tsx
-WARN   Line 24:3:   'handleChooseGrades' is defined but never used  @typescript-eslint/no-unused-vars
-WARN   Line 43:71:  'prev' is defined but never used                @typescript-eslint/no-unused-vars
+WARN   Line 3:10:   'GradeTarget' is defined but never used  @typescript-eslint/no-unused-vars
+WARN   Line 61:19:  'prev' is defined but never used         @typescript-eslint/no-unused-vars
 WARN 
 WARN src/lib/Theme.tsx
-WARN   Line 128:34:  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+WARN   Line 135:34:  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+WARN 
+WARN src/lib/styledcomponents/ButtonStyledComponents.tsx
+WARN   Line 32:45:  'theme' is defined but never used  @typescript-eslint/no-unused-vars
+WARN   Line 46:51:  'theme' is defined but never used  @typescript-eslint/no-unused-vars
+WARN   Line 51:55:  'theme' is defined but never used  @typescript-eslint/no-unused-vars
 WARN 
 WARN src/lib/styledcomponents/SelectGrade.tsx
 WARN   Line 1:8:     'React' is defined but never used        @typescript-eslint/no-unused-vars
 WARN   Line 1:17:    'useState' is defined but never used     @typescript-eslint/no-unused-vars
 WARN   Line 1:27:    'ChangeEvent' is defined but never used  @typescript-eslint/no-unused-vars
-WARN   Line 108:46:  'theme' is defined but never used        @typescript-eslint/no-unused-vars
+WARN   Line 112:47:  'theme' is defined but never used        @typescript-eslint/no-unused-vars
 WARN 
 WARN src/lib/styledcomponents/SortSearch.tsx
 WARN   Line 1:8:     'React' is defined but never used       @typescript-eslint/no-unused-vars
-WARN   Line 18:35:   'screenSize' is defined but never used  @typescript-eslint/no-unused-vars
-WARN   Line 117:46:  'theme' is defined but never used       @typescript-eslint/no-unused-vars
+WARN   Line 17:35:   'screenSize' is defined but never used  @typescript-eslint/no-unused-vars
+WARN   Line 133:47:  'theme' is defined but never used       @typescript-eslint/no-unused-vars
 WARN 
 WARN 
 WARN asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 WARN This can impact web performance.
 WARN Assets: 
-WARN   757.7d3e4616.iframe.bundle.js (1.24 MiB)
+WARN   169.8234ee49.iframe.bundle.js (1.29 MiB)
 WARN   205.b3bc747d.iframe.bundle.js (1.01 MiB)
 WARN   668.78efe269.iframe.bundle.js (1.43 MiB)
 WARN entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 WARN Entrypoints:
 WARN   main (1.44 MiB)
-WARN       runtime~main.e25c9d54.iframe.bundle.js
+WARN       runtime~main.0cce7f31.iframe.bundle.js
 WARN       668.78efe269.iframe.bundle.js
-WARN       main.dbf3b530.iframe.bundle.js
+WARN       main.b8a38c1e.iframe.bundle.js
 WARN 
 info => Preview built (14 s)
-info => Output directory: /var/folders/vx/62pcsbgx4s18tdd6ygwrvmgw0000gn/T/chromatic--4707-OOFYzHuVbsLL
+info => Output directory: /var/folders/vx/62pcsbgx4s18tdd6ygwrvmgw0000gn/T/chromatic--81009-ZODjrtrR2fbg

@@ -13,16 +13,16 @@ export const SelectContainer = styled(Box)(() => {
 
 export const SelectGrade = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize: ScreenSize }>(({ screenSize }) => ({
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
   width: screenSize === ScreenSize.SMALL ? '38px' : '240px',
   minHeight: '44px',
-  background: 'linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)',
-  borderTopLeftRadius: '22px',
-  borderBottomLeftRadius: '22px',
+  background: `${theme.palette.primary.searchButtonColor}`,
+  borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
+  borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
   gap: '16px',
   zIndex: 4,
   cursor: 'pointer',
@@ -32,7 +32,7 @@ export const SelectLabel = styled(Typography)(() => {
   return {
     color: 'white',
     fontFamily: 'Poppins',
-    fontSize: '20',
+    fontSize: '20px',
     fontWeight: '700',
   };
 });
@@ -69,25 +69,27 @@ export const SelectArrowContainer = styled(Box, {
 }));
 
 export const SelectMenu = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSelectOpen',
-})<{ isSelectOpen: boolean }>(({ isSelectOpen }) => ({
+  shouldForwardProp: (prop) => prop !== 'isSelectOpen' && prop !== 'screenSize',
+})<{ isSelectOpen: boolean, screenSize: ScreenSize }>(({ theme, isSelectOpen, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'center',
   zIndex: 3,
   background: 'white',
-  borderTopLeftRadius: '16px',
-  borderBottomLeftRadius: '16px',
-  borderBottomRightRadius: '16px',
+  gap: `${theme.sizing.xxSmPadding}px`,
+  borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
+  borderTopRightRadius: screenSize === ScreenSize.LARGE ? 0: `${theme.sizing.xSmPadding}px`,
+  borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
+  borderBottomRightRadius: `${theme.sizing.xSmPadding}px`,
   paddingLeft: '36px',
   paddingRight: '36px',
-  paddingTop: '8px',
-  paddingBottom: '8px',
+  paddingTop: `${theme.sizing.xSmPadding}px`,
+  paddingBottom: `${theme.sizing.xSmPadding}px`,
   position: 'absolute',
   top: '44px',
   left: 0,
-  width: '100%',
+  width: screenSize === ScreenSize.LARGE ? '100%' : `calc(100vw - 16px - 44px - ${theme.sizing.lgPadding}px - ${theme.sizing.lgPadding}px)`,
   minWidth: '240px',
   boxSizing: 'border-box',
   transition: isSelectOpen
@@ -95,19 +97,21 @@ export const SelectMenu = styled(Box, {
     : 'opacity 300ms ease, transform 150ms ease-in-out',
   opacity: isSelectOpen ? 1 : 0,
   transform: isSelectOpen ? 'translateY(0px)' : 'translateY(-20px)',
-  boxShadow: '0px 8px 16px -4px rgba(0, 0, 0, 0.4)',
+  boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.15)',
 }));
 
-export const SelectMenuItem = styled(Box)(() => {
-  return {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    gap: '16px',
-  };
-});
+export const SelectMenuItem = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  gap: `${theme.sizing.xSmPadding}px`,
+  paddingTop: `${theme.sizing.xSmPadding}px`,
+  paddingBottom: `${theme.sizing.xSmPadding}px`,
+  paddingLeft: `${theme.sizing.xSmPadding}px`,
+  borderSizing: 'border-box',
+}));
 
 export const SelectButtonBox = styled(Box)(({ theme }) => ({
   width: '100%',

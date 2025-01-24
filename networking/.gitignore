@@ -2,6 +2,7 @@ lib
 src/index.ts
 package-lock.json
 
+!src/AI/lib
 
 amplify/mock-api-resources
 

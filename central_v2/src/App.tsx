@@ -12,6 +12,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { APIClientsContext } from './lib/context/APIClientsContext';
 import Theme from './lib/Theme';
 import AppSwitch from './switches/AppSwitch';
+import CreateQuestionLoader from './loaders/CreateQuestionLoader';
 
 function App() {
   const { apiClients, loading } = useAPIClients(
@@ -34,6 +35,7 @@ function App() {
             <Route path="/signup" element={<AppSwitch />} />
             <Route path="/confirmation" element={<AppSwitch />} />
 
+            <Route path="/create/question" element={<AppSwitch />} loader={CreateQuestionLoader}/>
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />

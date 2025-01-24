@@ -9,9 +9,11 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `
     onCreatePublicGameTemplate(filter: $filter, owner: $owner) {
       id
       title
+      lowerCaseTitle
       owner
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -42,9 +44,11 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `
     onUpdatePublicGameTemplate(filter: $filter, owner: $owner) {
       id
       title
+      lowerCaseTitle
       owner
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -75,9 +79,11 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `
     onDeletePublicGameTemplate(filter: $filter, owner: $owner) {
       id
       title
+      lowerCaseTitle
       owner
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -109,8 +115,10 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `
       id
       owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -142,8 +150,10 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `
       id
       owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -175,8 +185,10 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `
       id
       owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -206,15 +218,17 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onCreatePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -225,6 +239,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -236,15 +251,17 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onUpdatePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -255,6 +272,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -266,15 +284,17 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `
   ) {
     onDeletePublicQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -285,6 +305,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -298,13 +319,16 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -328,13 +352,16 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -358,13 +385,16 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -745,9 +775,11 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
       publicGameTemplate {
         id
         title
+        lowerCaseTitle
         owner
         version
         description
+        lowerCaseDescription
         ccss
         domain
         cluster
@@ -766,21 +798,24 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        owner
         title
+        lowerCaseTitle
         version
         choices
         instructions
         answerSettings
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         imageUrl
         gameTemplatesCount
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -802,9 +837,11 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
       publicGameTemplate {
         id
         title
+        lowerCaseTitle
         owner
         version
         description
+        lowerCaseDescription
         ccss
         domain
         cluster
@@ -823,21 +860,24 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        owner
         title
+        lowerCaseTitle
         version
         choices
         instructions
         answerSettings
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         imageUrl
         gameTemplatesCount
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -859,9 +899,11 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
       publicGameTemplate {
         id
         title
+        lowerCaseTitle
         owner
         version
         description
+        lowerCaseDescription
         ccss
         domain
         cluster
@@ -880,21 +922,24 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `
       }
       publicQuestionTemplate {
         id
-        owner
         title
+        lowerCaseTitle
         version
         choices
         instructions
         answerSettings
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         imageUrl
         gameTemplatesCount
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -917,8 +962,10 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
         id
         owner
         title
+        lowerCaseTitle
         version
         description
+        lowerCaseDescription
         ccss
         domain
         cluster
@@ -939,13 +986,16 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
         id
         owner
         title
+        lowerCaseTitle
         version
         choices
         instructions
         answerSettings
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         imageUrl
         gameTemplatesCount
@@ -974,8 +1024,10 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
         id
         owner
         title
+        lowerCaseTitle
         version
         description
+        lowerCaseDescription
         ccss
         domain
         cluster
@@ -996,13 +1048,16 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
         id
         owner
         title
+        lowerCaseTitle
         version
         choices
         instructions
         answerSettings
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         imageUrl
         gameTemplatesCount
@@ -1031,8 +1086,10 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
         id
         owner
         title
+        lowerCaseTitle
         version
         description
+        lowerCaseDescription
         ccss
         domain
         cluster
@@ -1053,13 +1110,16 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
         id
         owner
         title
+        lowerCaseTitle
         version
         choices
         instructions
         answerSettings
+        ccss
         domain
         cluster
         grade
+        gradeFilter
         standard
         imageUrl
         gameTemplatesCount

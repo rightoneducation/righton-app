@@ -1,11 +1,10 @@
 import React from 'react';
-import { Box, Fade, Skeleton } from '@mui/material';
+import { Box, Fade, Skeleton, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const GameCard = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '260px',
-  padding: `12px ${theme.sizing.smPadding}px 12px ${theme.sizing.smPadding}px`,
+  maxWidth: '384px',
+  height: '100%',
   gap: `${theme.sizing.smPadding}px`,
   borderRadius: `${theme.sizing.smPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
@@ -21,6 +20,7 @@ interface SkeletonGameCardProps {
 }
 
 export default function SkeletonGameCard({ index }: SkeletonGameCardProps) {
+  const theme = useTheme();
   return (
     <Fade
       in
@@ -29,60 +29,27 @@ export default function SkeletonGameCard({ index }: SkeletonGameCardProps) {
     >
       <GameCard
         sx={{
-          padding: 2,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
-          gap: 2,
-          height: '260px',
+          gap: '12px'
         }}
       >
+        <Skeleton animation="wave" variant="rounded" width="100%" height="186px"/>
         <Box
           sx={{
             display: 'flex',
+            flexDirection: 'column',
             alignContents: 'center',
             justifyContent: 'space-between',
+            paddingLeft:  `${theme.sizing.smPadding}px`,
+            paddingRight: `${theme.sizing.smPadding}px`,
+            paddingBottom: `${theme.sizing.smPadding}px`,
+            gap: '12px'
           }}
         >
-          <Skeleton animation="wave" variant="text" width="70%" height={30} />
-          <Skeleton
-            animation="wave"
-            variant="circular"
-            width={30}
-            height={30}
-          />
-        </Box>
-        <Box sx={{ display: 'flex', gap: 2, flexGrow: 1, width: '100%' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              flexGrow: 1,
-              width: '100%',
-            }}
-          >
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Skeleton
-                animation="wave"
-                variant="text"
-                width="100%"
-                height={20}
-              />
-              <Skeleton
-                animation="wave"
-                variant="text"
-                width="100%"
-                height={20}
-              />
-              <Skeleton
-                animation="wave"
-                variant="text"
-                width="100%"
-                height={20}
-              />
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2 }}>
+          <Skeleton animation="wave" variant="text" width="100%" height='45px' />
+          <Box sx={{ display: 'flex', gap: 2 }}>
               <Skeleton
                 animation="wave"
                 variant="rounded"
@@ -102,6 +69,25 @@ export default function SkeletonGameCard({ index }: SkeletonGameCardProps) {
                 height={15}
               />
             </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Skeleton
+              animation="wave"
+              variant="text"
+              width="100%"
+              height={20}
+            />
+            <Skeleton
+              animation="wave"
+              variant="text"
+              width="100%"
+              height={20}
+            />
+            <Skeleton
+              animation="wave"
+              variant="text"
+              width="100%"
+              height={20}
+            />
           </Box>
           <Box sx={{ width: '100%' }}>
             <Skeleton
@@ -110,29 +96,17 @@ export default function SkeletonGameCard({ index }: SkeletonGameCardProps) {
               sx={{ borderRadius: 1, height: '100%' }}
             />
           </Box>
-        </Box>
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 2,
-          }}
-        >
           <Skeleton
             animation="wave"
-            variant="rectangular"
-            width={60}
-            height={30}
-            sx={{ borderRadius: 1 }}
+            variant="rounded"
+            width='100%'
+            height='38px'
           />
           <Skeleton
             animation="wave"
-            variant="rectangular"
-            width={60}
-            height={30}
-            sx={{ borderRadius: 1 }}
+            variant="rounded"
+            width='100%'
+            height='38px'
           />
         </Box>
       </GameCard>

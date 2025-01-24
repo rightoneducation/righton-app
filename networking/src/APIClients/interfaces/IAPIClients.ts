@@ -9,10 +9,12 @@ import { ITeamAPIClient } from '../gamesession/interfaces/ITeamAPIClient';
 import { ITeamMemberAPIClient } from '../gamesession/interfaces/ITeamMemberAPIClient';
 import { ITeamAnswerAPIClient } from '../gamesession/interfaces/ITeamAnswerAPIClient';
 import { ICentralDataManagerAPIClient, IHostDataManagerAPIClient, IPlayDataManagerAPIClient } from '../datamanagers';
+import IAIAPIClient from '../AI/interfaces/IAIAPIClient';
 
 export interface IAPIClients {
   auth: IAuthAPIClient;
   user: IUserAPIClient;
+  AI: IAIAPIClient;
   gameTemplate: IGameTemplateAPIClient;
   questionTemplate: IQuestionTemplateAPIClient;
   gameQuestions: IGameQuestionsAPIClient;

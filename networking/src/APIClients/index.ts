@@ -2,6 +2,7 @@
 
 export * from './APIClients';
 export * from './BaseAPIClient';
+export * from './AI';
 export * from './auth';
 export * from './datamanagers';
 export * from './gamesession';
