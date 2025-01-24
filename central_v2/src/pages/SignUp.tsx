@@ -1,4 +1,4 @@
-import React, { useState, useRef  } from 'react';
+import React, { useState, useRef, useEffect  } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import {Box, FormControl, Typography, Select, TextField, MenuItem, SelectChangeEvent, Button} from '@mui/material';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
@@ -6,7 +6,10 @@ import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import RightOnLogo from "../images/RightOnLogo.png";
 import Adpic from "../images/@.svg"
+import Confirmation from './Confirmation';
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -221,171 +224,177 @@ const HaveAnAccountText = styled(Typography)(({ theme }) => ({
   fontSize: '16px', 
 }));
 
-export default function SignUp() {
 
+function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void }) {
   const [title, setTitle] = useState('Title...');
-  const [firstName, setFirstName] = useState(''); 
-  const [lastName, setLastName] = useState(''); 
-  const [userName, setUserName] = useState(''); 
-  const [schoolEmail, setSchoolEmail] = useState(''); 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [schoolEmail, setSchoolEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const [imageFront, setImageFront] = useState<File | null>(null);
-  const [imageBack, setImageBack] = useState<File | null>(null);
-
-  const [password, setPassword] = useState(''); 
-  const [confirmPassword, setConfirmPassword] = useState(''); 
+  const buttonTypeNext = ButtonType.NEXTSTEP;
+  const [isNextEnabled, setIsNextEnabled] = useState(true);
 
   const buttonType = ButtonType.LOGIN;
   const [isEnabled, setIsEnabled] = useState(true);
 
-  const buttonTypeNext = ButtonType.NEXTSTEP;
-  const [isNextEnabled, setIsNextEnabled] = useState(false);
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
 
-  const buttonTypeUpload = ButtonType.UPLOAD;
-  const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
+  const handleSubmit = async () => {
+    setLoading(true);
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords don't match");
+      setLoading(false);
+      return;
+    }
 
-  const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
-  
+    const user = {
+      userName,
+      title,
+      firstName,
+      lastName,
+      email: schoolEmail,
+      password,
+      gamesMade: 77,
+      questionsMade: 16,
+    };
 
-const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setFirstName(event.target.value);
-}
-const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setLastName(event.target.value);
-}
-const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setUserName(event.target.value);
-}
-const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setPassword(event.target.value);
-}
+    try {
+      await apiClients.auth.awsSignUp(userName, schoolEmail, password);
+      await apiClients.user.createUser(user); // Save user to the backend
+      handleUserCreate(userName); // Trigger switch to confirmation
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
+  };
 
-const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setConfirmPassword(event.target.value);
-}
-
-const handleSchoolEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setSchoolEmail(event.target.value);
-}
-
-
-const handleImageFrontChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    setImageFront(file);
-  }
-};
-
-const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    setImageBack(file);
-  }
-};
   return (
-      <SignUpMainContainer>
-        <InnerBodyContainer>
-          <UpperSignup >
-            <img src={RightOnLogo} alt="Right On Logo" style={{width: '200px', height: '200px'}}/> 
-            <UpperSignupSubStepText>
-              Step 1: New Account Registration
-            </UpperSignupSubStepText>
-            <UpperSignupSubGoogle>
-              Sign Up with Google
-            </UpperSignupSubGoogle>
-          </UpperSignup>
+    <SignUpMainContainer>
+      <InnerBodyContainer>
+        <UpperSignup>
+          <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
+          <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
+          <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle>
+        </UpperSignup>
 
-          <OrText>
-              Or
-          </OrText>
+        <OrText>Or</OrText>
 
-          <MiddleText>
-            <MiddleTextFirstRow>
-              <TitleField
-                select
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                variant="outlined"
-                SelectProps={{
-                  IconComponent: DropDown,  // Custom icon component
-                }}
-                >
-                  <MenuItem value="Title...">
-                    Title...
-                  </MenuItem>
-                  <MenuItem value="Mr.">Mr.</MenuItem>
-                  <MenuItem value="Mrs.">Mrs.</MenuItem>
-                  <MenuItem value="Ms.">Ms.</MenuItem>
-                  <MenuItem value="Dr.">Dr.</MenuItem>
-              </TitleField>
-              <UserTextField
-                variant="outlined"
-                placeholder="First Name"
-                value={firstName}
-                onChange={handleFirstNameChange} 
-              />
-              <UserTextField
-                variant="outlined"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={handleLastNameChange} 
-              />
-            </MiddleTextFirstRow>
-            <MiddleTextSecondRow>
-                <img src={Adpic} alt="Adpic" style={{width: '26px'}}/>
-                <UserTextField 
-                  variant="outlined"
-                  placeholder="Username..."
-                  value={userName}
-                  onChange={handleUserNameChange} 
-                />
-            </MiddleTextSecondRow>
+        <MiddleText>
+          <MiddleTextFirstRow>
+            <TitleField
+              select
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              variant="outlined"
+              SelectProps={{
+                IconComponent: DropDown, // Custom icon component
+              }}
+            >
+              <MenuItem value="Title...">Title...</MenuItem>
+              <MenuItem value="Mr.">Mr.</MenuItem>
+              <MenuItem value="Mrs.">Mrs.</MenuItem>
+              <MenuItem value="Ms.">Ms.</MenuItem>
+              <MenuItem value="Dr.">Dr.</MenuItem>
+            </TitleField>
             <UserTextField
               variant="outlined"
-              placeholder="School Email..."
-              value={schoolEmail}
-              onChange={handleSchoolEmailChange}/>
-            <MiddleTextFourthRow>
-              Teacher ID Image
-            </MiddleTextFourthRow>
-          </MiddleText>
+              placeholder="First Name"
+              value={firstName}
+              onChange={(event) => setFirstName(event.target.value)}
+            />
+            <UserTextField
+              variant="outlined"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(event) => setLastName(event.target.value)}
+            />
+          </MiddleTextFirstRow>
+          <MiddleTextSecondRow>
+            <img src={Adpic} alt="Adpic" style={{ width: '26px' }} />
+            <UserTextField
+              variant="outlined"
+              placeholder="Username..."
+              value={userName}
+              onChange={(event) => setUserName(event.target.value)}
+            />
+          </MiddleTextSecondRow>
+          <UserTextField
+            variant="outlined"
+            placeholder="School Email..."
+            value={schoolEmail}
+            onChange={(event) => setSchoolEmail(event.target.value)}
+          />
+          <MiddleTextFourthRow>Teacher ID Image</MiddleTextFourthRow>
+        </MiddleText>
 
-          <UploadImagesAndPassword>
-            <UploadImages >
-                <UploadImageContainer>
-                  <ImageText>Front</ImageText>
-                  <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadFrontEnabled} />
-                </UploadImageContainer>
+        <UploadImagesAndPassword>
+          <PasswordContainer>
+            <UserTextField
+              variant="outlined"
+              placeholder="Password..."
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              error={!!passwordError}
+            />
+            <UserTextField
+              variant="outlined"
+              placeholder="Confirm Password..."
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              error={!!passwordError}
+            />
+          </PasswordContainer>
+        </UploadImagesAndPassword>
 
-                <UploadImageContainer>
-                    <ImageText>Back</ImageText>
-                    <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadBackEnabled} />
-                </UploadImageContainer>
-            </UploadImages>
-            <PasswordContainer>
-              <UserTextField
-                  variant="outlined"
-                  placeholder="Password..."
-                  value={password}
-                  onChange={handlePasswordChange} />
-              <UserTextField
-                  variant="outlined"
-                  placeholder="Confirm Password..."
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordChange} />
-            </PasswordContainer>
-          </UploadImagesAndPassword>
-
-          <LowerLogin>
-              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} />
+        <LowerLogin>
+              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} onClick={handleSubmit}/>
               <LowestContainer>
                 <HaveAnAccountText>
                   Already have an account?
                 </HaveAnAccountText>
-                <CentralButton buttonType={buttonType} isEnabled={isEnabled} />
+                <CentralButton buttonType={buttonType} isEnabled={isEnabled}  />
               </LowestContainer>
-          </LowerLogin>
-        </InnerBodyContainer>
-      </SignUpMainContainer>
+        </LowerLogin>
+      </InnerBodyContainer>
+    </SignUpMainContainer>
   );
 }
+
+export default function SignUpSwitch() {
+  const [userName, setUserName] = useState(''); // Track the submitted username
+  const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
+
+  const handleUserCreate = (user: string) => {
+    setUserName(user);
+    setIsUserSubmitted(true); // Trigger confirmation view
+  };
+
+  return isUserSubmitted ? (
+    <Confirmation userName={userName} /> // Render confirmation page
+  ) : (
+    <SignUp handleUserCreate={handleUserCreate} /> // Render signup page
+  );
+}
+
+
+
+// Const [userName, setUserName = useState(‘’);
+//   Const [isUserSubmitted, setIsUserSubmitted] = userState(false)
+    
+//   Const handleUserCreate = (user) => {
+//   setUserName(user)
+//   setIsUserSubmitted(true)
+//   }
+  
+  
+//   <Signup Switch>
+//     { !isUserSubmitted 
+//       ? <Signup handleUserCreate={handleUserCreate}>
+//       : <Confirmation userName={username}
+//   }
+//   </Signup Switch>

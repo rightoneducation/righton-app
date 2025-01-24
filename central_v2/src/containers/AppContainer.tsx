@@ -40,6 +40,7 @@ interface AppContainerProps {
 
 function AppContainer({ currentScreen, children }: AppContainerProps) {
   const theme = useTheme();
+  console.log('children here:', children)
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));

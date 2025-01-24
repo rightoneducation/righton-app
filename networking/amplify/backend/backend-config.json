@@ -104,6 +104,20 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "teacherIdAuth": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "uploadExternalImageToS3": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -166,6 +180,22 @@
         {
           "category": "function",
           "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_teacherIdAuth_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "teacherIdAuth"
+        }
+      ]
+    },
+    "AMPLIFY_function_teacherIdAuth_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "teacherIdAuth"
         }
       ]
     },

@@ -8,6 +8,7 @@ import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUp from '../pages/SignUp';
 import CreateQuestion from '../pages/CreateQuestion';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
+import Confirmation from '../pages/Confirmation';
 
 // interface AppSwitchProps {
 // }
@@ -26,6 +27,8 @@ function AppSwitch() {
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
+  const confirmationScreen = useMatch('/confirmation') !== null;
+
   switch (true) {
     case questionScreen: {
       return (
@@ -56,6 +59,13 @@ function AppSwitch() {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP}>
           <CreateQuestion screenSize={screenSize}/>
+        </AppContainer>
+      );
+    }
+    case confirmationScreen: {
+      return (
+        <AppContainer currentScreen={ScreenType.CONFIRMATION}>
+          <Confirmation />
         </AppContainer>
       );
     }
