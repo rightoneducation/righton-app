@@ -10,17 +10,22 @@ export const ButtonStyled = styled(Button, {
 })<ButtonStyledProps>(({ theme, buttonColor }) => ({
   width: '100%',
   height: '38px',
+  padding: 0,
   borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
   boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
-  backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionDefault}` : `${theme.palette.primary.buttonPrimaryDefault}`,
+  borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
+  borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
+  borderColor: buttonColor === ButtonColor.NULL ? `${theme.palette.primary.buttonPrimaryDefault}` : 'none',
+  backgroundColor: buttonColor === ButtonColor.NULL ? `transparent` : `${theme.palette.primary.buttonPrimaryDefault}`,
   ':hover': {
-    backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionHover}` : `${theme.palette.primary.buttonPrimaryHover}`,
+    backgroundColor: buttonColor === ButtonColor.NULL ? `${theme.palette.primary.buttonCCSSDisable}` : `${theme.palette.primary.buttonPrimaryHover}`,
   },
   '&:disabled': {
-    backgroundColor: buttonColor === ButtonColor.RED ? `${theme.palette.primary.buttonActionDisable}` : `${theme.palette.primary.buttonPrimaryDisable}`,
+    backgroundColor: buttonColor === ButtonColor.NULL ? `transparent` : `${theme.palette.primary.buttonPrimaryDisable}`,
   },
-  pointerEvents: 'auto'
+  boxSizing: 'border-box',
+  pointerEvents: 'auto',
 }));
 
 export const ButtonContent = styled(Box)(({ theme }) => ({
@@ -42,16 +47,20 @@ export const ButtonIconContainer = styled(Box)(({ theme }) => ({
   width: '20px',
 }));
 
-export const ButtonTypography = styled(Typography)(({ theme }) => ({
+export const ButtonTypography = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'buttonColor',
+})<ButtonStyledProps>(({ theme, buttonColor }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
   fontWeight: '700',
-  color: '#FFFFFF',
+  textTransform: 'none',
+  padding: 0,
+  color: buttonColor === ButtonColor.NULL ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
 }));
 
 export const ButtonCCSS = styled(Box)(({ theme }) => ({
   width: 'auto',
-  height: 'auto',
+  height: '24px',
   padding: `${theme.sizing.xxSmPadding}px ${theme.sizing.xSmPadding + theme.sizing.xxSmPadding}px`,
   borderRadius: '12px',
   backgroundColor: `${theme.palette.primary.buttonCCSSDefault}`,
@@ -66,6 +75,9 @@ export const ButtonCCSS = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
   minWidth: '20px',
   cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   '&:hover': {
     backgroundColor: `${theme.palette.primary.buttonCCSSHover}`,
   },
@@ -86,4 +98,9 @@ export const ButtonFavourite = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: '8px',
   right: '4px',
+}));
+
+
+export const ButtonIconBlue = styled('img')(({ theme }) => ({
+  filter: 'brightness(0) saturate(100%) invert(14%) sepia(22%) saturate(7087%) hue-rotate(212deg) brightness(93%) contrast(86%)'
 }));

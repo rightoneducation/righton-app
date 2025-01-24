@@ -8,6 +8,7 @@ import {
   ButtonContent,
   ButtonIconContainer,
   ButtonTypography,
+  ButtonIconBlue
 } from '../../lib/styledcomponents/ButtonStyledComponents';
 
 interface CentralButtonProps {
@@ -34,6 +35,7 @@ export default function CentralButton({
     ? t(`button.${buttonObj.textKey}`)
     : null;
   const buttonColor = buttonObj.color ?? ButtonColor.BLUE;
+  const buttonWidth = buttonObj.width ?? '100%';
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')) && !smallScreenOverride;
 
   const handleButtonClick = () => {
@@ -59,17 +61,24 @@ export default function CentralButton({
       buttonColor={buttonColor}
       disabled={!isEnabled}
       onClick={handleButtonClick}
+      style={{width: buttonWidth}}
     >
       <ButtonContent>
         {buttonObj.icon && (
           <ButtonIconContainer>
-            <img src={buttonObj.icon} alt={`${buttonText}`} />
+            { buttonColor === ButtonColor.NULL
+              ? <ButtonIconBlue src={buttonObj.icon}/>
+              : <img src={buttonObj.icon} alt={`${buttonText}`} />
+            }
           </ButtonIconContainer>
         )}
-        {buttonText && !isSmallScreen && <ButtonTypography> {buttonText} </ButtonTypography>}
+        {buttonText && !isSmallScreen && <ButtonTypography buttonColor={buttonColor}> {buttonText} </ButtonTypography>}
         {buttonObj.rightIcon && (
           <ButtonIconContainer>
-            <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
+            { buttonColor === ButtonColor.NULL
+              ? <ButtonIconBlue src={buttonObj.rightIcon}/>
+              : <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
+            }
           </ButtonIconContainer>
         )}
       </ButtonContent>

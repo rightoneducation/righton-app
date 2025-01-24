@@ -1,15 +1,10 @@
 import React from 'react';
 import { Box, Grid, TextField, Paper, Button, styled } from '@mui/material';
-import { ScreenSize } from '../CentralModels';
+import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'flex-start',
-  backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -17,11 +12,20 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
-  gap: `${theme.sizing.lgPadding}px`,
-  paddingTop: `${theme.sizing.lgPadding}px`,
-  paddingLeft: `${theme.sizing.mdPadding}px`,
-  paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
+}));
+
+export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  opacity: 0.1,
+  position: 'absolute',
+  zIndex: 0,
+  backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
+  backgroundImage: `
+    linear-gradient(180deg, rgb(254, 251, 247) 0%, rgba(254, 251, 247, 0) 100%),
+    url(${mathSymbolsBackground})
+  `,
 }));
 
 interface BaseCardStyledProps {
@@ -60,11 +64,11 @@ export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>((
   margin: 0,
   padding: 0,
   boxSizing: 'border-box',
-  borderRadius: `${theme.sizing.xSmPadding}px`,
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
       borderWidth: `2px`,
       borderColor: isAIEnabled ? `${theme.palette.primary.darkPurple}`: `${theme.palette.primary.grey}`,
+      borderRadius: `${theme.sizing.xSmPadding}px`,
      },
     "&.Mui-focused fieldset": {
       borderWidth: `2px`,
@@ -79,6 +83,50 @@ export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>((
       borderColor: theme.palette.error.main,
     },
   },
+}));
+
+export const ImageURLTextContainerStyled = styled(TextContainerStyled)(({ theme }) => ({
+  height: '60px',
+  input: {
+    color: "#000",
+    zIndex: 1
+  },
+  '& .MuiInputBase-input': {
+    width: `calc(100% - 130px)`,
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      height: '60px',
+      backgroundColor: `${theme.palette.primary.uploadLightGrey}`,
+      zIndeX: 0
+    },
+  }
+}));
+
+export const ImageURLUploadButton = styled(Box)(({ theme }) => ({
+  width: '100px',
+  height: '43px',
+  fontWeight: 700,
+  fontSize: '18px',
+  backgroundColor: '#FFFFFF',
+  borderRadius: '8px',
+  borderColor: `${theme.palette.primary.uploadDarkGrey}`, 
+  borderStyle: 'solid',
+  borderWidth: '2px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  cursor: 'pointer',
+  "&:hover": {
+    backgroundColor: `${theme.palette.primary.uploadLightGrey}`
+  },
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  zIndex: 2,
+  boxSizing: 'border-box',
+  marginTop: '8px',
+  marginRight: '10px'
 }));
 
 export const RegenTextContainerStyled = styled(TextField)(({ theme }) => ({

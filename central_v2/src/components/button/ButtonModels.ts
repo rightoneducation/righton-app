@@ -20,6 +20,7 @@ export enum ButtonType {
   VIEW = 'view',
   LAUNCH = 'launch',
   UPLOAD = 'upload',
+  UPLOADIMAGE = 'uploadimage',
   NEXTSTEP = 'nextstep',
   VERIFY = 'verify',
   GETSTARTED = 'getstarted',
@@ -52,6 +53,7 @@ export enum ButtonType {
 export enum ButtonColor {
   RED,
   BLUE,
+  NULL
 }
 
 type ButtonContentMapProps = {
@@ -60,6 +62,7 @@ type ButtonContentMapProps = {
     textKey?: string;
     color?: ButtonColor;
     rightIcon?: string;
+    width?: string;
   };
 };
 
@@ -85,6 +88,11 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.UPLOAD]: {
     icon: upload,
     textKey: ButtonType.UPLOAD,
+  },
+  [ButtonType.UPLOADIMAGE]: {
+    icon: upload,
+    textKey: ButtonType.UPLOADIMAGE,
+    width: '200px'
   },
   [ButtonType.NEXTSTEP]: {
     textKey: ButtonType.NEXTSTEP,
@@ -126,6 +134,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.SAVE]: {
     icon: save,
     textKey: ButtonType.SAVE,
+    width: '200px'
   },
   [ButtonType.DISCARD]: {
     icon: discard,
@@ -143,14 +152,18 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.BROWSEFILES]: {
     icon: upload,
     textKey: ButtonType.BROWSEFILES,
+    width: '200px'
   },
   [ButtonType.CHANGEIMAGE]: {
     icon: upload,
     textKey: ButtonType.CHANGEIMAGE,
+    width: '220px',
+    color: ButtonColor.NULL
   },
   [ButtonType.NEXTCARD]: {
     icon: next,
     textKey: ButtonType.NEXTCARD,
+    width: '200px'
   },
   [ButtonType.LAUNCHGAME]: {
     icon: launch,

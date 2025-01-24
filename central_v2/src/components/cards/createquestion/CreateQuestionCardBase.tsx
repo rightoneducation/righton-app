@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 import { 
   PublicPrivateType,
   CentralQuestionTemplateInput
@@ -20,11 +21,13 @@ import {
 import {
   ErrorIcon
 } from '../../../lib/styledcomponents/CentralStyledComponents';
+import CentralButton from '../../button/Button';
+import { ButtonType } from '../../button/ButtonModels';
+import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
 import ImageButton from '../../button/imagebutton/ImageButton';
 import { ImageButtonType } from '../../button/imagebutton/ImageButtonModels';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
-import arrow from '../../../images/SelectArrow.svg';
 import errorIcon from '../../../images/errorIcon.svg';
 
 interface CreateQuestionCardBaseProps {
@@ -33,7 +36,6 @@ interface CreateQuestionCardBaseProps {
   handleTitleChange: (title: string, draftQuestion: CentralQuestionTemplateInput) => void;
   handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
-  handleImageURLClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   isHighlight: boolean;
   isCardSubmitted: boolean;
@@ -48,13 +50,14 @@ type ImagePlaceholderProps = {
 export const ImagePlaceholder = styled(Box)<ImagePlaceholderProps>(({ theme, isCardErrored }) => ({
   width: '100%',
   height: '175px',
-  background: `rgba(204,204,204)`,
+  background: `${theme.palette.primary.uploadLightGrey}`,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   gap: '10px',
-  border: isCardErrored ? `2px solid ${theme.palette.primary.errorColor}` : '0px',
+  border: isCardErrored ? `2px solid ${theme.palette.primary.errorColor}` : `2px solid ${theme.palette.primary.uploadDarkGrey}`,
+  borderRadius: '8px',
   boxSizing: 'border-box'
 }));
 
@@ -72,7 +75,7 @@ export const CreateQuestionTitleBarStyled = styled(Box)<CreateQuestionTitleBarSt
   gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.xSmPadding}px` : `${theme.sizing.smPadding}px`,
 }));
 
-export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme }) => ({
+export const CreateQuestionContentLeftContainerStyled = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -85,7 +88,6 @@ export default function CreateQuestionCardBase({
   handleTitleChange,
   handleCCSSClick,
   handleImageUploadClick,
-  handleImageURLClick,
   handlePublicPrivateChange,
   isHighlight,
   isCardSubmitted,
@@ -140,10 +142,7 @@ export default function CreateQuestionCardBase({
             />
             <Fade in={isImageHovered} >
               <div>
-                <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
-                <Box style={{paddingTop: '16px'}}>
-                  <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled onClick={handleImageURLClick}/>
-                </Box>
+                <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
               </div>
             </Fade>
       </Box>
@@ -152,7 +151,12 @@ export default function CreateQuestionCardBase({
   return (
     <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
-        <QuestionTitleStyled>Question</QuestionTitleStyled>
+        <Box style={{display: 'flex', alignItems: 'center', gap: '14px'}}>
+          <QuestionTitleStyled>Question</QuestionTitleStyled>
+          <ButtonCCSS key={uuidv4()} onClick={handleCCSSClick}>
+            {draftQuestion.questionCard.ccss}
+          </ButtonCCSS>
+        </Box>
         <RadioContainerStyled>
           <RadioGroup
             row
@@ -178,19 +182,12 @@ export default function CreateQuestionCardBase({
         </RadioContainerStyled>
       </CreateQuestionTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        {imageLink 
-          ? imageContents
-          : <ImagePlaceholder isCardErrored={isCardErrored}>
-              <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
-              <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled onClick={handleImageURLClick}/>
-            </ImagePlaceholder>
-        }
-        <CreateQuestionContentRightContainerStyled>
+        <CreateQuestionContentLeftContainerStyled>
           <TextContainerStyled 
             multiline 
             variant="outlined" 
             rows='4' 
-            placeholder="Question Contents..." 
+            placeholder="Enter question here..." 
             error={(isCardSubmitted || isAIError) && (!title || title.length === 0)}
             value={title}
             onChange = {(e) => handleLocalTitleChange(e.target.value)}
@@ -210,14 +207,23 @@ export default function CreateQuestionCardBase({
           >
             <Typography>{draftQuestion.questionCard.title}</Typography>
           </TextContainerStyled>
-          <Box style={{display: 'flex', gap: '16px', alignItems: 'center'}}>
-            <PublicPrivateButton />
-            <CCSSIndicator onClick={handleCCSSClick}>
-              {draftQuestion.questionCard.ccss}
-              <img src={arrow} alt='CCSS' style={{width: '12px', height: '12px'}}/>
-            </CCSSIndicator>
-          </Box>
-        </CreateQuestionContentRightContainerStyled>
+          { screenSize !== ScreenSize.SMALL && 
+            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              <PublicPrivateButton />
+            </Box>
+          }
+        </CreateQuestionContentLeftContainerStyled>
+        {imageLink 
+          ? imageContents
+          : <ImagePlaceholder isCardErrored={isCardErrored}>
+              <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
+            </ImagePlaceholder>
+        }
+           { screenSize === ScreenSize.SMALL && 
+            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              <PublicPrivateButton />
+            </Box>
+          }
       </ContentContainerStyled>
     </BaseCardStyled>
   );

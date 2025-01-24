@@ -1,17 +1,15 @@
 import React, { useState, useCallback } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled, Fade} from '@mui/material';
-import { useNavigate, useLoaderData } from 'react-router-dom';
-import { debounce, set, update } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
-  QuestionCard,
   IncorrectCard,
 } from '@righton/networking';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
-import { CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
+import { CreateQuestionBackground, CreateQuestionGridContainer, CreateQuestionMainContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import { 
   ScreenSize,
   BorderStyle,
@@ -27,10 +25,9 @@ import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackgro
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 import ModalBackground from '../components/modal/ModalBackground';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
-import ImageURLModal from '../components/modal/ImageURLModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
@@ -47,6 +44,7 @@ const TitleText = styled(Typography)<TitleTextProps>(({ theme, screenSize }) => 
   fontSize:
     screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
   color: `${theme.palette.primary.extraDarkBlue}`,
+  paddingTop: `${theme.sizing.lgPadding}px`,
 }));
 
 const SubCardGridItem = styled(Grid)(({ theme }) => ({
@@ -83,6 +81,7 @@ export default function CreateQuestion({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
+  const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
@@ -146,25 +145,14 @@ export default function CreateQuestion({
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
   // QuestionCardBase handler functions
-  const [modalImage, setModalImage] = useState<File | null>(null);
-  const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
-  const [debouncedModalImageUrl, setDebouncedModalImageUrl] = useState<string | null>(null);
-
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
-    if (inputImage)
-      setModalImage(inputImage);
-  }
-
-  const handledebouncedImageUrlChange = useCallback( // eslint-disable-line
-    debounce((debouncedQuestion: CentralQuestionTemplateInput, url: string) => {
-      setDebouncedModalImageUrl(url);
-    }, 500),
-    [] 
-  )
-
-  const handleImageUrlChange = (inputQuestion: CentralQuestionTemplateInput, url: string) => {
-    setModalImageUrl(url);
-    handledebouncedImageUrlChange(inputQuestion, url);
+    if (inputImage) {
+      const newDraftQuestion = updateDQwithImage(draftQuestion, undefined, inputImage);
+      setDraftQuestion(newDraftQuestion);
+    } else if (inputUrl) {
+      const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
+      setDraftQuestion(newDraftQuestion);
+    }
   }
   
   const handleImageSave = async (
@@ -183,7 +171,7 @@ export default function CreateQuestion({
     }
     if (inputUrl){
       const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImage(draftQuestion, inputUrl);
+      const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
       if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
@@ -197,7 +185,6 @@ export default function CreateQuestion({
       const newDraftQuestion = updateDQwithTitle(draftQuestionInput, title);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
-      setIsAIError(false);
       console.log(newDraftQuestion);
       if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
@@ -220,13 +207,7 @@ export default function CreateQuestion({
   }
 
   const handleImageUploadClick = () => {
-    setModalImageUrl(null);
     setIsImageUploadVisible(true);
-  }
-
-  const handleImageURLClick = () => {
-    setModalImage(null);
-    setIsImageURLVisible(true);
   }
 
   const handlePublicPrivateChange = (value: PublicPrivateType) => {
@@ -234,8 +215,6 @@ export default function CreateQuestion({
   }
 
   const handleCloseModal = () => {
-    setModalImage(null);
-    setModalImageUrl(null);
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
     setIsCreatingTemplate(false);
@@ -249,7 +228,6 @@ export default function CreateQuestion({
       console.log(newDraftQuestion);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
-      setIsAIError(false);
       if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
     }, 1000),
@@ -270,6 +248,8 @@ export default function CreateQuestion({
 
   // incorrect answer card functions
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
+    if (isAIError)
+      setIsAIError(false);
     const updatedAnswers = incompleteIncorrectAnswers.map((answer) => {
       if (answer.id === cardData.id) {
         return cardData;
@@ -282,8 +262,6 @@ export default function CreateQuestion({
   };
 
   const handleIncorrectCardStackUpdate = (cardData: IncorrectCard, draftQuestionInput: CentralQuestionTemplateInput, completeAnswers: IncorrectCard[], incompleteAnswers: IncorrectCard[], isAIEnabledCard?: boolean) => {
-      if (isAIError)
-        setIsAIError(false);
       const nextCard = getNextHighlightCard(cardData.id as CreateQuestionHighlightCard);
       const isUpdateInIncompleteCards = incompleteAnswers.find(answer => answer.id === cardData.id);
       let newDraftQuestion = null;
@@ -292,6 +270,7 @@ export default function CreateQuestion({
       // everytime we update those arrays, we're going to trigger an animation, so we have to only manipulate them when we want that
       // so in this case, if the card that is being edited is already complete, we are only going to update the draftQuestion object and leave the arrays alone
       if (isUpdateInIncompleteCards){
+        setIsAIError(false);
         const updatedAnswers = incompleteAnswers.map((answer) => {
           if (answer.id === cardData.id) {
             return cardData;
@@ -407,12 +386,38 @@ export default function CreateQuestion({
     setIsAIError(true);
   }
 
+  const handleAIIsEnabled = () => {
+    setIsAIEnabled((prev) => !prev);
+    setIsAIError(false);
+  }
+
   return (
     <CreateQuestionMainContainer>
+      <CreateQuestionBackground />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
-       <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
-       <ImageURLModal modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} draftQuestion={draftQuestion} isModalOpen={isImageURLVisible} handleImageUrlChange={handleImageUrlChange} handleImageSave={handleImageSave} handleCloseModal={handleCloseModal} />
+       <ImageUploadModal 
+          draftQuestion={draftQuestion} 
+          screenSize={screenSize}  
+          isModalOpen={isImageUploadVisible} 
+          handleImageChange={handleImageChange}
+          handleImageSave={handleImageSave} 
+          handleCloseModal={handleCloseModal}
+        />
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
+       <Box style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          gap: `${theme.sizing.lgPadding}px`,
+          zIndex: 1,
+          position: 'relative',
+          paddingLeft: `${theme.sizing.mdPadding}px`,
+          paddingRight: `${theme.sizing.mdPadding}px`,
+          boxSizing: 'border-box',
+        }}>
       <>
         <CCSSTabsModalBackground
           isTabsOpen={isCCSSVisible}
@@ -437,7 +442,15 @@ export default function CreateQuestion({
                   <ErrorCard />
                 </div>
               </Fade>  
-              <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingBottom: '16px'}}>
+              <Box style={{
+                width: '100%', 
+                maxWidth: '672px',
+                display: 'flex',
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                gap: `${theme.sizing.xSmPadding}px`, 
+                paddingBottom: '16px',
+              }}>
                 <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
                 <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
               </Box>
@@ -480,7 +493,7 @@ export default function CreateQuestion({
             maxWidth: '672px',
             display: 'flex',
             flexDirection: 'column',
-            gap: `${theme.sizing.smPadding}px`,
+            gap: `${theme.sizing.xLgPadding}px`,
           }}
         >
           <Box onClick={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)} style={{ width: '100%' }}>
@@ -491,7 +504,6 @@ export default function CreateQuestion({
               handleCCSSClick={handleCCSSClick}
               isHighlight={highlightCard === CreateQuestionHighlightCard.QUESTIONCARD}
               handleImageUploadClick={handleImageUploadClick}
-              handleImageURLClick={handleImageURLClick}
               handlePublicPrivateChange={handlePublicPrivateChange}
               isCardSubmitted={isCardSubmitted}
               isCardErrored={isCardErrored}
@@ -528,7 +540,7 @@ export default function CreateQuestion({
                 <Typography style={{textAlign: 'right', fontWeight: 500}}>
                   Try our AI-Generated Wrong Answer Explanation Prototype
                 </Typography>
-                <AISwitch checked={isAIEnabled} onChange={(prev) => setIsAIEnabled(!isAIEnabled)}/>
+                <AISwitch checked={isAIEnabled} onChange={(prev) => handleAIIsEnabled()}/>
               </Box>
               <IncorrectAnswerCardStack 
                 draftQuestion={draftQuestion}
@@ -551,6 +563,7 @@ export default function CreateQuestion({
           md={1}
           lg={4} item />
       </CreateQuestionGridContainer>
+      </Box>
     </CreateQuestionMainContainer>
   );
 }
