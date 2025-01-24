@@ -1,6 +1,72 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    createUser(input: $input, condition: $condition) {
+      id
+      userName
+      title
+      firstName
+      lastName
+      email
+      password
+      gamesMade
+      questionsMade
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    updateUser(input: $input, condition: $condition) {
+      id
+      userName
+      title
+      firstName
+      lastName
+      email
+      password
+      gamesMade
+      questionsMade
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    deleteUser(input: $input, condition: $condition) {
+      id
+      userName
+      title
+      firstName
+      lastName
+      email
+      password
+      gamesMade
+      questionsMade
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
 export const createPublicGameTemplate = /* GraphQL */ `
   mutation CreatePublicGameTemplate(
     $input: CreatePublicGameTemplateInput!
@@ -10,7 +76,6 @@ export const createPublicGameTemplate = /* GraphQL */ `
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -32,6 +97,7 @@ export const createPublicGameTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -45,7 +111,6 @@ export const updatePublicGameTemplate = /* GraphQL */ `
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -67,6 +132,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -80,7 +146,6 @@ export const deletePublicGameTemplate = /* GraphQL */ `
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -102,6 +167,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -113,7 +179,6 @@ export const createPrivateGameTemplate = /* GraphQL */ `
   ) {
     createPrivateGameTemplate(input: $input, condition: $condition) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -137,6 +202,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -148,7 +214,6 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
   ) {
     updatePrivateGameTemplate(input: $input, condition: $condition) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -172,6 +237,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -183,7 +249,6 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
   ) {
     deletePrivateGameTemplate(input: $input, condition: $condition) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -207,6 +272,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -218,6 +284,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
   ) {
     createPublicQuestionTemplate(input: $input, condition: $condition) {
       id
+      owner
       title
       lowerCaseTitle
       version
@@ -239,7 +306,6 @@ export const createPublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
   }
@@ -251,6 +317,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
   ) {
     updatePublicQuestionTemplate(input: $input, condition: $condition) {
       id
+      owner
       title
       lowerCaseTitle
       version
@@ -272,7 +339,6 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
   }
@@ -284,6 +350,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
   ) {
     deletePublicQuestionTemplate(input: $input, condition: $condition) {
       id
+      owner
       title
       lowerCaseTitle
       version
@@ -305,7 +372,6 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
-      owner
       __typename
     }
   }
@@ -875,7 +941,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
         id
         title
         lowerCaseTitle
-        owner
         version
         description
         lowerCaseDescription
@@ -893,10 +958,12 @@ export const createPublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       publicQuestionTemplate {
         id
+        owner
         title
         lowerCaseTitle
         version
@@ -914,7 +981,6 @@ export const createPublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
-        owner
         __typename
       }
       createdAt
@@ -937,7 +1003,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         id
         title
         lowerCaseTitle
-        owner
         version
         description
         lowerCaseDescription
@@ -955,10 +1020,12 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       publicQuestionTemplate {
         id
+        owner
         title
         lowerCaseTitle
         version
@@ -976,7 +1043,6 @@ export const updatePublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
-        owner
         __typename
       }
       createdAt
@@ -999,7 +1065,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         id
         title
         lowerCaseTitle
-        owner
         version
         description
         lowerCaseDescription
@@ -1017,10 +1082,12 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       publicQuestionTemplate {
         id
+        owner
         title
         lowerCaseTitle
         version
@@ -1038,7 +1105,6 @@ export const deletePublicGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
-        owner
         __typename
       }
       createdAt
@@ -1059,7 +1125,6 @@ export const createPrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1079,6 +1144,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       privateQuestionTemplate {
@@ -1121,7 +1187,6 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1141,6 +1206,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       privateQuestionTemplate {
@@ -1183,7 +1249,6 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
       privateQuestionTemplateID
       privateGameTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1203,6 +1268,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       privateQuestionTemplate {
@@ -1241,18 +1307,8 @@ export const createGameSessionFromTemplate = /* GraphQL */ `
     createGameSessionFromTemplate(input: $input)
   }
 `;
-export const uploadExternalImageToS3 = /* GraphQL */ `
-  mutation UploadExternalImageToS3($input: UploadExternalImageToS3Input) {
-    uploadExternalImageToS3(input: $input)
-  }
-`;
-export const waegen = /* GraphQL */ `
-  mutation Waegen($input: WaeGenInput) {
-    waegen(input: $input)
-  }
-`;
-export const waeregen = /* GraphQL */ `
-  mutation Waeregen($input: WaeRegenInput) {
-    waeregen(input: $input)
+export const teacherIdAuth = /* GraphQL */ `
+  mutation TeacherIdAuth($input: TeacherIdAuthInput!) {
+    teacherIdAuth(input: $input)
   }
 `;
