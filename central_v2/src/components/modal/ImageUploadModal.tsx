@@ -75,50 +75,53 @@ const DashedBox = styled(Box)(({ theme }) => ({
 interface ImageUploadModalProps {
   screenSize: ScreenSize;
   isModalOpen: boolean;
-  modalImage: File | null;
   draftQuestion: CentralQuestionTemplateInput;
-  modalImageUrl: string | null;
-  debouncedModalImageUrl: string | null;
-  handleImageUrlChange: (debouncedQuestion: CentralQuestionTemplateInput, url: string) => void;
-  handleImageChange: (file: File) => void;
-  handleImageSave: (file: File) => void;
+  handleImageChange: (inputImage?: File, inputUrl?: string) => void;
+  handleImageSave: (image?: File, inputUrl?: string) => void;
   handleCloseModal: () => void;
-  borderStyle: BorderStyle;
 }
 
 export default function ImageUploadModal({
   screenSize,
   isModalOpen,
-  modalImage,
   draftQuestion,
-  modalImageUrl,
-  debouncedModalImageUrl,
-  handleImageUrlChange,
   handleImageChange,
   handleImageSave,
   handleCloseModal,
-  borderStyle
 }: ImageUploadModalProps) {
   const theme = useTheme();
-  const [isMouseOver, setIsMouseOver] = React.useState<boolean>(false);
-  const imageUrl = modalImageUrl ?? draftQuestion.questionCard.imageUrl;
+  const { imageUrl } = draftQuestion.questionCard;
   const { image } = draftQuestion.questionCard;
+  const [localURL, setLocalURL] = React.useState<string | null>(null);
+  const [isChangeImage, setIsChangeImage] = React.useState<boolean>(false);
+  
   let imageLink: string | null = null;
-  if (modalImage && modalImage instanceof File)
-    imageLink = URL.createObjectURL(modalImage);
-   else if (image && image instanceof File)
-     imageLink = URL.createObjectURL(image);
+  if (imageUrl)
+    imageLink = imageUrl;
+  else if (image && image instanceof File)
+    imageLink = URL.createObjectURL(image);
 
   const handleChangeClick = (newImage: File) => {
+    setIsChangeImage(false);
     handleImageChange(newImage);
   }
 
+  const handleUrlChange = (newUrl: string) => {
+    setIsChangeImage(false);
+    handleImageChange(undefined, newUrl);
+  }
+
+  const handleClose = () => {
+    setIsChangeImage(false);
+    handleCloseModal();
+  }
+
   const handleSaveClick = () => {
-    if (modalImage) {
-      handleImageSave(modalImage);
+    if (imageUrl) {
+      handleImageSave(undefined, imageUrl);
     } else if (image) {
       handleImageSave(image);
-    }
+    } 
   } 
 
   return (
@@ -126,44 +129,23 @@ export default function ImageUploadModal({
       <IntegratedContainer elevation={12} screenSize={screenSize}>
         <Box style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <QuestionTitleStyled style={{fontSize: '27px'}}>
-            Upload file
+            { image || imageUrl
+              ? 'Image preview'
+              : 'Upload file'
+            }
           </QuestionTitleStyled>
-          <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleCloseModal} />
+          <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleClose} />
         </Box>
         <DashedBox>
-          {(imageLink) ? (
+          {((image || imageUrl) && !isChangeImage) ? (
             <Box style={{
               width: '100%',
               height: '100%',
               position: 'relative',
             }}
-            onMouseEnter={() => setIsMouseOver(true)}
-            onMouseLeave={() => setIsMouseOver(false)}
             >
-              <Box 
-                style={{
-                  position: 'absolute',
-                  top: '0',
-                  left: '0',
-                  height: '100%',
-                  width: '100%',
-                  backgroundColor: isMouseOver ? 'rgba(0,0,0,0.72)' : 'rgba(0,0,0,0)',
-                  transition: 'background-color 0.75s',
-                }} 
-              />
-              <Fade in={isMouseOver} mountOnEnter unmountOnExit timeout={750} >
-                <Box style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  zIndex: 1,
-                }}>
-                  <CentralButton type="file" buttonType={ButtonType.BROWSEFILES} isEnabled handleFileChange={handleChangeClick} />
-                </Box>
-              </Fade>
               <img
-                src={imageLink} 
+                src={imageLink ?? ''} 
                 alt="Uploaded"
                 style={{
                   width: '100%',
@@ -180,12 +162,23 @@ export default function ImageUploadModal({
             </DropImageUpload>   
           )}
         </DashedBox>
-        <Box style={{width: '100%', position: 'relative'}}>
-        <ImageURLTextContainerStyled value={imageUrl} variant="outlined" rows='1' placeholder="Add Image URL" onChange={(e)=> handleImageUrlChange(draftQuestion, e.target.value)}/>
-        <ImageURLUploadButton>
-          Upload
-        </ImageURLUploadButton>
-        </Box>
+        {((image || imageUrl) && !isChangeImage)
+          ? <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.mdPadding}px`}}>
+              <CentralButton 
+                buttonType={ButtonType.CHANGEIMAGE} 
+                isEnabled 
+                smallScreenOverride 
+                onClick={() => setIsChangeImage(true)}
+              />
+              <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride  onClick={handleSaveClick}/>
+            </Box>
+          : <Box style={{width: '100%', position: 'relative'}}>
+              <ImageURLTextContainerStyled value={imageUrl} variant="outlined" rows='1' placeholder="Add Image URL" onChange={(e)=> setLocalURL(e.target.value)}/>
+              <ImageURLUploadButton onClick={() => handleUrlChange(localURL ?? '')}>
+                Upload
+              </ImageURLUploadButton>
+            </Box>
+        }
       </IntegratedContainer>      
     </Fade>
   );

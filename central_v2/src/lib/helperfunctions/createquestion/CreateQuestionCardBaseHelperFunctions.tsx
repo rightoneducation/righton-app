@@ -1,23 +1,28 @@
 import React, { useCallback } from 'react';
-import { debounce } from 'lodash';
 import { CentralQuestionTemplateInput } from '@righton/networking'; 
-
-export const updateDQwithImageChange = (draftQuestion: CentralQuestionTemplateInput, inputUrl?: string, inputImage?: File,): CentralQuestionTemplateInput => {
-  if (inputImage || inputUrl){
-    return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: inputImage, imageUrl: inputUrl}};
-  }
-  return draftQuestion;
-}
 
 export const updateDQwithImage = (draftQuestion: CentralQuestionTemplateInput, inputUrl?: string, inputImage?: File,): CentralQuestionTemplateInput => {
   if (inputImage || inputUrl){
     if (draftQuestion.questionCard.ccss.length > 0 && draftQuestion.questionCard.ccss !== 'CCSS' && draftQuestion.questionCard.title){
       if (draftQuestion.correctCard.isFirstEdit){
-        return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: inputImage, imageUrl: inputUrl, isCardComplete: true, isFirstEdit: false}};
+        return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: inputImage, imageUrl: undefined, isCardComplete: true, isFirstEdit: false}};
       } 
-      return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: inputImage, imageUrl: inputUrl, isCardComplete: true}};
+      return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: inputImage, imageUrl: undefined, isCardComplete: true}};
     } 
-    return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: inputImage, imageUrl: inputUrl}};
+    return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: inputImage, imageUrl: undefined}};
+  }
+  return draftQuestion;
+}
+
+export const updateDQwithImageURL = (draftQuestion: CentralQuestionTemplateInput, inputUrl?: string, inputImage?: File,): CentralQuestionTemplateInput => {
+  if (inputImage || inputUrl){
+    if (draftQuestion.questionCard.ccss.length > 0 && draftQuestion.questionCard.ccss !== 'CCSS' && draftQuestion.questionCard.title){
+      if (draftQuestion.correctCard.isFirstEdit){
+        return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: undefined, imageUrl: inputUrl, isCardComplete: true, isFirstEdit: false}};
+      } 
+      return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: undefined, imageUrl: inputUrl, isCardComplete: true}};
+    } 
+    return {...draftQuestion, questionCard: {...draftQuestion.questionCard, image: undefined, imageUrl: inputUrl}};
   }
   return draftQuestion;
 }

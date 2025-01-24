@@ -37,31 +37,27 @@ const Template: StoryFn<typeof ImageUploadModal> = function CardTemplate(args) {
 export const DefaultDashedBorder = Template.bind({});
 DefaultDashedBorder.args = {
   isModalOpen: true,
-  handleImageSave: (file: File) => console.log(file),
+  handleImageSave: (file?: File) => console.log(file),
   handleCloseModal: () => console.log('close'),
-  borderStyle: BorderStyle.DASHED_BORDER,
 };
 
 export const SVGDashedBorder = Template.bind({});
 SVGDashedBorder.args = {
   isModalOpen: true,
-  handleImageSave: (file: File) => console.log(file),
+  handleImageSave: (file?: File) => console.log(file),
   handleCloseModal: () => console.log('close'),
-  borderStyle: BorderStyle.SVG,
 };
 
 export const CornerBorder = Template.bind({});
 CornerBorder.args = {
   isModalOpen: true,
-  handleImageSave: (file: File) => console.log(file),
+  handleImageSave: (file?: File, link?: string) => console.log(file),
   handleCloseModal: () => console.log('close'),
-  borderStyle: BorderStyle.CORNER_BORDER,
 };
 
 export const SolidBorder = Template.bind({});
 SolidBorder.args = {
   isModalOpen: true,
-  handleImageSave: (file: File) => console.log(file),
+  handleImageSave: (file?: File, link?: string) => console.log(file),
   handleCloseModal: () => console.log('close'),
-  borderStyle: BorderStyle.SOLID_BORDER,
 };

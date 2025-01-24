@@ -25,10 +25,9 @@ import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackgro
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 import ModalBackground from '../components/modal/ModalBackground';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
-import ImagePreviewModal from '../components/modal/ImagePreviewModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { updateDQwithImage, updateDQwithImageChange, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
@@ -82,6 +81,7 @@ export default function CreateQuestion({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
+  const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
@@ -145,25 +145,14 @@ export default function CreateQuestion({
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
   // QuestionCardBase handler functions
-  const [modalImage, setModalImage] = useState<File | null>(null);
-  const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
-  const [debouncedModalImageUrl, setDebouncedModalImageUrl] = useState<string | null>(null);
-
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
-    if (inputImage)
-      setModalImage(inputImage);
-  }
-
-  const handledebouncedImageUrlChange = useCallback( // eslint-disable-line
-    debounce((debouncedQuestion: CentralQuestionTemplateInput, url: string) => {
-      setDebouncedModalImageUrl(url);
-    }, 500),
-    [] 
-  )
-
-  const handleImageUrlChange = (inputQuestion: CentralQuestionTemplateInput, url: string) => {
-    setModalImageUrl(url);
-    handledebouncedImageUrlChange(inputQuestion, url);
+    if (inputImage) {
+      const newDraftQuestion = updateDQwithImage(draftQuestion, undefined, inputImage);
+      setDraftQuestion(newDraftQuestion);
+    } else if (inputUrl) {
+      const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
+      setDraftQuestion(newDraftQuestion);
+    }
   }
   
   const handleImageSave = async (
@@ -182,7 +171,7 @@ export default function CreateQuestion({
     }
     if (inputUrl){
       const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImage(draftQuestion, inputUrl);
+      const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
       window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
       if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
@@ -218,13 +207,7 @@ export default function CreateQuestion({
   }
 
   const handleImageUploadClick = () => {
-    setModalImageUrl(null);
     setIsImageUploadVisible(true);
-  }
-
-  const handleImageURLClick = () => {
-    setModalImage(null);
-    setIsImageURLVisible(true);
   }
 
   const handlePublicPrivateChange = (value: PublicPrivateType) => {
@@ -232,8 +215,6 @@ export default function CreateQuestion({
   }
 
   const handleCloseModal = () => {
-    setModalImage(null);
-    setModalImageUrl(null);
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
     setIsCreatingTemplate(false);
@@ -414,8 +395,14 @@ export default function CreateQuestion({
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
        <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
-       <ImagePreviewModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize}  modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} isModalOpen={isImageUploadVisible} handleImageSave={handleImageSave} handleImageUrlChange={handleImageUrlChange} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
-       <ImageUploadModal modalImage={modalImage} draftQuestion={draftQuestion} handleImageChange={handleImageChange} screenSize={screenSize}  modalImageUrl={modalImageUrl} debouncedModalImageUrl={debouncedModalImageUrl} isModalOpen={false} handleImageSave={handleImageSave} handleImageUrlChange={handleImageUrlChange} handleCloseModal={handleCloseModal} borderStyle={BorderStyle.SVG}/>
+       <ImageUploadModal 
+          draftQuestion={draftQuestion} 
+          screenSize={screenSize}  
+          isModalOpen={isImageUploadVisible} 
+          handleImageChange={handleImageChange}
+          handleImageSave={handleImageSave} 
+          handleCloseModal={handleCloseModal}
+        />
        <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
        <Box style={{
           width: '100%',
@@ -517,7 +504,6 @@ export default function CreateQuestion({
               handleCCSSClick={handleCCSSClick}
               isHighlight={highlightCard === CreateQuestionHighlightCard.QUESTIONCARD}
               handleImageUploadClick={handleImageUploadClick}
-              handleImageURLClick={handleImageURLClick}
               handlePublicPrivateChange={handlePublicPrivateChange}
               isCardSubmitted={isCardSubmitted}
               isCardErrored={isCardErrored}

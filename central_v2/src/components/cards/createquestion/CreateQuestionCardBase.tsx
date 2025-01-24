@@ -36,7 +36,6 @@ interface CreateQuestionCardBaseProps {
   handleTitleChange: (title: string, draftQuestion: CentralQuestionTemplateInput) => void;
   handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
-  handleImageURLClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   isHighlight: boolean;
   isCardSubmitted: boolean;
@@ -89,7 +88,6 @@ export default function CreateQuestionCardBase({
   handleTitleChange,
   handleCCSSClick,
   handleImageUploadClick,
-  handleImageURLClick,
   handlePublicPrivateChange,
   isHighlight,
   isCardSubmitted,
@@ -144,10 +142,7 @@ export default function CreateQuestionCardBase({
             />
             <Fade in={isImageHovered} >
               <div>
-                <ImageButton imageButtonType={ImageButtonType.IMAGEUPLOAD} isEnabled onClick={handleImageUploadClick}/>
-                <Box style={{paddingTop: '16px'}}>
-                  <ImageButton imageButtonType={ImageButtonType.IMAGEURL} isEnabled onClick={handleImageURLClick}/>
-                </Box>
+                <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
               </div>
             </Fade>
       </Box>
