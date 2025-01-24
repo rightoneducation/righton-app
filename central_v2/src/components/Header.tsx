@@ -121,8 +121,8 @@ const CreateDropDown = styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   gap: `${theme.sizing.smPadding}px`,
   padding: `${theme.sizing.xSmPadding}px`,
-  borderBottomLeftRadius: '24px',
-  borderBottomRightRadius: '24px',
+  borderBottomLeftRadius: '8px',
+  borderBottomRightRadius: '8px',
 }));
 
 const PinkIcon = styled('img')(({ theme }) => ({

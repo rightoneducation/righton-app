@@ -1,8 +1,44 @@
-import { Button, Box, Typography, styled } from '@mui/material';
+import { Button, Box, Typography, styled, useTheme } from '@mui/material';
 import { ButtonColor } from '../../components/button/ButtonModels';
 
 type ButtonStyledProps = {
   buttonColor: ButtonColor;
+};
+
+const getBackgroundColor = (theme: any, buttonColor: ButtonColor) => {
+  switch (buttonColor) {
+    case ButtonColor.RED:
+      return `${theme.palette.primary.buttonActionDefault}`;
+    case ButtonColor.NULL:
+      return 'transparent';
+    case ButtonColor.BLUE:
+    default:
+      return `${theme.palette.primary.buttonPrimaryDefault}`;
+  }
+};
+
+const getHoverColor = (theme: any, buttonColor: ButtonColor) => {
+  switch (buttonColor) {
+    case ButtonColor.RED:
+      return `${theme.palette.primary.buttonActionHover}`;
+    case ButtonColor.NULL:
+      return 'transparent';
+    case ButtonColor.BLUE:
+    default:
+      return `${theme.palette.primary.buttonPrimaryHover}`;
+  }
+};
+
+const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
+  switch (buttonColor) {
+    case ButtonColor.RED:
+      return `${theme.palette.primary.buttonActionDisable}`;
+    case ButtonColor.NULL:
+      return 'transparent';
+    case ButtonColor.BLUE:
+    default:
+      return `${theme.palette.primary.buttonPrimaryDisable}`;
+  }
 };
 
 export const ButtonStyled = styled(Button, {
@@ -17,12 +53,12 @@ export const ButtonStyled = styled(Button, {
   borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
   borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
   borderColor: buttonColor === ButtonColor.NULL ? `${theme.palette.primary.buttonPrimaryDefault}` : 'none',
-  backgroundColor: buttonColor === ButtonColor.NULL ? `transparent` : `${theme.palette.primary.buttonPrimaryDefault}`,
+  backgroundColor: getBackgroundColor(theme, buttonColor),
   ':hover': {
-    backgroundColor: buttonColor === ButtonColor.NULL ? `${theme.palette.primary.buttonCCSSDisable}` : `${theme.palette.primary.buttonPrimaryHover}`,
+    backgroundColor: getHoverColor(theme, buttonColor),
   },
   '&:disabled': {
-    backgroundColor: buttonColor === ButtonColor.NULL ? `transparent` : `${theme.palette.primary.buttonPrimaryDisable}`,
+    backgroundColor: getDisableColor(theme, buttonColor),
   },
   boxSizing: 'border-box',
   pointerEvents: 'auto',
