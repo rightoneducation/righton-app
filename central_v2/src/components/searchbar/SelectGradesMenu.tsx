@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox, Typography, Collapse } from '@mui/material';
+import { Checkbox, Typography, Collapse, useTheme, Button } from '@mui/material';
 import { GradeTarget } from '@righton/networking';
 import { ScreenSize } from '../../lib/CentralModels';
 import {
@@ -13,6 +13,8 @@ import {
   SelectButtonBox,
 } from '../../lib/styledcomponents/SelectGrade';
 import SelectArrow from '../../images/SelectArrow.svg';
+import CentralButton from '../button/Button';
+import { ButtonType } from '../button/ButtonModels';
 
 interface SelectGradesMenuProps {
   screenSize: ScreenSize;
@@ -23,6 +25,7 @@ export default function SelectGradesMenu({
   screenSize,
   handleChooseGrades,
 }: SelectGradesMenuProps) {
+  const theme = useTheme();
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
   const gradeMap = {
@@ -115,7 +118,7 @@ export default function SelectGradesMenu({
         </SelectArrowContainer>
       </SelectGrade>
       <Collapse in={isSelectOpen} timeout={1000}>
-        <SelectMenu isSelectOpen={isSelectOpen}>
+        <SelectMenu isSelectOpen={isSelectOpen} screenSize={screenSize}>
           {Object.keys(gradeMap).map((grade) => (
             <SelectMenuItem onClick={() => handleGradesChange(grade)}>
               <Checkbox
@@ -123,12 +126,15 @@ export default function SelectGradesMenu({
                   gradeMap[grade as keyof typeof gradeMap],
                 )}
                 color="default"
+                style={{padding: 0}}
               />
               <Typography
                 style={{
                   fontFamily: 'Poppins',
                   fontSize: '16px',
+                  lineHeight: '24px',
                   fontWeight: 500,
+                  color: `${theme.palette.primary.extraDarkBlue}`,
                 }}
               >
                 {grade}
@@ -136,14 +142,14 @@ export default function SelectGradesMenu({
             </SelectMenuItem>
           ))}
           <SelectButtonBox>
-            <SelectButton
+            <CentralButton
+              buttonType={ButtonType.CHOOSE}
+              isEnabled
               onClick={() => {
                 setIsSelectOpen(false);
                 handleChooseGrades(selectedGrades);
               }}
-            >
-              Choose
-            </SelectButton>
+            />
           </SelectButtonBox>
         </SelectMenu>
       </Collapse>

@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Button, Typography, Collapse, IconButton } from '@mui/material';
+import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
-import dice from '../images/Dice.svg';
-import qmarks from '../images/qmarks.svg';
+import dice from '../images/dice.svg';
+import dicePink from '../images/dicePink.svg';
+import qmark from '../images/qmark.svg';
+import qmarkPink from '../images/qmarkPink.svg';
 import books from '../images/books.svg';
+import lib from '../images/lib.svg';
+import libPink from '../images/libPink.svg';
 import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
+import createDropdownGame from '../images/createDropdownGame.svg';
+import createDropdownQuestion from '../images/createDropdownQuestion.svg'
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import { SelectedCentralPages } from '../lib/ScreenEnums';
+import CentralButton from './button/Button';
+import { ButtonType } from './button/ButtonModels';
+import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 
 interface HeaderProps {
   currentScreen: ScreenType;
@@ -34,6 +43,16 @@ const HeaderContainer = styled(Box)<HeaderContainerProps>(
     width: '100%',
     padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
     boxSizing: 'border-box',
+    position: 'relative',
+    backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
+    backgroundImage: `
+      linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%),
+      url(${mathSymbolsBackground})
+    `,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'bottom', // Adjust as needed
+    backgroundSize: 'cover',
+    zIndex: 1,
   }),
 );
 
@@ -45,14 +64,18 @@ const TransparentButton = styled(Button)<{
   justifyContent: menuOpen ? 'flex-start' : 'center',
   width: '200px',
   background: 'transparent',
-  color: '#FFFFFF',
-  fontFamily: 'Poppins',
-  fontSize: '20px',
-  fontWeight: 700,
-  lineHeight: '30px',
-  textAlign: 'center',
-  textTransform: 'none',
-  opacity: active ? 1 : 0.5, // Apply opacity based on active prop
+  borderStyle: 'none',
+  borderColor: `${theme.palette.primary.buttonNavBorder}`,
+  '&:hover': {
+    background: 'none',
+    borderRadius: `${theme.sizing.xSmPadding}px`,
+    borderWidth: '0.75px',
+    borderColor: `${theme.palette.primary.buttonNavBorder}`,
+    borderStyle: 'solid',
+  },
+  '&:disabled': {
+    opacity: 0.3,
+  },
   '& img': {
     marginRight: `${theme.sizing.xSmPadding}px`,
   },
@@ -88,6 +111,38 @@ const CreateBox = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
+const CreateButtonContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const CreateDropDown = styled(Paper)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.smPadding}px`,
+  padding: `${theme.sizing.xSmPadding}px`,
+  borderBottomLeftRadius: '24px',
+  borderBottomRightRadius: '24px',
+}));
+
+const PinkIcon = styled('img')(({ theme }) => ({
+  filter: 'brightness(0) saturate(100%) invert(19%) sepia(100%) saturate(2857%) hue-rotate(317deg) brightness(91%) contrast(103%)',
+}));
+
+interface ButtonTextProps {
+  active: boolean;
+}
+
+const ButtonText = styled(Typography)<ButtonTextProps>(({ active, theme }) => ({
+  fontFamily: 'Poppins',
+  fontSize: '20px',
+  fontWeight: 700,
+  lineHeight: '30px',
+  textAlign: 'center',
+  textTransform: 'none',
+  color: active ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
+}));
+
 interface ImageContainerProps {
   align: 'flex-start' | 'center' | 'flex-end';
 }
@@ -108,7 +163,8 @@ export default function Header({
   setMenuOpen,
 }: HeaderProps) {
   const navigate = useNavigate();
-
+  const theme = useTheme();
+  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
     currentScreen
   );
@@ -144,10 +200,10 @@ export default function Header({
         transition: 'height 0.5s ease-in-out',
         height: getHeight(),
         width: '100%',
-        overflow: 'hidden',
-        zIndex: 5,
+        overflow: !isLgScreen ? 'hidden' : 'visible',
+        zIndex: 0,
         position: 'fixed',
-        background: 'linear-gradient(360deg, #02215F 0%, #0D68B1 100%)',
+        background: 'linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%)',
         padding: '0px 0px 16px 0px',
         display: 'flex',
         justifyContent: 'center', // Center the entire menu box horizontally
@@ -168,6 +224,7 @@ export default function Header({
           {isLgScreen ? (
             <Box display="flex" gap="80px">
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.GAMES)
                 }
@@ -175,10 +232,16 @@ export default function Header({
                   selectedScreen === ScreenType.GAMES
                 }
               >
-                <img src={dice} alt="Games Icon" />
-                Games
+                { selectedScreen === ScreenType.GAMES
+                  ? <PinkIcon src={dice} alt="Games Icon" />
+                  : <img src={dice} alt="Games Icon" />
+                }
+                <ButtonText active={selectedScreen === ScreenType.GAMES}>
+                  Games
+                </ButtonText>
               </TransparentButton>
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.QUESTIONS)
                 }
@@ -186,17 +249,28 @@ export default function Header({
                   selectedScreen === ScreenType.QUESTIONS
                 }
               >
-                <img src={qmarks} alt="Questions Icon" />
-                Questions
+                { selectedScreen === ScreenType.QUESTIONS
+                  ? <PinkIcon src={qmark} alt="Questions Icon" />
+                  : <img src={qmark} alt="Questions Icon" />
+                }
+                <ButtonText active={selectedScreen === ScreenType.QUESTIONS}>
+                  Questions
+                </ButtonText>
               </TransparentButton>
               <TransparentButton
+                disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.LIBRARY)
                 }
                 active={selectedScreen === ScreenType.LIBRARY}
               >
-                <img src={books} alt="My Library Icon" />
-                My Library
+                 { selectedScreen === ScreenType.LIBRARY
+                  ? <PinkIcon src={books} alt="Library Icon" />
+                  : <img src={books} alt="Library Icon" />
+                }
+                <ButtonText active={selectedScreen === ScreenType.LIBRARY}>
+                  My Library
+                </ButtonText>
               </TransparentButton>
             </Box>
           ) : (
@@ -216,13 +290,32 @@ export default function Header({
           }}
         >
           {isLgScreen ? (
-            <>
-              <PrimaryButton2 style={{ marginTop: '12px' }}>
-                <img src={plus} alt="Plus Icon" />
-                <PrimaryButton2Text>Create</PrimaryButton2Text>
-              </PrimaryButton2>
-              <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
-            </>
+            <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
+            <Box display="flex" justifyContent="flex-start" alignItems="flex-start" style={{height: '50%'}} >
+              <CreateButtonContainer>
+                <Box style={{zIndex: 4}}>
+                  <CentralButton buttonType={ButtonType.CREATE} isEnabled onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
+                </Box>
+                <Collapse in={isCreateMenuOpen} style={{position: 'relative', top: '-17px', zIndex: 3}}>
+                  <CreateDropDown>
+                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
+                      <img src={createDropdownGame} alt="Create Game" />
+                      <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+                        Game
+                      </Typography>
+                    </Box>
+                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => { setIsCreateMenuOpen(false); navigate('/create/question')}}>
+                      <img src={createDropdownQuestion} alt="Create Question" />
+                      <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+                        Question
+                      </Typography>
+                    </Box>
+                  </CreateDropDown>
+                </Collapse>              
+              </CreateButtonContainer>
+            </Box>
+            <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
+            </Box>
           ) : (
             <img src={profile} alt="Profile" />
           )}
@@ -244,7 +337,10 @@ export default function Header({
             active={selectedScreen === ScreenType.GAMES}
             menuOpen={menuOpen}
           >
-            <img src={dice} alt="Games Icon" />
+            { selectedScreen === ScreenType.GAMES
+              ? <img src={dicePink} alt="Games Icon" />
+              : <img src={dice} alt="Games Icon" />
+            }
             Games
           </TransparentButton>
           <TransparentButton
@@ -256,7 +352,10 @@ export default function Header({
             }
             menuOpen={menuOpen}
           >
-            <img src={qmarks} alt="Questions Icon" />
+            { selectedScreen === ScreenType.QUESTIONS
+              ? <img src={qmarkPink} alt="Questions Icon" />
+              : <img src={qmark} alt="Questions Icon" />
+            }
             Questions
           </TransparentButton>
           <TransparentButton
@@ -266,7 +365,10 @@ export default function Header({
             active={selectedScreen === ScreenType.LIBRARY}
             menuOpen={menuOpen}
           >
-            <img src={books} alt="My Library Icon" />
+            { selectedScreen === ScreenType.LIBRARY
+              ? <img src={libPink} alt="Library Icon" />
+              : <img src={lib} alt="Library Icon" />
+            }
             My Library
           </TransparentButton>
           <CreateBox>
@@ -294,7 +396,7 @@ export default function Header({
                 <PrimaryButton2Text>Game</PrimaryButton2Text>
               </PrimaryButton2>
               <PrimaryButton2 style={{ width: '150px' }}>
-                <img src={qmarks} alt="Plus Icon" />
+                <img src={qmark} alt="Plus Icon" />
                 <PrimaryButton2Text>Question</PrimaryButton2Text>
               </PrimaryButton2>
             </Box>

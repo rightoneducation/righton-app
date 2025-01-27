@@ -10,6 +10,7 @@ import {
   fetchAuthSession,
   getCurrentUser,
   resetPassword, 
+  SignInOutput,
   type ResetPasswordOutput
 } from 'aws-amplify/auth';
 import amplifyconfig from "../../amplifyconfiguration.json";
@@ -75,8 +76,8 @@ export class AuthAPIClient
     await confirmSignUp({username: email, confirmationCode: code});
   }
 
-  async awsSignIn(username: string, password: string): Promise<void> {
-    await signIn({username: username, password: password});
+  async awsSignIn(username: string, password: string): Promise<SignInOutput> {
+    return await signIn({username: username, password: password});
   }
 
   async awsSignInFederated (): Promise<void> {
@@ -96,6 +97,7 @@ export class AuthAPIClient
 
   async verifyAuth(): Promise<boolean> {
     const session = await fetchAuthSession();
+    console.log(session);
     if (session && session.tokens && session.tokens.accessToken) {
       const groups = session.tokens.accessToken.payload["cognito:groups"];
       if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {

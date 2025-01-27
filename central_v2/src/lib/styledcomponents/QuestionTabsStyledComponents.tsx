@@ -62,12 +62,13 @@ export const DetailedQuestionContainer = styled(Grid)(({ theme }) => ({
 
 export const ContentContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
-  flexGrow: 1,
   height: '100%',
   width: '100%',
   background: '#02215F',
   zIndex: 6,
   borderTopRightRadius: '16px',
+  borderBottomLeftRadius: '16px',
+  borderBottomRightRadius: '16px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

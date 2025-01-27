@@ -6,9 +6,10 @@ import {
 } from '@righton/networking';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
-import CardCarousal from './CardCarousal';
+import CardCarousel from '../cardcarousel/CardCarousel';
 import { ScreenSize } from '../../lib/CentralModels';
 import PaginationContainerStyled from '../../lib/PaginationContainerStyled';
+import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 interface RecommendedProps<T> {
   screenSize: ScreenSize;
@@ -30,7 +31,8 @@ const RecommendedContainer = styled(Box)<RecommendedGamesContainerProps>(
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
+    overflow: 'hidden',
+    position: 'relative',
   }),
 );
 
@@ -42,6 +44,7 @@ const Title = styled(Typography)<{ screenSize: ScreenSize }>(
       screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
     lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
     color: '#FFFFFF',
+    zIndex: 1
   }),
 );
 
@@ -61,7 +64,8 @@ export default function Recommended<
       <Title screenSize={screenSize}>
         Recommended {elementType === ElementType.GAME ? 'Games' : 'Questions'}
       </Title>
-      <CardCarousal
+      <CardCarousel
+        screenSize={screenSize}
         recommendedElements={recommendedElements}
         elementType={elementType}
         setIsTabsOpen={setIsTabsOpen}

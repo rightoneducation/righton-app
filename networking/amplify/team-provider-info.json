@@ -1,36 +1,53 @@
 {
-  "dev": {
+  "test": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-dev-69ed3-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-dev-69ed3-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-dev-69ed3-authRole",
+      "AuthRoleName": "amplify-mobile-test-2c53b-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-test-2c53b-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-test-2c53b-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-dev-69ed3-deployment",
-      "UnauthRoleName": "amplify-mobile-dev-69ed3-unauthRole",
-      "StackName": "amplify-mobile-dev-69ed3",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-dev-69ed3/aac72780-94d8-11ef-b873-0e96212caa6b",
+      "DeploymentBucketName": "amplify-mobile-test-2c53b-deployment",
+      "UnauthRoleName": "amplify-mobile-test-2c53b-unauthRole",
+      "StackName": "amplify-mobile-test-2c53b",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-test-2c53b/4eebd9f0-da16-11ef-9190-1226c1f0f5d1",
       "AmplifyAppId": "d2z6928w5qibze",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-69ed3-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-test-2c53b-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
-        "mobile6060603c": {}
+        "mobile6060603c": {
+          "googleClientId": "23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com"
+        },
+        "userPoolGroups": {}
       },
       "function": {
-        "createGameTest": {
-          "deploymentBucketName": "amplify-mobile-dev-69ed3-deployment",
-          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
-        },
         "mobile6060603cPostConfirmation": {
-          "GROUP": "Teacher_Auth",
-          "deploymentBucketName": "amplify-mobile-dev-69ed3-deployment",
+          "GROUP": "usergroup",
+          "deploymentBucketName": "amplify-mobile-test-2c53b-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
-        "mobile": {},
-        "mobile6060603c": {}
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-test-2c53b-deployment",
+          "s3Key": "amplify-builds/createGameTest-496a526946425549316a-build.zip"
+        },
+        "teacherIdAuth": {
+          "deploymentBucketName": "amplify-mobile-test-2c53b-deployment",
+          "s3Key": "amplify-builds/teacherIdAuth-4b46634e547979646a33-build.zip"
+        },
+        "uploadExternalImageToS3": {
+          "deploymentBucketName": "amplify-mobile-test-2c53b-deployment",
+          "s3Key": "amplify-builds/uploadExternalImageToS3-4e55784e7a75437a4e33-build.zip"
+        },
+        "waegen": {
+          "deploymentBucketName": "amplify-mobile-test-2c53b-deployment",
+          "s3Key": "amplify-builds/waegen-3657566c447833793575-build.zip"
+        },
+        "waeregen": {
+          "deploymentBucketName": "amplify-mobile-test-2c53b-deployment",
+          "s3Key": "amplify-builds/waeregen-3238724877794877452f-build.zip"
+        }
       },
-      "api": {
-        "mobile": {}
+      "storage": {
+        "gamequestionimages": {}
       }
     }
   }

@@ -1,5 +1,8 @@
-import {type ResetPasswordOutput
+import {
+  SignInOutput,
+  type ResetPasswordOutput
 } from 'aws-amplify/auth';
+
 export interface IAuthAPIClient {
   isUserAuth: boolean;
   init(): Promise<void>;
@@ -8,7 +11,7 @@ export interface IAuthAPIClient {
   authListener(): void;
   awsSignUp(username: string, email: string, password: string): void;
   awsConfirmSignUp(email: string, code: string): void;
-  awsSignIn(email: string, password: string): void;
+  awsSignIn(email: string, password: string): Promise<SignInOutput>;
   awsSignInFederated(): void;
   awsSignOut(): void;
   awsResetPassword (username: string): Promise<ResetPasswordOutput>

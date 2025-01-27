@@ -1,3 +1,25 @@
+type User @model
+@auth(
+  rules:  [
+    { allow: public, provider: iam  },
+    { allow: owner, provider: userPools },
+    { allow: private, operations: [read], provider: userPools },  
+  ]
+)
+@aws_iam
+@aws_cognito_user_pools
+{
+  id: ID! @primaryKey
+  userName: String! @index(name: "userNameIndex", queryField: "userByUserName")
+  title: String
+  firstName: String
+  lastName: String
+  email: String! @index(name: "emailIndex", queryField: "userByEmail")
+  password: String
+  gamesMade: Int
+  questionsMade: Int
+}
+
 type Mutation {
   createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String 
   @function(name: "createGameTest-${env}") 
@@ -7,6 +29,67 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+  teacherIdAuth(input: TeacherIdAuthInput!): String 
+  @function(name: "teacherIdAuth-${env}") 
+  @auth(
+    rules: [
+      { allow: private, provider: userPools }
+    ]
+  )
+  uploadExternalImageToS3(input: UploadExternalImageToS3Input): String
+  @function(name: "uploadExternalImageToS3-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+
+  waegen(input: WaeGenInput): String
+  @function(name: "waegen-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+
+  waeregen(input: WaeRegenInput): String
+  @function(name: "waeregen-${env}")
+    @auth(
+    rules: [
+      { allow: public, provider: iam  },
+      { allow: private, provider: userPools }
+    ]
+  )
+}
+
+input TeacherIdAuthInput {
+  teacherImage: String!
+  fileName: String!
+  fileType: String!
+}
+input UploadExternalImageToS3Input {
+  imageUrl: String!
+}
+
+input WaeGenInput {
+  question: String!
+  correctAnswer: String!
+  wrongAnswer: String!
+  discardedExplanations: AWSJSON!
+}
+
+input WaeRegenInput {
+  question: String!
+  correctAnswer: String!
+  wrongAnswer: String!
+  currentExplanation: String!
+  currentPrompt: String
+  incorrectMath: Boolean
+  toneClarity: Boolean
+  other: Boolean
+  discardedExplanations: AWSJSON
 }
 
 type PublicGameTemplate @model
@@ -23,11 +106,6 @@ type PublicGameTemplate @model
   id: ID!
   title: String!
   lowerCaseTitle: String!
-  owner: String! @index(
-      name: "publicGameTemplatesByOwner"
-      queryField: "publicGameTemplatesByOwner"
-      sortKeyFields: ["createdAt"]
-    )
   version: Int!
   description: String!
   lowerCaseDescription: String!
@@ -65,11 +143,6 @@ type PrivateGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String! @index(
-    name: "privatecGameTemplatesByOwner"
-    queryField: "privateGameTemplatesByOwner"
-    sortKeyFields: ["createdAt"]
-  )
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -110,7 +183,6 @@ type PublicQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String!
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -350,3 +422,4 @@ type Subscription {
       ]
     )
 }
+

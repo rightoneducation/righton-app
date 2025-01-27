@@ -4,7 +4,8 @@ import { createTheme } from '@mui/material/styles';
 const mainColor = '#FFFFFF'; // main  (ex white)
 const accentColor = '#312759'; // accent (ex purple)
 const darkBlueCardColor = '#08458F'; // card color for default host cards with student data
-const lightBlueBackgroundColor = '#E9F1FF'; // background color for central pages
+const lightBlueBackgroundColor = '#22366A'; // background color for central pages
+const creamBackgroundColor = '#FEFBF7'; // background color for central pages
 const backgroundGradient =
   'linear-gradient(196deg, rgb(49,109,176) 0%, rgb(11,33,90) 73%)'; // upper header background1
 //   background: linear-gradient(196deg, #0D68B1 0%, #02215F 73.62%);
@@ -17,6 +18,8 @@ const radialGradient =
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
 const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
+const aiGradient = 
+  'linear-gradient(90deg, #4700B2 0%, #5A257D 100%)';
 const questionGradient =
   'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator
 const circularProgress = '#159EFA';
@@ -25,6 +28,7 @@ const secondaryTextColor = '#384466'; // secondary text (question text, answer t
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
 const playerNameTextColor = '#AEAEAE'; // player name
 const darkPurpleColor = '#4700B2'; // phase results, selected answer
+const extraDarkPurpleColor = '#340380'; // hover state for dark purple text fields
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
 const blueColor = '#22ADFF'; // highlights around selected answer, pagination bullet
@@ -32,9 +36,12 @@ const mediumBlueColor = '#3958BF'; // checked radio button
 const extraDarkBlueColor = '#02215F'; // upper explore games screen background
 const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
+const greyColor = '#CCCCCC'; // text field borders
 const lightGreyColor = '#F4F4F4'; // submitted answer
+const blueGreyColor = '#0076AA'; // CCSS buttons on explore game/question pages
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
+const greyPurpleColor = '#EDE9F2'; // AI regen text field
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
 const playerFeedbackLabelColor = 'rgba(255, 255, 255, 0.4)'; // color of text on confidence card, responses card, player thinking, etc.
 const feedbackCardsInstructionsColor = 'rgba(255, 255, 255, 0.6)'; // color of text on player data cards that says 'tap on a response...'
@@ -43,6 +50,7 @@ const dropdownInfoBackgroundColor = '#063772'; // background color of the sub-ca
 const answerBarBackgroundColor = 'rgba(8, 69, 143, 0.20)';
 const progressBarColor = '#08458F';
 const progressBarBackgroundColor = '#D0DAE7';
+const errorColor = '#F60E44';
 const buttonGradientBlue = 'linear-gradient(270deg, #1C94C3 0%, #3153C7 100%)';
 const buttonGradientRed = 'linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)';
 const buttonGradientGrey = 'linear-gradient(90deg, #969696 0%, #515151 100%)';
@@ -56,6 +64,32 @@ const radialTimerArray = [
   'rgb(237, 115, 166)',
   'rgb(255, 120, 165)',
 ]; // radial timer color array - appended with '0.x )' opacity when used in countdown
+
+// button colors
+const buttonPrimaryDefault = '#1B376F'; // primary button color
+const buttonPrimaryDisable = '#B5BCCD'; // disabled state for primary buttons
+const buttonPrimaryHover = '#3155C7'; // hover state for primary buttons
+
+const buttonActionDefault = '#EB147C'; // action button color
+const buttonActionDisable = '#EDBBD7'; // disabled state for action buttons
+const buttonActionHover = '#FF72B6'; // hover state for action buttons
+
+const buttonCCSSDefault = '#0076AA'; // CCSS buttons on explore game/question pages
+const buttonCCSSDisable = '#B9D5E3'; // disabled state for CCSS buttons
+const buttonCCSSHover = '#1FBBFF'; // hover state for CCSS buttons
+
+const buttonNavBorder = '#3155C6'; // selected nav button border color
+const buttonNavSelected = '#EB147C'; // selected nav button color
+
+// search bar colors
+const searchBackgroundColor = '#FFFFFF'; // search bar background color
+const searchButtonColor = '#EB147C'; // search bar button color
+
+// sort menu colors
+
+const sortHover = '#E6E9EE'; // hover state for sort menu items
+const sortActive = '#02215F'; // active state for sort menu items
+const sortText = '#02215'; // text color for sort menu items
 
 //  borders
 const borderWidth = 1;
@@ -379,6 +413,7 @@ declare module '@mui/material/styles' {
     backgroundGradient: string;
     darkBlueCardColor: string;
     lightBlueBackgroundColor: string;
+    creamBackgroundColor: string;
     timerGradient: string;
     radialGradient: string;
     highlightGradient: string;
@@ -387,13 +422,17 @@ declare module '@mui/material/styles' {
     circularProgress: string;
     red: string;
     green: string;
+    greyPurple: string;
     darkPurple: string;
+    extraDarkPurple: string;
     blue: string;
     mediumBlue: string;
     darkBlue: string;
     extraDarkBlue: string;
     extraDarkGrey: string;
     darkGrey: string;
+    grey: string;
+    blueGrey: string;
     lightGrey: string;
     correctColor: string;
     baseQuestionColor: string;
@@ -402,6 +441,7 @@ declare module '@mui/material/styles' {
     graphAccentColor: string;
     dropdownInfoBackgroundColor: string;
     answerBarBackgroundColor: string;
+    errorColor: string;
     progressBarColor: string;
     progressBarBackgroundColor: string;
     countdownColor: string;
@@ -409,6 +449,23 @@ declare module '@mui/material/styles' {
     buttonGradientBlue: string;
     buttonGradientRed: string;
     buttonGradientGrey: string;
+    aiGradient: string;
+    buttonPrimaryDefault: string;
+    buttonPrimaryDisable: string;
+    buttonPrimaryHover: string;
+    buttonActionDefault: string;
+    buttonActionDisable: string;
+    buttonActionHover: string;
+    buttonCCSSDefault: string;
+    buttonCCSSDisable: string;
+    buttonCCSSHover: string;
+    buttonNavBorder: string;
+    buttonNavSelected: string;
+    searchBackgroundColor: string;
+    searchButtonColor: string;
+    sortHover: string;
+    sortActive: string;
+    sortText: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -416,6 +473,7 @@ declare module '@mui/material/styles' {
     backgroundGradient?: string;
     darkBlueCardColor?: string;
     lightBlueBackgroundColor?: string;
+    creamBackgroundColor?: string;
     timerGradient?: string;
     radialGradient?: string;
     highlightGradient?: string;
@@ -424,7 +482,9 @@ declare module '@mui/material/styles' {
     circularProgress?: string;
     red?: string;
     green?: string;
+    greyPurple?: string;
     darkPurple?: string;
+    extraDarkPurple?: string;
     blue?: string;
     mediumBlue?: string;
     darkBlue?: string;
@@ -432,6 +492,8 @@ declare module '@mui/material/styles' {
     purple?: string;
     extraDarkGrey?: string;
     darkGrey?: string;
+    grey?: string;
+    blueGrey?: string;
     lightGrey?: string;
     correctColor?: string;
     baseQuestionColor?: string;
@@ -440,6 +502,7 @@ declare module '@mui/material/styles' {
     graphAccentColor?: string;
     dropdownInfoBackgroundColor?: string;
     answerBarBackgroundColor?: string;
+    errorColor?: string;
     progressBarColor?: string;
     progressBarBackgroundColor?: string;
     countdownColor: string;
@@ -447,6 +510,23 @@ declare module '@mui/material/styles' {
     buttonGradientBlue?: string;
     buttonGradientRed?: string;
     buttonGradientGrey?: string;
+    aiGradient?: string;
+    buttonPrimaryDefault?: string;
+    buttonPrimaryDisable?: string;
+    buttonPrimaryHover?: string;
+    buttonActionDefault?: string;
+    buttonActionDisable?: string;
+    buttonActionHover?: string;
+    buttonCCSSDefault?: string;
+    buttonCCSSDisable?: string;
+    buttonCCSSHover?: string;
+    buttonNavBorder?: string;
+    buttonNavSelected?: string;
+    searchBackgroundColor?: string;
+    searchButtonColor?: string;
+    sortHover?: string;
+    sortActive?: string;
+    sortText?: string;
   }
 }
 
@@ -490,6 +570,7 @@ export default createTheme({
       accent: accentColor,
       darkBlueCardColor,
       lightBlueBackgroundColor,
+      creamBackgroundColor,
       backgroundGradient,
       radialGradient,
       timerGradient,
@@ -499,13 +580,17 @@ export default createTheme({
       circularProgress,
       red: redColor,
       green: greenColor,
+      greyPurple: greyPurpleColor,
       darkPurple: darkPurpleColor,
+      extraDarkPurple: extraDarkPurpleColor,
       blue: blueColor,
       mediumBlue: mediumBlueColor,
       darkBlue: secondaryTextColor,
       extraDarkBlue: extraDarkBlueColor,
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
+      grey: greyColor,
+      blueGrey: blueGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
       baseQuestionColor,
@@ -516,11 +601,29 @@ export default createTheme({
       answerBarBackgroundColor,
       progressBarColor,
       progressBarBackgroundColor,
+      errorColor,
       countdownColor,
       radialTimerArray,
       buttonGradientBlue,
       buttonGradientRed,
       buttonGradientGrey,
+      aiGradient,
+      buttonPrimaryDefault,
+      buttonPrimaryDisable,
+      buttonPrimaryHover,
+      buttonActionDefault,
+      buttonActionDisable,
+      buttonActionHover,
+      buttonCCSSDefault,
+      buttonCCSSDisable,
+      buttonCCSSHover,
+      buttonNavBorder,
+      buttonNavSelected,
+      searchBackgroundColor,
+      searchButtonColor,
+      sortHover,
+      sortActive,
+      sortText,
     },
   },
   typography: {

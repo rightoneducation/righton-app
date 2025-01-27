@@ -38,6 +38,7 @@ interface MostPopularComponentProps<T> {
 }
 
 interface MostPopularGamesComponentProps {
+  screenSize: ScreenSize,
   mostPopularElements: IGameTemplate[];
   maxCards: number;
   numColumns: number;
@@ -47,6 +48,7 @@ interface MostPopularGamesComponentProps {
 }
 
 function MostPopularGamesComponent({
+  screenSize,
   mostPopularElements,
   maxCards,
   isLoading,
@@ -55,24 +57,26 @@ function MostPopularGamesComponent({
   handleViewButtonClick,
 }: MostPopularGamesComponentProps) {
   return (
-    <Grid container spacing={2} id="scrollableDiv">
+    <Grid container spacing={4} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: '2000px'}}>
       {(mostPopularElements.length === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
-              <Grid item xs={12} md={6} lg={4} key={index}> {/* eslint-disable-line */}
+              <Grid item xs={12} md={6} lg={3} key={index}> {/* eslint-disable-line */}
                 <SkeletonGameCard index={index} />
               </Grid>
             );
           })
         : mostPopularElements.map((game) => {
             return (
-              <Grid item xs={12} md={6} lg={4} key={game.id}>
+              <Grid item key={game.id}>
                 <StyledGameCard
+                  screenSize={screenSize}
                   game={game}
                   id={game.id}
                   title={game.title}
                   description={game.description}
                   image={game.imageUrl || placeHolder}
+                  isCarousel={false}
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
                   }
@@ -109,7 +113,7 @@ function MostPopularQuestionsComponent({
           })
         : Array.from({ length: numColumns }).map((_, index) => {
             return (
-              <Grid item xs={12} md={4} lg={2.4} key={uuidv4()}>
+              <Grid item xs={12} md={4} lg key={uuidv4()}>
                 <Box
                   style={{
                     display: 'flex',
@@ -126,6 +130,7 @@ function MostPopularQuestionsComponent({
                           id={question.id}
                           title={question.title}
                           image={question.imageUrl || placeHolder}
+                          isCarousel={false}
                           handleViewButtonClick={
                             handleViewButtonClick as (
                               element: IQuestionTemplate,
@@ -163,7 +168,7 @@ export default function CardGallery<
       case ScreenSize.MEDIUM:
         return 3;
       default:
-        return 5;
+        return 8;
     }
   };
   const reformatElements = <T,>( // eslint-disable-line
@@ -204,6 +209,7 @@ export default function CardGallery<
       />
       {elementType === ElementType.GAME ? (
         <MostPopularGamesComponent
+          screenSize={screenSize}
           isLoading={isLoading ?? false}
           mostPopularElements={galleryElements as IGameTemplate[]}
           maxCards={maxCards}

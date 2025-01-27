@@ -32,6 +32,7 @@ export enum ButtonType {
   NEXTQUESTION = 'nextquestion',
   SAVE = 'save',
   DISCARD = 'discard',
+  DISCARDBLUE = 'discardblue',
   ADDSTEP = 'addstep',
   BROWSEFILES = 'browsefiles',
   CHANGEIMAGE = 'changeimage',
@@ -43,6 +44,9 @@ export enum ButtonType {
   EDITPICTURE = 'editpicture',
   EDITINFORMATION = 'editinformation',
   CHANGEPASSWORD = 'changepassword',
+  CREATE = 'create',
+  CHOOSE = 'choose',
+  CLONE = 'clone'
 }
 
 export enum ButtonColor {
@@ -128,6 +132,10 @@ export const buttonContentMap: ButtonContentMapProps = {
     textKey: ButtonType.DISCARD,
     color: ButtonColor.RED,
   },
+  [ButtonType.DISCARDBLUE]: {
+    icon: discard,
+    textKey: ButtonType.DISCARD
+  },
   [ButtonType.ADDSTEP]: {
     icon: add,
     textKey: ButtonType.ADDSTEP,
@@ -168,5 +176,18 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CHANGEPASSWORD]: {
     textKey: ButtonType.CHANGEPASSWORD,
+  },
+  [ButtonType.CREATE]: {
+    icon: add,
+    textKey: ButtonType.CREATE,
+    color: ButtonColor.RED,
+  },
+  [ButtonType.CHOOSE]: {
+    icon: add, 
+    textKey: ButtonType.CHOOSE,
+  },
+  [ButtonType.CLONE]: {
+    icon: clone, 
+    textKey: ButtonType.CLONE,
   },
 };
