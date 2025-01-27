@@ -16,4 +16,10 @@ export interface IUserAPIClient {
   updateUser<User>( 
     updateUserInput: UpdateUserInput
   ): Promise<User>;
+
+  uploadTeacherId<String>( 
+    teacherIdImage: File,
+    fileName: string,
+    fileType: string
+  ): Promise<String>;
 }

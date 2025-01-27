@@ -86,10 +86,14 @@ const VerifyBox = styled(Box)(({ theme }) => ({
 // Props interface
 interface ConfirmationProps {
     userName?: string;
+    frontImage?: File | null;
+    backImage?: File | null;
+    handlerImageUpload?: (file: File) => Promise<any>;
+    password?: string
 }
 
 // Use function declaration for the component
-function Confirmation({ userName = '' }: ConfirmationProps) {
+function Confirmation({ userName = '', frontImage, backImage, handlerImageUpload, password}: ConfirmationProps) {
     const [code, setCode] = useState(Array(6).fill(''));
     const apiClients = useTSAPIClientsContext(APIClientsContext);
 
@@ -122,9 +126,43 @@ function Confirmation({ userName = '' }: ConfirmationProps) {
         try {
             await apiClients.auth.awsConfirmSignUp(userName, fullCode);
             console.log('Confirmation successful!');
+
         } catch (error) {
             console.error('Error confirming sign-up:', error);
         }
+
+        try {
+            if(password) {
+                await apiClients.auth.awsSignIn(userName, password);
+                console.log('Confirmation successful!');
+            }
+        } catch (error) {
+            console.error('Error Signing in user:', error);
+        }
+
+        try {
+            let response
+            let response2;
+
+            // Ensure frontImage and backImage are not null
+            if (frontImage && handlerImageUpload) {
+            response = await handlerImageUpload(frontImage);
+            } else {
+            console.error("Front image is required.");
+            return;
+            }
+            if (backImage && handlerImageUpload) {
+            response2 = await handlerImageUpload(backImage);
+            } else {
+            console.error("Back image is required.");
+            return;
+            }
+            console.log("Image Uploaded Successfully.")
+        } catch (error) {
+            console.error('Error Uploading Images:', error);
+        }
+
+        
     };
 
     const setInputRef = (index: number, el: HTMLInputElement | null) => {

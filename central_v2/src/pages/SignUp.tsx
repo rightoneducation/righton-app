@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect  } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import {Box, FormControl, Typography, Select, TextField, MenuItem, SelectChangeEvent, Button} from '@mui/material';
+import {Box, FormControl, Typography, Select, TextField, MenuItem, SelectChangeEvent, Button, Avatar} from '@mui/material';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
@@ -224,15 +224,32 @@ const HaveAnAccountText = styled(Typography)(({ theme }) => ({
   fontSize: '16px', 
 }));
 
+const ImagePlaceHolder = styled('img')(({ theme }) => ({
+  width: 100, // Set default width
+  height: 148, // Set default height
+  borderRadius: 4, // Set border radius for rounded corners
+  border: '2px solid #ccc', // Add border
+}));
 
-function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void }) {
+interface SignUpProps {
+  handleUserCreate: (user: string) => void;
+  frontImage: File | null;
+  setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
+  backImage: File | null;
+  setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
+  apiClients: any; // Replace with the exact type if you have one for `apiClients`
+  password: string
+  setPassword: (value: string) => void
+  confirmPassword: string
+  setConfirmPassword: (value: string) => void
+}
+function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBackImage, apiClients, password, setPassword, confirmPassword, setConfirmPassword}: SignUpProps ) {
   const [title, setTitle] = useState('Title...');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
   const [schoolEmail, setSchoolEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -242,7 +259,10 @@ function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void
   const buttonType = ButtonType.LOGIN;
   const [isEnabled, setIsEnabled] = useState(true);
 
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const buttonTypeUpload = ButtonType.UPLOAD;
+  const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
+
+  const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -266,12 +286,36 @@ function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void
     try {
       await apiClients.auth.awsSignUp(userName, schoolEmail, password);
       await apiClients.user.createUser(user); // Save user to the backend
+      // let response
+      // let response2;
+
+      // // Ensure frontImage and backImage are not null
+      // if (frontImage) {
+      //   response = await handlerImageUpload(frontImage);
+      // } else {
+      //   console.error("Front image is required.");
+      //   setLoading(false);
+      //   return;
+      // }
+  
+      // if (backImage) {
+      //   response2 = await handlerImageUpload(backImage);
+      // } else {
+      //   console.error("Back image is required.");
+      //   setLoading(false);
+      //   return;
+      // }
+
+      // console.log(response)
+      // console.log(response2)
+
       handleUserCreate(userName); // Trigger switch to confirmation
     } catch (error) {
       console.error(error);
     }
     setLoading(false);
   };
+
 
   return (
     <SignUpMainContainer>
@@ -333,6 +377,86 @@ function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void
         </MiddleText>
 
         <UploadImagesAndPassword>
+        <UploadImages >
+              <UploadImageContainer>
+                <ImageText>Front</ImageText>
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="front-upload"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setFrontImage(e.target.files[0]); // Store the selected image
+                    }
+                  }}
+                />
+                {frontImage 
+                  ? ( <ImagePlaceHolder
+                  src={URL.createObjectURL(frontImage)}
+                  alt="Uploaded Preview"
+                  />)
+                  : (<CentralButton
+                  buttonType={buttonTypeUpload}
+                  isEnabled={isUploadFrontEnabled}
+                  onClick={async () => {
+                    const uploadInput = document.getElementById('front-upload') as HTMLInputElement;
+                    uploadInput?.click(); // Trigger file selection
+
+                    // Wait for the user to select the file
+                    uploadInput.onchange = async (e: Event) => {
+                      const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
+                      if (target.files) {
+                        const file = target.files[0]; // Access the selected file
+                        setFrontImage(file); // Store file locally
+                      }
+                    };
+                  }}
+                />)
+                }
+
+              </UploadImageContainer>
+
+
+              <UploadImageContainer>
+                  <ImageText>Back</ImageText>
+                  <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="back-upload"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setBackImage(e.target.files[0]); // Store the selected image
+                    }
+                  }}
+                  />
+                  {backImage 
+                    ? ( <ImagePlaceHolder
+                    src={URL.createObjectURL(backImage)}
+                    alt="Uploaded Preview"
+                    />)
+                    : (<CentralButton 
+                      buttonType={buttonTypeUpload} 
+                      isEnabled={isUploadBackEnabled} 
+                      onClick={async () => {
+                        const uploadInput = document.getElementById('back-upload') as HTMLInputElement;
+                        uploadInput?.click(); // Trigger file selection
+    
+                        // Wait for the user to select the file
+                        uploadInput.onchange = async (e: Event) => {
+                          const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
+                          if (target.files) {
+                            const file = target.files[0]; // Access the selected file
+                            setBackImage(file); // Store file locally
+                          }
+                        };
+                      }}
+    
+                    />)
+                  }
+              </UploadImageContainer>
+        </UploadImages>
           <PasswordContainer>
             <UserTextField
               variant="outlined"
@@ -366,8 +490,28 @@ function SignUp({ handleUserCreate }: { handleUserCreate: (user: string) => void
 }
 
 export default function SignUpSwitch() {
+
   const [userName, setUserName] = useState(''); // Track the submitted username
   const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
+  const [frontImage, setFrontImage] = useState<File | null>(null);
+  const [backImage, setBackImage] = useState<File | null>(null);
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+
+  const handlerImageUpload = async (file: File) => {
+    console.log(file)
+    const fileName = file.name
+    const fileType = file.type
+    console.log(fileName)
+    console.log(fileType)
+    const response = await apiClients.user.uploadTeacherId(file, fileName, fileType)
+    
+    console.log("response: ", response)
+    return response
+  }
 
   const handleUserCreate = (user: string) => {
     setUserName(user);
@@ -375,26 +519,11 @@ export default function SignUpSwitch() {
   };
 
   return isUserSubmitted ? (
-    <Confirmation userName={userName} /> // Render confirmation page
+    <Confirmation userName={userName} frontImage={frontImage} backImage={backImage} handlerImageUpload={handlerImageUpload}
+    password={password}/> // Render confirmation page
   ) : (
-    <SignUp handleUserCreate={handleUserCreate} /> // Render signup page
+    <SignUp handleUserCreate={handleUserCreate} frontImage={frontImage} setFrontImage={setFrontImage} 
+    backImage={backImage} setBackImage={setBackImage} apiClients={apiClients} password={password} setPassword={setPassword}
+    confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword}/> // Render signup page
   );
 }
-
-
-
-// Const [userName, setUserName = useState(‘’);
-//   Const [isUserSubmitted, setIsUserSubmitted] = userState(false)
-    
-//   Const handleUserCreate = (user) => {
-//   setUserName(user)
-//   setIsUserSubmitted(true)
-//   }
-  
-  
-//   <Signup Switch>
-//     { !isUserSubmitted 
-//       ? <Signup handleUserCreate={handleUserCreate}>
-//       : <Confirmation userName={username}
-//   }
-//   </Signup Switch>
