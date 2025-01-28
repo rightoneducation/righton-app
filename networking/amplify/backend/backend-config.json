@@ -106,15 +106,6 @@
     },
     "teacherIdAuth": {
       "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "mobile6060603c"
-        }
-      ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },

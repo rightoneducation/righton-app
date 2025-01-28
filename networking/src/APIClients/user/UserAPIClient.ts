@@ -117,7 +117,6 @@ export class UserAPIClient
     fileType: string
   ): Promise<String> {
     const teacherImage = await this.fileToBase64(teacherIdImage)
-    console.log(teacherImage)
     const input: TeacherIdAuthInput = {teacherImage, fileName, fileType}
     const variables: TeacherIdAuthMutationVariables = { input }
     console.log("printing variables:" ,variables)

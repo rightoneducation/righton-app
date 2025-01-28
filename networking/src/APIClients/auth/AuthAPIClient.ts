@@ -77,7 +77,15 @@ export class AuthAPIClient
   }
 
   async awsSignIn(username: string, password: string): Promise<SignInOutput> {
-    return await signIn({username: username, password: password});
+    const session = await fetchAuthSession();
+    console.log(session);
+    let user;
+    try{
+      user = await signIn({username: username, password: password}); 
+    } catch (e: any) {
+      throw new Error (e);
+    }
+    return user;
   }
 
   async awsSignInFederated (): Promise<void> {

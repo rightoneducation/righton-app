@@ -134,7 +134,7 @@ function Confirmation({ userName = '', frontImage, backImage, handlerImageUpload
         try {
             if(password) {
                 await apiClients.auth.awsSignIn(userName, password);
-                console.log('Confirmation successful!');
+                console.log('Sign in successful!');
             }
         } catch (error) {
             console.error('Error Signing in user:', error);
