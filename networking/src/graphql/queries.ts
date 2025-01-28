@@ -139,7 +139,6 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
     id
     title
     lowerCaseTitle
-    owner
     version
     description
     lowerCaseDescription
@@ -161,7 +160,6 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
           id
           title
           lowerCaseTitle
-          owner
           version
           description
           lowerCaseDescription
@@ -183,7 +181,6 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -205,6 +202,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -246,6 +244,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
@@ -272,7 +271,6 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -294,6 +292,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -350,6 +349,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -371,7 +371,6 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -393,7 +392,6 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -415,7 +413,6 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -433,6 +430,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -470,6 +468,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -496,7 +495,6 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -514,6 +512,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -566,6 +565,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     nextToken
@@ -575,231 +575,6 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
 ` as GeneratedQuery<
   APITypes.ListPublicGameTemplatesQueryVariables,
   APITypes.ListPublicGameTemplatesQuery
->;
-export const publicGameTemplatesByOwner = /* GraphQL */ `query PublicGameTemplatesByOwner(
-  $owner: String!
-  $createdAt: ModelStringKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPublicGameTemplateFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  publicGameTemplatesByOwner(
-    owner: $owner
-    createdAt: $createdAt
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      title
-      lowerCaseTitle
-      owner
-      version
-      description
-      lowerCaseDescription
-      ccss
-      domain
-      cluster
-      grade
-      gradeFilter
-      standard
-      phaseOneTime
-      phaseTwoTime
-      imageUrl
-      questionTemplates {
-        items {
-          id
-          publicGameTemplateID
-          publicQuestionTemplateID
-          publicGameTemplate {
-            id
-            title
-            lowerCaseTitle
-            owner
-            version
-            description
-            lowerCaseDescription
-            ccss
-            domain
-            cluster
-            grade
-            gradeFilter
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  title
-                  lowerCaseTitle
-                  owner
-                  version
-                  description
-                  lowerCaseDescription
-                  ccss
-                  domain
-                  cluster
-                  grade
-                  gradeFilter
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  questionTemplatesOrder
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  title
-                  lowerCaseTitle
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  ccss
-                  domain
-                  cluster
-                  grade
-                  gradeFilter
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  owner
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            questionTemplatesOrder
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          publicQuestionTemplate {
-            id
-            title
-            lowerCaseTitle
-            version
-            choices
-            instructions
-            answerSettings
-            ccss
-            domain
-            cluster
-            grade
-            gradeFilter
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                publicGameTemplateID
-                publicQuestionTemplateID
-                publicGameTemplate {
-                  id
-                  title
-                  lowerCaseTitle
-                  owner
-                  version
-                  description
-                  lowerCaseDescription
-                  ccss
-                  domain
-                  cluster
-                  grade
-                  gradeFilter
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  questionTemplatesOrder
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                publicQuestionTemplate {
-                  id
-                  title
-                  lowerCaseTitle
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  ccss
-                  domain
-                  cluster
-                  grade
-                  gradeFilter
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  owner
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            owner
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      questionTemplatesCount
-      questionTemplatesOrder
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PublicGameTemplatesByOwnerQueryVariables,
-  APITypes.PublicGameTemplatesByOwnerQuery
 >;
 export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplatesByDate(
   $type: String!
@@ -821,7 +596,6 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -843,7 +617,6 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -865,7 +638,6 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -883,6 +655,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -920,6 +693,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -946,7 +720,6 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -964,6 +737,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -1016,6 +790,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     nextToken
@@ -1046,7 +821,6 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -1068,7 +842,6 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -1090,7 +863,6 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -1108,6 +880,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -1145,6 +918,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -1171,7 +945,6 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -1189,6 +962,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -1241,6 +1015,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     nextToken
@@ -1271,7 +1046,6 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -1293,7 +1067,6 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -1315,7 +1088,6 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -1333,6 +1105,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -1370,6 +1143,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -1396,7 +1170,6 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -1414,6 +1187,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -1466,6 +1240,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     nextToken
@@ -1479,7 +1254,6 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
 export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplate($id: ID!) {
   getPrivateGameTemplate(id: $id) {
     id
-    owner
     title
     lowerCaseTitle
     version
@@ -1501,7 +1275,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          owner
           title
           lowerCaseTitle
           version
@@ -1523,7 +1296,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -1547,6 +1319,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
@@ -1588,6 +1361,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         privateQuestionTemplate {
@@ -1613,7 +1387,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -1637,6 +1410,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
@@ -1692,6 +1466,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1711,7 +1486,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
   ) {
     items {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -1733,7 +1507,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -1755,7 +1528,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -1775,6 +1547,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -1812,6 +1585,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -1837,7 +1611,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -1857,6 +1630,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -1908,6 +1682,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     nextToken
@@ -1917,231 +1692,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
 ` as GeneratedQuery<
   APITypes.ListPrivateGameTemplatesQueryVariables,
   APITypes.ListPrivateGameTemplatesQuery
->;
-export const privateGameTemplatesByOwner = /* GraphQL */ `query PrivateGameTemplatesByOwner(
-  $owner: String!
-  $createdAt: ModelStringKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPrivateGameTemplateFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  privateGameTemplatesByOwner(
-    owner: $owner
-    createdAt: $createdAt
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      owner
-      title
-      lowerCaseTitle
-      version
-      description
-      lowerCaseDescription
-      ccss
-      domain
-      cluster
-      grade
-      gradeFilter
-      standard
-      phaseOneTime
-      phaseTwoTime
-      imageUrl
-      questionTemplates {
-        items {
-          id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          privateGameTemplate {
-            id
-            owner
-            title
-            lowerCaseTitle
-            version
-            description
-            lowerCaseDescription
-            ccss
-            domain
-            cluster
-            grade
-            gradeFilter
-            standard
-            phaseOneTime
-            phaseTwoTime
-            imageUrl
-            questionTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  lowerCaseTitle
-                  version
-                  description
-                  lowerCaseDescription
-                  ccss
-                  domain
-                  cluster
-                  grade
-                  gradeFilter
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  questionTemplatesOrder
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  lowerCaseTitle
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  ccss
-                  domain
-                  cluster
-                  grade
-                  gradeFilter
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            questionTemplatesCount
-            questionTemplatesOrder
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          privateQuestionTemplate {
-            id
-            owner
-            title
-            lowerCaseTitle
-            version
-            choices
-            instructions
-            answerSettings
-            ccss
-            domain
-            cluster
-            grade
-            gradeFilter
-            standard
-            imageUrl
-            gameTemplates {
-              items {
-                id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
-                  id
-                  owner
-                  title
-                  lowerCaseTitle
-                  version
-                  description
-                  lowerCaseDescription
-                  ccss
-                  domain
-                  cluster
-                  grade
-                  gradeFilter
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  questionTemplatesCount
-                  questionTemplatesOrder
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                privateQuestionTemplate {
-                  id
-                  owner
-                  title
-                  lowerCaseTitle
-                  version
-                  choices
-                  instructions
-                  answerSettings
-                  ccss
-                  domain
-                  cluster
-                  grade
-                  gradeFilter
-                  standard
-                  imageUrl
-                  gameTemplatesCount
-                  createdAt
-                  updatedAt
-                  type
-                  __typename
-                }
-                createdAt
-                updatedAt
-                owner
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            gameTemplatesCount
-            createdAt
-            updatedAt
-            type
-            __typename
-          }
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      questionTemplatesCount
-      questionTemplatesOrder
-      createdAt
-      updatedAt
-      type
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PrivateGameTemplatesByOwnerQueryVariables,
-  APITypes.PrivateGameTemplatesByOwnerQuery
 >;
 export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTemplatesByDate(
   $type: String!
@@ -2161,7 +1711,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
   ) {
     items {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -2183,7 +1732,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -2205,7 +1753,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -2225,6 +1772,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -2262,6 +1810,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -2287,7 +1836,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -2307,6 +1855,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -2358,6 +1907,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     nextToken
@@ -2386,7 +1936,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
   ) {
     items {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -2408,7 +1957,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -2430,7 +1978,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -2450,6 +1997,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -2487,6 +2035,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -2512,7 +2061,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -2532,6 +2080,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -2583,6 +2132,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     nextToken
@@ -2611,7 +2161,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
   ) {
     items {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -2633,7 +2182,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -2655,7 +2203,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -2675,6 +2222,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -2712,6 +2260,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -2737,7 +2286,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -2757,6 +2305,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -2808,6 +2357,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     nextToken
@@ -2843,7 +2393,6 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
           id
           title
           lowerCaseTitle
-          owner
           version
           description
           lowerCaseDescription
@@ -2865,7 +2414,6 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -2887,6 +2435,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -2928,6 +2477,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
@@ -2954,7 +2504,6 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 id
                 title
                 lowerCaseTitle
-                owner
                 version
                 description
                 lowerCaseDescription
@@ -2976,6 +2525,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
@@ -3073,7 +2623,6 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -3095,7 +2644,6 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3113,6 +2661,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3150,6 +2699,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -3176,7 +2726,6 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3194,6 +2743,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3296,7 +2846,6 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -3318,7 +2867,6 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3336,6 +2884,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3373,6 +2922,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -3399,7 +2949,6 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3417,6 +2966,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3519,7 +3069,6 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -3541,7 +3090,6 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3559,6 +3107,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3596,6 +3145,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -3622,7 +3172,6 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3640,6 +3189,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3742,7 +3292,6 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -3764,7 +3313,6 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3782,6 +3330,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3819,6 +3368,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -3845,7 +3395,6 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -3863,6 +3412,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -3949,7 +3499,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          owner
           title
           lowerCaseTitle
           version
@@ -3971,7 +3520,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -3995,6 +3543,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
@@ -4036,6 +3585,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         privateQuestionTemplate {
@@ -4061,7 +3611,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
                 lowerCaseTitle
                 version
@@ -4085,6 +3634,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
@@ -4179,7 +3729,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -4201,7 +3750,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4221,6 +3769,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -4258,6 +3807,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -4283,7 +3833,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4303,6 +3852,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -4402,7 +3952,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -4424,7 +3973,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4444,6 +3992,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -4481,6 +4030,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -4506,7 +4056,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4526,6 +4075,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -4625,7 +4175,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -4647,7 +4196,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4667,6 +4215,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -4704,6 +4253,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -4729,7 +4279,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4749,6 +4298,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -4848,7 +4398,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -4870,7 +4419,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4890,6 +4438,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -4927,6 +4476,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -4952,7 +4502,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -4972,6 +4521,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -5933,7 +5483,6 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
       id
       title
       lowerCaseTitle
-      owner
       version
       description
       lowerCaseDescription
@@ -5955,7 +5504,6 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -5977,7 +5525,6 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -5995,6 +5542,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -6032,6 +5580,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -6058,7 +5607,6 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -6076,6 +5624,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -6128,6 +5677,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     publicQuestionTemplate {
@@ -6154,7 +5704,6 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             id
             title
             lowerCaseTitle
-            owner
             version
             description
             lowerCaseDescription
@@ -6176,7 +5725,6 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -6194,6 +5742,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -6231,6 +5780,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
@@ -6257,7 +5807,6 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   id
                   title
                   lowerCaseTitle
-                  owner
                   version
                   description
                   lowerCaseDescription
@@ -6275,6 +5824,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
@@ -6357,7 +5907,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         id
         title
         lowerCaseTitle
-        owner
         version
         description
         lowerCaseDescription
@@ -6379,7 +5928,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               id
               title
               lowerCaseTitle
-              owner
               version
               description
               lowerCaseDescription
@@ -6410,6 +5958,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               createdAt
               updatedAt
               type
+              owner
               __typename
             }
             publicQuestionTemplate {
@@ -6460,6 +6009,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       publicQuestionTemplate {
@@ -6486,7 +6036,6 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               id
               title
               lowerCaseTitle
-              owner
               version
               description
               lowerCaseDescription
@@ -6517,6 +6066,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               createdAt
               updatedAt
               type
+              owner
               __typename
             }
             publicQuestionTemplate {
@@ -6589,7 +6139,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
     privateQuestionTemplateID
     privateGameTemplate {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -6611,7 +6160,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -6633,7 +6181,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -6653,6 +6200,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -6690,6 +6238,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -6715,7 +6264,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -6735,6 +6283,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -6786,6 +6335,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     privateQuestionTemplate {
@@ -6811,7 +6361,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
             lowerCaseTitle
             version
@@ -6833,7 +6382,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -6853,6 +6401,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -6890,6 +6439,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
@@ -6915,7 +6465,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
                   lowerCaseTitle
                   version
@@ -6935,6 +6484,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
@@ -7013,7 +6563,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
       privateQuestionTemplateID
       privateGameTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -7035,7 +6584,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
             privateQuestionTemplateID
             privateGameTemplate {
               id
-              owner
               title
               lowerCaseTitle
               version
@@ -7068,6 +6616,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               createdAt
               updatedAt
               type
+              owner
               __typename
             }
             privateQuestionTemplate {
@@ -7118,6 +6667,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       privateQuestionTemplate {
@@ -7143,7 +6693,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
             privateQuestionTemplateID
             privateGameTemplate {
               id
-              owner
               title
               lowerCaseTitle
               version
@@ -7176,6 +6725,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               createdAt
               updatedAt
               type
+              owner
               __typename
             }
             privateQuestionTemplate {

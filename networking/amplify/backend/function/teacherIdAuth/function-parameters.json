@@ -1,3 +1,13 @@
 {
+  "permissions": {
+    "auth": {
+      "mobile6060603c": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
   "lambdaLayers": []
 }

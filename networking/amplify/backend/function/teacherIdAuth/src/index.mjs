@@ -21,7 +21,7 @@ export const handler = async (event) => {
             body: JSON.stringify({
                 message: 'Missing required fields: base64String, fileType, or fileName',
             }),
-        };
+        };ampl
     }
 
     try {
