@@ -216,7 +216,11 @@ export default function Header({
           style={{
             width: isLgScreen ? '210px' : 'auto',
             alignItems: 'flex-start',
+            cursor: 'pointer'
           }}
+          onClick={() =>
+            handleButtonClick(ScreenType.GAMES)
+          }
         >
           <img src={rightonlogo} alt="Right On Logo" />
         </ImageContainer>
