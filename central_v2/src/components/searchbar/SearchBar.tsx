@@ -26,10 +26,11 @@ interface SearchBarProps {
 }
 interface SearchBarProps2 {
   screenSize?: ScreenSize;
+  searchTerms?: string;
 }
 
 const SearchBarContainer = styled(TextField)<SearchBarProps2>(
-  ({ screenSize, theme }) => ({
+  ({ screenSize, searchTerms, theme }) => ({
     width: '100%',
     flexGrow: 1,
     margin: '0',
@@ -41,7 +42,9 @@ const SearchBarContainer = styled(TextField)<SearchBarProps2>(
       padding: '0 12px',
       boxSizing: 'border-box',
       borderRadius: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px 0px`,
-      borderWidth: '0px',
+      borderColor: searchTerms && searchTerms.length === 0 ? 'none' : theme.palette.primary.darkGrey,
+      borderStyle: searchTerms && searchTerms.length === 0 ? 'none' : 'solid',
+      borderWidth: searchTerms && searchTerms.length === 0 ? '0px' : '2px',
       "& fieldset": { border: 'none' },
       '& .MuiInputBase-input': {
         padding: 0,
@@ -107,6 +110,7 @@ function SearchBar({
           }
           variant="outlined"
           value={searchBarText}
+          searchTerms={searchTerms}
           onChange={handleInputChange}
           InputProps={{
             disableUnderline: true,

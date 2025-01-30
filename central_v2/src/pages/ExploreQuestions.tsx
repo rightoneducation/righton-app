@@ -118,6 +118,7 @@ export default function ExploreQuestions({
           />
           <CardGallery<IQuestionTemplate>
             screenSize={screenSize}
+            searchTerm={searchTerms}
             grades={selectedGrades}
             galleryElements={searchedQuestions}
             isLoading={isLoading}
