@@ -16,6 +16,7 @@ import SortSearchMenu from './SortSearchMenu';
 
 interface SearchBarProps {
   screenSize?: ScreenSize;
+  searchTerms: string;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSearchChange: (searchTerm: string) => void;
   handleSortChange: (sort: {
@@ -76,15 +77,16 @@ const SearchAndFilterContainer = styled(Box)<SearchBarProps2>(
 
 function SearchBar({
   screenSize,
+  searchTerms,
   handleSearchChange,
   handleChooseGrades,
   handleSortChange,
 }: SearchBarProps) {
   const theme = useTheme();
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchBarText, setSearchBarText] = useState(searchTerms);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setSearchTerm(value);
+    setSearchBarText(value);
     handleSearchChange(value);
   };
   return (
@@ -104,7 +106,7 @@ function SearchBar({
               : 'Search by topics, standards, or games...'
           }
           variant="outlined"
-          value={searchTerm}
+          value={searchBarText}
           onChange={handleInputChange}
           InputProps={{
             disableUnderline: true,

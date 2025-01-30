@@ -48,7 +48,7 @@ export default function ExploreQuestions({
     handleSearchChange,
     loadMoreQuestions,
   } = useExploreQuestionsStateManager();
-
+  
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
@@ -108,23 +108,32 @@ export default function ExploreQuestions({
         </>
       )}
       {searchTerms.length > 0 ? (
-        <CardGallery<IQuestionTemplate>
-          screenSize={screenSize}
-          searchTerm={searchTerms}
-          grades={selectedGrades}
-          galleryElements={searchedQuestions}
-          isLoading={isLoading}
-          elementType={ElementType.QUESTION}
-          galleryType={GalleryType.SEARCH_RESULTS}
-          setIsTabsOpen={setIsTabsOpen}
-          handleView={handleView}
-        />
+        <>
+          <SearchBar
+            screenSize={screenSize}
+            searchTerms={searchTerms}
+            handleSearchChange={handleSearchChange}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+          />
+          <CardGallery<IQuestionTemplate>
+            screenSize={screenSize}
+            grades={selectedGrades}
+            galleryElements={searchedQuestions}
+            isLoading={isLoading}
+            elementType={ElementType.QUESTION}
+            galleryType={GalleryType.SEARCH_RESULTS}
+            setIsTabsOpen={setIsTabsOpen}
+            handleView={handleView}
+          />
+        </>
       ) : (
         <>
           <ExploreGamesUpperContainer screenSize={screenSize}>
             <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'cover'}} />
             <SearchBar
               screenSize={screenSize}
+              searchTerms={searchTerms}
               handleSearchChange={handleSearchChange}
               handleChooseGrades={handleChooseGrades}
               handleSortChange={handleSortChange}
