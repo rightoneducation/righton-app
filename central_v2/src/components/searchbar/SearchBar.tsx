@@ -16,6 +16,7 @@ import SortSearchMenu from './SortSearchMenu';
 
 interface SearchBarProps {
   screenSize?: ScreenSize;
+  searchTerms: string;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSearchChange: (searchTerm: string) => void;
   handleSortChange: (sort: {
@@ -25,10 +26,11 @@ interface SearchBarProps {
 }
 interface SearchBarProps2 {
   screenSize?: ScreenSize;
+  searchTerms?: string;
 }
 
 const SearchBarContainer = styled(TextField)<SearchBarProps2>(
-  ({ screenSize, theme }) => ({
+  ({ screenSize, searchTerms, theme }) => ({
     width: '100%',
     flexGrow: 1,
     margin: '0',
@@ -40,7 +42,9 @@ const SearchBarContainer = styled(TextField)<SearchBarProps2>(
       padding: '0 12px',
       boxSizing: 'border-box',
       borderRadius: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px 0px`,
-      borderWidth: '0px',
+      borderColor: searchTerms && searchTerms.length === 0 ? 'none' : theme.palette.primary.darkGrey,
+      borderStyle: searchTerms && searchTerms.length === 0 ? 'none' : 'solid',
+      borderWidth: searchTerms && searchTerms.length === 0 ? '0px' : '2px',
       "& fieldset": { border: 'none' },
       '& .MuiInputBase-input': {
         padding: 0,
@@ -76,15 +80,16 @@ const SearchAndFilterContainer = styled(Box)<SearchBarProps2>(
 
 function SearchBar({
   screenSize,
+  searchTerms,
   handleSearchChange,
   handleChooseGrades,
   handleSortChange,
 }: SearchBarProps) {
   const theme = useTheme();
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchBarText, setSearchBarText] = useState(searchTerms);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setSearchTerm(value);
+    setSearchBarText(value);
     handleSearchChange(value);
   };
   return (
@@ -104,7 +109,8 @@ function SearchBar({
               : 'Search by topics, standards, or games...'
           }
           variant="outlined"
-          value={searchTerm}
+          value={searchBarText}
+          searchTerms={searchTerms}
           onChange={handleInputChange}
           InputProps={{
             disableUnderline: true,

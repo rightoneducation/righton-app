@@ -118,6 +118,9 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
         gradeTargets: GradeTarget[],
         sortType: SortType,
       ) => {
+        setIsLoading(true);
+        setSearchedQuestions([]);
+        setSearchTerms(search);
         setNextToken(null);
         apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
@@ -140,9 +143,6 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
   );
 
   const handleSearchChange = (searchString: string) => {
-    setIsLoading(true);
-    setSearchedQuestions([]);
-    setSearchTerms(searchString);
     if (searchString !== ''){
       debouncedSearch(
         searchString,

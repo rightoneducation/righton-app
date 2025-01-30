@@ -112,7 +112,10 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
         gradeTargets: GradeTarget[],
         sortType: SortType,
       ) => {
-      
+        setIsLoading(true);
+        setSearchedGames([]);
+        setSearchTerms(search);
+        setNextToken(null);
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             PublicPrivateType.PUBLIC,
@@ -134,10 +137,6 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
   );
 
   const handleSearchChange = (searchString: string) => {
-    setIsLoading(true);
-    setSearchTerms(searchString);
-    setSearchedGames([]);
-    setNextToken(null);
     if (searchString !== ''){
       debouncedSearch(
         searchString,
