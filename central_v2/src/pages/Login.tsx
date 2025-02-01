@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, TextField, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { GoogleLogin } from '@react-oauth/google';
-import { IAuthAPIClient } from '@righton/networking';
+import { getUser, IAuthAPIClient } from '@righton/networking';
 import { useNavigate } from 'react-router-dom'; 
 import RightOnLogo from '../images/RightOnLogo.png';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
@@ -151,6 +151,8 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   const handleLoginClick = async () => {
     try {
       await apiClients.auth.awsSignIn(userName, password);
+      const getUserName = await apiClients.auth.getUserNickname();
+      console.log(getUserName)
       console.log('Login successful');
     } catch (error) {
       console.error('Error during login:', error);

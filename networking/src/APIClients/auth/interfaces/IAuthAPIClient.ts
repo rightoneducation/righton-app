@@ -19,5 +19,6 @@ export interface IAuthAPIClient {
   verifyGameOwner(gameOwner: string): Promise<boolean>;
   verifyQuestionOwner(questionOwner: string): Promise<boolean>;
   getCurrentUserName(): Promise<string>;
+  getUserNickname(): Promise<string | null>;
   
 }

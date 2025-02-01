@@ -241,14 +241,15 @@ interface SignUpProps {
   password: string
   setPassword: (value: string) => void
   confirmPassword: string
+  schoolEmail: string
+  setSchoolEmail: React.Dispatch<React.SetStateAction<string>>;
   setConfirmPassword: (value: string) => void
 }
-function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBackImage, apiClients, password, setPassword, confirmPassword, setConfirmPassword}: SignUpProps ) {
+function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBackImage, apiClients, password, setPassword, confirmPassword, setConfirmPassword, schoolEmail, setSchoolEmail}: SignUpProps ) {
   const [title, setTitle] = useState('Title...');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
-  const [schoolEmail, setSchoolEmail] = useState('');
 
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -286,28 +287,6 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
     try {
       await apiClients.auth.awsSignUp(userName, schoolEmail, password);
       await apiClients.user.createUser(user); // Save user to the backend
-      // let response
-      // let response2;
-
-      // // Ensure frontImage and backImage are not null
-      // if (frontImage) {
-      //   response = await handlerImageUpload(frontImage);
-      // } else {
-      //   console.error("Front image is required.");
-      //   setLoading(false);
-      //   return;
-      // }
-  
-      // if (backImage) {
-      //   response2 = await handlerImageUpload(backImage);
-      // } else {
-      //   console.error("Back image is required.");
-      //   setLoading(false);
-      //   return;
-      // }
-
-      // console.log(response)
-      // console.log(response2)
 
       handleUserCreate(userName); // Trigger switch to confirmation
     } catch (error) {
@@ -495,6 +474,8 @@ export default function SignUpSwitch() {
   const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
+  const [schoolEmail, setSchoolEmail] = useState('');
+
   const apiClients = useTSAPIClientsContext(APIClientsContext);
 
   const [password, setPassword] = useState('');
@@ -519,11 +500,11 @@ export default function SignUpSwitch() {
   };
 
   return isUserSubmitted ? (
-    <Confirmation userName={userName} frontImage={frontImage} backImage={backImage} handlerImageUpload={handlerImageUpload}
+    <Confirmation schoolEmail={schoolEmail} frontImage={frontImage} backImage={backImage} handlerImageUpload={handlerImageUpload}
     password={password}/> // Render confirmation page
   ) : (
     <SignUp handleUserCreate={handleUserCreate} frontImage={frontImage} setFrontImage={setFrontImage} 
     backImage={backImage} setBackImage={setBackImage} apiClients={apiClients} password={password} setPassword={setPassword}
-    confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword}/> // Render signup page
+    confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword} schoolEmail={schoolEmail} setSchoolEmail={setSchoolEmail}/> // Render signup page
   );
 }

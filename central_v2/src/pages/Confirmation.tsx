@@ -85,7 +85,7 @@ const VerifyBox = styled(Box)(({ theme }) => ({
 
 // Props interface
 interface ConfirmationProps {
-    userName?: string;
+    schoolEmail?: string;
     frontImage?: File | null;
     backImage?: File | null;
     handlerImageUpload?: (file: File) => Promise<any>;
@@ -93,7 +93,7 @@ interface ConfirmationProps {
 }
 
 // Use function declaration for the component
-function Confirmation({ userName = '', frontImage, backImage, handlerImageUpload, password}: ConfirmationProps) {
+function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpload, password}: ConfirmationProps) {
     const [code, setCode] = useState(Array(6).fill(''));
     const apiClients = useTSAPIClientsContext(APIClientsContext);
 
@@ -124,7 +124,7 @@ function Confirmation({ userName = '', frontImage, backImage, handlerImageUpload
             return;
         }
         try {
-            await apiClients.auth.awsConfirmSignUp(userName, fullCode);
+            await apiClients.auth.awsConfirmSignUp(schoolEmail, fullCode);
             console.log('Confirmation successful!');
 
         } catch (error) {
@@ -133,7 +133,7 @@ function Confirmation({ userName = '', frontImage, backImage, handlerImageUpload
 
         try {
             if(password) {
-                await apiClients.auth.awsSignIn(userName, password);
+                await apiClients.auth.awsSignIn(schoolEmail, password);
                 console.log('Sign in successful!');
             }
         } catch (error) {
