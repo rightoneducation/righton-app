@@ -15,6 +15,7 @@ import {
 } from 'aws-amplify/auth';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
+import { fetchUserAttributes } from 'aws-amplify/auth';
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -61,16 +62,32 @@ export class AuthAPIClient
 
   async awsSignUp(username: string, email: string, password: string) {
     await signUp({
-      username: username,
+      username: email,
       password: password,
       options: {
         userAttributes: {
-          preferred_username: username,
+          nickname: username,
           email: email,
         },
       }
     });
   }
+
+  async getUserNickname(): Promise<string | null> {
+    try {
+      const attributes = await fetchUserAttributes();
+      console.log("User Attributes:", attributes);
+      if (attributes && attributes.nickname !== undefined) {
+        return attributes.nickname;
+      } else {
+        return null; // Ensure undefined is converted to null
+      }
+    } catch (error) {
+      console.error("Error fetching user attributes:", error);
+      return null;
+    }
+  }
+  
 
   async awsConfirmSignUp(email: string, code: string): Promise<void> {
     await confirmSignUp({username: email, confirmationCode: code});
