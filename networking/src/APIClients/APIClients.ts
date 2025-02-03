@@ -1,6 +1,9 @@
 import {
   IAuthAPIClient
 } from './auth/interfaces';
+import {
+  IUserAPIClient
+} from './user/interfaces/IUserAPIClient';
 import { 
   IGameTemplateAPIClient, 
   IQuestionTemplateAPIClient, 
@@ -16,6 +19,7 @@ import {
 import IAIAPIClient from './AI/interfaces/IAIAPIClient';
 import { AuthAPIClient } from './auth/AuthAPIClient';
 import { AIAPIClient } from './AI/AIAPIClient';
+import { UserAPIClient } from './user/UserAPIClient';
 import { GameTemplateAPIClient } from './templates/GameTemplateAPIClient';
 import { QuestionTemplateAPIClient } from './templates/QuestionTemplateAPIClient';
 import { GameQuestionsAPIClient } from './templates/GameQuestionsAPIClient';
@@ -31,6 +35,7 @@ import { HostDataManagerAPIClient } from './datamanagers/HostDataManagerAPIClien
 import { IHostDataManagerAPIClient } from './datamanagers/interfaces/IHostDataManagerAPIClient';
 import { CentralDataManagerAPIClient } from './datamanagers/CentralDataManagerAPIClient';
 import { ICentralDataManagerAPIClient } from './datamanagers/interfaces/ICentralDataManagerAPIClient';
+
 import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 
@@ -43,6 +48,7 @@ export enum AppType {
 export class APIClients {
   auth: IAuthAPIClient;
   AI: IAIAPIClient;
+  user: IUserAPIClient;
   gameTemplate: IGameTemplateAPIClient;
   questionTemplate: IQuestionTemplateAPIClient;
   gameQuestions: IGameQuestionsAPIClient;
@@ -59,6 +65,7 @@ export class APIClients {
     this.configAmplify(awsconfig);
     this.auth = authClient;
     this.AI = new AIAPIClient(env, this.auth);
+    this.user = new UserAPIClient(env, this.auth);
     this.gameTemplate = new GameTemplateAPIClient(env, this.auth);
     this.questionTemplate = new QuestionTemplateAPIClient(env, this.auth);
     this.gameQuestions = new GameQuestionsAPIClient(env, this.auth);
@@ -67,6 +74,8 @@ export class APIClients {
     this.team = new TeamAPIClient(env, this.auth);
     this.teamMember = new TeamMemberAPIClient(env, this.auth);
     this.teamAnswer = new TeamAnswerAPIClient(env, this.auth);
+    this.user = new UserAPIClient(env, this.auth)
+
     if (appType === AppType.PLAY) {
       this.playDataManager = new PlayDataManagerAPIClient(env, this.gameSession);
     } else if (appType ===AppType.HOST) {

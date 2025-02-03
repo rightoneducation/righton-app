@@ -1,12 +1,15 @@
-import React, { useState, useRef  } from 'react';
+import React, { useState, useRef, useEffect  } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import {Box, FormControl, Typography, Select, TextField, MenuItem, SelectChangeEvent, Button} from '@mui/material';
+import {Box, FormControl, Typography, Select, TextField, MenuItem, SelectChangeEvent, Button, Avatar} from '@mui/material';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import RightOnLogo from "../images/RightOnLogo.png";
 import Adpic from "../images/@.svg"
+import Confirmation from './Confirmation';
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -221,171 +224,306 @@ const HaveAnAccountText = styled(Typography)(({ theme }) => ({
   fontSize: '16px', 
 }));
 
-export default function SignUp() {
+const ImagePlaceHolder = styled('img')(({ theme }) => ({
+  width: 100, // Set default width
+  height: 148, // Set default height
+  borderRadius: 4, // Set border radius for rounded corners
+  border: '2px solid #ccc', // Add border
+}));
 
+interface SignUpProps {
+  handleUserCreate: (user: string) => void;
+  frontImage: File | null;
+  setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
+  backImage: File | null;
+  setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
+  apiClients: any; // Replace with the exact type if you have one for `apiClients`
+  password: string
+  setPassword: (value: string) => void
+  confirmPassword: string
+  setConfirmPassword: (value: string) => void
+}
+function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBackImage, apiClients, password, setPassword, confirmPassword, setConfirmPassword}: SignUpProps ) {
   const [title, setTitle] = useState('Title...');
-  const [firstName, setFirstName] = useState(''); 
-  const [lastName, setLastName] = useState(''); 
-  const [userName, setUserName] = useState(''); 
-  const [schoolEmail, setSchoolEmail] = useState(''); 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [schoolEmail, setSchoolEmail] = useState('');
 
-  const [imageFront, setImageFront] = useState<File | null>(null);
-  const [imageBack, setImageBack] = useState<File | null>(null);
+  const [passwordError, setPasswordError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const [password, setPassword] = useState(''); 
-  const [confirmPassword, setConfirmPassword] = useState(''); 
+  const buttonTypeNext = ButtonType.NEXTSTEP;
+  const [isNextEnabled, setIsNextEnabled] = useState(true);
 
   const buttonType = ButtonType.LOGIN;
   const [isEnabled, setIsEnabled] = useState(true);
-
-  const buttonTypeNext = ButtonType.NEXTSTEP;
-  const [isNextEnabled, setIsNextEnabled] = useState(false);
 
   const buttonTypeUpload = ButtonType.UPLOAD;
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords don't match");
+      setLoading(false);
+      return;
+    }
+
+    const user = {
+      userName,
+      title,
+      firstName,
+      lastName,
+      email: schoolEmail,
+      password,
+      gamesMade: 77,
+      questionsMade: 16,
+    };
+
+    try {
+      await apiClients.auth.awsSignUp(userName, schoolEmail, password);
+      await apiClients.user.createUser(user); // Save user to the backend
+      // let response
+      // let response2;
+
+      // // Ensure frontImage and backImage are not null
+      // if (frontImage) {
+      //   response = await handlerImageUpload(frontImage);
+      // } else {
+      //   console.error("Front image is required.");
+      //   setLoading(false);
+      //   return;
+      // }
   
+      // if (backImage) {
+      //   response2 = await handlerImageUpload(backImage);
+      // } else {
+      //   console.error("Back image is required.");
+      //   setLoading(false);
+      //   return;
+      // }
 
-const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setFirstName(event.target.value);
-}
-const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setLastName(event.target.value);
-}
-const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setUserName(event.target.value);
-}
-const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setPassword(event.target.value);
-}
+      // console.log(response)
+      // console.log(response2)
 
-const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setConfirmPassword(event.target.value);
-}
-
-const handleSchoolEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setSchoolEmail(event.target.value);
-}
+      handleUserCreate(userName); // Trigger switch to confirmation
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
+  };
 
 
-const handleImageFrontChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    setImageFront(file);
-  }
-};
-
-const handleImageBackChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    setImageBack(file);
-  }
-};
   return (
-      <SignUpMainContainer>
-        <InnerBodyContainer>
-          <UpperSignup >
-            <img src={RightOnLogo} alt="Right On Logo" style={{width: '200px', height: '200px'}}/> 
-            <UpperSignupSubStepText>
-              Step 1: New Account Registration
-            </UpperSignupSubStepText>
-            <UpperSignupSubGoogle>
-              Sign Up with Google
-            </UpperSignupSubGoogle>
-          </UpperSignup>
+    <SignUpMainContainer>
+      <InnerBodyContainer>
+        <UpperSignup>
+          <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
+          <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
+          <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle>
+        </UpperSignup>
 
-          <OrText>
-              Or
-          </OrText>
+        <OrText>Or</OrText>
 
-          <MiddleText>
-            <MiddleTextFirstRow>
-              <TitleField
-                select
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                variant="outlined"
-                SelectProps={{
-                  IconComponent: DropDown,  // Custom icon component
-                }}
-                >
-                  <MenuItem value="Title...">
-                    Title...
-                  </MenuItem>
-                  <MenuItem value="Mr.">Mr.</MenuItem>
-                  <MenuItem value="Mrs.">Mrs.</MenuItem>
-                  <MenuItem value="Ms.">Ms.</MenuItem>
-                  <MenuItem value="Dr.">Dr.</MenuItem>
-              </TitleField>
-              <UserTextField
-                variant="outlined"
-                placeholder="First Name"
-                value={firstName}
-                onChange={handleFirstNameChange} 
-              />
-              <UserTextField
-                variant="outlined"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={handleLastNameChange} 
-              />
-            </MiddleTextFirstRow>
-            <MiddleTextSecondRow>
-                <img src={Adpic} alt="Adpic" style={{width: '26px'}}/>
-                <UserTextField 
-                  variant="outlined"
-                  placeholder="Username..."
-                  value={userName}
-                  onChange={handleUserNameChange} 
-                />
-            </MiddleTextSecondRow>
+        <MiddleText>
+          <MiddleTextFirstRow>
+            <TitleField
+              select
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              variant="outlined"
+              SelectProps={{
+                IconComponent: DropDown, // Custom icon component
+              }}
+            >
+              <MenuItem value="Title...">Title...</MenuItem>
+              <MenuItem value="Mr.">Mr.</MenuItem>
+              <MenuItem value="Mrs.">Mrs.</MenuItem>
+              <MenuItem value="Ms.">Ms.</MenuItem>
+              <MenuItem value="Dr.">Dr.</MenuItem>
+            </TitleField>
             <UserTextField
               variant="outlined"
-              placeholder="School Email..."
-              value={schoolEmail}
-              onChange={handleSchoolEmailChange}/>
-            <MiddleTextFourthRow>
-              Teacher ID Image
-            </MiddleTextFourthRow>
-          </MiddleText>
+              placeholder="First Name"
+              value={firstName}
+              onChange={(event) => setFirstName(event.target.value)}
+            />
+            <UserTextField
+              variant="outlined"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(event) => setLastName(event.target.value)}
+            />
+          </MiddleTextFirstRow>
+          <MiddleTextSecondRow>
+            <img src={Adpic} alt="Adpic" style={{ width: '26px' }} />
+            <UserTextField
+              variant="outlined"
+              placeholder="Username..."
+              value={userName}
+              onChange={(event) => setUserName(event.target.value)}
+            />
+          </MiddleTextSecondRow>
+          <UserTextField
+            variant="outlined"
+            placeholder="School Email..."
+            value={schoolEmail}
+            onChange={(event) => setSchoolEmail(event.target.value)}
+          />
+          <MiddleTextFourthRow>Teacher ID Image</MiddleTextFourthRow>
+        </MiddleText>
 
-          <UploadImagesAndPassword>
-            <UploadImages >
-                <UploadImageContainer>
-                  <ImageText>Front</ImageText>
-                  <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadFrontEnabled} />
-                </UploadImageContainer>
+        <UploadImagesAndPassword>
+        <UploadImages >
+              <UploadImageContainer>
+                <ImageText>Front</ImageText>
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="front-upload"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setFrontImage(e.target.files[0]); // Store the selected image
+                    }
+                  }}
+                />
+                {frontImage 
+                  ? ( <ImagePlaceHolder
+                  src={URL.createObjectURL(frontImage)}
+                  alt="Uploaded Preview"
+                  />)
+                  : (<CentralButton
+                  buttonType={buttonTypeUpload}
+                  isEnabled={isUploadFrontEnabled}
+                  onClick={async () => {
+                    const uploadInput = document.getElementById('front-upload') as HTMLInputElement;
+                    uploadInput?.click(); // Trigger file selection
 
-                <UploadImageContainer>
-                    <ImageText>Back</ImageText>
-                    <CentralButton buttonType={buttonTypeUpload} isEnabled={isUploadBackEnabled} />
-                </UploadImageContainer>
-            </UploadImages>
-            <PasswordContainer>
-              <UserTextField
-                  variant="outlined"
-                  placeholder="Password..."
-                  value={password}
-                  onChange={handlePasswordChange} />
-              <UserTextField
-                  variant="outlined"
-                  placeholder="Confirm Password..."
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordChange} />
-            </PasswordContainer>
-          </UploadImagesAndPassword>
+                    // Wait for the user to select the file
+                    uploadInput.onchange = async (e: Event) => {
+                      const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
+                      if (target.files) {
+                        const file = target.files[0]; // Access the selected file
+                        setFrontImage(file); // Store file locally
+                      }
+                    };
+                  }}
+                />)
+                }
 
-          <LowerLogin>
-              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} />
+              </UploadImageContainer>
+
+
+              <UploadImageContainer>
+                  <ImageText>Back</ImageText>
+                  <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="back-upload"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setBackImage(e.target.files[0]); // Store the selected image
+                    }
+                  }}
+                  />
+                  {backImage 
+                    ? ( <ImagePlaceHolder
+                    src={URL.createObjectURL(backImage)}
+                    alt="Uploaded Preview"
+                    />)
+                    : (<CentralButton 
+                      buttonType={buttonTypeUpload} 
+                      isEnabled={isUploadBackEnabled} 
+                      onClick={async () => {
+                        const uploadInput = document.getElementById('back-upload') as HTMLInputElement;
+                        uploadInput?.click(); // Trigger file selection
+    
+                        // Wait for the user to select the file
+                        uploadInput.onchange = async (e: Event) => {
+                          const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
+                          if (target.files) {
+                            const file = target.files[0]; // Access the selected file
+                            setBackImage(file); // Store file locally
+                          }
+                        };
+                      }}
+    
+                    />)
+                  }
+              </UploadImageContainer>
+        </UploadImages>
+          <PasswordContainer>
+            <UserTextField
+              variant="outlined"
+              placeholder="Password..."
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              error={!!passwordError}
+            />
+            <UserTextField
+              variant="outlined"
+              placeholder="Confirm Password..."
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              error={!!passwordError}
+            />
+          </PasswordContainer>
+        </UploadImagesAndPassword>
+
+        <LowerLogin>
+              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} onClick={handleSubmit}/>
               <LowestContainer>
                 <HaveAnAccountText>
                   Already have an account?
                 </HaveAnAccountText>
-                <CentralButton buttonType={buttonType} isEnabled={isEnabled} />
+                <CentralButton buttonType={buttonType} isEnabled={isEnabled}  />
               </LowestContainer>
-          </LowerLogin>
-        </InnerBodyContainer>
-      </SignUpMainContainer>
+        </LowerLogin>
+      </InnerBodyContainer>
+    </SignUpMainContainer>
+  );
+}
+
+export default function SignUpSwitch() {
+
+  const [userName, setUserName] = useState(''); // Track the submitted username
+  const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
+  const [frontImage, setFrontImage] = useState<File | null>(null);
+  const [backImage, setBackImage] = useState<File | null>(null);
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+
+  const handlerImageUpload = async (file: File) => {
+    console.log(file)
+    const fileName = file.name
+    const fileType = file.type
+    console.log(fileName)
+    console.log(fileType)
+    const response = await apiClients.user.uploadTeacherId(file, fileName, fileType)
+    
+    console.log("response: ", response)
+    return response
+  }
+
+  const handleUserCreate = (user: string) => {
+    setUserName(user);
+    setIsUserSubmitted(true); // Trigger confirmation view
+  };
+
+  return isUserSubmitted ? (
+    <Confirmation userName={userName} frontImage={frontImage} backImage={backImage} handlerImageUpload={handlerImageUpload}
+    password={password}/> // Render confirmation page
+  ) : (
+    <SignUp handleUserCreate={handleUserCreate} frontImage={frontImage} setFrontImage={setFrontImage} 
+    backImage={backImage} setBackImage={setBackImage} apiClients={apiClients} password={password} setPassword={setPassword}
+    confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword}/> // Render signup page
   );
 }

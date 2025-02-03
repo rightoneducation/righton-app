@@ -6,8 +6,10 @@ import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUp from '../pages/SignUp';
+import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
+import Confirmation from '../pages/Confirmation';
 
 // interface AppSwitchProps {
 // }
@@ -17,6 +19,7 @@ function AppSwitch() {
   const questionScreen = useMatch('/questions') !== null;
   const libraryScreen = useMatch('/library') !== null;
   const signUpScreen = useMatch('/signup') !== null;
+  const loginScreen = useMatch('/login') !== null;
   const createQuestionScreen = useMatch('/create/question') !== null;
   const createGameScreen = useMatch('/create/game') !== null;
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -26,6 +29,8 @@ function AppSwitch() {
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
+  const confirmationScreen = useMatch('/confirmation') !== null;
+
   switch (true) {
     case questionScreen: {
       return (
@@ -52,10 +57,24 @@ function AppSwitch() {
         </AppContainer>
       );
     }
+    case loginScreen: {
+      return (
+        <AppContainer currentScreen={ScreenType.LOGIN}>
+          <Login />
+        </AppContainer>
+      );
+    }
     case createQuestionScreen: {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP}>
           <CreateQuestion screenSize={screenSize}/>
+        </AppContainer>
+      );
+    }
+    case confirmationScreen: {
+      return (
+        <AppContainer currentScreen={ScreenType.CONFIRMATION}>
+          <Confirmation />
         </AppContainer>
       );
     }
