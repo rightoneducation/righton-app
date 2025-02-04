@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, Box } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   ElementType,
@@ -52,7 +52,7 @@ export default function ExploreQuestions({
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
-
+  const isSearchResults = searchTerms.length > 0;
   const handleView = (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
@@ -107,72 +107,62 @@ export default function ExploreQuestions({
           />
         </>
       )}
-      {searchTerms.length > 0 ? (
-        <>
-          <SearchBar
+      <ExploreGamesUpperContainer screenSize={screenSize}>
+        {!isSearchResults && 
+          <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />
+        }
+        <SearchBar
+          screenSize={screenSize}
+          searchTerms={searchTerms}
+          handleSearchChange={handleSearchChange}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+        />
+        {!isSearchResults && 
+          <Recommended<IQuestionTemplate>
             screenSize={screenSize}
-            searchTerms={searchTerms}
-            handleSearchChange={handleSearchChange}
-            handleChooseGrades={handleChooseGrades}
-            handleSortChange={handleSortChange}
-          />
-          <CardGallery<IQuestionTemplate>
-            screenSize={screenSize}
-            searchTerm={searchTerms}
-            grades={selectedGrades}
-            galleryElements={searchedQuestions}
-            isLoading={isLoading}
+            recommendedElements={recommendedQuestions}
             elementType={ElementType.QUESTION}
-            galleryType={GalleryType.SEARCH_RESULTS}
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
           />
-        </>
-      ) : (
-        <>
-          <ExploreGamesUpperContainer screenSize={screenSize}>
-            <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'cover'}} />
-            <SearchBar
-              screenSize={screenSize}
-              searchTerms={searchTerms}
-              handleSearchChange={handleSearchChange}
-              handleChooseGrades={handleChooseGrades}
-              handleSortChange={handleSortChange}
-            />
-            <Recommended<IQuestionTemplate>
-              screenSize={screenSize}
-              recommendedElements={recommendedQuestions}
-              elementType={ElementType.QUESTION}
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleView}
-            />
-          </ExploreGamesUpperContainer>
-          <InfiniteScroll
-            dataLength={mostPopularQuestions.length}
-            next={loadMoreQuestions}
-            hasMore={nextToken !== null}
-            loader=<h4>loading...</h4>
-            scrollableTarget="scrollableDiv"
-            style={{
-              width: '100vw',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <CardGallery<IQuestionTemplate>
-              screenSize={screenSize}
-              galleryElements={mostPopularQuestions}
-              elementType={ElementType.QUESTION}
-              galleryType={GalleryType.MOST_POPULAR}
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleView}
-              isLoading={isLoading}
-            />
-          </InfiniteScroll>
-        </>
-      )}
+        }
+      </ExploreGamesUpperContainer>
+      <InfiniteScroll
+        dataLength={mostPopularQuestions.length}
+        next={loadMoreQuestions}
+        hasMore={nextToken !== null}
+        loader=<h4>loading...</h4>
+        scrollableTarget="scrollableDiv"
+        style={{
+          width: '100vw',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+        }}
+      >
+        <CardGallery<IQuestionTemplate>
+          screenSize={screenSize}
+          searchTerm={isSearchResults ? searchTerms : undefined}
+          grades={isSearchResults ? selectedGrades : undefined}
+          galleryElements={isSearchResults ? searchedQuestions : mostPopularQuestions}
+          elementType={ElementType.QUESTION}
+           galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
+          setIsTabsOpen={setIsTabsOpen}
+          handleView={handleView}
+          isLoading={isLoading}
+        />
+      </InfiniteScroll>
+      <Box 
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          flexGrow: 1,
+          backgroundColor: theme.palette.primary.creamBackgroundColor,
+        }}
+      />
     </ExploreGamesMainContainer>
   );
 }

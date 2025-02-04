@@ -221,7 +221,7 @@ export default function CardGallery<
         />
       ) : (
         <MostPopularQuestionsComponent
-          isLoading={isLoading || false}
+          isLoading={isLoading ?? false}
           mostPopularElements={reformatElements(
             galleryElements as IQuestionTemplate[],
           )}
