@@ -61,8 +61,8 @@ function MostPopularGamesComponent({
       {(mostPopularElements.length === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
-              <Grid item xs={12} md={6} lg={3} key={index}> {/* eslint-disable-line */}
-                <SkeletonGameCard index={index} />
+              <Grid item key={index}> {/* eslint-disable-line */}
+                <SkeletonGameCard screenSize={screenSize} isCarousel={false} index={index} />
               </Grid>
             );
           })
@@ -102,11 +102,11 @@ function MostPopularQuestionsComponent({
     0,
   );
   return (
-    <Grid container spacing={2} id="scrollableDiv">
+    <Grid container spacing={2}   columns={{ xs: 12, sm: 12, md: 12, lg: 8 }} id="scrollableDiv">
       {(elementsLength === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
-              <Grid item xs={12} md={4} lg={2} key={index}> {/* eslint-disable-line */}
+              <Grid item xs={12} md={4} lg={1} key={index}> {/* eslint-disable-line */}
                 <SkeletonQuestionCard index={index} />
               </Grid>
             );

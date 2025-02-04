@@ -137,14 +137,12 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
   );
 
   const handleSearchChange = (searchString: string) => {
-    if (searchString !== ''){
-      debouncedSearch(
-        searchString,
-        sort.direction ?? SortDirection.ASC,
-        selectedGrades,
-        sort.field,
-      );
-    }
+    debouncedSearch(
+      searchString.trim(),
+      sort.direction ?? SortDirection.ASC,
+      selectedGrades,
+      sort.field,
+    );
   };
 
   const loadMoreGames = () => {

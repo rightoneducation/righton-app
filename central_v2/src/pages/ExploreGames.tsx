@@ -4,11 +4,8 @@ import {
   GalleryType,
   IGameTemplate,
 } from '@righton/networking';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '@mui/material/styles';
+import { Box, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { APIClientsContext } from '../lib/context/APIClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
@@ -27,6 +24,7 @@ interface ExploreGamesProps {
 export default function ExploreGames({
   screenSize
 } : ExploreGamesProps) {
+  const theme = useTheme();
   const {
     recommendedGames,
     mostPopularGames,
@@ -43,7 +41,7 @@ export default function ExploreGames({
   } = useExploreGamesStateManager();
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
-
+  const isSearchResults = searchTerms.length > 0;
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     setSelectedGame(game);
     setGameSet(games);
@@ -51,72 +49,63 @@ export default function ExploreGames({
   };
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      {searchTerms.length > 0 ? (
-        <>
-          <SearchBar
+      <ExploreGamesUpperContainer screenSize={screenSize}>
+        {!isSearchResults && 
+          <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />
+        }
+        <SearchBar
+          screenSize={screenSize}
+          searchTerms={searchTerms}
+          handleSearchChange={handleSearchChange}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+        />
+        { !isSearchResults && 
+          <Recommended<IGameTemplate>
             screenSize={screenSize}
-            searchTerms={searchTerms}
-            handleSearchChange={handleSearchChange}
-            handleChooseGrades={handleChooseGrades}
-            handleSortChange={handleSortChange}
-          />
-          <CardGallery<IGameTemplate>
-            screenSize={screenSize}
-            searchTerm={searchTerms}
-            grades={selectedGrades}
-            galleryElements={searchedGames}
-            isLoading={isLoading}
+            recommendedElements={recommendedGames}
             elementType={ElementType.GAME}
-            galleryType={GalleryType.SEARCH_RESULTS}
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
           />
-        </>
-      ) : (
-        <>
-          <ExploreGamesUpperContainer screenSize={screenSize}>
-            <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'cover'}} />
-            <SearchBar
-              screenSize={screenSize}
-              searchTerms={searchTerms}
-              handleSearchChange={handleSearchChange}
-              handleChooseGrades={handleChooseGrades}
-              handleSortChange={handleSortChange}
-            />
-            <Recommended<IGameTemplate>
-              screenSize={screenSize}
-              recommendedElements={recommendedGames}
-              elementType={ElementType.GAME}
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleView}
-            />
-          </ExploreGamesUpperContainer>
-          <InfiniteScroll
-            dataLength={mostPopularGames.length}
-            next={loadMoreGames}
-            hasMore={nextToken !== null}
-            loader=<h4>loading...</h4>
-            scrollableTarget="scrollableDiv"
-            style={{
-              width: '100vw',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <CardGallery<IGameTemplate>
-              screenSize={screenSize}
-              galleryElements={mostPopularGames}
-              elementType={ElementType.GAME}
-              galleryType={GalleryType.MOST_POPULAR}
-              setIsTabsOpen={setIsTabsOpen}
-              handleView={handleView}
-              isLoading={isLoading}
-            />
-          </InfiniteScroll>
-        </>
-      )}
+        }
+      </ExploreGamesUpperContainer>
+        <InfiniteScroll
+          dataLength={isSearchResults ? searchedGames.length : mostPopularGames.length}
+          next={loadMoreGames}
+          hasMore={nextToken !== null}
+          loader=<h4>loading...</h4>
+          scrollableTarget="scrollableDiv"
+          style={{
+            width: '100vw',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            backgroundColor: theme.palette.primary.creamBackgroundColor,
+          }}
+        >
+          <CardGallery<IGameTemplate>
+            screenSize={screenSize}
+            searchTerm={isSearchResults ? searchTerms : undefined}
+            grades={isSearchResults ? selectedGrades : undefined}
+            galleryElements={isSearchResults ? searchedGames : mostPopularGames}
+            elementType={ElementType.GAME}
+            galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
+            setIsTabsOpen={setIsTabsOpen}
+            handleView={handleView}
+            isLoading={isLoading}
+          />
+        </InfiniteScroll>
+        <Box 
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexGrow: 1,
+            backgroundColor: theme.palette.primary.creamBackgroundColor,
+          }}
+        />
     </ExploreGamesMainContainer>
   );
 }

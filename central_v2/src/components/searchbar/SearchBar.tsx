@@ -93,7 +93,7 @@ function SearchBar({
     handleSearchChange(value);
   };
   return (
-    <SearchAndFilterContainer screenSize={screenSize}>
+    <SearchAndFilterContainer screenSize={screenSize} style={{backgroundColor: searchTerms.length > 0 ? theme.palette.primary.creamBackgroundColor : ''}}>
       <Box style={{ display: 'flex', width: '100%' }}>
         <SelectGradesMenu
           screenSize={screenSize ?? ScreenSize.SMALL}
