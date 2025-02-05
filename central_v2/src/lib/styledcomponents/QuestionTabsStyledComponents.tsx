@@ -5,7 +5,7 @@ export const TabContainer = styled(Box)(({ theme }) => ({
   top: 0,
   height: '100dvh',
   width: '100dvw',
-  zIndex: 6,
+  zIndex: 7,
   overflow: 'hidden',
   pointerEvents: 'none',
 }));

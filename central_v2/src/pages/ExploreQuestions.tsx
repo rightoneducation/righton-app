@@ -24,10 +24,14 @@ import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabs
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 
 interface ExploreQuestionsProps {
+  isTabsOpen: boolean;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   screenSize: ScreenSize;
 }
 
 export default function ExploreQuestions({
+  isTabsOpen,
+  setIsTabsOpen,
   screenSize
 }:ExploreQuestionsProps) {
   const theme = useTheme();
@@ -41,14 +45,11 @@ export default function ExploreQuestions({
     isLoading,
     searchTerms,
     selectedGrades,
-    isTabsOpen,
-    setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
     loadMoreQuestions,
   } = useExploreQuestionsStateManager();
-  
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);

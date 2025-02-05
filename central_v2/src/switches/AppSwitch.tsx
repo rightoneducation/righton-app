@@ -24,18 +24,18 @@ function AppSwitch() {
   const createGameScreen = useMatch('/create/game') !== null;
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const [isTabsOpen, setIsTabsOpen] = React.useState(false);
   const screenSize = isLargeScreen // eslint-disable-line
     ? ScreenSize.LARGE
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
   const confirmationScreen = useMatch('/confirmation') !== null;
-
   switch (true) {
     case questionScreen: {
       return (
-        <AppContainer currentScreen={ScreenType.QUESTIONS}>
-          <ExploreQuestions screenSize={screenSize}/>
+        <AppContainer isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} currentScreen={ScreenType.QUESTIONS}>
+          <ExploreQuestions isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} screenSize={screenSize}/>
         </AppContainer>
       );
     }

@@ -1,25 +1,48 @@
 import React from 'react';
-import { Typography, RadioGroup } from '@mui/material';
-import { IQuestionTemplate } from '@righton/networking';
+import { PublicPrivateType, IQuestionTemplate } from '@righton/networking';
+import { Typography, RadioGroup, Box, styled } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 import {
-  BaseCardStyled,
-  TitleBarStyled,
   QuestionTitleStyled,
   RadioContainerStyled,
   RadioLabelStyled,
   RadioStyled,
   ContentContainerStyled,
   ImageStyled,
-  ContentRightContainerStyled,
-  TextContainerStyled,
-  CCSSIndicator,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
+import { 
+  BaseCardStyled,
+  TextContainerStyled,
+} from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
+import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 
 interface DetailedQuestionCardBaseProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
 }
+
+interface CreateQuestionTitleBarStyledProps {
+  screenSize: ScreenSize;
+}
+
+export const CreateQuestionTitleBarStyled = styled(Box)<CreateQuestionTitleBarStyledProps>(({ theme, screenSize }) => ({
+  width: '100%',
+  height: 'fit-content',
+  display: 'flex',
+  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  justifyContent: 'space-between',
+  alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
+  gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.xSmPadding}px` : `${theme.sizing.smPadding}px`,
+}));
+
+export const CreateQuestionContentLeftContainerStyled = styled(Box)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.xSmPadding}px`,
+}));
 
 export default function DetailedQuestionCardBase({
   screenSize,
@@ -33,37 +56,72 @@ export default function DetailedQuestionCardBase({
   };
 
   return (
-    <BaseCardStyled>
-      <TitleBarStyled>
+    <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false}>
+    <CreateQuestionTitleBarStyled screenSize={screenSize}>
+      <Box style={{display: 'flex', alignItems: 'center', gap: '14px'}}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
-        <RadioContainerStyled>
-          <RadioGroup row value={questionType} style={{overflow: 'hidden', flexWrap: 'nowrap'}}>
-            <RadioLabelStyled
-              value="A"
-              control={<RadioStyled />}
-              label={screenSize === ScreenSize.SMALL ? "M.C." : "Multiple Choice"}
-              isSelected={questionType === 'A'}
-            />
-            <RadioLabelStyled
-              value="B"
-              control={<RadioStyled />}
-              label={screenSize === ScreenSize.SMALL ? "S.A." : "Short Answer"}
-              isSelected={questionType === 'B'}
-            />
-          </RadioGroup>
-        </RadioContainerStyled>
-      </TitleBarStyled>
-      <ContentContainerStyled screenSize={screenSize}>
-        <ImageStyled src={question.imageUrl ?? ''} alt="image" />
-        <ContentRightContainerStyled>
-          <TextContainerStyled>
-            <Typography>{question.title}</Typography>
-          </TextContainerStyled>
-          <CCSSIndicator>
-            {question.ccss}
-          </CCSSIndicator>
-        </ContentRightContainerStyled>
-      </ContentContainerStyled>
-    </BaseCardStyled>
+        <ButtonCCSS key={uuidv4()}>
+          {question.ccss}
+        </ButtonCCSS>
+      </Box>
+      <RadioContainerStyled>
+        <RadioGroup
+          row
+          value={questionType} 
+          onChange={handleQuestionTypeChange}
+          style={{overflow: 'hidden', flexWrap: 'nowrap'}}
+        >
+          <RadioLabelStyled
+            value={PublicPrivateType.PUBLIC}
+            control={<RadioStyled style={{cursor: 'pointer'}}/>}
+            label="Multiple Choice"
+            isSelected={questionType === PublicPrivateType.PUBLIC}
+            style={{cursor: 'pointer'}}
+          />
+          <RadioLabelStyled
+            value={PublicPrivateType.PRIVATE}
+            control={<RadioStyled style={{cursor: 'pointer'}}/>}
+            label="Short Answer"
+            isSelected={questionType === PublicPrivateType.PRIVATE}
+            style={{cursor: 'pointer'}}
+          />
+        </RadioGroup>
+      </RadioContainerStyled>
+    </CreateQuestionTitleBarStyled>
+    <ContentContainerStyled screenSize={screenSize}>
+      <CreateQuestionContentLeftContainerStyled style={{height: '100%', justifyContent: 'space-between'}}>
+        <Box
+          style={{
+            width: '100%',
+            margin: 0,
+            padding: '8px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <Typography>{question.title}</Typography>
+        </Box>
+        { screenSize !== ScreenSize.SMALL && 
+          <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+            <PublicPrivateButton isDisabled/>
+          </Box>
+        }
+      </CreateQuestionContentLeftContainerStyled>
+      <Box
+        style={{
+          width: '100%',
+          height: 'auto',
+          margin: 0,
+          boxSizing: 'border-box',
+        }}
+      >
+        <img src={question.imageUrl ?? ''} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
+      </Box>
+      { screenSize === ScreenSize.SMALL && 
+        <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+          <PublicPrivateButton isDisabled={false}/>
+        </Box>
+      }
+    </ContentContainerStyled>
+  </BaseCardStyled>
   );
 }

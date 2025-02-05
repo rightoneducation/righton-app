@@ -14,6 +14,7 @@ import {
 interface CentralButtonProps {
   buttonType: ButtonType;
   isEnabled: boolean;
+  isOnQuestionTab?: boolean;
   smallScreenOverride?: boolean;
   type?: string;
   onClick?: () => void;
@@ -23,6 +24,7 @@ interface CentralButtonProps {
 export default function CentralButton({
   buttonType,
   isEnabled,
+  isOnQuestionTab,
   smallScreenOverride,
   type,
   onClick,
@@ -60,6 +62,7 @@ export default function CentralButton({
     <ButtonStyled
       buttonColor={buttonColor}
       disabled={!isEnabled}
+      isOnQuestionTab={isOnQuestionTab ?? false}
       onClick={handleButtonClick}
       style={{width: buttonWidth}}
     >
