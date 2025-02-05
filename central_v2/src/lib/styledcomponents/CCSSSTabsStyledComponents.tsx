@@ -2,14 +2,18 @@ import React from 'react';
 import { Box, Button, Tabs, Grid, styled, Typography } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 
-export const CCSSTabContainer = styled(Box)(({ theme }) => ({
+interface CCSSTabContainerProps {
+  screenSize: ScreenSize;
+}
+
+export const CCSSTabContainer = styled(Box)<CCSSTabContainerProps>(({ theme, screenSize }) => ({
   position: 'absolute',
-  top: '20dvh',
+  top: screenSize === ScreenSize.SMALL ? '5dvh' : '15dvh',
+  height: '100',
   maxHeight: '100dvh',
   width: '100dvw',
-  zIndex: 6,
+  zIndex: 20,
   overflow: 'hidden',
-  pointerEvents: 'none',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -32,10 +36,10 @@ export const CCSSContentContainer = styled(Box)<CCSSContentContainerProps>(({ th
   flexDirection: 'column',
   alignItems: 'center',
   gap: `${theme.sizing.mdPadding}px`,
-  maxHeight: '100%',
-  overflow: 'auto',
+  maxHeight: '50dvh',
+  overflowY: 'auto',
   paddingTop: '32px',
-  paddingBottom: '32px',
+  paddingBottom: '32px'
 }));
 
 interface CCSSContentFrameProps {
@@ -46,7 +50,7 @@ export const CCSSContentFrame = styled(Box)<CCSSContentFrameProps>(({theme, scre
   boxSizing: 'border-box',
   height: 'fit-content',
   width: screenSize === ScreenSize.LARGE ? '672px' : '100%',
-  padding: screenSize === ScreenSize.LARGE ? '0px' : '21px'
+  padding: screenSize === ScreenSize.LARGE ? '0px' : '21px',
 }));
 
 export const CCSSTabsStyled = styled(Tabs)(({ theme }) => ({
@@ -104,20 +108,20 @@ export const CCSSGridItem = styled(Grid)(({ theme }) => ({
 export const GradeIndicator = styled(Button)(({ theme }) => ({
   width: 'fit-content',
   minHeight: '38px',
-  borderRadius: '25px',
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
-  boxShadow: ' 0px 5px 22px 0px rgba(71, 217, 255, 0.37)',
+  boxShadow: 'none',
   paddingTop: '4px',
   paddingBottom: '4px',
   paddingLeft: '32px',
   paddingRight: '32px',
   boxSizing: 'border-box',
-  background: `${theme.palette.primary.buttonGradientBlue}`,
+  background: `${theme.palette.primary.buttonActionDefault}`,
   ':hover': {
-    background: `${theme.palette.primary.buttonGradientBlue}`,
+    background: `${theme.palette.primary.buttonActionHover}`,
   },
   '&:disabled': {
-    background: `${theme.palette.primary.buttonGradientGrey}`,
+    background: `${theme.palette.primary.buttonActionDisable}`,
   },
 }));
 
