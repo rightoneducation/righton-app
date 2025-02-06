@@ -1,4 +1,5 @@
-import { BaseAPIClient } from '../BaseAPIClient';
+import { generateClient } from "@aws-amplify/api";
+import { BaseAPIClient, IQueryParameters } from '../BaseAPIClient';
 import { IUserAPIClient } from './interfaces/IUserAPIClient';
 
 import {
@@ -13,14 +14,15 @@ import {
   TeacherIdAuthMutationVariables,
   UpdateUserInput,
   UpdateUserMutation,
-  UpdateUserMutationVariables
-
+  UpdateUserMutationVariables,
+  ListUsersQueryVariables,
 } from "../../AWSMobileApi";
 
 import {
   createUser,
   deleteUser,
   updateUser, 
+  listUsers,
   teacherIdAuth
 } from "../../graphql";
 
@@ -36,6 +38,8 @@ import {
 //   questionsMade?: number | null,
 // }
 
+export const client = generateClient({});
+
 export class UserAPIClient
   extends BaseAPIClient
   implements IUserAPIClient
@@ -49,6 +53,15 @@ export class UserAPIClient
     // we can reference UpdateQuestion in QuestionAPIClient.ts (under gamesession) for an example of how to do this
     // you can disregard the parsing functions for now. We just need to determine what our input variables will be and what graphql function we should be passing 
     // to the this.callGraphlQL function that is defined in BaseAPIClient
+
+
+    // sample code for checking unique users
+    const filter = { userName: { eq: createUserInput.userName }, and: { email: { eq: createUserInput.email } } }
+    const listUsersVariables: IQueryParameters = { limit: 1, nextToken: null, filter }
+    const response = await client.graphql({query: listUsers, variables: listUsersVariables as ListUsersQueryVariables }) as { data: any };
+    if (response.data.listUsers.items.length > 0) {
+      throw new Error("User already exists");
+    }
 
     // when we are all done, we should be able to do something like apiClients.userAPIClient.createUser({ Input stuff here}); to create the user on the button click
     const input: CreateUserInput = createUserInput
