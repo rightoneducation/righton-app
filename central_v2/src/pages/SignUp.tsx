@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect  } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
@@ -320,7 +321,7 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
 
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
-
+  const navigate = useNavigate();
   const togglePasswordRequirements = () => {
     setShowPasswordRequirements(!showPasswordRequirements);
   };
@@ -627,7 +628,7 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                 <HaveAnAccountText>
                   Already have an account?
                 </HaveAnAccountText>
-                <CentralButton buttonType={buttonType} isEnabled={isEnabled}  />
+                <CentralButton buttonType={buttonType} isEnabled={isEnabled}  onClick={() => navigate('/login')}/>
               </LowestContainer>
         </LowerLogin>
       </InnerBodyContainer>
@@ -650,14 +651,9 @@ export default function SignUpSwitch() {
 
 
   const handlerImageUpload = async (file: File) => {
-    console.log(file)
     const fileName = file.name
     const fileType = file.type
-    console.log(fileName)
-    console.log(fileType)
     const response = await apiClients.user.uploadTeacherId(file, fileName, fileType)
-    
-    console.log("response: ", response)
     return response
   }
 

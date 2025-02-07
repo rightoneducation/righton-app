@@ -93,6 +93,7 @@ export const ButtonTypography = styled(Button, {
   textTransform: 'none',
   padding: 0,
   color: buttonColor === ButtonColor.NULL ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  whiteSpace: 'nowrap',
 }));
 
 export const ButtonCCSS = styled(Box)(({ theme }) => ({

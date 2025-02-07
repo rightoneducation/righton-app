@@ -150,8 +150,8 @@ const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
   display: 'flex',
   justifyContent: align,
   alignItems: 'center',
-  width: 'auto',
   height: '100%',
+  width: 'auto'
 }));
 
 export default function Header({
@@ -163,6 +163,7 @@ export default function Header({
 }: HeaderProps) {
   const navigate = useNavigate();
   const theme = useTheme();
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
     currentScreen
@@ -191,6 +192,40 @@ export default function Header({
     if (menuOpen) return '418px';
     return '94px';
   };
+
+  const loggedInUserComponents = [
+    isLgScreen ? (
+      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
+      <Box display="flex" justifyContent="flex-start" alignItems="flex-start" style={{height: '50%'}} >
+        <CreateButtonContainer>
+          <Box style={{zIndex: 4}}>
+            <CentralButton buttonType={ButtonType.CREATE} isEnabled onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
+          </Box>
+          <Collapse in={isCreateMenuOpen} style={{position: 'relative', top: '-17px', zIndex: 3}}>
+            <CreateDropDown>
+              <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
+                <img src={createDropdownGame} alt="Create Game" />
+                <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+                  Game
+                </Typography>
+              </Box>
+              <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => { setIsCreateMenuOpen(false); navigate('/create/question')}}>
+                <img src={createDropdownQuestion} alt="Create Question" />
+                <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+                  Question
+                </Typography>
+              </Box>
+            </CreateDropDown>
+          </Collapse>              
+        </CreateButtonContainer>
+      </Box>
+      <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
+      </Box>
+    ) : (
+      <img src={profile} alt="Profile" />
+    )
+  ]
+
   return (
     <Collapse
       in
@@ -285,44 +320,16 @@ export default function Header({
             </IconButton>
           )}
         </ImageContainer>
-        <ImageContainer
-          align="flex-end"
-          style={{
-            width: isLgScreen ? 'auto' : '120px',
-            alignItems: 'flex-start',
-          }}
-        >
-          {isLgScreen ? (
-            <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
-            <Box display="flex" justifyContent="flex-start" alignItems="flex-start" style={{height: '50%'}} >
-              <CreateButtonContainer>
-                <Box style={{zIndex: 4}}>
-                  <CentralButton buttonType={ButtonType.CREATE} isEnabled onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
-                </Box>
-                <Collapse in={isCreateMenuOpen} style={{position: 'relative', top: '-17px', zIndex: 3}}>
-                  <CreateDropDown>
-                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
-                      <img src={createDropdownGame} alt="Create Game" />
-                      <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
-                        Game
-                      </Typography>
-                    </Box>
-                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => { setIsCreateMenuOpen(false); navigate('/create/question')}}>
-                      <img src={createDropdownQuestion} alt="Create Question" />
-                      <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
-                        Question
-                      </Typography>
-                    </Box>
-                  </CreateDropDown>
-                </Collapse>              
-              </CreateButtonContainer>
-            </Box>
-            <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
-            </Box>
-          ) : (
-            <img src={profile} alt="Profile" />
-          )}
-        </ImageContainer>
+        <Box style={{width: 'fit-content', display: 'flex', gap: '16px', justifyContent: 'center'}}>
+          {isUserLoggedIn 
+            ? loggedInUserComponents
+            :
+              <>
+                <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
+                <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />    
+              </>
+          }
+        </Box>
       </HeaderContainer>
       {menuOpen && (
         <Box
