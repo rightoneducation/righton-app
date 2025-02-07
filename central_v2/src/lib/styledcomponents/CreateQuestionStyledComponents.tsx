@@ -61,6 +61,7 @@ export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>((
   padding: 0,
   boxSizing: 'border-box',
   borderRadius: `${theme.sizing.xSmPadding}px`,
+  
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
       borderWidth: `2px`,

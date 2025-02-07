@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect  } from 'react';
-import { useTheme, styled } from '@mui/material/styles';
-import {Box, FormControl, Typography, Select, TextField, MenuItem, SelectChangeEvent, Button, Avatar} from '@mui/material';
+import { useTheme, styled} from '@mui/material/styles';
+import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
@@ -10,6 +12,16 @@ import Confirmation from './Confirmation';
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+
+import { 
+  TextContainerStyled,
+} from '../lib/styledcomponents/CreateQuestionStyledComponents';
+
+import {
+  ErrorIcon
+} from '../lib/styledcomponents/CentralStyledComponents';
+import errorIcon from '../images/errorIcon.svg';
+
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -162,10 +174,47 @@ const UploadImagesAndPassword = styled(Box)(({ theme }) => ({
 
 const PasswordContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid red',
+  // border: '1px solid black',
   gap: '12px'
+  
 }));
 
+const CustomTooltip = styled(Tooltip)({
+  '& .MuiTooltip-tooltip': {
+    backgroundColor: '#02215F !important', // Ensures the background applies
+    color: '#FFFFFF !important', // Ensures text remains white
+    fontSize: '14px',
+    padding: '10px 15px',
+    borderRadius: '8px',
+    maxWidth: '250px', 
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+  },
+  '& .MuiTooltip-arrow': {
+    color: '#02215F !important', // Ensures arrow color matches the tooltip
+  },
+});
+
+
+
+
+const PasswordRequirementsList = styled(List)({
+  margin: 0,
+  paddingLeft: '18px',
+  listStyleType: 'disc',
+  
+});
+
+const PasswordRequirementItem = styled(ListItem)({
+  display: 'list-item', // Ensures bullet points appear
+  padding: 0, // Removes extra padding from ListItem
+
+});
+
+const PasswordRequirementText = styled(ListItemText)({
+  '& span': { // Targets the primary text inside ListItemText
+    color: '#FFFFFF', 
+  },
+});
 
 const UploadImages= styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -231,6 +280,9 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
   border: '2px solid #ccc', // Add border
 }));
 
+
+
+
 interface SignUpProps {
   handleUserCreate: (user: string) => void;
   frontImage: File | null;
@@ -252,6 +304,8 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
   const [userName, setUserName] = useState('');
 
   const [passwordError, setPasswordError] = useState('');
+  const [passwordConfirmError, setPasswordConfirmError] = useState('');
+
   const [loading, setLoading] = useState(false);
 
   const buttonTypeNext = ButtonType.NEXTSTEP;
@@ -265,10 +319,37 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
 
+  const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
+
+  const togglePasswordRequirements = () => {
+    setShowPasswordRequirements(!showPasswordRequirements);
+  };
+
+
   const handleSubmit = async () => {
     setLoading(true);
+    setPasswordError(""); // Reset error before validation
+    setPasswordConfirmError("")
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      setLoading(false);
+      return;
+    }
+
+    if (!/[A-Za-z]/.test(password)) {
+      setPasswordError("Password must include at least one letter.");
+      setLoading(false);
+      return;
+    }
+
+    if (!/\d/.test(password)) {
+      setPasswordError("Password must include at least one number.");
+      setLoading(false);
+      return;
+    }
+
     if (password !== confirmPassword) {
-      setPasswordError("Passwords don't match");
+      setPasswordConfirmError("Passwords don't match");
       setLoading(false);
       return;
     }
@@ -285,8 +366,11 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
     };
 
     try {
-      await apiClients.auth.awsSignUp(userName, schoolEmail, password);
-      await apiClients.user.createUser(user); // Save user to the backend
+      const dynamocreate = await apiClients.user.createUser(user); // Save user to the backend
+      console.log(dynamocreate)
+
+      const awssignup = await apiClients.auth.awsSignUp(userName, schoolEmail, password);
+      console.log(awssignup)
 
       handleUserCreate(userName); // Trigger switch to confirmation
     } catch (error) {
@@ -339,11 +423,28 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
           </MiddleTextFirstRow>
           <MiddleTextSecondRow>
             <img src={Adpic} alt="Adpic" style={{ width: '26px' }} />
-            <UserTextField
+            <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
               value={userName}
               onChange={(event) => setUserName(event.target.value)}
+              sx={{
+                backgroundColor: 'white'
+              }}
+              // InputProps={{
+              //   endAdornment: 
+              //     <InputAdornment
+              //       position="end" 
+              //       sx={{ 
+              //         flexDirection: 'column',
+              //         // alignSelf: 'flex-start',
+              //         alignItems: 'center',
+              //         mt: '-20px'
+              //       }}
+              //     >
+              //       <ErrorIcon src={errorIcon} alt='error icon'/>
+              //     </InputAdornment>
+              // }}
             />
           </MiddleTextSecondRow>
           <UserTextField
@@ -437,19 +538,85 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
               </UploadImageContainer>
         </UploadImages>
           <PasswordContainer>
-            <UserTextField
-              variant="outlined"
-              placeholder="Password..."
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              error={!!passwordError}
+          <TextContainerStyled
+            variant="outlined"
+            placeholder="Password..."
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            error={!!passwordError}
+            sx={{
+              backgroundColor: 'white',
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {passwordError && (
+                    <CustomTooltip
+                      title={
+                        <Box>
+                          <Typography sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
+                            Passwords must:
+                          </Typography>
+                          <PasswordRequirementsList>
+                            <PasswordRequirementItem>
+                              <PasswordRequirementText primary="Be at least 8 characters in length" />
+                            </PasswordRequirementItem>
+                            <PasswordRequirementItem>
+                              <PasswordRequirementText primary="Include at least one letter" />
+                            </PasswordRequirementItem>
+                            <PasswordRequirementItem>
+                              <PasswordRequirementText primary="Include at least one number" />
+                            </PasswordRequirementItem>
+                          </PasswordRequirementsList>
+                        </Box>
+                      }
+                      arrow
+                      placement="top"
+                    >
+                      <img
+                        src={errorIcon}
+                        alt="Error"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </CustomTooltip>
+                  )}
+                </InputAdornment>
+              ),
+            }}
             />
-            <UserTextField
+            <TextContainerStyled
               variant="outlined"
               placeholder="Confirm Password..."
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               error={!!passwordError}
+              sx={{
+                backgroundColor: 'white'
+              }}
+              InputProps={{
+                endAdornment: 
+                  <InputAdornment position="end">
+                  {passwordConfirmError && (
+                    <CustomTooltip
+                      title={
+                        <Box>
+                          <Typography sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
+                            Passwords do not match.
+                          </Typography>
+                        </Box>
+                      }
+                      arrow
+                      placement="top"
+                    >
+                      <img
+                        src={errorIcon}
+                        alt="Error"
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </CustomTooltip>
+                  )}
+                </InputAdornment>
+              }}
             />
           </PasswordContainer>
         </UploadImagesAndPassword>

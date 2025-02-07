@@ -149,11 +149,14 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
 
   const handleLoginClick = async () => {
+    
     try {
       await apiClients.auth.awsSignIn(userName, password);
       const getUserName = await apiClients.auth.getUserNickname();
       console.log(getUserName)
       console.log('Login successful');
+      navigate('/'); // Navigate to the Signup page
+
     } catch (error) {
       console.error('Error during login:', error);
       // You can also display an error message to the user if needed

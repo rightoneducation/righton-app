@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { TextField, Box, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; 
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -96,6 +97,7 @@ interface ConfirmationProps {
 function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpload, password}: ConfirmationProps) {
     const [code, setCode] = useState(Array(6).fill(''));
     const apiClients = useTSAPIClientsContext(APIClientsContext);
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
 
@@ -118,6 +120,7 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
     };
 
     const handleSubmit = async () => {
+        
         const fullCode = code.join('');
         if (fullCode.length < 6) {
             alert('Please enter all 6 digits of the confirmation code.');
@@ -158,6 +161,8 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
             return;
             }
             console.log("Image Uploaded Successfully.")
+            navigate('/'); // Navigate to the Signup page
+
         } catch (error) {
             console.error('Error Uploading Images:', error);
         }
