@@ -1,4 +1,4 @@
-import { Amplify } from "aws-amplify";
+import { Amplify  } from "aws-amplify";
 import { Hub, CookieStorage  } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { 
@@ -21,6 +21,7 @@ export class AuthAPIClient
   implements IAuthAPIClient
 {
   isUserAuth: boolean;
+
   constructor(){
     this.isUserAuth = false;
     this.configAmplify(amplifyconfig);
