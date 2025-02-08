@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import rightonlogo from '../images/rightonlogo.svg';
 import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
@@ -161,9 +163,10 @@ export default function Header({
   menuOpen,
   setMenuOpen,
 }: HeaderProps) {
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const navigate = useNavigate();
   const theme = useTheme();
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const isUserLoggedIn = apiClients.auth.isUserAuth;
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
     currentScreen
@@ -172,6 +175,7 @@ export default function Header({
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
+
 
   const handleButtonClick = (screen: ScreenType) => {
     setSelectedScreen(screen);
@@ -192,6 +196,7 @@ export default function Header({
     if (menuOpen) return '418px';
     return '94px';
   };
+
   const loggedInUserComponents = [
     isLgScreen ? (
       <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>

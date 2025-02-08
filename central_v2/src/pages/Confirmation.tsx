@@ -161,6 +161,7 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
                 }
             });
         } catch (error) {
+            // TODO: Clear backend resources and authsession so we don't get user data fragments if the above fails
             console.error('Error in Confirmation Process:', error);
         }
     };
