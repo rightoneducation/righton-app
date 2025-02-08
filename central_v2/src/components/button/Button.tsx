@@ -16,6 +16,7 @@ interface CentralButtonProps {
   isEnabled: boolean;
   isOnQuestionTab?: boolean;
   smallScreenOverride?: boolean;
+  buttonWidthOverride?: string;
   type?: string;
   onClick?: () => void;
   handleFileChange?: (file: File) => void;
@@ -26,6 +27,7 @@ export default function CentralButton({
   isEnabled,
   isOnQuestionTab,
   smallScreenOverride,
+  buttonWidthOverride,
   type,
   onClick,
   handleFileChange,
@@ -64,7 +66,7 @@ export default function CentralButton({
       disabled={!isEnabled}
       isOnQuestionTab={isOnQuestionTab ?? false}
       onClick={handleButtonClick}
-      style={{width: buttonWidth}}
+      style={{width: buttonWidthOverride ?? buttonWidth}}
     >
       <ButtonContent>
         {buttonObj.icon && (

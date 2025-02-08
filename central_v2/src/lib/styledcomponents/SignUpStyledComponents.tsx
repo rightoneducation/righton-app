@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/material';
 
 export const SignUpMainContainer = styled(Box)(({ theme }) => ({ // eslint-disable-line
   width: '100%',
-  height: '100vh',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -17,8 +17,6 @@ export const SignUpMainContainer = styled(Box)(({ theme }) => ({ // eslint-disab
   // justifyContent: 'center',
   overflow: 'auto',
   flexGrow: 1,
-  paddingTop: '40px',
-  paddingBottom: '124px',
   boxSizing: 'border-box'
   // border: '5px solid green'
 }));
