@@ -192,7 +192,6 @@ export default function Header({
     if (menuOpen) return '418px';
     return '94px';
   };
-
   const loggedInUserComponents = [
     isLgScreen ? (
       <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
@@ -326,7 +325,7 @@ export default function Header({
             :
               <>
                 <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
-                <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />    
+                <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
               </>
           }
         </Box>

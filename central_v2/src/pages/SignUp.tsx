@@ -488,6 +488,7 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                   buttonType={buttonTypeUpload}
                   isEnabled={isUploadFrontEnabled}
                   buttonWidthOverride='38px'
+                  iconOnlyOverride
                   onClick={async () => {
                     const uploadInput = document.getElementById('front-upload') as HTMLInputElement;
                     uploadInput?.click(); // Trigger file selection
@@ -529,6 +530,7 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                       buttonType={buttonTypeUpload} 
                       isEnabled={isUploadBackEnabled} 
                       buttonWidthOverride='38px'
+                      iconOnlyOverride
                       onClick={async () => {
                         const uploadInput = document.getElementById('back-upload') as HTMLInputElement;
                         uploadInput?.click(); // Trigger file selection

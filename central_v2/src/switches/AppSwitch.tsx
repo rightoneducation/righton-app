@@ -71,13 +71,6 @@ function AppSwitch() {
         </AppContainer>
       );
     }
-    case confirmationScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.CONFIRMATION}>
-          <Confirmation />
-        </AppContainer>
-      );
-    }
     default:{
       return (
         <AppContainer currentScreen={ScreenType.GAMES}>

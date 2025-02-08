@@ -17,6 +17,7 @@ interface CentralButtonProps {
   isOnQuestionTab?: boolean;
   smallScreenOverride?: boolean;
   buttonWidthOverride?: string;
+  iconOnlyOverride?: boolean;
   type?: string;
   onClick?: () => void;
   handleFileChange?: (file: File) => void;
@@ -28,6 +29,7 @@ export default function CentralButton({
   isOnQuestionTab,
   smallScreenOverride,
   buttonWidthOverride,
+  iconOnlyOverride,
   type,
   onClick,
   handleFileChange,
@@ -77,7 +79,7 @@ export default function CentralButton({
             }
           </ButtonIconContainer>
         )}
-        {buttonText && !isSmallScreen && <ButtonTypography buttonColor={buttonColor}> {buttonText} </ButtonTypography>}
+        {buttonText && !isSmallScreen && !iconOnlyOverride && <ButtonTypography buttonColor={buttonColor}> {buttonText} </ButtonTypography>}
         {buttonObj.rightIcon && (
           <ButtonIconContainer>
             { buttonColor === ButtonColor.NULL

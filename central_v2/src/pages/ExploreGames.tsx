@@ -6,6 +6,8 @@ import {
 } from '@righton/networking';
 import { Box, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ScreenSize } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
@@ -16,6 +18,8 @@ import Recommended from '../components/explore/Recommended';
 import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
+import CentralButton from '../components/button/Button';
+import { ButtonType } from '../components/button/ButtonModels';
 
 interface ExploreGamesProps {
   screenSize: ScreenSize;
@@ -39,6 +43,7 @@ export default function ExploreGames({
     handleSearchChange,
     loadMoreGames,
   } = useExploreGamesStateManager();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const isSearchResults = searchTerms.length > 0;
@@ -47,8 +52,14 @@ export default function ExploreGames({
     setGameSet(games);
     setIsTabsOpen(true);
   };
+  const handleSignOut = () => {
+    apiClients.auth.awsSignOut();
+  }
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
+      <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 
+        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled onClick={handleSignOut} />  
+      </Box>
       <ExploreGamesUpperContainer screenSize={screenSize}>
         {!isSearchResults && 
           <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />
