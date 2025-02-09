@@ -358,9 +358,7 @@ export default function CreateQuestion({
             if (result && result.path && result.path.length > 0)
               url = result.path;
           } else if (draftQuestion.questionCard.imageUrl){
-            console.log('here');
             url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
-            console.log('url');
           }
           window.localStorage.setItem(StorageKey, '');
           console.log(draftQuestion.questionCard.imageUrl);

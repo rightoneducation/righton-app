@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
@@ -17,7 +17,6 @@ import plus from '../images/plus.svg';
 import createDropdownGame from '../images/createDropdownGame.svg';
 import createDropdownQuestion from '../images/createDropdownQuestion.svg'
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
-import { SelectedCentralPages } from '../lib/ScreenEnums';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
@@ -114,6 +113,7 @@ const CreateBox = styled(Box)(({ theme }) => ({
 const CreateButtonContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative'
 }));
 
 const CreateDropDown = styled(Paper)(({ theme }) => ({
@@ -199,12 +199,11 @@ export default function Header({
   const loggedInUserComponents = [
     isLgScreen ? (
       <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
-      <Box display="flex" justifyContent="flex-start" alignItems="flex-start" style={{height: '50%'}} >
         <CreateButtonContainer>
           <Box style={{zIndex: 4}}>
             <CentralButton buttonType={ButtonType.CREATE} isEnabled onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
           </Box>
-          <Collapse in={isCreateMenuOpen} style={{position: 'relative', top: '-17px', zIndex: 3}}>
+          <Collapse in={isCreateMenuOpen} style={{position: 'absolute', top: '50%', zIndex: 3, width: '100%'}}>
             <CreateDropDown>
               <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
                 <img src={createDropdownGame} alt="Create Game" />
@@ -221,8 +220,7 @@ export default function Header({
             </CreateDropDown>
           </Collapse>              
         </CreateButtonContainer>
-      </Box>
-      <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
+        <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
       </Box>
     ) : (
       <img src={profile} alt="Profile" />

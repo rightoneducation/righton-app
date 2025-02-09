@@ -168,7 +168,7 @@ export default function CardGallery<
       case ScreenSize.MEDIUM:
         return 3;
       default:
-        return 8;
+        return 7;
     }
   };
   const reformatElements = <T,>( // eslint-disable-line

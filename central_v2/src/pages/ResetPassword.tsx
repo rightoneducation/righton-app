@@ -10,13 +10,19 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    // border: '1px solid blue',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '24px',
-    // height: '100vh',
-    // border: '1px solid red'
+  display: 'flex',
+  // border: '1px solid blue',
+  alignItems: 'center',
+  flexDirection: 'column',
+  gap: '20px',
+  height: '100%',
+  width: '100%',
+  maxWidth: '500px',
+  paddingTop: '40px',
+  paddingBottom: '40px',
+  paddingLeft: '40px',
+  paddingRight: '40px',
+  boxSizing: 'border-box',
 }));
 
 const ResetPasswordText = styled(Typography)(({ theme }) => ({

@@ -55,7 +55,7 @@ export default function CreatingTemplateModal({
   const text = templateType === TemplateType.GAME ? 'Game' : 'Question';
 
   return (
-    <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
+    <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}  style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%)'}}>
       <IntegratedContainer elevation={12}>
         <Box style={{
           width: '100%',
