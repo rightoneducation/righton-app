@@ -406,7 +406,7 @@ export default function Header({
                 <img src={dice} alt="Plus Icon" />
                 <PrimaryButton2Text>Game</PrimaryButton2Text>
               </PrimaryButton2>
-              <PrimaryButton2 style={{ width: '150px' }}>
+              <PrimaryButton2 style={{ width: '150px' }} onClick={() => { setMenuOpen(false); navigate('/create/question')}}>
                 <img src={qmark} alt="Plus Icon" />
                 <PrimaryButton2Text>Question</PrimaryButton2Text>
               </PrimaryButton2>

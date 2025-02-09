@@ -184,7 +184,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
         <MiddleContainer>
           <UserTextField
                 variant="outlined"
-                placeholder="Username or Email"
+                placeholder="Email"
                 value={userName}
                 onChange={(event) => setUserName(event.target.value)}
           />

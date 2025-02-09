@@ -205,7 +205,7 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
                     <ResendCodeText onClick={handleResendCodeClick}>Resend Code</ResendCodeText>
                 </CodeandResendContainer>
                 <VerifyBox>
-                    <CentralButton buttonType={buttonTypeVerify} isEnabled={isVerify && !isVerifying} onClick={handleSubmit} />
+                    <CentralButton buttonType={buttonTypeVerify} isEnabled={isVerify && !isVerifying} smallScreenOverride onClick={handleSubmit} />
                 </VerifyBox>
                     {isVerifying && 
                         <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
