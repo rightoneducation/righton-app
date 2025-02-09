@@ -31,7 +31,7 @@ const InnerBodyContainer = styled(Box)(({ theme }) => ({
   gap: '20px',
   height: '100%',
   width: '100%',
-  maxWidth: '672px',
+  maxWidth: '500px',
   paddingTop: '40px',
   paddingBottom: '40px',
   paddingLeft: '40px',

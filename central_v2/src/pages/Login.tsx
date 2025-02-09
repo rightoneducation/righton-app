@@ -17,10 +17,14 @@ const InnerBodyContainer = styled(Box)(({ theme }) => ({
   // border: '1px solid blue',
   flexDirection: 'column',
   gap: '20px',
-  // height: '100vh',
-  // border: '1px solid red'
-  marginTop: '-8px',
-  marginBottom: '-100px'
+  height: '100%',
+  width: '100%',
+  maxWidth: '500px',
+  paddingTop: '40px',
+  paddingBottom: '40px',
+  paddingLeft: '40px',
+  paddingRight: '40px',
+  boxSizing: 'border-box',
 }));
 
 const UpperLogin = styled(Box)(({ theme }) => ({
@@ -195,11 +199,11 @@ function Login({handleForgotPasswordClick} : LoginProps) {
           </ForgotPasswordButton>
         </MiddleContainer>
         <LoginContainer>
-          <CentralButton buttonType={buttonTypeLogin} isEnabled={isLoginEnabled} onClick={handleLoginClick}/>
+          <CentralButton buttonType={buttonTypeLogin} isEnabled={isLoginEnabled} smallScreenOverride onClick={handleLoginClick}/>
         </LoginContainer>
         <SignupContainer>
           <NoAccountText>Dont have an account?</NoAccountText>
-          <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} onClick={handleSignupClick}/>
+          <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} smallScreenOverride  onClick={handleSignupClick}/>
         </SignupContainer>
       </InnerBodyContainer>
     </SignUpMainContainer>

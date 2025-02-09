@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
-import { APIClientsContext } from '../lib/context/APIClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import rightonlogo from '../images/rightonlogo.svg';
 import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
@@ -30,6 +28,7 @@ interface HeaderProps {
   isLgScreen: boolean;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
+  isUserLoggedIn: boolean;
 }
 
 interface HeaderContainerProps {
@@ -162,11 +161,11 @@ export default function Header({
   isLgScreen,
   menuOpen,
   setMenuOpen,
+  isUserLoggedIn
 }: HeaderProps) {
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const navigate = useNavigate();
   const theme = useTheme();
-  const isUserLoggedIn = apiClients.auth.isUserAuth;
+  
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
     currentScreen

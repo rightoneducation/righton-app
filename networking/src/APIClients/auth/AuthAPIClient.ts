@@ -59,6 +59,7 @@ export class AuthAPIClient
 
   authListener() {
     Hub.listen('auth', ({ payload }) => {
+      console.log('auth event detected')
       this.authEvents(payload);
       }
     );
@@ -99,8 +100,6 @@ export class AuthAPIClient
   }
 
   async awsSignIn(username: string, password: string): Promise<SignInOutput> {
-    const session = await fetchAuthSession();
-    console.log(session);
     let user;
     try{
       user = await signIn({username: username, password: password}); 

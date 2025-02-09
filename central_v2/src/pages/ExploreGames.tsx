@@ -23,10 +23,12 @@ import { ButtonType } from '../components/button/ButtonModels';
 
 interface ExploreGamesProps {
   screenSize: ScreenSize;
+  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
 }
 
 export default function ExploreGames({
-  screenSize
+  screenSize,
+  setIsUserLoggedIn
 } : ExploreGamesProps) {
   const theme = useTheme();
   const {
@@ -52,13 +54,18 @@ export default function ExploreGames({
     setGameSet(games);
     setIsTabsOpen(true);
   };
-  const handleSignOut = () => {
-    apiClients.auth.awsSignOut();
+
+  // Debug button temporarily added for QA
+  const handleSignOut = async () => {
+    console.log('here');
+    const response = apiClients.auth.awsSignOut();
+    setIsUserLoggedIn(false);
+    console.log(response);
   }
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 
-        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled onClick={handleSignOut} />  
+        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleSignOut()} />  
       </Box>
       <ExploreGamesUpperContainer screenSize={screenSize}>
         {!isSearchResults && 

@@ -42,9 +42,10 @@ interface AppContainerProps {
   isTabsOpen?: boolean;
   setIsTabsOpen?: (isTabsOpen: boolean) => void;
   children: React.ReactNode;
+  isUserLoggedIn: boolean;
 }
 
-function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, children }: AppContainerProps) {
+function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, isUserLoggedIn, children }: AppContainerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -74,6 +75,7 @@ function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, children }: Ap
           isLgScreen={isLgScreen}
           menuOpen={menuOpen}
           setMenuOpen={setMenuOpen}
+          isUserLoggedIn={isUserLoggedIn}
         />
       </HeaderContainer>
       <BodyContainer screenSize={screenSize}>{children}</BodyContainer>

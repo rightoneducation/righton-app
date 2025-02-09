@@ -32,7 +32,7 @@ interface ExploreQuestionsProps {
 export default function ExploreQuestions({
   isTabsOpen,
   setIsTabsOpen,
-  screenSize
+  screenSize,
 }:ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();

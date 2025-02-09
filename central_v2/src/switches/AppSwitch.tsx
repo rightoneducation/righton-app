@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { useMatch } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
@@ -31,11 +33,19 @@ function AppSwitch() {
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
   const confirmationScreen = useMatch('/confirmation') !== null;
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
+
+  // TODO: remove useeffect and monitor via hook etc
+  useEffect(() => {
+    setIsUserLoggedIn(apiClients.auth.isUserAuth);
+  }, [apiClients.auth.isUserAuth]);
+
   switch (true) {
     case questionScreen: {
       return (
-        <AppContainer isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} currentScreen={ScreenType.QUESTIONS}>
-          <ExploreQuestions isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} screenSize={screenSize}/>
+        <AppContainer isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} currentScreen={ScreenType.QUESTIONS} isUserLoggedIn={isUserLoggedIn}>
+          <ExploreQuestions isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} screenSize={screenSize} />
         </AppContainer>
       );
     }
@@ -52,29 +62,29 @@ function AppSwitch() {
     }
     case signUpScreen: {
       return (
-        <AppContainer currentScreen={ScreenType.SIGNUP}>
+        <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
           <SignUp />
         </AppContainer>
       );
     }
     case loginScreen: {
       return (
-        <AppContainer currentScreen={ScreenType.LOGIN}>
+        <AppContainer currentScreen={ScreenType.LOGIN} isUserLoggedIn={isUserLoggedIn}>
           <Login />
         </AppContainer>
       );
     }
     case createQuestionScreen: {
       return (
-        <AppContainer currentScreen={ScreenType.SIGNUP}>
+        <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
           <CreateQuestion screenSize={screenSize}/>
         </AppContainer>
       );
     }
     default:{
       return (
-        <AppContainer currentScreen={ScreenType.GAMES}>
-          <ExploreGames screenSize={screenSize}/>
+        <AppContainer currentScreen={ScreenType.GAMES} isUserLoggedIn={isUserLoggedIn}>
+          <ExploreGames screenSize={screenSize} setIsUserLoggedIn={setIsUserLoggedIn}/>
         </AppContainer>
       );
     }
