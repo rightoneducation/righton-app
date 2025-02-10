@@ -32,7 +32,8 @@
     "editinformation": "Edit Information",
     "changepassword": "Change Password",
     "choose": "Choose",
-    "clone": "Clone"
+    "clone": "Clone",
+    "signout": "Debug Sign Out"
   },
   "imageButton": {
     "imageupload": "Upload Image",

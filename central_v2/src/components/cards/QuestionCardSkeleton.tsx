@@ -3,8 +3,8 @@ import { Box, Fade, Skeleton, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const QuestionCard = styled(Box)(({ theme }) => ({
-  maxWidth: '275px',
-  height: '100%',
+  width: '100%',
+  height: '455px',
   gap: `${theme.sizing.smPadding}px`,
   borderRadius: `${theme.sizing.smPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,

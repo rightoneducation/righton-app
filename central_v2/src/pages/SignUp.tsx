@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect  } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
@@ -28,7 +29,14 @@ const InnerBodyContainer = styled(Box)(({ theme }) => ({
   // border: '1px solid blue',
   flexDirection: 'column',
   gap: '20px',
-  height: '100vh',
+  height: '100%',
+  width: '100%',
+  maxWidth: '500px',
+  paddingTop: '40px',
+  paddingBottom: '40px',
+  paddingLeft: '40px',
+  paddingRight: '40px',
+  boxSizing: 'border-box',
 }));
 
 
@@ -224,25 +232,24 @@ const UploadImages= styled(Box)(({ theme }) => ({
 
 const UploadImageContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  backgroundColor: '#02215F',  // Set background color
-  border: '1px solid #000000', // Set border color and width
-  borderRadius: '8px',         // Set border radius
+  backgroundColor: '#02215F', 
+  border: '1px solid #000000', 
+  borderRadius: '8px',        
   flexDirection: 'column',
-  alignItems: 'center',        // Center content vertically
-  justifyContent: 'center',    // Center content horizontally
+  alignItems: 'center',       
+  justifyContent: 'center',    
   width: '100%',
   gap: '10px',
-  paddingTop: '8px',
-  paddingRight: '58px',
-  paddingBottom: '16px',
-  paddingLeft: '58px',
+  paddingTop: '10px',
+  paddingBottom: '10px',
+  boxSizing: 'border-box'
 }));
 
 const ImageText = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Rubik, sans-serif',  // Set font to Rubik
-  fontWeight: 400,                  // Set font weight to 400
-  fontSize: '16px',                 // Set font size to 16px
-  color: '#E9F1FF',                 // Set text color to #E9F1FF
+  fontFamily: 'Rubik, sans-serif',  
+  fontWeight: 400,                  
+  fontSize: '16px',                
+  color: '#E9F1FF',                 
 }));
 
 const LowerLogin = styled(Box)(({ theme }) => ({
@@ -274,10 +281,11 @@ const HaveAnAccountText = styled(Typography)(({ theme }) => ({
 }));
 
 const ImagePlaceHolder = styled('img')(({ theme }) => ({
-  width: 100, // Set default width
+  width: '80%', // Set default width
   height: 148, // Set default height
   borderRadius: 4, // Set border radius for rounded corners
   border: '2px solid #ccc', // Add border
+  objectFit: 'cover'
 }));
 
 
@@ -320,7 +328,7 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
 
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
-
+  const navigate = useNavigate();
   const togglePasswordRequirements = () => {
     setShowPasswordRequirements(!showPasswordRequirements);
   };
@@ -479,6 +487,8 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                   : (<CentralButton
                   buttonType={buttonTypeUpload}
                   isEnabled={isUploadFrontEnabled}
+                  buttonWidthOverride='38px'
+                  iconOnlyOverride
                   onClick={async () => {
                     const uploadInput = document.getElementById('front-upload') as HTMLInputElement;
                     uploadInput?.click(); // Trigger file selection
@@ -519,6 +529,8 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                     : (<CentralButton 
                       buttonType={buttonTypeUpload} 
                       isEnabled={isUploadBackEnabled} 
+                      buttonWidthOverride='38px'
+                      iconOnlyOverride
                       onClick={async () => {
                         const uploadInput = document.getElementById('back-upload') as HTMLInputElement;
                         uploadInput?.click(); // Trigger file selection
@@ -622,12 +634,12 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
         </UploadImagesAndPassword>
 
         <LowerLogin>
-              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} onClick={handleSubmit}/>
+              <CentralButton buttonType={buttonTypeNext} isEnabled={isNextEnabled} onClick={handleSubmit} smallScreenOverride/>
               <LowestContainer>
                 <HaveAnAccountText>
                   Already have an account?
                 </HaveAnAccountText>
-                <CentralButton buttonType={buttonType} isEnabled={isEnabled}  />
+                <CentralButton buttonType={buttonType} isEnabled={isEnabled}  onClick={() => navigate('/login')}/>
               </LowestContainer>
         </LowerLogin>
       </InnerBodyContainer>
@@ -650,14 +662,9 @@ export default function SignUpSwitch() {
 
 
   const handlerImageUpload = async (file: File) => {
-    console.log(file)
     const fileName = file.name
     const fileType = file.type
-    console.log(fileName)
-    console.log(fileType)
     const response = await apiClients.user.uploadTeacherId(file, fileName, fileType)
-    
-    console.log("response: ", response)
     return response
   }
 

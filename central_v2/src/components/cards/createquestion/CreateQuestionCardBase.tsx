@@ -209,7 +209,7 @@ export default function CreateQuestionCardBase({
           </TextContainerStyled>
           { screenSize !== ScreenSize.SMALL && 
             <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-              <PublicPrivateButton />
+              <PublicPrivateButton isDisabled={false}/>
             </Box>
           }
         </CreateQuestionContentLeftContainerStyled>
@@ -221,7 +221,7 @@ export default function CreateQuestionCardBase({
         }
            { screenSize === ScreenSize.SMALL && 
             <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-              <PublicPrivateButton />
+              <PublicPrivateButton isDisabled={false}/>
             </Box>
           }
       </ContentContainerStyled>

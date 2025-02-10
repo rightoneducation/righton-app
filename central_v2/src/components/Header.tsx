@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
-import dice from '../images/Dice.svg';
+import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
 import qmark from '../images/qmark.svg';
 import qmarkPink from '../images/qmarkPink.svg';
@@ -17,7 +17,6 @@ import plus from '../images/plus.svg';
 import createDropdownGame from '../images/createDropdownGame.svg';
 import createDropdownQuestion from '../images/createDropdownQuestion.svg'
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
-import { SelectedCentralPages } from '../lib/ScreenEnums';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
@@ -28,6 +27,7 @@ interface HeaderProps {
   isLgScreen: boolean;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
+  isUserLoggedIn: boolean;
 }
 
 interface HeaderContainerProps {
@@ -51,7 +51,6 @@ const HeaderContainer = styled(Box)<HeaderContainerProps>(
     `,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'bottom', // Adjust as needed
-    backgroundSize: 'cover',
     zIndex: 1,
   }),
 );
@@ -114,6 +113,7 @@ const CreateBox = styled(Box)(({ theme }) => ({
 const CreateButtonContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative'
 }));
 
 const CreateDropDown = styled(Paper)(({ theme }) => ({
@@ -151,8 +151,8 @@ const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
   display: 'flex',
   justifyContent: align,
   alignItems: 'center',
-  width: 'auto',
   height: '100%',
+  width: 'auto'
 }));
 
 export default function Header({
@@ -161,9 +161,11 @@ export default function Header({
   isLgScreen,
   menuOpen,
   setMenuOpen,
+  isUserLoggedIn
 }: HeaderProps) {
   const navigate = useNavigate();
   const theme = useTheme();
+  
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
     currentScreen
@@ -172,6 +174,7 @@ export default function Header({
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
+
 
   const handleButtonClick = (screen: ScreenType) => {
     setSelectedScreen(screen);
@@ -192,6 +195,42 @@ export default function Header({
     if (menuOpen) return '418px';
     return '94px';
   };
+
+  const createMenu = [
+    <CreateButtonContainer>
+    <Box style={{zIndex: 4}}>
+      <CentralButton buttonType={ButtonType.CREATE} isEnabled smallScreenOverride={screenSize === ScreenSize.SMALL} onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
+    </Box>
+    <Collapse in={isCreateMenuOpen} style={{position: 'absolute', top: '50%', zIndex: 3, width: '100%'}}>
+      <CreateDropDown>
+        <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
+          <img src={createDropdownGame} alt="Create Game" />
+          <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+            Game
+          </Typography>
+        </Box>
+        <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => { setIsCreateMenuOpen(false); navigate('/create/question')}}>
+          <img src={createDropdownQuestion} alt="Create Question" />
+          <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+            Question
+          </Typography>
+        </Box>
+      </CreateDropDown>
+    </Collapse>              
+  </CreateButtonContainer>
+  ]
+
+  const loggedInUserComponents = [
+    isLgScreen ? (
+      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
+        {createMenu}
+        <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
+      </Box>
+    ) : (
+      <img src={profile} alt="Profile" />
+    )
+  ]
+
   return (
     <Collapse
       in
@@ -286,44 +325,16 @@ export default function Header({
             </IconButton>
           )}
         </ImageContainer>
-        <ImageContainer
-          align="flex-end"
-          style={{
-            width: isLgScreen ? 'auto' : '120px',
-            alignItems: 'flex-start',
-          }}
-        >
-          {isLgScreen ? (
-            <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
-            <Box display="flex" justifyContent="flex-start" alignItems="flex-start" style={{height: '50%'}} >
-              <CreateButtonContainer>
-                <Box style={{zIndex: 4}}>
-                  <CentralButton buttonType={ButtonType.CREATE} isEnabled onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
-                </Box>
-                <Collapse in={isCreateMenuOpen} style={{position: 'relative', top: '-17px', zIndex: 3}}>
-                  <CreateDropDown>
-                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
-                      <img src={createDropdownGame} alt="Create Game" />
-                      <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
-                        Game
-                      </Typography>
-                    </Box>
-                    <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => { setIsCreateMenuOpen(false); navigate('/create/question')}}>
-                      <img src={createDropdownQuestion} alt="Create Question" />
-                      <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
-                        Question
-                      </Typography>
-                    </Box>
-                  </CreateDropDown>
-                </Collapse>              
-              </CreateButtonContainer>
-            </Box>
-            <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
-            </Box>
-          ) : (
-            <img src={profile} alt="Profile" />
-          )}
-        </ImageContainer>
+        <Box style={{width: 'fit-content', display: 'flex', gap: '16px', justifyContent: 'center'}}>
+          {isUserLoggedIn 
+            ? loggedInUserComponents
+            :
+              <>
+                <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
+                <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
+              </>
+          }
+        </Box>
       </HeaderContainer>
       {menuOpen && (
         <Box
@@ -375,36 +386,7 @@ export default function Header({
             }
             My Library
           </TransparentButton>
-          <CreateBox>
-            <Box
-              style={{
-                opacity: 0.8,
-                gap: '8px',
-                display: 'flex',
-                flexDirection: 'row',
-              }}
-            >
-              <img src={plus} alt="Plus Icon" />
-              <PrimaryButton2Text>Create</PrimaryButton2Text>
-            </Box>
-            <Box
-              style={{
-                padding: '16px 0px 0px 24px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
-              }}
-            >
-              <PrimaryButton2 style={{ width: '120px' }}>
-                <img src={dice} alt="Plus Icon" />
-                <PrimaryButton2Text>Game</PrimaryButton2Text>
-              </PrimaryButton2>
-              <PrimaryButton2 style={{ width: '150px' }}>
-                <img src={qmark} alt="Plus Icon" />
-                <PrimaryButton2Text>Question</PrimaryButton2Text>
-              </PrimaryButton2>
-            </Box>
-          </CreateBox>
+          {isUserLoggedIn && createMenu}
         </Box>
       )}
     </Collapse>

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import { TextField, Box, Typography } from '@mui/material';
+import { TextField, Box, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -12,16 +12,23 @@ import RightOnLogo from "../images/RightOnLogo.png";
 const OuterBody = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    width: '100%',
     height: '100%',
     boxSizing: 'border-box',
-    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
 }));
 
 const InnerBody = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '24px',
+    maxWidth: '672px',
+    paddingTop: '40px',
+    paddingBottom: '40px',
+    paddingLeft: '40px',
+    paddingRight: '40px',
+    boxSizing: 'border-box',
 }));
 
 const ImageContainer = styled(Box)(({ theme }) => ({
@@ -77,6 +84,7 @@ const ResendCodeText = styled(Typography)(({ theme }) => ({
     color: '#02215F',
     textDecoration: 'underline',
     textAlign: 'center',
+    cursor: 'pointer',
 }));
 
 const VerifyBox = styled(Box)(({ theme }) => ({
@@ -89,13 +97,15 @@ interface ConfirmationProps {
     schoolEmail?: string;
     frontImage?: File | null;
     backImage?: File | null;
-    handlerImageUpload?: (file: File) => Promise<any>;
+    handlerImageUpload: (file: File) => Promise<any>;
     password?: string
 }
 
 // Use function declaration for the component
 function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpload, password}: ConfirmationProps) {
+    const theme = useTheme();
     const [code, setCode] = useState(Array(6).fill(''));
+    const [isVerifying, setIsVerifying] = useState(false);
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     const navigate = useNavigate(); // Initialize useNavigate
 
@@ -120,56 +130,49 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
     };
 
     const handleSubmit = async () => {
-        
+        setIsVerifying(true);
         const fullCode = code.join('');
         if (fullCode.length < 6) {
             alert('Please enter all 6 digits of the confirmation code.');
             return;
         }
         try {
-            await apiClients.auth.awsConfirmSignUp(schoolEmail, fullCode);
-            console.log('Confirmation successful!');
+            apiClients.auth.awsConfirmSignUp(schoolEmail, fullCode).then(() => {
+                console.log('confirmed');
+                if (password){
+                    // we have to sign in so that we have permission to upload images to the S3 bucket
+                    apiClients.auth.awsSignIn(schoolEmail, password).then(() => {
+                        console.log('signed in');
+                        if (!frontImage || !backImage) {
+                            console.log("Front and back images are required.");
+                            return;
+                        }
 
+                        // we can run the image uploads in parallel here with promises and then when each promise completes, we can navigate to the next page
+                        const frontImageUpload = handlerImageUpload(frontImage);
+                        const backImageUpload = handlerImageUpload(backImage);
+
+                        Promise.all([frontImageUpload, backImageUpload]).then(() => {
+                            console.log("Image Uploaded Successfully.")
+                            setIsVerifying(false);
+                            navigate('/'); // Navigate to the Signup page
+                        });
+                    })
+                }
+            });
         } catch (error) {
-            console.error('Error confirming sign-up:', error);
+            // TODO: Clear backend resources and authsession so we don't get user data fragments if the above fails
+            console.error('Error in Confirmation Process:', error);
         }
-
-        try {
-            if(password) {
-                await apiClients.auth.awsSignIn(schoolEmail, password);
-                console.log('Sign in successful!');
-            }
-        } catch (error) {
-            console.error('Error Signing in user:', error);
-        }
-
-        try {
-            let response
-            let response2;
-
-            // Ensure frontImage and backImage are not null
-            if (frontImage && handlerImageUpload) {
-            response = await handlerImageUpload(frontImage);
-            } else {
-            console.error("Front image is required.");
-            return;
-            }
-            if (backImage && handlerImageUpload) {
-            response2 = await handlerImageUpload(backImage);
-            } else {
-            console.error("Back image is required.");
-            return;
-            }
-            console.log("Image Uploaded Successfully.")
-            navigate('/'); // Navigate to the Signup page
-
-        } catch (error) {
-            console.error('Error Uploading Images:', error);
-        }
-
-        
     };
-
+    const handleResendCodeClick = async () => {
+        try {
+            await apiClients.auth.resendConfirmationCode(schoolEmail);
+            console.log('Confirmation code resent!');
+        } catch (error) {
+            console.error('Error resending confirmation code:', error);
+        }
+    };
     const setInputRef = (index: number, el: HTMLInputElement | null) => {
         inputRefs.current[index] = el;
     };
@@ -199,11 +202,16 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
                             />
                         ))}
                     </UserCodeTextBoxesContainer>
-                    <ResendCodeText>Resend Code</ResendCodeText>
+                    <ResendCodeText onClick={handleResendCodeClick}>Resend Code</ResendCodeText>
                 </CodeandResendContainer>
                 <VerifyBox>
-                    <CentralButton buttonType={buttonTypeVerify} isEnabled={isVerify} onClick={handleSubmit} />
+                    <CentralButton buttonType={buttonTypeVerify} isEnabled={isVerify && !isVerifying} smallScreenOverride onClick={handleSubmit} />
                 </VerifyBox>
+                    {isVerifying && 
+                        <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                            <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
+                        </Box>
+                    } 
             </InnerBody>
         </OuterBody>
     );

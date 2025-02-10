@@ -154,7 +154,7 @@ export default function CreateQuestion({
       setDraftQuestion(newDraftQuestion);
     }
   }
-  
+
   const handleImageSave = async (
     inputImage?: File, 
     inputUrl?: string
@@ -218,6 +218,7 @@ export default function CreateQuestion({
     setIsImageUploadVisible(false);
     setIsImageURLVisible(false);
     setIsCreatingTemplate(false);
+    setIsCCSSVisible(false);
   }
 
   // CorrectAnswerCard handler functions
@@ -357,9 +358,7 @@ export default function CreateQuestion({
             if (result && result.path && result.path.length > 0)
               url = result.path;
           } else if (draftQuestion.questionCard.imageUrl){
-            console.log('here');
             url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
-            console.log('url');
           }
           window.localStorage.setItem(StorageKey, '');
           console.log(draftQuestion.questionCard.imageUrl);
@@ -394,7 +393,12 @@ export default function CreateQuestion({
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
-       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate} handleCloseModal={handleCloseModal}/>
+       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible} handleCloseModal={handleCloseModal}/>
+       <CCSSTabs
+          screenSize={screenSize}
+          isTabsOpen={isCCSSVisible}
+          handleCCSSSubmit={handleCCSSSubmit}
+        />
        <ImageUploadModal 
           draftQuestion={draftQuestion} 
           screenSize={screenSize}  
@@ -418,44 +422,33 @@ export default function CreateQuestion({
           paddingRight: `${theme.sizing.mdPadding}px`,
           boxSizing: 'border-box',
         }}>
-      <>
-        <CCSSTabsModalBackground
-          isTabsOpen={isCCSSVisible}
-          handleBackToExplore={handleBackToExplore}
-        />
-        <CCSSTabs
-          screenSize={screenSize}
-          isTabsOpen={isCCSSVisible}
-          handleCCSSSubmit={handleCCSSSubmit}
-        />
-      </>
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
       { (screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) &&
-            <>
-              <Fade 
-                in={isCardErrored}
-                mountOnEnter
-                unmountOnExit
-                timeout={500}
-              >
-                <div>
-                  <ErrorCard />
-                </div>
-              </Fade>  
-              <Box style={{
-                width: '100%', 
-                maxWidth: '672px',
-                display: 'flex',
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                gap: `${theme.sizing.xSmPadding}px`, 
-                paddingBottom: '16px',
-              }}>
-                <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
-                <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
-              </Box>
-            </>
-          }
+        <>
+          <Fade 
+            in={isCardErrored}
+            mountOnEnter
+            unmountOnExit
+            timeout={500}
+          >
+            <div>
+              <ErrorCard />
+            </div>
+          </Fade>  
+          <Box style={{
+            width: '100%', 
+            maxWidth: '672px',
+            display: 'flex',
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            gap: `${theme.sizing.xSmPadding}px`, 
+            paddingBottom: '16px',
+          }}>
+            <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
+            <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
+          </Box>
+        </>
+      }
       <CreateQuestionGridContainer container  wrap="nowrap" >
         <Grid
           sm

@@ -129,11 +129,13 @@ export default function QuestionTabs({
                   <CentralButton
                     buttonType={ButtonType.PREVIOUSQUESTION}
                     isEnabled
+                    isOnQuestionTab
                     onClick={handlePrevQuestion}
                   />
                   <CentralButton
                     buttonType={ButtonType.BACKTOEXPLORE}
                     isEnabled
+                    isOnQuestionTab
                     onClick={handleBackToExplore}
                   />
                 </ButtonContainerLeft>
@@ -142,10 +144,12 @@ export default function QuestionTabs({
                   <CentralButton
                     buttonType={ButtonType.CLONEANDEDIT}
                     isEnabled
+                    isOnQuestionTab
                   />
                   <CentralButton
                     buttonType={ButtonType.NEXTQUESTION}
                     isEnabled
+                    isOnQuestionTab
                     onClick={handleNextQuestion}
                   />
                 </ButtonContainerRight>

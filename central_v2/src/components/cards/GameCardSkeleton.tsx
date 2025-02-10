@@ -1,10 +1,16 @@
 import React from 'react';
 import { Box, Fade, Skeleton, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { ScreenSize } from '../../lib/CentralModels';
 
-const GameCard = styled(Box)(({ theme }) => ({
-  maxWidth: '384px',
-  height: '100%',
+interface GameCardProps {
+  screenSize: ScreenSize;
+  isCarousel: boolean;
+}
+
+const GameCard = styled(Box)<GameCardProps>(({ theme, screenSize, isCarousel }) => ({
+  width: screenSize !== ScreenSize.LARGE ? (isCarousel ? '290px' : '327px') : '384px', // eslint-disable-line
+  height: '505px',
   gap: `${theme.sizing.smPadding}px`,
   borderRadius: `${theme.sizing.smPadding}px`,
   boxShadow: `0px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px -4px #5C769166`,
@@ -17,9 +23,11 @@ const GameCard = styled(Box)(({ theme }) => ({
 
 interface SkeletonGameCardProps {
   index: number;
+  screenSize: ScreenSize;
+  isCarousel: boolean;
 }
 
-export default function SkeletonGameCard({ index }: SkeletonGameCardProps) {
+export default function SkeletonGameCard({ index, screenSize, isCarousel }: SkeletonGameCardProps) {
   const theme = useTheme();
   return (
     <Fade
@@ -34,6 +42,8 @@ export default function SkeletonGameCard({ index }: SkeletonGameCardProps) {
           justifyContent: 'flex-start',
           gap: '12px'
         }}
+        screenSize={screenSize}
+        isCarousel={isCarousel}
       >
         <Skeleton animation="wave" variant="rounded" width="100%" height="186px"/>
         <Box

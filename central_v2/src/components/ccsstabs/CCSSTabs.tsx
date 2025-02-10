@@ -224,7 +224,7 @@ export default function CCSSTabs({
           const domainObject = gradeObject.domains.find((ccssDomain) => ccssDomain.key === domain);
           if (domainObject){
             return (
-              <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
+              <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start', flexWrap: 'nowrap'}}>
                 {domainObject.clusters.map((ccssCluster) => (
                     <CCSSIndicatorPill key={ccssCluster.key} description={ccssCluster.desc} label={ccssCluster.key} onClick={()=> handlePillClick(ccssCluster.key, CCSSType.CLUSTER)} type={CCSSType.CLUSTER}/>
                   ))
@@ -239,7 +239,7 @@ export default function CCSSTabs({
         const gradeObject = ccssDictionary.find((ccssGrade) => ccssGrade.key === grade);
         if (gradeObject){
           return (
-            <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start'}}>
+            <CCSSPillContainer container rowSpacing={2} direction="column" style={{alignItems: 'flex-start', flexWrap: 'nowrap'}}>
               {gradeObject.domains.map((ccssDomain) => (
                   <CCSSIndicatorPill key={ccssDomain.key} description={ccssDomain.desc} label={ccssDomain.key} onClick={()=> handlePillClick(ccssDomain.key, CCSSType.DOMAIN)} type={CCSSType.DOMAIN}/>
                 ))
@@ -252,7 +252,7 @@ export default function CCSSTabs({
       case 0:
       default:
        return (
-        <CCSSPillContainer container rowSpacing={2}>
+        <CCSSPillContainer container rowSpacing={2} columnSpacing={screenSize === ScreenSize.SMALL ? 2 : 0}>
           {ccssDictionary.map((ccssGrade) => (
             <CCSSIndicatorPill key={ccssGrade.key} description={ccssGrade.desc} onClick={()=> handlePillClick(ccssGrade.key, CCSSType.GRADE)}  type={CCSSType.GRADE}/>
           ))}
@@ -268,7 +268,7 @@ export default function CCSSTabs({
       unmountOnExit
       timeout={1000}
     >
-      <CCSSTabContainer>
+      <CCSSTabContainer screenSize={screenSize}>
         <CCSSContentFrame screenSize={screenSize}>
           <TabContent>
             <CCSSStyledTabs

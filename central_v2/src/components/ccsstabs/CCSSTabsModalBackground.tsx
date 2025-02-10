@@ -2,53 +2,52 @@ import React from 'react';
 import {
   Box,
   Fade,
-  Slide,
-  Tabs,
-  Tab,
-  Grid,
   styled,
-  Modal,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 
 const TabContainer = styled(Box)(({ theme }) => ({
-  position: 'absolute',
+  position: 'fixed',
   top: 0,
-  height: '100dvh',
-  width: '100dvw',
-  zIndex: 5,
-  overflow: 'hidden',
-}));
-
-const ModalBackground = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  top: 0,
-  height: '100%',
-  width: '100%',
+  left: 0, 
+  width: '100vw',
+  height: '100%', 
+  overflow: 'auto',
+  zIndex: 5,  
+  display: 'flex',
   background: 'rgba(0,0,0,0.5)',
-  zIndex: 5,
+  pointEvents: 'auto'
 }));
 
 interface CCSSTabsModalBackgroundProps {
   isTabsOpen: boolean;
   handleBackToExplore: () => void;
+  children: React.ReactNode;
 }
 
 export default function CCSSTabsModalBackground({
   isTabsOpen,
   handleBackToExplore,
+  children
 }: CCSSTabsModalBackgroundProps) {
   return (
-    <Fade
-      in={isTabsOpen}
-      mountOnEnter
-      unmountOnExit
-      timeout={1000}
-      onClick={handleBackToExplore}
-    >
-      <TabContainer>
-        <ModalBackground />
-      </TabContainer>
-    </Fade>
+    <Box style={{
+      width: '100%', 
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center', 
+      height:'100%'
+    }}
+    >  
+      <Fade
+        in={isTabsOpen}
+        mountOnEnter
+        unmountOnExit
+        timeout={1000}
+        style={{height: '100%'}}
+      >
+        <TabContainer onClick={handleBackToExplore}/> 
+      </Fade>
+      {children}
+    </Box>
   );
 }

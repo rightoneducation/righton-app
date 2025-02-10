@@ -11,7 +11,10 @@ import {
   getCurrentUser,
   resetPassword, 
   SignInOutput,
-  type ResetPasswordOutput
+  resendSignUpCode,
+  type ResetPasswordOutput,
+  ResendSignUpCodeOutput,
+  ConfirmSignUpOutput
 } from 'aws-amplify/auth';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
@@ -56,6 +59,7 @@ export class AuthAPIClient
 
   authListener() {
     Hub.listen('auth', ({ payload }) => {
+      console.log('auth event detected')
       this.authEvents(payload);
       }
     );
@@ -90,13 +94,12 @@ export class AuthAPIClient
   }
   
 
-  async awsConfirmSignUp(email: string, code: string): Promise<void> {
-    await confirmSignUp({username: email, confirmationCode: code});
+  async awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput> {
+    const response = await confirmSignUp({username: email, confirmationCode: code});
+    return response;
   }
 
   async awsSignIn(username: string, password: string): Promise<SignInOutput> {
-    const session = await fetchAuthSession();
-    console.log(session);
     let user;
     try{
       user = await signIn({username: username, password: password}); 
@@ -123,7 +126,6 @@ export class AuthAPIClient
 
   async verifyAuth(): Promise<boolean> {
     const session = await fetchAuthSession();
-    console.log(session);
     if (session && session.tokens && session.tokens.accessToken) {
       const groups = session.tokens.accessToken.payload["cognito:groups"];
       if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
@@ -150,5 +152,10 @@ export class AuthAPIClient
    async getCurrentUserName(): Promise<string>{
     const { username } = await getCurrentUser();
     return username
+   }
+
+   async resendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {
+    const response = await resendSignUpCode({username: email});
+    return response;
    }
 }

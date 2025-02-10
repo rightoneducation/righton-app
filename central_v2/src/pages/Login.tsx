@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, TextField, Typography, CircularProgress } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { GoogleLogin } from '@react-oauth/google';
 import { getUser, IAuthAPIClient } from '@righton/networking';
@@ -17,10 +17,14 @@ const InnerBodyContainer = styled(Box)(({ theme }) => ({
   // border: '1px solid blue',
   flexDirection: 'column',
   gap: '20px',
-  // height: '100vh',
-  // border: '1px solid red'
-  marginTop: '-8px',
-  marginBottom: '-100px'
+  height: '100%',
+  width: '100%',
+  maxWidth: '500px',
+  paddingTop: '40px',
+  paddingBottom: '40px',
+  paddingLeft: '40px',
+  paddingRight: '40px',
+  boxSizing: 'border-box',
 }));
 
 const UpperLogin = styled(Box)(({ theme }) => ({
@@ -135,7 +139,7 @@ interface LoginProps{
 }
 
 function Login({handleForgotPasswordClick} : LoginProps) {
-
+  const theme = useTheme();
   const navigate = useNavigate(); // Initialize useNavigate
   const [userName, setUserName] = useState('');
 
@@ -146,15 +150,17 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   const [isSignupEnabled, setIsSignupEnabled] = useState(true);
 
   const [password, setPassword] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
 
   const handleLoginClick = async () => {
-    
     try {
+      setIsLoggingIn(true);
       await apiClients.auth.awsSignIn(userName, password);
       const getUserName = await apiClients.auth.getUserNickname();
       console.log(getUserName)
       console.log('Login successful');
+      setIsLoggingIn(false);
       navigate('/'); // Navigate to the Signup page
 
     } catch (error) {
@@ -180,7 +186,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
         <MiddleContainer>
           <UserTextField
                 variant="outlined"
-                placeholder="Username or Email"
+                placeholder="Email"
                 value={userName}
                 onChange={(event) => setUserName(event.target.value)}
           />
@@ -195,12 +201,17 @@ function Login({handleForgotPasswordClick} : LoginProps) {
           </ForgotPasswordButton>
         </MiddleContainer>
         <LoginContainer>
-          <CentralButton buttonType={buttonTypeLogin} isEnabled={isLoginEnabled} onClick={handleLoginClick}/>
+          <CentralButton buttonType={buttonTypeLogin} isEnabled={isLoginEnabled && !isLoggingIn} smallScreenOverride onClick={handleLoginClick}/>
         </LoginContainer>
         <SignupContainer>
           <NoAccountText>Dont have an account?</NoAccountText>
-          <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} onClick={handleSignupClick}/>
+          <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} smallScreenOverride  onClick={handleSignupClick}/>
         </SignupContainer>
+        {isLoggingIn && 
+          <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+              <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
+          </Box>
+        } 
       </InnerBodyContainer>
     </SignUpMainContainer>
   );

@@ -3,6 +3,7 @@ import { ButtonColor } from '../../components/button/ButtonModels';
 
 type ButtonStyledProps = {
   buttonColor: ButtonColor;
+  isOnQuestionTab?: boolean;
 };
 
 const getBackgroundColor = (theme: any, buttonColor: ButtonColor) => {
@@ -42,14 +43,14 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
 };
 
 export const ButtonStyled = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'buttonColor',
-})<ButtonStyledProps>(({ theme, buttonColor }) => ({
+  shouldForwardProp: (prop) => (prop !== 'buttonColor' && prop !== 'isOnQuestionTab'),
+})<ButtonStyledProps>(({ theme, buttonColor, isOnQuestionTab }) => ({
   width: '100%',
-  height: '38px',
-  padding: 0,
+  height: isOnQuestionTab ? '100%' : '38px',
+  padding: isOnQuestionTab ? '8px' : 0,
   borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
-  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
+  boxShadow: isOnQuestionTab ? 'none' : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
   borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
   borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
   borderColor: buttonColor === ButtonColor.NULL ? `${theme.palette.primary.buttonPrimaryDefault}` : 'none',
@@ -92,6 +93,7 @@ export const ButtonTypography = styled(Button, {
   textTransform: 'none',
   padding: 0,
   color: buttonColor === ButtonColor.NULL ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  whiteSpace: 'nowrap',
 }));
 
 export const ButtonCCSS = styled(Box)(({ theme }) => ({

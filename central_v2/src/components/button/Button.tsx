@@ -14,7 +14,10 @@ import {
 interface CentralButtonProps {
   buttonType: ButtonType;
   isEnabled: boolean;
+  isOnQuestionTab?: boolean;
   smallScreenOverride?: boolean;
+  buttonWidthOverride?: string;
+  iconOnlyOverride?: boolean;
   type?: string;
   onClick?: () => void;
   handleFileChange?: (file: File) => void;
@@ -23,7 +26,10 @@ interface CentralButtonProps {
 export default function CentralButton({
   buttonType,
   isEnabled,
+  isOnQuestionTab,
   smallScreenOverride,
+  buttonWidthOverride,
+  iconOnlyOverride,
   type,
   onClick,
   handleFileChange,
@@ -60,8 +66,9 @@ export default function CentralButton({
     <ButtonStyled
       buttonColor={buttonColor}
       disabled={!isEnabled}
+      isOnQuestionTab={isOnQuestionTab ?? false}
       onClick={handleButtonClick}
-      style={{width: buttonWidth}}
+      style={{width: buttonWidthOverride ?? buttonWidth}}
     >
       <ButtonContent>
         {buttonObj.icon && (
@@ -72,7 +79,7 @@ export default function CentralButton({
             }
           </ButtonIconContainer>
         )}
-        {buttonText && !isSmallScreen && <ButtonTypography buttonColor={buttonColor}> {buttonText} </ButtonTypography>}
+        {buttonText && !isSmallScreen && !iconOnlyOverride && <ButtonTypography buttonColor={buttonColor}> {buttonText} </ButtonTypography>}
         {buttonObj.rightIcon && (
           <ButtonIconContainer>
             { buttonColor === ButtonColor.NULL

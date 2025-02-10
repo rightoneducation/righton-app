@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-const PublicPrivateContainer = styled(Button)(({theme}) => ({
+interface PublicPrivateContainerProps {
+  isDisabled: boolean;
+}
+
+const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
   width: '144px',
   minHeight: '36px',
   borderRadius: '24px',
@@ -12,6 +16,7 @@ const PublicPrivateContainer = styled(Button)(({theme}) => ({
   },
   padding: 0,
   position: 'relative',
+  cursor: isDisabled ? 'default' : 'pointer'
 }));
 
 const PublicPrivateSelectionPill = styled(Box, {
@@ -63,14 +68,20 @@ const PublicPrivateText = styled(Typography)<PublicPrivateTextProps>(({isSelecte
   transition: 'color 0.3 ease-in-out'
 }));
 
-export default function PublicPrivateButton() {
+interface PublicPrivateButtonInterface {
+  isDisabled: boolean;
+}
+
+export default function PublicPrivateButton({
+  isDisabled
+}: PublicPrivateButtonInterface) {
   const { t } = useTranslation();
   const [isPublic, setIsPublic] = useState<boolean>(true);
   const handlePublicPrivateSwitch = () =>{
     setIsPublic(!isPublic);
   }
   return (
-    <PublicPrivateContainer onClick={handlePublicPrivateSwitch}>
+    <PublicPrivateContainer isDisabled={isDisabled} onClick={!isDisabled ? handlePublicPrivateSwitch : undefined}>
       <PublicPrivateSelectionPill isPublic={isPublic}/>
       <LabelContainer>
         <SubContainer isSelected={isPublic}>     

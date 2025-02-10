@@ -45,7 +45,7 @@ export default function CardCarousel<
   return (
     <Swiper
       style={{
-        width: '100%',
+        width: '100%'
       }}
       modules={[Pagination]}
       pagination={{
@@ -61,9 +61,10 @@ export default function CardCarousel<
       spaceBetween={theme.sizing.smPadding}
       slidesPerView='auto'
       updateOnWindowResize
-      centeredSlides
-      loop
       navigation
+      loop
+      centeredSlides
+      centeredSlidesBounds
     >
       {Array.from({ length: maxSlides }).map((_, index) => {
         const element = recommendedElements[index] as
@@ -87,7 +88,7 @@ export default function CardCarousel<
                   }
                 />
               ) : (
-                <SkeletonGameCard index={index} />
+                <SkeletonGameCard isCarousel screenSize={screenSize} index={index} />
               )}
             </SwiperSlide>
           );

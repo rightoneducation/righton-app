@@ -6,6 +6,8 @@ import { Box } from '@mui/material';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
+import { ModalBackground } from '../lib/styledcomponents/QuestionTabsStyledComponents';
+import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 
 const ScreenContainer = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -37,12 +39,14 @@ const BodyContainer = styled(Box)<BodyContainerProps>(
 
 interface AppContainerProps {
   currentScreen: ScreenType;
+  isTabsOpen?: boolean;
+  setIsTabsOpen?: (isTabsOpen: boolean) => void;
   children: React.ReactNode;
+  isUserLoggedIn: boolean;
 }
 
-function AppContainer({ currentScreen, children }: AppContainerProps) {
+function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, isUserLoggedIn, children }: AppContainerProps) {
   const theme = useTheme();
-  console.log('children here:', children)
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -52,15 +56,26 @@ function AppContainer({ currentScreen, children }: AppContainerProps) {
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
+  const handleBackToExplore = () => {
+    if (setIsTabsOpen)
+      setIsTabsOpen(false);
+  }
   return (
     <ScreenContainer>
       <HeaderContainer>
+        { isTabsOpen && 
+          <QuestionTabsModalBackground 
+            isTabsOpen={isTabsOpen} 
+            handleBackToExplore={handleBackToExplore} 
+          />
+        }
         <Header
           currentScreen={currentScreen}
           screenSize={screenSize}
           isLgScreen={isLgScreen}
           menuOpen={menuOpen}
           setMenuOpen={setMenuOpen}
+          isUserLoggedIn={isUserLoggedIn}
         />
       </HeaderContainer>
       <BodyContainer screenSize={screenSize}>{children}</BodyContainer>
