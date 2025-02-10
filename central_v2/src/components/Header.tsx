@@ -196,30 +196,34 @@ export default function Header({
     return '94px';
   };
 
+  const createMenu = [
+    <CreateButtonContainer>
+    <Box style={{zIndex: 4}}>
+      <CentralButton buttonType={ButtonType.CREATE} isEnabled smallScreenOverride={screenSize === ScreenSize.SMALL} onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
+    </Box>
+    <Collapse in={isCreateMenuOpen} style={{position: 'absolute', top: '50%', zIndex: 3, width: '100%'}}>
+      <CreateDropDown>
+        <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
+          <img src={createDropdownGame} alt="Create Game" />
+          <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+            Game
+          </Typography>
+        </Box>
+        <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => { setIsCreateMenuOpen(false); navigate('/create/question')}}>
+          <img src={createDropdownQuestion} alt="Create Question" />
+          <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
+            Question
+          </Typography>
+        </Box>
+      </CreateDropDown>
+    </Collapse>              
+  </CreateButtonContainer>
+  ]
+
   const loggedInUserComponents = [
     isLgScreen ? (
       <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
-        <CreateButtonContainer>
-          <Box style={{zIndex: 4}}>
-            <CentralButton buttonType={ButtonType.CREATE} isEnabled onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
-          </Box>
-          <Collapse in={isCreateMenuOpen} style={{position: 'absolute', top: '50%', zIndex: 3, width: '100%'}}>
-            <CreateDropDown>
-              <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
-                <img src={createDropdownGame} alt="Create Game" />
-                <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
-                  Game
-                </Typography>
-              </Box>
-              <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, cursor: 'pointer'}} onClick={() => { setIsCreateMenuOpen(false); navigate('/create/question')}}>
-                <img src={createDropdownQuestion} alt="Create Question" />
-                <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
-                  Question
-                </Typography>
-              </Box>
-            </CreateDropDown>
-          </Collapse>              
-        </CreateButtonContainer>
+        {createMenu}
         <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
       </Box>
     ) : (
@@ -382,36 +386,7 @@ export default function Header({
             }
             My Library
           </TransparentButton>
-          <CreateBox>
-            <Box
-              style={{
-                opacity: 0.8,
-                gap: '8px',
-                display: 'flex',
-                flexDirection: 'row',
-              }}
-            >
-              <img src={plus} alt="Plus Icon" />
-              <PrimaryButton2Text>Create</PrimaryButton2Text>
-            </Box>
-            <Box
-              style={{
-                padding: '16px 0px 0px 24px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
-              }}
-            >
-              <PrimaryButton2 style={{ width: '120px' }}>
-                <img src={dice} alt="Plus Icon" />
-                <PrimaryButton2Text>Game</PrimaryButton2Text>
-              </PrimaryButton2>
-              <PrimaryButton2 style={{ width: '150px' }} onClick={() => { setMenuOpen(false); navigate('/create/question')}}>
-                <img src={qmark} alt="Plus Icon" />
-                <PrimaryButton2Text>Question</PrimaryButton2Text>
-              </PrimaryButton2>
-            </Box>
-          </CreateBox>
+          {isUserLoggedIn && createMenu}
         </Box>
       )}
     </Collapse>
