@@ -2,14 +2,15 @@ import React, {useEffect, useMemo} from 'react';
 import { Grid, Card, CardContent, Typography, Box, CircularProgress, Switch, Radio } from '@mui/material';
 import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createQuestion, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
 import { IDiscardedExplanationToSave, IQuestionToSave, IRegenInput } from '../lib/Models';
-import ShortAnswerTextFieldStyled from '../lib/ShortAnswerTextFieldStyled';
+import { QuestionCard } from '../components/QuestionCard';
 import ButtonSubmitQuestion from '../components/ButtonSubmitQuestion';
-import ButtonSaveQuestion from '../components/ButtonSaveQuestion';
 import { version, date, model, ExplanationRegenType } from '../lib/Constants';
-import ExplanationCard from '../components/ExplanationCard';
-import RightonLogo from '../img/RightonLogo.svg';
-import OpenAI from '../img/OpenAI.svg';
+import InfoIcon from '../img/InfoIcon.svg';
+import OpenAI from '../img/OpenAILogo.svg';
 import { GamePlayButtonStyled } from '../lib/GamePlayButtonStyled';
+import { MainContainer, HeaderContainer, VersionContainer, CardContainer } from '../lib/styledcomponents/generator/StyledContainers';
+import { TooltipStyled } from '../lib/styledcomponents/generator/StyledTooltip';
+import { BaseCardStyled } from '../lib/styledcomponents/generator/StyledCards';
 
 export default function Generator() {
   const [formData, setFormData] = React.useState({
@@ -60,14 +61,6 @@ export default function Generator() {
     'This is the wrong answer explanation for wrong answer 3',
   ];
   const [selectedCards, setSelectedCards] = React.useState(new Array(wrongAnswerExplanations.length).fill(false));
-
-  const inputs = [
-    { label: 'Question', name: 'question' },
-    { label: 'Correct Answer', name: 'correctAnswer' },
-    { label: 'Wrong Answer 1', name: 'wrongAnswer1' },
-    { label: 'Wrong Answer 2', name: 'wrongAnswer2' },
-    { label: 'Wrong Answer 3', name: 'wrongAnswer3' },
-  ];
 
   const sampleQuestions = [
     {
@@ -128,7 +121,6 @@ export default function Generator() {
       formData.wrongAnswer2 = sampleQuestions[selectedSampleQuestion].incorrectAnswer2;
       formData.wrongAnswer3 = sampleQuestions[selectedSampleQuestion].incorrectAnswer3;
     }
-    console.log(formData);
     generateWrongAnswerExplanations(formData, discardedExplanations).then((response) => {
       const explanationsArray = response ?? [];
       const wrongAnswersArray =  explanationsArray.map((explanation: string, index: number) => {
@@ -288,136 +280,106 @@ export default function Generator() {
       /> 
     </>
   ];
-  const customQuestion = [
-    <>
-      {inputs.map((input, index) => {
-          return (
-            <React.Fragment key={input.name}>
-            <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', textAlign: 'left', fontSize: '15px', lineHeight: '30px'}}>
-              {labelText[index]}
-              </Typography>
-              <ShortAnswerTextFieldStyled
-                fullWidth
-                variant="filled"
-                autoComplete="off"
-                multiline
-                minRows={2}
-                maxRows={2}
-                placeholder={`Enter ${input.label} here...`}
-                onChange={handleInputChange}
-                value={formData[input.name as keyof typeof formData]}
-                name={input.name}
-                disabled={isSubmitted}
-                InputProps={{
-                  disableUnderline: true,
-                  style: {
-                    paddingTop: '9px',
-                  },
-                }}
-              />
-          </React.Fragment>
-          )}
-          )
-        }
-        <ButtonSubmitQuestion 
+  return (
+    <MainContainer>
+      <HeaderContainer>
+        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px'}} >
+          <Typography style={{ fontFamily: 'Rubik', fontSize: '16px', lineHeight: '16px', color: 'white'}} >
+            Powered By:
+          </Typography>
+          <img src={OpenAI} style={{}}/>
+        </Box>
+        <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
+          Wrong Answer Explanations
+        </Typography>
+        <Typography style={{ fontFamily: 'Rubik', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
+        AI-Powered Insights to Guide Student Understanding
+        </Typography>
+      </HeaderContainer>
+   
+      <CardContainer>
+        <QuestionCard 
+          isCustomQuestion={isCustomQuestion}
+          labelText={labelText}
+          handleSwitch={handleSwitch}
+          handleInputChange={handleInputChange}
+          formData={formData}
           isSubmitted={isSubmitted}
           isFormComplete={isFormComplete}
           isQuestionGenerating={isQuestionGenerating}
           handleSubmitQuestion={handleSubmitQuestion}
+        />
+        {/* <Box style={{
+            maxHeight: '70vh',
+            overflow: 'scroll', 
+            display: 'flex', 
+            justifyContent: 'flex-start', 
+            alignItems: 'center', 
+            flexDirection: 'column',
+            gap: 20,  
+            scrollbarWidth: 'none', 
+          }}>
+          { questionToSave.wrongAnswers.length > 0 && questionToSave.wrongAnswers.map((explanation, index) => {
+            return (
+              <ExplanationCard
+                index={index}
+                questionToSave={questionToSave}
+                isSubmitted={isSubmitted}
+                explanation={explanation}
+                selectedCards={selectedCards}
+                setQuestionToSave={setQuestionToSave}
+                handleExplanationClick={handleExplanationClick}
+                saveDiscardExplanation={saveDiscardExplanation}
+                isQuestionSaved={isQuestionSaved}
+              />
+            )
+          })}
+        </Box>
+        <Box style={{display: 'flex', gap: '16px'}}>
+        <ButtonSaveQuestion
+          isSubmitted={false}
+          isQuestionRegenerating={isQuestionRegenerating}
+          handleSaveQuestion={handleSaveQuestion}
         /> 
-    </>
-  ]
-
-  return (
-    <div className="App" style={{height: '100vh', width: '100vw', background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-
-      <Box style={{position: 'absolute', top: '30px', left: '50%', transform: 'translate(-50%)'}}>
-        <Typography style={{ fontFamily: 'Montserrat', fontSize: '40px', lineHeight: '40px', color: 'white'}} >
-          AI-Generated
-        </Typography>
-        <Typography style={{ fontFamily: 'Montserrat', fontSize: '40px', lineHeight: '40px', color: 'white'}} >
-          Wrong Answer Explanations
-        </Typography>
-      </Box>
-      <Box style={{position: 'absolute', top: '10px', right: '10px'}}>
-          <Typography style={{  fontFamily: 'Montserrat',  fontSize: '12px', color: 'white', textAlign: 'right'}} >
-          Version {version}
+        <GamePlayButtonStyled
+          onClick={clearFields}
+          animate={false}
+          style={{ background: `linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)`}}
+        >
+          <Typography sx={{ textTransform: 'none' }} variant="button">
+            Discard Question
           </Typography>
-          <Typography style={{  fontFamily: 'Montserrat',  fontSize: '12px', color: 'white', textAlign: 'right'}} >
-          Last updated: {date}
+        </GamePlayButtonStyled>
+        </Box> */}
+        {isQuestionSaved &&
+          <Typography style={{  fontFamily: 'Poppins',  fontWeight: '600', fontSize: '14px', color: 'white', marginTop: '20px'}} >
+          Question Saved!
         </Typography>
-        <Typography style={{   fontFamily: 'Montserrat', fontSize: '12px', color: 'white', textAlign: 'right'}} >
-          Model: {model}
-        </Typography>
-      </Box>
-   
-      <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',  height: '70vh'}}>
-        <Grid container spacing={2} style={{ zIndex: 2, height: '100%', padding: '20px'}}>
-          <Grid item xs={6} style={{display: 'flex', justifyContent:'flex-start', alignItems: 'flex-start', height: '70vh'}}>
-            <Card style={{ width: '300px', borderRadius: '20px', padding: '20px'}}>
-              <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', fontSize: '15px', color: 'black'}} >
-                  {isCustomQuestion ? 'Create Your Own Question' : 'Sample Question'}
-                </Typography>
-              <Switch defaultChecked onChange={handleSwitch}/>
-              </Box>
-              {isCustomQuestion ? customQuestion : premadeQuestion}  
-            </Card>
-          </Grid>
-          <Grid item xs={6} style={{ display: 'flex', flexDirection: 'column', justifyContent:'flex-start', alignItems: 'center', height: '70vh', paddingLeft: '32px'}}>
-            <Box style={{
-                maxHeight: '70vh',
-                overflow: 'scroll', 
-                display: 'flex', 
-                justifyContent: 'flex-start', 
-                alignItems: 'center', 
-                flexDirection: 'column',
-                gap: 20,  
-                scrollbarWidth: 'none', 
-              }}>
-              { questionToSave.wrongAnswers.length > 0 && questionToSave.wrongAnswers.map((explanation, index) => {
-                return (
-                  <ExplanationCard
-                    index={index}
-                    questionToSave={questionToSave}
-                    isSubmitted={isSubmitted}
-                    explanation={explanation}
-                    selectedCards={selectedCards}
-                    setQuestionToSave={setQuestionToSave}
-                    handleExplanationClick={handleExplanationClick}
-                    saveDiscardExplanation={saveDiscardExplanation}
-                    isQuestionSaved={isQuestionSaved}
-                  />
-                )
-              })}
-            </Box>
-            <Box style={{display: 'flex', gap: '16px'}}>
-            <ButtonSaveQuestion
-              isSubmitted={false}
-              isQuestionRegenerating={isQuestionRegenerating}
-              handleSaveQuestion={handleSaveQuestion}
-            /> 
-            <GamePlayButtonStyled
-              onClick={clearFields}
-              animate={false}
-              style={{ background: `linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)`}}
-            >
-              <Typography sx={{ textTransform: 'none' }} variant="button">
-                Discard Question
+        }
+      </CardContainer>
+      <VersionContainer>
+        <TooltipStyled 
+          title={
+            <>
+              <Typography style={{  fontFamily: 'Montserrat',  fontSize: '12px', color: 'white', textAlign: 'right'}} >
+              Version {version}
               </Typography>
-            </GamePlayButtonStyled>
-            </Box>
-            {isQuestionSaved &&
-              <Typography style={{  fontFamily: 'Poppins',  fontWeight: '600', fontSize: '14px', color: 'white', marginTop: '20px'}} >
-              Question Saved!
-            </Typography>
-            }
-             
-          </Grid>
-        </Grid>
-        <img src={OpenAI} style={{position: 'absolute', bottom: 20, left: '50%', transform: 'translate(-50%)', maxHeight: '32px'}}/>
-        <img src={RightonLogo} style={{position: 'absolute', right: 30, bottom: 30, transform: 'rotate(-10deg)', zIndex: 0}}/>
-      </Box>
-    </div>
+              <Typography style={{  fontFamily: 'Montserrat',  fontSize: '12px', color: 'white', textAlign: 'right'}} >
+              Last updated: {date}
+              </Typography>
+              <Typography style={{   fontFamily: 'Montserrat', fontSize: '12px', color: 'white', textAlign: 'right'}} >
+              Model: {model}
+              </Typography>
+            </>
+          }
+          arrow
+          placement="top"
+        >
+          <img src={InfoIcon} alt="Version Info" />
+        </TooltipStyled>
+      </VersionContainer>
+    </MainContainer>
   );
 }
+
+
