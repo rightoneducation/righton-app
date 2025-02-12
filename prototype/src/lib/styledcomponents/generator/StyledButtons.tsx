@@ -17,3 +17,27 @@ export const ButtonStyled = styled(Button)(({ theme }) => ({
   boxSizing: 'border-box',
   pointerEvents: 'auto',
 }));
+
+export const ButtonSecondaryStyled = styled(ButtonStyled)(({ theme }) => ({
+  backgroundColor: `${theme.palette.primary.buttonActionDefault}`,
+  ':hover': {
+    backgroundColor: `${theme.palette.primary.buttonActionHover}`,
+  },
+  '&:disabled': {
+    backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
+    color: `${theme.palette.primary.main}`,
+  },
+}));
+
+export const ButtonSaveStyled = styled(ButtonStyled)(({ theme }) => ({
+  backgroundColor: `${theme.palette.primary.buttonSaveDefault}`,
+  color: `${theme.palette.primary.buttonPrimaryDefault}`,
+  ':hover': {
+    backgroundColor: `${theme.palette.primary.buttonSaveDisable}`,
+    color: `${theme.palette.primary.buttonPrimaryDefault}`,
+  },
+  '&:disabled': {
+    backgroundColor: `${theme.palette.primary.buttonSaveDisable}`,
+    color: `${theme.palette.primary.buttonPrimaryDefault}`,
+  },
+}));

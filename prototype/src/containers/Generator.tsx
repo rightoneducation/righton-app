@@ -1,5 +1,9 @@
-import React, {useEffect, useMemo} from 'react';
-import { Grid, Card, CardContent, Typography, Box, CircularProgress, Switch, Radio, useTheme } from '@mui/material';
+import React, {useEffect, useState } from 'react';
+import { Grid, Card, CardContent, Typography, Box, CircularProgress, Switch, Radio, useMediaQuery, useTheme } from '@mui/material';
+import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
+import { Swiper as SwiperInstance } from 'swiper';
+import { Pagination } from 'swiper/modules';
+import { v4 as uuidv4 } from 'uuid';
 import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createQuestion, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
 import { IDiscardedExplanationToSave, IQuestionToSave, IRegenInput } from '../lib/Models';
 import { QuestionCard } from '../components/QuestionCard';
@@ -8,12 +12,27 @@ import { ExplanationCards } from '../components/ExplanationCards';
 import { version, date, model, ExplanationRegenType } from '../lib/Constants';
 import InfoIcon from '../img/InfoIcon.svg';
 import OpenAI from '../img/OpenAILogo.svg';
-import { MainContainer, HeaderContainer, VersionContainer, CardsContainer } from '../lib/styledcomponents/generator/StyledContainers';
+import { MainContainer, HeaderContainer, VersionContainer, CardsContainer, QuestionContainer, FooterContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { TooltipStyled } from '../lib/styledcomponents/generator/StyledTooltip';
-import { BaseCardStyled } from '../lib/styledcomponents/generator/StyledCards';
+import { ButtonSaveStyled, ButtonSecondaryStyled } from '../lib/styledcomponents/generator/StyledButtons';
+import { ScreenSize } from '../lib/Models';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 export default function Generator() {
   const theme = useTheme();
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const screenSize = isLargeScreen // eslint-disable-line
+    ? ScreenSize.LARGE
+    : isMediumScreen
+      ? ScreenSize.MEDIUM
+      : ScreenSize.SMALL;
+  const [swiper, setSwiper] = useState<SwiperInstance | null>(null);
+  const handleChangeSlide=()=>{
+    if (swiper)
+      swiper.slideTo(1, 750);
+  }
   const [formData, setFormData] = React.useState({
     question: '',
     correctAnswer: '',
@@ -26,29 +45,14 @@ export default function Generator() {
   const [isSelected, setIsSelected] = React.useState(false);
   const [isQuestionGenerating, setIsQuestionGenerating] = React.useState(false);
   const [isQuestionRegenerating, setIsQuestionRegenerating] = React.useState(false);
+  const [isQuestionGenerated, setIsQuestionGenerated] = React.useState(false);
   const [isQuestionSaved, setIsQuestionSaved] = React.useState(false);
   const [isCustomQuestion, setIsCustomQuestion] = React.useState(true);
   const [selectedSampleQuestion, setSelectedSampleQuestion] = React.useState(0);
   const blankQuestion = {
     question: '',
     correctAnswer: '',
-    wrongAnswers: [
-      {
-        answer: '',
-        selectedExplanation: 'asdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfs',
-        dismissedExplanations: [],
-      },
-      {
-        answer: '',
-        selectedExplanation: '',
-        dismissedExplanations: [],
-      },
-      {
-        answer: '',
-        selectedExplanation: '',
-        dismissedExplanations: [],
-      }
-    ],
+    wrongAnswers: [],
     discardedExplanations: [],
     version
   }
@@ -144,7 +148,9 @@ export default function Generator() {
         discardedExplanations: [],
         version
       }));
+      handleChangeSlide();
       setIsQuestionGenerating(false);
+      setIsQuestionGenerated(true);
       setIsSubmitted(true);
     });
   };
@@ -282,95 +288,8 @@ export default function Generator() {
     </>
   ];
   return (
-    <MainContainer>
-      <HeaderContainer>
-        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px'}} >
-          <Typography style={{ fontFamily: 'Rubik', fontSize: '16px', lineHeight: '16px', color: 'white'}} >
-            Powered By:
-          </Typography>
-          <img src={OpenAI} alt="OpenAI Logo"/>
-        </Box>
-        <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
-          Wrong Answer Explanations
-        </Typography>
-        <Typography style={{ fontFamily: 'Rubik',textAlign: 'center', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
-        AI-Powered Insights to Guide Student Understanding
-        </Typography>
-      </HeaderContainer>
    
-      <CardsContainer container spacing={`${theme.sizing.xLgPadding}px`}>
-        <Grid item xs={6}>
-          <QuestionCard 
-            isCustomQuestion={isCustomQuestion}
-            labelText={labelText}
-            handleSwitch={handleSwitch}
-            handleInputChange={handleInputChange}
-            formData={formData}
-            isSubmitted={isSubmitted}
-            isFormComplete={isFormComplete}
-            isQuestionGenerating={isQuestionGenerating}
-            handleSubmitQuestion={handleSubmitQuestion}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <ExplanationCards
-            isSubmitted={isSubmitted}
-            questionToSave={questionToSave}
-            selectedCards={selectedCards}
-            setQuestionToSave={setQuestionToSave}
-            handleExplanationClick={handleExplanationClick}
-            saveDiscardExplanation={saveDiscardExplanation}
-            isQuestionSaved={isQuestionSaved}
-          />
-        </Grid>
-        {/* <Box style={{
-            maxHeight: '70vh',
-            overflow: 'scroll', 
-            display: 'flex', 
-            justifyContent: 'flex-start', 
-            alignItems: 'center', 
-            flexDirection: 'column',
-            gap: 20,  
-            scrollbarWidth: 'none', 
-          }}>
-          { questionToSave.wrongAnswers.length > 0 && questionToSave.wrongAnswers.map((explanation, index) => {
-            return (
-              <ExplanationCard
-                index={index}
-                questionToSave={questionToSave}
-                isSubmitted={isSubmitted}
-                explanation={explanation}
-                selectedCards={selectedCards}
-                setQuestionToSave={setQuestionToSave}
-                handleExplanationClick={handleExplanationClick}
-                saveDiscardExplanation={saveDiscardExplanation}
-                isQuestionSaved={isQuestionSaved}
-              />
-            )
-          })}
-        </Box>
-        <Box style={{display: 'flex', gap: '16px'}}>
-        <ButtonSaveQuestion
-          isSubmitted={false}
-          isQuestionRegenerating={isQuestionRegenerating}
-          handleSaveQuestion={handleSaveQuestion}
-        /> 
-        <GamePlayButtonStyled
-          onClick={clearFields}
-          animate={false}
-          style={{ background: `linear-gradient(90deg, #F60E44 0%, #E31C5E 100%)`}}
-        >
-          <Typography sx={{ textTransform: 'none' }} variant="button">
-            Discard Question
-          </Typography>
-        </GamePlayButtonStyled>
-        </Box> */}
-        {isQuestionSaved &&
-          <Typography style={{  fontFamily: 'Poppins',  fontWeight: '600', fontSize: '14px', color: 'white', marginTop: '20px'}} >
-          Question Saved!
-        </Typography>
-        }
-      </CardsContainer>
+    <MainContainer>
       <VersionContainer>
         <TooltipStyled 
           title={
@@ -392,8 +311,117 @@ export default function Generator() {
           <img src={InfoIcon} alt="Version Info" />
         </TooltipStyled>
       </VersionContainer>
+      <HeaderContainer>
+        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px'}} >
+          <Typography style={{ fontFamily: 'Rubik', fontSize: '16px', lineHeight: '16px', color: 'white'}} >
+            Powered By:
+          </Typography>
+          <img src={OpenAI} alt="OpenAI Logo"/>
+        </Box>
+        <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
+          Wrong Answer Explanations
+        </Typography>
+        <Typography style={{ fontFamily: 'Rubik',textAlign: 'center', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
+        AI-Powered Insights to Guide Student Understanding
+        </Typography>
+      </HeaderContainer>
+      { screenSize === ScreenSize.SMALL 
+      ? <Swiper
+          onSwiper={(swiper: any) => {
+            setSwiper(swiper)
+          }}
+          style={{
+            width: '100vw',
+            paddingLeft: `${theme.sizing.mdPadding}px`,
+            paddingRight: `${theme.sizing.mdPadding}px`,
+            boxSizing: 'border-box'
+          }}
+          modules={[Pagination]}
+          pagination={{
+            el: '.swiper-pagination-container',
+            bulletClass: 'swiper-pagination-bullet',
+            bulletActiveClass: 'swiper-pagination-bullet-active',
+            clickable: true,
+            renderBullet(index: number, className: string) {
+              return `<span class="${className}" style="width:20px; height:6px; border-radius:2px;"></span>`;
+            },
+          }}
+          centeredSlides
+          slidesPerView={1}
+          spaceBetween={`${theme.sizing.mdPadding}px`}
+          updateOnWindowResize
+        >
+          <SwiperSlide key={uuidv4()}>
+            <QuestionCard 
+              isCustomQuestion={isCustomQuestion}
+              labelText={labelText}
+              handleSwitch={handleSwitch}
+              handleInputChange={handleInputChange}
+              formData={formData}
+              isSubmitted={isSubmitted}
+              isFormComplete={isFormComplete}
+              isQuestionGenerating={isQuestionGenerating}
+              handleSubmitQuestion={handleSubmitQuestion}
+            />
+          </SwiperSlide>
+          <SwiperSlide key={uuidv4()}>
+            <ExplanationCards
+              isSubmitted={isSubmitted}
+              questionToSave={questionToSave}
+              selectedCards={selectedCards}
+              setQuestionToSave={setQuestionToSave}
+              handleExplanationClick={handleExplanationClick}
+              saveDiscardExplanation={saveDiscardExplanation}
+              isQuestionSaved={isQuestionSaved}
+              isQuestionGenerating={isQuestionGenerating}
+            />
+          </SwiperSlide>
+        </Swiper>
+      : <CardsContainer container columnSpacing={'20px'}>
+          <Grid item xs={6} style={{paddingTop: 0}}>
+            <QuestionCard 
+              isCustomQuestion={isCustomQuestion}
+              labelText={labelText}
+              handleSwitch={handleSwitch}
+              handleInputChange={handleInputChange}
+              formData={formData}
+              isSubmitted={isSubmitted}
+              isFormComplete={isFormComplete}
+              isQuestionGenerating={isQuestionGenerating}
+              handleSubmitQuestion={handleSubmitQuestion}
+            />
+          </Grid>
+          <Grid item xs={6} style={{paddingTop: 0}}>
+            <ExplanationCards
+              isSubmitted={isSubmitted}
+              questionToSave={questionToSave}
+              selectedCards={selectedCards}
+              setQuestionToSave={setQuestionToSave}
+              handleExplanationClick={handleExplanationClick}
+              saveDiscardExplanation={saveDiscardExplanation}
+              isQuestionSaved={isQuestionSaved}
+              isQuestionGenerating={isQuestionGenerating}
+            />
+          </Grid>
+        </CardsContainer>
+      }
+      { isQuestionGenerated &&
+        <FooterContainer screenSize={screenSize}>
+          <ButtonSaveStyled style={{width: '220px'}}>
+            Save Question
+          </ButtonSaveStyled>
+          <ButtonSecondaryStyled style={{width: '220px'}}>
+            Discard Question
+          </ButtonSecondaryStyled>
+        </FooterContainer>
+      }
     </MainContainer>
   );
 }
 
 
+// {isQuestionSaved &&
+//   <Typography style={{  fontFamily: 'Poppins',  fontWeight: '600', fontSize: '14px', color: 'white', marginTop: '20px'}} >
+//   Question Saved!
+// </Typography>
+// }

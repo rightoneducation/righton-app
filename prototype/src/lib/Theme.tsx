@@ -81,6 +81,9 @@ const buttonCCSSHover = '#1FBBFF'; // hover state for CCSS buttons
 const buttonNavBorder = '#3155C6'; // selected nav button border color
 const buttonNavSelected = '#EB147C'; // selected nav button color
 
+const buttonSaveDefault = '#FFFFFF'; // save button color
+const buttonSaveDisable = 'rgba(255, 255, 255, 0.85)'; // disabled state for save buttons
+
 // search bar colors
 const searchBackgroundColor = '#FFFFFF'; // search bar background color
 const searchButtonColor = '#EB147C'; // search bar button color
@@ -472,6 +475,8 @@ declare module '@mui/material/styles' {
     buttonCCSSHover: string;
     buttonNavBorder: string;
     buttonNavSelected: string;
+    buttonSaveDefault: string;
+    buttonSaveDisable: string;
     searchBackgroundColor: string;
     searchButtonColor: string;
     sortHover: string;
@@ -538,6 +543,8 @@ declare module '@mui/material/styles' {
     buttonCCSSHover?: string;
     buttonNavBorder?: string;
     buttonNavSelected?: string;
+    buttonSaveDefault?: string;
+    buttonSaveDisable?: string;
     searchBackgroundColor?: string;
     searchButtonColor?: string;
     sortHover?: string;
@@ -640,6 +647,8 @@ export default createTheme({
       buttonCCSSHover,
       buttonNavBorder,
       buttonNavSelected,
+      buttonSaveDefault,
+      buttonSaveDisable,
       searchBackgroundColor,
       searchButtonColor,
       sortHover,

@@ -4,16 +4,23 @@ import AcceptAnswer from '../img/AcceptAnswer.svg';
 import RegenAnswer from '../img/RegenAnswer.svg';
 import RegenArrow from '../img/RegenArrow.svg';
 import DiscardAnswer from '../img/DiscardAnswer.svg';
+import AcceptIcon from '../img/AcceptIcon.svg';
+import RejectIcon from '../img/RejectIcon.svg';
 import { 
   CardHeaderTextStyled, 
   EditTextStyled,
-  ExplanationTextStyled 
+  ExplanationTextStyled,
+  ButtonSubtextStyled
 } from '../lib/styledcomponents/generator/StyledTypography';
 import EditAnswer from '../img/EditAnswer.svg';
 import {
   AnswerExplanationButtonStyled,
   PromptSubmitButtonStyled
 } from '../lib/GamePlayButtonStyled';
+import { 
+  ButtonStyled, 
+  ButtonSecondaryStyled 
+} from '../lib/styledcomponents/generator/StyledButtons';
 import {
   ExplanationCardStyled,
 } from '../lib/styledcomponents/generator/StyledCards';
@@ -188,13 +195,36 @@ export default function ExplanationCard(
         </Box>
       </Box>
       { !isEditMode ? 
-      <ExplanationTextStyled>
-        {editableExplanation.length > 0 ? editableExplanation : explanation.selectedExplanation}
-      </ExplanationTextStyled>
+      <>
+        <ExplanationTextStyled>
+          {editableExplanation.length > 0 ? editableExplanation : explanation.selectedExplanation}
+        </ExplanationTextStyled>
+        <Grid container style={{paddingLeft: '34px', paddingRight: '34px'}} spacing='12px'>
+            <Grid item xs={6} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'}}>
+              <ButtonStyled>
+                <img src={AcceptIcon} style={{width: '20px', height: '20px'}}/>
+              </ButtonStyled>
+              <ButtonSubtextStyled>
+                Accept
+              </ButtonSubtextStyled>
+            </Grid>
+            <Grid item xs={6} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'}}>
+              <ButtonSecondaryStyled>
+                <img src={RejectIcon} style={{width: '20px', height: '20px'}}/>
+              </ButtonSecondaryStyled>
+              <ButtonSubtextStyled>
+                Reject
+              </ButtonSubtextStyled>
+            </Grid>
+        </Grid>
+      </>
       : 
-      <TextField style={{width: '100%'}} value={editableExplanation} onChange={(e) => setEditableExplanation(e.target.value)} multiline={true} maxRows={5}/>
+      <>
+        <TextField style={{width: '100%'}} value={editableExplanation} onChange={(e) => setEditableExplanation(e.target.value)} multiline={true} maxRows={5}/>
+      
+      </>
       }
-      {isSubmitted && !isSaved && (
+      {/* {isSubmitted && !isSaved && (
         <>
           <Box display="flex" justifyContent="center" >
             <Tooltip title="Accept Explanation" enterDelay={0} placement="top" arrow>
@@ -292,7 +322,7 @@ export default function ExplanationCard(
               </Box>
             )}
         </>
-      )}
+      )} */}
   </ExplanationCardStyled>
   )
 }

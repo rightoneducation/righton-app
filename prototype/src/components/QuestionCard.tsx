@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, useTheme } from '@mui/material';
+import { QuestionContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { BaseCardStyled } from '../lib/styledcomponents/generator/StyledCards';
 import { TextFieldStyled } from '../lib/styledcomponents/generator/StyledTextField';
 import { CardHeaderTextStyled, FooterBoldStyled, FooterTextStyled, WrongAnswerNumberStyled } from '../lib/styledcomponents/generator/StyledTypography';
@@ -36,73 +37,76 @@ export const QuestionCard = ({
   ];
 
   return (
-    <BaseCardStyled>
-      <CardHeaderTextStyled>
-        Question
-      </CardHeaderTextStyled>
-      <TextFieldStyled placeholder="Enter the question here..." variant="outlined" />
-      <CardHeaderTextStyled>
-        Correct Answer
-      </CardHeaderTextStyled>
-      <TextFieldStyled placeholder="Enter the correct answer here..." variant="outlined" />
-      <CardHeaderTextStyled>
-        Incorrect Answers
-      </CardHeaderTextStyled>
-      <Box style={{display: 'flex', flexDirection: 'column', gap: '16px'}}> 
-        { wrongAnswerInputs.map((input, index) => {
-          return (
-            <Box style={{width: '100%', display: 'flex', justifyContent: 'center', gap: '16px'}}>
-              <WrongAnswerNumberStyled>
-                {index + 1}
-              </WrongAnswerNumberStyled>
-              <TextFieldStyled placeholder="Enter an incorrect answer here..." variant="outlined" />
-            </Box> 
-          )
-        })}
-      </Box>
-      <ButtonStyled onClick={handleSubmitQuestion} disabled>
-        Generate Explanations
-      </ButtonStyled>
-      <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xxSmPadding}px`}}>
-        <FooterTextStyled>Don't have a question? </FooterTextStyled>
-        <FooterBoldStyled>Generate a sample</FooterBoldStyled>
-      </Box>
-{/* 
-    {inputs.map((input, index) => {
-      return (
-        <React.Fragment key={input.name}>
-        <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', textAlign: 'left', fontSize: '15px', lineHeight: '30px'}}>
-          {labelText[index]}
-          </Typography>
-          <TextFieldStyled
-            fullWidth
-            variant="filled"
-            autoComplete="off"
-            multiline
-            minRows={2}
-            maxRows={2}
-            placeholder={`Enter ${input.label} here...`}
-            onChange={handleInputChange}
-            value={formData[input.name as keyof typeof formData]}
-            name={input.name}
-            disabled={isSubmitted}
-            InputProps={{
-              disableUnderline: true,
-              style: {
-                paddingTop: '9px',
-              },
-            }}
-          />
-      </React.Fragment>
-      )}
-      )
-    }
-    <ButtonSubmitQuestion 
-      isSubmitted={isSubmitted}
-      isFormComplete={isFormComplete}
-      isQuestionGenerating={isQuestionGenerating}
-      handleSubmitQuestion={handleSubmitQuestion}
-    />  */}
-  </BaseCardStyled>
+    <QuestionContainer>
+      <BaseCardStyled>
+        <CardHeaderTextStyled>
+          Question
+        </CardHeaderTextStyled>
+        <TextFieldStyled placeholder="Enter the question here..." variant="outlined" />
+        <CardHeaderTextStyled>
+          Correct Answer
+        </CardHeaderTextStyled>
+        <TextFieldStyled placeholder="Enter the correct answer here..." variant="outlined" />
+        <CardHeaderTextStyled>
+          Incorrect Answers
+        </CardHeaderTextStyled>
+        <Box style={{display: 'flex', flexDirection: 'column', gap: '16px'}}> 
+          { wrongAnswerInputs.map((input, index) => {
+            return (
+              <Box style={{width: '100%', display: 'flex', justifyContent: 'center', gap: '16px'}}>
+                <WrongAnswerNumberStyled>
+                  {index + 1}
+                </WrongAnswerNumberStyled>
+                <TextFieldStyled placeholder="Enter an incorrect answer here..." variant="outlined" />
+              </Box> 
+            )
+          })}
+        </Box>
+        <ButtonStyled onClick={handleSubmitQuestion}>
+          Generate Explanations
+        </ButtonStyled>
+        <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xxSmPadding}px`}}>
+          <FooterTextStyled>Don't have a question? </FooterTextStyled>
+          <FooterBoldStyled>Generate a sample</FooterBoldStyled>
+        </Box>
+  {/* 
+      {inputs.map((input, index) => {
+        return (
+          <React.Fragment key={input.name}>
+          <Typography style={{ fontFamily: 'Poppins',  fontWeight: '600', textAlign: 'left', fontSize: '15px', lineHeight: '30px'}}>
+            {labelText[index]}
+            </Typography>
+            <TextFieldStyled
+              fullWidth
+              variant="filled"
+              autoComplete="off"
+              multiline
+              minRows={2}
+              maxRows={2}
+              placeholder={`Enter ${input.label} here...`}
+              onChange={handleInputChange}
+              value={formData[input.name as keyof typeof formData]}
+              name={input.name}
+              disabled={isSubmitted}
+              InputProps={{
+                disableUnderline: true,
+                style: {
+                  paddingTop: '9px',
+                },
+              }}
+            />
+        </React.Fragment>
+        )}
+        )
+      }
+      <ButtonSubmitQuestion 
+        isSubmitted={isSubmitted}
+        isFormComplete={isFormComplete}
+        isQuestionGenerating={isQuestionGenerating}
+        handleSubmitQuestion={handleSubmitQuestion}
+      />  */}
+
+    </BaseCardStyled>
+  </QuestionContainer>
   );
 }

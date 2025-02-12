@@ -53,3 +53,9 @@ export const ExplanationTextStyled = styled(Typography)(({ theme }) => ({
   lineHeight: '16px',
   wordWrap: 'break-word'
 }));
+
+export const ButtonSubtextStyled = styled(Typography)(({ theme }) => ({
+  color: '#000',
+  fontSize: '14px',
+  lineHeight: '14px',
+}));

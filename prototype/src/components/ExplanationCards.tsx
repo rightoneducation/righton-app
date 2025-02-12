@@ -1,3 +1,4 @@
+import { Box, CircularProgress } from '@mui/material';
 import { IQuestionToSave, IRegenInput } from '../lib/Models';
 import { ExplanationCardContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { PlaceholderHeaderStyled, PlaceholderBodyStyled } from '../lib/styledcomponents/generator/StyledTypography';
@@ -13,6 +14,7 @@ interface ExplanationCardsProps {
     question: string, selectedExplanation: string
   ) => void;
   isQuestionSaved: boolean;
+  isQuestionGenerating: boolean;
 }
 
 export const ExplanationCards = ({
@@ -22,18 +24,22 @@ export const ExplanationCards = ({
   setQuestionToSave,
   handleExplanationClick,
   saveDiscardExplanation,
-  isQuestionSaved
+  isQuestionSaved,
+  isQuestionGenerating
 }: ExplanationCardsProps) => {
   const isQuestionFilled = questionToSave.wrongAnswers.length > 0;
   return (
     <ExplanationCardContainer isQuestionFilled={isQuestionFilled}> 
-      {questionToSave.wrongAnswers.length === 0 
+      {!isQuestionFilled
       ?
-        <>
+        <Box style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
           <PlaceholderHeaderStyled>💡 Explanations Awaiting...</PlaceholderHeaderStyled>
           <PlaceholderBodyStyled> Fill out all fields to generate AI-powered explanations. </PlaceholderBodyStyled>
-        </>
-      : questionToSave.wrongAnswers.length > 0 && questionToSave.wrongAnswers.map((explanation, index) => {
+          { isQuestionGenerating && 
+            <CircularProgress style={{color: "#FFF"}}/>
+          }
+        </Box>
+      : isQuestionFilled && questionToSave.wrongAnswers.map((explanation, index) => {
         return (
           <ExplanationCard
             index={index}
