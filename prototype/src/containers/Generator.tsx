@@ -1,18 +1,19 @@
 import React, {useEffect, useMemo} from 'react';
-import { Grid, Card, CardContent, Typography, Box, CircularProgress, Switch, Radio } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Box, CircularProgress, Switch, Radio, useTheme } from '@mui/material';
 import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createQuestion, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
 import { IDiscardedExplanationToSave, IQuestionToSave, IRegenInput } from '../lib/Models';
 import { QuestionCard } from '../components/QuestionCard';
 import ButtonSubmitQuestion from '../components/ButtonSubmitQuestion';
+import { ExplanationCards } from '../components/ExplanationCards';
 import { version, date, model, ExplanationRegenType } from '../lib/Constants';
 import InfoIcon from '../img/InfoIcon.svg';
 import OpenAI from '../img/OpenAILogo.svg';
-import { GamePlayButtonStyled } from '../lib/GamePlayButtonStyled';
-import { MainContainer, HeaderContainer, VersionContainer, CardContainer } from '../lib/styledcomponents/generator/StyledContainers';
+import { MainContainer, HeaderContainer, VersionContainer, CardsContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { TooltipStyled } from '../lib/styledcomponents/generator/StyledTooltip';
 import { BaseCardStyled } from '../lib/styledcomponents/generator/StyledCards';
 
 export default function Generator() {
+  const theme = useTheme();
   const [formData, setFormData] = React.useState({
     question: '',
     correctAnswer: '',
@@ -34,7 +35,7 @@ export default function Generator() {
     wrongAnswers: [
       {
         answer: '',
-        selectedExplanation: '',
+        selectedExplanation: 'asdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfsasdfasdfasdfsadfsadfasdfasdfasdfs',
         dismissedExplanations: [],
       },
       {
@@ -287,28 +288,41 @@ export default function Generator() {
           <Typography style={{ fontFamily: 'Rubik', fontSize: '16px', lineHeight: '16px', color: 'white'}} >
             Powered By:
           </Typography>
-          <img src={OpenAI} style={{}}/>
+          <img src={OpenAI} alt="OpenAI Logo"/>
         </Box>
         <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
           Wrong Answer Explanations
         </Typography>
-        <Typography style={{ fontFamily: 'Rubik', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
+        <Typography style={{ fontFamily: 'Rubik',textAlign: 'center', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
         AI-Powered Insights to Guide Student Understanding
         </Typography>
       </HeaderContainer>
    
-      <CardContainer>
-        <QuestionCard 
-          isCustomQuestion={isCustomQuestion}
-          labelText={labelText}
-          handleSwitch={handleSwitch}
-          handleInputChange={handleInputChange}
-          formData={formData}
-          isSubmitted={isSubmitted}
-          isFormComplete={isFormComplete}
-          isQuestionGenerating={isQuestionGenerating}
-          handleSubmitQuestion={handleSubmitQuestion}
-        />
+      <CardsContainer container spacing={`${theme.sizing.xLgPadding}px`}>
+        <Grid item xs={6}>
+          <QuestionCard 
+            isCustomQuestion={isCustomQuestion}
+            labelText={labelText}
+            handleSwitch={handleSwitch}
+            handleInputChange={handleInputChange}
+            formData={formData}
+            isSubmitted={isSubmitted}
+            isFormComplete={isFormComplete}
+            isQuestionGenerating={isQuestionGenerating}
+            handleSubmitQuestion={handleSubmitQuestion}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <ExplanationCards
+            isSubmitted={isSubmitted}
+            questionToSave={questionToSave}
+            selectedCards={selectedCards}
+            setQuestionToSave={setQuestionToSave}
+            handleExplanationClick={handleExplanationClick}
+            saveDiscardExplanation={saveDiscardExplanation}
+            isQuestionSaved={isQuestionSaved}
+          />
+        </Grid>
         {/* <Box style={{
             maxHeight: '70vh',
             overflow: 'scroll', 
@@ -356,7 +370,7 @@ export default function Generator() {
           Question Saved!
         </Typography>
         }
-      </CardContainer>
+      </CardsContainer>
       <VersionContainer>
         <TooltipStyled 
           title={

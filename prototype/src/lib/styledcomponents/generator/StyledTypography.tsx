@@ -26,3 +26,30 @@ export const WrongAnswerNumberStyled = styled(Typography)(({ theme }) => ({
   boxSizing: 'border-box'
 }));
 
+export const PlaceholderHeaderStyled = styled(CardHeaderTextStyled)(({ theme }) => ({
+  color: `${theme.palette.primary.main}`,
+  fontSize: '20px',
+  textAlign: 'center'
+}));
+
+export const PlaceholderBodyStyled = styled(PlaceholderHeaderStyled)(({ theme }) => ({
+  color: `${theme.palette.primary.main}`,
+  fontSize: '16px',
+  fontWeight: 400,
+  lineHeight: '24px'
+}));
+
+export const EditTextStyled = styled(Typography)(({ theme }) => ({
+  color: `rgba(0,0,0,0.59)`,
+  fontSize: '14px',
+  lineHeight: '24px',
+  textDecoration: 'underline',
+  cursor: 'pointer'
+}));
+
+export const ExplanationTextStyled = styled(Typography)(({ theme }) => ({
+  color: `${theme.palette.primary.darkBlue}`,
+  fontSize: '16px',
+  lineHeight: '16px',
+  wordWrap: 'break-word'
+}));

@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/material';
+import { Box, Grid, styled } from '@mui/material';
 import MathBackground from '../../../img/MathSymbolsBackground.svg';
 
 export const MainContainer = styled(Box)(({ theme }) => ({
@@ -15,7 +15,6 @@ export const MainContainer = styled(Box)(({ theme }) => ({
   paddingTop: `${theme.sizing.mdPadding}px`,
   paddingLeft: `${theme.sizing.xLgPadding}px`,
   paddingRight: `${theme.sizing.xLgPadding}px`,
-  paddingBottom: `${theme.sizing.xLgPadding}px`,
   boxSizing: 'border-box',
   overflow: 'auto',
   '&::-webkit-scrollbar': {
@@ -24,7 +23,7 @@ export const MainContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
-  gap: '75px'
+  gap: '40px'
 }));
 
 export const HeaderContainer = styled(Box)(({ theme }) => ({
@@ -34,16 +33,30 @@ export const HeaderContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-export const CardContainer = styled(Box)(({ theme }) => ({
-  display: 'flex', 
-  justifyContent: 'center',  
+export const CardsContainer = styled(Grid)(({ theme }) => ({ 
   maxWidth: '1013px', 
   width: '100%',
-  gap: '80px'
 }));
 
 export const VersionContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
   bottom: `${theme.sizing.smPadding}px`,
   right: `${theme.sizing.smPadding}px`,
+}));
+
+interface ExplanationCardContainerProps {
+  isQuestionFilled: boolean,
+}
+
+export const ExplanationCardContainer = styled(Box)<ExplanationCardContainerProps>(({ theme, isQuestionFilled }) => ({
+  height: '100%', 
+  display: 'flex', 
+  flexDirection: 'column',
+  justifyContent: 'flex-start', 
+  alignItems: 'center',
+  backgroundColor: isQuestionFilled ? `rgba(249, 245, 242, 1)` : `rgba(249, 245, 242, 0.5)`,
+  borderRadius: `${theme.sizing.smPadding}px`,
+  padding: '20px',
+  boxSizing: 'border-box',
+  gap: 20,
 }));
