@@ -59,3 +59,16 @@ export const ButtonSubtextStyled = styled(Typography)(({ theme }) => ({
   fontSize: '14px',
   lineHeight: '14px',
 }));
+
+export const SavedTextStyled = styled(Typography)(({ theme }) => ({
+  fontSize: '40px',
+  fontWeight: 700,
+  color: '#229E15',
+}));
+
+export const SavedModalTextStyled = styled(Typography)(({ theme }) => ({
+  fontSize: '20px',
+  lineHeight: '24px',
+  color: `${theme.palette.primary.darkBlue}`,
+  textAlign: 'center'
+}));

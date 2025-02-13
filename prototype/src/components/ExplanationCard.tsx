@@ -10,7 +10,9 @@ import {
   CardHeaderTextStyled, 
   EditTextStyled,
   ExplanationTextStyled,
-  ButtonSubtextStyled
+  ButtonSubtextStyled,
+  SavedTextStyled,
+  FooterBoldStyled
 } from '../lib/styledcomponents/generator/StyledTypography';
 import EditAnswer from '../img/EditAnswer.svg';
 import {
@@ -23,14 +25,17 @@ import {
 } from '../lib/styledcomponents/generator/StyledButtons';
 import {
   ExplanationCardStyled,
+  ExplanationCardContentStyled
 } from '../lib/styledcomponents/generator/StyledCards';
 import { ExplanationRegenType } from '../lib/Constants';
 import { IQuestionToSave, IRegenInput } from '../lib/Models';
 import { compareEditedExplanation } from '../lib/API';
+import { set } from 'lodash';
 
 interface Explanation {
   answer: string; 
   selectedExplanation: string; 
+  editedExplanation?: string;
   dismissedExplanations: {
     explanation: string;
     prompt?: string;
@@ -88,14 +93,14 @@ export default function ExplanationCard(
   const [regenPromptText, setRegenPromptText] = useState<string|null>(null);
   const [discardPromptText, setDiscardPromptText] = useState<string>('');
   const [discardOptions, setDiscardOptions] = useState<DiscardOptions>({incorrectMath: false, toneClarity: false, other: {isEnabled: false, text:''}});
-  const [originalExplanation, setOriginalExplanation] = useState<string>('');
   const [regenType, setRegenType] = useState<ExplanationRegenType>(0);
   const [isSaved, setIsSaved] = useState<boolean>(false);
 
   // editMode flips the explanation into a Textfield, so that a user can edit its contents
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editableExplanation, setEditableExplanation] = useState(explanation.selectedExplanation);
-  
+  // local state to store edited explanation
+  const [editableExplanation, setEditableExplanation] = useState(explanation.editedExplanation ? explanation.editedExplanation : explanation.selectedExplanation);
+
   useEffect(() => {
       if (isQuestionSaved) {
         setIsSaved(false);
@@ -146,13 +151,12 @@ export default function ExplanationCard(
     }    
     switch (action){
       case ExplanationRegenType.ACCEPT:
-        setOriginalExplanation(editableExplanation.length > 0 ? editableExplanation : originalExplanation);
         setIsSaved(true);
         break;
       case ExplanationRegenType.ACCEPT_EDITED:
-        inputToSend.question.wrongAnswers[index].selectedExplanation = originalExplanation;
+        inputToSend.question.wrongAnswers[index].selectedExplanation = explanation.selectedExplanation;
         inputToSend.question.wrongAnswers[index].editedExplanation = editableExplanation;
-        compareEditedExplanation(originalExplanation, editableExplanation).then((response: any) => {
+        compareEditedExplanation(explanation.selectedExplanation, editableExplanation).then((response: any) => {
           console.log(response);
           inputToSend.question.wrongAnswers[index].editedReason = response.content;
         }).then(() => {
@@ -180,171 +184,88 @@ export default function ExplanationCard(
     setRegenPromptText(null);
     setDiscardPromptText('');
   }
-
+  const handleEditModeClick = () => {
+    setIsEditMode(true);
+  }
+  const handleEditSave = () => {
+    const inputQuestion = JSON.parse(JSON.stringify(questionToSave));
+    inputQuestion.wrongAnswers[index].editedExplanation = editableExplanation;
+    setQuestionToSave(inputQuestion);
+    setIsEditMode(false);
+  }
+  const handleEditDiscard = () => {
+    setEditableExplanation(explanation.editedExplanation ? explanation.editedExplanation : explanation.selectedExplanation);
+    setIsEditMode(false);
+  }
   return (
-    <ExplanationCardStyled key={index}>
-      <Box style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
-        <CardHeaderTextStyled>
-          Wrong Answer #{index + 1} Explanation
-        </CardHeaderTextStyled>
-        <Box style={{display: 'flex', gap: `${theme.sizing.xSmPadding}px`}}>
-          <EditTextStyled>
-            Edit
-          </EditTextStyled>
-          <img src={RegenArrow} alt="Regen Explanation" style={{cursor: 'pointer', height: '20px', width: 'auto'}} />
+    <Box style={{position: 'relative', width: '100%'}}>
+      { isSaved &&
+        <Box style={{ 
+          position: 'absolute', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)',
+          opacity: 1,
+          zIndex: 5
+        }}>
+        <SavedTextStyled> Saved! </SavedTextStyled>
         </Box>
-      </Box>
-      { !isEditMode ? 
-      <>
-        <ExplanationTextStyled>
-          {editableExplanation.length > 0 ? editableExplanation : explanation.selectedExplanation}
-        </ExplanationTextStyled>
-        <Grid container style={{paddingLeft: '34px', paddingRight: '34px'}} spacing='12px'>
-            <Grid item xs={6} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'}}>
-              <ButtonStyled>
-                <img src={AcceptIcon} style={{width: '20px', height: '20px'}}/>
-              </ButtonStyled>
-              <ButtonSubtextStyled>
-                Accept
-              </ButtonSubtextStyled>
-            </Grid>
-            <Grid item xs={6} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'}}>
-              <ButtonSecondaryStyled>
-                <img src={RejectIcon} style={{width: '20px', height: '20px'}}/>
-              </ButtonSecondaryStyled>
-              <ButtonSubtextStyled>
-                Reject
-              </ButtonSubtextStyled>
-            </Grid>
-        </Grid>
-      </>
-      : 
-      <>
-        <TextField style={{width: '100%'}} value={editableExplanation} onChange={(e) => setEditableExplanation(e.target.value)} multiline={true} maxRows={5}/>
-      
-      </>
       }
-      {/* {isSubmitted && !isSaved && (
-        <>
-          <Box display="flex" justifyContent="center" >
-            <Tooltip title="Accept Explanation" enterDelay={0} placement="top" arrow>
-              <AnswerExplanationButtonStyled style={buttonStyle} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0)} animate={false}>
-                <img src={AcceptAnswer} style={{width: '50px', height: '50px'}}/>
-              </AnswerExplanationButtonStyled>    
-            </Tooltip>
-            <Tooltip title="Edit Explanation" enterDelay={0} placement="top" arrow>
-                <AnswerExplanationButtonStyled style={buttonStyle} onClick={() => {setOriginalExplanation(explanation.selectedExplanation); setEditableExplanation(explanation.selectedExplanation); setIsEditMode(!isEditMode); setIsRegenEnabled(false); setIsDiscardEnabled(false)}} animate={false}>
-                  <img src={EditAnswer} style={{width: '30px', height: '30px'}}/>
-                </AnswerExplanationButtonStyled> 
-              </Tooltip>   
+        <ExplanationCardStyled key={index} isSaved={isSaved}>
+          <Box style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+            <CardHeaderTextStyled>
+              Wrong Answer #{index + 1} Explanation
+            </CardHeaderTextStyled>
             { !isEditMode &&
-              <>
-                <Tooltip title="Regenerate Explanation" enterDelay={0} placement="top" arrow>
-                  <AnswerExplanationButtonStyled style={buttonStyle} onClick={() => {setIsRegenEnabled(true); setIsDiscardEnabled(false); setIsEditMode(false)}} animate={false}>
-                    <img src={RegenAnswer} style={{width: '40px', height: '40px'}}/>
-                  </AnswerExplanationButtonStyled>  
-                </Tooltip>
-              </>
-            }
-            <Tooltip title="Reject Explanation" enterDelay={0} placement="top" arrow>
-              <AnswerExplanationButtonStyled style={buttonStyle} onClick={() => {setIsDiscardEnabled(true); setIsRegenEnabled(false); setIsEditMode(false)}} animate={false}>
-                <img src={DiscardAnswer} style={{width: '50px', height: '50px'}}/>
-              </AnswerExplanationButtonStyled>
-            </Tooltip>
-          </Box>
-          { isRegenEnabled && (
-            <Box style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <Box style={{width: '100%'}}>
-              <Typography style={{ fontFamily: 'Montserrat',  fontWeight: '700', fontSize: '12px', lineHeight: '20px', textAlign: 'left'}} >
-                Why are you regenerating this explanation?
-              </Typography>
-            </Box>
-            <TextField style={{width: '100%'}} value={discardPromptText} onChange={(e) =>  {setDiscardOptions((prev) => ({
-                    ...prev,
-                    other: {
-                      ...prev.other,
-                      text: e.target.value,
-                    },
-                  }));
-                  setDiscardPromptText(e.target.value);
-                }
-              } 
-              multiline={true} minRows={2} maxRows={2}/>
-            <PromptSubmitButtonStyled title="Submit" style={buttonStyle} onClick={() => packageRegenInputAndSubmit(index, 2, regenPromptText ?? '', discardPromptText ?? '')} animate={false}>
-              Submit
-            </PromptSubmitButtonStyled>
-            </Box>
-          )}
-          { isDiscardEnabled && (
-              <Box style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Box style={{width: '100%'}}>
-                  <Typography style={{ fontFamily: 'Montserrat',  fontWeight: '700', fontSize: '12px', lineHeight: '20px', textAlign: 'left'}} >
-                    Why are you discarding this explanation?
-                  </Typography>
-                </Box>
-                <FormControl
-                  component="fieldset"
-                  variant="standard"
-                  sx={{display: 'inline', width: '100%', textAlign: 'left', paddingLeft: '32px'}}
-                >
-                  <FormControlLabel value="0" control={<Checkbox checked={discardOptions.incorrectMath} onChange={handleCheckboxChange} name="incorrectMath"/>} label={ 
-                    <Typography style={{ fontFamily: 'Montserrat',fontSize: '12px', lineHeight: '20px', textAlign: 'left'}} >
-                      Incorrect Math
-                    </Typography>
-                  } />
-                  <FormControlLabel value="1" control={<Checkbox checked={discardOptions.toneClarity} onChange={handleCheckboxChange} name="toneClarity"/>} label={ 
-                    <Typography style={{ fontFamily: 'Montserrat',fontSize: '12px', lineHeight: '20px', textAlign: 'left'}} >
-                      Tone/Clarity
-                    </Typography>
-                  } />
-                  <FormControlLabel value="2" control={<Checkbox checked={discardOptions.other.isEnabled} onChange={handleCheckboxChange} name="other"/>} label={ 
-                    <Typography style={{ fontFamily: 'Montserrat',fontSize: '12px', lineHeight: '20px', textAlign: 'left'}} >
-                      Other
-                    </Typography>
-                  } />
-                </FormControl>
-                { discardOptions.other &&
-                  <TextField style={{width: '100%'}} value={discardPromptText} onChange={(e) =>  {setDiscardOptions((prev) => ({
-                        ...prev,
-                        other: {
-                          ...prev.other,
-                          text: e.target.value,
-                        },
-                      }));
-                      setDiscardPromptText(e.target.value);
-                    }
-                  } 
-                  multiline={true} minRows={2} maxRows={2}/>
-                }
-                <PromptSubmitButtonStyled title="Submit" style={buttonStyle} onClick={() => packageRegenInputAndSubmit(index, 2, regenPromptText ?? '', discardPromptText ?? '')} animate={false}>
-                  Submit
-                </PromptSubmitButtonStyled>
+              <Box style={{display: 'flex', gap: `${theme.sizing.xSmPadding}px`}}>
+                <EditTextStyled onClick={handleEditModeClick}>
+                  Edit
+                </EditTextStyled>
+                <img src={RegenArrow} alt="Regen Explanation" style={{cursor: 'pointer', height: '20px', width: 'auto'}} />
               </Box>
-            )}
-        </>
-      )} */}
-  </ExplanationCardStyled>
+            }
+          </Box>
+          { !isEditMode ? 
+          <>
+            <ExplanationTextStyled>
+              {editableExplanation.length > 0 ? editableExplanation : explanation.selectedExplanation}
+            </ExplanationTextStyled>
+            <Grid container style={{paddingLeft: '34px', paddingRight: '34px'}} spacing='12px'>
+                <Grid item xs={6} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'}}>
+                  <ButtonStyled onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0)}>
+                    <img src={AcceptIcon} style={{width: '20px', height: '20px'}}/>
+                  </ButtonStyled>
+                  <ButtonSubtextStyled>
+                    Accept
+                  </ButtonSubtextStyled>
+                </Grid>
+                <Grid item xs={6} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'}}>
+                  <ButtonSecondaryStyled onClick={() => {setIsDiscardEnabled(true); setIsRegenEnabled(false); setIsEditMode(false)}}>
+                    <img src={RejectIcon} style={{width: '20px', height: '20px'}}/>
+                  </ButtonSecondaryStyled>
+                  <ButtonSubtextStyled>
+                    Reject
+                  </ButtonSubtextStyled>
+                </Grid>
+            </Grid>
+          </>
+          : 
+          <>
+            <TextField style={{width: '100%'}} value={editableExplanation} onChange={(e) => setEditableExplanation(e.target.value)} multiline={true} maxRows={5}/>
+            <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
+              <FooterBoldStyled style={{cursor: 'pointer'}} onClick={handleEditSave}>
+                Save
+              </FooterBoldStyled>
+              <FooterBoldStyled>
+                |
+              </FooterBoldStyled>
+              <FooterBoldStyled style={{cursor: 'pointer'}} onClick={handleEditDiscard}>
+                Discard
+              </FooterBoldStyled>
+            </Box>
+          </>
+        }
+    </ExplanationCardStyled>
+  </Box>
   )
 }
-
-// {selectedCards[index] && (
-    //   <Box style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
-    //     {!isQuestionSaved && (
-    //     (regenType === 0 || regenType === 1) ? 
-    //       <>
-    //         <Typography style={{  fontWeight: '800', fontSize: '16px', color: 'white', marginTop: '20px'}} >
-    //           Saved!
-    //         </Typography>
-    //         <img src={ExplanationSaved} style={{width: '50px', height: '50px'}}/>
-    //       </>
-    //       :
-    //       <>
-    //         <Typography style={{  fontWeight: '800', fontSize: '14px', color: 'white', marginTop: '20px'}} >
-    //           Regenerating Explanation...
-    //         </Typography>
-    //         <CircularProgress style={{color:'#159EFA'}}/>
-    //       </>
-        
-    //     )}
-    //   </Box>
-    // )}

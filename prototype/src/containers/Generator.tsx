@@ -6,6 +6,8 @@ import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
 import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createQuestion, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
 import { IDiscardedExplanationToSave, IQuestionToSave, IRegenInput } from '../lib/Models';
+import QuestionSavedModal from '../components/modals/QuestionSavedModal';
+import ModalBackground from '../components/modals/ModalBackground';
 import { QuestionCard } from '../components/QuestionCard';
 import ButtonSubmitQuestion from '../components/ButtonSubmitQuestion';
 import { ExplanationCards } from '../components/ExplanationCards';
@@ -151,7 +153,6 @@ export default function Generator() {
   const handleSaveQuestion = () => {
     console.log('Question to save:', questionToSave);
     createQuestion(questionToSave).then((response) => {
-      console.log(response);
       setQuestionToSave(blankQuestion);
       setFormData({
         question: '',
@@ -220,8 +221,14 @@ export default function Generator() {
     setFormData(sampleQuestions[randomQuestionIndex])
   };
 
+  const handleCloseModal = () => {
+    setIsQuestionSaved(false);
+  };
+
   return (
     <MainContainer>
+      <QuestionSavedModal isModalOpen={isQuestionSaved} />
+      <ModalBackground isModalOpen={isQuestionSaved} handleCloseModal={handleCloseModal} />
       <VersionContainer>
         <TooltipStyled 
           title={
@@ -339,7 +346,7 @@ export default function Generator() {
       }
       { isQuestionGenerated &&
         <FooterContainer screenSize={screenSize}>
-          <ButtonSaveStyled style={{width: '220px'}}>
+          <ButtonSaveStyled style={{width: '220px'}} onClick={handleSaveQuestion}>
             Save Question
           </ButtonSaveStyled>
           <ButtonSecondaryStyled style={{width: '220px'}}>
