@@ -71,23 +71,23 @@ export default function Generator() {
     {
       question: "A pair of shoes were 10% off last week. This week, there’s an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the shoes this week?",
       correctAnswer: "46%", 
-      incorrectAnswer1: "50%",
-      incorrectAnswer2: "54%",
-      incorrectAnswer3: "14%"
+      wrongAnswer1: "50%",
+      wrongAnswer2: "54%",
+      wrongAnswer3: "14%"
     },
     {
       question: "A child is raising a flag up a 20-foot flag pole. She starts pulling at a rate of 2 feet per second for 5 seconds, but she starts to get tired and decreases her rate to 1/2 foot per second for the remainder of the time. In total, how many seconds does it take her to raise the flag from the bottom to the top?",
       correctAnswer: "25", 
-      incorrectAnswer1: "10",
-      incorrectAnswer2: "20",
-      incorrectAnswer3: "13.75"
+      wrongAnswer1: "10",
+      wrongAnswer2: "20",
+      wrongAnswer3: "13.75"
     },
     {
       question: "If f(x) = x^2 + 2x + 3, what is the value of f(x), when x = 6?",
       correctAnswer: "51", 
-      incorrectAnswer1: "27",
-      incorrectAnswer2: "41",
-      incorrectAnswer3: "65"
+      wrongAnswer1: "27",
+      wrongAnswer2: "41",
+      wrongAnswer3: "65"
     }
   ]
 
@@ -119,13 +119,6 @@ export default function Generator() {
 
   const handleSubmitQuestion = () => {
     setIsQuestionGenerating(true);
-    if (!isCustomQuestion){
-      formData.question = sampleQuestions[selectedSampleQuestion].question;
-      formData.correctAnswer = sampleQuestions[selectedSampleQuestion].correctAnswer;
-      formData.wrongAnswer1 = sampleQuestions[selectedSampleQuestion].incorrectAnswer1;
-      formData.wrongAnswer2 = sampleQuestions[selectedSampleQuestion].incorrectAnswer2;
-      formData.wrongAnswer3 = sampleQuestions[selectedSampleQuestion].incorrectAnswer3;
-    }
     generateWrongAnswerExplanations(formData, discardedExplanations).then((response) => {
       const explanationsArray = response ?? [];
       const wrongAnswersArray =  explanationsArray.map((explanation: string, index: number) => {
@@ -218,77 +211,16 @@ export default function Generator() {
       discardText: "Math is incorrect",
       version
     }
-    console.log(discardedQuestionInput);
     const result = saveDiscardedExplanation(discardedQuestionInput);
-    console.log(result);
   }
 
-  const clearFields = () => {
-    setFormData({  
-      question: '',
-      correctAnswer: '',
-      wrongAnswer1: '',
-      wrongAnswer2: '',
-      wrongAnswer3: ''
-    })
-    setIsSubmitted(false);
-    setQuestionToSave(blankQuestion);
-    setIsQuestionSaved(false);
-  }
+  const handleGenerateSampleQuestion = () => {
+    const randomQuestionIndex = Math.floor(Math.random() * sampleQuestions.length);
+    setIsCustomQuestion(false);
+    setFormData(sampleQuestions[randomQuestionIndex])
+  };
 
-  const handleSwitch = () => {
-    clearFields();
-    setIsCustomQuestion(!isCustomQuestion)
-  }
-  const premadeQuestion = [
-    <>
-          <Box style={{display: 'flex', flexDirection: 'column', alignItems: 'start', paddingTop: '10px'}}>
-            <Typography style={{ fontFamily: 'Poppins', maxHeight: '250px', fontWeight: '200', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-              {sampleQuestions[0].question}
-            </Typography>
-            <Box style={{display: 'flex', alignItems: 'space-between', justifyContent: 'space-between', width: '280px'}}>
-              <Typography style={{ fontFamily: 'Poppins', maxHeight: '193px', fontWeight: '400', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-                Correct Answer: 
-              </Typography>
-              <Typography style={{ fontFamily: 'Poppins', maxHeight: '193px', fontWeight: '200', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-                {sampleQuestions[0].correctAnswer}
-              </Typography>
-            </Box>
-            <Box style={{display: 'flex', alignItems: 'space-between', justifyContent: 'space-between', width: '280px'}}>
-              <Typography style={{ fontFamily: 'Poppins', maxHeight: '193px', fontWeight: '400', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-                Incorrect Answer 1: 
-              </Typography>
-              <Typography style={{ fontFamily: 'Poppins', maxHeight: '193px', fontWeight: '200', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-                {sampleQuestions[0].incorrectAnswer1}
-              </Typography>
-            </Box>
-            <Box style={{display: 'flex',alignItems: 'space-between', justifyContent: 'space-between', width: '280px'}}>
-              <Typography style={{ fontFamily: 'Poppins', maxHeight: '193px', fontWeight: '400', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-                Incorrect Answer 2:  
-              </Typography>
-              <Typography style={{ fontFamily: 'Poppins', maxHeight: '193px', fontWeight: '200', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-                {sampleQuestions[0].incorrectAnswer2}
-              </Typography>
-            </Box>
-            <Box style={{display: 'flex', alignItems: 'space-between', justifyContent: 'space-between', width: '280px'}}>
-              <Typography style={{ fontFamily: 'Poppins', maxHeight: '193px', fontWeight: '400', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-                Incorrect Answer 3: 
-              </Typography>
-              <Typography style={{ fontFamily: 'Poppins', maxHeight: '193px', fontWeight: '200', textAlign: 'left', fontSize: '15px', lineHeight: '30px', overflowY: 'scroll'}}>
-                {sampleQuestions[0].incorrectAnswer3}
-              </Typography>
-            </Box>
-          </Box>
-      <ButtonSubmitQuestion 
-        isSubmitted={isSubmitted}
-        isFormComplete={true}
-        isQuestionGenerating={isQuestionGenerating}
-        handleSubmitQuestion={handleSubmitQuestion}
-      /> 
-    </>
-  ];
   return (
-   
     <MainContainer>
       <VersionContainer>
         <TooltipStyled 
@@ -355,13 +287,13 @@ export default function Generator() {
             <QuestionCard 
               isCustomQuestion={isCustomQuestion}
               labelText={labelText}
-              handleSwitch={handleSwitch}
               handleInputChange={handleInputChange}
               formData={formData}
               isSubmitted={isSubmitted}
               isFormComplete={isFormComplete}
               isQuestionGenerating={isQuestionGenerating}
               handleSubmitQuestion={handleSubmitQuestion}
+              handleGenerateSampleQuestion={handleGenerateSampleQuestion}
             />
           </SwiperSlide>
           <SwiperSlide key={uuidv4()}>
@@ -382,13 +314,13 @@ export default function Generator() {
             <QuestionCard 
               isCustomQuestion={isCustomQuestion}
               labelText={labelText}
-              handleSwitch={handleSwitch}
               handleInputChange={handleInputChange}
               formData={formData}
               isSubmitted={isSubmitted}
               isFormComplete={isFormComplete}
               isQuestionGenerating={isQuestionGenerating}
               handleSubmitQuestion={handleSubmitQuestion}
+              handleGenerateSampleQuestion={handleGenerateSampleQuestion}
             />
           </Grid>
           <Grid item xs={6} style={{paddingTop: 0}}>
