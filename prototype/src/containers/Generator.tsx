@@ -152,7 +152,6 @@ export default function Generator() {
   };
 
   const handleSaveQuestion = () => {
-    console.log('Question to save:', questionToSave);
     createQuestion(questionToSave).then((response) => {
       setQuestionToSave(blankQuestion);
       setFormData({
@@ -162,11 +161,32 @@ export default function Generator() {
         wrongAnswer2: '',
         wrongAnswer3: '',
       });
+      setQuestionToSave(blankQuestion);
       setIsSubmitted(false);
       setIsSelected(false);
       setIsQuestionSaved(true);
+      setIsQuestionGenerated(false);
+      if (swiper)
+        swiper.slideTo(0, 750);
     });
   };
+
+  const handleDiscardQuestion = () => {
+    setFormData({
+      question: '',
+      correctAnswer: '',
+      wrongAnswer1: '',
+      wrongAnswer2: '',
+      wrongAnswer3: '',
+    });
+    setQuestionToSave(blankQuestion);
+    setIsSubmitted(false);
+    setIsSelected(false);
+    setIsQuestionSaved(false);
+    setIsQuestionGenerated(false);
+    if (swiper)
+      swiper.slideTo(0, 750);
+  }
 
   const handleExplanationClick = (input: IRegenInput) => {
     // Toggle the selected state for the clicked card
@@ -359,7 +379,7 @@ export default function Generator() {
           <ButtonSaveStyled style={{width: '220px'}} onClick={handleSaveQuestion}>
             Save Question
           </ButtonSaveStyled>
-          <ButtonSecondaryStyled style={{width: '220px'}}>
+          <ButtonSecondaryStyled style={{width: '220px'}} onClick={handleDiscardQuestion}>
             Discard Question
           </ButtonSecondaryStyled>
         </FooterContainer>
@@ -367,10 +387,3 @@ export default function Generator() {
     </MainContainer>
   );
 }
-
-
-// {isQuestionSaved &&
-//   <Typography style={{  fontFamily: 'Poppins',  fontWeight: '600', fontSize: '14px', color: 'white', marginTop: '20px'}} >
-//   Question Saved!
-// </Typography>
-// }

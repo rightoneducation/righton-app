@@ -241,7 +241,7 @@ export default function ExplanationCard(
       }
       <ExplanationCardStyled key={index} isSaved={isSaved}>
         { isDiscarded 
-        ? <Box style={{width: '100%', display: 'flex', alignItems: 'center'}}> 
+        ? <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}> 
             <CardHeaderTextStyled> Thanks for your feedback! </CardHeaderTextStyled>
           </Box>
         : <>
@@ -308,7 +308,7 @@ export default function ExplanationCard(
                     </DiscardTextStyled>
                     {isPromptEnabled &&
                       <>
-                        <TextFieldStyled placeholder="Enter the question here..." variant="outlined" style={{width: '100%'}} value={discardPromptText} onChange={(e) => setDiscardPromptText(e.target.value)} multiline={true} maxRows={5}/>
+                        <TextFieldStyled placeholder="Enter your reason here..." variant="outlined" style={{width: '100%'}} value={discardPromptText} onChange={(e) => setDiscardPromptText(e.target.value)} multiline={true} minRows={5}/>
                         <Box style={{display: 'flex', justifyContent: 'flex-end', gap: `${theme.sizing.xSmPadding}px`}}>
                           <DiscardTextStyled style={{cursor: 'pointer', textDecoration: 'underline'}} onClick={() => packageRegenInputAndSubmit(index, 2, '', '')}>
                             Submit

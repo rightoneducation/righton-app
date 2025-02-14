@@ -6,6 +6,7 @@ import {
   VictoryBar,
   VictoryLine,
   VictoryLabel,
+  VictoryContainer
 } from 'victory';
 
 interface QualityChartProps {
@@ -45,7 +46,7 @@ export default function QualityChart({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
+  console.log(data);
   return (
 
     <div style={{ 
@@ -57,16 +58,17 @@ export default function QualityChart({
         {data.length > 1 && (
           <>
             <VictoryChart
-              domainPadding={{ x: 36, y: 0 }}
+              width={800}
+              containerComponent={<VictoryContainer responsive={false} />}
+              domainPadding={{ x: 0, y: 0 }}
               padding={{ top: 20, bottom: 60, left: 60, right: 90 }}
             >
              <VictoryLine
               data={data}
-              x="quality"
-              y="version"
-              horizontal
+              x="version"
+              y="quality"
               standalone={false}
-              interpolation="natural"
+             
               animate={{
                 onLoad: { duration: 200 },
                 duration: 200,
@@ -74,11 +76,11 @@ export default function QualityChart({
             />
             <VictoryAxis
               dependentAxis
-              axisLabelComponent={<VictoryLabel dy={12} />}
+              axisLabelComponent={<VictoryLabel dy={-20} />}
               label="Version"
             />
             <VictoryAxis
-              axisLabelComponent={<VictoryLabel dy={-20} />}
+              axisLabelComponent={<VictoryLabel dy={12} />}
               label="Quality"
             />
           </VictoryChart>

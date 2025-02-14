@@ -27,7 +27,7 @@ export default function Eval(){
     // const dismissedExplanations = wrongAnswers.map((answer) => { if (answer.dismissedExplanations.prompt) return answer.dismissedExplanations.prompt });
     // console.log(dismissedExplanations);
     setSelectedVersionData(versionData ?? null);
-    setQueryVersion(selectedVersion);
+    setQueryVersion(selectedVersion ?? null);
   }
   useEffect (() => {
     returnQuestions().then((returnedQuestions) => {      
@@ -45,28 +45,18 @@ export default function Eval(){
         const totalDismissedExplanations = groupedQuestionsByVersion[key].reduce((acc: number, curr: any) => {
           const wrongAnswers = JSON.parse(curr.wrongAnswers);
           if (Array.isArray(wrongAnswers)) {
-            return wrongAnswers.reduce((acc: number, curr: any) => {
+            return acc + wrongAnswers.reduce((acc: number, curr: any) => {
               return acc + curr.dismissedExplanations.length;
             }, 0);
           } else {
             return 0;
           }
         }, 0);
-
-        const quality = groupedQuestionsByVersion[key].reduce((acc: number, curr: any) => {
-          const wrongAnswers = JSON.parse(curr.wrongAnswers);
-          if (Array.isArray(wrongAnswers)) {
-            const qualityArray = wrongAnswers.map((answer: any) => {
-              return 1/(1+answer.dismissedExplanations.length);
-            });
-            return qualityArray.reduce((acc: number, curr: number) => acc + curr, 0)/qualityArray.length;
-          } else {
-            return 0;
-          }
-        }, 0);
+        // 
+        const quality = totalDismissedExplanations > 0 ? (1 / (totalDismissedExplanations / totalQuestionsByVersion)) : 1;
         return {version: key, numberOfQuestions: totalQuestionsByVersion, numberOfDismissedExplanations: totalDismissedExplanations, quality: quality};
       });
-    console.log(groupedQuestionsByVersionArray);
+    
     groupedQuestionsByVersionArray.sort((a, b) => {
       return a.version.localeCompare(b.version);
     });

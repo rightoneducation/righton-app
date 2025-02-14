@@ -32,7 +32,6 @@ export const ExplanationCards = ({
   regenIndex
 }: ExplanationCardsProps) => {
   const isQuestionFilled = questionToSave.wrongAnswers.length > 0;
-  console.log(questionToSave);
   return (
     <ExplanationCardContainer isQuestionFilled={isQuestionFilled}> 
       {!isQuestionFilled
