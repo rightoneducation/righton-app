@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { TextField } from '@mui/material';
 
-export default styled(TextField)(({ theme }) => ({
+export const TextFieldStyled = styled(TextField)(({ theme }) => ({
   '& .MuiFilledInput-root': {
     borderRadius: 5,
     overflow: 'hidden',
