@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, useTheme } from '@mui/material';
+import { TooltipStyled } from '../lib/styledcomponents/generator/StyledTooltip';
 import { QuestionContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { BaseCardStyled } from '../lib/styledcomponents/generator/StyledCards';
 import { TextFieldStyled } from '../lib/styledcomponents/generator/StyledTextField';
@@ -63,14 +64,23 @@ export const QuestionCard = ({
                 <WrongAnswerNumberStyled>
                   {index + 1}
                 </WrongAnswerNumberStyled>
-                <TextFieldStyled placeholder="Enter an incorrect answer here..." variant="outlined" name={input.name} value={formData.Answer} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event)}/>
+                <TextFieldStyled placeholder="Enter an incorrect answer here..." variant="outlined" name={input.name} value={formData[input.name]} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event)}/>
               </Box> 
             )
           })}
         </Box>
-        <ButtonStyled onClick={handleSubmitQuestion}>
-          Generate Explanations
-        </ButtonStyled>
+        { !isFormComplete 
+          ? <TooltipStyled title="Please fill out all fields to generate explanations" arrow placement="top">
+              <span>
+              <ButtonStyled onClick={handleSubmitQuestion} disabled={!isFormComplete}>
+                Generate Explanations
+              </ButtonStyled>
+              </span>
+            </TooltipStyled>
+          : <ButtonStyled onClick={handleSubmitQuestion} disabled={!isFormComplete}>
+              Generate Explanations
+            </ButtonStyled>
+        }
         <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xxSmPadding}px`}}>
           <FooterTextStyled>Don't have a question? </FooterTextStyled>
           <FooterBoldStyled style={{cursor: 'pointer'}} onClick={handleGenerateSampleQuestion}>Generate a sample</FooterBoldStyled>

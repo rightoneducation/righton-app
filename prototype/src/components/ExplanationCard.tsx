@@ -279,7 +279,7 @@ export default function ExplanationCard(
                         <img src={RejectIcon} style={{width: '20px', height: '20px'}}/>
                       </ButtonSecondaryStyled>
                       <ButtonSubtextStyled isDiscardEnabled={isDiscardEnabled}>
-                        Reject
+                        Discard
                       </ButtonSubtextStyled>
                     </Grid>
                 </Grid>

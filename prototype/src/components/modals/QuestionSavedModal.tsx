@@ -8,7 +8,8 @@ import { SavedModalTextStyled } from '../../lib/styledcomponents/generator/Style
 const IntegratedContainer = styled(Paper)(({ theme }) => ({
   position: 'absolute',
   borderRadius: '16px',
-  width: '490px',
+  width: '100%',
+  maxWidth: '490px',
   height: 'auto',
   top: '30%',
   maxHeight: '100%',
@@ -49,7 +50,7 @@ export default function QuestionSavedModal({
   const theme = useTheme();
 
   return (
-    <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}  style={{position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%)'}}>
+    <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}  style={{width: '100%', position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%)'}}>
       <IntegratedContainer elevation={12}>
         <Box style={{
           width: '100%',

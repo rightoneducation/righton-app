@@ -69,21 +69,17 @@ export const QuestionContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
+  '-webkit-overflow-scrolling': 'touch'
 }));
 
-interface ExplanationCardContainerProps {
-  isQuestionFilled: boolean,
-}
-
-export const ExplanationCardContainer = styled(Box)<ExplanationCardContainerProps>(({ theme, isQuestionFilled }) => ({
+export const ExplanationCardContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: 'fit-content',
-  minHeight: '606px',
+  height: '100%',
   display: 'flex', 
   flexDirection: 'column',
-  justifyContent: 'center', 
-  alignItems: 'flex-start',
-  backgroundColor: isQuestionFilled ? `rgba(249, 245, 242, 1)` : `rgba(249, 245, 242, 0.5)`,
+  justifyContent: 'flex-start', 
+  alignItems: 'center',
+  backgroundColor: `rgba(249, 245, 242, 1)`,
   borderRadius: `${theme.sizing.smPadding}px`,
   gap: 20,
   padding: `${theme.sizing.smPadding}px`,
@@ -95,6 +91,15 @@ export const ExplanationCardContainer = styled(Box)<ExplanationCardContainerProp
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
+  '-webkit-overflow-scrolling': 'touch'
+}));
+
+export const EmptyExplanationCardContainer = styled(ExplanationCardContainer)(({ theme }) => ({
+  justifyContent: 'center', 
+  maxHeight: '606px',
+  backgroundColor: `rgba(249, 245, 242, 0.5)`,
+  gap: '12px',
+  padding: `${theme.sizing.mdPadding}px`,
 }));
 
 interface FooterContainerProps {

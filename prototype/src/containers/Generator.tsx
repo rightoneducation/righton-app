@@ -219,7 +219,6 @@ export default function Generator() {
                 wrongAnswers: updatedWrongAnswers,
               };
             })
-            console.log(newExplanation);
             setSelectedCards((current) =>
               current.map((isSelected, idx) => (input.index === idx ? !isSelected : isSelected))
             );
