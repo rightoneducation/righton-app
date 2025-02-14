@@ -76,12 +76,13 @@ interface ExplanationCardContainerProps {
 }
 
 export const ExplanationCardContainer = styled(Box)<ExplanationCardContainerProps>(({ theme, isQuestionFilled }) => ({
-  height: 'fit-content',
   width: '100%',
+  height: 'fit-content',
+  minHeight: '606px',
   display: 'flex', 
   flexDirection: 'column',
-  justifyContent: 'flex-start', 
-  alignItems: 'center',
+  justifyContent: 'center', 
+  alignItems: 'flex-start',
   backgroundColor: isQuestionFilled ? `rgba(249, 245, 242, 1)` : `rgba(249, 245, 242, 0.5)`,
   borderRadius: `${theme.sizing.smPadding}px`,
   gap: 20,

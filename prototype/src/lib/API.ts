@@ -42,6 +42,7 @@ export async function generateWrongAnswerExplanations(
             .then((response) => {
                 return response.wrongAnswerExplanations;
             })
+        console.log(response);
         return response;
     } catch (e) {
         console.log(e);

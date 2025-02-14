@@ -46,7 +46,8 @@ export default function Generator() {
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [isSelected, setIsSelected] = React.useState(false);
   const [isQuestionGenerating, setIsQuestionGenerating] = React.useState(false);
-  const [isQuestionRegenerating, setIsQuestionRegenerating] = React.useState(false);
+  const [isExplanationRegenerating, setIsExplanationRegenerating] = React.useState(false);
+  const [regenIndex, setRegenIndex] = React.useState<number | null>(null);
   const [isQuestionGenerated, setIsQuestionGenerated] = React.useState(false);
   const [isQuestionSaved, setIsQuestionSaved] = React.useState(false);
   const [isCustomQuestion, setIsCustomQuestion] = React.useState(true);
@@ -181,7 +182,11 @@ export default function Generator() {
         console.log("accepted");
         break;
       case (ExplanationRegenType.DISCARD):
-        setIsQuestionRegenerating(true);
+        console.log("discard");
+        break;
+      case (ExplanationRegenType.REGEN): 
+        setIsExplanationRegenerating(true);
+        setRegenIndex(input.index);
         if (input){
           regenerateWrongAnswerExplanation(fullInput).then((response: any) => {
             const newExplanation = response.content;
@@ -194,10 +199,11 @@ export default function Generator() {
                 wrongAnswers: updatedWrongAnswers,
               };
             })
+            console.log(newExplanation);
             setSelectedCards((current) =>
               current.map((isSelected, idx) => (input.index === idx ? !isSelected : isSelected))
             );
-            setIsQuestionRegenerating(false);
+            setIsExplanationRegenerating(false);
           }
         );
       }
@@ -261,7 +267,7 @@ export default function Generator() {
           Wrong Answer Explanations
         </Typography>
         <Typography style={{ fontFamily: 'Rubik',textAlign: 'center', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
-        AI-Powered Insights to Guide Student Understanding
+          AI-Powered Insights to Guide Student Understanding
         </Typography>
       </HeaderContainer>
       { screenSize === ScreenSize.SMALL 
@@ -290,7 +296,7 @@ export default function Generator() {
           spaceBetween={`${theme.sizing.mdPadding}px`}
           updateOnWindowResize
         >
-          <SwiperSlide key={uuidv4()}>
+          <SwiperSlide key="question-slide">
             <QuestionCard 
               isCustomQuestion={isCustomQuestion}
               labelText={labelText}
@@ -303,7 +309,7 @@ export default function Generator() {
               handleGenerateSampleQuestion={handleGenerateSampleQuestion}
             />
           </SwiperSlide>
-          <SwiperSlide key={uuidv4()}>
+          <SwiperSlide key="explanation-slide">
             <ExplanationCards
               isSubmitted={isSubmitted}
               questionToSave={questionToSave}
@@ -313,6 +319,8 @@ export default function Generator() {
               saveDiscardExplanation={saveDiscardExplanation}
               isQuestionSaved={isQuestionSaved}
               isQuestionGenerating={isQuestionGenerating}
+              isExplanationRegenerating={isExplanationRegenerating}
+              regenIndex={regenIndex}
             />
           </SwiperSlide>
         </Swiper>
@@ -340,6 +348,8 @@ export default function Generator() {
               saveDiscardExplanation={saveDiscardExplanation}
               isQuestionSaved={isQuestionSaved}
               isQuestionGenerating={isQuestionGenerating}
+              isExplanationRegenerating={isExplanationRegenerating}
+              regenIndex={regenIndex}
             />
           </Grid>
         </CardsContainer>

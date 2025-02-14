@@ -17,6 +17,7 @@ export const BaseCardStyled = styled(Paper)(({ theme }) => ({
 
 interface ExplanationCardStyledProps {
   isSaved: boolean;
+
 }
 
 export const ExplanationCardStyled = styled(Paper)<ExplanationCardStyledProps>(({ theme, isSaved }) => ({
@@ -27,13 +28,11 @@ export const ExplanationCardStyled = styled(Paper)<ExplanationCardStyledProps>((
   padding: `${theme.sizing.mdPadding}px`,
   transition: 'opacity 0.3s ease',
   borderRadius: '20px',
-  borderThickness: '2px',
-  borderStyle: 'solid',
-  borderColor: 'white',
   gap: '10px',
   boxSizing: 'border-box',
   opacity: isSaved ? 0.4 : 1,
-  position: 'relative'
+  position: 'relative',
+  background: '#FFFFFF'
 }));
 
 interface ExplanationCardContentStyledProps {

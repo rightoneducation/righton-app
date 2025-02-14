@@ -15,6 +15,8 @@ interface ExplanationCardsProps {
   ) => void;
   isQuestionSaved: boolean;
   isQuestionGenerating: boolean;
+  isExplanationRegenerating: boolean;
+  regenIndex: null | number;
 }
 
 export const ExplanationCards = ({
@@ -25,9 +27,12 @@ export const ExplanationCards = ({
   handleExplanationClick,
   saveDiscardExplanation,
   isQuestionSaved,
-  isQuestionGenerating
+  isQuestionGenerating,
+  isExplanationRegenerating,
+  regenIndex
 }: ExplanationCardsProps) => {
   const isQuestionFilled = questionToSave.wrongAnswers.length > 0;
+  console.log(questionToSave);
   return (
     <ExplanationCardContainer isQuestionFilled={isQuestionFilled}> 
       {!isQuestionFilled
@@ -51,6 +56,7 @@ export const ExplanationCards = ({
             handleExplanationClick={handleExplanationClick}
             saveDiscardExplanation={saveDiscardExplanation}
             isQuestionSaved={isQuestionSaved}
+            isRegenerating={isExplanationRegenerating && regenIndex === index}
           />
         )
       })}

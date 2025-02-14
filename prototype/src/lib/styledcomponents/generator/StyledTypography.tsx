@@ -54,10 +54,15 @@ export const ExplanationTextStyled = styled(Typography)(({ theme }) => ({
   wordWrap: 'break-word'
 }));
 
-export const ButtonSubtextStyled = styled(Typography)(({ theme }) => ({
+interface ButtonSubtextStyledProps {
+  isDiscardEnabled?: boolean;
+}
+
+export const ButtonSubtextStyled = styled(Typography)<ButtonSubtextStyledProps>(({ theme, isDiscardEnabled }) => ({
   color: '#000',
   fontSize: '14px',
   lineHeight: '14px',
+  fontWeight: isDiscardEnabled ? 700 : 400,
 }));
 
 export const SavedTextStyled = styled(Typography)(({ theme }) => ({
@@ -71,4 +76,10 @@ export const SavedModalTextStyled = styled(Typography)(({ theme }) => ({
   lineHeight: '24px',
   color: `${theme.palette.primary.darkBlue}`,
   textAlign: 'center'
+}));
+
+export const DiscardTextStyled = styled(Typography)(({ theme }) => ({
+  fontSize: '14px',
+  lineHeight: '14px',
+  color: `${theme.palette.primary.darkBlue}`,
 }));

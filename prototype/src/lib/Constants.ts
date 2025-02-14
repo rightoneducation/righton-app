@@ -6,5 +6,6 @@ export const prevVersions: string[] = ['0.1.0', '0.1.1', '0.1.2', '0.2.0', '0.2.
 export enum ExplanationRegenType {
   ACCEPT = 0,
   ACCEPT_EDITED = 1,
-  DISCARD = 2
+  DISCARD = 2,
+  REGEN = 3
 }
