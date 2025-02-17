@@ -167,10 +167,10 @@ export default function ImageUploadModal({
               <CentralButton 
                 buttonType={ButtonType.CHANGEIMAGE} 
                 isEnabled 
-                smallScreenOverride 
+                
                 onClick={() => setIsChangeImage(true)}
               />
-              <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride  onClick={handleSaveClick}/>
+              <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveClick}/>
             </Box>
           : <Box style={{width: '100%', position: 'relative'}}>
               <ImageURLTextContainerStyled value={imageUrl} variant="outlined" rows='1' placeholder="Add Image URL" onChange={(e)=> setLocalURL(e.target.value)}/>
