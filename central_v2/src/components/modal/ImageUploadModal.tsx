@@ -163,14 +163,15 @@ export default function ImageUploadModal({
           )}
         </DashedBox>
         {((image || imageUrl) && !isChangeImage)
-          ? <Box style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.mdPadding}px`}}>
+          ? <Box style={{width: '100%', display: 'flex', flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.mdPadding}px`}}>
               <CentralButton 
                 buttonType={ButtonType.CHANGEIMAGE} 
                 isEnabled 
-                
+                smallScreenOverride 
+                buttonWidthOverride={screenSize === ScreenSize.SMALL ? '100%' : undefined}
                 onClick={() => setIsChangeImage(true)}
               />
-              <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveClick}/>
+              <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride buttonWidthOverride={screenSize === ScreenSize.SMALL ? '100%' : undefined} onClick={handleSaveClick}/>
             </Box>
           : <Box style={{width: '100%', position: 'relative'}}>
               <ImageURLTextContainerStyled value={imageUrl} variant="outlined" rows='1' placeholder="Add Image URL" onChange={(e)=> setLocalURL(e.target.value)}/>
