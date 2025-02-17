@@ -113,7 +113,7 @@ export default function ResetPassword() {
             />
             <CentralButton buttonType={buttonTypeResetLink} isEnabled={isResetLinkEnabled} onClick={handleResetLink}/>
             <SignupContainer>
-                <NoAccountText>Dont have an account?</NoAccountText>
+                <NoAccountText>Don't have an account?</NoAccountText>
                 <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} onClick={handleSignupClick}/>
             </SignupContainer>
         </InnerBodyContainer>

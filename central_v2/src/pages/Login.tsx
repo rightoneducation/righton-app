@@ -186,7 +186,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
           <CentralButton buttonType={buttonTypeLogin} isEnabled={isLoginEnabled && !isLoggingIn} smallScreenOverride onClick={handleLoginClick}/>
         </LoginContainer>
         <SignupContainer>
-          <NoAccountText>Dont have an account?</NoAccountText>
+          <NoAccountText>Don't have an account?</NoAccountText>
           <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} smallScreenOverride  onClick={handleSignupClick}/>
         </SignupContainer>
         {isLoggingIn && 
