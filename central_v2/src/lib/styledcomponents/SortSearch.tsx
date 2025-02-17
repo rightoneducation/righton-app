@@ -22,7 +22,7 @@ export const SortButton = styled(Box, {
   width: '100%',
   minWidth: '44px',
   minHeight: '44px',
-  background: `${theme.palette.primary.searchButtonColor}`,
+  background: `${theme.palette.primary.buttonActionDefault}`,
   borderRadius: `${theme.sizing.xSmPadding}px`,
   paddingTop: '8px',
   paddingBottom: '8px',
@@ -32,6 +32,12 @@ export const SortButton = styled(Box, {
   gap: '8px',
   zIndex: 4,
   cursor: 'pointer',
+  ':hover': {
+    backgroundColor: `${theme.palette.primary.buttonActionHover}`,
+  },
+  '&:disabled': {
+    backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
+  },
 }));
 
 export const SortLabel = styled(Typography)(() => {

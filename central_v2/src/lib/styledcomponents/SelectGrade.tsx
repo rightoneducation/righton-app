@@ -20,12 +20,18 @@ export const SelectGrade = styled(Box, {
   justifyContent: 'center',
   width: screenSize === ScreenSize.SMALL ? '38px' : '240px',
   minHeight: '44px',
-  background: `${theme.palette.primary.searchButtonColor}`,
+  background: `${theme.palette.primary.buttonActionDefault}`,
   borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
   borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
   gap: '16px',
   zIndex: 4,
   cursor: 'pointer',
+  ':hover': {
+    backgroundColor: `${theme.palette.primary.buttonActionHover}`,
+  },
+  '&:disabled': {
+    backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
+  },
 }));
 
 export const SelectLabel = styled(Typography)(() => {
