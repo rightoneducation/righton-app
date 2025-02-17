@@ -283,6 +283,7 @@ interface SignUpProps {
   setConfirmPassword: (value: string) => void
 }
 function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBackImage, apiClients, password, setPassword, confirmPassword, setConfirmPassword, schoolEmail, setSchoolEmail}: SignUpProps ) {
+  const theme = useTheme();
   const [title, setTitle] = useState('Title...');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -545,6 +546,23 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                           </PasswordRequirementsList>
                         </Box>
                       }
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            bgcolor: `${theme.palette.primary.extraDarkBlue}`,
+                            color: '#FFFFFF !important', // Ensures text remains white
+                            fontSize: '14px',
+                            padding: '10px 15px',
+                            borderRadius: '8px',
+                            maxWidth: '250px', 
+                            boxSizing: 'border-box',
+                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                            '& .MuiTooltip-arrow': {
+                              color: `${theme.palette.primary.extraDarkBlue}`,
+                            },
+                          },
+                        },
+                      }}
                       arrow
                       placement="top"
                     >
@@ -580,6 +598,23 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                           </Typography>
                         </Box>
                       }
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            bgcolor: `${theme.palette.primary.extraDarkBlue}`,
+                            color: '#FFFFFF !important', // Ensures text remains white
+                            fontSize: '14px',
+                            padding: '10px 15px',
+                            borderRadius: '8px',
+                            maxWidth: '250px', 
+                            boxSizing: 'border-box',
+                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                            '& .MuiTooltip-arrow': {
+                              color: `${theme.palette.primary.extraDarkBlue}`,
+                            },
+                          },
+                        },
+                      }}
                       arrow
                       placement="top"
                     >
