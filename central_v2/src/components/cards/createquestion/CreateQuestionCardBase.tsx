@@ -25,8 +25,7 @@ import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
-import ImageButton from '../../button/imagebutton/ImageButton';
-import { ImageButtonType } from '../../button/imagebutton/ImageButtonModels';
+import ErrorBox from './ErrorBox';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
 
@@ -49,14 +48,14 @@ type ImagePlaceholderProps = {
 
 export const ImagePlaceholder = styled(Box)<ImagePlaceholderProps>(({ theme, isCardErrored }) => ({
   width: '100%',
-  height: '175px',
+  height: '196px',
   background: `${theme.palette.primary.uploadLightGrey}`,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   gap: '10px',
-  border: isCardErrored ? `2px solid ${theme.palette.primary.errorColor}` : `2px solid ${theme.palette.primary.uploadDarkGrey}`,
+  border: isCardErrored ? `2px solid ${theme.palette.primary.errorBorder}` : `2px solid ${theme.palette.primary.uploadDarkGrey}`,
   borderRadius: '8px',
   boxSizing: 'border-box'
 }));
@@ -75,7 +74,7 @@ export const CreateQuestionTitleBarStyled = styled(Box)<CreateQuestionTitleBarSt
   gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.xSmPadding}px` : `${theme.sizing.smPadding}px`,
 }));
 
-export const CreateQuestionContentLeftContainerStyled = styled(Box)(({ theme }) => ({
+export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -124,7 +123,7 @@ export default function CreateQuestionCardBase({
         onMouseLeave={() => setIsImageHovered(false)}
         style={{  
           width: '100%',
-          height: '175px',
+          height: '196px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -137,7 +136,8 @@ export default function CreateQuestionCardBase({
               alt="image" 
               style={{
                 opacity: isImageHovered ? 0.6: 1,
-                transition: 'opacity 0.75s'
+                transition: 'opacity 0.75s',
+                borderRadius: '8px',
               }}
             />
             <Fade in={isImageHovered} >
@@ -151,12 +151,26 @@ export default function CreateQuestionCardBase({
   return (
     <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
-        <Box style={{display: 'flex', alignItems: 'center', gap: '14px'}}>
-          <QuestionTitleStyled>Question</QuestionTitleStyled>
+        <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
+          <QuestionTitleStyled>Create Question</QuestionTitleStyled>
           <ButtonCCSS key={uuidv4()} onClick={handleCCSSClick}>
             {draftQuestion.questionCard.ccss}
           </ButtonCCSS>
         </Box>
+        { screenSize !== ScreenSize.SMALL && 
+            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              <PublicPrivateButton isDisabled={false}/>
+            </Box>
+          }
+      </CreateQuestionTitleBarStyled>
+      <ContentContainerStyled screenSize={screenSize}>
+      {imageLink 
+          ? imageContents
+          : <ImagePlaceholder isCardErrored={isCardErrored}>
+              <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
+            </ImagePlaceholder>
+        }
+        <CreateQuestionContentRightContainerStyled>
         <RadioContainerStyled>
           <RadioGroup
             row
@@ -180,13 +194,10 @@ export default function CreateQuestionCardBase({
             />
           </RadioGroup>
         </RadioContainerStyled>
-      </CreateQuestionTitleBarStyled>
-      <ContentContainerStyled screenSize={screenSize}>
-        <CreateQuestionContentLeftContainerStyled>
           <TextContainerStyled 
             multiline 
             variant="outlined" 
-            rows='4' 
+            rows='5' 
             placeholder="Enter question here..." 
             error={(isCardSubmitted || isAIError) && (!title || title.length === 0)}
             value={title}
@@ -207,24 +218,21 @@ export default function CreateQuestionCardBase({
           >
             <Typography>{draftQuestion.questionCard.title}</Typography>
           </TextContainerStyled>
-          { screenSize !== ScreenSize.SMALL && 
-            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-              <PublicPrivateButton isDisabled={false}/>
-            </Box>
-          }
-        </CreateQuestionContentLeftContainerStyled>
-        {imageLink 
-          ? imageContents
-          : <ImagePlaceholder isCardErrored={isCardErrored}>
-              <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
-            </ImagePlaceholder>
+        </CreateQuestionContentRightContainerStyled>
+        { screenSize === ScreenSize.SMALL && 
+          <>
+            { isCardErrored &&
+              <ErrorBox/>
+            }
+              <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+                <PublicPrivateButton isDisabled={false}/>
+              </Box>
+          </>
         }
-           { screenSize === ScreenSize.SMALL && 
-            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-              <PublicPrivateButton isDisabled={false}/>
-            </Box>
-          }
       </ContentContainerStyled>
+      {screenSize !== ScreenSize.SMALL && isCardErrored &&
+        <ErrorBox/>
+      }
     </BaseCardStyled>
   );
 }

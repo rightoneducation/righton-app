@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
-
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
@@ -13,14 +12,9 @@ import Confirmation from './Confirmation';
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-
 import { 
   TextContainerStyled,
 } from '../lib/styledcomponents/CreateQuestionStyledComponents';
-
-import {
-  ErrorIcon
-} from '../lib/styledcomponents/CentralStyledComponents';
 import errorIcon from '../images/errorIcon.svg';
 
 
@@ -113,6 +107,9 @@ const TitleField = styled(TextField)(({ theme }) => ({
   '&.Mui-focused .MuiSelect-icon': {
     transform: 'rotate(-180deg)', // Rotate upward when focused
   },
+  '& .MuiOutlinedInput-notchedOutline': {
+    border: 'none', // Remove the default border
+  },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
@@ -131,26 +128,6 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   },
   '&.Mui-focused .MuiSelect-icon': {
     transform: 'rotate(-180deg)', // Rotate upward when focused
-  },
-}));
-
-const UserTextField = styled(TextField)(({ theme }) => ({
-  border: '2px solid #CCCCCC', // Set border to 2px
-  borderRadius: '8px', // Set border radius to 8px
-  backgroundColor: '#FFFFFF', // Set background color to white
-  width: '100%',
-  '& .MuiInputBase-root': {
-    borderRadius: '8px', // Ensure border radius is applied to the input field
-  },
-  '& .MuiInputBase-input': {
-    color: '#384466', // Set text color of the input
-
-  },
-  '& .MuiInputBase-input::placeholder': {
-    color: '#384466', // Set the placeholder text color
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#CCCCCC', // Set border color for the outline
   },
 }));
 
@@ -306,6 +283,7 @@ interface SignUpProps {
   setConfirmPassword: (value: string) => void
 }
 function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBackImage, apiClients, password, setPassword, confirmPassword, setConfirmPassword, schoolEmail, setSchoolEmail}: SignUpProps ) {
+  const theme = useTheme();
   const [title, setTitle] = useState('Title...');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -416,13 +394,13 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
               <MenuItem value="Ms.">Ms.</MenuItem>
               <MenuItem value="Dr.">Dr.</MenuItem>
             </TitleField>
-            <UserTextField
+            <TextContainerStyled
               variant="outlined"
               placeholder="First Name"
               value={firstName}
               onChange={(event) => setFirstName(event.target.value)}
             />
-            <UserTextField
+            <TextContainerStyled
               variant="outlined"
               placeholder="Last Name"
               value={lastName}
@@ -439,23 +417,9 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
               sx={{
                 backgroundColor: 'white'
               }}
-              // InputProps={{
-              //   endAdornment: 
-              //     <InputAdornment
-              //       position="end" 
-              //       sx={{ 
-              //         flexDirection: 'column',
-              //         // alignSelf: 'flex-start',
-              //         alignItems: 'center',
-              //         mt: '-20px'
-              //       }}
-              //     >
-              //       <ErrorIcon src={errorIcon} alt='error icon'/>
-              //     </InputAdornment>
-              // }}
             />
           </MiddleTextSecondRow>
-          <UserTextField
+          <TextContainerStyled
             variant="outlined"
             placeholder="School Email..."
             value={schoolEmail}
@@ -582,6 +546,23 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                           </PasswordRequirementsList>
                         </Box>
                       }
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            bgcolor: `${theme.palette.primary.extraDarkBlue}`,
+                            color: '#FFFFFF !important', // Ensures text remains white
+                            fontSize: '14px',
+                            padding: '10px 15px',
+                            borderRadius: '8px',
+                            maxWidth: '250px', 
+                            boxSizing: 'border-box',
+                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                            '& .MuiTooltip-arrow': {
+                              color: `${theme.palette.primary.extraDarkBlue}`,
+                            },
+                          },
+                        },
+                      }}
                       arrow
                       placement="top"
                     >
@@ -617,6 +598,23 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                           </Typography>
                         </Box>
                       }
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            bgcolor: `${theme.palette.primary.extraDarkBlue}`,
+                            color: '#FFFFFF !important', // Ensures text remains white
+                            fontSize: '14px',
+                            padding: '10px 15px',
+                            borderRadius: '8px',
+                            maxWidth: '250px', 
+                            boxSizing: 'border-box',
+                            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+                            '& .MuiTooltip-arrow': {
+                              color: `${theme.palette.primary.extraDarkBlue}`,
+                            },
+                          },
+                        },
+                      }}
                       arrow
                       placement="top"
                     >

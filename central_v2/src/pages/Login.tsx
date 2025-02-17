@@ -6,6 +6,9 @@ import { getUser, IAuthAPIClient } from '@righton/networking';
 import { useNavigate } from 'react-router-dom'; 
 import RightOnLogo from '../images/RightOnLogo.png';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
+import { 
+  TextContainerStyled,
+} from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import CentralButton from "../components/button/Button";
 import { ButtonType } from '../components/button/ButtonModels';
 import ResetPassword from './ResetPassword';
@@ -90,27 +93,6 @@ const ForgotPasswordButton = styled('button')(({ theme }) => ({
   // border:'1px red solid'
 }));
 
-
-const UserTextField = styled(TextField)(({ theme }) => ({
-  border: '2px solid #CCCCCC', // Set border to 2px
-  borderRadius: '8px', // Set border radius to 8px
-  backgroundColor: '#FFFFFF', // Set background color to white
-  width: '100%',
-  '& .MuiInputBase-root': {
-    borderRadius: '8px', // Ensure border radius is applied to the input field
-  },
-  '& .MuiInputBase-input': {
-    color: '#384466', // Set text color of the input
-
-  },
-  '& .MuiInputBase-input::placeholder': {
-    color: '#384466', // Set the placeholder text color
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#CCCCCC', // Set border color for the outline
-  },
-}));
-
 const LoginContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   // border: '1px solid green',
@@ -184,13 +166,13 @@ function Login({handleForgotPasswordClick} : LoginProps) {
         </UpperLogin>
         <OrText>or</OrText>
         <MiddleContainer>
-          <UserTextField
+          <TextContainerStyled
                 variant="outlined"
                 placeholder="Email"
                 value={userName}
                 onChange={(event) => setUserName(event.target.value)}
           />
-          <UserTextField
+          <TextContainerStyled
                 variant="outlined"
                 placeholder="Password"
                 value={password}
@@ -204,7 +186,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
           <CentralButton buttonType={buttonTypeLogin} isEnabled={isLoginEnabled && !isLoggingIn} smallScreenOverride onClick={handleLoginClick}/>
         </LoginContainer>
         <SignupContainer>
-          <NoAccountText>Dont have an account?</NoAccountText>
+          <NoAccountText>Don&rsquo;t have an account?</NoAccountText>
           <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} smallScreenOverride  onClick={handleSignupClick}/>
         </SignupContainer>
         {isLoggingIn && 

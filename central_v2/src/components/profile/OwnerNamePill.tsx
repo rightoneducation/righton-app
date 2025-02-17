@@ -16,16 +16,6 @@ const OwnerNamePillText = styled(Typography)(({ theme }) => ({
   fontSize: '14px',
   fontWeight: 800,
   color: '#FFFFFF',
-  textShadow: `
-  -1px -1px 0 #000,
-   1px -1px 0 #000,
-  -1px  1px 0 #000,
-   1px  1px 0 #000,
-  0px -1px 0 #000,
-  0px  1px 0 #000,
-  -1px  0px 0 #000,
-   1px  0px 0 #000
-`,
 }));
 
 interface OwnerNamePillProps {

@@ -140,7 +140,11 @@ export default function QuestionTabs({
                   />
                 </ButtonContainerLeft>
                 <ButtonContainerRight>
-                  <CentralButton buttonType={ButtonType.FAVORITE} isEnabled />
+                  <CentralButton 
+                    buttonType={ButtonType.FAVORITE} 
+                    isEnabled 
+                    isOnQuestionTab
+                  />
                   <CentralButton
                     buttonType={ButtonType.CLONEANDEDIT}
                     isEnabled

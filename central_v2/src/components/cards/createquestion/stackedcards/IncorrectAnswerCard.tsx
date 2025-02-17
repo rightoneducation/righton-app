@@ -15,6 +15,7 @@ import {
   QuestionTitleStyled,
 } from '../../../../lib/styledcomponents/DetailedQuestionStyledComponents';
 import { TextContainerStyled } from '../../../../lib/styledcomponents/CreateQuestionStyledComponents';
+import ErrorBox from '../ErrorBox';
 
 interface StyledCardProps {
   isHighlight: boolean;
@@ -314,6 +315,10 @@ export default function IncorrectAnswerCard({
               }
             </AnimatePresence>
           }
+          {
+            (isTopCard && (isCardSubmitted || isAIError) && (cardData.explanation.length === 0 || cardData.answer.length === 0)) &&
+            <ErrorBox/>
+          }
       </AnswerCard>
       { isTopCard &&
         <Box
@@ -331,6 +336,7 @@ export default function IncorrectAnswerCard({
             onClick={() => handleNextCardButtonClick && handleNextCardButtonClick(cardData)}
           />
         </Box>
+        
       }
     </Box>
   )

@@ -424,30 +424,18 @@ export default function CreateQuestion({
         }}>
       <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
       { (screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) &&
-        <>
-          <Fade 
-            in={isCardErrored}
-            mountOnEnter
-            unmountOnExit
-            timeout={500}
-          >
-            <div>
-              <ErrorCard />
-            </div>
-          </Fade>  
-          <Box style={{
-            width: '100%', 
-            maxWidth: '672px',
-            display: 'flex',
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            gap: `${theme.sizing.xSmPadding}px`, 
-            paddingBottom: '16px',
-          }}>
-            <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
-            <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
-          </Box>
-        </>
+        <Box style={{
+          width: '100%', 
+          maxWidth: '672px',
+          display: 'flex',
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          gap: `${theme.sizing.xSmPadding}px`, 
+          paddingBottom: '16px',
+        }}>
+          <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
+          <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
+        </Box>
       }
       <CreateQuestionGridContainer container  wrap="nowrap" >
         <Grid
@@ -458,22 +446,10 @@ export default function CreateQuestion({
           style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', paddingTop: '16px', gap: '20px'}}
         >
           { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
-            <>
-              <Fade 
-                in={isCardErrored}
-                mountOnEnter
-                unmountOnExit
-                timeout={500}
-              >
-                <div>
-                  <ErrorCard />
-                </div>
-              </Fade>  
             <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
             </Box>
-            </>
           }
         </Grid>
         <Grid
@@ -484,6 +460,7 @@ export default function CreateQuestion({
           style={{
             width: '100%',
             maxWidth: '672px',
+            minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
             display: 'flex',
             flexDirection: 'column',
             gap: `${theme.sizing.xLgPadding}px`,

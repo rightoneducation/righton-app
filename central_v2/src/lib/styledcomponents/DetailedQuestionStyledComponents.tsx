@@ -56,6 +56,7 @@ export const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(
     color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
     '& .MuiTypography-root': {
       color: isSelected ? 'rbga(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0.2)',
+      fontSize: '14px'
     },
   }),
 );
@@ -78,7 +79,7 @@ export const ContentContainerStyled = styled(Box)<ContentContainerProps>(({ them
   display: 'flex',
   flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
   justifyContent: 'space-between',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   gap: `${theme.sizing.smPadding}px`,
 }));
 
