@@ -15,6 +15,7 @@ import {
 } from '../../../lib/styledcomponents/CentralStyledComponents';
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
+import ErrorBox from './ErrorBox';
 import errorIcon from '../../../images/errorIcon.svg';
 
 
@@ -138,6 +139,9 @@ export default function DetailedQuestionSubCard({
         answerSteps.map((step, index) => 
           answerStepsComponent(step, index)
         )
+      }
+      { isCardErrored &&
+          <ErrorBox/>
       }
       <Box style = {{width: '100%', display: 'flex', justifyContent: 'center'}}>
         <CentralButton buttonType={ButtonType.ADDSTEP} isEnabled onClick={addStep}/>

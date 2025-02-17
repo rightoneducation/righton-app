@@ -82,7 +82,7 @@ export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>((
     },
     '&.Mui-error fieldset': {
       borderWidth: '2px',
-      borderColor: theme.palette.error.main,
+      borderColor: theme.palette.primary.errorBorder,
     },
   },
 }));

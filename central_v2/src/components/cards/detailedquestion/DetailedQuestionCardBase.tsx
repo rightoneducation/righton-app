@@ -37,7 +37,7 @@ export const CreateQuestionTitleBarStyled = styled(Box)<CreateQuestionTitleBarSt
   gap: screenSize === ScreenSize.SMALL ? `${theme.sizing.xSmPadding}px` : `${theme.sizing.smPadding}px`,
 }));
 
-export const CreateQuestionContentLeftContainerStyled = styled(Box)(({ theme }) => ({
+export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -58,54 +58,19 @@ export default function DetailedQuestionCardBase({
   return (
     <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false}>
     <CreateQuestionTitleBarStyled screenSize={screenSize}>
-      <Box style={{display: 'flex', alignItems: 'center', gap: '14px'}}>
+      <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
         <ButtonCCSS key={uuidv4()}>
           {question.ccss}
         </ButtonCCSS>
       </Box>
-      <RadioContainerStyled>
-        <RadioGroup
-          row
-          value={questionType} 
-          onChange={handleQuestionTypeChange}
-          style={{overflow: 'hidden', flexWrap: 'nowrap'}}
-        >
-          <RadioLabelStyled
-            value={PublicPrivateType.PUBLIC}
-            control={<RadioStyled style={{cursor: 'pointer'}}/>}
-            label="Multiple Choice"
-            isSelected={questionType === PublicPrivateType.PUBLIC}
-            style={{cursor: 'pointer'}}
-          />
-          <RadioLabelStyled
-            value={PublicPrivateType.PRIVATE}
-            control={<RadioStyled style={{cursor: 'pointer'}}/>}
-            label="Short Answer"
-            isSelected={questionType === PublicPrivateType.PRIVATE}
-            style={{cursor: 'pointer'}}
-          />
-        </RadioGroup>
-      </RadioContainerStyled>
+      { screenSize !== ScreenSize.SMALL && 
+        <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+          <PublicPrivateButton isDisabled/>
+        </Box>
+      }
     </CreateQuestionTitleBarStyled>
     <ContentContainerStyled screenSize={screenSize}>
-      <CreateQuestionContentLeftContainerStyled style={{height: '100%', justifyContent: 'space-between'}}>
-        <Box
-          style={{
-            width: '100%',
-            margin: 0,
-            padding: '8px',
-            boxSizing: 'border-box',
-          }}
-        >
-          <Typography>{question.title}</Typography>
-        </Box>
-        { screenSize !== ScreenSize.SMALL && 
-          <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-            <PublicPrivateButton isDisabled/>
-          </Box>
-        }
-      </CreateQuestionContentLeftContainerStyled>
       <Box
         style={{
           width: '100%',
@@ -116,8 +81,43 @@ export default function DetailedQuestionCardBase({
       >
         <img src={question.imageUrl ?? ''} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
       </Box>
+      <CreateQuestionContentRightContainerStyled>
+        <RadioContainerStyled>
+          <RadioGroup
+            row
+            value={questionType} 
+            onChange={handleQuestionTypeChange}
+            style={{overflow: 'hidden', flexWrap: 'nowrap'}}
+          >
+            <RadioLabelStyled
+              value={PublicPrivateType.PUBLIC}
+              control={<RadioStyled style={{cursor: 'pointer'}}/>}
+              label="Multiple Choice"
+              isSelected={questionType === PublicPrivateType.PUBLIC}
+              style={{cursor: 'pointer'}}
+            />
+            <RadioLabelStyled
+              value={PublicPrivateType.PRIVATE}
+              control={<RadioStyled style={{cursor: 'pointer'}}/>}
+              label="Short Answer"
+              isSelected={questionType === PublicPrivateType.PRIVATE}
+              style={{cursor: 'pointer'}}
+            />
+          </RadioGroup>
+        </RadioContainerStyled>
+        <Box
+          style={{
+            width: '100%',
+            margin: 0,
+            padding: '8px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <Typography>{question.title}</Typography>
+        </Box>
+      </CreateQuestionContentRightContainerStyled>
       { screenSize === ScreenSize.SMALL && 
-        <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+        <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
           <PublicPrivateButton isDisabled={false}/>
         </Box>
       }
