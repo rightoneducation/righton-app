@@ -6,6 +6,9 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
+import { 
+    TextContainerStyled,
+  } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import RightOnLogo from "../images/RightOnLogo.png";
 
 // Styled components
@@ -65,12 +68,9 @@ const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
     gap: '8px',
 }));
 
-const UserCodeTextBoxes = styled(TextField)(({ theme }) => ({
+const UserCodeTextBoxes = styled(TextContainerStyled)(({ theme }) => ({
     width: '40px',
     height: '54px',
-    borderRadius: '8px',
-    border: '2px solid #FFFFFF',
-    color: '#FFFFFF',
     textAlign: 'center',
     input: {
         textAlign: 'center',
@@ -193,6 +193,7 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
                     <UserCodeTextBoxesContainer>
                         {code.map((value, index) => (
                             <UserCodeTextBoxes
+                                variant="outlined"
                                 key={`code-${uniqueKeys[index]}`}
                                 inputRef={(el) => setInputRef(index, el)}
                                 value={value}
