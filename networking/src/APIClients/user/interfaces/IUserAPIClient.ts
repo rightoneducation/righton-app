@@ -3,23 +3,18 @@ import {
   DeleteUserInput,
   UpdateUserInput
 } from "../../../AWSMobileApi";
+import { IUser } from '../../../Models/IUser';
 
 export interface IUserAPIClient {
-  createUser<User>( 
+  createUser( 
     createUserInput: CreateUserInput
-  ): Promise<User>;
+  ): Promise<IUser | null>;
 
-  deleteUser<User>( 
+  deleteUser( 
     deleteUserInput: DeleteUserInput
-  ): Promise<User>;
+  ): Promise<IUser | null>;
 
-  updateUser<User>( 
+  updateUser( 
     updateUserInput: UpdateUserInput
-  ): Promise<User>;
-
-  uploadTeacherId<String>( 
-    teacherIdImage: File,
-    fileName: string,
-    fileType: string
-  ): Promise<String>;
+  ): Promise<IUser | null>;
 }

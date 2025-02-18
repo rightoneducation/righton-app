@@ -2,18 +2,27 @@ import { Environment } from '../interfaces/IBaseAPIClient';
 import { ICentralDataManagerAPIClient } from './interfaces/ICentralDataManagerAPIClient';
 import { IGameTemplateAPIClient, IQuestionTemplateAPIClient } from '../templates';
 import { PublicPrivateType, SortDirection, GradeTarget, SortType } from "../BaseAPIClient";
+import { IAuthAPIClient } from '../auth';
+import { IUserAPIClient } from '../user';
+import { IUser } from '../../Models/IUser';
 
 export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient{
   protected env: Environment;
+  protected authAPIClient: IAuthAPIClient;
+  protected userAPIClient: IUserAPIClient;
   protected gameTemplateAPIClient: IGameTemplateAPIClient;
   protected questionTemplateAPIClient: IQuestionTemplateAPIClient;
 
   constructor (
     env: Environment,
+    authAPIClient: IAuthAPIClient,
+    userAPIClient: IUserAPIClient,
     gameTemplateAPIClient: IGameTemplateAPIClient,
     questionTemplateAPIClient: IQuestionTemplateAPIClient,
   ) {
     this.env = env;
+    this.authAPIClient = authAPIClient;
+    this.userAPIClient = userAPIClient;
     this.gameTemplateAPIClient = gameTemplateAPIClient;
     this.questionTemplateAPIClient = questionTemplateAPIClient;
   } 
@@ -101,5 +110,27 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
     }
     return {nextToken: null, questions: []};
+  };
+
+  public signUpSendConfirmationCode = async (user: IUser) => {
+    return this.authAPIClient.awsSignUp(user.userName, user.email, user.password ?? '');
+  };
+
+  public signUpConfirmAndBuildBackendUser = async (user: IUser, confirmationCode: string, frontImage: File, backImage: File) => {
+    try {
+      this.authAPIClient.awsConfirmSignUp(user.email, confirmationCode).then(() => {
+        this.authAPIClient.awsSignIn(user.email, user.password ?? '').then(() => {
+          this.userAPIClient.createUser(user).then((user: any) => {
+            const frontImagePromise = this.authAPIClient.awsUploadImagePrivate(frontImage);
+            const backImagePromise = this.authAPIClient.awsUploadImagePrivate(backImage);
+            Promise.all([frontImagePromise, backImagePromise]).then((images: any) => {
+              return { user, images };
+            });
+          });
+        });
+      });
+    } catch (e: any) {
+      throw new Error(e);
+    }
   };
 }

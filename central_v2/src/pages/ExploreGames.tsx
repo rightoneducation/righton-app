@@ -20,6 +20,7 @@ import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
+import test from '../images/test.png';
 
 interface ExploreGamesProps {
   screenSize: ScreenSize;
@@ -48,12 +49,44 @@ export default function ExploreGames({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
+  const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = searchTerms.length > 0;
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     setSelectedGame(game);
     setGameSet(games);
     setIsTabsOpen(true);
   };
+
+
+   // Debug button temporarily added for QA
+   const handleTestDownload= async () => {
+    console.log('here');
+    const response = await apiClients.user.downloadImagePrivate();
+    if (response){
+      setImgSrc(response);
+    }
+  }
+
+  // Debug button temporarily added for QA
+  const handleTestUploadPublic = async () => {
+    console.log('here');
+    const fetchedImage = await fetch(test);
+    const blob = await fetchedImage.blob();
+    const image = new File([blob], 'test.png', { type: 'image/png' });
+    const response = await apiClients.user.uploadImagePublic(image);
+    setIsUserLoggedIn(false);
+    console.log(response);
+  }
+
+  const handleTestUploadPrivate = async () => {
+    console.log('here');
+    const fetchedImage = await fetch(test);
+    const blob = await fetchedImage.blob();
+    const image = new File([blob], 'test.png', { type: 'image/png' });
+    const response = await apiClients.user.uploadImagePrivate(image);
+    setIsUserLoggedIn(false);
+    console.log(response);
+  }
 
   // Debug button temporarily added for QA
   const handleSignOut = async () => {
@@ -62,6 +95,7 @@ export default function ExploreGames({
     setIsUserLoggedIn(false);
     console.log(response);
   }
+
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 

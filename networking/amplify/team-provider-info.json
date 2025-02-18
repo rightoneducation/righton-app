@@ -46,13 +46,17 @@
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
         },
         "mobile": {},
-        "mobile6060603c": {}
+        "mobile6060603c": {},
+        "S3Trigger04eb3a91": {
+          "deploymentBucketName": "amplify-mobile-dev-37d69-deployment",
+          "s3Key": "amplify-builds/S3Trigger04eb3a91-62396f4b372b526b2f32-build.zip"
+        }
       },
       "api": {
         "mobile": {}
       },
       "storage": {
-        "gamequestionimages": {}
+        "rightoncentralstorage": {}
       }
     }
   }

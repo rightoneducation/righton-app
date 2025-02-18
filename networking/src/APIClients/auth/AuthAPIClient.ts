@@ -16,6 +16,7 @@ import {
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput
 } from 'aws-amplify/auth';
+import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
@@ -39,6 +40,51 @@ export class AuthAPIClient
     Amplify.configure(awsconfig);
     // change userPools auth storage to cookies so that auth persists across central/host apps for signed-in teachers
     cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
+  }
+
+  async verifyAuth(): Promise<boolean> {
+    const session = await fetchAuthSession();
+    if (session && session.tokens && session.tokens.accessToken) {
+      const groups = session.tokens.accessToken.payload["cognito:groups"];
+      if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
+        return true;
+      }
+    };
+    return false;
+  }
+
+  async verifyGameOwner(gameOwner: string): Promise<boolean> {
+    const { username } = await getCurrentUser();
+    if (username === gameOwner)
+      return true;
+    return false;
+  }
+
+  async verifyQuestionOwner(questionOwner: string): Promise<boolean> {
+    const { username } = await getCurrentUser();
+    if (username === questionOwner)
+      return true;
+    return false;
+  }
+
+  async getCurrentUserName(): Promise<string>{
+    const { username } = await getCurrentUser();
+    return username
+  }
+
+  async getUserNickname(): Promise<string | null> {
+    try {
+      const attributes = await fetchUserAttributes();
+      console.log("User Attributes:", attributes);
+      if (attributes && attributes.nickname !== undefined) {
+        return attributes.nickname;
+      } else {
+        return null; // Ensure undefined is converted to null
+      }
+    } catch (error) {
+      console.error("Error fetching user attributes:", error);
+      return null;
+    }
   }
 
   authEvents (payload: any): void {
@@ -78,22 +124,6 @@ export class AuthAPIClient
     });
   }
 
-  async getUserNickname(): Promise<string | null> {
-    try {
-      const attributes = await fetchUserAttributes();
-      console.log("User Attributes:", attributes);
-      if (attributes && attributes.nickname !== undefined) {
-        return attributes.nickname;
-      } else {
-        return null; // Ensure undefined is converted to null
-      }
-    } catch (error) {
-      console.error("Error fetching user attributes:", error);
-      return null;
-    }
-  }
-  
-
   async awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput> {
     const response = await confirmSignUp({username: email, confirmationCode: code});
     return response;
@@ -124,38 +154,52 @@ export class AuthAPIClient
     await signOut();
   }
 
-  async verifyAuth(): Promise<boolean> {
-    const session = await fetchAuthSession();
-    if (session && session.tokens && session.tokens.accessToken) {
-      const groups = session.tokens.accessToken.payload["cognito:groups"];
-      if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
-        return true;
-      }
-    };
-    return false;
-  }
-
-   async verifyGameOwner(gameOwner: string): Promise<boolean> {
-    const { username } = await getCurrentUser();
-    if (username === gameOwner)
-      return true;
-    return false;
-   }
-
-   async verifyQuestionOwner(questionOwner: string): Promise<boolean> {
-    const { username } = await getCurrentUser();
-    if (username === questionOwner)
-      return true;
-    return false;
-   }
-
-   async getCurrentUserName(): Promise<string>{
-    const { username } = await getCurrentUser();
-    return username
-   }
-
-   async resendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {
+  async awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {
     const response = await resendSignUpCode({username: email});
     return response;
-   }
+  }
+
+  async awsUploadImagePrivate <String>(
+    image: File,
+  ): Promise<String> {
+    const user = (await fetchAuthSession()).identityId;
+    const result = await uploadData({
+      path: `private/${user}/test.png`,
+      data: image,
+      options: { contentType: image.type }
+    }).result;
+    return result as String
+  }
+
+  async awsUploadImagePublic <String>(
+    image: File,
+  ): Promise<String> {
+    const result = await uploadData({
+      path: `public/${image.name}`,
+      data: image,
+      options: { contentType: image.type }
+    }).result;
+    return result as String
+  }
+
+  async awsDownloadImagePublic(
+  ) {
+    const { body } = await downloadData({ 
+      path: 'public/test.png' 
+    }).result;
+    const blob = await body.blob();
+    const imageUrl = URL.createObjectURL(blob);
+    return imageUrl;
+  }
+
+  async awsDownloadImagePrivate(
+  ) {
+    const user = (await fetchAuthSession()).identityId;
+    const { body } = await downloadData({ 
+      path: `private/${user}/test.png`
+    }).result;
+    const blob = await body.blob();
+    const imageUrl = URL.createObjectURL(blob);
+    return imageUrl;
+  }
 }

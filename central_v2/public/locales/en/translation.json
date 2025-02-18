@@ -33,7 +33,8 @@
     "changepassword": "Change Password",
     "choose": "Choose",
     "clone": "Clone",
-    "signout": "Debug Sign Out"
+    "signout": "Debug Sign Out",
+    "test": "Test"
   },
   "imageButton": {
     "imageupload": "Upload Image",

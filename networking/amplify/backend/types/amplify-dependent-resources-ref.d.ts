@@ -23,6 +23,13 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "S3Trigger04eb3a91": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "createGameTest": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -67,7 +74,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "gamequestionimages": {
+    "rightoncentralstorage": {
       "BucketName": "string",
       "Region": "string"
     }
