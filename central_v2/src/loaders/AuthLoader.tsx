@@ -1,12 +1,8 @@
 import React from 'react';
-import { 
-  fetchAuthSession,
-} from 'aws-amplify/auth';
-import { AuthLocalData } from '../lib/CentralModels';
+import { IAPIClients } from '@righton/networking';
 
-export const AuthLoader = async (): Promise<boolean> => { // eslint-disable-line
-  const session = await fetchAuthSession();
-  if(!!session?.tokens?.accessToken) // eslint-disable-line
-    return true;
-  return false;
+export const AuthLoader = async (apiClients: IAPIClients): Promise<boolean> => { // eslint-disable-line
+  const session = await apiClients.auth.verifyAuth();
+  console.log(session);
+  return session;
 }

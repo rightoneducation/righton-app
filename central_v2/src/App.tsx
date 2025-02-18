@@ -32,7 +32,7 @@ function App() {
       <>
         {apiClients && (
           <>
-            <Route path="/" element={<AppSwitch />} loader={AuthLoader}/>
+            <Route path="/" element={<AppSwitch />} loader={() => AuthLoader(apiClients)}/>
             <Route path="/questions" element={<AppSwitch />} />
             <Route path="/signup" element={<AppSwitch />} />
             <Route path="/login" element={<AppSwitch />} />

@@ -39,10 +39,6 @@ function AppSwitch() {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const isUserLoggedIn = useLoaderData() as boolean;
 
-  console.log('is the user logged in?');
-  console.log(isUserLoggedIn);
-  fetchAuthSession().then((session) => {console.log(session)});
- 
   switch (true) {
     case questionScreen: {
       return (
