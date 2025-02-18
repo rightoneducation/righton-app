@@ -55,5 +55,15 @@
         "gamequestionimages": {}
       }
     }
+  },
+  "test": {
+    "categories": {
+      "auth": {
+        "mobile6060603c": {}
+      },
+      "function": {
+        "UserCleaner": {}
+      }
+    }
   }
 }

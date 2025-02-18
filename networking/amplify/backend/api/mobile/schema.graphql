@@ -36,6 +36,13 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+  userCleaner(input: String!): String 
+  @function(name: "UserCleaner-${env}") 
+  @auth(
+    rules: [
+      { allow: private, provider: userPools }
+    ]
+  )
   uploadExternalImageToS3(input: UploadExternalImageToS3Input): String
   @function(name: "uploadExternalImageToS3-${env}")
     @auth(
