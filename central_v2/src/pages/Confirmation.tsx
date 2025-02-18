@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import { TextField, Box, Typography } from '@mui/material';
+import { TextField, Box, Typography, InputAdornment } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import RightOnLogo from "../images/RightOnLogo.png";
+import errorIcon from '../images/errorIcon.svg';
 
 // Styled components
 const OuterBody = styled(Box)(({ theme }) => ({
@@ -58,17 +59,55 @@ const UserCodeTextBoxesContainer = styled(Box)(({ theme }) => ({
     gap: '8px',
 }));
 
-const UserCodeTextBoxes = styled(TextField)(({ theme }) => ({
+const ErrorIconWrapper = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center', // Centers the icon vertically
+    marginLeft: '10px', // Adds spacing between last textbox and icon
+  }));
+
+// const UserCodeTextBoxes = styled(TextField)(({ theme }) => ({
+//     width: '40px',
+//     height: '54px',
+//     borderRadius: '8px',
+//     border: '2px solid #FFFFFF',
+//     color: '#FFFFFF',
+//     textAlign: 'center',
+//     input: {
+//         textAlign: 'center',
+//     },
+// }));
+
+const UserCodeTextBoxes = styled(TextField)<{ error?: boolean }>(({ theme, error }) => ({
     width: '40px',
     height: '54px',
     borderRadius: '8px',
-    border: '2px solid #FFFFFF',
-    color: '#FFFFFF',
-    textAlign: 'center',
+    backgroundColor: '#FFFFFF', // Background always white
+    color: '#000000', // Ensuring text is visible
+
+    "& .MuiOutlinedInput-root": {
+        border: `2px solid ${error ? theme.palette.error.main : '#CCCCCC'}`, // Ensuring a consistent border
+        borderRadius: '8px', // Keep the rounded edges
+
+        "& fieldset": {
+            borderColor: "transparent", // Hide default fieldset border
+        },
+        "&:hover fieldset": {
+            borderColor: error ? theme.palette.error.main : "#999999", // Slightly darker gray on hover
+        },
+        "&.Mui-focused": {
+            borderColor: error ? theme.palette.error.main : theme.palette.primary.main, // Custom focus color
+            borderWidth: "2px", // Ensures border stays visible
+        },
+    },
+
     input: {
         textAlign: 'center',
     },
 }));
+
+
+
+
 
 const ResendCodeText = styled(Typography)(({ theme }) => ({
     fontFamily: 'Rubik, sans-serif',
@@ -98,6 +137,7 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
     const [code, setCode] = useState(Array(6).fill(''));
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     const navigate = useNavigate(); // Initialize useNavigate
+    const [hasError, setHasError] = useState(false);
 
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
 
@@ -131,6 +171,7 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
             console.log('Confirmation successful!');
 
         } catch (error) {
+            setHasError(true)
             console.error('Error confirming sign-up:', error);
         }
 
@@ -187,18 +228,32 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
                 <VerifyText>Step 2: Verify Email</VerifyText>
                 <EnterText>Enter the verification code you have received in your email</EnterText>
                 <CodeandResendContainer>
-                    <UserCodeTextBoxesContainer>
-                        {code.map((value, index) => (
-                            <UserCodeTextBoxes
-                                key={`code-${uniqueKeys[index]}`}
-                                inputRef={(el) => setInputRef(index, el)}
-                                value={value}
-                                onChange={(e) => handleChange(e.target.value, index)}
-                                onKeyDown={(e) => handleKeyDown(e, index)}
-                                inputProps={{ maxLength: 1 }}
-                            />
-                        ))}
+                <UserCodeTextBoxesContainer>
+                    {code.map((value, index) => (
+                        <UserCodeTextBoxes
+                        key={`code-${uniqueKeys[index]}`}
+                        inputRef={(el) => setInputRef(index, el)}
+                        value={value}
+                        onChange={(e) => handleChange(e.target.value, index)}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                        inputProps={{ maxLength: 1 }}
+                        error={hasError} // Apply error styling per text box
+                        />
+                    ))}
+
+                    {/* Show error icon only when hasError is true */}
+                    {hasError && (
+                        <ErrorIconWrapper>
+                        <img
+                            src={errorIcon}
+                            alt="Error"
+                            style={{ cursor: 'pointer' }}
+                        />
+                        </ErrorIconWrapper>
+                    )}
                     </UserCodeTextBoxesContainer>
+
+
                     <ResendCodeText>Resend Code</ResendCodeText>
                 </CodeandResendContainer>
                 <VerifyBox>

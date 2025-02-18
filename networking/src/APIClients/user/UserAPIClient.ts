@@ -1,5 +1,6 @@
-import { BaseAPIClient } from '../BaseAPIClient';
-import { IUserAPIClient } from './interfaces/IUserAPIClient';
+// import { generateClient } from "@aws-amplify/api";
+import { BaseAPIClient, IQueryParameters, client } from '../BaseAPIClient';
+import { IUserAPIClient, } from './interfaces/IUserAPIClient';
 
 import {
   CreateUserInput,
@@ -13,7 +14,8 @@ import {
   TeacherIdAuthMutationVariables,
   UpdateUserInput,
   UpdateUserMutation,
-  UpdateUserMutationVariables
+  UpdateUserMutationVariables,
+  ListUsersQueryVariables
 
 } from "../../AWSMobileApi";
 
@@ -21,7 +23,8 @@ import {
   createUser,
   deleteUser,
   updateUser, 
-  teacherIdAuth
+  teacherIdAuth,
+  listUsers
 } from "../../graphql";
 
 // interface IUser {
@@ -35,11 +38,13 @@ import {
 //   gamesMade?: number | null,
 //   questionsMade?: number | null,
 // }
+// export const client = generateClient({});
 
 export class UserAPIClient
   extends BaseAPIClient
   implements IUserAPIClient
 {
+  
   async createUser<IUser>( 
     createUserInput: CreateUserInput
   ): Promise<IUser> {
@@ -50,16 +55,71 @@ export class UserAPIClient
     // you can disregard the parsing functions for now. We just need to determine what our input variables will be and what graphql function we should be passing 
     // to the this.callGraphlQL function that is defined in BaseAPIClient
 
-    // when we are all done, we should be able to do something like apiClients.userAPIClient.createUser({ Input stuff here}); to create the user on the button click
-    const input: CreateUserInput = createUserInput
-    const variables: CreateUserMutationVariables = { input }
-    console.log(variables)
-    const user = await this.callGraphQL<CreateUserMutation>(
-        createUser,
-        variables
-    )
+    const userNameFilter = { userName: { eq: createUserInput.userName } };
+    const emailFilter = { email: { eq: createUserInput.email } };
+
+    // Check if a user with the same username exists
+    const userNameVariables: IQueryParameters = { limit: 1, nextToken: null, filter: userNameFilter };
+    const userNameResponse = await client.graphql({ query: listUsers, variables: userNameVariables as ListUsersQueryVariables }) as { data: any };
+
+    // Check if a user with the same email exists
+    const emailVariables: IQueryParameters = { limit: 1, nextToken: null, filter: emailFilter };
+    const emailResponse = await client.graphql({ query: listUsers, variables: emailVariables as ListUsersQueryVariables }) as { data: any };
+
+    const userNameExists = userNameResponse.data?.listUsers?.items?.length > 0;
+    const emailExists = emailResponse.data?.listUsers?.items?.length > 0;
+
+    if (userNameExists && emailExists) {
+      throw new Error("Both username and email already exist.");
+    } else if (userNameExists) {
+      throw new Error("Username already exists.");
+    } else if (emailExists) {
+      throw new Error("Email already exists.");
+    }
+
+    // Proceed with user creation since both are unique
+    const input: CreateUserInput = createUserInput;
+    const variables: CreateUserMutationVariables = { input };
+
+    console.log("inside create USER");
+    const user = await this.callGraphQL<CreateUserMutation>(createUser, variables);
+
     return user as IUser;
+
   } 
+
+  // async isNicknameUnique(nickname: string): Promise<boolean> {
+  //   const query = `
+  //     query UserByUserName($userName: String!) {
+  //       userByUserName(userName: $userName) {
+  //         items {
+  //           id
+  //           userName
+  //         }
+  //       }
+  //     }
+  //   `;
+  
+  //   try {
+  //     const response = await client.graphql({
+  //       query,
+  //       variables: { userName: nickname },
+  //     }) as { data: { userByUserName: { items: Array<{ id: string; userName: string }> } } };
+  
+  //     // Check if the response structure is correct
+  //     if (response && response.data && response.data.userByUserName) {
+  //       const users = response.data.userByUserName.items;
+  //       console.log("Found users:", users);
+  //       return users.length === 0; // Unique if no matches
+  //     } else {
+  //       console.error("Unexpected response structure:", response);
+  //       return true; // Default to unique if the response is unexpected
+  //     }
+  //   } catch (error) {
+  //     console.error("Error checking nickname uniqueness:", error);
+  //     throw new Error("Failed to verify nickname uniqueness.");
+  //   }
+  // }
 
   async deleteUser<IUser>( 
     deleteUserInput: DeleteUserInput

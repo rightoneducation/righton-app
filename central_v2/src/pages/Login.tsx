@@ -149,6 +149,10 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
 
   const handleLoginClick = async () => {
+    const signOutResponse = await apiClients.auth.awsSignOut(); 
+    console.log(signOutResponse)
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     
     try {
       await apiClients.auth.awsSignIn(userName, password);

@@ -180,20 +180,19 @@ const PasswordContainer = styled(Box)(({ theme }) => ({
 }));
 
 const CustomTooltip = styled(Tooltip)({
-  '& .MuiTooltip-tooltip': {
-    backgroundColor: '#02215F !important', // Ensures the background applies
-    color: '#FFFFFF !important', // Ensures text remains white
+  "& .MuiTooltip-tooltip": {
+    backgroundColor: '#02215F', // Dark blue background
+    color: '#FFFFFF', // White text
     fontSize: '14px',
     padding: '10px 15px',
     borderRadius: '8px',
-    maxWidth: '250px', 
+    maxWidth: '250px',
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
   },
   '& .MuiTooltip-arrow': {
-    color: '#02215F !important', // Ensures arrow color matches the tooltip
+    color: '#02215F', // Ensure arrow color matches the tooltip background
   },
 });
-
 
 
 
@@ -321,12 +320,21 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
 
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
 
+
+  const [userTaken, setUserTaken] = useState(false);
+
+
   const togglePasswordRequirements = () => {
     setShowPasswordRequirements(!showPasswordRequirements);
   };
 
 
   const handleSubmit = async () => {
+    // Ensure the current user is logged out before proceeding with signup
+    const signOutResponse = await apiClients.auth.awsSignOut(); 
+    console.log(signOutResponse)
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     setLoading(true);
     setPasswordError(""); // Reset error before validation
     setPasswordConfirmError("")
@@ -374,6 +382,7 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
 
       handleUserCreate(userName); // Trigger switch to confirmation
     } catch (error) {
+      setUserTaken(true)
       console.error(error);
     }
     setLoading(false);
@@ -431,20 +440,28 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
               sx={{
                 backgroundColor: 'white'
               }}
-              // InputProps={{
-              //   endAdornment: 
-              //     <InputAdornment
-              //       position="end" 
-              //       sx={{ 
-              //         flexDirection: 'column',
-              //         // alignSelf: 'flex-start',
-              //         alignItems: 'center',
-              //         mt: '-20px'
-              //       }}
-              //     >
-              //       <ErrorIcon src={errorIcon} alt='error icon'/>
-              //     </InputAdornment>
-              // }}
+              InputProps={{
+                endAdornment: 
+                    <InputAdornment position="end">
+                      {userTaken && (
+                        <CustomTooltip
+                          title={
+                            <Typography sx = {{color: '#FFFFFF'}}>
+                              This username is taken.
+                            </Typography>
+                          }
+                          arrow
+                          placement="top"
+                        >
+                          <img
+                            src={errorIcon}
+                            alt="Error"
+                            style={{ cursor: 'pointer' }}
+                          />
+                        </CustomTooltip>
+                      )}
+                    </InputAdornment>
+              }}
             />
           </MiddleTextSecondRow>
           <UserTextField
@@ -554,7 +571,7 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
                     <CustomTooltip
                       title={
                         <Box>
-                          <Typography sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
+                          <Typography sx={{ color: '#FFFFFF' }}>
                             Passwords must:
                           </Typography>
                           <PasswordRequirementsList>
@@ -596,26 +613,24 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
               InputProps={{
                 endAdornment: 
                   <InputAdornment position="end">
-                  {passwordConfirmError && (
-                    <CustomTooltip
-                      title={
-                        <Box>
-                          <Typography sx={{ fontWeight: 'bold', color: '#FFFFFF' }}>
+                    {passwordConfirmError && (
+                      <CustomTooltip
+                        title={
+                          <Typography sx={{ color: '#FFFFFF' }}>
                             Passwords do not match.
                           </Typography>
-                        </Box>
-                      }
-                      arrow
-                      placement="top"
-                    >
-                      <img
-                        src={errorIcon}
-                        alt="Error"
-                        style={{ cursor: 'pointer' }}
-                      />
-                    </CustomTooltip>
-                  )}
-                </InputAdornment>
+                        }
+                        arrow
+                        placement="top"
+                      >
+                        <img
+                          src={errorIcon}
+                          alt="Error"
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </CustomTooltip>
+                    )}
+                  </InputAdornment>
               }}
             />
           </PasswordContainer>
