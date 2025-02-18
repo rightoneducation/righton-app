@@ -13,6 +13,7 @@ import { APIClientsContext } from './lib/context/APIClientsContext';
 import Theme from './lib/Theme';
 import AppSwitch from './switches/AppSwitch';
 import CreateQuestionLoader from './loaders/CreateQuestionLoader';
+import { AuthLoader } from './loaders/AuthLoader';
 
 function App() {
   const { apiClients, loading } = useAPIClients(
@@ -31,7 +32,7 @@ function App() {
       <>
         {apiClients && (
           <>
-            <Route path="/" element={<AppSwitch />} />
+            <Route path="/" element={<AppSwitch />} loader={AuthLoader}/>
             <Route path="/questions" element={<AppSwitch />} />
             <Route path="/signup" element={<AppSwitch />} />
             <Route path="/login" element={<AppSwitch />} />

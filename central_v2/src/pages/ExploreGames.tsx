@@ -23,12 +23,10 @@ import { ButtonType } from '../components/button/ButtonModels';
 
 interface ExploreGamesProps {
   screenSize: ScreenSize;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
 }
 
 export default function ExploreGames({
   screenSize,
-  setIsUserLoggedIn
 } : ExploreGamesProps) {
   const theme = useTheme();
   const {
@@ -61,7 +59,6 @@ export default function ExploreGames({
   const handleSignOut = async () => {
     console.log('here');
     const response = apiClients.auth.awsSignOut();
-    setIsUserLoggedIn(false);
     console.log(response);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');

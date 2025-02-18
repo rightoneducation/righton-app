@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import { useMatch } from 'react-router-dom';
+import { useMatch, useLoaderData } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { 
+  fetchAuthSession,
+} from 'aws-amplify/auth';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import AppContainer from '../containers/AppContainer';
@@ -34,15 +37,12 @@ function AppSwitch() {
       : ScreenSize.SMALL;
   const confirmationScreen = useMatch('/confirmation') !== null;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
+  const isUserLoggedIn = useLoaderData() as boolean;
 
-  // TODO: remove useeffect and monitor via hook etc
-  
-  
-  useEffect(() => {
-    setIsUserLoggedIn(apiClients.auth.isUserAuth);
-  }, [apiClients.auth.isUserAuth]);
-
+  console.log('is the user logged in?');
+  console.log(isUserLoggedIn);
+  fetchAuthSession().then((session) => {console.log(session)});
+ 
   switch (true) {
     case questionScreen: {
       return (
@@ -86,7 +86,7 @@ function AppSwitch() {
     default:{
       return (
         <AppContainer currentScreen={ScreenType.GAMES} isUserLoggedIn={isUserLoggedIn}>
-          <ExploreGames screenSize={screenSize} setIsUserLoggedIn={setIsUserLoggedIn}/>
+          <ExploreGames screenSize={screenSize}/>
         </AppContainer>
       );
     }

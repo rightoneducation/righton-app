@@ -51,3 +51,8 @@ export type CreateQuestionLocalData = {
   incompleteCards?: IncorrectCard[] | null,
   completeCards?: IncorrectCard[] | null
 }
+
+
+export type AuthLocalData ={
+  isUserAuth: boolean
+}
