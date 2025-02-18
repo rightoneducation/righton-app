@@ -136,34 +136,13 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
             alert('Please enter all 6 digits of the confirmation code.');
             return;
         }
-        try {
-            apiClients.auth.awsConfirmSignUp(schoolEmail, fullCode).then(() => {
-                console.log('confirmed');
-                if (password){
-                    // we have to sign in so that we have permission to upload images to the S3 bucket
-                    apiClients.auth.awsSignIn(schoolEmail, password).then(() => {
-                        console.log('signed in');
-                        if (!frontImage || !backImage) {
-                            console.log("Front and back images are required.");
-                            return;
-                        }
-
-                        // we can run the image uploads in parallel here with promises and then when each promise completes, we can navigate to the next page
-                        const frontImageUpload = handlerImageUpload(frontImage);
-                        const backImageUpload = handlerImageUpload(backImage);
-
-                        Promise.all([frontImageUpload, backImageUpload]).then(() => {
-                            console.log("Image Uploaded Successfully.")
-                            setIsVerifying(false);
-                            navigate('/'); // Navigate to the Signup page
-                        });
-                    })
-                }
-            });
-        } catch (error) {
-            // TODO: Clear backend resources and authsession so we don't get user data fragments if the above fails
-            console.error('Error in Confirmation Process:', error);
-        }
+        // apiClients.centralDataManager?.signUpSendConfirmationCode(schoolEmail, fullCode, password).then(() => {
+        //     setIsVerifying(false);
+        //     navigate('/login');
+        // }).catch((error: any) => {
+        //     setIsVerifying(false);
+        //     console.error('Error confirming sign up:', error);
+        // });
     };
     const handleResendCodeClick = async () => {
         try {
