@@ -37,6 +37,8 @@ function AppSwitch() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
 
   // TODO: remove useeffect and monitor via hook etc
+  
+  
   useEffect(() => {
     setIsUserLoggedIn(apiClients.auth.isUserAuth);
   }, [apiClients.auth.isUserAuth]);

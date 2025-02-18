@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, TextField, Typography, CircularProgress } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { GoogleLogin } from '@react-oauth/google';
@@ -134,6 +134,23 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+
+  // useEffect(() => {
+  //   const signOutUser = async () => {
+  //     try {
+  //       await apiClients.auth.awsSignOut();
+  //       localStorage.removeItem('accessToken');
+  //       localStorage.removeItem('refreshToken');
+  //       console.log("User signed out");
+  //     } catch (error) {
+  //       console.error("Error during sign-out:", error);
+  //     }
+  //   };
+  
+  //   if (apiClients.auth) {
+  //     signOutUser();
+  //   }
+  // }, [apiClients]);
 
   const handleLoginClick = async () => {
     try {

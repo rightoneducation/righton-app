@@ -33,7 +33,10 @@ export class AuthAPIClient
   async init(): Promise<void> {
     this.authEvents(null); 
     this.isUserAuth = await this.verifyAuth();
-  }
+    if (this.isUserAuth) {
+       console.log("User is authenticated on page load.");
+    }
+ }
 
   configAmplify(awsconfig: any): void {
     Amplify.configure(awsconfig);
@@ -124,15 +127,25 @@ export class AuthAPIClient
     await signOut();
   }
 
+  // async verifyAuth(): Promise<boolean> {
+  //   const session = await fetchAuthSession();
+  //   if (session && session.tokens && session.tokens.accessToken) {
+  //     const groups = session.tokens.accessToken.payload["cognito:groups"];
+  //     if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
+  //       return true;
+  //     }
+  //   };
+  //   return false;
+  // }
+
   async verifyAuth(): Promise<boolean> {
-    const session = await fetchAuthSession();
-    if (session && session.tokens && session.tokens.accessToken) {
-      const groups = session.tokens.accessToken.payload["cognito:groups"];
-      if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
-        return true;
-      }
-    };
-    return false;
+    try {
+       const session = await fetchAuthSession();
+       return !!session?.tokens?.accessToken; // If accessToken exists, user is authenticated
+    } catch (error) {
+       console.error("Error verifying auth:", error);
+       return false;
+    }
   }
 
    async verifyGameOwner(gameOwner: string): Promise<boolean> {

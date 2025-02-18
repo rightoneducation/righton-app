@@ -49,6 +49,8 @@ export default function ExploreGames({
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const isSearchResults = searchTerms.length > 0;
+
+  
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     setSelectedGame(game);
     setGameSet(games);
@@ -61,6 +63,8 @@ export default function ExploreGames({
     const response = apiClients.auth.awsSignOut();
     setIsUserLoggedIn(false);
     console.log(response);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
   }
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
