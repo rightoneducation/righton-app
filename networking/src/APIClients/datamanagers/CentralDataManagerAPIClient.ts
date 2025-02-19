@@ -112,8 +112,8 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, questions: []};
   };
 
-  public signUpSendConfirmationCode = async (user: IUser) => {
-    return this.authAPIClient.awsSignUp(user.userName, user.email, user.password ?? '');
+  public signUpSendConfirmationCode = async (signUpInput: {username: string, password: string, email: string}) => {
+    return this.authAPIClient.awsSignUp(signUpInput.username, signUpInput.email, signUpInput.password ?? '');
   };
 
   public signUpConfirmAndBuildBackendUser = async (user: IUser, confirmationCode: string, frontImage: File, backImage: File) => {

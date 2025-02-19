@@ -11,4 +11,6 @@ export type AWSUser = {
   createdAt: string
   updatedAt: string
   owner?: string | null
+  frontIdPath?: string | null
+  backIdPath?: string | null
 }

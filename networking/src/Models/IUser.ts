@@ -1,5 +1,6 @@
 export type IUser = {
-  id: string
+  cognitoId: string
+  dynamoId: string
   userName: string
   title?: string
   firstName?: string
@@ -8,4 +9,6 @@ export type IUser = {
   password?: string
   gamesMade?: number
   questionsMade?: number
+  frontIdPath?: string
+  backIdPath?: string
 }

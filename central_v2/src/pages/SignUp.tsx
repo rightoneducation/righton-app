@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
+import { IAPIClients } from '@righton/networking';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
@@ -16,7 +17,7 @@ import {
   TextContainerStyled,
 } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import errorIcon from '../images/errorIcon.svg';
-
+import { sign } from 'crypto';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -274,7 +275,7 @@ interface SignUpProps {
   setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
   backImage: File | null;
   setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
-  apiClients: any; // Replace with the exact type if you have one for `apiClients`
+  apiClients: IAPIClients;
   password: string
   setPassword: (value: string) => void
   confirmPassword: string
@@ -352,12 +353,12 @@ export default function SignUp({ handleUserCreate, frontImage, setFrontImage, ba
     };
 
     try {
-      const dynamocreate = await apiClients.user.createUser(user); // Save user to the backend
-      console.log(dynamocreate)
-
-      const awssignup = await apiClients.auth.awsSignUp(userName, schoolEmail, password);
-      console.log(awssignup)
-
+      const signupInput = {
+        username: userName,
+        password: password,
+        email: schoolEmail,
+      }
+      await apiClients.centralDataManager?.signUpSendConfirmationCode(signupInput);
       handleUserCreate(userName); // Trigger switch to confirmation
     } catch (error) {
       console.error(error);

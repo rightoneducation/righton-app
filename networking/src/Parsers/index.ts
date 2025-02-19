@@ -8,3 +8,4 @@ export * from './QuestionTemplateParser';
 export * from './TeamAnswerParser';
 export * from './TeamMemberParser';
 export * from './TeamParser';
+export * from './UserParser';
