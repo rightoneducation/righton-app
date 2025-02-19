@@ -8,5 +8,5 @@ import AWS from 'aws-sdk'; // Use ES Module syntax
 const s3 = new AWS.S3();
 
 export const handler = async (event) => {
-   console.log('sup');
+   
 };
