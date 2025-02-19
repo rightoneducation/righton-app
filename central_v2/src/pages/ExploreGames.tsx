@@ -60,11 +60,9 @@ export default function ExploreGames({
   // Debug button temporarily added for QA
   const handleSignOut = async () => {
     console.log('here');
-    const response = apiClients.auth.awsSignOut();
-    setIsUserLoggedIn(false);
-    console.log(response);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    // const response = apiClients.auth.awsSignOut();
+    const lambdaTest = await apiClients.auth.awsCleanUser('test');
+    console.log(lambdaTest);
   }
   return (
     <ExploreGamesMainContainer id="scrollableDiv">

@@ -11,6 +11,7 @@ export interface IAuthAPIClient {
   configAmplify(awsconfig: any): void;
   authEvents(payload: any): void;
   authListener(): void;
+  awsCleanUser(input: string): Promise<void>;
   awsSignUp(username: string, email: string, password: string): void;
   awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput>;
   awsSignIn(email: string, password: string): Promise<SignInOutput>;

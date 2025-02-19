@@ -7792,6 +7792,14 @@ export type TeacherIdAuthMutation = {
   teacherIdAuth?: string | null,
 };
 
+export type UserCleanerMutationVariables = {
+  input: string,
+};
+
+export type UserCleanerMutation = {
+  userCleaner?: string | null,
+};
+
 export type UploadExternalImageToS3MutationVariables = {
   input?: UploadExternalImageToS3Input | null,
 };

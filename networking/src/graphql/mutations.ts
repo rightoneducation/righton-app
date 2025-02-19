@@ -6207,6 +6207,13 @@ export const teacherIdAuth = /* GraphQL */ `mutation TeacherIdAuth($input: Teach
   APITypes.TeacherIdAuthMutationVariables,
   APITypes.TeacherIdAuthMutation
 >;
+export const userCleaner = /* GraphQL */ `mutation UserCleaner($input: String!) {
+  userCleaner(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.UserCleanerMutationVariables,
+  APITypes.UserCleanerMutation
+>;
 export const uploadExternalImageToS3 = /* GraphQL */ `mutation UploadExternalImageToS3($input: UploadExternalImageToS3Input) {
   uploadExternalImageToS3(input: $input)
 }
