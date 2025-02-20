@@ -31,7 +31,7 @@
         },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-test-75e09-deployment",
-          "s3Key": "amplify-builds/teacherIdAuth-554e525679703132595a-build.zip"
+          "s3Key": "amplify-builds/teacherIdAuth-45723472713038476966-build.zip"
         },
         "uploadExternalImageToS3": {
           "deploymentBucketName": "amplify-mobile-test-75e09-deployment",
@@ -47,7 +47,7 @@
         },
         "UserCleaner": {
           "deploymentBucketName": "amplify-mobile-test-75e09-deployment",
-          "s3Key": "amplify-builds/UserCleaner-6948736e51385375754e-build.zip"
+          "s3Key": "amplify-builds/UserCleaner-386b386b353831595a37-build.zip"
         }
       },
       "storage": {

@@ -76,6 +76,7 @@ export class AuthAPIClient
     const client = generateClient({});
     const response = client.graphql({query: userCleaner, variables, authMode: authMode });
     console.log(response);
+
   }
 
   async awsSignUp(username: string, email: string, password: string) {
