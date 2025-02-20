@@ -1,5 +1,5 @@
 export type AWSUser = {
-  id: string
+  id?: string
   userName: string
   title?: string | null
   firstName?: string | null
@@ -8,8 +8,8 @@ export type AWSUser = {
   password?: string | null
   gamesMade?: number | null
   questionsMade?: number | null
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
   owner?: string | null
   frontIdPath?: string | null
   backIdPath?: string | null

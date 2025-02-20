@@ -164,7 +164,7 @@ export class AuthAPIClient
   ): Promise<String> {
     const user = (await fetchAuthSession()).identityId;
     const result = await uploadData({
-      path: `private/${user}/test.png`,
+      path: `private/${user}/${image.name}`,
       data: image,
       options: { contentType: image.type }
     }).result;

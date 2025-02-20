@@ -57,37 +57,6 @@ export default function ExploreGames({
     setIsTabsOpen(true);
   };
 
-
-   // Debug button temporarily added for QA
-   const handleTestDownload= async () => {
-    console.log('here');
-    const response = await apiClients.user.downloadImagePrivate();
-    if (response){
-      setImgSrc(response);
-    }
-  }
-
-  // Debug button temporarily added for QA
-  const handleTestUploadPublic = async () => {
-    console.log('here');
-    const fetchedImage = await fetch(test);
-    const blob = await fetchedImage.blob();
-    const image = new File([blob], 'test.png', { type: 'image/png' });
-    const response = await apiClients.user.uploadImagePublic(image);
-    setIsUserLoggedIn(false);
-    console.log(response);
-  }
-
-  const handleTestUploadPrivate = async () => {
-    console.log('here');
-    const fetchedImage = await fetch(test);
-    const blob = await fetchedImage.blob();
-    const image = new File([blob], 'test.png', { type: 'image/png' });
-    const response = await apiClients.user.uploadImagePrivate(image);
-    setIsUserLoggedIn(false);
-    console.log(response);
-  }
-
   // Debug button temporarily added for QA
   const handleSignOut = async () => {
     console.log('here');

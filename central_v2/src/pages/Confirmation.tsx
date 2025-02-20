@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { TextField, Box, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
+import { IUserProfile } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -94,15 +95,14 @@ const VerifyBox = styled(Box)(({ theme }) => ({
 
 // Props interface
 interface ConfirmationProps {
-    schoolEmail?: string;
-    frontImage?: File | null;
-    backImage?: File | null;
+    userProfile: IUserProfile;
+    frontImage: File;
+    backImage: File;
     handlerImageUpload: (file: File) => Promise<any>;
-    password?: string
 }
 
 // Use function declaration for the component
-function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpload, password}: ConfirmationProps) {
+function Confirmation({ userProfile, frontImage, backImage, handlerImageUpload}: ConfirmationProps) {
     const theme = useTheme();
     const [code, setCode] = useState(Array(6).fill(''));
     const [isVerifying, setIsVerifying] = useState(false);
@@ -134,19 +134,19 @@ function Confirmation({ schoolEmail = '', frontImage, backImage, handlerImageUpl
         const fullCode = code.join('');
         if (fullCode.length < 6) {
             alert('Please enter all 6 digits of the confirmation code.');
-            return;
         }
-        // apiClients.centralDataManager?.signUpSendConfirmationCode(schoolEmail, fullCode, password).then(() => {
-        //     setIsVerifying(false);
-        //     navigate('/login');
-        // }).catch((error: any) => {
-        //     setIsVerifying(false);
-        //     console.error('Error confirming sign up:', error);
-        // });
+        try {
+            await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(userProfile, fullCode, frontImage, backImage);
+            setIsVerifying(false);
+            navigate('/');
+        } catch (error: any) {
+            setIsVerifying(false);
+            console.error('Error confirming sign up:', error);
+        }
     };
     const handleResendCodeClick = async () => {
         try {
-            await apiClients.auth.resendConfirmationCode(schoolEmail);
+            await apiClients.auth.awsResendConfirmationCode(userProfile.email);
             console.log('Confirmation code resent!');
         } catch (error) {
             console.error('Error resending confirmation code:', error);

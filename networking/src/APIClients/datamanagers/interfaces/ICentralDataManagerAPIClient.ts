@@ -1,5 +1,5 @@
 import { IGameTemplate, IQuestionTemplate } from "../../../Models";
-import { IUser } from "../../../Models/IUser";
+import { IUserProfile } from "../../../Models/IUserProfile";
 import { PublicPrivateType, SortDirection, SortType, GradeTarget } from "../../BaseAPIClient";
 
 
@@ -24,6 +24,6 @@ export interface ICentralDataManagerAPIClient {
     sortType: SortType, 
     gradeTargets: GradeTarget[]
   ) => Promise<{ nextToken: string | null, questions: IQuestionTemplate[] }>;
-  signUpSendConfirmationCode(user: IUser): Promise<void>;
-  signUpConfirmAndBuildBackendUser(user: IUser, confirmationCode: string, frontImage: File, backImage: File): Promise<void>;
+  signUpSendConfirmationCode(user: IUserProfile): Promise<void>;
+  signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ user: any; images: any[] }>;
 }
