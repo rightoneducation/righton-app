@@ -1,7 +1,7 @@
 export type IUserProfile = {
   id?: string
-  cognitoId: string
-  dynamoId: string
+  cognitoId?: string
+  dynamoId?: string
   username: string
   title?: string
   firstName?: string

@@ -315,19 +315,19 @@ export default function SignUp({
     setLoading(true);
     setPasswordError(""); // Reset error before validation
     setPasswordConfirmError("")
-    if (userProfile.password.length < 8) {
+    if (userProfile && userProfile.password && userProfile.password.length < 8) {
       setPasswordError("Password must be at least 8 characters long.");
       setLoading(false);
       return;
     }
 
-    if (!/[A-Za-z]/.test(userProfile.password)) {
+    if (!/[A-Za-z]/.test(userProfile.password ?? '')) {
       setPasswordError("Password must include at least one letter.");
       setLoading(false);
       return;
     }
 
-    if (!/\d/.test(userProfile.password)) {
+    if (!/\d/.test(userProfile.password ?? '')) {
       setPasswordError("Password must include at least one number.");
       setLoading(false);
       return;
