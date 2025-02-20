@@ -8,3 +8,4 @@ export * from './AWSQuestionTemplate';
 export * from './AWSTeam';
 export * from './AWSTeamAnswer';
 export * from './AWSTeamMember';
+export * from './AWSUser';

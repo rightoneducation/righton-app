@@ -9,4 +9,6 @@ export * from './IQuestion';
 export * from './IQuestionTemplate';
 export * from './ITeam';
 export * from './ITeamMember';
+export * from './IUser';
+export * from './IUserProfile';
 export * from './AWS';

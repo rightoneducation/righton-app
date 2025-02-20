@@ -81,7 +81,7 @@ export class APIClients {
     } else if (appType ===AppType.HOST) {
       this.hostDataManager = new HostDataManagerAPIClient(env, this.gameSession, this.question, this.team, this.teamMember, this.teamAnswer);
     } else {
-      this.centralDataManager = new CentralDataManagerAPIClient(env, this.gameTemplate, this.questionTemplate);
+      this.centralDataManager = new CentralDataManagerAPIClient(env, this.auth, this.user, this.gameTemplate, this.questionTemplate);
     }
   }
   static async create(env: Environment, appType: AppType): Promise<APIClients> {

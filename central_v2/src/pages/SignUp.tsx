@@ -3,20 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
+import { IAPIClients, IUserProfile } from '@righton/networking';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import RightOnLogo from "../images/RightOnLogo.png";
 import Adpic from "../images/@.svg"
-import Confirmation from './Confirmation';
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
-import { APIClientsContext } from '../lib/context/APIClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { 
   TextContainerStyled,
 } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import errorIcon from '../images/errorIcon.svg';
-
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -265,29 +262,31 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
   objectFit: 'cover'
 }));
 
-
-
-
 interface SignUpProps {
-  handleUserCreate: (user: string) => void;
+  apiClients: IAPIClients;
+  userProfile: IUserProfile;
+  setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>; 
+  handleUserCreate: () => void;
   frontImage: File | null;
   setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
   backImage: File | null;
   setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
-  apiClients: any; // Replace with the exact type if you have one for `apiClients`
-  password: string
-  setPassword: (value: string) => void
-  confirmPassword: string
-  schoolEmail: string
-  setSchoolEmail: React.Dispatch<React.SetStateAction<string>>;
-  setConfirmPassword: (value: string) => void
+  confirmPassword: string;
+  setConfirmPassword: (value: string) => void;
 }
-function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBackImage, apiClients, password, setPassword, confirmPassword, setConfirmPassword, schoolEmail, setSchoolEmail}: SignUpProps ) {
+export default function SignUp({ 
+  apiClients, 
+  userProfile, 
+  setUserProfile, 
+  handleUserCreate, 
+  frontImage, 
+  setFrontImage, 
+  backImage, 
+  setBackImage,
+  confirmPassword,
+  setConfirmPassword
+}: SignUpProps ) {
   const theme = useTheme();
-  const [title, setTitle] = useState('Title...');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [userName, setUserName] = useState('');
 
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
@@ -316,49 +315,33 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
     setLoading(true);
     setPasswordError(""); // Reset error before validation
     setPasswordConfirmError("")
-    if (password.length < 8) {
+    if (userProfile.password.length < 8) {
       setPasswordError("Password must be at least 8 characters long.");
       setLoading(false);
       return;
     }
 
-    if (!/[A-Za-z]/.test(password)) {
+    if (!/[A-Za-z]/.test(userProfile.password)) {
       setPasswordError("Password must include at least one letter.");
       setLoading(false);
       return;
     }
 
-    if (!/\d/.test(password)) {
+    if (!/\d/.test(userProfile.password)) {
       setPasswordError("Password must include at least one number.");
       setLoading(false);
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (userProfile.password !== confirmPassword) {
       setPasswordConfirmError("Passwords don't match");
       setLoading(false);
       return;
     }
 
-    const user = {
-      userName,
-      title,
-      firstName,
-      lastName,
-      email: schoolEmail,
-      password,
-      gamesMade: 77,
-      questionsMade: 16,
-    };
-
     try {
-      const dynamocreate = await apiClients.user.createUser(user); // Save user to the backend
-      console.log(dynamocreate)
-
-      const awssignup = await apiClients.auth.awsSignUp(userName, schoolEmail, password);
-      console.log(awssignup)
-
-      handleUserCreate(userName); // Trigger switch to confirmation
+      await apiClients.centralDataManager?.signUpSendConfirmationCode(userProfile);
+      handleUserCreate(); // Trigger switch to confirmation
     } catch (error) {
       console.error(error);
     }
@@ -381,8 +364,14 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
           <MiddleTextFirstRow>
             <TitleField
               select
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
+              value={userProfile.title}
+              onChange={(event) => setUserProfile((prev) => {
+                return {
+                  ...prev,
+                  title: event.target.value,
+                  };
+                }
+              )}
               variant="outlined"
               SelectProps={{
                 IconComponent: DropDown, // Custom icon component
@@ -397,14 +386,26 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
             <TextContainerStyled
               variant="outlined"
               placeholder="First Name"
-              value={firstName}
-              onChange={(event) => setFirstName(event.target.value)}
+              value={userProfile.firstName}
+              onChange={(event) => setUserProfile((prev) => {
+                return {
+                  ...prev,
+                  firstName: event.target.value,
+                  };
+                }
+              )}
             />
             <TextContainerStyled
               variant="outlined"
               placeholder="Last Name"
-              value={lastName}
-              onChange={(event) => setLastName(event.target.value)}
+              value={userProfile.lastName}
+              onChange={(event) => setUserProfile((prev) => {
+                return {
+                  ...prev,
+                  lastName: event.target.value,
+                  };
+                }
+              )}
             />
           </MiddleTextFirstRow>
           <MiddleTextSecondRow>
@@ -412,8 +413,14 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
-              value={userName}
-              onChange={(event) => setUserName(event.target.value)}
+              value={userProfile.username}
+              onChange={(event) => setUserProfile((prev) => {
+                return {
+                  ...prev,
+                  username: event.target.value,
+                  };
+                }
+              )}
               sx={{
                 backgroundColor: 'white'
               }}
@@ -422,8 +429,14 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
           <TextContainerStyled
             variant="outlined"
             placeholder="School Email..."
-            value={schoolEmail}
-            onChange={(event) => setSchoolEmail(event.target.value)}
+            value={userProfile.email}
+            onChange={(event) => setUserProfile((prev) => {
+              return {
+                ...prev,
+                email: event.target.value,
+                };
+              }
+            )}
           />
           <MiddleTextFourthRow>Teacher ID Image</MiddleTextFourthRow>
         </MiddleText>
@@ -517,8 +530,14 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
           <TextContainerStyled
             variant="outlined"
             placeholder="Password..."
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            value={userProfile.password}
+            onChange={(event) => setUserProfile((prev) => {
+              return {
+                ...prev,
+                password: event.target.value,
+                };
+              }
+            )}
             error={!!passwordError}
             sx={{
               backgroundColor: 'white',
@@ -642,41 +661,5 @@ function SignUp({ handleUserCreate, frontImage, setFrontImage, backImage, setBac
         </LowerLogin>
       </InnerBodyContainer>
     </SignUpMainContainer>
-  );
-}
-
-export default function SignUpSwitch() {
-
-  const [userName, setUserName] = useState(''); // Track the submitted username
-  const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
-  const [frontImage, setFrontImage] = useState<File | null>(null);
-  const [backImage, setBackImage] = useState<File | null>(null);
-  const [schoolEmail, setSchoolEmail] = useState('');
-
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
-
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-
-  const handlerImageUpload = async (file: File) => {
-    const fileName = file.name
-    const fileType = file.type
-    const response = await apiClients.user.uploadTeacherId(file, fileName, fileType)
-    return response
-  }
-
-  const handleUserCreate = (user: string) => {
-    setUserName(user);
-    setIsUserSubmitted(true); // Trigger confirmation view
-  };
-
-  return isUserSubmitted ? (
-    <Confirmation schoolEmail={schoolEmail} frontImage={frontImage} backImage={backImage} handlerImageUpload={handlerImageUpload}
-    password={password}/> // Render confirmation page
-  ) : (
-    <SignUp handleUserCreate={handleUserCreate} frontImage={frontImage} setFrontImage={setFrontImage} 
-    backImage={backImage} setBackImage={setBackImage} apiClients={apiClients} password={password} setPassword={setPassword}
-    confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword} schoolEmail={schoolEmail} setSchoolEmail={setSchoolEmail}/> // Render signup page
   );
 }

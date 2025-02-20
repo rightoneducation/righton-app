@@ -84,6 +84,11 @@
     }
   },
   "function": {
+    "S3Trigger04eb3a91": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "createGameTest": {
       "build": true,
       "dependsOn": [
@@ -131,6 +136,22 @@
         {
           "category": "auth",
           "resourceName": "mobile6060603c"
+        }
+      ]
+    },
+    "AMPLIFY_function_S3Trigger04eb3a91_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ]
+    },
+    "AMPLIFY_function_S3Trigger04eb3a91_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
         }
       ]
     },
@@ -240,8 +261,18 @@
     }
   },
   "storage": {
-    "gamequestionimages": {
-      "dependsOn": [],
+    "rightoncentralstorage": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ],
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "S3"
     }

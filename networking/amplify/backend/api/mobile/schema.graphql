@@ -18,6 +18,8 @@ type User @model
   password: String
   gamesMade: Int
   questionsMade: Int
+  frontIdPath: String
+  backIdPath: String
 }
 
 type Mutation {

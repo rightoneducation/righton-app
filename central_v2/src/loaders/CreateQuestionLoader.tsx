@@ -13,6 +13,5 @@ export  default function CreateQuestion(): CreateQuestionLocalData {
       incompleteAnswers = parsedObject.incorrectCards.filter((card) =>  card.isCardComplete === false);
       completeAnswers = parsedObject.incorrectCards.filter((card) => card.isCardComplete);
     }
-    return {draftQuestion: parsedObject, incompleteCards: incompleteAnswers, completeCards: completeAnswers }
-  
+    return {draftQuestion: parsedObject, incompleteCards: incompleteAnswers, completeCards: completeAnswers } 
 }
