@@ -42,7 +42,6 @@ export default function DebugAuth(){
   const apiClients = useTSAPIClientsContext(APIClientsContext);
 
   const handleLogin = async () => {
-    
     setIsLoading(true);
     if (!checked){
       const response = await apiClients.auth.awsSignIn('debuguser', 'debugpassword123');

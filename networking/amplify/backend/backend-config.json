@@ -139,6 +139,7 @@
         }
       ]
     },
+<<<<<<< HEAD
     "AMPLIFY_function_UserCleaner_deploymentBucketName": {
       "usedBy": [
         {
@@ -152,6 +153,21 @@
         {
           "category": "function",
           "resourceName": "UserCleaner"
+=======
+    "AMPLIFY_function_S3Trigger04eb3a91_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ]
+    },
+    "AMPLIFY_function_S3Trigger04eb3a91_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+>>>>>>> dev
         }
       ]
     },
@@ -261,8 +277,18 @@
     }
   },
   "storage": {
-    "gamequestionimages": {
-      "dependsOn": [],
+    "rightoncentralstorage": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ],
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "S3"
     }

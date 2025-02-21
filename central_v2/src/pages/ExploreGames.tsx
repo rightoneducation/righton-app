@@ -20,6 +20,7 @@ import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
+import test from '../images/test.png';
 
 interface ExploreGamesProps {
   screenSize: ScreenSize;
@@ -48,6 +49,7 @@ export default function ExploreGames({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
+  const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = searchTerms.length > 0;
 
   
@@ -66,6 +68,7 @@ export default function ExploreGames({
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   }
+
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 

@@ -74,7 +74,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "gamequestionimages": {
+    "rightoncentralstorage": {
       "BucketName": "string",
       "Region": "string"
     }

@@ -7,7 +7,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
-import SignUp from '../pages/SignUp';
+import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
@@ -65,7 +65,7 @@ function AppSwitch() {
     case signUpScreen: {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
-          <SignUp />
+          <SignUpSwitch />
         </AppContainer>
       );
     }
