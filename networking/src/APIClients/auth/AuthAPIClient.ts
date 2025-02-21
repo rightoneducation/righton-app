@@ -1,4 +1,4 @@
-import { Amplify } from "aws-amplify";
+import { Amplify  } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
 import { Hub, CookieStorage  } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
@@ -21,7 +21,7 @@ import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
-import { userCleaner } from '../../graphql';
+import { userCleaner } from "../../graphql";
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -36,10 +36,7 @@ export class AuthAPIClient
   async init(): Promise<void> {
     this.authEvents(null); 
     this.isUserAuth = await this.verifyAuth();
-    if (this.isUserAuth) {
-       console.log("User is authenticated on page load.");
-    }
- }
+  }
 
   configAmplify(awsconfig: any): void {
     Amplify.configure(awsconfig);
@@ -51,7 +48,7 @@ export class AuthAPIClient
     const session = await fetchAuthSession();
     if (session && session.tokens && session.tokens.accessToken) {
       const groups = session.tokens.accessToken.payload["cognito:groups"];
-      if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
+      if (Array.isArray(groups) && groups.includes('authusers')) {
         return true;
       }
     };
@@ -75,6 +72,14 @@ export class AuthAPIClient
   async getCurrentUserName(): Promise<string>{
     const { username } = await getCurrentUser();
     return username
+  }
+
+  async awsCleanUser(input: string): Promise<void> {
+    const authMode = this.isUserAuth ? "userPool" : "iam"
+    const variables = { input }
+    const client = generateClient({});
+    const response = client.graphql({query: userCleaner, variables, authMode: authMode });
+    console.log(response);
   }
 
   async getUserNickname(): Promise<string | null> {
@@ -114,15 +119,6 @@ export class AuthAPIClient
       this.authEvents(payload);
       }
     );
-  }
-
-  async awsCleanUser(input: string): Promise<void> {
-    const authMode = this.isUserAuth ? "userPool" : "iam"
-    const variables = { input }
-    const client = generateClient({});
-    const response = client.graphql({query: userCleaner, variables, authMode: authMode });
-    console.log(response);
-
   }
 
   async awsSignUp(username: string, email: string, password: string) {
@@ -168,47 +164,7 @@ export class AuthAPIClient
     await signOut();
   }
 
-  // async verifyAuth(): Promise<boolean> {
-  //   const session = await fetchAuthSession();
-  //   if (session && session.tokens && session.tokens.accessToken) {
-  //     const groups = session.tokens.accessToken.payload["cognito:groups"];
-  //     if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
-  //       return true;
-  //     }
-  //   };
-  //   return false;
-  // }
-
-  async verifyAuth(): Promise<boolean> {
-    try {
-       const session = await fetchAuthSession();
-       return !!session?.tokens?.accessToken; // If accessToken exists, user is authenticated
-    } catch (error) {
-       console.error("Error verifying auth:", error);
-       return false;
-    }
-  }
-
-   async verifyGameOwner(gameOwner: string): Promise<boolean> {
-    const { username } = await getCurrentUser();
-    if (username === gameOwner)
-      return true;
-    return false;
-   }
-
-   async verifyQuestionOwner(questionOwner: string): Promise<boolean> {
-    const { username } = await getCurrentUser();
-    if (username === questionOwner)
-      return true;
-    return false;
-   }
-
-   async getCurrentUserName(): Promise<string>{
-    const { username } = await getCurrentUser();
-    return username
-   }
-
-   async resendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {
+  async awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {
     const response = await resendSignUpCode({username: email});
     return response;
   }

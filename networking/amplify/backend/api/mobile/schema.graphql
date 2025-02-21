@@ -53,7 +53,6 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
-
   waegen(input: WaeGenInput): String
   @function(name: "waegen-${env}")
     @auth(
@@ -62,7 +61,6 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
-
   waeregen(input: WaeRegenInput): String
   @function(name: "waeregen-${env}")
     @auth(

@@ -84,7 +84,7 @@
     }
   },
   "function": {
-    "UserCleaner": {
+    "S3Trigger04eb3a91": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -119,6 +119,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "userCleaner": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "waegen": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -139,21 +144,6 @@
         }
       ]
     },
-<<<<<<< HEAD
-    "AMPLIFY_function_UserCleaner_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "UserCleaner"
-        }
-      ]
-    },
-    "AMPLIFY_function_UserCleaner_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "UserCleaner"
-=======
     "AMPLIFY_function_S3Trigger04eb3a91_deploymentBucketName": {
       "usedBy": [
         {
@@ -167,7 +157,6 @@
         {
           "category": "function",
           "resourceName": "S3Trigger04eb3a91"
->>>>>>> dev
         }
       ]
     },
@@ -240,6 +229,22 @@
         {
           "category": "function",
           "resourceName": "uploadExternalImageToS3"
+        }
+      ]
+    },
+    "AMPLIFY_function_userCleaner_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_userCleaner_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userCleaner"
         }
       ]
     },

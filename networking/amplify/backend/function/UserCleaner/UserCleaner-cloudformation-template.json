@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "UserCleaner",
+            "userCleaner",
             {
               "Fn::Join": [
                 "",
                 [
-                  "UserCleaner",
+                  "userCleaner",
                   "-",
                   {
                     "Ref": "env"
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "mobileLambdaRole58ebda1a",
+            "mobileLambdaRole1487a2ea",
             {
               "Fn::Join": [
                 "",
                 [
-                  "mobileLambdaRole58ebda1a",
+                  "mobileLambdaRole1487a2ea",
                   "-",
                   {
                     "Ref": "env"

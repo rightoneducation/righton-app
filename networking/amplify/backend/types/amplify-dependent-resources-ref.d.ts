@@ -23,7 +23,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "UserCleaner": {
+    "S3Trigger04eb3a91": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
@@ -52,6 +52,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Region": "string"
     },
     "uploadExternalImageToS3": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "userCleaner": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

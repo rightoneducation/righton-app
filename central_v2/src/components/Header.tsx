@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
-import dice from '../images/Dice.svg';
+import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
 import qmark from '../images/qmark.svg';
 import qmarkPink from '../images/qmarkPink.svg';
@@ -80,36 +80,6 @@ const TransparentButton = styled(Button)<{
   },
 }));
 
-const PrimaryButton2 = styled(Button)(({ theme }) => ({
-  width: '123px',
-  minWidth: '44px',
-  height: '38px',
-  gap: `${theme.sizing.xSmPadding}px`,
-  borderRadius: '54px',
-  background: 'linear-gradient(90deg, #E81144 0%, #E31C5E 100%)',
-  boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.3)',
-  color: '#FFFFFF',
-  textTransform: 'none',
-}));
-
-const PrimaryButton2Text = styled(Typography)(() => ({
-  height: '30px',
-  fontFamily: 'Poppins',
-  fontWeight: '700',
-  fontSize: '20px',
-  lineHeight: '30px',
-  color: '#FFFFFF',
-}));
-const CreateBox = styled(Box)(({ theme }) => ({
-  width: '199px',
-  height: '154px',
-  padding: `${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px ${theme.sizing.xSmPadding}px ${theme.sizing.smPadding}px`,
-  gap: `${theme.sizing.smPadding}px`,
-  borderRadius: `${theme.sizing.smPadding}px`,
-  background: '#36598D',
-  boxSizing: 'border-box',
-}));
-
 const CreateButtonContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -175,7 +145,6 @@ export default function Header({
     setMenuOpen(!menuOpen);
   };
 
-  console.log(menuOpen);
   const handleButtonClick = (screen: ScreenType) => {
     setSelectedScreen(screen);
     switch (screen) {

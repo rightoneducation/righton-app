@@ -39,7 +39,7 @@ export default function SignUpSwitch() {
       frontImage={frontImage ?? new File([''], 'filename')} 
       backImage={backImage ?? new File([''], 'filename')} 
       handlerImageUpload={handlerImageUpload}
-    /> // Render confirmation page
+    />
   ) : (
     <SignUp
       apiClients={apiClients} 
@@ -52,6 +52,6 @@ export default function SignUpSwitch() {
       setBackImage={setBackImage} 
       confirmPassword={confirmPassword}
       setConfirmPassword={setConfirmPassword}
-    /> // Render signup page
+    />
   );
 }
