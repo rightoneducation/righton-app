@@ -3,6 +3,7 @@ import {
   ElementType,
   GalleryType,
   IGameTemplate,
+  IUserProfile,
 } from '@righton/networking';
 import { Box, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -20,14 +21,15 @@ import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
-import test from '../images/test.png';
 
 interface ExploreGamesProps {
+  userProfile: IUserProfile;
   screenSize: ScreenSize;
   setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
 }
 
 export default function ExploreGames({
+  userProfile,
   screenSize,
   setIsUserLoggedIn
 } : ExploreGamesProps) {
@@ -69,9 +71,18 @@ export default function ExploreGames({
     localStorage.removeItem('refreshToken');
   }
 
+  
+
+  const handleDeleteUser = async () => {
+    const session = await apiClients.auth.getCurrentSession();
+    const response = apiClients.auth.awsUserCleaner(userProfile, session);
+    console.log(response);
+  }
+
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 
+        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleDeleteUser()} />  
         <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleSignOut()} />  
       </Box>
       <ExploreGamesUpperContainer screenSize={screenSize}>

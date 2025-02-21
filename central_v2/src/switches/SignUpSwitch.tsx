@@ -5,17 +5,16 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import SignUp from '../pages/SignUp';
 import Confirmation from '../pages/Confirmation';
 
-export default function SignUpSwitch() {
+interface SignUpSwitchProps{
+  userProfile: IUserProfile;
+  setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>;
+}
+
+export default function SignUpSwitch({
+  userProfile,
+  setUserProfile
+}:SignUpSwitchProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const blankUserProfile = {
-    title: 'Title...',
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    password: '',
-  }
-  const [userProfile, setUserProfile] = useState<IUserProfile>(blankUserProfile);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
 
   const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
@@ -36,6 +35,7 @@ export default function SignUpSwitch() {
   return isUserSubmitted ? (
     <Confirmation
       userProfile={userProfile}
+      setUserProfile={setUserProfile}
       frontImage={frontImage ?? new File([''], 'filename')} 
       backImage={backImage ?? new File([''], 'filename')} 
       handlerImageUpload={handlerImageUpload}

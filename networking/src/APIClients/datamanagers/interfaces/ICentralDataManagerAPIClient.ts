@@ -25,5 +25,5 @@ export interface ICentralDataManagerAPIClient {
     gradeTargets: GradeTarget[]
   ) => Promise<{ nextToken: string | null, questions: IQuestionTemplate[] }>;
   signUpSendConfirmationCode(user: IUserProfile): Promise<void>;
-  signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ user: any; images: any[] }>;
+  signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
 }

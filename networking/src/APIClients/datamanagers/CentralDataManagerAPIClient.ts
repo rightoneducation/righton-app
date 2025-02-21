@@ -6,6 +6,10 @@ import { IUserProfile } from '../../Models/IUserProfile';
 import { IAuthAPIClient } from '../auth';
 import { IUserAPIClient } from '../user';
 import { UserParser } from '../../Parsers/UserParser';
+import {
+  getCurrentUser,
+  fetchAuthSession
+} from 'aws-amplify/auth';
 
 export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient{
   protected env: Environment;
@@ -119,14 +123,31 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
   public signUpConfirmAndBuildBackendUser = async (user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File) => {
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
-    await this.authAPIClient.awsConfirmSignUp(user.email, confirmationCode);
-    await this.authAPIClient.awsSignIn(user.email, user.password ?? '');
-    const images = await Promise.all([
-      this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
-      this.authAPIClient.awsUploadImagePrivate(backImage) as any
-    ]);
-    createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
-    await this.userAPIClient.createUser(createUserInput);
-    return { user, images };
+    let updatedUser = JSON.parse(JSON.stringify(user));
+    try {
+      await this.authAPIClient.awsConfirmSignUp(user.email, confirmationCode);
+      await this.authAPIClient.awsSignIn(user.email, user.password ?? '');
+      const currentUser = await getCurrentUser();
+      updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
+      const session = await fetchAuthSession();
+      console.log('current session:');
+      console.log(session);
+      console.log('current user:');
+      console.log(currentUser);
+      const images = await Promise.all([
+        this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
+        this.authAPIClient.awsUploadImagePrivate(backImage) as any
+      ]);
+      createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
+      updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
+      const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
+      updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      
+      console.log('here');
+      return { updatedUser, images };
+    } catch (error) {
+      // this.authAPIClient.awsUserCleaner(user);
+      throw new Error ('Error confirming sign up');
+    }
   };
 }

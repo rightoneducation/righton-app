@@ -39,9 +39,10 @@ type Mutation {
     ]
   )
   userCleaner(input: String!): String 
-  @function(name: "UserCleaner-${env}") 
+  @function(name: "userCleaner-${env}") 
   @auth(
     rules: [
+      { allow: public, provider: iam  },
       { allow: private, provider: userPools }
     ]
   )

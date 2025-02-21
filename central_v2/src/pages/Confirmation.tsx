@@ -96,13 +96,14 @@ const VerifyBox = styled(Box)(({ theme }) => ({
 // Props interface
 interface ConfirmationProps {
     userProfile: IUserProfile;
+    setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>;
     frontImage: File;
     backImage: File;
     handlerImageUpload: (file: File) => Promise<any>;
 }
 
 // Use function declaration for the component
-function Confirmation({ userProfile, frontImage, backImage, handlerImageUpload}: ConfirmationProps) {
+function Confirmation({ userProfile, setUserProfile, frontImage, backImage, handlerImageUpload}: ConfirmationProps) {
     const theme = useTheme();
     const [code, setCode] = useState(Array(6).fill(''));
     const [isVerifying, setIsVerifying] = useState(false);
@@ -136,7 +137,8 @@ function Confirmation({ userProfile, frontImage, backImage, handlerImageUpload}:
             alert('Please enter all 6 digits of the confirmation code.');
         }
         try {
-            await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(userProfile, fullCode, frontImage, backImage);
+            const response = await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(userProfile, fullCode, frontImage, backImage);
+            setUserProfile((prev) => response?.updatedUser ?? prev);
             setIsVerifying(false);
             navigate('/');
         } catch (error: any) {

@@ -15,13 +15,15 @@ import {
   resendSignUpCode,
   type ResetPasswordOutput,
   ResendSignUpCodeOutput,
-  ConfirmSignUpOutput
+  ConfirmSignUpOutput,
+  AuthSession
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { userCleaner } from "../../graphql";
+import { IUserProfile } from "../../Models/IUserProfile";
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -74,9 +76,14 @@ export class AuthAPIClient
     return username
   }
 
-  async awsCleanUser(input: string): Promise<void> {
+  async getCurrentSession(): Promise<AuthSession> {
+    return await fetchAuthSession();
+  }
+
+  async awsUserCleaner(user: IUserProfile, authSession: AuthSession): Promise<void> {
     const authMode = this.isUserAuth ? "userPool" : "iam"
-    const variables = { input }
+    const input = JSON.stringify({user: user, authSession: authSession});
+    const variables = { input };
     const client = generateClient({});
     const response = client.graphql({query: userCleaner, variables, authMode: authMode });
     console.log(response);
