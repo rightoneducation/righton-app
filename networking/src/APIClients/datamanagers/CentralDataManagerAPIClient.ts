@@ -8,8 +8,10 @@ import { IUserAPIClient } from '../user';
 import { UserParser } from '../../Parsers/UserParser';
 import {
   getCurrentUser,
-  // fetchAuthSession
+  fetchUserAttributes
 } from 'aws-amplify/auth';
+
+export const userProfileLocalStorage = 'righton_userprofile';
 
 export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient{
   protected env: Environment;
@@ -117,6 +119,45 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, questions: []};
   };
 
+  public getLocalUserProfile = () => {
+    const profile = window.localStorage.getItem(userProfileLocalStorage);
+    if (profile){
+      return JSON.parse(profile) as IUserProfile;
+    }
+    return null;
+  };
+
+  public setLocalUserProfile = (userProfile: IUserProfile) => {
+    window.localStorage.setItem(userProfileLocalStorage, JSON.stringify(userProfile));
+  }
+
+  public clearLocalUserProfile = () => {
+    window.localStorage.removeItem(userProfileLocalStorage);
+  }
+
+  public loginUserAndRetrieveUserProfile = async (username: string, password: string) => {
+    let userProfile = null;
+    try {
+      await this.authAPIClient.awsSignIn(username, password);
+      const currentCognitoUser = await getCurrentUser();
+      const attributes = await fetchUserAttributes();
+      if (!attributes || !attributes.nickname) 
+        return null;
+      const currentDynamoDBUser = await this.userAPIClient.getUserByUserName(attributes.nickname);
+      if  (currentDynamoDBUser !== null){
+        userProfile = {
+          cognitoId: currentCognitoUser.userId,
+          ...currentDynamoDBUser
+        };
+      this.setLocalUserProfile(userProfile);
+     }
+      return userProfile;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
+
+
   public signUpSendConfirmationCode = async (user: IUserProfile) => {
     return this.authAPIClient.awsSignUp(user.username, user.email, user.password ?? '');
   };
@@ -137,6 +178,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
       const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
       updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      this.setLocalUserProfile(updatedUser);
       return { updatedUser, images };
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);

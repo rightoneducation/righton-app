@@ -155,9 +155,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   const handleLoginClick = async () => {
     try {
       setIsLoggingIn(true);
-      await apiClients.auth.awsSignIn(userName, password);
-      const getUserName = await apiClients.auth.getUserNickname();
-      console.log(getUserName)
+      await apiClients.centralDataManager?.loginUserAndRetrieveUserProfile(userName, password);
       console.log('Login successful');
       setIsLoggingIn(false);
       navigate('/'); // Navigate to the Signup page

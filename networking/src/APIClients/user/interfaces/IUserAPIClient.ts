@@ -14,6 +14,10 @@ export interface IUserAPIClient {
     deleteUserInput: DeleteUserInput
   ): Promise<IUser | null>;
 
+  getUserByUserName(
+    userName: string
+  ): Promise<IUser | null>;
+
   updateUser( 
     updateUserInput: UpdateUserInput
   ): Promise<IUser | null>;
