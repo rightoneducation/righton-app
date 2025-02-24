@@ -172,7 +172,7 @@ export default function Header({
     </Box>
     <Collapse in={isCreateMenuOpen} style={{position: 'absolute', top: '50%', zIndex: 3, width: '100%'}}>
       <CreateDropDown>
-        <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`}}>
+        <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`, cursor: 'pointer'}} onClick={() => { setMenuOpen(false); setIsCreateMenuOpen(false); navigate('/create/game')}}>
           <img src={createDropdownGame} alt="Create Game" />
           <Typography style={{color: `${theme.palette.primary.darkBlue}`, fontWeight: 400, fontSize: 16}}>
             Game

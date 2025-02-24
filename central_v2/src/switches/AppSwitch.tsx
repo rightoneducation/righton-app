@@ -11,6 +11,7 @@ import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
+import CreateGame from '../pages/CreateGame';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import Confirmation from '../pages/Confirmation';
 
@@ -59,6 +60,8 @@ function AppSwitch() {
     )
   }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);
 
+  console.log(createGameScreen, 'createGameScreen');
+
   switch (true) {
     case questionScreen: {
       return (
@@ -94,8 +97,15 @@ function AppSwitch() {
     }
     case createQuestionScreen: {
       return (
-        <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
+        <AppContainer currentScreen={ScreenType.CREATEQUESTION} isUserLoggedIn={isUserLoggedIn}>
           <CreateQuestion screenSize={screenSize}/>
+        </AppContainer>
+      );
+    }
+    case createGameScreen: {
+      return (
+        <AppContainer currentScreen={ScreenType.CREATEGAME} isUserLoggedIn={isUserLoggedIn}>
+          <CreateGame screenSize={screenSize}/>
         </AppContainer>
       );
     }

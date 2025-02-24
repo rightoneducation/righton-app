@@ -6,6 +6,8 @@ export enum ScreenType {
   LIBRARY,
   LOGIN,
   SIGNUP, 
+  CREATEGAME,
+  CREATEQUESTION,
   CONFIRMATION
 }
 
