@@ -86,14 +86,12 @@ export class AuthAPIClient
     const input = JSON.stringify({user: user, authSession: authSession});
     const variables = { input };
     const client = generateClient({});
-    const response = client.graphql({query: userCleaner, variables, authMode: authMode });
-    console.log(response);
+    client.graphql({query: userCleaner, variables, authMode: authMode });
   }
 
   async getUserNickname(): Promise<string | null> {
     try {
       const attributes = await fetchUserAttributes();
-      console.log("User Attributes:", attributes);
       if (attributes && attributes.nickname !== undefined) {
         return attributes.nickname;
       } else {

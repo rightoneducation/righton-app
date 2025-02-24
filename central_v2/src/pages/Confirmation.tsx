@@ -155,7 +155,6 @@ function Confirmation({ userProfile, setUserProfile, frontImage, backImage, hand
             console.dir(error);
            
             if (error.message === 'CodeMismatchException: Invalid verification code provided, please try again.') {
-                console.log('hello');
                 handleConfirmationError();
             }
         }
@@ -163,7 +162,6 @@ function Confirmation({ userProfile, setUserProfile, frontImage, backImage, hand
     const handleResendCodeClick = async () => {
         try {
             await apiClients.auth.awsResendConfirmationCode(userProfile.email);
-            console.log('Confirmation code resent!');
         } catch (error) {
             console.error('Error resending confirmation code:', error);
         }

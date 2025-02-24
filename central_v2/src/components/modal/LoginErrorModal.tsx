@@ -47,35 +47,16 @@ const CloseButton = styled('img')(({ theme }) => ({
 }))
 
 interface CreatingTemplateModalProps {
-  userProfile: IUserProfile;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ConfirmationErrorModal({
-  userProfile,
+export default function LoginErrorModal({
   isModalOpen,
   setIsModalOpen,
-  setIsTabsOpen
 }: CreatingTemplateModalProps) {
   const theme = useTheme();
-  const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-
-
-  const handleRetry = () => {
-    apiClients.auth.awsResendConfirmationCode(userProfile.email);
-    setIsModalOpen(false);
-    setIsTabsOpen(false);
-  }
-
-  const handleCancel = () => {
-    const session = apiClients.auth.awsUserCleaner(userProfile);
-    setIsModalOpen(false);
-    setIsTabsOpen(false);
-    navigate('/');
-  }
 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}  style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%)'}}>
@@ -85,19 +66,13 @@ export default function ConfirmationErrorModal({
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: 'column',
           gap: '16px', padding: '24px'
         }}> 
-          <DragText> Error: Invalid Confirmation Code </DragText>
+          <DragText> Error Logging In </DragText>
           <Box style={{display: 'flex', gap: '16px'}}>
               <CentralButton 
                 buttonType={ButtonType.RETRY} 
                 isEnabled 
                 smallScreenOverride
-                onClick={handleRetry}
-              />
-              <CentralButton 
-                buttonType={ButtonType.CANCEL} 
-                isEnabled 
-                smallScreenOverride
-                onClick={handleCancel}
+                onClick={() => setIsModalOpen(false)}
               />
           </Box>
         </Box>

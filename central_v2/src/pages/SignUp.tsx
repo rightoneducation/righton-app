@@ -14,6 +14,8 @@ import {
   TextContainerStyled,
 } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import errorIcon from '../images/errorIcon.svg';
+import SignUpErrorModal from '../components/modal/SignUpErrorModal';
+import ModalBackground from '../components/modal/ModalBackground';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -303,6 +305,7 @@ export default function SignUp({
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
   const navigate = useNavigate();
@@ -343,6 +346,8 @@ export default function SignUp({
       await apiClients.centralDataManager?.signUpSendConfirmationCode(userProfile);
       handleUserCreate(); // Trigger switch to confirmation
     } catch (error) {
+      setIsModalOpen(true);
+      setLoading(false);
       console.error(error);
     }
     setLoading(false);
@@ -351,6 +356,8 @@ export default function SignUp({
 
   return (
     <SignUpMainContainer>
+      <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
       <InnerBodyContainer>
         <UpperSignup>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />

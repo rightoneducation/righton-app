@@ -167,6 +167,10 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     let updatedUser = JSON.parse(JSON.stringify(user));
     try {
       await this.authAPIClient.awsConfirmSignUp(user.email, confirmationCode);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+    try {
       await this.authAPIClient.awsSignIn(user.email, user.password ?? '');
       const currentUser = await getCurrentUser();
       updatedUser = { ...updatedUser, cognitoId: currentUser.userId };

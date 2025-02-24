@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Box, TextField, Typography, CircularProgress } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
-import { GoogleLogin } from '@react-oauth/google';
-import { getUser, IAuthAPIClient } from '@righton/networking';
 import { useNavigate } from 'react-router-dom'; 
 import RightOnLogo from '../images/RightOnLogo.png';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
@@ -14,6 +12,9 @@ import { ButtonType } from '../components/button/ButtonModels';
 import ResetPassword from './ResetPassword';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import LoginErrorModal from '../components/modal/LoginErrorModal';
+import ModalBackground from '../components/modal/ModalBackground';
+
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -133,39 +134,21 @@ function Login({handleForgotPasswordClick} : LoginProps) {
 
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-
-  // useEffect(() => {
-  //   const signOutUser = async () => {
-  //     try {
-  //       await apiClients.auth.awsSignOut();
-  //       localStorage.removeItem('accessToken');
-  //       localStorage.removeItem('refreshToken');
-  //       console.log("User signed out");
-  //     } catch (error) {
-  //       console.error("Error during sign-out:", error);
-  //     }
-  //   };
-  
-  //   if (apiClients.auth) {
-  //     signOutUser();
-  //   }
-  // }, [apiClients]);
 
   const handleLoginClick = async () => {
     try {
       setIsLoggingIn(true);
       await apiClients.centralDataManager?.loginUserAndRetrieveUserProfile(userName, password);
-      console.log('Login successful');
       setIsLoggingIn(false);
       navigate('/'); // Navigate to the Signup page
-
     } catch (error) {
+      setIsModalOpen(true);
+      setIsLoggingIn(false);
       console.error('Error during login:', error);
-      // You can also display an error message to the user if needed
     }
   };
-
 
   const handleSignupClick = () => {
     navigate('/Signup'); // Navigate to the Signup page
@@ -173,6 +156,8 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   
   return (
     <SignUpMainContainer>
+      <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
       <InnerBodyContainer>
         <UpperLogin>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
