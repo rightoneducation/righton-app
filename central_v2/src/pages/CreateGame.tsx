@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import { Typography, Box, useTheme, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import {
-  PublicPrivateType,
-} from '@righton/networking';
 import { CreateGameMainContainer, CreateGameBackground } from '../lib/styledcomponents/CreateGameStyledComponent';
 import { 
   ScreenSize,
-  CreateQuestionHighlightCard,
   TemplateType
 } from '../lib/CentralModels';
-import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ModalBackground from '../components/modal/ModalBackground';
-import ImageUploadModal from '../components/modal/ImageUploadModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
@@ -41,42 +35,17 @@ export default function CreateGame({
   const theme = useTheme();
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
-  const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
-  const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
-  const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
-  const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
-  const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
-  const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
-  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
-  // const localData = useCreateQuestionLoader();
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleCloseModal = () => {
-    setIsImageUploadVisible(false);
-    setIsImageURLVisible(false);
-    setIsImagePreviewVisible(false);
-    setIsCreatingTemplate(false);
-    setIsCCSSVisible(false);
+    setIsModalOpen(false);
   };
 
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
-       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible} handleCloseModal={handleCloseModal}/>
-       {/* <CCSSTabs
-          screenSize={screenSize}
-          isTabsOpen={isCCSSVisible}
-          handleCCSSSubmit={handleCCSSSubmit}
-        />
-       <ImageUploadModal 
-          draftQuestion={draftQuestion} 
-          screenSize={screenSize}  
-          isModalOpen={isImageUploadVisible} 
-          handleImageChange={handleImageChange}
-          handleImageSave={handleImageSave} 
-          handleCloseModal={handleCloseModal}
-        /> */}
-       <CreatingTemplateModal isModalOpen={isCreatingTemplate} templateType={TemplateType.QUESTION}/>
+       <ModalBackground isModalOpen={isModalOpen} handleCloseModal={handleCloseModal}/>
+       <CreatingTemplateModal isModalOpen={isModalOpen} templateType={TemplateType.GAME}/>
        <Box style={{
           width: '100%',
           height: '100%',
@@ -91,7 +60,8 @@ export default function CreateGame({
           paddingRight: `${theme.sizing.mdPadding}px`,
           boxSizing: 'border-box',
         }}>
-        <TitleText screenSize={ScreenSize.LARGE}>Create Game</TitleText>
+          <TitleText screenSize={ScreenSize.LARGE}>Create Game</TitleText>
+          {/* TODO: complete game part of screen */}
       </Box>
     </CreateGameMainContainer>
   );
