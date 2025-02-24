@@ -61,27 +61,8 @@ export default function ExploreGames({
     setIsTabsOpen(true);
   };
 
-  // Debug button temporarily added for QA
-  const handleSignOut = async () => {
-    console.log('here');
-    const response = apiClients.centralDataManager?.signOut();
-    setIsUserLoggedIn(false);
-    console.log(response);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-  }
-
-  const handleDeleteUser = async () => {
-    const response = apiClients.auth.awsUserCleaner(userProfile);
-    console.log(response);
-  }
-
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 
-        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleDeleteUser()} />  
-        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleSignOut()} />  
-      </Box>
       <ExploreGamesUpperContainer screenSize={screenSize}>
         {!isSearchResults && 
           <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />
