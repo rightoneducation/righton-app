@@ -10,7 +10,9 @@ import CentralButton from "../components/button/Button";
 import { 
     TextContainerStyled,
   } from '../lib/styledcomponents/CreateQuestionStyledComponents';
+import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
 import RightOnLogo from "../images/RightOnLogo.png";
+import ModalBackground from '../components/modal/ModalBackground';
 
 // Styled components
 const OuterBody = styled(Box)(({ theme }) => ({
@@ -96,16 +98,19 @@ const VerifyBox = styled(Box)(({ theme }) => ({
 // Props interface
 interface ConfirmationProps {
     userProfile: IUserProfile;
+    setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>;
     frontImage: File;
     backImage: File;
     handlerImageUpload: (file: File) => Promise<any>;
+    setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Use function declaration for the component
-function Confirmation({ userProfile, frontImage, backImage, handlerImageUpload}: ConfirmationProps) {
+function Confirmation({ userProfile, setUserProfile, frontImage, backImage, handlerImageUpload, setIsTabsOpen}: ConfirmationProps) {
     const theme = useTheme();
     const [code, setCode] = useState(Array(6).fill(''));
     const [isVerifying, setIsVerifying] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     const navigate = useNavigate(); // Initialize useNavigate
 
@@ -129,6 +134,11 @@ function Confirmation({ userProfile, frontImage, backImage, handlerImageUpload}:
         }
     };
 
+    const handleConfirmationError = () => {
+        setIsTabsOpen(true);
+        setIsModalOpen(true);
+    };
+
     const handleSubmit = async () => {
         setIsVerifying(true);
         const fullCode = code.join('');
@@ -136,18 +146,22 @@ function Confirmation({ userProfile, frontImage, backImage, handlerImageUpload}:
             alert('Please enter all 6 digits of the confirmation code.');
         }
         try {
-            await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(userProfile, fullCode, frontImage, backImage);
+            const response = await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(userProfile, fullCode, frontImage, backImage);
+            setUserProfile((prev) => response?.updatedUser ?? prev);
             setIsVerifying(false);
             navigate('/');
         } catch (error: any) {
             setIsVerifying(false);
-            console.error('Error confirming sign up:', error);
+            console.dir(error);
+           
+            if (error.message === 'CodeMismatchException: Invalid verification code provided, please try again.') {
+                handleConfirmationError();
+            }
         }
     };
     const handleResendCodeClick = async () => {
         try {
             await apiClients.auth.awsResendConfirmationCode(userProfile.email);
-            console.log('Confirmation code resent!');
         } catch (error) {
             console.error('Error resending confirmation code:', error);
         }
@@ -162,6 +176,8 @@ function Confirmation({ userProfile, frontImage, backImage, handlerImageUpload}:
 
     return (
         <OuterBody>
+            <ConfirmationErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userProfile={userProfile} setIsTabsOpen={setIsTabsOpen}/>
+            <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
             <InnerBody>
                 <ImageContainer>
                     <img src={RightOnLogo} alt="Right On Logo" style={{ width: '280px', height: '280px' }} />

@@ -14,7 +14,9 @@ export class UserParser {
       email: user.email,
       password: user.password ?? '',
       gamesMade: user.gamesMade ?? 0,
-      questionsMade: user.questionsMade ?? 0
+      questionsMade: user.questionsMade ?? 0,
+      frontIdPath: user.frontIdPath ?? '',
+      backIdPath: user.backIdPath ?? ''
     }
     return parsedUser;
   }

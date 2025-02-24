@@ -1312,6 +1312,11 @@ export const teacherIdAuth = /* GraphQL */ `
     teacherIdAuth(input: $input)
   }
 `;
+export const userCleaner = /* GraphQL */ `
+  mutation UserCleaner($input: String!) {
+    userCleaner(input: $input)
+  }
+`;
 export const uploadExternalImageToS3 = /* GraphQL */ `
   mutation UploadExternalImageToS3($input: UploadExternalImageToS3Input) {
     uploadExternalImageToS3(input: $input)

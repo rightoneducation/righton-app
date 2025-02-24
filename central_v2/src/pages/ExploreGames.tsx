@@ -3,6 +3,7 @@ import {
   ElementType,
   GalleryType,
   IGameTemplate,
+  IUserProfile,
 } from '@righton/networking';
 import { Box, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -20,14 +21,15 @@ import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
-import test from '../images/test.png';
 
 interface ExploreGamesProps {
+  userProfile: IUserProfile;
   screenSize: ScreenSize;
   setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
 }
 
 export default function ExploreGames({
+  userProfile,
   screenSize,
   setIsUserLoggedIn
 } : ExploreGamesProps) {
@@ -51,6 +53,8 @@ export default function ExploreGames({
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = searchTerms.length > 0;
+
+  
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     setSelectedGame(game);
     setGameSet(games);
@@ -60,14 +64,22 @@ export default function ExploreGames({
   // Debug button temporarily added for QA
   const handleSignOut = async () => {
     console.log('here');
-    const response = apiClients.auth.awsSignOut();
+    const response = apiClients.centralDataManager?.signOut();
     setIsUserLoggedIn(false);
+    console.log(response);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  }
+
+  const handleDeleteUser = async () => {
+    const response = apiClients.auth.awsUserCleaner(userProfile);
     console.log(response);
   }
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 
+        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleDeleteUser()} />  
         <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleSignOut()} />  
       </Box>
       <ExploreGamesUpperContainer screenSize={screenSize}>

@@ -82,6 +82,11 @@
         "userPoolGroups": {}
       },
       "function": {
+        "mobile6060603cPostConfirmation": {
+          "GROUP": "authusers",
+          "deploymentBucketName": "amplify-mobile-dev-94cda-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
+        },
         "S3Trigger04eb3a91": {
           "deploymentBucketName": "amplify-mobile-dev-94cda-deployment",
           "s3Key": "amplify-builds/S3Trigger04eb3a91-62396f4b372b526b2f32-build.zip"
@@ -89,11 +94,6 @@
         "createGameTest": {
           "deploymentBucketName": "amplify-mobile-dev-94cda-deployment",
           "s3Key": "amplify-builds/createGameTest-324a487a7167484b6331-build.zip"
-        },
-        "mobile6060603cPostConfirmation": {
-          "GROUP": "authusers",
-          "deploymentBucketName": "amplify-mobile-dev-94cda-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-dev-94cda-deployment",
@@ -105,7 +105,7 @@
         },
         "userCleaner": {
           "deploymentBucketName": "amplify-mobile-dev-94cda-deployment",
-          "s3Key": "amplify-builds/userCleaner-53345367666445616745-build.zip"
+          "s3Key": "amplify-builds/userCleaner-4a666363746444522f75-build.zip"
         },
         "waegen": {
           "deploymentBucketName": "amplify-mobile-dev-94cda-deployment",
@@ -114,15 +114,13 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-dev-94cda-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
-        },
-        "mobile": {},
-        "mobile6060603c": {}
-      },
-      "api": {
-        "mobile": {}
+        }
       },
       "storage": {
         "rightoncentralstorage": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }

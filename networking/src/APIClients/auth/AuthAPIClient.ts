@@ -1,4 +1,5 @@
 import { Amplify  } from "aws-amplify";
+import { generateClient } from "aws-amplify/api";
 import { Hub, CookieStorage  } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { 
@@ -14,12 +15,15 @@ import {
   resendSignUpCode,
   type ResetPasswordOutput,
   ResendSignUpCodeOutput,
-  ConfirmSignUpOutput
+  ConfirmSignUpOutput,
+  AuthSession
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
+import { userCleaner } from "../../graphql";
+import { IUserProfile } from "../../Models/IUserProfile";
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -46,7 +50,7 @@ export class AuthAPIClient
     const session = await fetchAuthSession();
     if (session && session.tokens && session.tokens.accessToken) {
       const groups = session.tokens.accessToken.payload["cognito:groups"];
-      if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
+      if (Array.isArray(groups) && groups.includes('authusers')) {
         return true;
       }
     };
@@ -72,10 +76,22 @@ export class AuthAPIClient
     return username
   }
 
+  async getCurrentSession(): Promise<AuthSession> {
+    return await fetchAuthSession();
+  }
+
+  async awsUserCleaner(user: IUserProfile): Promise<void> {
+    const authSession = await fetchAuthSession();
+    const authMode = this.isUserAuth ? "userPool" : "iam"
+    const input = JSON.stringify({user: user, authSession: authSession});
+    const variables = { input };
+    const client = generateClient({});
+    client.graphql({query: userCleaner, variables, authMode: authMode });
+  }
+
   async getUserNickname(): Promise<string | null> {
     try {
       const attributes = await fetchUserAttributes();
-      console.log("User Attributes:", attributes);
       if (attributes && attributes.nickname !== undefined) {
         return attributes.nickname;
       } else {
@@ -152,6 +168,7 @@ export class AuthAPIClient
 
   async awsSignOut(): Promise<void> {
     await signOut();
+
   }
 
   async awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {

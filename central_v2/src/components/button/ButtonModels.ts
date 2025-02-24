@@ -49,7 +49,9 @@ export enum ButtonType {
   CHOOSE = 'choose',
   CLONE = 'clone',
   SIGNOUT = 'signout',
-  TEST = 'test'
+  TEST = 'test',
+  RETRY = 'retry',
+  CANCEL = 'cancel'
 }
 
 export enum ButtonColor {
@@ -211,6 +213,13 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.TEST]: {
     textKey: ButtonType.TEST,
+    color: ButtonColor.RED,
+  },
+  [ButtonType.RETRY]: {
+    textKey: ButtonType.RETRY
+  },
+  [ButtonType.CANCEL]: {
+    textKey: ButtonType.CANCEL,
     color: ButtonColor.RED,
   },
 };

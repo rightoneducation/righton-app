@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useMatch } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { IUserProfile } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import AppContainer from '../containers/AppContainer';
@@ -24,6 +25,15 @@ function AppSwitch() {
   const loginScreen = useMatch('/login') !== null;
   const createQuestionScreen = useMatch('/create/question') !== null;
   const createGameScreen = useMatch('/create/game') !== null;
+  const blankUserProfile = {
+    title: 'Title...',
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+  }
+  const [userProfile, setUserProfile] = useState<IUserProfile>(blankUserProfile);
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [isTabsOpen, setIsTabsOpen] = React.useState(false);
@@ -36,10 +46,18 @@ function AppSwitch() {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
 
-  // TODO: remove useeffect and monitor via hook etc
   useEffect(() => {
-    setIsUserLoggedIn(apiClients.auth.isUserAuth);
-  }, [apiClients.auth.isUserAuth]);
+    apiClients.auth.verifyAuth().then((status) => {
+        if (status){
+          const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+          if (localProfile){
+            setUserProfile(localProfile);
+            setIsUserLoggedIn(true);
+          }
+        }
+      }
+    )
+  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);
 
   switch (true) {
     case questionScreen: {
@@ -63,7 +81,7 @@ function AppSwitch() {
     case signUpScreen: {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
-          <SignUpSwitch />
+          <SignUpSwitch userProfile={userProfile} setUserProfile={setUserProfile} setIsTabsOpen={setIsTabsOpen}/>
         </AppContainer>
       );
     }
@@ -84,7 +102,7 @@ function AppSwitch() {
     default:{
       return (
         <AppContainer currentScreen={ScreenType.GAMES} isUserLoggedIn={isUserLoggedIn}>
-          <ExploreGames screenSize={screenSize} setIsUserLoggedIn={setIsUserLoggedIn}/>
+          <ExploreGames userProfile={userProfile} screenSize={screenSize} setIsUserLoggedIn={setIsUserLoggedIn}/>
         </AppContainer>
       );
     }
