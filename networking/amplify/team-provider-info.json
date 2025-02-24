@@ -1,4 +1,66 @@
 {
+  "devtwo": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-devtwo-66d7e-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtwo-66d7e-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devtwo-66d7e-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+      "UnauthRoleName": "amplify-mobile-devtwo-66d7e-unauthRole",
+      "StackName": "amplify-mobile-devtwo-66d7e",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devtwo-66d7e/b8eb2bf0-f04e-11ef-83d5-0e984e446999",
+      "AmplifyAppId": "d2z6928w5qibze",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-devtwo-66d7e-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "mobile6060603c": {
+          "googleClientId": "23009502295-0ut6vmh3km13funjo26p409mgmbkeb76.apps.googleusercontent.com"
+        },
+        "userPoolGroups": {}
+      },
+      "function": {
+        "mobile6060603cPostConfirmation": {
+          "GROUP": "authusers",
+          "deploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
+        },
+        "S3Trigger04eb3a91": {
+          "deploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+          "s3Key": "amplify-builds/S3Trigger04eb3a91-62396f4b372b526b2f32-build.zip"
+        },
+        "createGameTest": {
+          "deploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+          "s3Key": "amplify-builds/createGameTest-324a487a7167484b6331-build.zip"
+        },
+        "teacherIdAuth": {
+          "deploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+          "s3Key": "amplify-builds/teacherIdAuth-554e525679703132595a-build.zip"
+        },
+        "uploadExternalImageToS3": {
+          "deploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+          "s3Key": "amplify-builds/uploadExternalImageToS3-4e55784e7a75437a4e33-build.zip"
+        },
+        "userCleaner": {
+          "deploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+          "s3Key": "amplify-builds/userCleaner-53345367666445616745-build.zip"
+        },
+        "waegen": {
+          "deploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+          "s3Key": "amplify-builds/waegen-656a7761557067327232-build.zip"
+        },
+        "waeregen": {
+          "deploymentBucketName": "amplify-mobile-devtwo-66d7e-deployment",
+          "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
+        },
+        "mobile": {},
+        "mobile6060603c": {}
+      },
+      "storage": {
+        "rightoncentralstorage": {}
+      }
+    }
+  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-mobile-dev-94cda-authRole",
