@@ -170,6 +170,7 @@ export class AuthAPIClient
 
   async awsSignOut(): Promise<void> {
     await signOut();
+
   }
 
   async awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {

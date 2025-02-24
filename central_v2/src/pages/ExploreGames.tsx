@@ -64,14 +64,12 @@ export default function ExploreGames({
   // Debug button temporarily added for QA
   const handleSignOut = async () => {
     console.log('here');
-    const response = apiClients.auth.awsSignOut();
+    const response = apiClients.centralDataManager?.signOut();
     setIsUserLoggedIn(false);
     console.log(response);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   }
-
-  
 
   const handleDeleteUser = async () => {
     const response = apiClients.auth.awsUserCleaner(userProfile);

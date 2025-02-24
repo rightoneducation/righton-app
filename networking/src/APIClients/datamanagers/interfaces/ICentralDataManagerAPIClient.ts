@@ -29,4 +29,5 @@ export interface ICentralDataManagerAPIClient {
   loginUserAndRetrieveUserProfile: (username: string, password: string) => Promise<IUserProfile | null>;
   signUpSendConfirmationCode(user: IUserProfile): Promise<void>;
   signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
+  signOut: () => void;
 }

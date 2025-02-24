@@ -47,8 +47,17 @@ function AppSwitch() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
 
   useEffect(() => {
-    apiClients.auth.verifyAuth().then((status) => setIsUserLoggedIn(status));
-  }, [apiClients.auth, apiClients.auth.isUserAuth]);
+    apiClients.auth.verifyAuth().then((status) => {
+        if (status){
+          const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+          if (localProfile){
+            setUserProfile(localProfile);
+            setIsUserLoggedIn(true);
+          }
+        }
+      }
+    )
+  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);
 
   switch (true) {
     case questionScreen: {

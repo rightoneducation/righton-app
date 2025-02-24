@@ -185,4 +185,9 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       throw new Error (error);
     }
   };
+
+  public signOut = async () => {
+    this.authAPIClient.awsSignOut();
+    this.clearLocalUserProfile();
+  };
 }
