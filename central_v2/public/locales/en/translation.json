@@ -34,7 +34,9 @@
     "choose": "Choose",
     "clone": "Clone",
     "signout": "Debug Sign Out",
-    "test": "Test"
+    "test": "Test",
+    "cancel": "Cancel",
+    "retry": "Retry"
   },
   "imageButton": {
     "imageupload": "Upload Image",

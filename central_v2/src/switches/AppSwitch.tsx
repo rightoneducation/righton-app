@@ -49,7 +49,7 @@ function AppSwitch() {
   useEffect(() => {
     apiClients.auth.verifyAuth().then((status) => setIsUserLoggedIn(status));
   }, [apiClients.auth, apiClients.auth.isUserAuth]);
-  console.log(userProfile);
+
   switch (true) {
     case questionScreen: {
       return (
@@ -72,7 +72,7 @@ function AppSwitch() {
     case signUpScreen: {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
-          <SignUpSwitch userProfile={userProfile} setUserProfile={setUserProfile}/>
+          <SignUpSwitch userProfile={userProfile} setUserProfile={setUserProfile} setIsTabsOpen={setIsTabsOpen}/>
         </AppContainer>
       );
     }

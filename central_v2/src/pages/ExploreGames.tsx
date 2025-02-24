@@ -74,8 +74,7 @@ export default function ExploreGames({
   
 
   const handleDeleteUser = async () => {
-    const session = await apiClients.auth.getCurrentSession();
-    const response = apiClients.auth.awsUserCleaner(userProfile, session);
+    const response = apiClients.auth.awsUserCleaner(userProfile);
     console.log(response);
   }
 

@@ -80,7 +80,8 @@ export class AuthAPIClient
     return await fetchAuthSession();
   }
 
-  async awsUserCleaner(user: IUserProfile, authSession: AuthSession): Promise<void> {
+  async awsUserCleaner(user: IUserProfile): Promise<void> {
+    const authSession = await fetchAuthSession();
     const authMode = this.isUserAuth ? "userPool" : "iam"
     const input = JSON.stringify({user: user, authSession: authSession});
     const variables = { input };

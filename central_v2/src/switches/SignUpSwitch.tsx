@@ -8,11 +8,13 @@ import Confirmation from '../pages/Confirmation';
 interface SignUpSwitchProps{
   userProfile: IUserProfile;
   setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>;
+  setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SignUpSwitch({
   userProfile,
-  setUserProfile
+  setUserProfile,
+  setIsTabsOpen
 }:SignUpSwitchProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -39,6 +41,7 @@ export default function SignUpSwitch({
       frontImage={frontImage ?? new File([''], 'filename')} 
       backImage={backImage ?? new File([''], 'filename')} 
       handlerImageUpload={handlerImageUpload}
+      setIsTabsOpen={setIsTabsOpen}
     />
   ) : (
     <SignUp

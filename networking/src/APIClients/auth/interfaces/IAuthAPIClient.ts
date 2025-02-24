@@ -19,7 +19,7 @@ export interface IAuthAPIClient {
   getUserNickname(): Promise<string | null>;
   authEvents(payload: any): void;
   authListener(): void;
-  awsUserCleaner(userProfile: IUserProfile, authSession: AuthSession): Promise<void>;
+  awsUserCleaner(userProfile: IUserProfile): Promise<void>;
   awsSignUp(username: string, email: string, password: string): void;
   awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput>;
   awsSignIn(email: string, password: string): Promise<SignInOutput>;
