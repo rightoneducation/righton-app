@@ -21,6 +21,7 @@ export default function SignUpSwitch() {
   const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
+  // const [pressedGoogle, setPressedGoogle] = useState(false)
 
   const handlerImageUpload = async (file: File) => {
     const fileName = file.name
@@ -52,6 +53,7 @@ export default function SignUpSwitch() {
       setBackImage={setBackImage} 
       confirmPassword={confirmPassword}
       setConfirmPassword={setConfirmPassword}
+      // setPressedGoogle= {setPressedGoogle}
     /> // Render signup page
   );
 }

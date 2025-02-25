@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
-import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
+import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import { IAPIClients, IUserProfile } from '@righton/networking';
+import { fetchAuthSession, signIn, signUp, signOut,  } from 'aws-amplify/auth';
+// import { Auth } from 'aws-amplify';
+
+import { GoogleLogin } from '@react-oauth/google';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
@@ -14,6 +18,8 @@ import {
   TextContainerStyled,
 } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import errorIcon from '../images/errorIcon.svg';
+
+
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -58,6 +64,18 @@ const UpperSignupSubGoogle = styled(Typography)(({ theme }) => ({
   border: '2px solid #0966E0', // Set border to 2px with the same color
   borderRadius: '8px', // Set border radius to 8px
   backgroundColor: 'white', // Set background color to white
+  minHeight: '52px',
+}));
+
+const GoogleSignUpButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  color: '#0966E0', 
+  border: '2px solid #0966E0',
+  borderRadius: '8px',
+  backgroundColor: 'white',
   minHeight: '52px',
 }));
 
@@ -273,6 +291,7 @@ interface SignUpProps {
   setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
   confirmPassword: string;
   setConfirmPassword: (value: string) => void;
+  // setPressedGoogle: (value: boolean) => void
 }
 export default function SignUp({ 
   apiClients, 
@@ -284,7 +303,8 @@ export default function SignUp({
   backImage, 
   setBackImage,
   confirmPassword,
-  setConfirmPassword
+  setConfirmPassword,
+  // setPressedGoogle
 }: SignUpProps ) {
   const theme = useTheme();
 
@@ -312,6 +332,7 @@ export default function SignUp({
 
 
   const handleSubmit = async () => {
+    // setPressedGoogle(true)
     setLoading(true);
     setPasswordError(""); // Reset error before validation
     setPasswordConfirmError("")
@@ -355,7 +376,30 @@ export default function SignUp({
         <UpperSignup>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
           <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
-          <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle>
+          {/* <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle> */}
+          <GoogleLogin
+              useOneTap
+              onSuccess={async (credentialResponse) => {
+                try {
+                  const idToken = credentialResponse.credential;
+
+                  if (idToken) {
+                    // Sign up using the Google token and Cognito
+                    const response = await apiClients.auth.awsSignInFederated();
+                    console.log('User signed in:', response);
+                  } else {
+                    console.error('Google sign-in token is missing');
+                  }
+                } catch (error) {
+                  console.error('Google sign-in error:', error);
+                }
+              }}
+              onError={() => {
+                console.error('Google Sign-In Failed');
+              }}
+              text="signup_with"
+              
+            />
         </UpperSignup>
 
         <OrText>Or</OrText>

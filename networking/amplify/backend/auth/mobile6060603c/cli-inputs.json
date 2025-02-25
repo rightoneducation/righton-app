@@ -91,6 +91,6 @@
       "accounts.google.com"
     ],
     "thirdPartyAuth": true,
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"implicit\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"https://localhost:3000/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"implicit\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\",\"https://central.rightoneducation.com/\",\"http://localhost:3000/\"],\"LogoutURLs\":[\"https://localhost:3000/\",\"https://central.rightoneducation.com/\",\"http://localhost:3000/\"]}"
   }
 }
