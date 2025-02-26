@@ -44,9 +44,10 @@ export class AuthAPIClient
 
   async verifyAuth(): Promise<boolean> {
     const session = await fetchAuthSession();
+    console.log(session);
     if (session && session.tokens && session.tokens.accessToken) {
       const groups = session.tokens.accessToken.payload["cognito:groups"];
-      if (Array.isArray(groups) && groups.includes('Teacher_Auth')) {
+      if (Array.isArray(groups) && groups.includes('authusers')) {
         return true;
       }
     };

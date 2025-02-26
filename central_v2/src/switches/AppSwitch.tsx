@@ -41,6 +41,7 @@ function AppSwitch() {
     setIsUserLoggedIn(apiClients.auth.isUserAuth);
   }, [apiClients.auth.isUserAuth]);
 
+  const session = apiClients.auth.verifyAuth();
   switch (true) {
     case questionScreen: {
       return (
