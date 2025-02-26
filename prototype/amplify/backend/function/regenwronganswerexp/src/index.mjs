@@ -71,7 +71,6 @@ export async function handler(event) {
         - If the wrongAnswePrompt is "shorten the explanation" or "shorten this" or the like, reduce the total number of words of the explanation without losing the underlying meaning.
 
         Please ensure each explanation for the incorrect answers adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
-        DO NOT ADD MARKUP LIKE '''JSON ''' ENSURE THAT IT IS A VALID JSON OBJECT THAT CAN BE PARSED BY JSON.PARSE
         `
     });
     console.log(messages);

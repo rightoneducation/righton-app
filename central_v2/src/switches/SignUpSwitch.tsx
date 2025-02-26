@@ -1,0 +1,61 @@
+import React, { useState } from 'react';
+import { IUserProfile } from '@righton/networking';
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import SignUp from '../pages/SignUp';
+import Confirmation from '../pages/Confirmation';
+
+interface SignUpSwitchProps{
+  userProfile: IUserProfile;
+  setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>;
+  setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function SignUpSwitch({
+  userProfile,
+  setUserProfile,
+  setIsTabsOpen
+}:SignUpSwitchProps) {
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+  const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
+  const [frontImage, setFrontImage] = useState<File | null>(null);
+  const [backImage, setBackImage] = useState<File | null>(null);
+  // const [pressedGoogle, setPressedGoogle] = useState(false)
+
+  const handlerImageUpload = async (file: File) => {
+    const fileName = file.name
+    const fileType = file.type
+    // const response = await apiClients.user.uploadTeacherId(file, fileName, fileType)
+    // return response
+  }
+
+  const handleUserCreate = () => {
+    setIsUserSubmitted(true); // Trigger confirmation view
+  };
+
+  return isUserSubmitted ? (
+    <Confirmation
+      userProfile={userProfile}
+      setUserProfile={setUserProfile}
+      frontImage={frontImage ?? new File([''], 'filename')} 
+      backImage={backImage ?? new File([''], 'filename')} 
+      handlerImageUpload={handlerImageUpload}
+      setIsTabsOpen={setIsTabsOpen}
+    />
+  ) : (
+    <SignUp
+      apiClients={apiClients} 
+      userProfile={userProfile}
+      setUserProfile={setUserProfile}
+      handleUserCreate={handleUserCreate} 
+      frontImage={frontImage} 
+      setFrontImage={setFrontImage} 
+      backImage={backImage} 
+      setBackImage={setBackImage} 
+      confirmPassword={confirmPassword}
+      setConfirmPassword={setConfirmPassword}
+    />
+  );
+}

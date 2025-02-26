@@ -8,6 +8,84 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createUser = /* GraphQL */ `mutation CreateUser(
+  $input: CreateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  createUser(input: $input, condition: $condition) {
+    id
+    userName
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    questionsMade
+    frontIdPath
+    backIdPath
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateUserMutationVariables,
+  APITypes.CreateUserMutation
+>;
+export const updateUser = /* GraphQL */ `mutation UpdateUser(
+  $input: UpdateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  updateUser(input: $input, condition: $condition) {
+    id
+    userName
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    questionsMade
+    frontIdPath
+    backIdPath
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateUserMutationVariables,
+  APITypes.UpdateUserMutation
+>;
+export const deleteUser = /* GraphQL */ `mutation DeleteUser(
+  $input: DeleteUserInput!
+  $condition: ModelUserConditionInput
+) {
+  deleteUser(input: $input, condition: $condition) {
+    id
+    userName
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    questionsMade
+    frontIdPath
+    backIdPath
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteUserMutationVariables,
+  APITypes.DeleteUserMutation
+>;
 export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGameTemplate(
   $input: CreatePublicGameTemplateInput!
   $condition: ModelPublicGameTemplateConditionInput
@@ -15,9 +93,10 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
   createPublicGameTemplate(input: $input, condition: $condition) {
     id
     title
-    owner
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -35,9 +114,10 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
         publicGameTemplate {
           id
           title
-          owner
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -55,9 +135,10 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -76,19 +157,22 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -99,6 +183,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -114,19 +199,22 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -137,9 +225,10 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -158,19 +247,22 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -181,6 +273,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -195,6 +288,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -210,6 +304,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -224,9 +319,10 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
   updatePublicGameTemplate(input: $input, condition: $condition) {
     id
     title
-    owner
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -244,9 +340,10 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
         publicGameTemplate {
           id
           title
-          owner
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -264,9 +361,10 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -285,19 +383,22 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -308,6 +409,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -323,19 +425,22 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -346,9 +451,10 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -367,19 +473,22 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -390,6 +499,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -404,6 +514,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -419,6 +530,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -433,9 +545,10 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
   deletePublicGameTemplate(input: $input, condition: $condition) {
     id
     title
-    owner
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -453,9 +566,10 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
         publicGameTemplate {
           id
           title
-          owner
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -473,9 +587,10 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -494,19 +609,22 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -517,6 +635,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -532,19 +651,22 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -555,9 +677,10 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -576,19 +699,22 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -599,6 +725,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -613,6 +740,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -628,6 +756,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -641,10 +770,11 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
 ) {
   createPrivateGameTemplate(input: $input, condition: $condition) {
     id
-    owner
     title
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -661,10 +791,11 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -681,10 +812,11 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -703,19 +835,23 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -741,19 +877,23 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         privateQuestionTemplate {
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -763,10 +903,11 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -785,19 +926,23 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -837,6 +982,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -850,10 +996,11 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
 ) {
   updatePrivateGameTemplate(input: $input, condition: $condition) {
     id
-    owner
     title
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -870,10 +1017,11 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -890,10 +1038,11 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -912,19 +1061,23 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -950,19 +1103,23 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         privateQuestionTemplate {
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -972,10 +1129,11 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -994,19 +1152,23 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1046,6 +1208,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1059,10 +1222,11 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
 ) {
   deletePrivateGameTemplate(input: $input, condition: $condition) {
     id
-    owner
     title
+    lowerCaseTitle
     version
     description
+    lowerCaseDescription
     ccss
     domain
     cluster
@@ -1079,10 +1243,11 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1099,10 +1264,11 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1121,19 +1287,23 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1159,19 +1329,23 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         privateQuestionTemplate {
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1181,10 +1355,11 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1203,19 +1378,23 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1255,6 +1434,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1268,15 +1448,17 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
 ) {
   createPublicQuestionTemplate(input: $input, condition: $condition) {
     id
-    owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -1287,9 +1469,10 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
         publicGameTemplate {
           id
           title
-          owner
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1307,9 +1490,10 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1328,19 +1512,22 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1351,6 +1538,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1366,19 +1554,22 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1389,9 +1580,10 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1410,19 +1602,22 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1433,6 +1628,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1447,6 +1643,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1461,6 +1658,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1474,15 +1672,17 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
 ) {
   updatePublicQuestionTemplate(input: $input, condition: $condition) {
     id
-    owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -1493,9 +1693,10 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
         publicGameTemplate {
           id
           title
-          owner
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1513,9 +1714,10 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1534,19 +1736,22 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1557,6 +1762,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1572,19 +1778,22 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1595,9 +1804,10 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1616,19 +1826,22 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1639,6 +1852,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1653,6 +1867,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1667,6 +1882,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1680,15 +1896,17 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
 ) {
   deletePublicQuestionTemplate(input: $input, condition: $condition) {
     id
-    owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -1699,9 +1917,10 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
         publicGameTemplate {
           id
           title
-          owner
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1719,9 +1938,10 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1740,19 +1960,22 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1763,6 +1986,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1778,19 +2002,22 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         publicQuestionTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -1801,9 +2028,10 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
               publicGameTemplate {
                 id
                 title
-                owner
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1822,19 +2050,22 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               publicQuestionTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1845,6 +2076,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               createdAt
@@ -1859,6 +2091,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         createdAt
@@ -1873,6 +2106,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
     createdAt
     updatedAt
     type
+    owner
     __typename
   }
 }
@@ -1888,13 +2122,16 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -1904,10 +2141,11 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -1924,10 +2162,11 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -1946,19 +2185,23 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -1984,19 +2227,23 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         privateQuestionTemplate {
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -2006,10 +2253,11 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2028,19 +2276,23 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -2094,13 +2346,16 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -2110,10 +2365,11 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -2130,10 +2386,11 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2152,19 +2409,23 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -2190,19 +2451,23 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         privateQuestionTemplate {
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -2212,10 +2477,11 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2234,19 +2500,23 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -2300,13 +2570,16 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
     id
     owner
     title
+    lowerCaseTitle
     version
     choices
     instructions
     answerSettings
+    ccss
     domain
     cluster
     grade
+    gradeFilter
     standard
     imageUrl
     gameTemplates {
@@ -2316,10 +2589,11 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
         privateQuestionTemplateID
         privateGameTemplate {
           id
-          owner
           title
+          lowerCaseTitle
           version
           description
+          lowerCaseDescription
           ccss
           domain
           cluster
@@ -2336,10 +2610,11 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2358,19 +2633,23 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -2396,19 +2675,23 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           createdAt
           updatedAt
           type
+          owner
           __typename
         }
         privateQuestionTemplate {
           id
           owner
           title
+          lowerCaseTitle
           version
           choices
           instructions
           answerSettings
+          ccss
           domain
           cluster
           grade
+          gradeFilter
           standard
           imageUrl
           gameTemplates {
@@ -2418,10 +2701,11 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
               privateQuestionTemplateID
               privateGameTemplate {
                 id
-                owner
                 title
+                lowerCaseTitle
                 version
                 description
+                lowerCaseDescription
                 ccss
                 domain
                 cluster
@@ -2440,19 +2724,23 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 createdAt
                 updatedAt
                 type
+                owner
                 __typename
               }
               privateQuestionTemplate {
                 id
                 owner
                 title
+                lowerCaseTitle
                 version
                 choices
                 instructions
                 answerSettings
+                ccss
                 domain
                 cluster
                 grade
+                gradeFilter
                 standard
                 imageUrl
                 gameTemplates {
@@ -3412,9 +3700,10 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
     publicGameTemplate {
       id
       title
-      owner
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -3432,9 +3721,10 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
           publicGameTemplate {
             id
             title
-            owner
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -3452,9 +3742,10 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3469,25 +3760,29 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3503,19 +3798,22 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -3526,9 +3824,10 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3543,25 +3842,29 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3576,6 +3879,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -3591,19 +3895,22 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     publicQuestionTemplate {
       id
-      owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -3614,9 +3921,10 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
           publicGameTemplate {
             id
             title
-            owner
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -3634,9 +3942,10 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3651,25 +3960,29 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3685,19 +3998,22 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -3708,9 +4024,10 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3725,25 +4042,29 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3758,6 +4079,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -3772,6 +4094,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt
@@ -3795,9 +4118,10 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
     publicGameTemplate {
       id
       title
-      owner
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -3815,9 +4139,10 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
           publicGameTemplate {
             id
             title
-            owner
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -3835,9 +4160,10 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3852,25 +4178,29 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3886,19 +4216,22 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -3909,9 +4242,10 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -3926,25 +4260,29 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -3959,6 +4297,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -3974,19 +4313,22 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     publicQuestionTemplate {
       id
-      owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -3997,9 +4339,10 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
           publicGameTemplate {
             id
             title
-            owner
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4017,9 +4360,10 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4034,25 +4378,29 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4068,19 +4416,22 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4091,9 +4442,10 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4108,25 +4460,29 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4141,6 +4497,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4155,6 +4512,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt
@@ -4178,9 +4536,10 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
     publicGameTemplate {
       id
       title
-      owner
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -4198,9 +4557,10 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
           publicGameTemplate {
             id
             title
-            owner
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4218,9 +4578,10 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4235,25 +4596,29 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4269,19 +4634,22 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4292,9 +4660,10 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4309,25 +4678,29 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4342,6 +4715,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4357,19 +4731,22 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     publicQuestionTemplate {
       id
-      owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -4380,9 +4757,10 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
           publicGameTemplate {
             id
             title
-            owner
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4400,9 +4778,10 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4417,25 +4796,29 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4451,19 +4834,22 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           publicQuestionTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4474,9 +4860,10 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                 publicGameTemplate {
                   id
                   title
-                  owner
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4491,25 +4878,29 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 publicQuestionTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 createdAt
@@ -4524,6 +4915,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           createdAt
@@ -4538,6 +4930,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     createdAt
@@ -4560,10 +4953,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
     privateQuestionTemplateID
     privateGameTemplate {
       id
-      owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -4580,10 +4974,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4600,10 +4995,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4618,19 +5014,23 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4652,19 +5052,23 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4674,10 +5078,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4692,19 +5097,23 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4740,19 +5149,23 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     privateQuestionTemplate {
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -4762,10 +5175,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4782,10 +5196,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4800,19 +5215,23 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4834,19 +5253,23 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -4856,10 +5279,11 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -4874,19 +5298,23 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -4943,10 +5371,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
     privateQuestionTemplateID
     privateGameTemplate {
       id
-      owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -4963,10 +5392,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -4983,10 +5413,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5001,19 +5432,23 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5035,19 +5470,23 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -5057,10 +5496,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5075,19 +5515,23 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5123,19 +5567,23 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     privateQuestionTemplate {
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -5145,10 +5593,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -5165,10 +5614,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5183,19 +5633,23 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5217,19 +5671,23 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -5239,10 +5697,11 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5257,19 +5716,23 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5326,10 +5789,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
     privateQuestionTemplateID
     privateGameTemplate {
       id
-      owner
       title
+      lowerCaseTitle
       version
       description
+      lowerCaseDescription
       ccss
       domain
       cluster
@@ -5346,10 +5810,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -5366,10 +5831,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5384,19 +5850,23 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5418,19 +5888,23 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -5440,10 +5914,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5458,19 +5933,23 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5506,19 +5985,23 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
     privateQuestionTemplate {
       id
       owner
       title
+      lowerCaseTitle
       version
       choices
       instructions
       answerSettings
+      ccss
       domain
       cluster
       grade
+      gradeFilter
       standard
       imageUrl
       gameTemplates {
@@ -5528,10 +6011,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
           privateQuestionTemplateID
           privateGameTemplate {
             id
-            owner
             title
+            lowerCaseTitle
             version
             description
+            lowerCaseDescription
             ccss
             domain
             cluster
@@ -5548,10 +6032,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5566,19 +6051,23 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5600,19 +6089,23 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             createdAt
             updatedAt
             type
+            owner
             __typename
           }
           privateQuestionTemplate {
             id
             owner
             title
+            lowerCaseTitle
             version
             choices
             instructions
             answerSettings
+            ccss
             domain
             cluster
             grade
+            gradeFilter
             standard
             imageUrl
             gameTemplates {
@@ -5622,10 +6115,11 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
-                  owner
                   title
+                  lowerCaseTitle
                   version
                   description
+                  lowerCaseDescription
                   ccss
                   domain
                   cluster
@@ -5640,19 +6134,23 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   createdAt
                   updatedAt
                   type
+                  owner
                   __typename
                 }
                 privateQuestionTemplate {
                   id
                   owner
                   title
+                  lowerCaseTitle
                   version
                   choices
                   instructions
                   answerSettings
+                  ccss
                   domain
                   cluster
                   grade
+                  gradeFilter
                   standard
                   imageUrl
                   gameTemplatesCount
@@ -5707,4 +6205,39 @@ export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameS
 ` as GeneratedMutation<
   APITypes.CreateGameSessionFromTemplateMutationVariables,
   APITypes.CreateGameSessionFromTemplateMutation
+>;
+export const teacherIdAuth = /* GraphQL */ `mutation TeacherIdAuth($input: TeacherIdAuthInput!) {
+  teacherIdAuth(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.TeacherIdAuthMutationVariables,
+  APITypes.TeacherIdAuthMutation
+>;
+export const userCleaner = /* GraphQL */ `mutation UserCleaner($input: String!) {
+  userCleaner(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.UserCleanerMutationVariables,
+  APITypes.UserCleanerMutation
+>;
+export const uploadExternalImageToS3 = /* GraphQL */ `mutation UploadExternalImageToS3($input: UploadExternalImageToS3Input) {
+  uploadExternalImageToS3(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.UploadExternalImageToS3MutationVariables,
+  APITypes.UploadExternalImageToS3Mutation
+>;
+export const waegen = /* GraphQL */ `mutation Waegen($input: WaeGenInput) {
+  waegen(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.WaegenMutationVariables,
+  APITypes.WaegenMutation
+>;
+export const waeregen = /* GraphQL */ `mutation Waeregen($input: WaeRegenInput) {
+  waeregen(input: $input)
+}
+` as GeneratedMutation<
+  APITypes.WaeregenMutationVariables,
+  APITypes.WaeregenMutation
 >;

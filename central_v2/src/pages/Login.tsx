@@ -1,139 +1,215 @@
-import React from "react";
-import { TextField, Grid, Typography } from "@mui/material";
-import { styled } from "@mui/system";
-import { Link } from "react-router-dom";
-import RightOnLogo from "../images/RightOnLogo.png";
-import { GoogleLogin } from '@react-oauth/google';
-import { IAuthAPIClient } from "@righton/networking";
+import React, { useState } from 'react';
+import { Box, Typography, CircularProgress } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom'; 
+import RightOnLogo from '../images/RightOnLogo.png';
+import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
+import { 
+  TextContainerStyled,
+} from '../lib/styledcomponents/CreateQuestionStyledComponents';
+import CentralButton from "../components/button/Button";
+import { ButtonType } from '../components/button/ButtonModels';
+import ResetPassword from './ResetPassword';
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import LoginErrorModal from '../components/modal/LoginErrorModal';
+import ModalBackground from '../components/modal/ModalBackground';
 
-interface LoginProps {
-  authAPIClient: IAuthAPIClient;
+
+const InnerBodyContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  // border: '1px solid blue',
+  flexDirection: 'column',
+  gap: '20px',
+  height: '100%',
+  width: '100%',
+  maxWidth: '500px',
+  paddingTop: '40px',
+  paddingBottom: '40px',
+  paddingLeft: '40px',
+  paddingRight: '40px',
+  boxSizing: 'border-box',
+}));
+
+const UpperLogin = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  // border: '1px solid blue',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '20px',
+}));
+
+const UpperLoginText = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Poppins, sans-serif',
+  fontWeight: 700, 
+  fontSize: '24px', 
+  color: '#02215F',
+  textAlign: 'center', 
+  // border: '1px solid green',
+
+}));
+
+const UpperLoginGoogleButton = styled(Typography)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  color: '#0966E0', 
+  border: '2px solid #0966E0', // Set border to 2px with the same color
+  borderRadius: '8px', // Set border radius to 8px
+  backgroundColor: 'white', // Set background color to white
+  minHeight: '45.77px',
+  
+}));
+
+const OrText = styled(Typography)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  color: '#384466', 
+  // border: '1px solid yellow',
+  fontFamily: 'Poppins, sans-serif', 
+  fontWeight: 600, 
+  fontSize: '16px', 
+  // border: '1px solid green',
+
+}));
+
+const MiddleContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  // border: '1px solid green',
+  flexDirection: 'column',
+  gap: '12px'
+
+}));
+
+const ForgotPasswordButton = styled('button')(({ theme }) => ({
+  all: 'unset', // Resets all default styles for a button
+  color: '#02215F', 
+  fontFamily: 'Rubik, sans-serif', 
+  fontWeight: 400, 
+  fontSize: '16px', 
+  marginTop: '-8px',
+  cursor: 'pointer', // Add pointer cursor for button-like behavior
+  // border:'1px red solid'
+}));
+
+const LoginContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  // border: '1px solid green',
+  justifyContent: 'center',
+}));
+
+const SignupContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  // border: '1px solid green',
+  // flexDirection: 'column',
+  gap: '16px',
+  alignItems: 'center'
+}));
+
+const NoAccountText = styled(Typography)(({ theme }) => ({
+  color: '#02215F', 
+  // border: '1px solid blue',
+  fontFamily: 'Rubik, sans-serif', 
+  fontWeight: 400, 
+  fontSize: '16px', 
+}));
+
+interface LoginProps{
+  handleForgotPasswordClick: () => void
+
 }
 
-const Login = ({
-  authAPIClient
-}: LoginProps) => {
-  const [loading, setLoading] = React.useState(false);
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [adminError, setAdminError] = React.useState(false);
-  const handleGoogleLogin = async(googleToken: string) => {
-    console.log('google signin');
-  }
+function Login({handleForgotPasswordClick} : LoginProps) {
+  const theme = useTheme();
+  const navigate = useNavigate(); // Initialize useNavigate
+  const [userName, setUserName] = useState('');
 
-  const handleSubmit = async (e: React.SyntheticEvent<Element, Event>) => {
-    console.log("submitted");
+  const buttonTypeLogin = ButtonType.LOGIN;
+  const [isLoginEnabled, setIsLoginEnabled] = useState(true);
+  
+  const buttonTypeSignup = ButtonType.SIGNUP;
+  const [isSignupEnabled, setIsSignupEnabled] = useState(true);
+
+  const [password, setPassword] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+
+  const handleLoginClick = async () => {
+    try {
+      setIsLoggingIn(true);
+      await apiClients.centralDataManager?.loginUserAndRetrieveUserProfile(userName, password);
+      setIsLoggingIn(false);
+      navigate('/'); // Navigate to the Signup page
+    } catch (error) {
+      setIsModalOpen(true);
+      setIsLoggingIn(false);
+      console.error('Error during login:', error);
+    }
   };
 
+  const handleSignupClick = () => {
+    navigate('/Signup'); // Navigate to the Signup page
+  };
+  
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <img
-        src={RightOnLogo}
-        style={{
-          marginTop: "3%",
-          width: '15%',
-          minWidth: '200px',
-          marginBottom: "3%",
-        }}
-        alt="Right On"
-      />
-      <Grid item xs={12}>
-        <form
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingLeft: '5vw',
-            paddingRight: '5vw'
-          }}
-          onSubmit={handleSubmit}
-        >
-          <h1 style={{ fontSize: "22px", color: "grey", textAlign: "center"}}>
-            {" "}
-            Sign In to an Existing Acccount
-          </h1>
-          <Field
-            variant="outlined"
-            label="Email"
-            value={email}
-            type="email"
-            onChange={(e: any) => setEmail(e.target.value)}
+    <SignUpMainContainer>
+      <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
+      <InnerBodyContainer>
+        <UpperLogin>
+          <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
+          <UpperLoginText>Sign In to an Existing Account</UpperLoginText>
+          <UpperLoginGoogleButton>Log in with Google</UpperLoginGoogleButton>
+        </UpperLogin>
+        <OrText>or</OrText>
+        <MiddleContainer>
+          <TextContainerStyled
+                variant="outlined"
+                placeholder="Email"
+                value={userName}
+                onChange={(event) => setUserName(event.target.value)}
           />
-          <Field
-            variant="outlined"
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e: any) => setPassword(e.target.value)}
+          <TextContainerStyled
+                variant="outlined"
+                placeholder="Password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
           />
-        <GoogleLogin
-          onSuccess={googleToken => {
-            handleGoogleLogin(googleToken.credential ?? '')
-          }}
-          onError={() => {
-            setAdminError(true);
-          }}
-        />
-        </form>
-      </Grid>
-      {adminError ? <ErrorType> There has been an error. Please verify your username/password and contact the administrator for account verification. </ErrorType> : null}
-    </Grid>
+          <ForgotPasswordButton onClick={handleForgotPasswordClick}>
+            Forgot your password?
+          </ForgotPasswordButton>
+        </MiddleContainer>
+        <LoginContainer>
+          <CentralButton buttonType={buttonTypeLogin} isEnabled={isLoginEnabled && !isLoggingIn} smallScreenOverride onClick={handleLoginClick}/>
+        </LoginContainer>
+        <SignupContainer>
+          <NoAccountText>Don&rsquo;t have an account?</NoAccountText>
+          <CentralButton buttonType={buttonTypeSignup} isEnabled={isSignupEnabled} smallScreenOverride  onClick={handleSignupClick}/>
+        </SignupContainer>
+        {isLoggingIn && 
+          <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+              <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
+          </Box>
+        } 
+      </InnerBodyContainer>
+    </SignUpMainContainer>
   );
-};
+}
 
-export default Login;
+export default function LoginSwitch() {
+  const [isPasswordForgot, setisPasswordForgot] = useState(false); // Track submission state
 
-const Field = styled(TextField)({
-  margin: "10px 0",
-  borderRadius: "20px",
-  width: "100%",
-});
+  const handleForgotPasswordClick = () => {
+    setisPasswordForgot(true)
+  };
 
-const SignUpLink = styled(Link)({
-  backgroundColor: "#FC1047",
-  textDecoration: "none",
-  color: "white",
-  borderRadius: "34px",
-  minWidth: "70px",
-  textAlign: "center",
-  padding: "1vw",
-  whiteSpace: "nowrap",
-  fontWeight: "bold",
-});
+  return isPasswordForgot? (
+    <ResetPassword />
+  ) : (
+    <Login handleForgotPasswordClick={handleForgotPasswordClick}/>
+  )
 
-const LogInLink = styled(Link)({
-  backgroundColor: "#159EFA",
-  textDecoration: "none",
-  color: "white",
-  borderRadius: "34px",
-  minWidth: "70px",
-  textAlign: "center",
-  padding: "1vw",
-  whiteSpace: "nowrap",
-  fontWeight: "bold",
-});
-
-const ButtonGrid = styled(Grid)({
-  display: "flex",
-  flexDirection: "row",
-  justifyContent:"center",
-  alignItems: "flex-start",
-  width: '10vw',
-  marginBottom: '2vw',
-  marginTop: "2vw",
-  gap: '10%',
-});
-
-const ErrorType = styled(Typography)({
-  fontStyle: 'italic',
-  textAlign: 'center',
-  color: 'grey',
-  paddingLeft: '5vw',
-  paddingRight: '5vw'
-});
+}

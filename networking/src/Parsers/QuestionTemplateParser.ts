@@ -1,10 +1,52 @@
 import { isNullOrUndefined } from "../global";
-import { IQuestionTemplate, IGameTemplate } from "../Models";
+import { IQuestionTemplate, IGameTemplate, CentralQuestionTemplateInput } from "../Models";
+import { QuestionTemplateType } from "../APIClients/templates/interfaces/IQuestionTemplateAPIClient";
 import { AWSQuestionTemplate } from "../Models/AWS";
 import { GameTemplateParser } from "./GameTemplateParser";
 import { PublicPrivateType } from "../APIClients";
+import { IChoice } from "../Models/IQuestion";
 
 export class QuestionTemplateParser {
+    static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
+        imageUrl: string,
+        createQuestionTemplateInput: CentralQuestionTemplateInput
+    ): QuestionTemplateType<T>['create']['input']{
+        const {title, ccss } = createQuestionTemplateInput.questionCard;
+        const lowerCaseTitle = title.toLowerCase();
+        const deconstructCCSS = (ccss: string): { domain: string, cluster: string, grade: string, standard: string } => {
+            const [domain, cluster, grade, standard] = ccss.split('.');
+            return { domain, cluster, grade, standard }
+        }
+        const {domain, cluster, grade, standard} = deconstructCCSS(ccss);
+        const instructions = JSON.stringify(createQuestionTemplateInput.correctCard.answerSteps);
+        const choicesIncorrect = createQuestionTemplateInput.incorrectCards.map(card => {
+            return {
+                isAnswer: false,
+                reason: card.explanation,
+                text: card.answer,
+            }
+        });
+        const choicesCorrect = {isAnswer: true, reason: '', text: createQuestionTemplateInput.correctCard.answer}; 
+        const choices = JSON.stringify([choicesCorrect, ...choicesIncorrect]);
+        const questionTemplate: QuestionTemplateType<T>['create']['input'] = {
+            title,
+            lowerCaseTitle,
+            version: 0,
+            choices,
+            instructions,
+            ccss,
+            domain,
+            cluster,
+            grade,
+            gradeFilter: grade,
+            standard,
+            imageUrl,
+            gameTemplatesCount: 0,
+        }
+        console.log(questionTemplate);
+        return questionTemplate
+    }
+
     static questionTemplateFromAWSQuestionTemplate(
         awsQuestionTemplate: AWSQuestionTemplate,
         publicPrivate: PublicPrivateType
@@ -32,18 +74,37 @@ export class QuestionTemplateParser {
             // assign an empty array if gameTemplates is null
             gameTemplates = [];
         }
+        // parse choices array
+        let choices: IChoice[] = [];
+        if (!isNullOrUndefined(awsQuestionTemplate.choices)) {
+           try {
+            choices = JSON.parse(awsQuestionTemplate.choices) as IChoice[]
+            } catch (e) {
+                console.error(e);
+           }
+        }
+        // parse instructions array
+        let instructions: string[] = [];
+        if (!isNullOrUndefined(awsQuestionTemplate.instructions)) {
+           try {
+            instructions = JSON.parse(awsQuestionTemplate.instructions) as string[]
+            } catch (e) {
+                console.error(e);
+           }
+        }
        
       const {
           id,
           title,
+          lowerCaseTitle,
           owner,
           version,
-          choices,
-          instructions,
           answerSettings,
+          ccss,
           domain,
           cluster,
           grade,
+          gradeFilter,
           standard,
           imageUrl,
           gameTemplatesCount
@@ -59,18 +120,20 @@ export class QuestionTemplateParser {
 
       const createdAt = new Date(awsQuestionTemplate.createdAt ?? 0)
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
-
       const questionTemplate: IQuestionTemplate = {
           id,
           title,
+          lowerCaseTitle: lowerCaseTitle ?? '',
           owner,
           version,
           choices,
           instructions,
           answerSettings,
+          ccss: ccss ?? '',
           domain: domain ?? '',
           cluster: cluster ?? '',
           grade: grade ?? '',
+          gradeFilter: gradeFilter ?? '',
           standard: standard ?? '',
           imageUrl,
           gameTemplates,

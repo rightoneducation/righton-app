@@ -54,9 +54,11 @@ export class GameTemplateParser {
        const {
           id,
           title,
+          lowerCaseTitle,
           owner,
           version,
           description,
+          lowerCaseDescription,
           domain,
           cluster,
           grade,
@@ -73,9 +75,11 @@ export class GameTemplateParser {
       const gameTemplate: IGameTemplate = {
           id,
           title,
+          lowerCaseTitle,
           owner,
           version,
           description,
+          lowerCaseDescription,
           domain,
           cluster,
           grade,

@@ -16,28 +16,27 @@ export default {
 const Template: StoryFn<typeof SearchBar> = function CardTemplate(args) {
   return (
     <ThemeProvider theme={Theme}>
-        <SearchBar {...args} />
+      <SearchBar {...args} />
     </ThemeProvider>
   );
 };
 
 export const Mobile = Template.bind({});
 Mobile.args = {
-  screenSize: ScreenSize.SMALL
+  screenSize: ScreenSize.SMALL,
 };
 Mobile.parameters = {
   viewport: {
     defaultViewport: 'mobile2',
-  }
+  },
 };
 
 export const TabletDesktop = Template.bind({});
 TabletDesktop.args = {
-  screenSize: ScreenSize.LARGE
+  screenSize: ScreenSize.LARGE,
 };
 TabletDesktop.parameters = {
   viewport: {
     defaultViewport: 'desktop',
   },
 };
-

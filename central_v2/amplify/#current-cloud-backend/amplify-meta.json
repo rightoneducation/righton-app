@@ -1,0 +1,15 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mobile-devbackup-624cc-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devbackup-624cc-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-devbackup-624cc-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mobile-devbackup-624cc-deployment",
+      "UnauthRoleName": "amplify-mobile-devbackup-624cc-unauthRole",
+      "StackName": "amplify-mobile-devbackup-624cc",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-devbackup-624cc/a6bc6c80-929a-11ef-b5fd-0afffaa49c03",
+      "AmplifyAppId": "d21euzhdtgmb60"
+    }
+  }
+}

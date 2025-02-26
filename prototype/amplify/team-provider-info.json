@@ -13,18 +13,17 @@
     },
     "categories": {
       "function": {
-        "labelEdits": {},
         "labeledits": {
           "deploymentBucketName": "amplify-wronganswerexp-dev-112306-deployment",
-          "s3Key": "amplify-builds/labeledits-466439616269595a4349-build.zip"
+          "s3Key": "amplify-builds/labeledits-6a545061533850526633-build.zip"
         },
         "regenwronganswerexp": {
           "deploymentBucketName": "amplify-wronganswerexp-dev-112306-deployment",
-          "s3Key": "amplify-builds/regenwronganswerexp-77646b584a30336b4642-build.zip"
+          "s3Key": "amplify-builds/regenwronganswerexp-79516f6774664375302b-build.zip"
         },
         "wronganswerexp": {
           "deploymentBucketName": "amplify-wronganswerexp-dev-112306-deployment",
-          "s3Key": "amplify-builds/wronganswerexp-3649636147426d637837-build.zip"
+          "s3Key": "amplify-builds/wronganswerexp-4366725578647162524f-build.zip"
         }
       },
       "api": {

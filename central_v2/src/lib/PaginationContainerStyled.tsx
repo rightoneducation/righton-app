@@ -4,6 +4,7 @@ import { Container } from '@mui/material';
 // container for the Swiperjs pagination bullets
 export default styled('div')(({ theme }) => ({
   height: `${theme.sizing.mdPadding}px`,
+  paddingBottom: `${theme.sizing.mdPadding}px`,
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
@@ -14,4 +15,5 @@ export default styled('div')(({ theme }) => ({
   '--swiper-pagination-bullet-size': '10px',
   '--swiper-pagination-bullet-horizontal-gap': '4px',
   /* size and shape of bullets handled in <swiper pagination: { renderBullets } /> */
+  zIndex: 1
 }));

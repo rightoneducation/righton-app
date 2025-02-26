@@ -9,7 +9,8 @@ interface GamePlayButtonStyledProps {
 // gameplay button
 // Extend the Button component with styled-components, applying the animation conditionally
 export const GamePlayButtonStyled = styled(Button, {shouldForwardProp: (prop) => prop != 'animate'})<GamePlayButtonStyledProps>(({ theme, animate }) => ({
-  minWidth: '180px', // per figma
+  minWidth: 'fit-content', // per figma
+  padding: '16px',
   height: '26px',
   borderRadius: '22px',
   color: 'white',

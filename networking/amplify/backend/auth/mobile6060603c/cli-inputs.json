@@ -1,7 +1,7 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "mobile6060603c_identitypool_6060603c",
+    "identityPoolName": "mobile082e6f66_identitypool_082e6f66",
     "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "mobile6060603c",
     "userPoolName": "mobile6060603c_userpool_6060603c",
@@ -24,7 +24,7 @@
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
-    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientRefreshTokenValidity": "1",
     "userpoolClientWriteAttributes": [
       "email"
     ],
@@ -38,7 +38,9 @@
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
     "hostedUI": true,
-    "userPoolGroupList": [],
+    "userPoolGroupList": [
+      "authusers"
+    ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,
@@ -66,7 +68,7 @@
         ]
       }
     ],
-    "userPoolGroups": false,
+    "userPoolGroups": true,
     "adminQueries": false,
     "triggers": {
       "PostConfirmation": [
@@ -87,6 +89,6 @@
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
     "authProviders": [],
     "thirdPartyAuth": false,
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"https://localhost:3000/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"http://localhost:3000/\"],\"LogoutURLs\":[\"https://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\"]}"
   }
 }

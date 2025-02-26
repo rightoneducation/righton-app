@@ -2,18 +2,34 @@ import { Environment } from '../interfaces/IBaseAPIClient';
 import { ICentralDataManagerAPIClient } from './interfaces/ICentralDataManagerAPIClient';
 import { IGameTemplateAPIClient, IQuestionTemplateAPIClient } from '../templates';
 import { PublicPrivateType, SortDirection, GradeTarget, SortType } from "../BaseAPIClient";
+import { IUserProfile } from '../../Models/IUserProfile';
+import { IAuthAPIClient } from '../auth';
+import { IUserAPIClient } from '../user';
+import { UserParser } from '../../Parsers/UserParser';
+import {
+  getCurrentUser,
+  fetchUserAttributes
+} from 'aws-amplify/auth';
+
+export const userProfileLocalStorage = 'righton_userprofile';
 
 export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient{
   protected env: Environment;
+  protected authAPIClient: IAuthAPIClient;
+  protected userAPIClient: IUserAPIClient;
   protected gameTemplateAPIClient: IGameTemplateAPIClient;
   protected questionTemplateAPIClient: IQuestionTemplateAPIClient;
 
   constructor (
     env: Environment,
+    authAPIClient: IAuthAPIClient,
+    userAPIClient: IUserAPIClient,
     gameTemplateAPIClient: IGameTemplateAPIClient,
     questionTemplateAPIClient: IQuestionTemplateAPIClient,
   ) {
     this.env = env;
+    this.authAPIClient = authAPIClient;
+    this.userAPIClient = userAPIClient;
     this.gameTemplateAPIClient = gameTemplateAPIClient;
     this.questionTemplateAPIClient = questionTemplateAPIClient;
   } 
@@ -27,7 +43,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public initQuestions = async () => {
-    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, "");
+    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, []);
     if (response)
       return { nextToken: response.nextToken, questions: response.questionTemplates };
     return { nextToken: null, questions: [] };
@@ -66,5 +82,116 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
     }
     return {nextToken: null, games: []};
+  };
+
+  public searchForQuestionTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[]) => {
+    switch(sortType){
+      case SortType.listQuestionTemplatesByDate: {
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets);
+        if (response){
+          return { nextToken: response.nextToken, questions: response.questionTemplates };
+        }
+        break;
+      }
+      case SortType.listQuestionTemplatesByGrade: {
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets);
+        if (response){
+          return { nextToken: response.nextToken, questions: response.questionTemplates };
+        }
+        break;
+      }
+      case SortType.listQuestionTemplatesByGameCount: {
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGameTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets);
+        if (response){
+          return { nextToken: response.nextToken, questions: response.questionTemplates };
+        }
+        break;
+      }
+      case SortType.listQuestionTemplates:
+      default: {
+        const response = await this.questionTemplateAPIClient.listQuestionTemplates(type, limit, nextToken, sortDirection, search, gradeTargets);
+        if (response){
+          return { nextToken: response.nextToken, questions: response.questionTemplates };
+        }
+        break; 
+      }
+    }
+    return {nextToken: null, questions: []};
+  };
+
+  public getLocalUserProfile = () => {
+    const profile = window.localStorage.getItem(userProfileLocalStorage);
+    if (profile){
+      return JSON.parse(profile) as IUserProfile;
+    }
+    return null;
+  };
+
+  public setLocalUserProfile = (userProfile: IUserProfile) => {
+    window.localStorage.setItem(userProfileLocalStorage, JSON.stringify(userProfile));
+  }
+
+  public clearLocalUserProfile = () => {
+    window.localStorage.removeItem(userProfileLocalStorage);
+  }
+
+  public loginUserAndRetrieveUserProfile = async (username: string, password: string) => {
+    let userProfile = null;
+    try {
+      await this.authAPIClient.awsSignIn(username, password);
+      const currentCognitoUser = await getCurrentUser();
+      const attributes = await fetchUserAttributes();
+      if (!attributes || !attributes.nickname) 
+        return null;
+      const currentDynamoDBUser = await this.userAPIClient.getUserByUserName(attributes.nickname);
+      if  (currentDynamoDBUser !== null){
+        userProfile = {
+          cognitoId: currentCognitoUser.userId,
+          ...currentDynamoDBUser
+        };
+      this.setLocalUserProfile(userProfile);
+     }
+      return userProfile;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
+
+
+  public signUpSendConfirmationCode = async (user: IUserProfile) => {
+    return this.authAPIClient.awsSignUp(user.username, user.email, user.password ?? '');
+  };
+
+  public signUpConfirmAndBuildBackendUser = async (user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File) => {
+    let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
+    let updatedUser = JSON.parse(JSON.stringify(user));
+    try {
+      await this.authAPIClient.awsConfirmSignUp(user.email, confirmationCode);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+    try {
+      await this.authAPIClient.awsSignIn(user.email, user.password ?? '');
+      const currentUser = await getCurrentUser();
+      updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
+      const images = await Promise.all([
+        this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
+        this.authAPIClient.awsUploadImagePrivate(backImage) as any
+      ]);
+      createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
+      updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
+      const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
+      updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      this.setLocalUserProfile(updatedUser);
+      return { updatedUser, images };
+    } catch (error: any) {
+      this.authAPIClient.awsUserCleaner(updatedUser);
+      throw new Error (error);
+    }
+  };
+
+  public signOut = async () => {
+    this.authAPIClient.awsSignOut();
+    this.clearLocalUserProfile();
   };
 }

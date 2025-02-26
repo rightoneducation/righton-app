@@ -1,5 +1,11 @@
 import { ExplanationRegenType } from "./Constants";
 
+export enum ScreenSize {
+  SMALL,
+  MEDIUM,
+  LARGE,
+}
+
 export interface IQuestion {
   question: string;
   correctAnswer: string;
@@ -8,10 +14,7 @@ export interface IQuestion {
   wrongAnswer3: string;
 }
 
-export interface IWrongAnswerExplanations {
-  content: string;
-  role: string;
-}
+export type IWrongAnswerExplanations = string[];
 
 export interface IQuestionToSave {
   question: string;
