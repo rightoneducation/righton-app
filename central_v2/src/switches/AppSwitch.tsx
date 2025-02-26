@@ -46,21 +46,18 @@ function AppSwitch() {
   const confirmationScreen = useMatch('/confirmation') !== null;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
-
   useEffect(() => {
-    apiClients.auth.verifyAuth().then((status) => {
+    const response = apiClients.auth.verifyAuth().then((status) => {
         if (status){
           const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+          setIsUserLoggedIn(true);
           if (localProfile){
             setUserProfile(localProfile);
-            setIsUserLoggedIn(true);
           }
         }
       }
     )
   }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);
-
-  console.log(createGameScreen, 'createGameScreen');
 
   const session = apiClients.auth.verifyAuth();
   switch (true) {
