@@ -3,6 +3,7 @@ import {
   ElementType,
   GalleryType,
   IGameTemplate,
+  IUserProfile,
 } from '@righton/networking';
 import { Box, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -20,14 +21,15 @@ import SearchBar from '../components/searchbar/SearchBar';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
-import test from '../images/test.png';
 
 interface ExploreGamesProps {
+  userProfile: IUserProfile;
   screenSize: ScreenSize;
   setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
 }
 
 export default function ExploreGames({
+  userProfile,
   screenSize,
   setIsUserLoggedIn
 } : ExploreGamesProps) {
@@ -51,25 +53,16 @@ export default function ExploreGames({
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = searchTerms.length > 0;
+
+  
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     setSelectedGame(game);
     setGameSet(games);
     setIsTabsOpen(true);
   };
 
-  // Debug button temporarily added for QA
-  const handleSignOut = async () => {
-    console.log('here');
-    const response = apiClients.auth.awsSignOut();
-    setIsUserLoggedIn(false);
-    console.log(response);
-  }
-
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 
-        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleSignOut()} />  
-      </Box>
       <ExploreGamesUpperContainer screenSize={screenSize}>
         {!isSearchResults && 
           <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />

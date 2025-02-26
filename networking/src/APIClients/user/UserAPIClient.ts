@@ -1,5 +1,5 @@
 
-import { BaseAPIClient } from '../BaseAPIClient';
+import { BaseAPIClient, GraphQLOptions } from '../BaseAPIClient';
 import { IUserAPIClient } from './interfaces/IUserAPIClient';
 import {
   CreateUserInput,
@@ -10,12 +10,14 @@ import {
   DeleteUserMutationVariables,
   UpdateUserInput,
   UpdateUserMutation,
-  UpdateUserMutationVariables
+  UpdateUserMutationVariables,
+  UserByUserNameQuery
 } from "../../AWSMobileApi";
 import {
   createUser,
   deleteUser,
   updateUser, 
+  userByUserName
 } from "../../graphql";
 import { UserParser } from "../../Parsers/UserParser";
 import { IUser } from '../../Models/IUser';
@@ -51,6 +53,20 @@ export class UserAPIClient
       return UserParser.parseIUserfromAWSUser(user.data.deleteUser) as IUser;
     return null;
   }
+
+  async getUserByUserName(
+    userName: string
+  ): Promise<IUser | null> {
+    const user = await this.callGraphQL<UserByUserNameQuery>(
+        userByUserName,
+        {userName} as unknown as GraphQLOptions
+    )
+    console.log(user);
+    if (user.data.userByUserName?.items[0])
+      return UserParser.parseIUserfromAWSUser(user.data.userByUserName.items[0]) as IUser;
+    return null;
+  }
+  
 
   async updateUser( 
     updateUserInput: UpdateUserInput

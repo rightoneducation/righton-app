@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useMatch } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { IUserProfile } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import AppContainer from '../containers/AppContainer';
@@ -10,6 +11,7 @@ import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
+import CreateGame from '../pages/CreateGame';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import Confirmation from '../pages/Confirmation';
 
@@ -24,6 +26,15 @@ function AppSwitch() {
   const loginScreen = useMatch('/login') !== null;
   const createQuestionScreen = useMatch('/create/question') !== null;
   const createGameScreen = useMatch('/create/game') !== null;
+  const blankUserProfile = {
+    title: 'Title...',
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+  }
+  const [userProfile, setUserProfile] = useState<IUserProfile>(blankUserProfile);
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [isTabsOpen, setIsTabsOpen] = React.useState(false);
@@ -36,10 +47,20 @@ function AppSwitch() {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
 
-  // TODO: remove useeffect and monitor via hook etc
   useEffect(() => {
-    setIsUserLoggedIn(apiClients.auth.isUserAuth);
-  }, [apiClients.auth.isUserAuth]);
+    apiClients.auth.verifyAuth().then((status) => {
+        if (status){
+          const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+          if (localProfile){
+            setUserProfile(localProfile);
+            setIsUserLoggedIn(true);
+          }
+        }
+      }
+    )
+  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);
+
+  console.log(createGameScreen, 'createGameScreen');
 
   const session = apiClients.auth.verifyAuth();
   switch (true) {
@@ -64,7 +85,7 @@ function AppSwitch() {
     case signUpScreen: {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
-          <SignUpSwitch />
+          <SignUpSwitch userProfile={userProfile} setUserProfile={setUserProfile} setIsTabsOpen={setIsTabsOpen}/>
         </AppContainer>
       );
     }
@@ -77,15 +98,22 @@ function AppSwitch() {
     }
     case createQuestionScreen: {
       return (
-        <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
+        <AppContainer currentScreen={ScreenType.CREATEQUESTION} isUserLoggedIn={isUserLoggedIn}>
           <CreateQuestion screenSize={screenSize}/>
+        </AppContainer>
+      );
+    }
+    case createGameScreen: {
+      return (
+        <AppContainer currentScreen={ScreenType.CREATEGAME} isUserLoggedIn={isUserLoggedIn}>
+          <CreateGame screenSize={screenSize}/>
         </AppContainer>
       );
     }
     default:{
       return (
         <AppContainer currentScreen={ScreenType.GAMES} isUserLoggedIn={isUserLoggedIn}>
-          <ExploreGames screenSize={screenSize} setIsUserLoggedIn={setIsUserLoggedIn}/>
+          <ExploreGames userProfile={userProfile} screenSize={screenSize} setIsUserLoggedIn={setIsUserLoggedIn}/>
         </AppContainer>
       );
     }

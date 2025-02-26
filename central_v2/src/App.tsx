@@ -25,6 +25,7 @@ function App() {
     return null;
   }
 
+  
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
@@ -34,9 +35,9 @@ function App() {
             <Route path="/questions" element={<AppSwitch />} />
             <Route path="/signup" element={<AppSwitch />} />
             <Route path="/login" element={<AppSwitch />} />
+            <Route path="/create/game" element={<AppSwitch />} />
             <Route path="/create/question" element={<AppSwitch />} loader={CreateQuestionLoader}/>
             <Route path="/confirmation" element={<AppSwitch />} />
-
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />

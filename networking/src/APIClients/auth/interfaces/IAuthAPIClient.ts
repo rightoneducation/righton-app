@@ -2,8 +2,10 @@ import {
   SignInOutput,
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
-  type ResetPasswordOutput
+  type ResetPasswordOutput,
+  AuthSession
 } from 'aws-amplify/auth';
+import { IUserProfile } from "../../../Models/IUserProfile";
 
 export interface IAuthAPIClient {
   isUserAuth: boolean;
@@ -13,9 +15,11 @@ export interface IAuthAPIClient {
   verifyGameOwner(gameOwner: string): Promise<boolean>;
   verifyQuestionOwner(questionOwner: string): Promise<boolean>;
   getCurrentUserName(): Promise<string>;
+  getCurrentSession(): Promise<AuthSession>;
   getUserNickname(): Promise<string | null>;
   authEvents(payload: any): void;
   authListener(): void;
+  awsUserCleaner(userProfile: IUserProfile): Promise<void>;
   awsSignUp(username: string, email: string, password: string): void;
   awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput>;
   awsSignIn(email: string, password: string): Promise<SignInOutput>;
