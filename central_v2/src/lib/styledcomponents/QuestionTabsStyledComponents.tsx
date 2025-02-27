@@ -22,7 +22,7 @@ export const ModalBackground = styled(Box)(({ theme }) => ({
 export const ContentFrame = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: 0,
-  paddingTop: '115px',
+  paddingTop: '32px',
   paddingLeft: '32px',
   paddingRight: '32px',
   boxSizing: 'border-box',

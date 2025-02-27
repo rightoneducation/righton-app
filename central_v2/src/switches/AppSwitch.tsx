@@ -12,11 +12,8 @@ import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
+import MyLibrary from '../pages/MyLibrary';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
-import Confirmation from '../pages/Confirmation';
-
-// interface AppSwitchProps {
-// }
 
 function AppSwitch() {
   const theme = useTheme();
@@ -72,13 +69,9 @@ function AppSwitch() {
     }
     case libraryScreen: {
       return (
-        <>
-          <Box />
-          <Box />
-        </>
-        // <AppContainer>
-        //   <MyLibrary apiClients={apiClients} />
-        // </AppContainer>
+        <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn}>
+          <MyLibrary apiClients={apiClients} />
+        </AppContainer>
       );
     }
     case signUpScreen: {

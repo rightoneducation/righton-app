@@ -38,6 +38,7 @@ function App() {
             <Route path="/create/game" element={<AppSwitch />} />
             <Route path="/create/question" element={<AppSwitch />} loader={CreateQuestionLoader}/>
             <Route path="/confirmation" element={<AppSwitch />} />
+            <Route path="/library" element={<AppSwitch />} />
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />

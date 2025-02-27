@@ -1,31 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IAPIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IQuestionTemplate } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, Button } from '@mui/material';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import LibraryTabs from '../components/librarytabs/LibraryTabs';
 import { ScreenSize } from '../lib/CentralModels';
+import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
   apiClients: IAPIClients;
 }
 
-const MyLibraryContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
-  width: '100%',
-  height: '100vh',
-}));
+
+  // screenSize: ScreenSize;
+  // isTabsOpen: boolean;
+  // question: IQuestionTemplate;
+  // questions: IQuestionTemplate[];
+  // handleBackToExplore: () => void;
+  // handlePrevQuestion: () => void;
+  // handleNextQuestion: () => void;
 
 export default function MyLibrary({ apiClients }: MyLibraryProps) {
   const theme = useTheme();
@@ -38,14 +32,12 @@ export default function MyLibrary({ apiClients }: MyLibraryProps) {
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
-
-  useEffect(() => {
-    // TODO - implement api requests for my library screen
-  }, []);
+  const [questions, setQuestions] = useState<IQuestionTemplate[]>([]);
 
   return (
-    <MyLibraryContainer id="scrollableDiv">
-      <Typography> MY LIBRARY PAGE</Typography>
-    </MyLibraryContainer>
+        <MyLibraryMainContainer>
+          <MyLibraryBackground/>
+            <LibraryTabs screenSize={screenSize} questions={questions}/>
+        </MyLibraryMainContainer>
   );
 }
