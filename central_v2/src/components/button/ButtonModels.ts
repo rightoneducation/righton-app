@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import login from '../../images/buttonIconLogin.svg';
 import signup from '../../images/buttonIconSignup.svg';
 import view from '../../images/buttonIconView.svg';

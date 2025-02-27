@@ -104,6 +104,9 @@ const uploadDarkGrey = '#CCCCCC'; // border grey
 // wrong answer colors
 const wrongAnswerBorder = '#949494d9'; // textfield border 
 
+// chip colors
+const chipHover = '#E2D4AD' // hover state for discard explanation chips
+
 //  borders
 const borderWidth = 1;
 const solidWhite = `${borderWidth}px solid rgba(255, 255, 255, 1)`;
@@ -477,6 +480,7 @@ declare module '@mui/material/styles' {
     buttonNavSelected: string;
     buttonSaveDefault: string;
     buttonSaveDisable: string;
+    chipHover: string;
     searchBackgroundColor: string;
     searchButtonColor: string;
     sortHover: string;
@@ -545,6 +549,7 @@ declare module '@mui/material/styles' {
     buttonNavSelected?: string;
     buttonSaveDefault?: string;
     buttonSaveDisable?: string;
+    chipHover?: string;
     searchBackgroundColor?: string;
     searchButtonColor?: string;
     sortHover?: string;
@@ -649,6 +654,7 @@ export default createTheme({
       buttonNavSelected,
       buttonSaveDefault,
       buttonSaveDisable,
+      chipHover,
       searchBackgroundColor,
       searchButtonColor,
       sortHover,
