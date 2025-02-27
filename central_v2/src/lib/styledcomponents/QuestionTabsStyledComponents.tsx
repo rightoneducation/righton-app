@@ -72,7 +72,8 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: `${theme.sizing.mdPadding}px`,
+  padding: '24px',
+  boxSizing: 'border-box',
 }));
 
 export const ButtonContainer = styled(Box)(({ theme }) => ({

@@ -4,11 +4,19 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import { IQuestionTemplate } from '@righton/networking';
+import { 
+  IQuestionTemplate, 
+  ElementType,
+  GalleryType,
+  IGameTemplate,
+} from '@righton/networking';
+import CardGallery from '../cardgallery/CardGallery';
+import useExploreGamesStateManager from '../../hooks/useExploreGamesStateManager';
 import tabExploreQuestionsIcon from '../../images/tabExploreQuestions.svg';
-import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
+import SearchBar from '../searchbar/SearchBar';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
+import tabPrivateIcon from '../../images/tabPrivate.svg';
 import { ScreenSize } from '../../lib/CentralModels';
 import { LibraryTab } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 import { 
@@ -34,9 +42,26 @@ export default function QuestionTabs({
   questions,
 }: TabContainerProps) {
   const theme = useTheme();
+  const {
+    recommendedGames,
+    mostPopularGames,
+    searchedGames,
+    nextToken,
+    isLoading,
+    searchTerms,
+    selectedGrades,
+    setIsTabsOpen,
+    handleChooseGrades,
+    handleSortChange,
+    handleSearchChange,
+    loadMoreGames,
+  } = useExploreGamesStateManager();
   const [openTab, setOpenTab] = React.useState(0);
+  const isSearchResults = searchTerms.length > 0;
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setOpenTab(newValue);
+  };
+  const handleView = () => {
   };
   const tabMap: { [key: number]: string } = {
     0: 'Public',
@@ -47,7 +72,7 @@ export default function QuestionTabs({
 
   const tabIconMap: { [key: number]: string } = {
     0: tabExploreQuestionsIcon,
-    1: tabMyQuestionsIcon,
+    1: tabPrivateIcon,
     2: tabDraftsIcon,
     3: tabFavoritesIcon,
   };
@@ -81,19 +106,46 @@ export default function QuestionTabs({
                     <img
                       src={tabIconMap[numericKey]}
                       alt={value}
-                      style={{ opacity: openTab === numericKey ? 1 : 0.5, padding: 0 }}
+                      style={{ 
+                        opacity: openTab === numericKey ? 1 : 0.5, 
+                        paddingTop: 0,
+                        paddingLeft: 0,
+                        paddingRight: '12px',
+                        paddingBottom: 0,
+                        height: '30px',
+                        width: '30px',
+                        margin: 0
+                      }}
                     />
                   }
                   iconPosition="start"
                   label={getLabel(screenSize, isSelected, value)}
                   isSelected={isSelected}
-                  style={{ marginRight: '8px', textTransform: 'none' }}
+                  style={{ display: 'flex', alignItems: 'center', marginRight: '12px', textTransform: 'none', fontFamily: 'Karla', fontSize: 20, fontWeight: 600, padding: '16px', boxSizing: 'border-box' }}
                 />
               );
             })}
           </Tabs>
           <ContentContainer>
-            <CardContainer/>
+            <SearchBar
+              screenSize={screenSize}
+              searchTerms={searchTerms}
+              handleSearchChange={handleSearchChange}
+              handleChooseGrades={handleChooseGrades}
+              handleSortChange={handleSortChange}
+            />
+            <CardGallery<IGameTemplate>
+              screenSize={screenSize}
+              searchTerm={isSearchResults ? searchTerms : undefined}
+              grades={isSearchResults ? selectedGrades : undefined}
+              galleryElements={isSearchResults ? searchedGames : mostPopularGames}
+              elementType={ElementType.GAME}
+              galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
+              setIsTabsOpen={setIsTabsOpen}
+              handleView={handleView}
+              isLoading={isLoading}
+              isMyLibrary
+            />
           </ContentContainer>
         </TabContent>
       </ContentFrame>
