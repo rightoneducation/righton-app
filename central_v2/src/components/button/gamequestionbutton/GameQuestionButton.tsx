@@ -7,9 +7,9 @@ interface GameQuestionContainerProps {
 }
 
 const GameQuestionContainer = styled(Button)<GameQuestionContainerProps>(({theme, isDisabled}) => ({
-  width: '144px',
-  minHeight: '36px',
-  borderRadius: '24px',
+  width: '416px',
+  minHeight: '68px',
+  borderRadius: '8px',
   background: `${theme.palette.primary.sliderGrey}`,
   ':hover': {
     background: `${theme.palette.primary.sliderGrey}`,
@@ -22,15 +22,15 @@ const GameQuestionContainer = styled(Button)<GameQuestionContainerProps>(({theme
 const GameQuestionSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic',
 })<{ isPublic: boolean }>(({ theme, isPublic }) => ({
-  width: '71px',
-  height: '33px',
-  borderRadius: '24px',
+  width: '200px',
+  height: '52px',
+  borderRadius: '8px',
   background: `${theme.palette.primary.sliderBlue}`,
   ':hover': {
     background: `${theme.palette.primary.sliderBlue}`,
   },
   position: 'absolute',
-  left: isPublic ? '2px' : '70px', 
+  left: isPublic ? '8px' : '208px', 
   transition: 'left 0.3s ease-in-out',   
   boxSizing: 'border-box',
   zIndex: 3,
@@ -39,9 +39,8 @@ const GameQuestionSelectionPill = styled(Box, {
 const LabelContainer = styled(Box)(({theme}) => ({
   width: '100%',
   display: 'flex',
-  justifyContent: 'space-between',
-  paddingLeft: '16px',
-  paddingRight: '16px',
+  justifyContent: 'flex-start',
+  paddingLeft: '8px',
   zIndex: 4,
   position: 'relative'
 }))
@@ -52,7 +51,9 @@ const SubContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  justifyContent: 'center',
   position: 'relative',
+  width: '200px',
   opacity: isSelected ? 1 : 0.5,
   transition: 'opacity 0.3 ease-in-out'
 }));
@@ -62,7 +63,8 @@ interface GameQuestionTextProps {
 }
 
 const GameQuestionText = styled(Typography)<GameQuestionTextProps>(({isSelected, theme}) => ({
-  fontSize: '14px',
+  fontSize: '24px',
+  fontWeight: 700,
   color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
   textTransform: 'none',
   transition: 'color 0.3 ease-in-out'
@@ -86,12 +88,12 @@ export default function GameQuestionButton({
       <LabelContainer>
         <SubContainer isSelected={isPublic}>     
           <GameQuestionText isSelected={isPublic}>
-            {t(`publicPrivateButton.public`)}
+            {t(`gameQuestionButton.game`)}
           </GameQuestionText>
         </SubContainer>
         <SubContainer isSelected={!isPublic}>
           <GameQuestionText isSelected={!isPublic}>
-            {t(`publicPrivateButton.private`)}
+            {t(`gameQuestionButton.question`)}
           </GameQuestionText>
         </SubContainer>
       </LabelContainer>

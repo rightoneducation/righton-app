@@ -21,10 +21,10 @@ import tabPrivateIcon from '../../images/tabPrivate.svg';
 import { ScreenSize } from '../../lib/CentralModels';
 import { 
   LibraryTab,
-  LibraryTabsContainer
+  LibraryTabsContainer,
+  ContentFrame
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 import { 
-  ContentFrame, 
   TabContent, 
   ContentContainer, 
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';

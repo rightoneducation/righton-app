@@ -33,7 +33,7 @@ const BodyContainer = styled(Box)<BodyContainerProps>(
     },
     scrollbarWidth: 'none', // Firefox
     '-ms-overflow-style': 'none',
-    position: 'relative'
+    
   }),
 );
 

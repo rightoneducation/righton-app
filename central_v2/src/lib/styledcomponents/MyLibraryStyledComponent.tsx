@@ -13,15 +13,16 @@ export const MyLibraryMainContainer = styled(Box)(({ theme }) => ({
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
   boxSizing: 'border-box',
-  display: 'flex'
+  position: 'relative'
 }));
 
 export const MyLibraryBackground = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   opacity: 0.1,
-  position: 'absolute',
+  position: 'relative',
   zIndex: 0,
+  overflow: 'hidden',
   backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
   backgroundImage: `
     linear-gradient(180deg, rgb(254, 251, 247) 0%, rgba(254, 251, 247, 0) 100%),
@@ -48,12 +49,22 @@ export const LibraryTab = styled(Tab)<LibraryTabProps>(({ theme, isSelected }) =
 }));
 
 export const LibraryTabsContainer = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: 0,
   height: '100%',
   width: '100dvw',
+  left: 0, 
+  top: 0,
+  position: 'absolute',
   flexGrow: 1,
   zIndex: 7,
   overflow: 'hidden',
   pointerEvents: 'none',
+}));
+
+export const ContentFrame = styled(Box)(({ theme }) => ({
+  height: '100%',
+  width: '100%',
+  paddingTop: '32px',
+  paddingLeft: '32px',
+  paddingRight: '32px',
+  boxSizing: 'border-box',
 }));

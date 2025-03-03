@@ -20,6 +20,8 @@ import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
+import PublicPrivateButton from './button/publicprivatebutton/PublicPrivateButton';
+import GameQuestionButton from './button/gamequestionbutton/GameQuestionButton';
 
 interface HeaderProps {
   currentScreen: ScreenType;
@@ -33,15 +35,17 @@ interface HeaderProps {
 interface HeaderContainerProps {
   screenSize: ScreenSize;
   menuOpen: boolean;
+  selectedScreen: ScreenType;
 }
 const HeaderContainer = styled(Box)<HeaderContainerProps>(
-  ({ screenSize, menuOpen, theme }) => ({
-    height: '94px',
+  ({ screenSize, menuOpen, selectedScreen, theme }) => ({
+    
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
-    padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
+    padding: `${theme.sizing.smPadding}px ${theme.sizing.xLgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.xLgPadding}px`,
     boxSizing: 'border-box',
     position: 'relative',
     backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
@@ -52,8 +56,20 @@ const HeaderContainer = styled(Box)<HeaderContainerProps>(
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'bottom', // Adjust as needed
     zIndex: 1,
+    gap: `${theme.sizing.mdPadding}px`,
   }),
 );
+
+const HeaderFirstRow = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+}));
+
+const HeaderSecondRow = styled(HeaderFirstRow)(({ theme }) => ({
+  justifyContent: 'center'
+}));
 
 const TransparentButton = styled(Button)<{
   active?: boolean;
@@ -201,24 +217,27 @@ export default function Header({
   ]
 
   return (
-    <Collapse
-      in
-      timeout={500}
-      style={{
-        transition: 'height 0.5s ease-in-out',
-        height: getHeight(),
-        width: '100%',
-        overflow: !isLgScreen ? 'hidden' : 'visible',
-        zIndex: 0,
-        position: 'fixed',
-        background: 'linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%)',
-        padding: '0px 0px 16px 0px',
-        display: 'flex',
-        justifyContent: 'center', // Center the entire menu box horizontally
-        boxSizing: 'border-box',
-      }}
-    >
-      <HeaderContainer screenSize={screenSize} menuOpen={menuOpen}>
+        // <Collapse
+    //   in
+    //   timeout={500}
+    //   style={{
+    //     transition: 'height 0.5s ease-in-out',
+    //     height: getHeight(),
+    //     width: '100%',
+    //     overflow: !isLgScreen ? 'hidden' : 'visible',
+    //     zIndex: 0,
+    //     position: 'fixed',
+    //     background: 'linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%)',
+    //     padding: '0px 0px 16px 0px',
+    //     display: 'flex',
+    //     justifyContent: 'center', // Center the entire menu box horizontally
+    //     boxSizing: 'border-box',
+    //   }}
+    // >
+    <>
+
+      <HeaderContainer screenSize={screenSize} menuOpen={menuOpen} selectedScreen={selectedScreen}>
+        <HeaderFirstRow>
         <ImageContainer
           align="flex-start"
           style={{
@@ -304,6 +323,12 @@ export default function Header({
               </>
           }
         </Box>
+        </HeaderFirstRow>
+        { selectedScreen === ScreenType.LIBRARY && 
+          <HeaderSecondRow>
+            <GameQuestionButton isDisabled={false}/>
+          </HeaderSecondRow>
+        }
       </HeaderContainer>
       {menuOpen && (
         <Box
@@ -358,6 +383,7 @@ export default function Header({
           {isUserLoggedIn && createMenu}
         </Box>
       )}
-    </Collapse>
+     </>
+    // </Collapse>
   );
 }
