@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import {
   IGameTemplate,
   PublicPrivateType,
@@ -31,7 +31,8 @@ interface UseExploreGamesStateManagerProps {
   loadMoreGames: () => void;
 }
 
-export default function useExploreGamesStateManager(): UseExploreGamesStateManagerProps {
+export default function useExploreGamesStateManager(
+): UseExploreGamesStateManagerProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const debounceInterval = 800;
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
@@ -42,6 +43,9 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
   const [nextToken, setNextToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingInfiniteScroll, setIsLoadingInfiniteScroll] = useState(false);
+  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
+    PublicPrivateType.PUBLIC,
+  );
   const [sort, setSort] = useState<{
     field: SortType;
     direction: SortDirection | null;
@@ -50,9 +54,6 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     direction: null,
   });
   const [isTabsOpen, setIsTabsOpen] = useState(false);
-  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
-    PublicPrivateType.PUBLIC,
-  );
 
   const initGames = async () => {
     setIsLoading(true);
@@ -151,9 +152,9 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
   };
 
   const handlePublicPrivateChange = (newPublicPrivate: PublicPrivateType) => {
-    setPublicPrivate(newPublicPrivate);
     setIsLoading(true);
     setNextToken(null);
+    setPublicPrivate(newPublicPrivate);
     apiClients?.gameTemplate
       ?.listGameTemplates(
         newPublicPrivate,

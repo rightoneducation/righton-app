@@ -47,7 +47,7 @@
     "private": "Private"
   },
   "gameQuestionButton":{
-    "game": "Game",
-    "question": "Question"
+    "games": "Games",
+    "questions": "Questions"
   }
 }

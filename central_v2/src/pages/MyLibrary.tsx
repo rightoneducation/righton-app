@@ -4,24 +4,16 @@ import { IAPIClients, IQuestionTemplate } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, Button } from '@mui/material';
-import LibraryTabs from '../components/librarytabs/LibraryTabs';
-import { ScreenSize } from '../lib/CentralModels';
+import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
+import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
   apiClients: IAPIClients;
+  gameQuestion: GameQuestionType;
 }
 
-
-  // screenSize: ScreenSize;
-  // isTabsOpen: boolean;
-  // question: IQuestionTemplate;
-  // questions: IQuestionTemplate[];
-  // handleBackToExplore: () => void;
-  // handlePrevQuestion: () => void;
-  // handleNextQuestion: () => void;
-
-export default function MyLibrary({ apiClients }: MyLibraryProps) {
+export default function MyLibrary({ apiClients, gameQuestion }: MyLibraryProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -32,12 +24,11 @@ export default function MyLibrary({ apiClients }: MyLibraryProps) {
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
-  const [questions, setQuestions] = useState<IQuestionTemplate[]>([]);
 
   return (
-        <MyLibraryMainContainer>
-          <MyLibraryBackground/>
-            <LibraryTabs screenSize={screenSize} questions={questions}/>
-        </MyLibraryMainContainer>
+    <MyLibraryMainContainer>
+      <MyLibraryBackground/>
+        <LibraryTabsContainer screenSize={screenSize} gameQuestion={gameQuestion}/>
+    </MyLibraryMainContainer>
   );
 }

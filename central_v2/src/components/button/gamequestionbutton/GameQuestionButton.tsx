@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { GameQuestionType } from '../../../lib/CentralModels';
 
 interface GameQuestionContainerProps {
   isDisabled: boolean;
@@ -72,15 +73,20 @@ const GameQuestionText = styled(Typography)<GameQuestionTextProps>(({isSelected,
 
 interface GameQuestionButtonInterface {
   isDisabled: boolean;
+  gameQuestion?: GameQuestionType;
+  setGameQuestion?: (gameQuestion: GameQuestionType) => void;
 }
 
 export default function GameQuestionButton({
-  isDisabled
+  isDisabled,
+  gameQuestion,
+  setGameQuestion
 }: GameQuestionButtonInterface) {
   const { t } = useTranslation();
-  const [isPublic, setIsPublic] = useState<boolean>(true);
+  const isPublic = gameQuestion === GameQuestionType.GAME;
   const handleGameQuestionSwitch = () =>{
-    setIsPublic(!isPublic);
+    if (setGameQuestion)
+      setGameQuestion(gameQuestion === GameQuestionType.GAME ? GameQuestionType.QUESTION : GameQuestionType.GAME);
   }
   return (
     <GameQuestionContainer isDisabled={isDisabled} onClick={!isDisabled ? handleGameQuestionSwitch : undefined}>
@@ -88,12 +94,12 @@ export default function GameQuestionButton({
       <LabelContainer>
         <SubContainer isSelected={isPublic}>     
           <GameQuestionText isSelected={isPublic}>
-            {t(`gameQuestionButton.game`)}
+            {t(`gameQuestionButton.games`)}
           </GameQuestionText>
         </SubContainer>
         <SubContainer isSelected={!isPublic}>
           <GameQuestionText isSelected={!isPublic}>
-            {t(`gameQuestionButton.question`)}
+            {t(`gameQuestionButton.questions`)}
           </GameQuestionText>
         </SubContainer>
       </LabelContainer>

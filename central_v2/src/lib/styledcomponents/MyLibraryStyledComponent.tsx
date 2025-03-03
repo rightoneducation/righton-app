@@ -48,7 +48,7 @@ export const LibraryTab = styled(Tab)<LibraryTabProps>(({ theme, isSelected }) =
   cursor: 'pointer',
 }));
 
-export const LibraryTabsContainer = styled(Box)(({ theme }) => ({
+export const LibraryTabsStyledContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   width: '100dvw',
   left: 0, 

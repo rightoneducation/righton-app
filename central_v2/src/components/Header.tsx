@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
+import { Box, Button, Typography, Collapse, Fade, IconButton, Paper } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
 import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
@@ -16,7 +16,7 @@ import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
 import createDropdownGame from '../images/createDropdownGame.svg';
 import createDropdownQuestion from '../images/createDropdownQuestion.svg'
-import { ScreenType, ScreenSize } from '../lib/CentralModels';
+import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
@@ -29,6 +29,8 @@ interface HeaderProps {
   isLgScreen: boolean;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
+  gameQuestion?: GameQuestionType;
+  setGameQuestion?: (gameQuestion: GameQuestionType) => void;
   isUserLoggedIn: boolean;
 }
 
@@ -39,7 +41,6 @@ interface HeaderContainerProps {
 }
 const HeaderContainer = styled(Box)<HeaderContainerProps>(
   ({ screenSize, menuOpen, selectedScreen, theme }) => ({
-    
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
@@ -57,6 +58,7 @@ const HeaderContainer = styled(Box)<HeaderContainerProps>(
     backgroundPosition: 'bottom', // Adjust as needed
     zIndex: 1,
     gap: `${theme.sizing.mdPadding}px`,
+    transition: 'height 0.5s ease-in-out',
   }),
 );
 
@@ -147,6 +149,8 @@ export default function Header({
   isLgScreen,
   menuOpen,
   setMenuOpen,
+  gameQuestion,
+  setGameQuestion,
   isUserLoggedIn
 }: HeaderProps) {
   const navigate = useNavigate();
@@ -217,23 +221,6 @@ export default function Header({
   ]
 
   return (
-        // <Collapse
-    //   in
-    //   timeout={500}
-    //   style={{
-    //     transition: 'height 0.5s ease-in-out',
-    //     height: getHeight(),
-    //     width: '100%',
-    //     overflow: !isLgScreen ? 'hidden' : 'visible',
-    //     zIndex: 0,
-    //     position: 'fixed',
-    //     background: 'linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%)',
-    //     padding: '0px 0px 16px 0px',
-    //     display: 'flex',
-    //     justifyContent: 'center', // Center the entire menu box horizontally
-    //     boxSizing: 'border-box',
-    //   }}
-    // >
     <>
 
       <HeaderContainer screenSize={screenSize} menuOpen={menuOpen} selectedScreen={selectedScreen}>
@@ -324,11 +311,21 @@ export default function Header({
           }
         </Box>
         </HeaderFirstRow>
-        { selectedScreen === ScreenType.LIBRARY && 
+        <Collapse
+          in
+          style={{
+            transition: selectedScreen === ScreenType.LIBRARY ? 'height 0.5s ease-in-out' : 'none',
+            height: selectedScreen === ScreenType.LIBRARY ? '94px' : '0px',
+          }}
+        > 
           <HeaderSecondRow>
-            <GameQuestionButton isDisabled={false}/>
+            <Fade in={selectedScreen === ScreenType.LIBRARY} timeout={{enter: 1000, exit: 0}}  style={{transition: 'height 0.5s ease-in-out'}}>
+              <div>
+              <GameQuestionButton isDisabled={false} gameQuestion={gameQuestion} setGameQuestion={setGameQuestion}/>
+              </div>
+            </Fade>
           </HeaderSecondRow>
-        }
+          </Collapse>
       </HeaderContainer>
       {menuOpen && (
         <Box

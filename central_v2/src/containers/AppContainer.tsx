@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
-import { ScreenType, ScreenSize } from '../lib/CentralModels';
+import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
 import { ModalBackground } from '../lib/styledcomponents/QuestionTabsStyledComponents';
@@ -41,11 +41,21 @@ interface AppContainerProps {
   currentScreen: ScreenType;
   isTabsOpen?: boolean;
   setIsTabsOpen?: (isTabsOpen: boolean) => void;
+  gameQuestion?: GameQuestionType;
+  setGameQuestion?: (gameQuestion: GameQuestionType) => void
   children: React.ReactNode;
   isUserLoggedIn: boolean;
 }
 
-function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, isUserLoggedIn, children }: AppContainerProps) {
+function AppContainer({ 
+  currentScreen, 
+  isTabsOpen, 
+  setIsTabsOpen, 
+  gameQuestion,
+  setGameQuestion,
+  isUserLoggedIn, 
+  children 
+}: AppContainerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -74,6 +84,8 @@ function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, isUserLoggedIn
           screenSize={screenSize}
           isLgScreen={isLgScreen}
           menuOpen={menuOpen}
+          gameQuestion={gameQuestion}
+          setGameQuestion={setGameQuestion}
           setMenuOpen={setMenuOpen}
           isUserLoggedIn={isUserLoggedIn}
         />

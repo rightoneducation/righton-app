@@ -13,7 +13,7 @@ import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
 import MyLibrary from '../pages/MyLibrary';
-import { ScreenType, ScreenSize } from '../lib/CentralModels';
+import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
 
 function AppSwitch() {
   const theme = useTheme();
@@ -36,6 +36,7 @@ function AppSwitch() {
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [isTabsOpen, setIsTabsOpen] = React.useState(false);
+  const [gameQuestion, setGameQuestion] = useState<GameQuestionType>(GameQuestionType.GAME)
   const screenSize = isLargeScreen // eslint-disable-line
     ? ScreenSize.LARGE
     : isMediumScreen
@@ -68,8 +69,8 @@ function AppSwitch() {
     }
     case libraryScreen: {
       return (
-        <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn}>
-          <MyLibrary apiClients={apiClients} />
+        <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn} gameQuestion={gameQuestion} setGameQuestion={setGameQuestion}>
+          <MyLibrary apiClients={apiClients} gameQuestion={gameQuestion}/>
         </AppContainer>
       );
     }
