@@ -29,6 +29,7 @@ export function MostPopularContainer({ // eslint-disable-line
           screenSize === ScreenSize.SMALL
             ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`
             : `${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px`,
+        paddingBottom: '128px',
         boxSizing: 'border-box',
         gap:
           screenSize === ScreenSize.SMALL

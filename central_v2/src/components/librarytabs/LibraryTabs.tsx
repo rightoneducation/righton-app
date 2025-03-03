@@ -18,13 +18,14 @@ import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import tabPrivateIcon from '../../images/tabPrivate.svg';
 import { ScreenSize } from '../../lib/CentralModels';
-import { LibraryTab } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 import { 
-  TabContainer, 
+  LibraryTab,
+  LibraryTabsContainer
+} from '../../lib/styledcomponents/MyLibraryStyledComponent';
+import { 
   ContentFrame, 
   TabContent, 
   ContentContainer, 
-  CardContainer,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 
 interface TabContainerProps {
@@ -84,7 +85,7 @@ export default function QuestionTabs({
     return '';
   }
   return (
-    <TabContainer>
+    <LibraryTabsContainer>
       <ContentFrame>
         <TabContent>
           <Tabs
@@ -149,6 +150,6 @@ export default function QuestionTabs({
           </ContentContainer>
         </TabContent>
       </ContentFrame>
-    </TabContainer>
+    </LibraryTabsContainer>
   );
 }
