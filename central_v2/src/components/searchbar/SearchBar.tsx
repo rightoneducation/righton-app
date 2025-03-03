@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import {
   Box,
   InputAdornment,
-  Typography,
   styled,
   TextField,
-  Select,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { GradeTarget, SortType, SortDirection } from '@righton/networking';
@@ -93,7 +91,7 @@ function SearchBar({
     handleSearchChange(value);
   };
   return (
-    <SearchAndFilterContainer screenSize={screenSize} style={{backgroundColor: searchTerms.length > 0 ? theme.palette.primary.creamBackgroundColor : ''}}>
+    <SearchAndFilterContainer screenSize={screenSize}>
       <Box style={{ display: 'flex', width: '100%' }}>
         <SelectGradesMenu
           screenSize={screenSize ?? ScreenSize.SMALL}

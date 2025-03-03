@@ -9,6 +9,7 @@ import {
   ElementType,
   GalleryType,
   IGameTemplate,
+  PublicPrivateType
 } from '@righton/networking';
 import CardGallery from '../cardgallery/CardGallery';
 import useExploreGamesStateManager from '../../hooks/useExploreGamesStateManager';
@@ -38,7 +39,7 @@ interface TabContainerProps {
   questions: IQuestionTemplate[];
 }
 
-export default function QuestionTabs({
+export default function LibraryTabs({
   screenSize,
   questions,
 }: TabContainerProps) {
@@ -51,15 +52,18 @@ export default function QuestionTabs({
     isLoading,
     searchTerms,
     selectedGrades,
+    publicPrivate,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
+    handlePublicPrivateChange,
     loadMoreGames,
   } = useExploreGamesStateManager();
   const [openTab, setOpenTab] = React.useState(0);
   const isSearchResults = searchTerms.length > 0;
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
     setOpenTab(newValue);
   };
   const handleView = () => {
@@ -70,7 +74,6 @@ export default function QuestionTabs({
     2: 'Drafts',
     3: 'Favorites',
   };
-
   const tabIconMap: { [key: number]: string } = {
     0: tabExploreQuestionsIcon,
     1: tabPrivateIcon,

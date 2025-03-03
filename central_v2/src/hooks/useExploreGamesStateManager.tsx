@@ -19,6 +19,7 @@ interface UseExploreGamesStateManagerProps {
   searchTerms: string;
   selectedGrades: GradeTarget[];
   isTabsOpen: boolean;
+  publicPrivate: PublicPrivateType;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
@@ -26,6 +27,7 @@ interface UseExploreGamesStateManagerProps {
     direction: SortDirection | null;
   }) => void;
   handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
   loadMoreGames: () => void;
 }
 
@@ -48,6 +50,9 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     direction: null,
   });
   const [isTabsOpen, setIsTabsOpen] = useState(false);
+  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
+    PublicPrivateType.PUBLIC,
+  );
 
   const initGames = async () => {
     setIsLoading(true);
@@ -88,7 +93,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     setNextToken(null);
     apiClients?.centralDataManager
       ?.searchForGameTemplates(
-        PublicPrivateType.PUBLIC,
+        publicPrivate,
         null,
         null,
         searchTerms,
@@ -128,7 +133,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
           )
           .then((response) => {
             setIsLoading(false);
-            setSearchedGames(response.games);
+            setMostPopularGames(response.games);
           });
       },
       debounceInterval,
@@ -143,6 +148,26 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
       selectedGrades,
       sort.field,
     );
+  };
+
+  const handlePublicPrivateChange = (newPublicPrivate: PublicPrivateType) => {
+    setPublicPrivate(newPublicPrivate);
+    setIsLoading(true);
+    setNextToken(null);
+    apiClients?.gameTemplate
+      ?.listGameTemplates(
+        newPublicPrivate,
+        12,
+        null,
+        null,
+        null,
+        selectedGrades ?? [],
+      )
+      .then((response) => {
+        setIsLoading(false);
+        if (response)
+          setMostPopularGames(response.gameTemplates);
+      });
   };
 
   const loadMoreGames = () => {
@@ -187,10 +212,12 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     searchTerms,
     selectedGrades,
     isTabsOpen,
+    publicPrivate,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
+    handlePublicPrivateChange,
     loadMoreGames,
   };
 }

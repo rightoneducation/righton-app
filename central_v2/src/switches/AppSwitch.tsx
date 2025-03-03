@@ -58,8 +58,6 @@ function AppSwitch() {
     )
   }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);
 
-  console.log(createGameScreen, 'createGameScreen');
-
   switch (true) {
     case questionScreen: {
       return (
