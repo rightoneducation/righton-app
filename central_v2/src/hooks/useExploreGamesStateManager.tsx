@@ -155,10 +155,12 @@ export default function useExploreGamesStateManager(
     setIsLoading(true);
     setNextToken(null);
     setPublicPrivate(newPublicPrivate);
+    setMostPopularGames([]);
+    const limit = newPublicPrivate === PublicPrivateType.PUBLIC ? 12 : null;
     apiClients?.gameTemplate
       ?.listGameTemplates(
         newPublicPrivate,
-        12,
+        limit,
         null,
         null,
         null,

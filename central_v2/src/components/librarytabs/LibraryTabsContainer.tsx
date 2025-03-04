@@ -22,6 +22,7 @@ import {
   TabContent, 
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import LibraryTabsGames from './LibraryTabsGames';
+import LibraryTabsQuestions from './LibraryTabsQuestions';
 
 
 interface TabContainerProps {
@@ -59,14 +60,21 @@ export default function LibraryTabsContainer({
   return (
     <LibraryTabsStyledContainer>
     <ContentFrame>
-      { gameQuestion === GameQuestionType.GAME && 
-        <LibraryTabsGames
-          screenSize={screenSize}
-          tabMap={tabMap}
-          tabIconMap={tabIconMap}
-          getLabel={getLabel}
-          handleView={handleView}
-        />
+      { gameQuestion === GameQuestionType.GAME 
+        ? <LibraryTabsGames
+            screenSize={screenSize}
+            tabMap={tabMap}
+            tabIconMap={tabIconMap}
+            getLabel={getLabel}
+            handleView={handleView}
+          />
+        : <LibraryTabsQuestions
+            screenSize={screenSize}
+            tabMap={tabMap}
+            tabIconMap={tabIconMap}
+            getLabel={getLabel}
+            handleView={handleView}
+          />
       }
     </ContentFrame>
   </LibraryTabsStyledContainer>

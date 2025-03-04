@@ -26,6 +26,7 @@ interface UseExploreQuestionsStateManagerProps {
     direction: SortDirection | null;
   }) => void;
   handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
   loadMoreQuestions: () => void;
 }
 
@@ -46,6 +47,9 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
   const [nextToken, setNextToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingInfiniteScroll, setIsLoadingInfiniteScroll] = useState(false);
+  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
+    PublicPrivateType.PUBLIC,
+  );
   const [sort, setSort] = useState<{
     field: SortType;
     direction: SortDirection | null;
@@ -151,6 +155,27 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     );
   };
 
+  const handlePublicPrivateChange = (newPublicPrivate: PublicPrivateType) => {
+    setIsLoading(true);
+    setNextToken(null);
+    setPublicPrivate(newPublicPrivate);
+    const limit = newPublicPrivate === PublicPrivateType.PUBLIC ? 12 : null;
+    apiClients?.questionTemplate
+      ?.listQuestionTemplates(
+        newPublicPrivate,
+        limit,
+        null,
+        null,
+        null,
+        selectedGrades ?? [],
+      )
+      .then((response) => {
+        setIsLoading(false);
+        if (response)
+          setMostPopularQuestions(response.questionTemplates);
+      });
+  };
+
   const loadMoreQuestions = () => {
     if (nextToken && !isLoadingInfiniteScroll) {
       setIsLoadingInfiniteScroll(true);
@@ -200,6 +225,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
+    handlePublicPrivateChange,
     loadMoreQuestions,
   };
 }

@@ -105,7 +105,7 @@ function MostPopularQuestionsComponent({
     0,
   );
   return (
-    <Grid container spacing={2}   columns={{ xs: 12, sm: 12, md: 12, lg: 8 }} id="scrollableDiv">
+    <Grid container spacing={4}   columns={{ xs: 12, sm: 12, md: 12, lg: 7 }} id="scrollableDiv">
       {(elementsLength === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (

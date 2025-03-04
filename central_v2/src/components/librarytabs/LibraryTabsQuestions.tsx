@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { 
   ElementType,
   GalleryType,
-  IGameTemplate,
+  IQuestionTemplate,
   PublicPrivateType,
 } from '@righton/networking';
 import CardGallery from '../cardgallery/CardGallery';
@@ -16,12 +16,12 @@ import {
   ContentContainer, 
   TabContent,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
-import useExploreGamesStateManager from '../../hooks/useExploreGamesStateManager';
+import useExploreQuestionsStateManager from '../../hooks/useExploreQuestionsStateManager';
 import { 
   LibraryTab
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 
-interface LibraryTabsGamesProps<T extends IGameTemplate> {
+interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   screenSize: ScreenSize;
   tabMap: { [key: number]: string };
   tabIconMap: { [key: number]: string };
@@ -29,17 +29,17 @@ interface LibraryTabsGamesProps<T extends IGameTemplate> {
   handleView: (element: T, elements: T[]) => void;
 }
 
-export default function LibraryTabsGames({
+export default function LibraryTabsQuestions({
   screenSize,
   tabMap,
   tabIconMap,
   getLabel,
   handleView
-}: LibraryTabsGamesProps<IGameTemplate>) {
+}: LibraryTabsQuestionsProps<IQuestionTemplate>) {
 const {
-  recommendedGames,
-  mostPopularGames,
-  searchedGames,
+  recommendedQuestions,
+  mostPopularQuestions,
+  searchedQuestions,
   nextToken,
   isLoading,
   searchTerms,
@@ -49,9 +49,8 @@ const {
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  loadMoreGames,
-} = useExploreGamesStateManager();
-console.log(mostPopularGames);
+  loadMoreQuestions,
+} = useExploreQuestionsStateManager();
 const isSearchResults = searchTerms.length > 0;
 const [publicPrivate, setPublicPrivate] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
 const [openTab, setOpenTab] = React.useState(0);
@@ -109,12 +108,12 @@ return (
         handleChooseGrades={handleChooseGrades}
         handleSortChange={handleSortChange}
       />
-      <CardGallery<IGameTemplate>
+      <CardGallery<IQuestionTemplate>
         screenSize={screenSize}
         searchTerm={isSearchResults ? searchTerms : undefined}
         grades={isSearchResults ? selectedGrades : undefined}
-        galleryElements={isSearchResults ? searchedGames : mostPopularGames}
-        elementType={ElementType.GAME}
+        galleryElements={isSearchResults ? searchedQuestions : mostPopularQuestions}
+        elementType={ElementType.QUESTION}
         galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
         setIsTabsOpen={setIsTabsOpen}
         handleView={handleView}

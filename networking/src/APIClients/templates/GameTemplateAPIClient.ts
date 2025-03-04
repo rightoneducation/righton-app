@@ -5,6 +5,7 @@ import { GameTemplateParser } from "../../Parsers/GameTemplateParser";
 import { AWSGameTemplate } from "../../Models";
 import { isNullOrUndefined } from "../../global";
 import { GraphQLOptions } from "../BaseAPIClient";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 export class GameTemplateAPIClient
   extends BaseAPIClient
@@ -97,7 +98,11 @@ export class GameTemplateAPIClient
     const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.default;
     const awsType = `${type}GameTemplate`;
     const queryName = `list${type}GameTemplates`;
+    console.log(queryName);
+    console.log(queryFunction); 
+    console.log(await fetchAuthSession());
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, queryName, queryFunction, type, gradeTargets); 
+    console.log(response);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
 
