@@ -1,56 +1,72 @@
+import AWS from 'aws-sdk'; // Use ES Module syntax
+import { fetchAuthSession, fetchUserAttributes } from 'aws-amplify/auth';
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-import AWS from 'aws-sdk';
-
 export const handler = async (event) => {
-    console.log(event)
-    let returnMessage = {
-        cognito: false,
-        dynamo: false,
-        frontId: false,
-        backId: false
-    };
-    const response = JSON.parse(event.arguments.input);
-    const {user, authSession} = response;
-    if (!user && !authSession) {
-        return {
-          statusCode: 400,
-          body: JSON.stringify({ message: 'Missing temporary credentials or user identifier' }),
-        };
+  try {
+    // console.log("Starting the delete user data process");
+
+    // Verify the authentication session and get the current user nickname
+    const isAuthenticated = await verifyAuth();
+    // console.log(isAuthenticated)
+    if (isAuthenticated == false) {
+    //   return {
+    //     statusCode: 401,
+    //     body: JSON.stringify({ message: "User is not authenticated" }),
+    //   };
+        console.log("User is not Authenticated")
     }
-    const cognito = new AWS.CognitoIdentityServiceProvider();
-    const cognitoDelete = await cognito.adminDeleteUser({
-        UserPoolId: process.env.USER_POOL_ID,
-        Username: user.email
-    }).promise();
-    returnMessage.cognito = true;
-    if (user.dynamoId) {
-        const docClient = new AWS.DynamoDB.DocumentClient();
-        const dynamoDelete = await docClient.delete({
-            TableName: process.env.USER_TABLE_NAME,
-            Key: { id: user.dynamoId }
-        }).promise();
-        returnMessage.dynamo = true;
+
+    const userNickname = await getUserNickname();
+    console.log(userNickname)
+    if (!userNickname) {
+    //   return {
+    //     statusCode: 400,
+    //     body: JSON.stringify({ message: "User nickname not found" }),
+    //   };
+        console.log("User nickname not found")
     }
-    if (user.frontIdPath) {
-        const s3 = new AWS.S3();
-        const frontIdDelete = await s3.deleteObject({
-            Bucket: process.env.USER_IMAGE_BUCKET,
-            Key: user.frontIdPath
-        }).promise();;
-        returnMessage.frontId = true;
-    }
-    if (user.backIdPath) {
-        const s3 = new AWS.S3();
-        const backIdDelete = await s3.deleteObject({
-            Bucket: process.env.USER_IMAGE_BUCKET,
-            Key: user.backIdPath
-        }).promise();
-        returnMessage.backId = true;
-    }
+
+    // Proceed with deletion of user data here...
+
     return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'User deleted', returnMessage }),
+      statusCode: 200,
+      body: JSON.stringify({ message: "User data deletion process completed." })
     };
+
+  } catch (error) {
+    console.error("Error deleting user data:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Internal Server Error", error: error.message }),
+    };
+  }
 };
+
+// Correctly defining verifyAuth outside the handler
+async function verifyAuth() {
+    try {
+      const session = await fetchAuthSession();
+      return !!session?.tokens?.accessToken; // If accessToken exists, user is authenticated
+    } catch (error) {
+      console.error("Error verifying auth:", error);
+      return false;
+    }
+  }
+
+//   async function getUserNickname() {
+//     try {
+//       const attributes = await fetchUserAttributes();
+//       console.log("User Attributes:", attributes);
+//       if (attributes && attributes.nickname !== undefined) {
+//         return attributes.nickname;
+//       } else {
+//         return null; // Ensure undefined is converted to null
+//       }
+//     } catch (error) {
+//       console.error("Error fetching user attributes:", error);
+//       return null;
+//     }
+//   }

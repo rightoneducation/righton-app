@@ -19,8 +19,8 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     password
     gamesMade
     questionsMade
-    frontIdPath
-    backIdPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
     createdAt
     updatedAt
     owner
@@ -52,8 +52,8 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       password
       gamesMade
       questionsMade
-      frontIdPath
-      backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner
@@ -88,8 +88,8 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
       password
       gamesMade
       questionsMade
-      frontIdPath
-      backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner
@@ -127,8 +127,8 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       password
       gamesMade
       questionsMade
-      frontIdPath
-      backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner

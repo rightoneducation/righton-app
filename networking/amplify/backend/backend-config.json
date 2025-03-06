@@ -84,7 +84,7 @@
     }
   },
   "function": {
-    "S3Trigger04eb3a91": {
+    "UserCleaner": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -119,11 +119,6 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "userCleaner": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "waegen": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -144,19 +139,19 @@
         }
       ]
     },
-    "AMPLIFY_function_S3Trigger04eb3a91_deploymentBucketName": {
+    "AMPLIFY_function_UserCleaner_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "S3Trigger04eb3a91"
+          "resourceName": "UserCleaner"
         }
       ]
     },
-    "AMPLIFY_function_S3Trigger04eb3a91_s3Key": {
+    "AMPLIFY_function_UserCleaner_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "S3Trigger04eb3a91"
+          "resourceName": "UserCleaner"
         }
       ]
     },
@@ -232,22 +227,6 @@
         }
       ]
     },
-    "AMPLIFY_function_userCleaner_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "userCleaner"
-        }
-      ]
-    },
-    "AMPLIFY_function_userCleaner_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "userCleaner"
-        }
-      ]
-    },
     "AMPLIFY_function_waegen_deploymentBucketName": {
       "usedBy": [
         {
@@ -282,18 +261,8 @@
     }
   },
   "storage": {
-    "rightoncentralstorage": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "Name",
-            "Arn",
-            "LambdaExecutionRole"
-          ],
-          "category": "function",
-          "resourceName": "S3Trigger04eb3a91"
-        }
-      ],
+    "gamequestionimages": {
+      "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"
     }

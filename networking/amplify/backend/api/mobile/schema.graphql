@@ -18,8 +18,8 @@ type User @model
   password: String
   gamesMade: Int
   questionsMade: Int
-  frontIdPath: String
-  backIdPath: String
+  favoriteGameTemplateIds: AWSJSON
+  favoriteQuestionTemplateIds: AWSJSON
 }
 
 type Mutation {
@@ -39,10 +39,9 @@ type Mutation {
     ]
   )
   userCleaner(input: String!): String 
-  @function(name: "userCleaner-${env}") 
+  @function(name: "UserCleaner-${env}") 
   @auth(
     rules: [
-      { allow: public, provider: iam  },
       { allow: private, provider: userPools }
     ]
   )
@@ -54,6 +53,7 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+
   waegen(input: WaeGenInput): String
   @function(name: "waegen-${env}")
     @auth(
@@ -62,6 +62,7 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+
   waeregen(input: WaeRegenInput): String
   @function(name: "waeregen-${env}")
     @auth(
