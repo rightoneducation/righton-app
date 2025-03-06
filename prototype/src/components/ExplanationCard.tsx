@@ -30,16 +30,16 @@ import {
 } from '../lib/styledcomponents/generator/StyledCards';
 import { TextFieldStyled } from '../lib/styledcomponents/generator/StyledTextField';
 import { ExplanationRegenType } from '../lib/Constants';
-import { IQuestionToSave, IRegenInput } from '../lib/Models';
+import { IQuestionToSave, IRegenInput, IChipData } from '../lib/Models';
 import { compareEditedExplanation } from '../lib/API';
-import { set } from 'lodash';
+import DiscardOptions from './discard/DiscardOptions';
 
 interface Explanation {
   answer: string; 
   selectedExplanation: string; 
   editedExplanation?: string;
   dismissedExplanations: {
-    explanation: string;
+    explanation: IChipData | null;
     prompt?: string;
   }[]
 }
@@ -148,7 +148,7 @@ export default function ExplanationCard(
   }
 
   // answer: string; selectedExplanation: string; dismissedExplanations: string[]
-  const packageRegenInputAndSubmit= (index: number, action: ExplanationRegenType, promptText?: string, discardedExplanation?: string) => {
+  const packageRegenInputAndSubmit= (index: number, action: ExplanationRegenType, discardedExplanation: IChipData | null, promptText?: string) => {
     const inputToSend: IRegenInput = {
       question: questionToSave,
       action,
@@ -173,17 +173,11 @@ export default function ExplanationCard(
         break;
       case ExplanationRegenType.DISCARD:
         setIsDiscarded(true);
-        if (discardPromptText !== null && discardPromptText !== undefined && discardPromptText !== '') {
-          inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: explanation.selectedExplanation, prompt: discardPromptText})
-          setQuestionToSave(inputToSend.question);
-        }
-        if (discardOptions.toneClarity)
-          inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: explanation.selectedExplanation, prompt: "Adjust tone to match a middle school reading level"});
-        if (discardOptions.incorrectMath)
-          saveDiscardExplanation(questionToSave.question, explanation.selectedExplanation)
+        inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: discardedExplanation, prompt: promptText})
+        setQuestionToSave(inputToSend.question);
         break;
       case ExplanationRegenType.REGEN:
-        inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: explanation.selectedExplanation, prompt: ''})
+        inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: null, prompt: ''})
         setQuestionToSave(inputToSend.question);
         break;
     }
@@ -254,7 +248,7 @@ export default function ExplanationCard(
                   <EditTextStyled onClick={handleEditModeClick}>
                     Edit
                   </EditTextStyled>
-                  <img src={RegenArrow} alt="Regen Explanation" style={{cursor: 'pointer', height: '20px', width: 'auto'}} onClick={() => packageRegenInputAndSubmit(index, 3,  '', '')}/>
+                  <img src={RegenArrow} alt="Regen Explanation" style={{cursor: 'pointer', height: '20px', width: 'auto'}} onClick={() => packageRegenInputAndSubmit(index, 3,  null)}/>
                 </Box>
               }
             </Box>
@@ -265,7 +259,7 @@ export default function ExplanationCard(
                 </ExplanationTextStyled>
                 <Grid container style={{paddingLeft: '34px', paddingRight: '34px'}} spacing='12px'>
                     <Grid item xs={6} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'}}>
-                      <ButtonStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0)}>
+                      <ButtonStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)}>
                         <img src={AcceptIcon} style={{width: '20px', height: '20px'}}/>
                       </ButtonStyled>
                       { !isDiscardEnabled &&
@@ -284,39 +278,42 @@ export default function ExplanationCard(
                     </Grid>
                 </Grid>
                 {isDiscardEnabled &&
-                  <Box style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                    {!isPromptEnabled &&
-                      <>
-                        <Box style={{display: 'flex', gap: '8px'}}> 
-                          <DiscardTextStyled style={{fontWeight: 700, textDecoration: 'underline'}}>
-                            Tell us:
-                          </DiscardTextStyled>
-                          <DiscardTextStyled>
-                            Why are you discarding this explanation?
-                          </DiscardTextStyled>
-                        </Box>
-                        <DiscardTextStyled style={{fontWeight: 700, textDecoration: 'underline', cursor: 'pointer'}} onClick={() => { setDiscardOptions({incorrectMath: true, toneClarity: false, other: {isEnabled: false, text: ''}}); packageRegenInputAndSubmit(index, 2,  '', '')}}>
-                          Incorrect Math
-                        </DiscardTextStyled>
-                        <DiscardTextStyled style={{fontWeight: 700, textDecoration: 'underline', cursor: 'pointer'}} onClick={() => {setDiscardOptions({incorrectMath: false, toneClarity: true, other: {isEnabled: false, text: ''}}); packageRegenInputAndSubmit(index, 2,  '', '')}}>
-                          Tone/Clarity
-                        </DiscardTextStyled>
-                      </>
-                    }
-                    <DiscardTextStyled style={{fontWeight: 700, textDecoration: 'underline', cursor: 'pointer'}} onClick={() => setIsPromptEnabled(true)}>
-                      Other
-                    </DiscardTextStyled>
-                    {isPromptEnabled &&
-                      <>
-                        <TextFieldStyled placeholder="Enter your reason here..." variant="outlined" style={{width: '100%'}} value={discardPromptText} onChange={(e) => setDiscardPromptText(e.target.value)} multiline={true} minRows={5}/>
-                        <Box style={{display: 'flex', justifyContent: 'flex-end', gap: `${theme.sizing.xSmPadding}px`}}>
-                          <DiscardTextStyled style={{cursor: 'pointer', textDecoration: 'underline'}} onClick={() => packageRegenInputAndSubmit(index, 2, '', '')}>
-                            Submit
-                          </DiscardTextStyled>
-                        </Box>
-                      </>
-                    }
-                  </Box>
+
+                  <DiscardOptions index={index} packageRegenInputAndSubmit={packageRegenInputAndSubmit}/>
+
+                  // <Box style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                  //   {!isPromptEnabled &&
+                  //     <>
+                  //       <Box style={{display: 'flex', gap: '8px'}}> 
+                  //         <DiscardTextStyled style={{fontWeight: 700, textDecoration: 'underline'}}>
+                  //           Tell us:
+                  //         </DiscardTextStyled>
+                  //         <DiscardTextStyled>
+                  //           Why are you discarding this explanation?
+                  //         </DiscardTextStyled>
+                  //       </Box>
+                  //       <DiscardTextStyled style={{fontWeight: 700, textDecoration: 'underline', cursor: 'pointer'}} onClick={() => { setDiscardOptions({incorrectMath: true, toneClarity: false, other: {isEnabled: false, text: ''}}); packageRegenInputAndSubmit(index, 2,  '', '')}}>
+                  //         Incorrect Math
+                  //       </DiscardTextStyled>
+                  //       <DiscardTextStyled style={{fontWeight: 700, textDecoration: 'underline', cursor: 'pointer'}} onClick={() => {setDiscardOptions({incorrectMath: false, toneClarity: true, other: {isEnabled: false, text: ''}}); packageRegenInputAndSubmit(index, 2,  '', '')}}>
+                  //         Tone/Clarity
+                  //       </DiscardTextStyled>
+                  //     </>
+                  //   }
+                  //   <DiscardTextStyled style={{fontWeight: 700, textDecoration: 'underline', cursor: 'pointer'}} onClick={() => setIsPromptEnabled(true)}>
+                  //     Other
+                  //   </DiscardTextStyled>
+                  //   {isPromptEnabled &&
+                  //     <>
+                  //       <TextFieldStyled placeholder="Enter your reason here..." variant="outlined" style={{width: '100%'}} value={discardPromptText} onChange={(e) => setDiscardPromptText(e.target.value)} multiline={true} minRows={5}/>
+                  //       <Box style={{display: 'flex', justifyContent: 'flex-end', gap: `${theme.sizing.xSmPadding}px`}}>
+                  //         <DiscardTextStyled style={{cursor: 'pointer', textDecoration: 'underline'}} onClick={() => packageRegenInputAndSubmit(index, 2, '', '')}>
+                  //           Submit
+                  //         </DiscardTextStyled>
+                  //       </Box>
+                  //     </>
+                  //   }
+                  // </Box>
                 }
               </>
               : 

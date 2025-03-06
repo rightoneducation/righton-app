@@ -26,7 +26,7 @@ export interface IQuestionToSave {
       editedExplanation?: string;
       editedReason?: string;
       dismissedExplanations: {
-        explanation: string;
+        explanation: IChipData | null;
         prompt?: string;
       }[];
     }[];
@@ -52,4 +52,10 @@ export interface IDiscardedExplanationToSave {
   explanation: string,
   discardText?: string,
   version: string
+}
+
+export interface IChipData {
+  incorrect: boolean;
+  unclear: boolean;
+  other: boolean;
 }
