@@ -7,11 +7,17 @@ import { IAPIClients, IUserProfile } from '@righton/networking';
 import { fetchAuthSession, signIn, signUp, signOut,  } from 'aws-amplify/auth';
 // import { Auth } from 'aws-amplify';
 
-import { GoogleLogin } from '@react-oauth/google';
+// import { GoogleLogin } from '@react-oauth/google';
+import { Google as GoogleIcon } from '@mui/icons-material';
+import { useGoogleLogin } from '@react-oauth/google';
+// import GoogleIcon from "@mui/icons-material/Google";
+
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import RightOnLogo from "../images/RightOnLogo.png";
+import GoogleImageSvg from "../images/googleicon.svg";
+
 import Adpic from "../images/@.svg"
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
 import { 
@@ -70,16 +76,25 @@ const UpperSignupSubGoogle = styled(Typography)(({ theme }) => ({
 }));
 
 const GoogleSignUpButton = styled(Button)(({ theme }) => ({
+  backgroundColor: 'transparent',  // Make background transparent
+  color: '#0966E0',
+  padding: '10px 16px',
+  fontSize: '16px',
+  fontWeight: 500,
+  fontFamily: 'Poppins, sans-serif',
+  borderRadius: '8px',
   width: '100%',
   display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
-  color: '#0966E0', 
+  justifyContent: 'center',
+  gap: '10px',
   border: '2px solid #0966E0',
-  borderRadius: '8px',
-  backgroundColor: 'white',
-  minHeight: '52px',
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: '#f0f0f0',
+  },
 }));
+
 
 const OrText = styled(Typography)(({ theme }) => ({
   width: '100%',
@@ -287,6 +302,7 @@ interface SignUpProps {
   userProfile: IUserProfile;
   setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>; 
   handleUserCreate: () => void;
+  // handleGoogleUserCreate: () => void;
   frontImage: File | null;
   setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
   backImage: File | null;
@@ -306,7 +322,7 @@ export default function SignUp({
   setBackImage,
   confirmPassword,
   setConfirmPassword,
-  // setPressedGoogle
+  // handleGoogleUserCreate
 }: SignUpProps ) {
   const theme = useTheme();
 
@@ -374,7 +390,27 @@ export default function SignUp({
     setLoading(false);
   };
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const idToken = credentialResponse.access_token; // Use `access_token` for OAuth login
 
+        if (idToken) {
+          const response = await apiClients.auth.awsSignInFederated();
+          // handleGoogleUserCreate()
+          
+          console.log('User signed in:', response);
+        } else {
+          console.error('Google sign-in token is missing');
+        }
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+      }
+    },
+    onError: () => {
+      console.error('Google Sign-In Failed');
+    },
+  });
   return (
     <SignUpMainContainer>
       <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
@@ -384,29 +420,12 @@ export default function SignUp({
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
           <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
           {/* <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle> */}
-          <GoogleLogin
-              useOneTap
-              onSuccess={async (credentialResponse) => {
-                try {
-                  const idToken = credentialResponse.credential;
+          <GoogleSignUpButton onClick={() => googleLogin()} variant="contained">
+            <img src={GoogleImageSvg} alt="Google Icon" width="30px" height="30px" />
+            Sign up with Google
+          </GoogleSignUpButton>
 
-                  if (idToken) {
-                    // Sign up using the Google token and Cognito
-                    const response = await apiClients.auth.awsSignInFederated();
-                    console.log('User signed in:', response);
-                  } else {
-                    console.error('Google sign-in token is missing');
-                  }
-                } catch (error) {
-                  console.error('Google sign-in error:', error);
-                }
-              }}
-              onError={() => {
-                console.error('Google Sign-In Failed');
-              }}
-              text="signup_with"
-              
-            />
+
         </UpperSignup>
 
         <OrText>Or</OrText>

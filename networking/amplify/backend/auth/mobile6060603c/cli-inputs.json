@@ -89,6 +89,6 @@
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
     "authProviders": [],
     "thirdPartyAuth": false,
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"http://localhost:3000/\"],\"LogoutURLs\":[\"https://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/nextstep/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"http://localhost:3000/nextstep/\"],\"LogoutURLs\":[\"https://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\"]}"
   }
 }

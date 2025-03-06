@@ -26,6 +26,8 @@ function AppSwitch() {
   const loginScreen = useMatch('/login') !== null;
   const createQuestionScreen = useMatch('/create/question') !== null;
   const createGameScreen = useMatch('/create/game') !== null;
+  const googlenextstep = useMatch('/nextstep') !== null;
+  
   const blankUserProfile = {
     title: 'Title...',
     firstName: '',
@@ -79,13 +81,15 @@ function AppSwitch() {
         // </AppContainer>
       );
     }
-    case signUpScreen: {
+    case signUpScreen:
+    case googlenextstep: {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
           <SignUpSwitch userProfile={userProfile} setUserProfile={setUserProfile} setIsTabsOpen={setIsTabsOpen}/>
         </AppContainer>
       );
     }
+    
     case loginScreen: {
       return (
         <AppContainer currentScreen={ScreenType.LOGIN} isUserLoggedIn={isUserLoggedIn}>
