@@ -81,3 +81,9 @@ local-env-info.json
 # Ignore vscode settings until https://github.com/Microsoft/vscode/issues/32693 is ready
 # or all project agree on using a same structure
 .vscode/settings.json
+networking/amplify/backend/function/UserCleaner/UserCleaner-cloudformation-template.json
+networking/amplify/backend/function/userCleaner/amplify.state
+networking/amplify/backend/function/UserCleaner/UserCleaner-cloudformation-template.json
+networking/amplify/backend/function/userCleaner/src/package.json
+networking/amplify/backend/function/userCleaner/src/yarn.lock
+networking/amplify/backend/function/UserCleaner/UserCleaner-cloudformation-template.json
