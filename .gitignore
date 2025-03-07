@@ -87,3 +87,4 @@ networking/amplify/backend/function/UserCleaner/UserCleaner-cloudformation-templ
 networking/amplify/backend/function/userCleaner/src/package.json
 networking/amplify/backend/function/userCleaner/src/yarn.lock
 networking/amplify/backend/function/UserCleaner/UserCleaner-cloudformation-template.json
+networking/amplify/backend/function/UserCleaner/UserCleaner-cloudformation-template.json
