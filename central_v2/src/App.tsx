@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider,
-  useMatch,
+  RouterProvider
 } from 'react-router-dom';
 import { useAPIClients, Environment, AppType } from '@righton/networking';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { APIClientsContext } from './lib/context/APIClientsContext';
+import UserProfileReducer from './lib/reducer/UserProfileReducer';
 import Theme from './lib/Theme';
 import AppSwitch from './switches/AppSwitch';
 import CreateQuestionLoader from './loaders/CreateQuestionLoader';
+import { UserProfileContext, UserProfileDispatchContext } from './lib/context/UserProfileContext';
 
 function App() {
   const { apiClients, loading } = useAPIClients(
     Environment.Developing,
     AppType.CENTRAL,
   );
+  const blankUserProfile = {
+    title: 'Title...',
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+  }
+  const [userProfile, dispatchUserProfile] = useReducer(UserProfileReducer, blankUserProfile);
 
   function RedirectToCentralIfMissing() {
     window.location.href = 'http://dev-central.rightoneducation.com/';
@@ -52,7 +62,13 @@ function App() {
         <ThemeProvider theme={Theme}>
           {apiClients && (
             <APIClientsContext.Provider value={apiClients}>
-              <RouterProvider router={router} />
+              { userProfile &&
+                <UserProfileContext.Provider value={userProfile}>
+                  <UserProfileDispatchContext.Provider value={dispatchUserProfile}>
+                    <RouterProvider router={router} />
+                  </UserProfileDispatchContext.Provider>
+                </UserProfileContext.Provider>
+              }
             </APIClientsContext.Provider>
           )}
         </ThemeProvider>

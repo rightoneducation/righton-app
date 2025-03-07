@@ -84,7 +84,7 @@ export const ButtonIconContainer = styled(Box)(({ theme }) => ({
   width: '20px',
 }));
 
-export const ButtonTypography = styled(Button, {
+export const ButtonTypography = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'buttonColor',
 })<ButtonStyledProps>(({ theme, buttonColor }) => ({
   fontFamily: 'Poppins',

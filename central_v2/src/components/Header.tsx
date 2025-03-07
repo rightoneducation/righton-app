@@ -39,7 +39,9 @@ interface HeaderContainerProps {
   menuOpen: boolean;
   selectedScreen: ScreenType;
 }
-const HeaderContainer = styled(Box)<HeaderContainerProps>(
+const HeaderContainer = styled(Box, {
+ shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'menuOpen' && prop !== 'selectedScreen', 
+})<HeaderContainerProps>(
   ({ screenSize, menuOpen, selectedScreen, theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -73,10 +75,14 @@ const HeaderSecondRow = styled(HeaderFirstRow)(({ theme }) => ({
   justifyContent: 'center'
 }));
 
-const TransparentButton = styled(Button)<{
-  active?: boolean;
+const TransparentButton = styled(Button,
+  {
+    shouldForwardProp: (prop) => prop !== 'isActive' && prop !== 'menuOpen',
+  }
+)<{
+  isActive?: boolean;
   menuOpen?: boolean;
-}>(({ active, menuOpen, theme }) => ({
+}>(({ isActive, menuOpen, theme }) => ({
   display: 'flex',
   justifyContent: menuOpen ? 'flex-start' : 'center',
   width: '200px',
@@ -118,24 +124,28 @@ const PinkIcon = styled('img')(({ theme }) => ({
 }));
 
 interface ButtonTextProps {
-  active: boolean;
+  isActive: boolean;
 }
 
-const ButtonText = styled(Typography)<ButtonTextProps>(({ active, theme }) => ({
+const ButtonText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isActive',
+})<ButtonTextProps>(({ isActive, theme }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
   fontWeight: 700,
   lineHeight: '30px',
   textAlign: 'center',
   textTransform: 'none',
-  color: active ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
+  color: isActive ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
 }));
 
 interface ImageContainerProps {
   align: 'flex-start' | 'center' | 'flex-end';
 }
 
-const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
+const ImageContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'align',
+})<ImageContainerProps>(({ align }) => ({
   display: 'flex',
   justifyContent: align,
   alignItems: 'center',
@@ -186,7 +196,7 @@ export default function Header({
   };
 
   const createMenu = [
-    <CreateButtonContainer>
+    <CreateButtonContainer key="createMenu">
     <Box style={{zIndex: 4}}>
       <CentralButton buttonType={ButtonType.CREATE} isEnabled smallScreenOverride={screenSize === ScreenSize.SMALL} onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
     </Box>
@@ -211,7 +221,7 @@ export default function Header({
 
   const loggedInUserComponents = [
     isLgScreen ? (
-      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
+      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}} key="lgscreen">
         {createMenu}
         <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
       </Box>
@@ -246,7 +256,7 @@ export default function Header({
                 onClick={() =>
                   handleButtonClick(ScreenType.GAMES)
                 }
-                active={
+                isActive={
                   selectedScreen === ScreenType.GAMES
                 }
               >
@@ -254,7 +264,7 @@ export default function Header({
                   ? <PinkIcon src={dice} alt="Games Icon" />
                   : <img src={dice} alt="Games Icon" />
                 }
-                <ButtonText active={selectedScreen === ScreenType.GAMES}>
+                <ButtonText isActive={selectedScreen === ScreenType.GAMES}>
                   Games
                 </ButtonText>
               </TransparentButton>
@@ -263,7 +273,7 @@ export default function Header({
                 onClick={() =>
                   handleButtonClick(ScreenType.QUESTIONS)
                 }
-                active={
+                isActive={
                   selectedScreen === ScreenType.QUESTIONS
                 }
               >
@@ -271,7 +281,7 @@ export default function Header({
                   ? <PinkIcon src={qmark} alt="Questions Icon" />
                   : <img src={qmark} alt="Questions Icon" />
                 }
-                <ButtonText active={selectedScreen === ScreenType.QUESTIONS}>
+                <ButtonText isActive={selectedScreen === ScreenType.QUESTIONS}>
                   Questions
                 </ButtonText>
               </TransparentButton>
@@ -280,13 +290,13 @@ export default function Header({
                 onClick={() =>
                   handleButtonClick(ScreenType.LIBRARY)
                 }
-                active={selectedScreen === ScreenType.LIBRARY}
+                isActive={selectedScreen === ScreenType.LIBRARY}
               >
                  { selectedScreen === ScreenType.LIBRARY
                   ? <PinkIcon src={books} alt="Library Icon" />
                   : <img src={books} alt="Library Icon" />
                 }
-                <ButtonText active={selectedScreen === ScreenType.LIBRARY}>
+                <ButtonText isActive={selectedScreen === ScreenType.LIBRARY}>
                   My Library
                 </ButtonText>
               </TransparentButton>
@@ -340,7 +350,7 @@ export default function Header({
             onClick={() =>
               handleButtonClick(ScreenType.GAMES)
             }
-            active={selectedScreen === ScreenType.GAMES}
+            isActive={selectedScreen === ScreenType.GAMES}
             menuOpen={menuOpen}
           >
             { selectedScreen === ScreenType.GAMES
@@ -353,7 +363,7 @@ export default function Header({
             onClick={() =>
               handleButtonClick(ScreenType.QUESTIONS)
             }
-            active={
+            isActive={
               selectedScreen === ScreenType.QUESTIONS
             }
             menuOpen={menuOpen}
@@ -368,7 +378,7 @@ export default function Header({
             onClick={() =>
               handleButtonClick(ScreenType.LIBRARY)
             }
-            active={selectedScreen === ScreenType.LIBRARY}
+            isActive={selectedScreen === ScreenType.LIBRARY}
             menuOpen={menuOpen}
           >
             { selectedScreen === ScreenType.LIBRARY

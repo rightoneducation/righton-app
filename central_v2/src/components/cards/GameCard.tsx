@@ -53,7 +53,9 @@ interface GameCardProps {
   screenSize: ScreenSize;
 }
 
-const GameCard = styled(Box)<GameCardProps>(({ isCarousel, screenSize, theme }) => ({
+const GameCard = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'isCarousel',
+})<GameCardProps>(({ isCarousel, screenSize, theme }) => ({
   width: screenSize !== ScreenSize.LARGE ? (isCarousel ? '290px' : '327px') : '384px', // eslint-disable-line
   height: '100%',
   borderRadius: `${theme.sizing.xSmPadding}px`,
@@ -122,15 +124,12 @@ const CCSSButtonContainer = styled(Box)(({ theme }) => ({
 
 interface DescriptionTextProps {
   buttonCount: number;
-}
-
-interface DescriptionTextProps {
   isCarousel: boolean;
 }
 
 const DescriptionText = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isCarousel',
-})<DescriptionTextProps>(({ theme, isCarousel }) => ({
+  shouldForwardProp: (prop) => prop !== 'isCarousel' && prop !== 'buttonCount',
+})<DescriptionTextProps>(({ theme, isCarousel, buttonCount }) => ({
   width: '100%',
   height: 'fit-content',
   fontFamily: 'Rubik',
@@ -174,7 +173,7 @@ export default function StyledGameCard({
         ? <CarouselGameImage src={image} alt="Tag" />
         : <GameImage src={image} alt="Tag" />
       }
-        <FavouriteButton isEnabled/>
+        <FavouriteButton isEnabled id={id}/>
       </GameImageContainer>
       <ContentContainer>
         <TitleTextTypography>{title}</TitleTextTypography>

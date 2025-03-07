@@ -6,7 +6,11 @@ interface MostPopularTextProps {
   screenSize: ScreenSize;
 }
 
-export const MostPopularText = styled(Typography)<MostPopularTextProps>(
+export const MostPopularText = styled(Typography,
+  {
+    shouldForwardProp: (prop) => prop !== 'screenSize',
+  }
+)<MostPopularTextProps>(
   ({ theme, screenSize }) => ({
     lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
     fontFamily: 'Poppins',
@@ -21,7 +25,11 @@ interface SearchedTextProps {
   screenSize: ScreenSize;
 }
 
-export const SearchedText = styled(Typography)<SearchedTextProps>(
+export const SearchedText = styled(Typography,
+  {
+    shouldForwardProp: (prop) => prop !== 'screenSize',
+  }
+)<SearchedTextProps>(
   ({ screenSize, theme }) => ({
     lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
     fontFamily: 'Poppins',
@@ -33,7 +41,11 @@ export const SearchedText = styled(Typography)<SearchedTextProps>(
   }),
 );
 
-export const GradesText = styled(Typography)<SearchedTextProps>(
+export const GradesText = styled(Typography,
+  {
+    shouldForwardProp: (prop) => prop !== 'screenSize',
+  }
+)<SearchedTextProps>(
   ({ screenSize, theme }) => ({
     lineHeight: screenSize === ScreenSize.SMALL ? '30px' : '36px',
     fontFamily: 'Poppins',
@@ -46,7 +58,11 @@ export const GradesText = styled(Typography)<SearchedTextProps>(
   }),
 );
 
-export const ResultsLengthText = styled(Typography)<SearchedTextProps>(
+export const ResultsLengthText = styled(Typography,
+  {
+    shouldForwardProp: (prop) => prop !== 'screenSize',
+  }
+)<SearchedTextProps>(
   ({ screenSize, theme }) => ({
     fontFamily: 'Poppins',
     fontWeight: '700',
@@ -56,7 +72,11 @@ export const ResultsLengthText = styled(Typography)<SearchedTextProps>(
   }),
 );
 
-export const NoResultsText = styled(Typography)<SearchedTextProps>(
+export const NoResultsText = styled(Typography,
+  {
+    shouldForwardProp: (prop) => prop !== 'screenSize',
+  }
+)<SearchedTextProps>(
   ({ screenSize, theme }) => ({
     lineHeight:
       screenSize === ScreenSize.SMALL

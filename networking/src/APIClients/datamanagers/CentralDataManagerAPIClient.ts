@@ -49,6 +49,26 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return { nextToken: null, questions: [] };
   };
 
+  public favoriteGameTemplate = async (gameId: string, user: IUserProfile) => {
+    let newFavoriteGameTemplateIds = user.favoriteGameTemplateIds ? JSON.parse(JSON.stringify(user.favoriteGameTemplateIds)) : [];
+    const isFav = newFavoriteGameTemplateIds.includes(gameId);
+    console.log(isFav);
+    if (isFav === true)
+      newFavoriteGameTemplateIds = newFavoriteGameTemplateIds.filter((id: string) => id !== gameId);
+    else 
+      newFavoriteGameTemplateIds.push(gameId);
+    return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
+    // if (!response)
+    //   return null;
+    // // this.setLocalUserProfile(response);
+    // return response;
+  };
+
+  public favoriteQuestionTemplate = async (questionId: string, favorite: boolean) => {
+    console.log(questionId);
+    console.log(favorite);
+  };
+
   public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[]) => {
     switch(sortType){
       case SortType.listGameTemplatesByDate: {
@@ -186,7 +206,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       return { updatedUser, images };
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);
-      throw new Error (error);
+      throw new Error (JSON.stringify(error));
     }
   };
 

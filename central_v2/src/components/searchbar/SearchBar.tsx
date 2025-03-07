@@ -27,7 +27,9 @@ interface SearchBarProps2 {
   searchTerms?: string;
 }
 
-const SearchBarContainer = styled(TextField)<SearchBarProps2>(
+const SearchBarContainer = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'searchTerms',
+})<SearchBarProps2>(
   ({ screenSize, searchTerms, theme }) => ({
     width: '100%',
     flexGrow: 1,
@@ -63,7 +65,9 @@ const SearchBarContainer = styled(TextField)<SearchBarProps2>(
   }),
 );
 
-const SearchAndFilterContainer = styled(Box)<SearchBarProps2>(
+const SearchAndFilterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<SearchBarProps2>(
   ({ screenSize, theme }) => ({
     height: '88px',
     width: '100%',
@@ -111,7 +115,7 @@ function SearchBar({
           searchTerms={searchTerms}
           onChange={handleInputChange}
           InputProps={{
-            disableUnderline: true,
+            
             startAdornment: (
               <InputAdornment position="start">
                 <img src={SearchIcon} alt="Search Icon" />

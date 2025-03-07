@@ -11,7 +11,7 @@ export const MyLibraryMainContainer = styled(Box)(({ theme }) => ({
     display: 'none',
   },
   scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
+  msOverflowStyle: 'none',
   boxSizing: 'border-box',
   position: 'relative'
 }));
@@ -34,7 +34,9 @@ type LibraryTabProps = {
   isSelected: boolean;
 };
 
-export const LibraryTab = styled(Tab)<LibraryTabProps>(({ theme, isSelected }) => ({
+export const LibraryTab = styled(Tab, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<LibraryTabProps>(({ theme, isSelected }) => ({
   background: theme.palette.primary.darkBlue,
   color: theme.palette.primary.main,
   minWidth: '64px',
