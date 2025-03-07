@@ -24,6 +24,8 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
     questionsMade
     frontIdPath
     backIdPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
     createdAt
     updatedAt
     owner
@@ -50,6 +52,8 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
     questionsMade
     frontIdPath
     backIdPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
     createdAt
     updatedAt
     owner
@@ -76,6 +80,8 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
     questionsMade
     frontIdPath
     backIdPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
     createdAt
     updatedAt
     owner

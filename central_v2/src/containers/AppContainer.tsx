@@ -17,24 +17,20 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
   
 }));
 
-interface BodyContainerProps {
-  screenSize: ScreenSize;
-}
-
-const BodyContainer = styled(Box)<BodyContainerProps>(
-  ({ theme, screenSize }) => ({
-    width: '100%',
-    display: 'flex',
-    flexGrow: 1,
-    overflowY: 'auto',
-    '&::-webkit-scrollbar': {
-      // Chrome and Safari
-      display: 'none',
-    },
-    scrollbarWidth: 'none', // Firefox
-    '-ms-overflow-style': 'none',
-    
-  }),
+const BodyContainer = styled(Box)(() => {
+    return {
+      width: '100%',
+      display: 'flex',
+      flexGrow: 1,
+      overflowY: 'auto',
+      '&::-webkit-scrollbar': {
+        // Chrome and Safari
+        display: 'none',
+      },
+      scrollbarWidth: 'none', // Firefox
+      msOverflowStyle: 'none',
+    }
+  }
 );
 
 interface AppContainerProps {
@@ -90,7 +86,7 @@ function AppContainer({
           isUserLoggedIn={isUserLoggedIn}
         />
       </HeaderContainer>
-      <BodyContainer screenSize={screenSize}>{children}</BodyContainer>
+      <BodyContainer>{children}</BodyContainer>
     </ScreenContainer>
   );
 }

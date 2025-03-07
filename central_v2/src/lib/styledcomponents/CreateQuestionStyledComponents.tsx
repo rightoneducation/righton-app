@@ -11,7 +11,7 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
     display: 'none',
   },
   scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
+  msOverflowStyle: 'none',
   boxSizing: 'border-box',
 }));
 
@@ -33,7 +33,9 @@ interface BaseCardStyledProps {
   isCardComplete: boolean
 }
 
-export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete }) => ({
+export const BaseCardStyled = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete',
+})<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
@@ -59,7 +61,9 @@ interface TextContainerStyledProps {
 }
 
 
-export const TextContainerStyled = styled(TextField)<TextContainerStyledProps>(({ theme, isAIEnabled }) => ({
+export const TextContainerStyled = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== 'isAIEnabled',
+})<TextContainerStyledProps>(({ theme, isAIEnabled }) => ({
   width: '100%',
   margin: 0,
   padding: 0,

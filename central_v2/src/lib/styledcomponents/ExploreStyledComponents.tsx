@@ -42,7 +42,7 @@ export function MostPopularContainer({ // eslint-disable-line
           display: 'none',
         },
         scrollbarWidth: 'none', // Firefox
-        '-ms-overflow-style': 'none',
+        msOverflowStyle: 'none',
       }}
     >
       {children}

@@ -23,7 +23,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "S3Trigger04eb3a91": {
+    "UserCleaner": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
@@ -58,13 +58,6 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
-    "userCleaner": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
-    },
     "waegen": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -81,7 +74,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "rightoncentralstorage": {
+    "gamequestionimages": {
       "BucketName": "string",
       "Region": "string"
     }

@@ -24,6 +24,8 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     questionsMade
     frontIdPath
     backIdPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
     createdAt
     updatedAt
     owner
@@ -50,6 +52,8 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     questionsMade
     frontIdPath
     backIdPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
     createdAt
     updatedAt
     owner
@@ -76,6 +80,8 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     questionsMade
     frontIdPath
     backIdPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
     createdAt
     updatedAt
     owner

@@ -1,4 +1,4 @@
-import { IGameTemplate, IQuestionTemplate } from "../../../Models";
+import { IGameTemplate, IQuestionTemplate} from "../../../Models";
 import { IUserProfile } from "../../../Models/IUserProfile";
 import { PublicPrivateType, SortDirection, SortType, GradeTarget } from "../../BaseAPIClient";
 
@@ -27,6 +27,8 @@ export interface ICentralDataManagerAPIClient {
   setLocalUserProfile: (userProfile: IUserProfile) => void;
   clearLocalUserProfile: () => void;
   loginUserAndRetrieveUserProfile: (username: string, password: string) => Promise<IUserProfile | null>;
+  favoriteGameTemplate: (gameId: string, user: IUserProfile) => Promise<IUserProfile | null>;
+  favoriteQuestionTemplate: (questionId: string, isFavourite: boolean) => Promise<void>;
   signUpSendConfirmationCode(user: IUserProfile): Promise<void>;
   signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
   signOut: () => void;

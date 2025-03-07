@@ -43,7 +43,9 @@ type StyledTabProps = {
   isSelected: boolean;
 };
 
-export const StyledTab = styled(Tab)<StyledTabProps>(({ theme, isSelected }) => ({
+export const StyledTab = styled(Tab, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<StyledTabProps>(({ theme, isSelected }) => ({
   background: '#304B7F',
   color: 'rgba(255, 255, 255, 0.5)',
   minWidth: '64px',

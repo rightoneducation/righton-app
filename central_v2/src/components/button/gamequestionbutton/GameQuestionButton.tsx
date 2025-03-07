@@ -7,7 +7,9 @@ interface GameQuestionContainerProps {
   isDisabled: boolean;
 }
 
-const GameQuestionContainer = styled(Button)<GameQuestionContainerProps>(({theme, isDisabled}) => ({
+const GameQuestionContainer = styled(Button,{
+  shouldForwardProp: (prop) => prop !== 'isDisabled',
+})<GameQuestionContainerProps>(({theme, isDisabled}) => ({
   width: '416px',
   minHeight: '68px',
   borderRadius: '8px',
@@ -63,7 +65,9 @@ interface GameQuestionTextProps {
   isSelected: boolean;
 }
 
-const GameQuestionText = styled(Typography)<GameQuestionTextProps>(({isSelected, theme}) => ({
+const GameQuestionText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<GameQuestionTextProps>(({isSelected, theme}) => ({
   fontSize: '24px',
   fontWeight: 700,
   color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
