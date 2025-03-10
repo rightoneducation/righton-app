@@ -52,12 +52,11 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   public favoriteGameTemplate = async (gameId: string, user: IUserProfile) => {
     let newFavoriteGameTemplateIds = user.favoriteGameTemplateIds ? JSON.parse(JSON.stringify(user.favoriteGameTemplateIds)) : [];
     const isFav = newFavoriteGameTemplateIds.includes(gameId);
-    console.log(isFav);
     if (isFav === true)
       newFavoriteGameTemplateIds = newFavoriteGameTemplateIds.filter((id: string) => id !== gameId);
     else 
       newFavoriteGameTemplateIds.push(gameId);
-    return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
+    return await this.userAPIClient.updateUser({ id: user.id ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
     // if (!response)
     //   return null;
     // // this.setLocalUserProfile(response);
@@ -67,6 +66,20 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   public favoriteQuestionTemplate = async (questionId: string, favorite: boolean) => {
     console.log(questionId);
     console.log(favorite);
+  };
+
+  public getFavoriteGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, sortDirection: SortDirection, userProfile: IUserProfile) =>{
+    const response = await this.gameTemplateAPIClient.listGameTemplatesByFavorite(
+      type,
+      limit,
+      nextToken,
+      sortDirection,
+      userProfile.favoriteGameTemplateIds ?? []
+    );
+    if (response){
+      return { nextToken: response.nextToken, games: response.gameTemplates };
+    }
+    return {nextToken: null, games: []};
   };
 
   public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[]) => {

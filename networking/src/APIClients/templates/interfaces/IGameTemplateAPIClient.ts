@@ -204,4 +204,12 @@ export interface IGameTemplateAPIClient {
     filterString: string | null,
     gradeTargets: GradeTarget[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
+
+  listGameTemplatesByFavorite<T extends PublicPrivateType>(
+    type: T,
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    favIds: string[],
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 }

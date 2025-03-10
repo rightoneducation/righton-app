@@ -28,6 +28,13 @@ export interface ICentralDataManagerAPIClient {
   clearLocalUserProfile: () => void;
   loginUserAndRetrieveUserProfile: (username: string, password: string) => Promise<IUserProfile | null>;
   favoriteGameTemplate: (gameId: string, user: IUserProfile) => Promise<IUserProfile | null>;
+  getFavoriteGameTemplates: (
+    type: PublicPrivateType, 
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: SortDirection,
+    userProfile: IUserProfile
+  ) => Promise<{ nextToken: string | null, games: IGameTemplate[] }>;
   favoriteQuestionTemplate: (questionId: string, isFavourite: boolean) => Promise<void>;
   signUpSendConfirmationCode(user: IUserProfile): Promise<void>;
   signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;

@@ -144,4 +144,18 @@ export class GameTemplateAPIClient
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}GameTemplatesByPublicQuestionTemplatesCount`, queryFunction, type, gradeTargets);
     return response as { gameTemplates: IGameTemplate[]; nextToken: string; };
   }
+
+  async listGameTemplatesByFavorite<T extends PublicPrivateType>(
+    type: T,
+    limit: number,
+    nextToken: string | null,
+    sortDirection: string | null,
+    favIds: string[],
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    const queryFunction = gameTemplateRuntimeMap[type].list.queryFunction.default;
+    const awsType = `${type}GameTemplate`;
+    const queryName = `list${type}GameTemplates`;
+    const response = await this.executeQuery(limit, nextToken, sortDirection, null, awsType, queryName, queryFunction, type, null, favIds);
+    return response as { gameTemplates: IGameTemplate[], nextToken: string; };
+  }
 }

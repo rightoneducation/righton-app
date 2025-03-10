@@ -163,36 +163,46 @@ export abstract class BaseAPIClient {
       query: any,
       type: PublicPrivateType,
       gradeTargets?: GradeTarget[] | null,
+      favIds?: string[] | null
     ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
       const filterStringLowerCase = filterString?.toLowerCase();
       if (filterStringLowerCase != null) {
         queryParameters.filter = { lowerCaseTitle: { contains: filterStringLowerCase } };
-      if (filterStringLowerCase != null && gradeTargets) {
-          const filters: any[] = [];
-          const gradeFilters: any[] = [];
-          filters.push({ lowerCaseTitle: { contains: filterStringLowerCase } });
-          if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-            filters.push({ lowerCaseDescription: { contains: filterStringLowerCase } });
+        if (filterStringLowerCase != null && gradeTargets) {
+            const filters: any[] = [];
+            const gradeFilters: any[] = [];
+            filters.push({ lowerCaseTitle: { contains: filterStringLowerCase } });
+            if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+              filters.push({ lowerCaseDescription: { contains: filterStringLowerCase } });
+            }
+            filters.push({ ccss: { contains: filterStringLowerCase } });
+            if (gradeTargets.length === 0) {
+              queryParameters.filter = { 
+                or: filters 
+              };       // Match at least one of the filters (title, description, etc.)
+            } else {
+              gradeTargets.forEach((target) => {
+                if (target !== null) {
+                  gradeFilters.push({ gradeFilter: { eq: target } });
+                }
+              });
+              queryParameters.filter = {
+                and: [
+                  { or: gradeFilters }, // Match one of the specified grades
+                  { or: filters }       // Match at least one of the filters (title, description, etc.)
+                ]
+              };
+            }
           }
-          filters.push({ ccss: { contains: filterStringLowerCase } });
-          if (gradeTargets.length === 0) {
-            queryParameters.filter = { 
-              or: filters 
-            };       // Match at least one of the filters (title, description, etc.)
-          } else {
-            gradeTargets.forEach((target) => {
-              if (target !== null) {
-                gradeFilters.push({ gradeFilter: { eq: target } });
-              }
-            });
-            queryParameters.filter = {
-              and: [
-                { or: gradeFilters }, // Match one of the specified grades
-                { or: filters }       // Match at least one of the filters (title, description, etc.)
-              ]
-            };
-          }
+      }
+      if (favIds != null) {
+        queryParameters.filter = {
+          or: 
+            favIds.map((id) => {
+              return { id: { eq: id }}
+            })
+
         }
       }
       if (sortDirection != null) {
@@ -200,7 +210,7 @@ export abstract class BaseAPIClient {
       }
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode })) as { data: any };
-      if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
+      if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {
         const operationResult = result.data[queryName];
         const parsedNextToken = operationResult.nextToken;
           if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {

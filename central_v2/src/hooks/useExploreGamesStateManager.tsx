@@ -6,6 +6,7 @@ import {
   SortDirection,
   SortType,
   GradeTarget,
+  IUserProfile,
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
@@ -14,6 +15,7 @@ interface UseExploreGamesStateManagerProps {
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
+  favGames: IGameTemplate[];
   nextToken: string | null;
   isLoading: boolean;
   searchTerms: string;
@@ -28,6 +30,7 @@ interface UseExploreGamesStateManagerProps {
   }) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
+  getFavGames: (user: IUserProfile) => void;
   loadMoreGames: () => void;
 }
 
@@ -37,6 +40,7 @@ export default function useExploreGamesStateManager(
   const debounceInterval = 800;
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
   const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
+  const [favGames, setFavGames] = useState<IGameTemplate[]>([]);
   const [searchedGames, setSearchedGames] = useState<IGameTemplate[]>([]);
   const [searchTerms, setSearchTerms] = useState('');
   const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
@@ -199,6 +203,21 @@ export default function useExploreGamesStateManager(
     }
   };
 
+  const getFavGames = async (user: IUserProfile) => {
+    setIsLoading(true);
+    apiClients?.centralDataManager?.getFavoriteGameTemplates(
+      PublicPrivateType.PUBLIC,
+      12,
+      nextToken,
+      SortDirection.DESC,
+      user
+    ).then((response) => {
+      setFavGames(response.games);
+      setNextToken(response.nextToken); 
+      setIsLoading(false);
+    });
+  };
+
   useEffect(() => {
     try {
       initGames();
@@ -209,6 +228,7 @@ export default function useExploreGamesStateManager(
   return {
     recommendedGames,
     mostPopularGames,
+    favGames,
     searchedGames,
     nextToken,
     isLoading,
@@ -221,6 +241,7 @@ export default function useExploreGamesStateManager(
     handleSortChange,
     handleSearchChange,
     handlePublicPrivateChange,
+    getFavGames,
     loadMoreGames,
   };
 }

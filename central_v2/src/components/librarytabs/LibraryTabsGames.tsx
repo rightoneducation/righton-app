@@ -17,6 +17,8 @@ import {
   TabContent,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import useExploreGamesStateManager from '../../hooks/useExploreGamesStateManager';
+import { UserProfileContext } from '../../lib/context/UserProfileContext';
+import { useUserProfileContext } from '../../hooks/context/useUserProfileContext';
 import { 
   LibraryTab
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
@@ -40,6 +42,7 @@ const {
   recommendedGames,
   mostPopularGames,
   searchedGames,
+  favGames,
   nextToken,
   isLoading,
   searchTerms,
@@ -49,17 +52,31 @@ const {
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
+  getFavGames,
   loadMoreGames,
 } = useExploreGamesStateManager();
-console.log(mostPopularGames);
 const isSearchResults = searchTerms.length > 0;
 const [publicPrivate, setPublicPrivate] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
 const [openTab, setOpenTab] = React.useState(0);
+const userProfile = useUserProfileContext(UserProfileContext);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-  setPublicPrivate(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
-  handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
+  if (newValue === 3) {
+    getFavGames(userProfile);
+    console.log(favGames);
+  } else {
+    setPublicPrivate(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
+    handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
+  }
   setOpenTab(newValue);
 };
+const getElements = () => {
+  if (favGames.length > 0 && openTab === 3)
+    return favGames;
+  if (isSearchResults)
+    return searchedGames 
+  return mostPopularGames;
+}
+
 return (
   <TabContent>
     <Tabs
@@ -113,7 +130,7 @@ return (
         screenSize={screenSize}
         searchTerm={isSearchResults ? searchTerms : undefined}
         grades={isSearchResults ? selectedGrades : undefined}
-        galleryElements={isSearchResults ? searchedGames : mostPopularGames}
+        galleryElements={getElements()} 
         elementType={ElementType.GAME}
         galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
         setIsTabsOpen={setIsTabsOpen}
