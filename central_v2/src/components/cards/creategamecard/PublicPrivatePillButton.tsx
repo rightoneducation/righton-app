@@ -11,7 +11,7 @@ interface PublicPrivateContainerProps {
 
 const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
   width: '144px',
-  minHeight: '36px',
+  minHeight: '38px',
   borderRadius: '24px',
   background: `${theme.palette.primary.sliderGrey}`,
   ':hover': {
@@ -26,7 +26,7 @@ const PublicPrivateSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic',
 })<{ isPublic: boolean }>(({ theme, isPublic }) => ({
   width: '71px',
-  height: '33px',
+  height: '100%',
   borderRadius: '24px',
   background: `${theme.palette.primary.sliderBlue}`,
   ':hover': {

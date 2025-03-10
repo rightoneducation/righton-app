@@ -34,12 +34,15 @@ export default function SelectPhaseButton({
   const [phase, setPhase] = useState<string>('');
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
+  const isSmallerScreen = screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
 
+  // handles clicks outside of menu if open and close it
   const handleClickOutside = (event: MouseEvent) => {
     if (ref.current && !ref.current.contains(event.target as Node))
       setIsSelectOpen(false);
   };
 
+  // listen for click events after phase menu is opened
   useEffect(() => {
     if (isSelectOpen) {
       document.addEventListener('mousedown', (event) =>
@@ -56,11 +59,13 @@ export default function SelectPhaseButton({
       );
   }, [isSelectOpen]);
 
+  // handle phase selection on menu item click
   const selectPhase = (phaseVal: string) => {
     setPhase(phaseVal);
     setIsSelectOpen(false);
   };
 
+  // open menu on click
   const handleMenuToggle = () => {
     setIsSelectOpen((prev) => !prev);
   };
@@ -104,15 +109,16 @@ export default function SelectPhaseButton({
             backgroundColor: '#fffbf6',
             padding: 0,
             minWidth: '110px',
+            width: '110px',
             borderRadius: '0 0 4px 4px',
+            ...(isSmallerScreen ? { zIndex: 5} : {})
           }}
         >
           {times.map((phaseTime, i) => (
-            <>
-              <SelectMenuItem
-                onClick={() => selectPhase(phaseTime.label)}
-                sx={{ cursor: 'pointer' }}
-              >
+            <Box
+            onClick={() => selectPhase(phaseTime.label)}
+            sx={{ cursor: 'pointer', width: '100%' }}>
+              <SelectMenuItem>
                 <Typography
                   fontWeight="0.3rem"
                   fontSize="14px"
@@ -123,12 +129,11 @@ export default function SelectPhaseButton({
               </SelectMenuItem>
               {i !== times.length - 1 && (
                 <Divider
-                  onClick={() => selectPhase(phaseTime.label)}
                   flexItem
                   sx={{ width: '100%', background: '#02215f' }}
                 />
               )}
-            </>
+            </Box>
           ))}
         </SelectMenu>
       </Collapse>
