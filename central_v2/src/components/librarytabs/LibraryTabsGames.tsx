@@ -60,6 +60,8 @@ const [publicPrivate, setPublicPrivate] = React.useState<PublicPrivateType>(Publ
 const [openTab, setOpenTab] = React.useState(0);
 const userProfile = useUserProfileContext(UserProfileContext);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  console.log('sup')
+  console.log(newValue)
   if (newValue === 3) {
     getFavGames(userProfile);
     console.log(favGames);

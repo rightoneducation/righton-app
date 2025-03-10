@@ -208,7 +208,7 @@ export default function useExploreGamesStateManager(
     apiClients?.centralDataManager?.getFavoriteGameTemplates(
       PublicPrivateType.PUBLIC,
       12,
-      nextToken,
+      null,
       SortDirection.DESC,
       user
     ).then((response) => {
