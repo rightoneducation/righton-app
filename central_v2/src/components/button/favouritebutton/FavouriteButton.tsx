@@ -24,8 +24,6 @@ export default function FavouriteButton({
   const isFavorite = userProfile?.favoriteGameTemplateIds?.includes(id) ?? false;
   const handleButtonClick = async () => {
     setIsLoading(true);
-    console.log(id);
-    console.log(userProfile);
     const response = await apiClients.centralDataManager?.favoriteGameTemplate(id, userProfile);
     if (response) {
       userProfileDispatch({ type: 'update_user_profile', payload: response });

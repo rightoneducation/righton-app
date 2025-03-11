@@ -21,6 +21,7 @@ interface UseExploreGamesStateManagerProps {
   searchTerms: string;
   selectedGrades: GradeTarget[];
   isTabsOpen: boolean;
+  isFavTabOpen: boolean;
   publicPrivate: PublicPrivateType;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -58,6 +59,7 @@ export default function useExploreGamesStateManager(
     direction: null,
   });
   const [isTabsOpen, setIsTabsOpen] = useState(false);
+  const [isFavTabOpen, setIsFavTabOpen] = useState(false);
 
   const initGames = async () => {
     setIsLoading(true);
@@ -82,6 +84,7 @@ export default function useExploreGamesStateManager(
         sort.direction ?? SortDirection.ASC,
         sort.field,
         [...grades],
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -105,6 +108,7 @@ export default function useExploreGamesStateManager(
         newSort.direction ?? SortDirection.ASC,
         newSort.field,
         selectedGrades,
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -135,6 +139,7 @@ export default function useExploreGamesStateManager(
             sortDirection,
             sortType,
             gradeTargets,
+            null
           )
           .then((response) => {
             setIsLoading(false);
@@ -169,6 +174,7 @@ export default function useExploreGamesStateManager(
         null,
         null,
         selectedGrades ?? [],
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -188,6 +194,7 @@ export default function useExploreGamesStateManager(
           null,
           null,
           selectedGrades ?? [],
+          null
         )
         .then((response) => {
           if (response) {
@@ -205,12 +212,15 @@ export default function useExploreGamesStateManager(
 
   const getFavGames = async (user: IUserProfile) => {
     setIsLoading(true);
-    apiClients?.centralDataManager?.getFavoriteGameTemplates(
+    apiClients?.centralDataManager?.searchForGameTemplates(
       PublicPrivateType.PUBLIC,
       12,
       null,
-      SortDirection.DESC,
-      user
+      searchTerms,
+      sort.direction ?? SortDirection.ASC,
+      sort.field,
+      [...selectedGrades],
+      user.favoriteGameTemplateIds ?? null,
     ).then((response) => {
       setFavGames(response.games);
       setNextToken(response.nextToken); 
@@ -235,6 +245,7 @@ export default function useExploreGamesStateManager(
     searchTerms,
     selectedGrades,
     isTabsOpen,
+    isFavTabOpen,
     publicPrivate,
     setIsTabsOpen,
     handleChooseGrades,

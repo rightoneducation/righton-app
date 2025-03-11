@@ -35,7 +35,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   } 
   
   public initGames = async () => {
-    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, []);
+    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, [], null);
     if (response){
       return { nextToken: response.nextToken, games: response.gameTemplates };
     }
@@ -82,24 +82,24 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, games: []};
   };
 
-  public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[]) => {
+  public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null) => {
     switch(sortType){
       case SortType.listGameTemplatesByDate: {
-        const response = await this.gameTemplateAPIClient.listGameTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.gameTemplateAPIClient.listGameTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
         break;
       }
       case SortType.listGameTemplatesByGrade: {
-        const response = await this.gameTemplateAPIClient.listGameTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.gameTemplateAPIClient.listGameTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
         break;
       }
       case SortType.listGameTemplatesByQuestionCount: {
-        const response = await this.gameTemplateAPIClient.listGameTemplatesByQuestionTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.gameTemplateAPIClient.listGameTemplatesByQuestionTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
@@ -107,7 +107,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
       case SortType.listGameTemplates:
       default: {
-        const response = await this.gameTemplateAPIClient.listGameTemplates(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.gameTemplateAPIClient.listGameTemplates(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }

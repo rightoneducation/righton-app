@@ -12,7 +12,8 @@ export interface ICentralDataManagerAPIClient {
     search: string, 
     sortDirection: SortDirection, 
     sortType: SortType, 
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ) => Promise<{ nextToken: string | null, games: IGameTemplate[] }>;
   searchForQuestionTemplates: (
     type: PublicPrivateType, 

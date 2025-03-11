@@ -38,8 +38,7 @@ function AppSwitch() {
   const userProfile = useUserProfileContext(UserProfileContext);
   const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
-  console.log('user profile:');
-  console.log(userProfile);
+  
   useEffect(() => {
     apiClients.auth.verifyAuth().then((status) => {
         if (status){

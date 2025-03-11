@@ -166,45 +166,42 @@ export abstract class BaseAPIClient {
       favIds?: string[] | null
     ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
-      const filterStringLowerCase = filterString?.toLowerCase();
-      if (filterStringLowerCase != null) {
-        queryParameters.filter = { lowerCaseTitle: { contains: filterStringLowerCase } };
-        if (filterStringLowerCase != null && gradeTargets) {
-            const filters: any[] = [];
-            const gradeFilters: any[] = [];
-            filters.push({ lowerCaseTitle: { contains: filterStringLowerCase } });
-            if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-              filters.push({ lowerCaseDescription: { contains: filterStringLowerCase } });
-            }
-            filters.push({ ccss: { contains: filterStringLowerCase } });
-            if (gradeTargets.length === 0) {
-              queryParameters.filter = { 
-                or: filters 
-              };       // Match at least one of the filters (title, description, etc.)
-            } else {
-              gradeTargets.forEach((target) => {
-                if (target !== null) {
-                  gradeFilters.push({ gradeFilter: { eq: target } });
-                }
-              });
-              queryParameters.filter = {
-                and: [
-                  { or: gradeFilters }, // Match one of the specified grades
-                  { or: filters }       // Match at least one of the filters (title, description, etc.)
-                ]
-              };
-            }
-          }
+      if (!queryParameters.filter) {
+        queryParameters.filter = { and: [] };
       }
-      if (favIds != null) {
-        queryParameters.filter = {
+      let searchFilter: any = {};
+      let gradeFilter: any = {};
+      let favFilter: any = {};
+      const filterStringLowerCase = filterString?.toLowerCase();
+      if (favIds && favIds.length > 0) {
+        favFilter = {
           or: 
             favIds.map((id) => {
               return { id: { eq: id }}
             })
-
         }
+        queryParameters.filter.and.push(favFilter);
       }
+      if (filterStringLowerCase != null) {
+        searchFilter = { 
+          or: [
+            { lowerCaseTitle: { contains: filterStringLowerCase } },
+            (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") && { lowerCaseDescription: { contains: filterStringLowerCase } },
+            { ccss: { contains: filterStringLowerCase } }
+          ]
+        };
+        queryParameters.filter.and.push(searchFilter);
+      }
+      if (gradeTargets && gradeTargets.length > 0) {
+        gradeFilter = { 
+          or: 
+            gradeTargets.map((target) => {
+              return { gradeFilter: { eq: target } };
+            })
+          }
+          queryParameters.filter.and.push(gradeFilter);
+      }
+      
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
