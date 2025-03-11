@@ -1,29 +1,30 @@
 import React, { useCallback, useState } from 'react';
 import {
-  Typography,
   Box,
   useTheme,
-  styled,
-  Paper,
-  Stack,
   Grid,
-  TextField,
-  Button,
-  Switch,
-  IconButton,
   useMediaQuery,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import { debounce } from 'lodash';
 import {
   CentralQuestionTemplateInput,
   IncorrectCard,
   PublicPrivateType,
+  IGameTemplate
 } from '@righton/networking';
 import { useNavigate } from 'react-router-dom';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
+  CreateGameSaveDiscardGridItem,
+  CreateGameCardGridItem,
+  AddMoreIconButton,
+  TitleText,
+  CreateGameGridContainer,
+  QuestionCountButton,
+  CreateGameBoxContainer,
+  CreateGameSaveDiscardBoxContainer,
+  GameCreateButtonStack
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import {
   CreateQuestionHighlightCard,
@@ -57,51 +58,11 @@ import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateGameCardBase from '../components/cards/creategamecard/CreateGameCardBase';
 import VerticalMoreImg from '../images/buttonIconVerticalMore.svg'
 
-type TitleTextProps = {
-  screenSize: ScreenSize;
-};
-
-const TitleText = styled(Typography)<TitleTextProps>(
-  ({ theme, screenSize }) => ({
-    lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
-    fontFamily: 'Poppins',
-    fontWeight: '700',
-    fontSize:
-      screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
-    color: `${theme.palette.primary.extraDarkBlue}`,
-    paddingTop: `${theme.sizing.lgPadding}px`,
-  }),
-);
-
-export const CreateGameGridContainer = styled(Grid)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-}));
-
-type QuestionCountButtonProps = {
-  isDisabled: boolean;
-}
-
-export const QuestionCountButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'disabled'
-})<QuestionCountButtonProps>(({ theme, isDisabled }) => ({
-  backgroundColor: "#02215f",
-  height: '38px',
-  width: '119px',
-  borderRadius: '8px',
-  padding: '8px',
-  opacity: isDisabled ? 0.3 : 1,
-  color: '#fffff',
-  "&:hover" : {
-    backgroundColor: '#3155c7'
-  }
-}))
-
 interface CreateGameProps {
   screenSize: ScreenSize;
 }
 
+const verticalEllipsis = <img src={VerticalMoreImg} alt="more-elipsis" />;
 export default function CreateGame({ screenSize }: CreateGameProps) {
   const theme = useTheme();
   /* temp Large Screen tester for considitonal render */
@@ -389,36 +350,12 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         isModalOpen={isModalOpen}
         templateType={TemplateType.GAME}
       />
-      <Box
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          gap: `${theme.sizing.lgPadding}px`,
-          zIndex: 1,
-          position: 'relative',
-          paddingLeft: `${theme.sizing.mdPadding}px`,
-          paddingRight: `${theme.sizing.mdPadding}px`,
-          boxSizing: 'border-box',
-        }}
-      >
+      <CreateGameBoxContainer>
         <TitleText screenSize={ScreenSize.LARGE}>Create Game</TitleText>
+        {/* Save & Discard Button for Small & Medium Screen Size */}
         {(currentScreenSize === ScreenSize.SMALL ||
           currentScreenSize === ScreenSize.MEDIUM) && (
-          <Box
-            style={{
-              width: '100%',
-              maxWidth: '672px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: `${theme.sizing.xSmPadding}px`,
-              paddingBottom: '16px',
-            }}
-          >
+          <CreateGameSaveDiscardBoxContainer screenSize={currentScreenSize}>
             <CentralButton
               buttonType={ButtonType.SAVE}
               isEnabled
@@ -431,35 +368,20 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
               smallScreenOverride
               onClick={handleDiscardQuestion}
             />
-          </Box>
+          </CreateGameSaveDiscardBoxContainer>
         )}
 
         <CreateGameGridContainer container wrap="nowrap">
-          <Grid
+          {/* Grid item for Save & Discard Buttons for Large Screen Size */}
+          <CreateGameSaveDiscardGridItem
             item
             sm
             md={1}
             lg={4}
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'flex-start',
-              paddingTop: '16px',
-              gap: '20px',
-            }}
-          >
+            >
             {currentScreenSize !== ScreenSize.SMALL &&
               screenSize !== ScreenSize.MEDIUM && (
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-Start',
-                    alignItems: 'center',
-                    gap: `${theme.sizing.xSmPadding}px`,
-                    paddingRight: '30px',
-                  }}
-                >
+                <CreateGameSaveDiscardBoxContainer screenSize={currentScreenSize}>
                   <CentralButton
                     buttonType={ButtonType.SAVE}
                     isEnabled
@@ -470,22 +392,16 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                     isEnabled
                     onClick={handleDiscardQuestion}
                   />
-                </Box>
+                </CreateGameSaveDiscardBoxContainer>
               )}
-          </Grid>
-          <Grid
+          </CreateGameSaveDiscardGridItem>
+          {/* Grid Item for Create Game Card */}
+          <CreateGameCardGridItem
             item
             sm={12}
             md={10}
             lg={4}
-            style={{
-              width: '100%',
-              maxWidth: '672px',
-              minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: `${theme.sizing.xLgPadding}px`,
-            }}
+           screenSize={screenSize}
           >
             <Box
               onClick={() =>
@@ -508,32 +424,28 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                 isAIError={isAIError}
               />
             </Box>
-          </Grid>
+          </CreateGameCardGridItem>
           <Grid sm md={1} lg={4} item />
         </CreateGameGridContainer>
-        <Stack direction="row" alignItems="center" spacing={2}>
-          
-          <QuestionCountButton endIcon={<img src={VerticalMoreImg} alt="more-elipsis" />} isDisabled={false}>
+        {/* Question Count & Add Button */}
+        <GameCreateButtonStack>  
+          <QuestionCountButton endIcon={verticalEllipsis} isDisabled={false}>
           Question { questionCount }
           </QuestionCountButton>
-          <IconButton
-            sx={{
-              backgroundColor: '#02215f',
-              '&:hover': { backgroundColor: '#4056ca' },
-              borderRadius: '20%',
-            }}
+          <AddMoreIconButton
           >
             <img
               alt="add-question"
               src={buttonContentMap[ButtonType.ADDSTEP].icon}
             />
-          </IconButton>
-        </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+          </AddMoreIconButton>
+        </GameCreateButtonStack>
+         {/* Create Question & Question Bank */}
+        <GameCreateButtonStack>
           <CentralButton buttonType={ButtonType.CREATEQUESTION} isEnabled />
           <CentralButton buttonType={ButtonType.QUESTIONBANK} isEnabled />
-        </Stack>
-      </Box>
+        </GameCreateButtonStack>
+      </CreateGameBoxContainer>
     </CreateGameMainContainer>
   );
 }

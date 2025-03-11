@@ -111,7 +111,7 @@ export default function SelectPhaseButton({
             minWidth: '110px',
             width: '110px',
             borderRadius: '0 0 4px 4px',
-            ...(isSmallerScreen ? { zIndex: 5} : {})
+            ...(isSmallerScreen ? { zIndex: 5 } : {})
           }}
         >
           {times.map((phaseTime, i) => (

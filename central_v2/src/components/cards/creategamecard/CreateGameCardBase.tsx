@@ -1,10 +1,8 @@
 import React from 'react';
 import {
   Typography,
-  RadioGroup,
   Box,
   Fade,
-  styled,
   useTheme,
   InputAdornment,
   Grid,
@@ -16,10 +14,6 @@ import {
   CentralQuestionTemplateInput,
 } from '@righton/networking';
 import {
-  QuestionTitleStyled,
-  RadioContainerStyled,
-  RadioLabelStyled,
-  RadioStyled,
   ContentContainerStyled,
   ImageStyled,
 } from '../../../lib/styledcomponents/DetailedQuestionStyledComponents';
@@ -39,6 +33,7 @@ import errorIcon from '../../../images/errorIcon.svg';
 import SelectPhaseButton from './SelectPhaseButton';
 import SelectArrowImage from '../../../images/SelectArrow.svg';
 import ImageUploadModal from '../../modal/ImageUploadModal';
+import { CreateGameContentLeftContainerStyled, ImagePlaceholder, CreateGameTextFieldContainer } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 
 interface CreateGameCardBase {
   screenSize: ScreenSize;
@@ -55,56 +50,6 @@ interface CreateGameCardBase {
   isCardErrored: boolean;
   isAIError: boolean;
 }
-
-type ImagePlaceholderProps = {
-  isCardErrored: boolean;
-};
-
-export const ImagePlaceholder = styled(Box)<ImagePlaceholderProps>(
-  ({ theme, isCardErrored }) => ({
-    width: '100%',
-    height: '196px',
-    background: `${theme.palette.primary.uploadLightGrey}`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: '10px',
-    border: isCardErrored
-      ? `2px solid ${theme.palette.primary.errorBorder}`
-      : `2px solid ${theme.palette.primary.uploadDarkGrey}`,
-    borderRadius: '8px',
-    boxSizing: 'border-box',
-  }),
-);
-
-interface CreateQuestionTitleBarStyledProps {
-  screenSize: ScreenSize;
-}
-
-export const CreateQuestionTitleBarStyled = styled(
-  Box,
-)<CreateQuestionTitleBarStyledProps>(({ theme, screenSize }) => ({
-  width: '100%',
-  height: 'fit-content',
-  display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
-  justifyContent: 'space-between',
-  alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
-  gap:
-    screenSize === ScreenSize.SMALL
-      ? `${theme.sizing.xSmPadding}px`
-      : `${theme.sizing.smPadding}px`,
-}));
-
-export const CreateQuestionContentRightContainerStyled = styled(Box)(
-  ({ theme }) => ({
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: `${theme.sizing.xSmPadding}px`,
-  }),
-);
 
 export default function CreateQuestionCardBase({
   screenSize,
@@ -197,17 +142,12 @@ export default function CreateQuestionCardBase({
     >
       <ContentContainerStyled screenSize={screenSize}>
         {/* Create Question Content Right Container */}
-        <CreateQuestionContentRightContainerStyled>
+        <CreateGameContentLeftContainerStyled>
           {/* Game Title TextField */}
-          <TextContainerStyled
+          <CreateGameTextFieldContainer
+            isTitle
             variant="outlined"
             placeholder="Game Title..."
-            sx={{
-              input: {
-                '&::placeholder': { fontSize: '1.5rem', fontWeight: 700, },
-                '&:focus::placeholder': { color: '#02215f', opacity: 1 },
-              },
-            }}
             InputProps={{
               startAdornment: (isCardSubmitted || isAIError) &&
                 (!title || title.length === 0) && (
@@ -223,22 +163,14 @@ export default function CreateQuestionCardBase({
                 ),
             }}
           >
-            <Typography variant="h2">
-              {draftQuestion.questionCard.title}
-            </Typography>
-          </TextContainerStyled>
+            {draftQuestion.questionCard.title}
+          </CreateGameTextFieldContainer>
           {/* Game Description TextField */}
-          <TextContainerStyled
+          <CreateGameTextFieldContainer
             multiline
             variant="outlined"
             rows="4"
             placeholder="Game Description..."
-            sx={{
-              '& .MuiInputBase-input:focus::placeholder': {
-                color: '#02215f',
-                opacity: 1,
-              },
-            }}
             error={
               (isCardSubmitted || isAIError) && (!title || title.length === 0)
             }
@@ -260,8 +192,8 @@ export default function CreateQuestionCardBase({
             }}
           >
             <Typography>{draftQuestion.questionCard.title}</Typography>
-          </TextContainerStyled>
-        </CreateQuestionContentRightContainerStyled>
+          </CreateGameTextFieldContainer>
+        </CreateGameContentLeftContainerStyled>
 
         {/* Image Upload handled here */}
         {imageLink ? (

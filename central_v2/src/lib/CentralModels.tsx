@@ -1,4 +1,4 @@
-import { CentralQuestionTemplateInput, IncorrectCard } from "@righton/networking";
+import { CentralQuestionTemplateInput, IGameTemplate, IncorrectCard } from "@righton/networking";
 
 export enum ScreenType {
   GAMES,
@@ -52,4 +52,9 @@ export type CreateQuestionLocalData = {
   draftQuestion?: CentralQuestionTemplateInput | null,
   incompleteCards?: IncorrectCard[] | null,
   completeCards?: IncorrectCard[] | null
+}
+
+// type that shapes retrieved storage for gameCreation
+export type CreateGameLocalData = {
+  gameTemplate: IGameTemplate | null;
 }
