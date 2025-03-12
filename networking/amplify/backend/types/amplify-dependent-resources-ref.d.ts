@@ -23,13 +23,6 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "UserCleaner": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
-    },
     "createGameTest": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -52,6 +45,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Region": "string"
     },
     "uploadExternalImageToS3": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "userCleaner": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
