@@ -44,6 +44,10 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-test-7d167-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
+        },
+        "UserCleaner": {
+          "deploymentBucketName": "amplify-mobile-test-7d167-deployment",
+          "s3Key": "amplify-builds/UserCleaner-7646316f4f3354626752-build.zip"
         }
       },
       "storage": {

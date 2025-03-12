@@ -84,6 +84,11 @@
     }
   },
   "function": {
+    "UserCleaner": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "createGameTest": {
       "build": true,
       "dependsOn": [
@@ -131,6 +136,22 @@
         {
           "category": "auth",
           "resourceName": "mobile6060603c"
+        }
+      ]
+    },
+    "AMPLIFY_function_UserCleaner_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "UserCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_UserCleaner_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "UserCleaner"
         }
       ]
     },
