@@ -185,7 +185,8 @@ export interface IQuestionTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
   listQuestionTemplatesByDate<T extends PublicPrivateType>(
@@ -194,7 +195,8 @@ export interface IQuestionTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
   listQuestionTemplatesByGrade<T extends PublicPrivateType>(
@@ -203,7 +205,8 @@ export interface IQuestionTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 
   listQuestionTemplatesByGameTemplatesCount<T extends PublicPrivateType>(
@@ -212,6 +215,7 @@ export interface IQuestionTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 }

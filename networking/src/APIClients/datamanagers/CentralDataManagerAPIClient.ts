@@ -43,7 +43,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public initQuestions = async () => {
-    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, []);
+    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null);
     if (response)
       return { nextToken: response.nextToken, questions: response.questionTemplates };
     return { nextToken: null, questions: [] };
@@ -66,20 +66,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   public favoriteQuestionTemplate = async (questionId: string, favorite: boolean) => {
     console.log(questionId);
     console.log(favorite);
-  };
-
-  public getFavoriteGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, sortDirection: SortDirection, userProfile: IUserProfile) =>{
-    const response = await this.gameTemplateAPIClient.listGameTemplatesByFavorite(
-      type,
-      limit,
-      nextToken,
-      sortDirection,
-      userProfile.favoriteGameTemplateIds ?? []
-    );
-    if (response){
-      return { nextToken: response.nextToken, games: response.gameTemplates };
-    }
-    return {nextToken: null, games: []};
   };
 
   public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null) => {
@@ -117,24 +103,24 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, games: []};
   };
 
-  public searchForQuestionTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[]) => {
+  public searchForQuestionTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null) => {
     switch(sortType){
       case SortType.listQuestionTemplatesByDate: {
-        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
         break;
       }
       case SortType.listQuestionTemplatesByGrade: {
-        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
         break;
       }
       case SortType.listQuestionTemplatesByGameCount: {
-        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGameTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGameTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
@@ -142,7 +128,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
       case SortType.listQuestionTemplates:
       default: {
-        const response = await this.questionTemplateAPIClient.listQuestionTemplates(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.questionTemplateAPIClient.listQuestionTemplates(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
