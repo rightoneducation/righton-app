@@ -42,7 +42,7 @@ function AppSwitch() {
   
   const gameQuestion: GameQuestionType = 
     (mainScreen || (libraryScreen && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
-    
+  console.log(gameQuestion);
   const {
     recommendedGames,
     mostPopularGames,
@@ -115,7 +115,31 @@ function AppSwitch() {
     case libraryScreen: {
       return (
         <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn} gameQuestion={gameQuestion} setLibraryGameQuestionSwitch={setLibraryGameQuestionSwitch}>
-          <MyLibrary apiClients={apiClients} gameQuestion={gameQuestion}/>
+          <MyLibrary 
+            gameQuestion={gameQuestion}
+            isTabsOpen={isTabsOpen} 
+            setIsTabsOpen={setIsTabsOpen}
+            userProfile={userProfile} 
+            setIsUserLoggedIn={setIsUserLoggedIn}
+            screenSize={screenSize} 
+            recommendedGames={recommendedGames}
+            mostPopularGames={mostPopularGames}
+            searchedGames={searchedGames}
+            draftGames={draftGames}
+            favGames={favGames}
+            nextToken={nextToken}
+            isLoading={isLoading}
+            searchTerms={searchTerms}
+            selectedGrades={selectedGrades}
+            isFavTabOpen={isFavTabOpen}
+            publicPrivate={publicPrivate}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            getFav={getFav}
+            loadMore={loadMore}
+          />
         </AppContainer>
       );
     }

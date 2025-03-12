@@ -62,7 +62,7 @@ export default function useCentralDataManager({
 }: UseCentralDataManagerProps): UseCentralDataManagerReturnProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const debounceInterval = 800;
-  
+  console.log(gameQuestion);
   // holding all of these seperately in state so that we can switch between them without refetching
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
   const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
@@ -215,13 +215,14 @@ export default function useCentralDataManager({
         search: string,
         sortDirection: SortDirection,
         gradeTargets: GradeTarget[],
-        sortType: SortType
+        sortType: SortType,
+        searchGameQuestion: GameQuestionType
       ) => {
         setIsLoading(true);
         setSearchedGames([]);
         setSearchTerms(search);
         setNextToken(null);
-        switch(gameQuestion){
+        switch(searchGameQuestion){
           case GameQuestionType.QUESTION:
             apiClients?.centralDataManager
               ?.searchForQuestionTemplates(
@@ -236,7 +237,7 @@ export default function useCentralDataManager({
               )
               .then((response) => {
                 setIsLoading(false);
-                setMostPopularQuestions(response.questions);
+                setSearchedQuestions(response.questions);
               });
             break;
           case GameQuestionType.GAME:
@@ -254,7 +255,7 @@ export default function useCentralDataManager({
               )
               .then((response) => {
                 setIsLoading(false);
-                setMostPopularGames(response.games);
+                setSearchedGames(response.games);
               });
           break;
         }
@@ -269,7 +270,8 @@ export default function useCentralDataManager({
       searchString.trim(),
       sort.direction ?? SortDirection.ASC,
       selectedGrades,
-      sort.field
+      sort.field,
+      gameQuestion
     );
   };
 

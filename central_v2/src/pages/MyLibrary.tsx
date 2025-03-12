@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IAPIClients, IQuestionTemplate } from '@righton/networking';
+import { 
+  IAPIClients, 
+  IQuestionTemplate,
+  IGameTemplate,
+  PublicPrivateType,
+  IUserProfile,
+  GradeTarget,
+  SortType,
+  SortDirection
+} from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
 import { Typography, Box, Button } from '@mui/material';
@@ -9,26 +18,92 @@ import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
-  apiClients: IAPIClients;
   gameQuestion: GameQuestionType;
+  isTabsOpen: boolean;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
+  userProfile: IUserProfile;
+  screenSize: ScreenSize;
+  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
+  recommendedGames: IGameTemplate[];
+  mostPopularGames: IGameTemplate[];
+  searchedGames: IGameTemplate[];
+  draftGames: IGameTemplate[];
+  favGames: IGameTemplate[];
+  nextToken: string | null;
+  isLoading: boolean;
+  searchTerms: string;
+  selectedGrades: GradeTarget[];
+  isFavTabOpen: boolean;
+  publicPrivate: PublicPrivateType;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (
+    newSort: {
+      field: SortType;
+      direction: SortDirection | null;
+    }
+  ) => void;
+  handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  getFav: (user: IUserProfile) => void;
+  loadMore: () => void;
 }
 
-export default function MyLibrary({ apiClients, gameQuestion }: MyLibraryProps) {
+export default function MyLibrary({ 
+  gameQuestion,
+  isTabsOpen,
+  setIsTabsOpen,
+  userProfile,
+  screenSize,
+  setIsUserLoggedIn,
+  recommendedGames,
+  mostPopularGames,
+  searchedGames,
+  draftGames,
+  favGames,
+  nextToken,
+  isLoading,
+  searchTerms,
+  selectedGrades,
+  isFavTabOpen,
+  publicPrivate,
+  handleChooseGrades,
+  handleSortChange,
+  handleSearchChange,
+  handlePublicPrivateChange,
+  getFav,
+  loadMore,
+}: MyLibraryProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const isXLScreen = useMediaQuery(theme.breakpoints.up('xl'));
-  const screenSize = isLargeScreen // eslint-disable-line
-    ? ScreenSize.LARGE
-    : isMediumScreen
-      ? ScreenSize.MEDIUM
-      : ScreenSize.SMALL;
 
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
-        <LibraryTabsContainer screenSize={screenSize} gameQuestion={gameQuestion}/>
+        <LibraryTabsContainer 
+          gameQuestion={gameQuestion}
+          isTabsOpen={isTabsOpen}
+          setIsTabsOpen={setIsTabsOpen}
+          userProfile={userProfile}
+          screenSize={screenSize}
+          setIsUserLoggedIn={setIsUserLoggedIn}
+          recommendedGames={recommendedGames}
+          mostPopularGames={mostPopularGames}
+          searchedGames={searchedGames}
+          draftGames={draftGames}
+          favGames={favGames}
+          nextToken={nextToken}
+          isLoading={isLoading}
+          searchTerms={searchTerms}
+          selectedGrades={selectedGrades}
+          isFavTabOpen={isFavTabOpen}
+          publicPrivate={publicPrivate}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+          handleSearchChange={handleSearchChange}
+          handlePublicPrivateChange={handlePublicPrivateChange}
+          getFav={getFav}
+          loadMore={loadMore}
+        />
     </MyLibraryMainContainer>
   );
 }

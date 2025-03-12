@@ -186,10 +186,11 @@ export abstract class BaseAPIClient {
         searchFilter = { 
           or: [
             { lowerCaseTitle: { contains: filterStringLowerCase } },
-            (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") && { lowerCaseDescription: { contains: filterStringLowerCase } },
             { ccss: { contains: filterStringLowerCase } }
           ]
         };
+        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate")
+          searchFilter.or.push({ lowerCaseDescription: { contains: filterStringLowerCase }});
         queryParameters.filter.and.push(searchFilter);
       }
       if (gradeTargets && gradeTargets.length > 0) {
@@ -205,6 +206,7 @@ export abstract class BaseAPIClient {
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
+      console.log(queryParameters.filter);
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode })) as { data: any };
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {
