@@ -13,11 +13,21 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
 import { GameQuestionType } from '../lib/CentralModels';
 
-interface UseExploreGamesStateManagerProps {
+interface UseCentralDataManagerProps {
+  gameQuestion: GameQuestionType;
+}
+
+interface UseCentralDataManagerReturnProps {
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
+  draftGames: IGameTemplate[];
   favGames: IGameTemplate[];
+  recommendedQuestions: IQuestionTemplate[];
+  mostPopularQuestions: IQuestionTemplate[];
+  searchedQuestions: IQuestionTemplate[];
+  draftQuestions: IQuestionTemplate[];
+  favQuestions: IQuestionTemplate[];
   nextToken: string | null;
   isLoading: boolean;
   searchTerms: string;
@@ -26,18 +36,17 @@ interface UseExploreGamesStateManagerProps {
   isFavTabOpen: boolean;
   publicPrivate: PublicPrivateType;
   setIsTabsOpen: (isOpen: boolean) => void;
-  handleChooseGrades: (grades: GradeTarget[], gameQuestion: GameQuestionType) => void;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
       field: SortType;
       direction: SortDirection | null;
-    },
-    gameQuestion: GameQuestionType
+    }
   ) => void;
-  handleSearchChange: (searchString: string, gameQuestion: GameQuestionType) => void;
-  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType, gameQuestion: GameQuestionType ) => void;
-  getFav: (user: IUserProfile, gameQuestion: GameQuestionType) => void;
-  loadMore: (gameQuestion: GameQuestionType) => void;
+  handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  getFav: (user: IUserProfile) => void;
+  loadMore: () => void;
 }
 
 /* 
@@ -46,8 +55,9 @@ interface UseExploreGamesStateManagerProps {
 * Includes: recommended, popular, draft, favourited, and searched/sorted/filtered versions of those
 * */
 
-export default function useExploreGamesStateManager(
-): UseExploreGamesStateManagerProps {
+export default function useCentralDataManager({
+  gameQuestion
+}: UseCentralDataManagerProps): UseCentralDataManagerReturnProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const debounceInterval = 800;
   
@@ -64,7 +74,6 @@ export default function useExploreGamesStateManager(
   const [draftQuestions, setDraftQuestions] = useState<IQuestionTemplate[]>([]);
   const [favQuestions, setFavQuestions] = useState<IQuestionTemplate[]>([]);
 
-  const [gameQuestionType, setGameQuestionType] = useState<GameQuestionType>(GameQuestionType.GAME);
   const [searchTerms, setSearchTerms] = useState('');
   const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
   const [nextToken, setNextToken] = useState<string | null>(null);
@@ -83,7 +92,7 @@ export default function useExploreGamesStateManager(
   const [isTabsOpen, setIsTabsOpen] = useState(false);
   const [isFavTabOpen, setIsFavTabOpen] = useState(false);
 
-  const init = async (gameQuestion: GameQuestionType) => {
+  const init = async () => {
     setIsLoading(true);
     switch (gameQuestion) {
       case GameQuestionType.QUESTION:
@@ -106,7 +115,7 @@ export default function useExploreGamesStateManager(
     }
   };
 
-  const handleChooseGrades = (grades: GradeTarget[], gameQuestion: GameQuestionType) => {
+  const handleChooseGrades = (grades: GradeTarget[]) => {
     setSelectedGrades((prev) => [...grades]);
     setIsLoading(true);
     setNextToken(null);
@@ -153,7 +162,7 @@ export default function useExploreGamesStateManager(
   const handleSortChange = (newSort: {
     field: SortType;
     direction: SortDirection | null;
-  }, gameQuestion: GameQuestionType) => {
+  }) => {
     setSort(newSort);
     setIsLoading(true);
     setNextToken(null);
@@ -204,8 +213,7 @@ export default function useExploreGamesStateManager(
         search: string,
         sortDirection: SortDirection,
         gradeTargets: GradeTarget[],
-        sortType: SortType,
-        gameQuestion: GameQuestionType
+        sortType: SortType
       ) => {
         setIsLoading(true);
         setSearchedGames([]);
@@ -254,17 +262,16 @@ export default function useExploreGamesStateManager(
     [debounceInterval],
   );
 
-  const handleSearchChange = (searchString: string, gameQuestion: GameQuestionType) => {
+  const handleSearchChange = (searchString: string) => {
     debouncedSearch(
       searchString.trim(),
       sort.direction ?? SortDirection.ASC,
       selectedGrades,
-      sort.field,
-      gameQuestion
+      sort.field
     );
   };
 
-  const handlePublicPrivateChange = (newPublicPrivate: PublicPrivateType, gameQuestion: GameQuestionType) => {
+  const handlePublicPrivateChange = (newPublicPrivate: PublicPrivateType) => {
     setIsLoading(true);
     setNextToken(null);
     setPublicPrivate(newPublicPrivate);
@@ -309,7 +316,7 @@ export default function useExploreGamesStateManager(
     }
   };
 
-  const loadMore = (gameQuestion: GameQuestionType) => {
+  const loadMore = () => {
     if (nextToken && !isLoadingInfiniteScroll) {
       setIsLoadingInfiniteScroll(true);
       switch (gameQuestion){
@@ -364,7 +371,7 @@ export default function useExploreGamesStateManager(
     }
   };
 
-  const getFav = async (user: IUserProfile, gameQuestion: GameQuestionType) => {
+  const getFav = async (user: IUserProfile) => {
     setIsLoading(true);
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
@@ -405,16 +412,26 @@ export default function useExploreGamesStateManager(
 
   useEffect(() => {
     try {
-      init(GameQuestionType.GAME);
+      if ((gameQuestion === GameQuestionType.QUESTION && !recommendedQuestions.length || !mostPopularQuestions.length)
+        || (gameQuestion === GameQuestionType.GAME) && !recommendedGames.length || !mostPopularGames.length) {
+      init();
+      }
     } catch (error) {
       console.log('Error:', error);
     }
-  }, []); // eslint-disable-line
+  }, [gameQuestion]); // eslint-disable-line
+
   return {
     recommendedGames,
     mostPopularGames,
-    favGames,
     searchedGames,
+    draftGames,
+    favGames,
+    recommendedQuestions,
+    mostPopularQuestions,
+    searchedQuestions,
+    favQuestions,
+    draftQuestions,
     nextToken,
     isLoading,
     searchTerms,

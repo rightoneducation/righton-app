@@ -6,7 +6,7 @@ import SignUp from '../pages/SignUp';
 import Confirmation from '../pages/Confirmation';
 
 interface SignUpSwitchProps{
-  setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 export default function SignUpSwitch({

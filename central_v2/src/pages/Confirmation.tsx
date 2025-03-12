@@ -101,7 +101,7 @@ interface ConfirmationProps {
     frontImage: File;
     backImage: File;
     handlerImageUpload: (file: File) => Promise<any>;
-    setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 // Use function declaration for the component

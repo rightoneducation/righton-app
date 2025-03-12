@@ -38,7 +38,7 @@ interface AppContainerProps {
   isTabsOpen?: boolean;
   setIsTabsOpen?: (isTabsOpen: boolean) => void;
   gameQuestion?: GameQuestionType;
-  setGameQuestion?: (gameQuestion: GameQuestionType) => void
+  setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void
   children: React.ReactNode;
   isUserLoggedIn: boolean;
 }
@@ -48,7 +48,7 @@ function AppContainer({
   isTabsOpen, 
   setIsTabsOpen, 
   gameQuestion,
-  setGameQuestion,
+  setLibraryGameQuestionSwitch,
   isUserLoggedIn, 
   children 
 }: AppContainerProps) {
@@ -81,7 +81,7 @@ function AppContainer({
           isLgScreen={isLgScreen}
           menuOpen={menuOpen}
           gameQuestion={gameQuestion}
-          setGameQuestion={setGameQuestion}
+          setGameQuestion={setLibraryGameQuestionSwitch}
           setMenuOpen={setMenuOpen}
           isUserLoggedIn={isUserLoggedIn}
         />

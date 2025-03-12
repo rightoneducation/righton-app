@@ -82,6 +82,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
         sort.direction ?? SortDirection.ASC,
         sort.field,
         [...grades],
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -105,6 +106,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
         newSort.direction ?? SortDirection.ASC,
         newSort.field,
         selectedGrades,
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -135,6 +137,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
             sortDirection,
             sortType,
             gradeTargets,
+            null
           )
           .then((response) => {
             setIsLoading(false);
@@ -168,6 +171,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
         null,
         null,
         selectedGrades ?? [],
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -187,6 +191,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
           null,
           null,
           [],
+          null
         )
         .then((response) => {
           if (response) {
