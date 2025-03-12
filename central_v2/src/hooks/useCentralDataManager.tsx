@@ -53,6 +53,8 @@ interface UseCentralDataManagerReturnProps {
 * useCentralDataManager handles all data from api calls and stores them in state at the top (AppSwitch) of the app
 * It communicates primarily with apiClients.centralDataManager to fetch and maintain recent copies of subsets of games, questions 
 * Includes: recommended, popular, draft, favourited, and searched/sorted/filtered versions of those
+* There's a lot of duplicated code here via the switch statements but I preferred this over T extends GameQuestionType in the api layer
+* I think this is more straightforward 
 * */
 
 export default function useCentralDataManager({
@@ -412,6 +414,7 @@ export default function useCentralDataManager({
 
   useEffect(() => {
     try {
+      // inits games and questions only if they haven't been loaded yet
       if ((gameQuestion === GameQuestionType.QUESTION && !recommendedQuestions.length || !mostPopularQuestions.length)
         || (gameQuestion === GameQuestionType.GAME) && !recommendedGames.length || !mostPopularGames.length) {
       init();
