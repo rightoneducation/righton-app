@@ -37,10 +37,6 @@
           "deploymentBucketName": "amplify-mobile-test-7d167-deployment",
           "s3Key": "amplify-builds/uploadExternalImageToS3-4e55784e7a75437a4e33-build.zip"
         },
-        "userCleaner": {
-          "deploymentBucketName": "amplify-mobile-test-7d167-deployment",
-          "s3Key": "amplify-builds/userCleaner-65394a786f7a426b6b70-build.zip"
-        },
         "waegen": {
           "deploymentBucketName": "amplify-mobile-test-7d167-deployment",
           "s3Key": "amplify-builds/waegen-656a7761557067327232-build.zip"
@@ -52,6 +48,9 @@
       },
       "storage": {
         "gamequestionimages": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }
