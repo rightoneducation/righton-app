@@ -127,6 +127,11 @@ function AppSwitch() {
             searchedGames={searchedGames}
             draftGames={draftGames}
             favGames={favGames}
+            recommendedQuestions={recommendedQuestions}
+            mostPopularQuestions={mostPopularQuestions}
+            searchedQuestions={searchedQuestions}
+            draftQuestions={draftQuestions}
+            favQuestions={favQuestions}
             nextToken={nextToken}
             isLoading={isLoading}
             searchTerms={searchTerms}

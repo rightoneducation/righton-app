@@ -376,12 +376,13 @@ export default function useCentralDataManager({
   };
 
   const getFav = async (user: IUserProfile) => {
+    console.log(user.favoriteGameTemplateIds)
     setIsLoading(true);
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
           PublicPrivateType.PUBLIC,
-          12,
+          null,
           null,
           searchTerms,
           sort.direction ?? SortDirection.ASC,
@@ -398,7 +399,7 @@ export default function useCentralDataManager({
       default:
         apiClients?.centralDataManager?.searchForGameTemplates(
           PublicPrivateType.PUBLIC,
-          12,
+          null,
           null,
           searchTerms,
           sort.direction ?? SortDirection.ASC,

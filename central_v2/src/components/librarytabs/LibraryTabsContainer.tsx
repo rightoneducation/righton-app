@@ -42,6 +42,11 @@ interface TabContainerProps {
   searchedGames: IGameTemplate[];
   draftGames: IGameTemplate[];
   favGames: IGameTemplate[];
+  recommendedQuestions: IQuestionTemplate[];
+  mostPopularQuestions: IQuestionTemplate[];
+  searchedQuestions: IQuestionTemplate[];
+  draftQuestions: IQuestionTemplate[];
+  favQuestions: IQuestionTemplate[];
   nextToken: string | null;
   isLoading: boolean;
   searchTerms: string;
@@ -73,6 +78,11 @@ export default function LibraryTabsContainer({
   searchedGames,
   draftGames,
   favGames,
+  recommendedQuestions,
+  mostPopularQuestions,
+  searchedQuestions,
+  draftQuestions,
+  favQuestions,
   nextToken,
   isLoading,
   searchTerms,
@@ -144,10 +154,32 @@ export default function LibraryTabsContainer({
             handleView={handleView}
           />
         : <LibraryTabsQuestions
-            screenSize={screenSize}
+            gameQuestion={gameQuestion}
             tabMap={tabMap}
             tabIconMap={tabIconMap}
             getLabel={getLabel}
+            isTabsOpen={isTabsOpen} 
+            setIsTabsOpen={setIsTabsOpen}
+            userProfile={userProfile} 
+            setIsUserLoggedIn={setIsUserLoggedIn}
+            screenSize={screenSize} 
+            recommendedQuestions={recommendedQuestions}
+            mostPopularQuestions={mostPopularQuestions}
+            searchedQuestions={searchedQuestions}
+            draftQuestions={draftQuestions}
+            favQuestions={favQuestions}
+            nextToken={nextToken}
+            isLoading={isLoading}
+            searchTerms={searchTerms}
+            selectedGrades={selectedGrades}
+            isFavTabOpen={isFavTabOpen}
+            publicPrivate={publicPrivate}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            getFav={getFav}
+            loadMore={loadMore}
             handleView={handleView}
           />
       }

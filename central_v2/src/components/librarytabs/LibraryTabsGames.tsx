@@ -91,7 +91,6 @@ export default function LibraryTabsGames({
   loadMore,
   handleView
 }: LibraryTabsGamesProps<IGameTemplate>) {
-
 const isSearchResults = searchTerms.length > 0;
 const [openTab, setOpenTab] = React.useState(0);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -102,9 +101,13 @@ const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   }
   setOpenTab(newValue);
 };
+
 const getElements = () => {
-  if (favGames.length > 0 && openTab === 3)
+  if (favGames.length > 0 && openTab === 3){
+    if (isSearchResults)
+      return searchedGames.filter((game) => favGames.map((favGame) => favGame.id).includes(game.id));
     return favGames;
+  }
   if (isSearchResults)
     return searchedGames 
   return mostPopularGames;

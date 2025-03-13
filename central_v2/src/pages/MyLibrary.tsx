@@ -29,6 +29,11 @@ interface MyLibraryProps {
   searchedGames: IGameTemplate[];
   draftGames: IGameTemplate[];
   favGames: IGameTemplate[];
+  recommendedQuestions: IQuestionTemplate[];
+  mostPopularQuestions: IQuestionTemplate[];
+  searchedQuestions: IQuestionTemplate[];
+  draftQuestions: IQuestionTemplate[];
+  favQuestions: IQuestionTemplate[];
   nextToken: string | null;
   isLoading: boolean;
   searchTerms: string;
@@ -60,6 +65,11 @@ export default function MyLibrary({
   searchedGames,
   draftGames,
   favGames,
+  recommendedQuestions,
+  mostPopularQuestions,
+  searchedQuestions,
+  draftQuestions,
+  favQuestions,
   nextToken,
   isLoading,
   searchTerms,
@@ -90,6 +100,11 @@ export default function MyLibrary({
           mostPopularGames={mostPopularGames}
           searchedGames={searchedGames}
           draftGames={draftGames}
+          recommendedQuestions={recommendedQuestions}
+          mostPopularQuestions={mostPopularQuestions}
+          searchedQuestions={searchedQuestions}
+          draftQuestions={draftQuestions}
+          favQuestions={favQuestions}
           favGames={favGames}
           nextToken={nextToken}
           isLoading={isLoading}
