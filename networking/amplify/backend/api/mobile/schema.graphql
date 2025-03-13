@@ -157,6 +157,7 @@ type PrivateGameTemplate @model
   title: String!
   lowerCaseTitle: String!
   version: Int!
+  isDraft: Int!
   description: String!
   lowerCaseDescription: String!
   ccss: String
@@ -173,7 +174,7 @@ type PrivateGameTemplate @model
   questionTemplatesOrder: AWSJSON
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-  type: String @default(value: "PrivateGameTemplate") @index(name: "privateGameTemplatesByDate", queryField: "privateGameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "privateGameTemplatesByGrade", queryField: "privateGameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "privateGameTemplatesByPrivateQuestionTemplatesCount", queryField: "privateGameTemplatesByPrivateQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
+  type: String @default(value: "PrivateGameTemplate") @index(name: "privateGameTemplatesByDate", queryField: "privateGameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "privateGameTemplatesByGrade", queryField: "privateGameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "privateGameTemplatesByPrivateQuestionTemplatesCount", queryField: "privateGameTemplatesByPrivateQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"]) @index(name: "privateGameTemplatesByDraft", queryField: "privateGameTemplatesByDraft", sortKeyFields: ["isDraft"])
 }
 
 input PrivateGameTemplateInput {

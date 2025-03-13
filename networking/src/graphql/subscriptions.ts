@@ -779,6 +779,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
     title
     lowerCaseTitle
     version
+    isDraft
     description
     lowerCaseDescription
     ccss
@@ -800,6 +801,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -821,6 +823,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -912,6 +915,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1005,6 +1009,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
     title
     lowerCaseTitle
     version
+    isDraft
     description
     lowerCaseDescription
     ccss
@@ -1026,6 +1031,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -1047,6 +1053,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1138,6 +1145,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1231,6 +1239,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
     title
     lowerCaseTitle
     version
+    isDraft
     description
     lowerCaseDescription
     ccss
@@ -1252,6 +1261,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -1273,6 +1283,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1364,6 +1375,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2150,6 +2162,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -2171,6 +2184,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2262,6 +2276,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2374,6 +2389,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -2395,6 +2411,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2486,6 +2503,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2598,6 +2616,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -2619,6 +2638,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2710,6 +2730,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -4857,6 +4878,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
       title
       lowerCaseTitle
       version
+      isDraft
       description
       lowerCaseDescription
       ccss
@@ -4878,6 +4900,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -4899,6 +4922,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4982,6 +5006,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5079,6 +5104,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5100,6 +5126,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5183,6 +5210,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5275,6 +5303,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
       title
       lowerCaseTitle
       version
+      isDraft
       description
       lowerCaseDescription
       ccss
@@ -5296,6 +5325,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5317,6 +5347,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5400,6 +5431,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5497,6 +5529,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5518,6 +5551,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5601,6 +5635,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5693,6 +5728,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
       title
       lowerCaseTitle
       version
+      isDraft
       description
       lowerCaseDescription
       ccss
@@ -5714,6 +5750,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5735,6 +5772,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5818,6 +5856,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5915,6 +5954,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5936,6 +5976,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -6019,6 +6060,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss

@@ -779,6 +779,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
     title
     lowerCaseTitle
     version
+    isDraft
     description
     lowerCaseDescription
     ccss
@@ -800,6 +801,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -821,6 +823,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -912,6 +915,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1005,6 +1009,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
     title
     lowerCaseTitle
     version
+    isDraft
     description
     lowerCaseDescription
     ccss
@@ -1026,6 +1031,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -1047,6 +1053,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1138,6 +1145,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1231,6 +1239,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
     title
     lowerCaseTitle
     version
+    isDraft
     description
     lowerCaseDescription
     ccss
@@ -1252,6 +1261,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -1273,6 +1283,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1364,6 +1375,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2150,6 +2162,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -2171,6 +2184,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2262,6 +2276,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2374,6 +2389,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -2395,6 +2411,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2486,6 +2503,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2598,6 +2616,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           title
           lowerCaseTitle
           version
+          isDraft
           description
           lowerCaseDescription
           ccss
@@ -2619,6 +2638,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -2710,6 +2730,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -4962,6 +4983,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       title
       lowerCaseTitle
       version
+      isDraft
       description
       lowerCaseDescription
       ccss
@@ -4983,6 +5005,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5004,6 +5027,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5087,6 +5111,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5184,6 +5209,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5205,6 +5231,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5288,6 +5315,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5380,6 +5408,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       title
       lowerCaseTitle
       version
+      isDraft
       description
       lowerCaseDescription
       ccss
@@ -5401,6 +5430,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5422,6 +5452,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5505,6 +5536,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5602,6 +5634,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5623,6 +5656,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5706,6 +5740,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5798,6 +5833,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       title
       lowerCaseTitle
       version
+      isDraft
       description
       lowerCaseDescription
       ccss
@@ -5819,6 +5855,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -5840,6 +5877,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5923,6 +5961,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -6020,6 +6059,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             description
             lowerCaseDescription
             ccss
@@ -6041,6 +6081,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -6124,6 +6165,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   description
                   lowerCaseDescription
                   ccss
