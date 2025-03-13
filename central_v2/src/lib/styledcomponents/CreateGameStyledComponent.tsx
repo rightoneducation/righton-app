@@ -159,7 +159,6 @@ type ImagePlaceholderProps = {
 export const ImagePlaceholder = styled(Box)<ImagePlaceholderProps>(
   ({ theme, isCardErrored }) => ({
     width: '100%',
-    height: '196px',
     background: `${theme.palette.primary.uploadLightGrey}`,
     display: 'flex',
     flexDirection: 'column',
@@ -193,12 +192,19 @@ export const CreateGameTitleBarStyled = styled(
       : `${theme.sizing.smPadding}px`,
 }));
 
+export const CreateGameTitleText = styled(Typography)(({ theme }) => ({
+  fontSize: '24px',
+  lineHeight: '30px',
+  fontWeight: 700,
+  color: '#000',
+}));
+
 export const CreateGameContentLeftContainerStyled = styled(Box)(
   ({ theme }) => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: `${theme.sizing.xSmPadding}px`,
+    gap: `12px`,
   }),
 );
 
@@ -251,11 +257,11 @@ export const CreateGameTextFieldContainer = styled(TextField, {
       opacity: 0.5,
     },
     '&:focus': {
-      color: '#02215f',
+      color: '#384466',
       opacity: 1,
     },
     '&:focus::placeholder': {
-      color: '#02215f',
+      color: '#384466',
       opacity: 1,
     },
   },
@@ -274,7 +280,7 @@ interface PublicPrivateContainerProps {
 
 export const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
   width: '144px',
-  minHeight: '38px',
+  minHeight: '36px',
   borderRadius: '24px',
   background: `${theme.palette.primary.sliderGrey}`,
   ':hover': {
@@ -289,7 +295,7 @@ export const PublicPrivateSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic',
 })<{ isPublic: boolean }>(({ theme, isPublic }) => ({
   width: '71px',
-  height: '100%',
+  height: '33px',
   borderRadius: '24px',
   background: `${theme.palette.primary.sliderBlue}`,
   ':hover': {

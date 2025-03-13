@@ -16,7 +16,8 @@ import {
   SelectMenuItem,
   SelectButtonBox,
 } from '../../../lib/styledcomponents/SelectGrade';
-import SelectArrow from '../../../images/SelectArrow.svg';
+import SelectArrow from '../../../images/dropDownArrow.svg';
+
 import CentralButton from '../../button/Button';
 import { ButtonColor, ButtonType } from '../../button/ButtonModels';
 import { ScreenSize } from '../../../lib/CentralModels';
@@ -33,31 +34,7 @@ export default function SelectPhaseButton({
 }: SelectPhaseButtonProps) {
   const [phase, setPhase] = useState<string>('');
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
-  const ref = useRef<HTMLDivElement | null>(null);
   const isSmallerScreen = screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
-
-  // handles clicks outside of menu if open and close it
-  const handleClickOutside = (event: MouseEvent) => {
-    if (ref.current && !ref.current.contains(event.target as Node))
-      setIsSelectOpen(false);
-  };
-
-  // listen for click events after phase menu is opened
-  useEffect(() => {
-    if (isSelectOpen) {
-      document.addEventListener('mousedown', (event) =>
-        handleClickOutside(event),
-      );
-    } else {
-      document.removeEventListener('mousedown', (event) =>
-        handleClickOutside(event),
-      );
-    }
-    return () =>
-      document.removeEventListener('mousedown', (event) =>
-        handleClickOutside(event),
-      );
-  }, [isSelectOpen]);
 
   // handle phase selection on menu item click
   const selectPhase = (phaseVal: string) => {
@@ -80,25 +57,27 @@ export default function SelectPhaseButton({
       }}
     >
       <SelectPhase
-        ref={ref}
+        // ref={ref}
         sx={{
-          width: '94px',
+          width: phase === "" ? '96px' : 'auto',
           minHeight: '23px',
-          backgroundColor: '#02215f',
+          backgroundColor: '#fffbf6',
+          border: '1px solid #02215f',
           borderRadius: '8px',
+          justifyContent: 'space-between',
           padding: '4px 8px',
           '&:hover': {
-            backgroundColor: '#4056ca',
+            backgroundColor: '#fffbf6',
           },
         }}
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
-        <SelectLabel sx={{ fontSize: '14px', fontWeight: 'normal', margin: 0 }}>
+        <SelectLabel fontWeight="" sx={{ fontSize: '12px', fontWeight: 600, margin: 0, color: '#02215f', }}>
           {phase !== '' ? phase : `Phase ${phaseNumber}`}
         </SelectLabel>
         <SelectArrowContainer isSelectOpen={isSelectOpen}>
-          <img src={SelectArrow} alt="Select Arrow" />
+          <img src={SelectArrow} style={{ color: "#02215f" }} alt="Select Arrow" width="13px" height="12px" />
         </SelectArrowContainer>
       </SelectPhase>
       <Collapse in={isSelectOpen} timeout={1000}>
@@ -121,7 +100,8 @@ export default function SelectPhaseButton({
               <SelectMenuItem>
                 <Typography
                   fontWeight="0.3rem"
-                  fontSize="14px"
+                  fontSize="10px"
+                  fontFamily="Rubik"
                   sx={{ color: '#02215f' }}
                 >
                   {phaseTime.label}
@@ -130,7 +110,7 @@ export default function SelectPhaseButton({
               {i !== times.length - 1 && (
                 <Divider
                   flexItem
-                  sx={{ width: '100%', background: '#02215f' }}
+                  sx={{ width: '100%', background: '#02215f', opacity: 0.5, }}
                 />
               )}
             </Box>

@@ -22,13 +22,11 @@ export default function PublicPrivateButton({
       <PublicPrivateSelectionPill isPublic={isPublic}/>
       <LabelContainer>
         <SubContainer isSelected={isPublic}>
-          <img src={GlobeImg} alt="public-globe" width="20px" height="20px"/>
           <PublicPrivateText isSelected={isPublic}>
             {t(`publicPrivateButton.public`)}
           </PublicPrivateText>
         </SubContainer>
         <SubContainer isSelected={!isPublic}>
-        <img src={LockImg} alt="private-lock" width="18px" height="20px"/>
           <PublicPrivateText isSelected={!isPublic}>
             {t(`publicPrivateButton.private`)}
           </PublicPrivateText>

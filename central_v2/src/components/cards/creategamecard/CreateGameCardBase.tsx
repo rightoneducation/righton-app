@@ -28,14 +28,21 @@ import { ButtonType } from '../../button/ButtonModels';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from '../createquestion/ErrorBox';
+import CreateGameErrorBox from './CreateGameErrorBox';
 import PublicPrivateButton from './PublicPrivatePillButton';
 import errorIcon from '../../../images/errorIcon.svg';
 import SelectPhaseButton from './SelectPhaseButton';
 import SelectArrowImage from '../../../images/SelectArrow.svg';
 import ImageUploadModal from '../../modal/ImageUploadModal';
-import { CreateGameContentLeftContainerStyled, ImagePlaceholder, CreateGameTextFieldContainer } from '../../../lib/styledcomponents/CreateGameStyledComponent';
+import {
+  CreateGameContentLeftContainerStyled,
+  ImagePlaceholder,
+  CreateGameTextFieldContainer,
+  CreateGameTitleBarStyled,
+  CreateGameTitleText,
+} from '../../../lib/styledcomponents/CreateGameStyledComponent';
 
-interface CreateGameCardBase {
+interface CreateGameCardBaseProps {
   screenSize: ScreenSize;
   draftQuestion: CentralQuestionTemplateInput;
   handleTitleChange: (
@@ -51,7 +58,7 @@ interface CreateGameCardBase {
   isAIError: boolean;
 }
 
-export default function CreateQuestionCardBase({
+export default function CreateGameCardBase({
   screenSize,
   draftQuestion,
   handleTitleChange,
@@ -62,7 +69,7 @@ export default function CreateQuestionCardBase({
   isCardSubmitted,
   isCardErrored,
   isAIError,
-}: CreateGameCardBase) {
+}: CreateGameCardBaseProps) {
   const theme = useTheme();
   const [title, setTitle] = React.useState<string>(
     draftQuestion.questionCard.title,
@@ -134,20 +141,72 @@ export default function CreateQuestionCardBase({
     ),
   ];
 
+  const responsiveHeight = screenSize === ScreenSize.LARGE && !isCardErrored ? '314px' : '100%';
+  // isCardErrored ? 
+  const responsiveGap =
+    screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM
+      ? '24px'
+      : '8px';
+
   return (
     <BaseCardStyled
       elevation={6}
       isHighlight={isHighlight}
       isCardComplete={draftQuestion.questionCard.isCardComplete}
+      sx={{ height: responsiveHeight, gap: responsiveGap, padding: '28px', }}
     >
+      <CreateGameTitleBarStyled screenSize={screenSize}>
+        <Box
+          style={{
+            display: 'flex',
+            flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+            justifyContent:
+              screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
+            alignItems: screenSize === ScreenSize.SMALL ? 'start' : 'center',
+            gap: '14px',
+          }}
+        >
+          <CreateGameTitleText
+            align={screenSize === ScreenSize.SMALL ? 'left' : 'inherit'}
+            sx={{ color: '#384466' }}
+          >
+            Create Game
+          </CreateGameTitleText>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent={isSmallerScreen ? 'center' : 'normal'}
+          >
+            <SelectPhaseButton phaseNumber={1} screenSize={screenSize} />
+            <SelectPhaseButton phaseNumber={2} screenSize={screenSize} />
+          </Stack>
+        </Box>
+
+        {screenSize !== ScreenSize.SMALL && (
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '16px',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <PublicPrivateButton isDisabled={false} />
+          </Box>
+        )}
+      </CreateGameTitleBarStyled>
       <ContentContainerStyled screenSize={screenSize}>
-        {/* Create Question Content Right Container */}
+        {/* Create Question Content Left Container */}
         <CreateGameContentLeftContainerStyled>
           {/* Game Title TextField */}
           <CreateGameTextFieldContainer
             isTitle
             variant="outlined"
-            placeholder="Game Title..."
+            placeholder="Game title here..."
+            error={
+              (isCardSubmitted || isAIError) && (!title || title.length === 0)
+            }
             InputProps={{
               startAdornment: (isCardSubmitted || isAIError) &&
                 (!title || title.length === 0) && (
@@ -155,7 +214,7 @@ export default function CreateQuestionCardBase({
                     position="start"
                     sx={{
                       alignSelf: 'flex-start',
-                      mt: '10px',
+                      margin: "auto 0",
                     }}
                   >
                     <ErrorIcon src={errorIcon} alt="error icon" />
@@ -169,7 +228,7 @@ export default function CreateQuestionCardBase({
           <CreateGameTextFieldContainer
             multiline
             variant="outlined"
-            rows="4"
+            rows={4}
             placeholder="Game Description..."
             error={
               (isCardSubmitted || isAIError) && (!title || title.length === 0)
@@ -199,7 +258,7 @@ export default function CreateQuestionCardBase({
         {imageLink ? (
           imageContents
         ) : (
-          <ImagePlaceholder isCardErrored={isCardErrored}>
+          <ImagePlaceholder isCardErrored={false} sx={{ height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '100%' : '202px' ,}}>
             <CentralButton
               buttonType={ButtonType.UPLOADIMAGE}
               isEnabled
@@ -211,43 +270,27 @@ export default function CreateQuestionCardBase({
         {/* Image Upload handled here */}
 
         {/* card Error */}
-        {screenSize === ScreenSize.SMALL && isCardErrored && <ErrorBox />}
+        {screenSize === ScreenSize.SMALL && (
+          <>
+            {isCardErrored && <ErrorBox />}
+            <Box
+              style={{
+                width: '100%',
+                display: 'flex',
+                gap: '16px',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <PublicPrivateButton isDisabled={false} />
+            </Box>
+          </>
+        )}
       </ContentContainerStyled>
-      {/* Grid Container for Phase selection & PublicPrivate Toggle */}
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        spacing={isSmallerScreen ? 2 : 0}
-      >
-        {/* Grid item for phase selection */}
-        <Grid item xs={12} md={6}>
-          <Stack
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            justifyContent={isSmallerScreen ? 'center' : 'normal'}
-          >
-            <SelectPhaseButton phaseNumber={1} screenSize={screenSize} />
-            <SelectPhaseButton phaseNumber={2} screenSize={screenSize} />
-          </Stack>
-        </Grid>
-        {/* Grid item for PublicPrivate Toggle */}
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{
-            display: 'flex',
-            gap: '16px',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <PublicPrivateButton isDisabled={false} />
-        </Grid>
-      </Grid>
-      {screenSize !== ScreenSize.SMALL && isCardErrored && <ErrorBox />}
+
+      {screenSize !== ScreenSize.SMALL && isCardErrored && (
+          <CreateGameErrorBox />
+        )}
     </BaseCardStyled>
   );
 }

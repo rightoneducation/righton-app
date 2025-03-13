@@ -351,7 +351,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         templateType={TemplateType.GAME}
       />
       <CreateGameBoxContainer>
-        <TitleText screenSize={ScreenSize.LARGE}>Create Game</TitleText>
+        <TitleText screenSize={currentScreenSize}>Create Game</TitleText>
         {/* Save & Discard Button for Small & Medium Screen Size */}
         {(currentScreenSize === ScreenSize.SMALL ||
           currentScreenSize === ScreenSize.MEDIUM) && (
