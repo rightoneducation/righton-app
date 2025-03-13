@@ -206,22 +206,22 @@ export abstract class BaseAPIClient {
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
-      console.log(queryParameters.filter);
+      console.log(queryParameters);
       const authMode = this.auth.isUserAuth ? "userPool" : "iam";
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode })) as { data: any };
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {
         const operationResult = result.data[queryName];
         const parsedNextToken = operationResult.nextToken;
-          if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-            const gameTemplates = operationResult.items.map((item: any) => 
-                GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
-            );
-            return { gameTemplates, nextToken: parsedNextToken };
+        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+          const gameTemplates = operationResult.items.map((item: any) => 
+              GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
+          );
+          return { gameTemplates, nextToken: parsedNextToken };
         } else {
-            const questionTemplates = operationResult.items.map((item: any) => 
-                QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
-            );
-            return { questionTemplates, nextToken: parsedNextToken };
+          const questionTemplates = operationResult.items.map((item: any) => 
+              QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
+          );
+          return { questionTemplates, nextToken: parsedNextToken };
         }
       }
       if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {

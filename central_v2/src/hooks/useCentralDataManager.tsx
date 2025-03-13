@@ -279,42 +279,45 @@ export default function useCentralDataManager({
     setIsLoading(true);
     setNextToken(null);
     setPublicPrivate(newPublicPrivate);
-    setMostPopularGames([]);
     const limit = newPublicPrivate === PublicPrivateType.PUBLIC ? 12 : null;
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
-          apiClients?.questionTemplate
-            ?.listQuestionTemplates(
+          setMostPopularQuestions([]);
+          apiClients?.centralDataManager
+          ?.searchForQuestionTemplates(
               newPublicPrivate,
-              limit,
               null,
               null,
-              null,
+              searchTerms,
+              sort.direction ?? SortDirection.ASC,
+              sort.field,
               selectedGrades ?? [],
               null
             )
             .then((response) => {
               setIsLoading(false);
               if (response)
-                setMostPopularQuestions(response.questionTemplates);
+                setMostPopularQuestions(response.questions);
             });
         break;
       case GameQuestionType.GAME:
       default:
-        apiClients?.gameTemplate
-          ?.listGameTemplates(
+        setMostPopularGames([]);
+        apiClients?.centralDataManager
+          ?.searchForGameTemplates(
             newPublicPrivate,
-            limit,
             null,
             null,
-            null,
+            searchTerms,
+            sort.direction ?? SortDirection.ASC,
+            sort.field,
             selectedGrades ?? [],
             null
           )
           .then((response) => {
             setIsLoading(false);
             if (response)
-              setMostPopularGames(response.gameTemplates);
+              setMostPopularGames(response.games);
           });
       break;
     }
