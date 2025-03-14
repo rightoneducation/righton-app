@@ -40,6 +40,7 @@ import {
   CreateGameTextFieldContainer,
   CreateGameTitleBarStyled,
   CreateGameTitleText,
+  GameContentContainerStyled
 } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 
 interface CreateGameCardBaseProps {
@@ -153,7 +154,7 @@ export default function CreateGameCardBase({
       elevation={6}
       isHighlight={isHighlight}
       isCardComplete={draftQuestion.questionCard.isCardComplete}
-      sx={{ height: responsiveHeight, gap: responsiveGap, padding: '28px', }}
+      sx={{ height: responsiveHeight, gap: responsiveGap, padding: screenSize === ScreenSize.LARGE ? '28px': '24px', }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>
         <Box
@@ -163,7 +164,7 @@ export default function CreateGameCardBase({
             justifyContent:
               screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
             alignItems: screenSize === ScreenSize.SMALL ? 'start' : 'center',
-            gap: '14px',
+            gap: screenSize === ScreenSize.LARGE ? '10px': '16px',
           }}
         >
           <CreateGameTitleText
@@ -196,14 +197,15 @@ export default function CreateGameCardBase({
           </Box>
         )}
       </CreateGameTitleBarStyled>
-      <ContentContainerStyled screenSize={screenSize}>
+      <GameContentContainerStyled screenSize={screenSize}>
         {/* Create Question Content Left Container */}
-        <CreateGameContentLeftContainerStyled>
+        <CreateGameContentLeftContainerStyled sx={{ gap: screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM ? '12px' : '8px' }}>
           {/* Game Title TextField */}
           <CreateGameTextFieldContainer
+          isCardError={isCardErrored}
             isTitle
             variant="outlined"
-            placeholder="Game title here..."
+            placeholder="Game title..."
             error={
               (isCardSubmitted || isAIError) && (!title || title.length === 0)
             }
@@ -226,6 +228,7 @@ export default function CreateGameCardBase({
           </CreateGameTextFieldContainer>
           {/* Game Description TextField */}
           <CreateGameTextFieldContainer
+          isCardError={isCardErrored}
             multiline
             variant="outlined"
             rows={4}
@@ -272,7 +275,7 @@ export default function CreateGameCardBase({
         {/* card Error */}
         {screenSize === ScreenSize.SMALL && (
           <>
-            {isCardErrored && <ErrorBox />}
+            {isCardErrored && <CreateGameErrorBox />}
             <Box
               style={{
                 width: '100%',
@@ -286,7 +289,7 @@ export default function CreateGameCardBase({
             </Box>
           </>
         )}
-      </ContentContainerStyled>
+      </GameContentContainerStyled>
 
       {screenSize !== ScreenSize.SMALL && isCardErrored && (
           <CreateGameErrorBox />

@@ -13,6 +13,7 @@ import {
 import { ScreenSize } from '../CentralModels';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
+
 // Create Game Page Components
 export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -208,11 +209,12 @@ export const CreateGameContentLeftContainerStyled = styled(Box)(
   }),
 );
 
-type GameTextFieldContainer = { isTitle?: boolean; isAIEnabled?: boolean };
+type GameTextFieldContainer = { isTitle?: boolean; isAIEnabled?: boolean, isCardError: boolean };
 
-export const CreateGameTextFieldContainer = styled(TextField, {
+export const 
+CreateGameTextFieldContainer = styled(TextField, {
   shouldForwardProp: (prop) => prop !== 'isTitle',
-})<GameTextFieldContainer>(({ theme, isTitle, isAIEnabled }) => ({
+})<GameTextFieldContainer>(({ theme, isTitle, isAIEnabled, isCardError }) => ({
   width: '100%',
   margin: 0,
   padding: 0,
@@ -251,10 +253,12 @@ export const CreateGameTextFieldContainer = styled(TextField, {
       fontWeight: 700,
     }),
     color: '#02215f',
-    opacity: 0.5,
+    opacity: isCardError ? 1 : 0.5,
     '&::placeholder': {
-      color: '#02215f',
-      opacity: 0.5,
+      ...(isCardError ? 
+        { color: "#D0254D", opacity: 1}
+        :{ color: '#02215f', opacity: 0.5,})
+     
     },
     '&:focus': {
       color: '#384466',
@@ -338,4 +342,17 @@ export const PublicPrivateText = styled(Typography)<PublicPrivateTextProps>(({is
   color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
   textTransform: 'none',
   transition: 'color 0.3 ease-in-out'
+}));
+
+interface ContentContainerProps {
+  screenSize: ScreenSize;
+}
+export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(({ theme, screenSize }) => ({
+  width: '100%',
+  height: screenSize === ScreenSize.SMALL ? '100%' : '100%',
+  display: 'flex',
+  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: screenSize === ScreenSize.SMALL ? '12px': `${theme.sizing.smPadding}px`,
 }));
