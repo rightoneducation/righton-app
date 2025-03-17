@@ -257,11 +257,20 @@ export default function CreateGameCardBase({
           </CreateGameTextFieldContainer>
         </CreateGameContentLeftContainerStyled>
 
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '8px', 
+          width: '100%',
+          height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '198px' : '100%'
+          }}>
         {/* Image Upload handled here */}
         {imageLink ? (
           imageContents
         ) : (
-          <ImagePlaceholder isCardErrored={false} sx={{ height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '100%' : '202px' ,}}>
+          <ImagePlaceholder isCardErrored={false} sx={{ 
+            height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '198px' : '202px' ,
+            }}>
             <CentralButton
               buttonType={ButtonType.UPLOADIMAGE}
               isEnabled
@@ -275,12 +284,12 @@ export default function CreateGameCardBase({
         {/* card Error */}
         {screenSize === ScreenSize.SMALL && (
           <>
-            {isCardErrored && <CreateGameErrorBox />}
+            {isCardErrored && <CreateGameErrorBox screenSize={screenSize} />}
             <Box
               style={{
                 width: '100%',
                 display: 'flex',
-                gap: '16px',
+                gap: '8px',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
@@ -289,10 +298,11 @@ export default function CreateGameCardBase({
             </Box>
           </>
         )}
+        </Box>
       </GameContentContainerStyled>
 
       {screenSize !== ScreenSize.SMALL && isCardErrored && (
-          <CreateGameErrorBox />
+          <CreateGameErrorBox screenSize={screenSize} />
         )}
     </BaseCardStyled>
   );

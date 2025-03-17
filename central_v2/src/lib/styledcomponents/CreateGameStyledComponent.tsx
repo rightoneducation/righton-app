@@ -283,8 +283,8 @@ interface PublicPrivateContainerProps {
 }
 
 export const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
-  width: '144px',
-  minHeight: '36px',
+  width: '120px',
+  minHeight: '30px',
   borderRadius: '24px',
   background: `${theme.palette.primary.sliderGrey}`,
   ':hover': {
@@ -298,15 +298,15 @@ export const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps
 export const PublicPrivateSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic',
 })<{ isPublic: boolean }>(({ theme, isPublic }) => ({
-  width: '71px',
-  height: '33px',
+  width: '59px',
+  height: '27px',
   borderRadius: '24px',
   background: `${theme.palette.primary.sliderBlue}`,
   ':hover': {
     background: `${theme.palette.primary.sliderBlue}`,
   },
   position: 'absolute',
-  left: isPublic ? '2px' : '70px', 
+  left: isPublic ? '2px' : '59px', 
   transition: 'left 0.3s ease-in-out',   
   boxSizing: 'border-box',
   zIndex: 3,
@@ -316,8 +316,8 @@ export const LabelContainer = styled(Box)(({theme}) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
-  paddingLeft: '16px',
-  paddingRight: '16px',
+  paddingLeft: '10px',
+  paddingRight: '10px',
   zIndex: 4,
   position: 'relative'
 }))
@@ -329,7 +329,6 @@ export const SubContainer = styled(Box, {
   flexDirection: 'column',
   alignItems: 'center',
   position: 'relative',
-  opacity: isSelected ? 1 : 0.5,
   transition: 'opacity 0.3 ease-in-out'
 }));
 
@@ -338,7 +337,7 @@ interface PublicPrivateTextProps {
 }
 
 export const PublicPrivateText = styled(Typography)<PublicPrivateTextProps>(({isSelected, theme}) => ({
-  fontSize: '14px',
+  fontSize: '12px',
   color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
   textTransform: 'none',
   transition: 'color 0.3 ease-in-out'

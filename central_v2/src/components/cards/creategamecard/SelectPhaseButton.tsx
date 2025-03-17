@@ -52,6 +52,11 @@ export default function SelectPhaseButton({
         position: 'relative',
       }}
     >
+      {/* Wait for feedback from UI/UX Team
+      <Box sx={{ display: 'flex', flexDirection: 'row', width: '96px'}}></Box> 
+      selectmenu width should be
+      */}
+
       <SelectPhase
         // ref={ref}
         sx={{
@@ -74,7 +79,7 @@ export default function SelectPhaseButton({
         <SelectLabel
           sx={{
             fontSize: '16px',
-            fontWeight: 600,
+            fontWeight: 550,
             margin: 0,
             color: '#02215f',
           }}
@@ -91,6 +96,7 @@ export default function SelectPhaseButton({
           />
         </SelectArrowContainer>
       </SelectPhase>
+      
       <Collapse in={isSelectOpen} timeout={1000}>
         <SelectMenu
           isSelectOpen={isSelectOpen}
@@ -98,10 +104,10 @@ export default function SelectPhaseButton({
           sx={{
             backgroundColor: '#fffbf6',
             padding: 0,
-            top: '32px',
-            left: 8,
-            minWidth: '96px',
-            width: '96px',
+            top: '33px',
+            left: 0,
+            minWidth: '114px',
+            width: '114px',
             borderRadius: '0 0 4px 4px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',

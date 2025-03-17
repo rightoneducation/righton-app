@@ -1,11 +1,13 @@
 import React from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import errorCardIcon from '../../../images/errorCardIcon.svg';
+import { ScreenSize } from '../../../lib/CentralModels';
 
 const CreateGameErrorContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: '16px',
     paddingLeft: '16px',
+    paddingRight: '16px',
     paddingTop: '8px',
     paddingBottom: '8px',
     alignItems: 'center',
@@ -15,10 +17,16 @@ const CreateGameErrorContainer = styled(Box)(({ theme }) => ({
     background: `${theme.palette.primary.uploadLightGrey}`,
     borderBox: 'box-sizing'
   }));
+
+  type TErrorTextProps = {
+    screenSize: ScreenSize
+  }
   
-  const ErrorTextContainer = styled(Box)(({ theme }) => ({
+  const ErrorTextContainer = styled(Box)<TErrorTextProps>(({ theme, screenSize }) => ({
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
+    height: (screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM) ? '56px': "123px"
   }));
   
   const ErrorHeader = styled(Typography)(({ theme }) => ({
@@ -37,12 +45,16 @@ const CreateGameErrorContainer = styled(Box)(({ theme }) => ({
     height: '35px',
     width: '35px',
   }));
+
+  interface ICreateGameErrorBox {
+    screenSize: ScreenSize;
+  }
   
-  export default function CreateGameErrorBox(){
+  export default function CreateGameErrorBox({screenSize}: ICreateGameErrorBox){
     return (
       <CreateGameErrorContainer>
         <ErrorSVG src={errorCardIcon} alt="errorimage"/>
-        <ErrorTextContainer>
+        <ErrorTextContainer screenSize={screenSize}>
           <ErrorHeader>
             Looks like you missed something!
           </ErrorHeader>
