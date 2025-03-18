@@ -205,6 +205,11 @@ export default function CreateGameCardBase({
           isCardError={isCardErrored}
             isTitle
             variant="outlined"
+           sx={{
+            '& .MuiOutlinedInput-root': {
+              height: '54px'
+            }
+           }}
             placeholder="Game title..."
             error={
               (isCardSubmitted || isAIError) && (!title || title.length === 0)
@@ -229,8 +234,16 @@ export default function CreateGameCardBase({
           {/* Game Description TextField */}
           <CreateGameTextFieldContainer
           isCardError={isCardErrored}
+          variant="outlined"
+          sx={{
+            '& .MuiInputBase-root': {
+              height: '138px',
+            },
+            '& .MuiOutlinedInput-input': {
+            paddingBottom: 2
+            }
+          }}
             multiline
-            variant="outlined"
             rows={4}
             placeholder="Game Description..."
             error={
@@ -262,14 +275,14 @@ export default function CreateGameCardBase({
           flexDirection: 'column', 
           gap: '8px', 
           width: '100%',
-          height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '198px' : '100%'
+          height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '204px' : '100%'
           }}>
         {/* Image Upload handled here */}
         {imageLink ? (
           imageContents
         ) : (
           <ImagePlaceholder isCardErrored={false} sx={{ 
-            height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '198px' : '202px' ,
+            height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '204px' : '202px' ,
             }}>
             <CentralButton
               buttonType={ButtonType.UPLOADIMAGE}
