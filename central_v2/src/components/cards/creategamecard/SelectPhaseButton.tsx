@@ -16,20 +16,26 @@ import CentralButton from '../../button/Button';
 import { ButtonColor, ButtonType } from '../../button/ButtonModels';
 import { ScreenSize } from '../../../lib/CentralModels';
 import times from './time';
+import { ErrorIcon } from '../../../lib/styledcomponents/CentralStyledComponents';
+import errorIcon from '../../../images/errorIcon.svg';
 
 interface SelectPhaseButtonProps {
   screenSize: ScreenSize;
   phaseNumber: 1 | 2;
+  isCardSubmitted: boolean;
 }
 
 export default function SelectPhaseButton({
   screenSize,
   phaseNumber,
+  isCardSubmitted
 }: SelectPhaseButtonProps) {
   const [phase, setPhase] = useState<string>('');
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
+  // flag error if phase is not selected
+  const phaseError = isCardSubmitted && phase === '';
 
   // handle phase selection on menu item click
   const selectPhase = (phaseVal: string) => {
@@ -52,21 +58,15 @@ export default function SelectPhaseButton({
         position: 'relative',
       }}
     >
-      {/* Wait for feedback from UI/UX Team
-      <Box sx={{ display: 'flex', flexDirection: 'row', width: '96px'}}></Box> 
-      selectmenu width should be
-      */}
 
       <SelectPhase
-        // ref={ref}
         sx={{
-          width: '96px',
+          width:'96px', 
           maxWidth: '96px',
-          // width: phase === "" ? '96px' : 'auto',
           minHeight: '23px',
           backgroundColor: '#fffbf6',
           border: '1px solid #02215f',
-          borderRadius: '4.8px',
+          borderRadius: isSelectOpen ? '4.8px 4.8px 0 0':'4.8px',
           justifyContent: 'space-between',
           padding: '4px 8px',
           '&:hover': {
@@ -76,6 +76,7 @@ export default function SelectPhaseButton({
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
+        
         <SelectLabel
           sx={{
             fontSize: '16px',
@@ -86,6 +87,7 @@ export default function SelectPhaseButton({
         >
           {phase !== '' ? phase : `Phase ${phaseNumber}`}
         </SelectLabel>
+        {/* space between is here */}
         <SelectArrowContainer isSelectOpen={isSelectOpen}>
           <img
             src={SelectArrow}
@@ -104,7 +106,7 @@ export default function SelectPhaseButton({
           sx={{
             backgroundColor: '#fffbf6',
             padding: 0,
-            top: '33px',
+            top: "auto",
             left: 0,
             minWidth: '114px',
             width: '114px',
@@ -113,7 +115,6 @@ export default function SelectPhaseButton({
             borderBottom: '1px solid #02215f',
             borderLeft: '1px solid #02215f',
             borderTop: 'none',
-            // border: '0px 1px 1px 1px solid #02215f',
             transform: 'translateY(0px)',
             ...(isSmallerScreen ? { zIndex: 5 } : {}),
           }}

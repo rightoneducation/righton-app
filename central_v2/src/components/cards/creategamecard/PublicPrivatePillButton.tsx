@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import GlobeImg from '../../../images/buttonIconGlobe.svg';
-import LockImg from '../../../images/buttonIconLock.svg'
 import { PublicPrivateContainer, PublicPrivateSelectionPill, LabelContainer, SubContainer, PublicPrivateText } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 
 interface PublicPrivateButtonInterface {

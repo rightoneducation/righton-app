@@ -258,7 +258,6 @@ CreateGameTextFieldContainer = styled(TextField, {
       ...(isCardError ? 
         { color: "#D0254D", opacity: 1}
         :{ color: '#02215f', opacity: 0.5,})
-     
     },
     '&:focus': {
       color: '#384466',

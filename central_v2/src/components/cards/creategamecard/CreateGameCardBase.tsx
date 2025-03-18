@@ -179,8 +179,8 @@ export default function CreateGameCardBase({
             alignItems="center"
             justifyContent={isSmallerScreen ? 'center' : 'normal'}
           >
-            <SelectPhaseButton phaseNumber={1} screenSize={screenSize} />
-            <SelectPhaseButton phaseNumber={2} screenSize={screenSize} />
+            <SelectPhaseButton isCardSubmitted={isCardSubmitted} phaseNumber={1} screenSize={screenSize} />
+            <SelectPhaseButton isCardSubmitted={isCardSubmitted} phaseNumber={2} screenSize={screenSize} />
           </Stack>
         </Box>
 
