@@ -283,7 +283,7 @@ export default function Generator() {
           <img src={OpenAI} alt="OpenAI Logo"/>
         </Box>
         <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
-          Wrong Answer Explanations
+          Wrong Answer Explanation Generator
         </Typography>
         <Typography style={{ fontFamily: 'Rubik',textAlign: 'center', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
           AI-Powered Insights to Guide Student Understanding

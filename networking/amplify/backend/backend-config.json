@@ -136,14 +136,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_mobile6060603c_googleClientId": {
-      "usedBy": [
-        {
-          "category": "auth",
-          "resourceName": "mobile6060603c"
-        }
-      ]
-    },
     "AMPLIFY_function_S3Trigger04eb3a91_deploymentBucketName": {
       "usedBy": [
         {
