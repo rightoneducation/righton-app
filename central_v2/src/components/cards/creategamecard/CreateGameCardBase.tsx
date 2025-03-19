@@ -45,12 +45,10 @@ import {
 
 interface CreateGameCardBaseProps {
   screenSize: ScreenSize;
-  draftQuestion: CentralQuestionTemplateInput;
   handleTitleChange: (
     title: string,
     draftQuestion: CentralQuestionTemplateInput,
   ) => void;
-  handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   isHighlight: boolean;
@@ -61,9 +59,7 @@ interface CreateGameCardBaseProps {
 
 export default function CreateGameCardBase({
   screenSize,
-  draftQuestion,
   handleTitleChange,
-  handleCCSSClick,
   handleImageUploadClick,
   handlePublicPrivateChange,
   isHighlight,
@@ -72,22 +68,21 @@ export default function CreateGameCardBase({
   isAIError,
 }: CreateGameCardBaseProps) {
   const theme = useTheme();
-  const [title, setTitle] = React.useState<string>(
-    draftQuestion.questionCard.title,
-  );
+  const [title, setTitle] = React.useState<string>("");
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(
     PublicPrivateType.PUBLIC,
   );
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
+  const [image, setImage] = React.useState<File>()
   const getImage = () => {
     if (
-      draftQuestion.questionCard.image &&
-      draftQuestion.questionCard.image instanceof File
+      image &&
+      image instanceof File
     )
-      return URL.createObjectURL(draftQuestion.questionCard.image);
-    return draftQuestion.questionCard.imageUrl;
+      return URL.createObjectURL(image);
+    return image;
   };
   const imageLink = getImage();
 
@@ -100,7 +95,6 @@ export default function CreateGameCardBase({
 
   const handleLocalTitleChange = (value: string) => {
     setTitle((prev) => value);
-    handleTitleChange(value, draftQuestion);
   };
 
   const imageContents = [
@@ -153,7 +147,7 @@ export default function CreateGameCardBase({
     <BaseCardStyled
       elevation={6}
       isHighlight={isHighlight}
-      isCardComplete={draftQuestion.questionCard.isCardComplete}
+      isCardComplete={isCardErrored ?? false}
       sx={{ height: responsiveHeight, gap: responsiveGap, padding: screenSize === ScreenSize.LARGE ? '28px': '24px', }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>
@@ -229,7 +223,7 @@ export default function CreateGameCardBase({
                 ),
             }}
           >
-            {draftQuestion.questionCard.title}
+            {title}
           </CreateGameTextFieldContainer>
           {/* Game Description TextField */}
           <CreateGameTextFieldContainer
@@ -266,7 +260,7 @@ export default function CreateGameCardBase({
                 ),
             }}
           >
-            <Typography>{draftQuestion.questionCard.title}</Typography>
+            <Typography>{title}</Typography>
           </CreateGameTextFieldContainer>
         </CreateGameContentLeftContainerStyled>
 
