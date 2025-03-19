@@ -6,6 +6,7 @@ export type AWSQuestionTemplate = {
     lowerCaseTitle?: string | null,
     owner?: string | null,
     version?: number | null,
+    isDraft: number,
     choices?: string | null,
     instructions?: string | null,
     answerSettings?: string | null,

@@ -235,6 +235,7 @@ type PrivateQuestionTemplate @model
   title: String!
   lowerCaseTitle: String!
   version: Int!
+  isDraft: Int!
   choices: AWSJSON
   instructions: AWSJSON
   answerSettings: AWSJSON
@@ -249,7 +250,7 @@ type PrivateQuestionTemplate @model
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-   type: String @default(value: "PrivateQuestionTemplate") @index(name: "privateQuestionTemplatesByDate", queryField: "privateQuestionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "privateQuestionTemplatesByGrade", queryField: "privateQuestionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "privateQuestionTemplatesByPrivateGameTemplatesCount", queryField: "privateQuestionTemplatesByPrivateGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
+   type: String @default(value: "PrivateQuestionTemplate") @index(name: "privateQuestionTemplatesByDate", queryField: "privateQuestionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "privateQuestionTemplatesByGrade", queryField: "privateQuestionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "privateQuestionTemplatesByPrivateGameTemplatesCount", queryField: "privateQuestionTemplatesByPrivateGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"]) @index(name: "privateQuestionTemplatesByDraft", queryField: "privateQuestionTemplatesByDraft", sortKeyFields: ["isDraft"])
 }
 
 input PrivateQuestionTemplateInput {

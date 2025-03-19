@@ -12,6 +12,7 @@ export interface IQuestionTemplate {
   lowerCaseTitle: string,
   owner?: string,
   version: number,
+  isDraft: number,
   choices?: IChoice[] | null,
   instructions?: string[] | null,
   answerSettings?: string | null,

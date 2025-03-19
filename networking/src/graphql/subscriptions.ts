@@ -853,6 +853,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -895,6 +896,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -945,6 +947,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1083,6 +1086,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1125,6 +1129,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -1175,6 +1180,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1313,6 +1319,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1355,6 +1362,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -1405,6 +1413,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2142,6 +2151,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
     title
     lowerCaseTitle
     version
+    isDraft
     choices
     instructions
     answerSettings
@@ -2214,6 +2224,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2256,6 +2267,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -2306,6 +2318,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2369,6 +2382,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
     title
     lowerCaseTitle
     version
+    isDraft
     choices
     instructions
     answerSettings
@@ -2441,6 +2455,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2483,6 +2498,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -2533,6 +2549,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2596,6 +2613,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
     title
     lowerCaseTitle
     version
+    isDraft
     choices
     instructions
     answerSettings
@@ -2668,6 +2686,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2710,6 +2729,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -2760,6 +2780,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -4948,6 +4969,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4986,6 +5008,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5032,6 +5055,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5084,6 +5108,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
       title
       lowerCaseTitle
       version
+      isDraft
       choices
       instructions
       answerSettings
@@ -5152,6 +5177,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5190,6 +5216,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5236,6 +5263,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5373,6 +5401,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5411,6 +5440,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5457,6 +5487,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5509,6 +5540,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
       title
       lowerCaseTitle
       version
+      isDraft
       choices
       instructions
       answerSettings
@@ -5577,6 +5609,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5615,6 +5648,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5661,6 +5695,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5798,6 +5833,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5836,6 +5872,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5882,6 +5919,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5934,6 +5972,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
       title
       lowerCaseTitle
       version
+      isDraft
       choices
       instructions
       answerSettings
@@ -6002,6 +6041,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -6040,6 +6080,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -6086,6 +6127,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings

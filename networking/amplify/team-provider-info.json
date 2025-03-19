@@ -1,16 +1,16 @@
 {
   "test": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-mobile-test-cabc6-authRole",
-      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-test-cabc6-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-test-cabc6-authRole",
+      "AuthRoleName": "amplify-mobile-test-350d7-authRole",
+      "UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-test-350d7-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-mobile-test-350d7-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mobile-test-cabc6-deployment",
-      "UnauthRoleName": "amplify-mobile-test-cabc6-unauthRole",
-      "StackName": "amplify-mobile-test-cabc6",
-      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-test-cabc6/8cdfbec0-002c-11f0-ab00-1298a684b67d",
+      "DeploymentBucketName": "amplify-mobile-test-350d7-deployment",
+      "UnauthRoleName": "amplify-mobile-test-350d7-unauthRole",
+      "StackName": "amplify-mobile-test-350d7",
+      "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-mobile-test-350d7/a4afb860-04b0-11f0-934a-1277176bdf3f",
       "AmplifyAppId": "d2z6928w5qibze",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-test-cabc6-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-test-350d7-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
@@ -21,32 +21,32 @@
       },
       "function": {
         "UserCleaner": {
-          "deploymentBucketName": "amplify-mobile-test-cabc6-deployment",
-          "s3Key": "amplify-builds/UserCleaner-7646316f4f3354626752-build.zip"
+          "deploymentBucketName": "amplify-mobile-test-350d7-deployment",
+          "s3Key": "amplify-builds/UserCleaner-65394a786f7a426b6b70-build.zip"
         },
         "createGameTest": {
-          "deploymentBucketName": "amplify-mobile-test-cabc6-deployment",
+          "deploymentBucketName": "amplify-mobile-test-350d7-deployment",
           "s3Key": "amplify-builds/createGameTest-324a487a7167484b6331-build.zip"
         },
         "mobile6060603cPostConfirmation": {
           "GROUP": "authusers",
-          "deploymentBucketName": "amplify-mobile-test-cabc6-deployment",
+          "deploymentBucketName": "amplify-mobile-test-350d7-deployment",
           "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4d394d4257387a654431-build.zip"
         },
         "teacherIdAuth": {
-          "deploymentBucketName": "amplify-mobile-test-cabc6-deployment",
+          "deploymentBucketName": "amplify-mobile-test-350d7-deployment",
           "s3Key": "amplify-builds/teacherIdAuth-45723472713038476966-build.zip"
         },
         "uploadExternalImageToS3": {
-          "deploymentBucketName": "amplify-mobile-test-cabc6-deployment",
+          "deploymentBucketName": "amplify-mobile-test-350d7-deployment",
           "s3Key": "amplify-builds/uploadExternalImageToS3-4e55784e7a75437a4e33-build.zip"
         },
         "waegen": {
-          "deploymentBucketName": "amplify-mobile-test-cabc6-deployment",
+          "deploymentBucketName": "amplify-mobile-test-350d7-deployment",
           "s3Key": "amplify-builds/waegen-656a7761557067327232-build.zip"
         },
         "waeregen": {
-          "deploymentBucketName": "amplify-mobile-test-cabc6-deployment",
+          "deploymentBucketName": "amplify-mobile-test-350d7-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
         },
         "mobile": {},

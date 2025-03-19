@@ -365,7 +365,7 @@ export default function CreateQuestion({
           window.localStorage.setItem(StorageKey, '');
           console.log(draftQuestion.questionCard.imageUrl);
           if (url){
-            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
+            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, 0, draftQuestion);
           }
           setIsCreatingTemplate(false);
           navigate('/questions');
@@ -373,6 +373,30 @@ export default function CreateQuestion({
       } else {
         setIsCardErrored(true);
       }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const handleSaveDraft = async () => {
+    try {
+      setIsCardSubmitted(true);
+      setIsCreatingTemplate(true);
+      let result = null;
+      let url = '';
+      if (draftQuestion.questionCard.image){
+        const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+        // have to do a nested await here because aws-storage returns a nested promise object
+        result = await img.result;
+        if (result && result.path && result.path.length > 0)
+          url = result.path;
+      } else if (draftQuestion.questionCard.imageUrl){
+        url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+      }
+      window.localStorage.setItem(StorageKey, '');
+      apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, 1, draftQuestion);
+      setIsCreatingTemplate(false);
+      navigate('/questions');
     } catch (e) {
       console.log(e);
     }
@@ -450,6 +474,7 @@ export default function CreateQuestion({
           { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
             <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
+              <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
             </Box>
           }

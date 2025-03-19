@@ -853,6 +853,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -895,6 +896,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -945,6 +947,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1083,6 +1086,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1125,6 +1129,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -1175,6 +1180,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1313,6 +1319,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1355,6 +1362,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -1405,6 +1413,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2142,6 +2151,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
     title
     lowerCaseTitle
     version
+    isDraft
     choices
     instructions
     answerSettings
@@ -2214,6 +2224,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2256,6 +2267,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -2306,6 +2318,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2369,6 +2382,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
     title
     lowerCaseTitle
     version
+    isDraft
     choices
     instructions
     answerSettings
@@ -2441,6 +2455,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2483,6 +2498,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -2533,6 +2549,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2596,6 +2613,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
     title
     lowerCaseTitle
     version
+    isDraft
     choices
     instructions
     answerSettings
@@ -2668,6 +2686,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -2710,6 +2729,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           title
           lowerCaseTitle
           version
+          isDraft
           choices
           instructions
           answerSettings
@@ -2760,6 +2780,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 title
                 lowerCaseTitle
                 version
+                isDraft
                 choices
                 instructions
                 answerSettings
@@ -5053,6 +5074,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5091,6 +5113,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5137,6 +5160,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5189,6 +5213,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       title
       lowerCaseTitle
       version
+      isDraft
       choices
       instructions
       answerSettings
@@ -5257,6 +5282,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5295,6 +5321,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5341,6 +5368,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5478,6 +5506,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5516,6 +5545,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5562,6 +5592,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5614,6 +5645,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       title
       lowerCaseTitle
       version
+      isDraft
       choices
       instructions
       answerSettings
@@ -5682,6 +5714,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5720,6 +5753,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5766,6 +5800,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5903,6 +5938,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5941,6 +5977,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -5987,6 +6024,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -6039,6 +6077,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       title
       lowerCaseTitle
       version
+      isDraft
       choices
       instructions
       answerSettings
@@ -6107,6 +6146,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -6145,6 +6185,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             title
             lowerCaseTitle
             version
+            isDraft
             choices
             instructions
             answerSettings
@@ -6191,6 +6232,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   title
                   lowerCaseTitle
                   version
+                  isDraft
                   choices
                   instructions
                   answerSettings

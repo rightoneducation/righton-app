@@ -153,6 +153,7 @@ export interface IQuestionTemplateAPIClient {
   createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     imageUrl: string,
+    isDraft: number,
     createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate>;
 
