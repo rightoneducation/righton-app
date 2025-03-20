@@ -209,12 +209,12 @@ export const CreateGameContentLeftContainerStyled = styled(Box)(
   }),
 );
 
-type GameTextFieldContainer = { isTitle?: boolean; isAIEnabled?: boolean, isCardError: boolean };
+type GameTextFieldContainer = { isTitle?: boolean; isCardError: boolean };
 
 export const 
 CreateGameTextFieldContainer = styled(TextField, {
   shouldForwardProp: (prop) => prop !== 'isTitle',
-})<GameTextFieldContainer>(({ theme, isTitle, isAIEnabled, isCardError }) => ({
+})<GameTextFieldContainer>(({ theme, isTitle, isCardError }) => ({
   width: '100%',
   margin: 0,
   padding: 0,
@@ -224,20 +224,20 @@ CreateGameTextFieldContainer = styled(TextField, {
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderWidth: `2px`,
-      borderColor: isAIEnabled
+      borderColor: isCardError
         ? `${theme.palette.primary.darkPurple}`
         : `${theme.palette.primary.grey}`,
       borderRadius: `${theme.sizing.xSmPadding}px`,
     },
     '&.Mui-focused fieldset': {
       borderWidth: `2px`,
-      borderColor: isAIEnabled
+      borderColor: isCardError
         ? `${theme.palette.primary.darkPurple}`
         : `${theme.palette.primary.grey}`,
     },
     '&:hover fieldset': {
       borderWidth: `2px`,
-      borderColor: isAIEnabled
+      borderColor: isCardError
         ? `${theme.palette.primary.extraDarkPurple}`
         : `${theme.palette.primary.extraDarkGrey}`,
     },

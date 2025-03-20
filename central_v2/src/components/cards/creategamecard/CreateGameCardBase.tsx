@@ -54,7 +54,6 @@ interface CreateGameCardBaseProps {
   isHighlight: boolean;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
-  isAIError: boolean;
 }
 
 export default function CreateGameCardBase({
@@ -65,7 +64,6 @@ export default function CreateGameCardBase({
   isHighlight,
   isCardSubmitted,
   isCardErrored,
-  isAIError,
 }: CreateGameCardBaseProps) {
   const theme = useTheme();
   const [title, setTitle] = React.useState<string>("");
@@ -204,12 +202,12 @@ export default function CreateGameCardBase({
               height: '54px'
             }
            }}
-            placeholder="Game title..."
+            placeholder="Game title here.."
             error={
-              (isCardSubmitted || isAIError) && (!title || title.length === 0)
+              isCardSubmitted && (!title || title.length === 0)
             }
             InputProps={{
-              startAdornment: (isCardSubmitted || isAIError) &&
+              startAdornment: isCardSubmitted &&
                 (!title || title.length === 0) && (
                   <InputAdornment
                     position="start"
@@ -239,14 +237,14 @@ export default function CreateGameCardBase({
           }}
             multiline
             rows={4}
-            placeholder="Game Description..."
+            placeholder="Enter game description here..."
             error={
-              (isCardSubmitted || isAIError) && (!title || title.length === 0)
+              isCardSubmitted && (!title || title.length === 0)
             }
             value={title}
             onChange={(e) => handleLocalTitleChange(e.target.value)}
             InputProps={{
-              startAdornment: (isCardSubmitted || isAIError) &&
+              startAdornment: isCardSubmitted &&
                 (!title || title.length === 0) && (
                   <InputAdornment
                     position="start"

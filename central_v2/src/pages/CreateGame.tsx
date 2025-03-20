@@ -386,14 +386,12 @@ setOpenQuestionBank((prev) => !prev);
      <CreateGameComponent
      screenSize={screenSize}
      handleSaveGame={handleSaveGame}
-     // rename this function
      handleDiscard={handleDiscard}
      handlePublicPrivateChange={handlePublicPrivateChange}
      handleImageUploadClick={handleGameImageUploadClick}
      onCreateQuestion={handleCreateQuestion}
      onOpenQuestionBank={handleOpenQuestionBank}
      isCardSubmitted={isGameCardSubmitted}
-     isAIError={isAIError}
      questionCount={questionCount}
      isCardErrored={isCardErrored}
      highlightCard={highlightCard} />
@@ -412,6 +410,8 @@ setOpenQuestionBank((prev) => !prev);
       highlightCard={highlightCard}
        />
 )}
+
+{/* Question Bank goes here */}
       </CreateGameBoxContainer>
 
 

@@ -14,7 +14,6 @@ interface ICreateGameComponent {
     handleSaveGame: () => Promise<void>;
     handleDiscard: () => void;
     isCardSubmitted: boolean;
-    isAIError: boolean;
     questionCount: number;
     isCardErrored: boolean;
     highlightCard: CreateQuestionHighlightCard;
@@ -34,7 +33,6 @@ export default function CreateGameComponent({
     handleImageUploadClick,
     onCreateQuestion,
     onOpenQuestionBank,
-    isAIError,
     isCardSubmitted,
     questionCount,
     isCardErrored,
@@ -130,7 +128,6 @@ export default function CreateGameComponent({
                 handlePublicPrivateChange={handlePublicPrivateChange}
                 isCardSubmitted={isCardSubmitted}
                 isCardErrored={isCardErrored}
-                isAIError={isAIError}
               />
             </Box>
           </CreateGameCardGridItem>

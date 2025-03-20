@@ -1,5 +1,5 @@
 import React, { useState, useRef, Ref, useEffect } from 'react';
-import { Collapse, Button, Box, Divider, Typography } from '@mui/material';
+import { Collapse, Button, Box, Divider, Typography, useTheme } from '@mui/material';
 import { ButtonStyled } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import {
   SelectContainer,
@@ -30,6 +30,7 @@ export default function SelectPhaseButton({
   phaseNumber,
   isCardSubmitted
 }: SelectPhaseButtonProps) {
+  const theme = useTheme();
   const [phase, setPhase] = useState<string>('');
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const isSmallerScreen =
@@ -80,7 +81,8 @@ export default function SelectPhaseButton({
         <SelectLabel
           sx={{
             fontSize: '16px',
-            fontWeight: 550,
+            fontFamily: theme.typography.fontFamily,
+            fontWeight: 600,
             margin: 0,
             color: '#02215f',
           }}
@@ -108,8 +110,8 @@ export default function SelectPhaseButton({
             padding: 0,
             top: "auto",
             left: 0,
-            minWidth: '113.6px',
-            width: '113.6px',
+            minWidth: '114px',
+            width: '114px',
             borderRadius: '0 0 4px 4px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',
@@ -124,7 +126,7 @@ export default function SelectPhaseButton({
               onClick={() => selectPhase(phaseTime.label)}
               sx={{ cursor: 'pointer', width: '100%' }}
             >
-              <SelectMenuItem sx={{ height: '22.8px', padding: '4px 8px', }}>
+              <SelectMenuItem sx={{ height: '23px', padding: '4px 8px', }}>
                 <Typography
                   fontWeight="0.3rem"
                   fontSize="10px"
