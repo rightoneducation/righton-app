@@ -389,7 +389,7 @@ export default function useCentralDataManager({
           null,
           searchTerms,
           sort.direction ?? SortDirection.ASC,
-          SortType.listGameTemplatesByDraft,
+          sort.field,
           [...selectedGrades],
           null
         ).then((response) => {
@@ -406,7 +406,7 @@ export default function useCentralDataManager({
           null,
           searchTerms,
           sort.direction ?? SortDirection.ASC,
-          SortType.listQuestionTemplatesByDraft,
+          sort.field,
           [...selectedGrades],
           null
         ).then((response) => {
