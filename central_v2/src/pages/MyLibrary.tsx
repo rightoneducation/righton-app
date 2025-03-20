@@ -50,6 +50,7 @@ interface MyLibraryProps {
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   getFav: (user: IUserProfile) => void;
+  getDrafts: () => void;
   loadMore: () => void;
 }
 
@@ -81,6 +82,7 @@ export default function MyLibrary({
   handleSearchChange,
   handlePublicPrivateChange,
   getFav,
+  getDrafts,
   loadMore,
 }: MyLibraryProps) {
   const theme = useTheme();
@@ -117,6 +119,7 @@ export default function MyLibrary({
           handleSearchChange={handleSearchChange}
           handlePublicPrivateChange={handlePublicPrivateChange}
           getFav={getFav}
+          getDrafts={getDrafts}
           loadMore={loadMore}
         />
     </MyLibraryMainContainer>

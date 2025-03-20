@@ -56,6 +56,7 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   getFav: (user: IUserProfile) => void;
+  getDrafts: () => void;
   loadMore: () => void;
   handleView: (element: T, elements: T[]) => void;
 }
@@ -86,6 +87,7 @@ export default function LibraryTabsQuestions({
   handleSearchChange,
   handlePublicPrivateChange,
   getFav,
+  getDrafts,
   loadMore,
   handleView
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {

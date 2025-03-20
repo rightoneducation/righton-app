@@ -9,7 +9,6 @@ import { IChoice } from "../Models/IQuestion";
 export class QuestionTemplateParser {
     static centralQuestionTemplateInputToIQuestionTemplate<T extends PublicPrivateType>(
         imageUrl: string,
-        isDraft: number,
         createQuestionTemplateInput: CentralQuestionTemplateInput
     ): QuestionTemplateType<T>['create']['input']{
         const {title, ccss } = createQuestionTemplateInput.questionCard;
@@ -30,7 +29,6 @@ export class QuestionTemplateParser {
         const choicesCorrect = {isAnswer: true, reason: '', text: createQuestionTemplateInput.correctCard.answer}; 
         const choices = JSON.stringify([choicesCorrect, ...choicesIncorrect]);
         const questionTemplate: QuestionTemplateType<T>['create']['input'] = {
-            isDraft,
             title,
             lowerCaseTitle,
             version: 0,
@@ -101,7 +99,6 @@ export class QuestionTemplateParser {
           lowerCaseTitle,
           owner,
           version,
-          isDraft,
           answerSettings,
           ccss,
           domain,
@@ -129,7 +126,6 @@ export class QuestionTemplateParser {
           lowerCaseTitle: lowerCaseTitle ?? '',
           owner,
           version,
-          isDraft,
           choices,
           instructions,
           answerSettings,

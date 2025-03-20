@@ -58,6 +58,7 @@ interface LibraryTabsGamesProps<T extends IGameTemplate> {
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   getFav: (user: IUserProfile) => void;
+  getDrafts: () => void;
   loadMore: () => void;
   handleView: (element: T, elements: T[]) => void;
 }
@@ -88,6 +89,7 @@ export default function LibraryTabsGames({
   handleSortChange,
   handleSearchChange,
   getFav,
+  getDrafts,
   loadMore,
   handleView
 }: LibraryTabsGamesProps<IGameTemplate>) {
@@ -96,6 +98,8 @@ const [openTab, setOpenTab] = React.useState(0);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   if (newValue === 3) {
     getFav(userProfile);
+  } else if (newValue === 2) {
+    getDrafts();
   } else {
     handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
   }

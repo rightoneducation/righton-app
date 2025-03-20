@@ -63,6 +63,7 @@ interface TabContainerProps {
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   getFav: (user: IUserProfile) => void;
+  getDrafts: () => void;
   loadMore: () => void;
 }
 
@@ -94,6 +95,7 @@ export default function LibraryTabsContainer({
   handleSearchChange,
   handlePublicPrivateChange,
   getFav,
+  getDrafts,
   loadMore
 }: TabContainerProps) {
   const theme = useTheme();
@@ -150,6 +152,7 @@ export default function LibraryTabsContainer({
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
             getFav={getFav}
+            getDrafts={getDrafts}
             loadMore={loadMore}
             handleView={handleView}
           />
@@ -179,6 +182,7 @@ export default function LibraryTabsContainer({
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
             getFav={getFav}
+            getDrafts={getDrafts}
             loadMore={loadMore}
             handleView={handleView}
           />

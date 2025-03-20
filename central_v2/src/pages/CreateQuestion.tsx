@@ -365,7 +365,7 @@ export default function CreateQuestion({
           window.localStorage.setItem(StorageKey, '');
           console.log(draftQuestion.questionCard.imageUrl);
           if (url){
-            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, 0, draftQuestion);
+            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
           }
           setIsCreatingTemplate(false);
           navigate('/questions');
@@ -394,7 +394,7 @@ export default function CreateQuestion({
         url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
       }
       window.localStorage.setItem(StorageKey, '');
-      apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, 1, draftQuestion);
+      apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
       setIsCreatingTemplate(false);
       navigate('/questions');
     } catch (e) {

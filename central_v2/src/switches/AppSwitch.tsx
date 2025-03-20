@@ -67,6 +67,7 @@ function AppSwitch() {
     handleSearchChange,
     handlePublicPrivateChange,
     getFav,
+    getDrafts,
     loadMore,
   } = useCentralDataManager({gameQuestion});
   
@@ -143,6 +144,7 @@ function AppSwitch() {
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
             getFav={getFav}
+            getDrafts={getDrafts}
             loadMore={loadMore}
           />
         </AppContainer>

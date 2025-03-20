@@ -46,6 +46,7 @@ interface UseCentralDataManagerReturnProps {
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   getFav: (user: IUserProfile) => void;
+  getDrafts: () => void;
   loadMore: () => void;
 }
 
@@ -378,6 +379,45 @@ export default function useCentralDataManager({
     }
   };
 
+  const getDrafts = async () => {
+    setIsLoading(true);
+    switch (gameQuestion){
+      case GameQuestionType.QUESTION:
+        apiClients?.centralDataManager?.searchForQuestionTemplates(
+          PublicPrivateType.PUBLIC,
+          null,
+          null,
+          searchTerms,
+          sort.direction ?? SortDirection.ASC,
+          SortType.listGameTemplatesByDraft,
+          [...selectedGrades],
+          null
+        ).then((response) => {
+          setFavQuestions(response.questions);
+          setNextToken(response.nextToken); 
+          setIsLoading(false);
+        });
+      break;
+      case GameQuestionType.GAME:
+      default:
+        apiClients?.centralDataManager?.searchForGameTemplates(
+          PublicPrivateType.PUBLIC,
+          null,
+          null,
+          searchTerms,
+          sort.direction ?? SortDirection.ASC,
+          SortType.listQuestionTemplatesByDraft,
+          [...selectedGrades],
+          null
+        ).then((response) => {
+          setFavGames(response.games);
+          setNextToken(response.nextToken); 
+          setIsLoading(false);
+        });
+      break;
+    }
+  };
+
   const getFav = async (user: IUserProfile) => {
     console.log(user.favoriteGameTemplateIds)
     setIsLoading(true);
@@ -454,6 +494,7 @@ export default function useCentralDataManager({
     handleSearchChange,
     handlePublicPrivateChange,
     getFav,
+    getDrafts,
     loadMore,
   };
 }

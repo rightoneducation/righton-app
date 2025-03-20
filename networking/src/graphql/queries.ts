@@ -1273,7 +1273,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
     title
     lowerCaseTitle
     version
-    isDraft
     description
     lowerCaseDescription
     ccss
@@ -1295,7 +1294,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
           title
           lowerCaseTitle
           version
-          isDraft
           description
           lowerCaseDescription
           ccss
@@ -1317,7 +1315,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 title
                 lowerCaseTitle
                 version
-                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1347,7 +1344,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 title
                 lowerCaseTitle
                 version
-                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1390,7 +1386,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
           title
           lowerCaseTitle
           version
-          isDraft
           choices
           instructions
           answerSettings
@@ -1411,7 +1406,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 title
                 lowerCaseTitle
                 version
-                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -1441,7 +1435,6 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 title
                 lowerCaseTitle
                 version
-                isDraft
                 choices
                 instructions
                 answerSettings
@@ -1512,7 +1505,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
       title
       lowerCaseTitle
       version
-      isDraft
       description
       lowerCaseDescription
       ccss
@@ -1534,7 +1526,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -1556,7 +1547,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -1582,7 +1572,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -1621,7 +1610,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -1642,7 +1630,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -1668,7 +1655,6 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -1744,7 +1730,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
       title
       lowerCaseTitle
       version
-      isDraft
       description
       lowerCaseDescription
       ccss
@@ -1766,7 +1751,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -1788,7 +1772,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -1814,7 +1797,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -1853,7 +1835,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -1874,7 +1855,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -1900,7 +1880,6 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -1976,7 +1955,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
       title
       lowerCaseTitle
       version
-      isDraft
       description
       lowerCaseDescription
       ccss
@@ -1998,7 +1976,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -2020,7 +1997,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -2046,7 +2022,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -2085,7 +2060,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -2106,7 +2080,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -2132,7 +2105,6 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -2208,7 +2180,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
       title
       lowerCaseTitle
       version
-      isDraft
       description
       lowerCaseDescription
       ccss
@@ -2230,7 +2201,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -2252,7 +2222,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -2278,7 +2247,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -2317,7 +2285,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -2338,7 +2305,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -2364,7 +2330,6 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -2419,18 +2384,235 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
   APITypes.PrivateGameTemplatesByPrivateQuestionTemplatesCountQueryVariables,
   APITypes.PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery
 >;
-export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTemplatesByDraft(
-  $type: String!
-  $isDraft: ModelIntKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPrivateGameTemplateFilterInput
+export const getDraftGameTemplate = /* GraphQL */ `query GetDraftGameTemplate($id: ID!) {
+  getDraftGameTemplate(id: $id) {
+    id
+    title
+    lowerCaseTitle
+    version
+    description
+    lowerCaseDescription
+    ccss
+    domain
+    cluster
+    grade
+    gradeFilter
+    standard
+    phaseOneTime
+    phaseTwoTime
+    imageUrl
+    questionTemplates {
+      items {
+        id
+        draftGameTemplateID
+        draftQuestionTemplateID
+        draftGameTemplate {
+          id
+          title
+          lowerCaseTitle
+          version
+          description
+          lowerCaseDescription
+          ccss
+          domain
+          cluster
+          grade
+          gradeFilter
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
+          questionTemplates {
+            items {
+              id
+              draftGameTemplateID
+              draftQuestionTemplateID
+              draftGameTemplate {
+                id
+                title
+                lowerCaseTitle
+                version
+                description
+                lowerCaseDescription
+                ccss
+                domain
+                cluster
+                grade
+                gradeFilter
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                questionTemplatesCount
+                questionTemplatesOrder
+                createdAt
+                updatedAt
+                type
+                owner
+                __typename
+              }
+              draftQuestionTemplate {
+                id
+                owner
+                title
+                lowerCaseTitle
+                version
+                choices
+                instructions
+                answerSettings
+                ccss
+                domain
+                cluster
+                grade
+                gradeFilter
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                gameTemplatesCount
+                createdAt
+                updatedAt
+                type
+                __typename
+              }
+              createdAt
+              updatedAt
+              owner
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          questionTemplatesCount
+          questionTemplatesOrder
+          createdAt
+          updatedAt
+          type
+          owner
+          __typename
+        }
+        draftQuestionTemplate {
+          id
+          owner
+          title
+          lowerCaseTitle
+          version
+          choices
+          instructions
+          answerSettings
+          ccss
+          domain
+          cluster
+          grade
+          gradeFilter
+          standard
+          imageUrl
+          gameTemplates {
+            items {
+              id
+              draftGameTemplateID
+              draftQuestionTemplateID
+              draftGameTemplate {
+                id
+                title
+                lowerCaseTitle
+                version
+                description
+                lowerCaseDescription
+                ccss
+                domain
+                cluster
+                grade
+                gradeFilter
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                questionTemplatesCount
+                questionTemplatesOrder
+                createdAt
+                updatedAt
+                type
+                owner
+                __typename
+              }
+              draftQuestionTemplate {
+                id
+                owner
+                title
+                lowerCaseTitle
+                version
+                choices
+                instructions
+                answerSettings
+                ccss
+                domain
+                cluster
+                grade
+                gradeFilter
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                gameTemplatesCount
+                createdAt
+                updatedAt
+                type
+                __typename
+              }
+              createdAt
+              updatedAt
+              owner
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          gameTemplatesCount
+          createdAt
+          updatedAt
+          type
+          __typename
+        }
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    questionTemplatesCount
+    questionTemplatesOrder
+    createdAt
+    updatedAt
+    type
+    owner
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetDraftGameTemplateQueryVariables,
+  APITypes.GetDraftGameTemplateQuery
+>;
+export const listDraftGameTemplates = /* GraphQL */ `query ListDraftGameTemplates(
+  $filter: ModelDraftGameTemplateFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  privateGameTemplatesByDraft(
-    type: $type
-    isDraft: $isDraft
-    sortDirection: $sortDirection
+  listDraftGameTemplates(
     filter: $filter
     limit: $limit
     nextToken: $nextToken
@@ -2440,7 +2622,6 @@ export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTempl
       title
       lowerCaseTitle
       version
-      isDraft
       description
       lowerCaseDescription
       ccss
@@ -2455,14 +2636,13 @@ export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTempl
       questionTemplates {
         items {
           id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          privateGameTemplate {
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
             id
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -2477,14 +2657,13 @@ export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTempl
             questionTemplates {
               items {
                 id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
                   id
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -2504,13 +2683,12 @@ export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTempl
                   owner
                   __typename
                 }
-                privateQuestionTemplate {
+                draftQuestionTemplate {
                   id
                   owner
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -2543,13 +2721,12 @@ export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTempl
             owner
             __typename
           }
-          privateQuestionTemplate {
+          draftQuestionTemplate {
             id
             owner
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -2563,14 +2740,13 @@ export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTempl
             gameTemplates {
               items {
                 id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
                   id
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -2590,13 +2766,12 @@ export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTempl
                   owner
                   __typename
                 }
-                privateQuestionTemplate {
+                draftQuestionTemplate {
                   id
                   owner
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -2648,8 +2823,683 @@ export const privateGameTemplatesByDraft = /* GraphQL */ `query PrivateGameTempl
   }
 }
 ` as GeneratedQuery<
-  APITypes.PrivateGameTemplatesByDraftQueryVariables,
-  APITypes.PrivateGameTemplatesByDraftQuery
+  APITypes.ListDraftGameTemplatesQueryVariables,
+  APITypes.ListDraftGameTemplatesQuery
+>;
+export const draftGameTemplatesByDate = /* GraphQL */ `query DraftGameTemplatesByDate(
+  $type: String!
+  $updatedAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelDraftGameTemplateFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  draftGameTemplatesByDate(
+    type: $type
+    updatedAt: $updatedAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      title
+      lowerCaseTitle
+      version
+      description
+      lowerCaseDescription
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
+            id
+            title
+            lowerCaseTitle
+            version
+            description
+            lowerCaseDescription
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
+            questionTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            questionTemplatesCount
+            questionTemplatesOrder
+            createdAt
+            updatedAt
+            type
+            owner
+            __typename
+          }
+          draftQuestionTemplate {
+            id
+            owner
+            title
+            lowerCaseTitle
+            version
+            choices
+            instructions
+            answerSettings
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            imageUrl
+            gameTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            gameTemplatesCount
+            createdAt
+            updatedAt
+            type
+            __typename
+          }
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.DraftGameTemplatesByDateQueryVariables,
+  APITypes.DraftGameTemplatesByDateQuery
+>;
+export const draftGameTemplatesByGrade = /* GraphQL */ `query DraftGameTemplatesByGrade(
+  $type: String!
+  $grade: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelDraftGameTemplateFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  draftGameTemplatesByGrade(
+    type: $type
+    grade: $grade
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      title
+      lowerCaseTitle
+      version
+      description
+      lowerCaseDescription
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
+            id
+            title
+            lowerCaseTitle
+            version
+            description
+            lowerCaseDescription
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
+            questionTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            questionTemplatesCount
+            questionTemplatesOrder
+            createdAt
+            updatedAt
+            type
+            owner
+            __typename
+          }
+          draftQuestionTemplate {
+            id
+            owner
+            title
+            lowerCaseTitle
+            version
+            choices
+            instructions
+            answerSettings
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            imageUrl
+            gameTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            gameTemplatesCount
+            createdAt
+            updatedAt
+            type
+            __typename
+          }
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.DraftGameTemplatesByGradeQueryVariables,
+  APITypes.DraftGameTemplatesByGradeQuery
+>;
+export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `query DraftGameTemplatesByDraftQuestionTemplatesCount(
+  $type: String!
+  $questionTemplatesCount: ModelIntKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelDraftGameTemplateFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  draftGameTemplatesByDraftQuestionTemplatesCount(
+    type: $type
+    questionTemplatesCount: $questionTemplatesCount
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      title
+      lowerCaseTitle
+      version
+      description
+      lowerCaseDescription
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
+            id
+            title
+            lowerCaseTitle
+            version
+            description
+            lowerCaseDescription
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
+            questionTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            questionTemplatesCount
+            questionTemplatesOrder
+            createdAt
+            updatedAt
+            type
+            owner
+            __typename
+          }
+          draftQuestionTemplate {
+            id
+            owner
+            title
+            lowerCaseTitle
+            version
+            choices
+            instructions
+            answerSettings
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            imageUrl
+            gameTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            gameTemplatesCount
+            createdAt
+            updatedAt
+            type
+            __typename
+          }
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.DraftGameTemplatesByDraftQuestionTemplatesCountQueryVariables,
+  APITypes.DraftGameTemplatesByDraftQuestionTemplatesCountQuery
 >;
 export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionTemplate($id: ID!) {
   getPublicQuestionTemplate(id: $id) {
@@ -3765,7 +4615,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
     title
     lowerCaseTitle
     version
-    isDraft
     choices
     instructions
     answerSettings
@@ -3786,7 +4635,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
           title
           lowerCaseTitle
           version
-          isDraft
           description
           lowerCaseDescription
           ccss
@@ -3808,7 +4656,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 title
                 lowerCaseTitle
                 version
-                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -3838,7 +4685,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 title
                 lowerCaseTitle
                 version
-                isDraft
                 choices
                 instructions
                 answerSettings
@@ -3881,7 +4727,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
           title
           lowerCaseTitle
           version
-          isDraft
           choices
           instructions
           answerSettings
@@ -3902,7 +4747,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 title
                 lowerCaseTitle
                 version
-                isDraft
                 description
                 lowerCaseDescription
                 ccss
@@ -3932,7 +4776,6 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 title
                 lowerCaseTitle
                 version
-                isDraft
                 choices
                 instructions
                 answerSettings
@@ -4002,7 +4845,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
       title
       lowerCaseTitle
       version
-      isDraft
       choices
       instructions
       answerSettings
@@ -4023,7 +4865,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -4045,7 +4886,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4071,7 +4911,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4110,7 +4949,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -4131,7 +4969,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4157,7 +4994,6 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4232,7 +5068,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
       title
       lowerCaseTitle
       version
-      isDraft
       choices
       instructions
       answerSettings
@@ -4253,7 +5088,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -4275,7 +5109,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4301,7 +5134,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4340,7 +5172,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -4361,7 +5192,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4387,7 +5217,6 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4462,7 +5291,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
       title
       lowerCaseTitle
       version
-      isDraft
       choices
       instructions
       answerSettings
@@ -4483,7 +5311,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -4505,7 +5332,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4531,7 +5357,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4570,7 +5395,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -4591,7 +5415,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4617,7 +5440,6 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4692,7 +5514,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
       title
       lowerCaseTitle
       version
-      isDraft
       choices
       instructions
       answerSettings
@@ -4713,7 +5534,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -4735,7 +5555,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4761,7 +5580,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4800,7 +5618,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -4821,7 +5638,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4847,7 +5663,6 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -4900,18 +5715,233 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
   APITypes.PrivateQuestionTemplatesByPrivateGameTemplatesCountQueryVariables,
   APITypes.PrivateQuestionTemplatesByPrivateGameTemplatesCountQuery
 >;
-export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuestionTemplatesByDraft(
-  $type: String!
-  $isDraft: ModelIntKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelPrivateQuestionTemplateFilterInput
+export const getDraftQuestionTemplate = /* GraphQL */ `query GetDraftQuestionTemplate($id: ID!) {
+  getDraftQuestionTemplate(id: $id) {
+    id
+    owner
+    title
+    lowerCaseTitle
+    version
+    choices
+    instructions
+    answerSettings
+    ccss
+    domain
+    cluster
+    grade
+    gradeFilter
+    standard
+    imageUrl
+    gameTemplates {
+      items {
+        id
+        draftGameTemplateID
+        draftQuestionTemplateID
+        draftGameTemplate {
+          id
+          title
+          lowerCaseTitle
+          version
+          description
+          lowerCaseDescription
+          ccss
+          domain
+          cluster
+          grade
+          gradeFilter
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
+          questionTemplates {
+            items {
+              id
+              draftGameTemplateID
+              draftQuestionTemplateID
+              draftGameTemplate {
+                id
+                title
+                lowerCaseTitle
+                version
+                description
+                lowerCaseDescription
+                ccss
+                domain
+                cluster
+                grade
+                gradeFilter
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                questionTemplatesCount
+                questionTemplatesOrder
+                createdAt
+                updatedAt
+                type
+                owner
+                __typename
+              }
+              draftQuestionTemplate {
+                id
+                owner
+                title
+                lowerCaseTitle
+                version
+                choices
+                instructions
+                answerSettings
+                ccss
+                domain
+                cluster
+                grade
+                gradeFilter
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                gameTemplatesCount
+                createdAt
+                updatedAt
+                type
+                __typename
+              }
+              createdAt
+              updatedAt
+              owner
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          questionTemplatesCount
+          questionTemplatesOrder
+          createdAt
+          updatedAt
+          type
+          owner
+          __typename
+        }
+        draftQuestionTemplate {
+          id
+          owner
+          title
+          lowerCaseTitle
+          version
+          choices
+          instructions
+          answerSettings
+          ccss
+          domain
+          cluster
+          grade
+          gradeFilter
+          standard
+          imageUrl
+          gameTemplates {
+            items {
+              id
+              draftGameTemplateID
+              draftQuestionTemplateID
+              draftGameTemplate {
+                id
+                title
+                lowerCaseTitle
+                version
+                description
+                lowerCaseDescription
+                ccss
+                domain
+                cluster
+                grade
+                gradeFilter
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                questionTemplatesCount
+                questionTemplatesOrder
+                createdAt
+                updatedAt
+                type
+                owner
+                __typename
+              }
+              draftQuestionTemplate {
+                id
+                owner
+                title
+                lowerCaseTitle
+                version
+                choices
+                instructions
+                answerSettings
+                ccss
+                domain
+                cluster
+                grade
+                gradeFilter
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                gameTemplatesCount
+                createdAt
+                updatedAt
+                type
+                __typename
+              }
+              createdAt
+              updatedAt
+              owner
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          gameTemplatesCount
+          createdAt
+          updatedAt
+          type
+          __typename
+        }
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    gameTemplatesCount
+    createdAt
+    updatedAt
+    type
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetDraftQuestionTemplateQueryVariables,
+  APITypes.GetDraftQuestionTemplateQuery
+>;
+export const listDraftQuestionTemplates = /* GraphQL */ `query ListDraftQuestionTemplates(
+  $filter: ModelDraftQuestionTemplateFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  privateQuestionTemplatesByDraft(
-    type: $type
-    isDraft: $isDraft
-    sortDirection: $sortDirection
+  listDraftQuestionTemplates(
     filter: $filter
     limit: $limit
     nextToken: $nextToken
@@ -4922,7 +5952,6 @@ export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuest
       title
       lowerCaseTitle
       version
-      isDraft
       choices
       instructions
       answerSettings
@@ -4936,14 +5965,13 @@ export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuest
       gameTemplates {
         items {
           id
-          privateGameTemplateID
-          privateQuestionTemplateID
-          privateGameTemplate {
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
             id
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -4958,14 +5986,13 @@ export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuest
             questionTemplates {
               items {
                 id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
                   id
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -4985,13 +6012,12 @@ export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuest
                   owner
                   __typename
                 }
-                privateQuestionTemplate {
+                draftQuestionTemplate {
                   id
                   owner
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5024,13 +6050,12 @@ export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuest
             owner
             __typename
           }
-          privateQuestionTemplate {
+          draftQuestionTemplate {
             id
             owner
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -5044,14 +6069,13 @@ export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuest
             gameTemplates {
               items {
                 id
-                privateGameTemplateID
-                privateQuestionTemplateID
-                privateGameTemplate {
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
                   id
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -5071,13 +6095,12 @@ export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuest
                   owner
                   __typename
                 }
-                privateQuestionTemplate {
+                draftQuestionTemplate {
                   id
                   owner
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -5127,8 +6150,677 @@ export const privateQuestionTemplatesByDraft = /* GraphQL */ `query PrivateQuest
   }
 }
 ` as GeneratedQuery<
-  APITypes.PrivateQuestionTemplatesByDraftQueryVariables,
-  APITypes.PrivateQuestionTemplatesByDraftQuery
+  APITypes.ListDraftQuestionTemplatesQueryVariables,
+  APITypes.ListDraftQuestionTemplatesQuery
+>;
+export const draftQuestionTemplatesByDate = /* GraphQL */ `query DraftQuestionTemplatesByDate(
+  $type: String!
+  $updatedAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelDraftQuestionTemplateFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  draftQuestionTemplatesByDate(
+    type: $type
+    updatedAt: $updatedAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      owner
+      title
+      lowerCaseTitle
+      version
+      choices
+      instructions
+      answerSettings
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      imageUrl
+      gameTemplates {
+        items {
+          id
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
+            id
+            title
+            lowerCaseTitle
+            version
+            description
+            lowerCaseDescription
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
+            questionTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            questionTemplatesCount
+            questionTemplatesOrder
+            createdAt
+            updatedAt
+            type
+            owner
+            __typename
+          }
+          draftQuestionTemplate {
+            id
+            owner
+            title
+            lowerCaseTitle
+            version
+            choices
+            instructions
+            answerSettings
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            imageUrl
+            gameTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            gameTemplatesCount
+            createdAt
+            updatedAt
+            type
+            __typename
+          }
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.DraftQuestionTemplatesByDateQueryVariables,
+  APITypes.DraftQuestionTemplatesByDateQuery
+>;
+export const draftQuestionTemplatesByGrade = /* GraphQL */ `query DraftQuestionTemplatesByGrade(
+  $type: String!
+  $grade: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelDraftQuestionTemplateFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  draftQuestionTemplatesByGrade(
+    type: $type
+    grade: $grade
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      owner
+      title
+      lowerCaseTitle
+      version
+      choices
+      instructions
+      answerSettings
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      imageUrl
+      gameTemplates {
+        items {
+          id
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
+            id
+            title
+            lowerCaseTitle
+            version
+            description
+            lowerCaseDescription
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
+            questionTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            questionTemplatesCount
+            questionTemplatesOrder
+            createdAt
+            updatedAt
+            type
+            owner
+            __typename
+          }
+          draftQuestionTemplate {
+            id
+            owner
+            title
+            lowerCaseTitle
+            version
+            choices
+            instructions
+            answerSettings
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            imageUrl
+            gameTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            gameTemplatesCount
+            createdAt
+            updatedAt
+            type
+            __typename
+          }
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.DraftQuestionTemplatesByGradeQueryVariables,
+  APITypes.DraftQuestionTemplatesByGradeQuery
+>;
+export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `query DraftQuestionTemplatesByDraftGameTemplatesCount(
+  $type: String!
+  $gameTemplatesCount: ModelIntKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelDraftQuestionTemplateFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  draftQuestionTemplatesByDraftGameTemplatesCount(
+    type: $type
+    gameTemplatesCount: $gameTemplatesCount
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      owner
+      title
+      lowerCaseTitle
+      version
+      choices
+      instructions
+      answerSettings
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      imageUrl
+      gameTemplates {
+        items {
+          id
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
+            id
+            title
+            lowerCaseTitle
+            version
+            description
+            lowerCaseDescription
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
+            questionTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            questionTemplatesCount
+            questionTemplatesOrder
+            createdAt
+            updatedAt
+            type
+            owner
+            __typename
+          }
+          draftQuestionTemplate {
+            id
+            owner
+            title
+            lowerCaseTitle
+            version
+            choices
+            instructions
+            answerSettings
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            imageUrl
+            gameTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            gameTemplatesCount
+            createdAt
+            updatedAt
+            type
+            __typename
+          }
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.DraftQuestionTemplatesByDraftGameTemplatesCountQueryVariables,
+  APITypes.DraftQuestionTemplatesByDraftGameTemplatesCountQuery
 >;
 export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
   getGameSession(id: $id) {
@@ -6690,7 +8382,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
       title
       lowerCaseTitle
       version
-      isDraft
       description
       lowerCaseDescription
       ccss
@@ -6712,7 +8403,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -6734,7 +8424,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -6760,7 +8449,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -6799,7 +8487,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -6820,7 +8507,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -6846,7 +8532,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -6899,7 +8584,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
       title
       lowerCaseTitle
       version
-      isDraft
       choices
       instructions
       answerSettings
@@ -6920,7 +8604,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             title
             lowerCaseTitle
             version
-            isDraft
             description
             lowerCaseDescription
             ccss
@@ -6942,7 +8625,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -6968,7 +8650,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -7007,7 +8688,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             title
             lowerCaseTitle
             version
-            isDraft
             choices
             instructions
             answerSettings
@@ -7028,7 +8708,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   description
                   lowerCaseDescription
                   ccss
@@ -7054,7 +8733,6 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   title
                   lowerCaseTitle
                   version
-                  isDraft
                   choices
                   instructions
                   answerSettings
@@ -7128,7 +8806,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
         title
         lowerCaseTitle
         version
-        isDraft
         description
         lowerCaseDescription
         ccss
@@ -7150,7 +8827,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               title
               lowerCaseTitle
               version
-              isDraft
               description
               lowerCaseDescription
               ccss
@@ -7189,7 +8865,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               title
               lowerCaseTitle
               version
-              isDraft
               choices
               instructions
               answerSettings
@@ -7241,7 +8916,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
         title
         lowerCaseTitle
         version
-        isDraft
         choices
         instructions
         answerSettings
@@ -7262,7 +8936,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               title
               lowerCaseTitle
               version
-              isDraft
               description
               lowerCaseDescription
               ccss
@@ -7301,7 +8974,6 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               title
               lowerCaseTitle
               version
-              isDraft
               choices
               instructions
               answerSettings
@@ -7357,4 +9029,662 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
 ` as GeneratedQuery<
   APITypes.ListPrivateGameQuestionsQueryVariables,
   APITypes.ListPrivateGameQuestionsQuery
+>;
+export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions($id: ID!) {
+  getDraftGameQuestions(id: $id) {
+    id
+    draftGameTemplateID
+    draftQuestionTemplateID
+    draftGameTemplate {
+      id
+      title
+      lowerCaseTitle
+      version
+      description
+      lowerCaseDescription
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        items {
+          id
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
+            id
+            title
+            lowerCaseTitle
+            version
+            description
+            lowerCaseDescription
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
+            questionTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            questionTemplatesCount
+            questionTemplatesOrder
+            createdAt
+            updatedAt
+            type
+            owner
+            __typename
+          }
+          draftQuestionTemplate {
+            id
+            owner
+            title
+            lowerCaseTitle
+            version
+            choices
+            instructions
+            answerSettings
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            imageUrl
+            gameTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            gameTemplatesCount
+            createdAt
+            updatedAt
+            type
+            __typename
+          }
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      owner
+      __typename
+    }
+    draftQuestionTemplate {
+      id
+      owner
+      title
+      lowerCaseTitle
+      version
+      choices
+      instructions
+      answerSettings
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      imageUrl
+      gameTemplates {
+        items {
+          id
+          draftGameTemplateID
+          draftQuestionTemplateID
+          draftGameTemplate {
+            id
+            title
+            lowerCaseTitle
+            version
+            description
+            lowerCaseDescription
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
+            questionTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            questionTemplatesCount
+            questionTemplatesOrder
+            createdAt
+            updatedAt
+            type
+            owner
+            __typename
+          }
+          draftQuestionTemplate {
+            id
+            owner
+            title
+            lowerCaseTitle
+            version
+            choices
+            instructions
+            answerSettings
+            ccss
+            domain
+            cluster
+            grade
+            gradeFilter
+            standard
+            imageUrl
+            gameTemplates {
+              items {
+                id
+                draftGameTemplateID
+                draftQuestionTemplateID
+                draftGameTemplate {
+                  id
+                  title
+                  lowerCaseTitle
+                  version
+                  description
+                  lowerCaseDescription
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  questionTemplatesCount
+                  questionTemplatesOrder
+                  createdAt
+                  updatedAt
+                  type
+                  owner
+                  __typename
+                }
+                draftQuestionTemplate {
+                  id
+                  owner
+                  title
+                  lowerCaseTitle
+                  version
+                  choices
+                  instructions
+                  answerSettings
+                  ccss
+                  domain
+                  cluster
+                  grade
+                  gradeFilter
+                  standard
+                  imageUrl
+                  gameTemplatesCount
+                  createdAt
+                  updatedAt
+                  type
+                  __typename
+                }
+                createdAt
+                updatedAt
+                owner
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            gameTemplatesCount
+            createdAt
+            updatedAt
+            type
+            __typename
+          }
+          createdAt
+          updatedAt
+          owner
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetDraftGameQuestionsQueryVariables,
+  APITypes.GetDraftGameQuestionsQuery
+>;
+export const listDraftGameQuestions = /* GraphQL */ `query ListDraftGameQuestions(
+  $filter: ModelDraftGameQuestionsFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listDraftGameQuestions(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      draftGameTemplateID
+      draftQuestionTemplateID
+      draftGameTemplate {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplates {
+          items {
+            id
+            draftGameTemplateID
+            draftQuestionTemplateID
+            draftGameTemplate {
+              id
+              title
+              lowerCaseTitle
+              version
+              description
+              lowerCaseDescription
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
+              questionTemplates {
+                items {
+                  id
+                  draftGameTemplateID
+                  draftQuestionTemplateID
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              questionTemplatesCount
+              questionTemplatesOrder
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            draftQuestionTemplate {
+              id
+              owner
+              title
+              lowerCaseTitle
+              version
+              choices
+              instructions
+              answerSettings
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              imageUrl
+              gameTemplates {
+                items {
+                  id
+                  draftGameTemplateID
+                  draftQuestionTemplateID
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              gameTemplatesCount
+              createdAt
+              updatedAt
+              type
+              __typename
+            }
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      draftQuestionTemplate {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplates {
+          items {
+            id
+            draftGameTemplateID
+            draftQuestionTemplateID
+            draftGameTemplate {
+              id
+              title
+              lowerCaseTitle
+              version
+              description
+              lowerCaseDescription
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
+              questionTemplates {
+                items {
+                  id
+                  draftGameTemplateID
+                  draftQuestionTemplateID
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              questionTemplatesCount
+              questionTemplatesOrder
+              createdAt
+              updatedAt
+              type
+              owner
+              __typename
+            }
+            draftQuestionTemplate {
+              id
+              owner
+              title
+              lowerCaseTitle
+              version
+              choices
+              instructions
+              answerSettings
+              ccss
+              domain
+              cluster
+              grade
+              gradeFilter
+              standard
+              imageUrl
+              gameTemplates {
+                items {
+                  id
+                  draftGameTemplateID
+                  draftQuestionTemplateID
+                  createdAt
+                  updatedAt
+                  owner
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              gameTemplatesCount
+              createdAt
+              updatedAt
+              type
+              __typename
+            }
+            createdAt
+            updatedAt
+            owner
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListDraftGameQuestionsQueryVariables,
+  APITypes.ListDraftGameQuestionsQuery
 >;

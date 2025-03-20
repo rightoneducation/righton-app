@@ -4,12 +4,16 @@ import { CentralQuestionTemplateInput, IQuestionTemplate } from "../../../Models
 import {
   createPublicQuestionTemplate,
   createPrivateQuestionTemplate,
+  createDraftQuestionTemplate,
   getPublicQuestionTemplate,
   getPrivateQuestionTemplate,
+  getDraftQuestionTemplate,
   updatePublicQuestionTemplate,
   updatePrivateQuestionTemplate,
+  updateDraftQuestionTemplate,
   deletePublicQuestionTemplate,
   deletePrivateQuestionTemplate,
+  deleteDraftQuestionTemplate,
   listPublicQuestionTemplates,
   publicQuestionTemplatesByDate,
   publicQuestionTemplatesByGrade,
@@ -17,7 +21,11 @@ import {
   listPrivateQuestionTemplates,
   privateQuestionTemplatesByDate,
   privateQuestionTemplatesByGrade,
-  privateQuestionTemplatesByPrivateGameTemplatesCount
+  privateQuestionTemplatesByPrivateGameTemplatesCount,
+  listDraftQuestionTemplates,
+  draftQuestionTemplatesByDate,
+  draftQuestionTemplatesByGrade,
+  draftQuestionTemplatesByDraftGameTemplatesCount
 } from "../../../graphql";
 import {
   CreatePublicQuestionTemplateInput,
@@ -26,26 +34,39 @@ import {
   CreatePrivateQuestionTemplateInput,
   CreatePrivateQuestionTemplateMutationVariables,
   CreatePrivateQuestionTemplateMutation,
+  CreateDraftQuestionTemplateInput,
+  CreateDraftQuestionTemplateMutationVariables,
+  CreateDraftQuestionTemplateMutation,
   GetPublicQuestionTemplateQueryVariables,
   GetPublicQuestionTemplateQuery,
   GetPrivateQuestionTemplateQueryVariables,
   GetPrivateQuestionTemplateQuery,
+  GetDraftQuestionTemplateQueryVariables,
+  GetDraftQuestionTemplateQuery,
   UpdatePublicQuestionTemplateInput,
   UpdatePublicQuestionTemplateMutationVariables,
   UpdatePublicQuestionTemplateMutation,
   UpdatePrivateQuestionTemplateInput,
   UpdatePrivateQuestionTemplateMutationVariables,
   UpdatePrivateQuestionTemplateMutation,
+  UpdateDraftQuestionTemplateInput,
+  UpdateDraftQuestionTemplateMutationVariables,
+  UpdateDraftQuestionTemplateMutation,
   DeletePublicQuestionTemplateInput,
   DeletePublicQuestionTemplateMutationVariables,
   DeletePublicQuestionTemplateMutation,
   DeletePrivateQuestionTemplateInput,
   DeletePrivateQuestionTemplateMutationVariables,
   DeletePrivateQuestionTemplateMutation,
+  DeleteDraftQuestionTemplateInput,
+  DeleteDraftQuestionTemplateMutationVariables,
+  DeleteDraftQuestionTemplateMutation,
   ListPublicQuestionTemplatesQueryVariables,
   ListPublicQuestionTemplatesQuery,
   ListPrivateQuestionTemplatesQueryVariables,
-  ListPrivateQuestionTemplatesQuery
+  ListPrivateQuestionTemplatesQuery,
+  ListDraftQuestionTemplatesQueryVariables,
+  ListDraftQuestionTemplatesQuery
 } from "../../../AWSMobileApi";
 
 export interface IPublicQuestionTemplate {
@@ -100,6 +121,32 @@ export interface IPrivateQuestionTemplate {
   }
 }
 
+export interface IDraftQuestionTemplate {
+  create: {
+    input: CreateDraftQuestionTemplateInput;
+    variables: CreateDraftQuestionTemplateMutationVariables;
+    query: CreateDraftQuestionTemplateMutation;
+  },
+  get: {
+    variables: GetDraftQuestionTemplateQueryVariables;
+    query: GetDraftQuestionTemplateQuery;
+  },
+  update: {
+    input: UpdateDraftQuestionTemplateInput;
+    variables: UpdateDraftQuestionTemplateMutationVariables;
+    query: UpdateDraftQuestionTemplateMutation;
+  },
+  delete: {
+    input: DeleteDraftQuestionTemplateInput;
+    variables: DeleteDraftQuestionTemplateMutationVariables;
+    query: DeleteDraftQuestionTemplateMutation;
+  },
+  list: {
+    variables: ListDraftQuestionTemplatesQueryVariables;
+    query: ListDraftQuestionTemplatesQuery;
+  }
+}
+
 export const questionTemplateRuntimeMap = {
   Public: {
     create: {
@@ -144,6 +191,28 @@ export const questionTemplateRuntimeMap = {
         byGameTemplatesCount: privateQuestionTemplatesByPrivateGameTemplatesCount
       },
     },
+  },
+  Draft: {
+    create: {
+      queryFunction: createDraftQuestionTemplate,
+    },
+    get: {
+      queryFunction: getDraftQuestionTemplate,
+    },
+    update: {
+      queryFunction: updateDraftQuestionTemplate,
+    },
+    delete: {
+      queryFunction: deleteDraftQuestionTemplate,
+    },
+    list: {
+      queryFunction: {
+        default: listDraftQuestionTemplates,
+        byDate: draftQuestionTemplatesByDate,
+        byGrade: draftQuestionTemplatesByGrade,
+        byGameTemplatesCount: draftQuestionTemplatesByDraftGameTemplatesCount
+      }
+   }
   }
 }
 
@@ -153,7 +222,6 @@ export interface IQuestionTemplateAPIClient {
   createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     imageUrl: string,
-    isDraft: number,
     createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate>;
 
