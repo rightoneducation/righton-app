@@ -1,5 +1,5 @@
 import React, { useState, useRef, Ref, useEffect } from 'react';
-import { Collapse, Button, Box, Divider, Typography } from '@mui/material';
+import { Collapse, Button, Box, Divider, Typography, styled } from '@mui/material';
 import { ButtonStyled } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import {
   SelectContainer,
@@ -20,6 +20,29 @@ import { ErrorIcon } from '../../../lib/styledcomponents/CentralStyledComponents
 import errorIcon from '../../../images/errorIcon.svg';
 import { SelectPhaseLabel } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 
+
+// export const SelectPhase = styled(Box, {
+//   shouldForwardProp: (prop) => prop !== 'screenSize',
+// })<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
+//   display: 'flex',
+//   flexDirection: 'row',
+//   alignItems: 'center',
+//   justifyContent: 'center',
+//   width: '96px',
+//   minHeight: '44px',
+//   background: `${theme.palette.primary.buttonActionDefault}`,
+//   borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
+//   borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
+//   gap: '16px',
+//   zIndex: 4,
+//   cursor: 'pointer',
+//   ':hover': {
+//     backgroundColor: `${theme.palette.primary.buttonActionHover}`,
+//   },
+//   '&:disabled': {
+//     backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
+//   },
+// }));
 
 interface SelectPhaseButtonProps {
   screenSize: ScreenSize;
@@ -66,9 +89,10 @@ export default function SelectPhaseButton({
           width:'96px', 
           maxWidth: '96px',
           minHeight: '23px',
+          gap: '8px',
           backgroundColor: '#fffbf6',
           border: '1px solid #02215f',
-          borderRadius: isSelectOpen ? '5px 5px 0 0':'5px',
+          borderRadius: isSelectOpen ? '8px 8px 0 0':'8px',
           justifyContent: 'space-between',
           padding: '4px 8px',
           '&:hover': {
