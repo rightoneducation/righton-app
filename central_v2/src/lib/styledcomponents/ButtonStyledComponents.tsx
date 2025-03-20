@@ -89,7 +89,7 @@ export const ButtonTypography = styled(Button, {
 })<ButtonStyledProps>(({ theme, buttonColor }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
-  fontWeight: '700',
+  fontWeight: '600',
   textTransform: 'none',
   padding: 0,
   color: buttonColor === ButtonColor.NULL ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',

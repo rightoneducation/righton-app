@@ -1,9 +1,8 @@
 import React, { useState, useRef, Ref, useEffect } from 'react';
-import { Collapse, Button, Box, Divider, Typography, useTheme } from '@mui/material';
+import { Collapse, Button, Box, Divider, Typography, styled, useTheme } from '@mui/material';
 import { ButtonStyled } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import {
   SelectContainer,
-  SelectGrade as SelectPhase,
   SelectLabel,
   SelectArrowContainer,
   SelectMenu,
@@ -18,6 +17,33 @@ import { ScreenSize } from '../../../lib/CentralModels';
 import times from './time';
 import { ErrorIcon } from '../../../lib/styledcomponents/CentralStyledComponents';
 import errorIcon from '../../../images/errorIcon.svg';
+import { SelectPhaseLabel } from '../../../lib/styledcomponents/CreateGameStyledComponent';
+
+
+export const SelectPhase = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+   width:'128px', 
+  maxWidth: '128px',
+  minHeight: '40px',
+  background: '#fffbf6',
+  border: '1px solid #02215f',
+  padding: '8px',
+  gap: '9px',
+  boxSizing: 'border-box',
+  zIndex: 4,
+  cursor: 'pointer',
+  ':hover': {
+    backgroundColor: '#fffbf6',
+  },
+  '&:disabled': {
+    backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
+  },
+}));
 
 interface SelectPhaseButtonProps {
   screenSize: ScreenSize;
@@ -60,34 +86,14 @@ export default function SelectPhaseButton({
     >
 
       <SelectPhase
-        sx={{
-          width:'96px', 
-          maxWidth: '96px',
-          minHeight: '23px',
-          backgroundColor: '#fffbf6',
-          border: '1px solid #02215f',
-          borderRadius: isSelectOpen ? '4.8px 4.8px 0 0':'4.8px',
-          justifyContent: 'space-between',
-          padding: '4px 8px',
-          '&:hover': {
-            backgroundColor: '#fffbf6',
-          },
-        }}
+        sx={{ borderRadius: isSelectOpen ? '8px 8px 0 0':'8px' }}
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
         
-        <SelectLabel
-          sx={{
-            fontSize: '16px',
-            fontFamily: theme.typography.fontFamily,
-            fontWeight: 600,
-            margin: 0,
-            color: '#02215f',
-          }}
-        >
+        <SelectPhaseLabel>
           {phase !== '' ? phase : `Phase ${phaseNumber}`}
-        </SelectLabel>
+        </SelectPhaseLabel>
         {/* space between is here */}
         <SelectArrowContainer isSelectOpen={isSelectOpen}>
           <img
@@ -109,15 +115,15 @@ export default function SelectPhaseButton({
             padding: 0,
             top: "auto",
             left: 0,
-            minWidth: '114px',
-            width: '114px',
+            minWidth: '128px',
+            width: '128px',
             borderRadius: '0 0 4px 4px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',
             borderLeft: '1px solid #02215f',
             borderTop: 'none',
             transform: 'translateY(0px)',
-            ...(isSmallerScreen ? { zIndex: 5 } : {}),
+            ...(isSmallerScreen && { zIndex: 5 }),
           }}
         >
           {times.map((phaseTime, i) => (
@@ -127,8 +133,8 @@ export default function SelectPhaseButton({
             >
               <SelectMenuItem sx={{ height: '23px', padding: '4px 8px', }}>
                 <Typography
-                  fontWeight="0.3rem"
-                  fontSize="10px"
+                  fontWeight="normal"
+                  fontSize="16px"
                   fontFamily="Rubik"
                   sx={{ color: '#02215f' }}
                 >

@@ -29,7 +29,7 @@ import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents
 import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from '../createquestion/ErrorBox';
 import CreateGameErrorBox from './CreateGameErrorBox';
-import PublicPrivateButton from './PublicPrivatePillButton';
+import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
 import SelectPhaseButton from './SelectPhaseButton';
 import SelectArrowImage from '../../../images/SelectArrow.svg';
@@ -134,8 +134,7 @@ export default function CreateGameCardBase({
     ),
   ];
 
-  const responsiveHeight = screenSize === ScreenSize.LARGE && !isCardErrored ? '314px' : '100%';
-  // isCardErrored ? 
+  const responsiveHeight = screenSize === ScreenSize.LARGE && !isCardErrored ? '100%' : '100%';
   const responsiveGap =
     screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM
       ? '24px'
@@ -156,7 +155,7 @@ export default function CreateGameCardBase({
             justifyContent:
               screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
             alignItems: screenSize === ScreenSize.SMALL ? 'start' : 'center',
-            gap: screenSize === ScreenSize.LARGE ? '10px': '16px',
+            gap: screenSize === ScreenSize.LARGE ? '9px': '16px',
           }}
         >
           <CreateGameTitleText
@@ -230,6 +229,7 @@ export default function CreateGameCardBase({
           sx={{
             '& .MuiInputBase-root': {
               height: '138px',
+              fontFamily: 'Rubik'
             },
             '& .MuiOutlinedInput-input': {
             paddingBottom: 2

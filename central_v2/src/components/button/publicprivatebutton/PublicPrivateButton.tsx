@@ -6,9 +6,9 @@ interface PublicPrivateContainerProps {
   isDisabled: boolean;
 }
 
-const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
-  width: '144px',
-  minHeight: '36px',
+export const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
+  width: '120px',
+  minHeight: '30px',
   borderRadius: '24px',
   background: `${theme.palette.primary.sliderGrey}`,
   ':hover': {
@@ -19,41 +19,41 @@ const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({the
   cursor: isDisabled ? 'default' : 'pointer'
 }));
 
-const PublicPrivateSelectionPill = styled(Box, {
+export const PublicPrivateSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic',
 })<{ isPublic: boolean }>(({ theme, isPublic }) => ({
-  width: '71px',
-  height: '33px',
+  width: '59px',
+  height: '27px',
   borderRadius: '24px',
   background: `${theme.palette.primary.sliderBlue}`,
   ':hover': {
     background: `${theme.palette.primary.sliderBlue}`,
   },
   position: 'absolute',
-  left: isPublic ? '2px' : '70px', 
+  left: isPublic ? '2px' : '59px', 
   transition: 'left 0.3s ease-in-out',   
   boxSizing: 'border-box',
   zIndex: 3,
 }));
 
-const LabelContainer = styled(Box)(({theme}) => ({
+export const LabelContainer = styled(Box)(({theme}) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
-  paddingLeft: '16px',
-  paddingRight: '16px',
+  alignItems: 'center',
+  paddingLeft: '14px',
+  paddingRight: '12px',
   zIndex: 4,
   position: 'relative'
 }))
 
-const SubContainer = styled(Box, {
+export const SubContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSelected',
 })<{ isSelected: boolean }>(({ theme, isSelected }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   position: 'relative',
-  opacity: isSelected ? 1 : 0.5,
   transition: 'opacity 0.3 ease-in-out'
 }));
 
@@ -61,8 +61,9 @@ interface PublicPrivateTextProps {
   isSelected: boolean;
 }
 
-const PublicPrivateText = styled(Typography)<PublicPrivateTextProps>(({isSelected, theme}) => ({
-  fontSize: '14px',
+export const PublicPrivateText = styled(Typography)<PublicPrivateTextProps>(({isSelected, theme}) => ({
+  fontSize: '12px',
+  fontFamily: "Rubik",
   color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
   textTransform: 'none',
   transition: 'color 0.3 ease-in-out'

@@ -68,7 +68,6 @@ interface CreateGameProps {
 const verticalEllipsis = <img src={VerticalMoreImg} alt="more-elipsis" />;
 export default function CreateGame({ screenSize }: CreateGameProps) {
   const theme = useTheme();
-  /* temp Large Screen tester for considitonal render */
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const currentScreenSize = isLargeScreen // eslint-disable-line
@@ -79,7 +78,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageUploadVisible, setIsImageUploadVisible] =
     useState<boolean>(false);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
@@ -375,11 +373,11 @@ setOpenQuestionBank((prev) => !prev);
     <CreateGameMainContainer sx={{ overflowY: 'auto'}}>
       <CreateGameBackground />
       <ModalBackground
-        isModalOpen={isModalOpen}
+        isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible}
         handleCloseModal={handleCloseModal}
       />
       <CreatingTemplateModal
-        isModalOpen={isModalOpen}
+        isModalOpen={isCreatingTemplate}
         templateType={TemplateType.GAME}
       />
       <CreateGameBoxContainer>

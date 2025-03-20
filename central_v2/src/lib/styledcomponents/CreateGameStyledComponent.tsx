@@ -224,22 +224,16 @@ CreateGameTextFieldContainer = styled(TextField, {
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderWidth: `2px`,
-      borderColor: isCardError
-        ? `${theme.palette.primary.darkPurple}`
-        : `${theme.palette.primary.grey}`,
+      borderColor: `${theme.palette.primary.grey}`,
       borderRadius: `${theme.sizing.xSmPadding}px`,
     },
     '&.Mui-focused fieldset': {
       borderWidth: `2px`,
-      borderColor: isCardError
-        ? `${theme.palette.primary.darkPurple}`
-        : `${theme.palette.primary.grey}`,
+      borderColor:`${theme.palette.primary.grey}`,
     },
     '&:hover fieldset': {
       borderWidth: `2px`,
-      borderColor: isCardError
-        ? `${theme.palette.primary.extraDarkPurple}`
-        : `${theme.palette.primary.extraDarkGrey}`,
+      borderColor:`${theme.palette.primary.extraDarkGrey}`,
     },
     '&.Mui-error fieldset': {
       borderWidth: '2px',
@@ -249,15 +243,14 @@ CreateGameTextFieldContainer = styled(TextField, {
   '& .MuiInputBase-input': {
     ...(isTitle && {
       padding: '12px 10px',
-      fontSize: '1.5rem',
-      fontWeight: 700,
+      fontSize: '20px',
+      fontWeight: 'bold',
     }),
-    color: '#02215f',
+    color: '#384466',
     opacity: isCardError ? 1 : 0.5,
     '&::placeholder': {
-      ...(isCardError ? 
-        { color: "#D0254D", opacity: 1}
-        :{ color: '#02215f', opacity: 0.5,})
+        color: isCardError ? '#D0254D': '#384466',
+        opacity: isCardError ? 1 : 0.5
     },
     '&:focus': {
       color: '#384466',
@@ -276,72 +269,6 @@ export const AddMoreIconButton = styled(IconButton)(({ theme }) => ({
   borderRadius: '20%',
 }));
 
-// CardBase - PrivatePublicPill (in CardBase) Components for Create Game
-interface PublicPrivateContainerProps {
-  isDisabled: boolean;
-}
-
-export const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
-  width: '120px',
-  minHeight: '30px',
-  borderRadius: '24px',
-  background: `${theme.palette.primary.sliderGrey}`,
-  ':hover': {
-    background: `${theme.palette.primary.sliderGrey}`,
-  },
-  padding: 0,
-  position: 'relative',
-  cursor: isDisabled ? 'default' : 'pointer'
-}));
-
-export const PublicPrivateSelectionPill = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isPublic',
-})<{ isPublic: boolean }>(({ theme, isPublic }) => ({
-  width: '59px',
-  height: '27px',
-  borderRadius: '24px',
-  background: `${theme.palette.primary.sliderBlue}`,
-  ':hover': {
-    background: `${theme.palette.primary.sliderBlue}`,
-  },
-  position: 'absolute',
-  left: isPublic ? '2px' : '59px', 
-  transition: 'left 0.3s ease-in-out',   
-  boxSizing: 'border-box',
-  zIndex: 3,
-}));
-
-export const LabelContainer = styled(Box)(({theme}) => ({
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'space-between',
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  zIndex: 4,
-  position: 'relative'
-}))
-
-export const SubContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSelected',
-})<{ isSelected: boolean }>(({ theme, isSelected }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  position: 'relative',
-  transition: 'opacity 0.3 ease-in-out'
-}));
-
-interface PublicPrivateTextProps {
-  isSelected: boolean;
-}
-
-export const PublicPrivateText = styled(Typography)<PublicPrivateTextProps>(({isSelected, theme}) => ({
-  fontSize: '12px',
-  color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
-  textTransform: 'none',
-  transition: 'color 0.3 ease-in-out'
-}));
-
 interface ContentContainerProps {
   screenSize: ScreenSize;
 }
@@ -354,3 +281,11 @@ export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(({ 
   alignItems: 'flex-start',
   gap: screenSize === ScreenSize.SMALL ? '12px': `${theme.sizing.smPadding}px`,
 }));
+
+export const SelectPhaseLabel = styled(Typography)(({theme}) => ({
+    color: theme.palette.primary.sliderBlue,
+    fontFamily: theme.typography.fontFamily,
+    fontSize: '16px',
+    fontWeight: 600,
+    margin: 0,
+}))
