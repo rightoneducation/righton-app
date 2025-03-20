@@ -29,7 +29,7 @@ import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents
 import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from '../createquestion/ErrorBox';
 import CreateGameErrorBox from './CreateGameErrorBox';
-import PublicPrivateButton from './PublicPrivatePillButton';
+import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
 import SelectPhaseButton from './SelectPhaseButton';
 import SelectArrowImage from '../../../images/SelectArrow.svg';
@@ -56,7 +56,6 @@ interface CreateGameCardBaseProps {
   isHighlight: boolean;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
-  isAIError: boolean;
 }
 
 export default function CreateGameCardBase({
@@ -69,7 +68,6 @@ export default function CreateGameCardBase({
   isHighlight,
   isCardSubmitted,
   isCardErrored,
-  isAIError,
 }: CreateGameCardBaseProps) {
   const theme = useTheme();
   const [title, setTitle] = React.useState<string>(
@@ -143,7 +141,6 @@ export default function CreateGameCardBase({
   ];
 
   const responsiveHeight = screenSize === ScreenSize.LARGE && !isCardErrored ? '314px' : '100%';
-  // isCardErrored ? 
   const responsiveGap =
     screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM
       ? '24px'
@@ -210,12 +207,12 @@ export default function CreateGameCardBase({
               height: '54px'
             }
            }}
-            placeholder="Game title..."
+            placeholder="Game title here.."
             error={
-              (isCardSubmitted || isAIError) && (!title || title.length === 0)
+              isCardSubmitted && (!title || title.length === 0)
             }
             InputProps={{
-              startAdornment: (isCardSubmitted || isAIError) &&
+              startAdornment:isCardSubmitted &&
                 (!title || title.length === 0) && (
                   <InputAdornment
                     position="start"
@@ -238,6 +235,7 @@ export default function CreateGameCardBase({
           sx={{
             '& .MuiInputBase-root': {
               height: '138px',
+              fontFamily: 'Rubik'
             },
             '& .MuiOutlinedInput-input': {
             paddingBottom: 2
@@ -245,14 +243,14 @@ export default function CreateGameCardBase({
           }}
             multiline
             rows={4}
-            placeholder="Game Description..."
+            placeholder="Enter game Description here..."
             error={
-              (isCardSubmitted || isAIError) && (!title || title.length === 0)
+              isCardSubmitted && (!title || title.length === 0)
             }
             value={title}
             onChange={(e) => handleLocalTitleChange(e.target.value)}
             InputProps={{
-              startAdornment: (isCardSubmitted || isAIError) &&
+              startAdornment: isCardSubmitted &&
                 (!title || title.length === 0) && (
                   <InputAdornment
                     position="start"
