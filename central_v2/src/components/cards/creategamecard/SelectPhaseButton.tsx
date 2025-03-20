@@ -51,7 +51,6 @@ export default function SelectPhaseButton({
 
   return (
     <Box
-      id="phasetimer"
       sx={{
         display: 'flex',
         flexDirection: 'column',
