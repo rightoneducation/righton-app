@@ -140,7 +140,7 @@ export default function CreateGameCardBase({
     ),
   ];
 
-  const responsiveHeight = screenSize === ScreenSize.LARGE && !isCardErrored ? '314px' : '100%';
+  const responsiveHeight = screenSize === ScreenSize.LARGE && !isCardErrored ? '100%' : '100%';
   const responsiveGap =
     screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM
       ? '24px'
@@ -161,7 +161,7 @@ export default function CreateGameCardBase({
             justifyContent:
               screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
             alignItems: screenSize === ScreenSize.SMALL ? 'start' : 'center',
-            gap: screenSize === ScreenSize.LARGE ? '10px': '16px',
+            gap: screenSize === ScreenSize.LARGE ? '9px': '16px',
           }}
         >
           <CreateGameTitleText

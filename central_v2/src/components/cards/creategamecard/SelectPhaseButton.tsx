@@ -3,7 +3,6 @@ import { Collapse, Button, Box, Divider, Typography, styled } from '@mui/materia
 import { ButtonStyled } from '../../../lib/styledcomponents/ButtonStyledComponents';
 import {
   SelectContainer,
-  SelectGrade as SelectPhase,
   SelectLabel,
   SelectArrowContainer,
   SelectMenu,
@@ -21,28 +20,30 @@ import errorIcon from '../../../images/errorIcon.svg';
 import { SelectPhaseLabel } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 
 
-// export const SelectPhase = styled(Box, {
-//   shouldForwardProp: (prop) => prop !== 'screenSize',
-// })<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
-//   display: 'flex',
-//   flexDirection: 'row',
-//   alignItems: 'center',
-//   justifyContent: 'center',
-//   width: '96px',
-//   minHeight: '44px',
-//   background: `${theme.palette.primary.buttonActionDefault}`,
-//   borderTopLeftRadius: `${theme.sizing.xSmPadding}px`,
-//   borderBottomLeftRadius: `${theme.sizing.xSmPadding}px`,
-//   gap: '16px',
-//   zIndex: 4,
-//   cursor: 'pointer',
-//   ':hover': {
-//     backgroundColor: `${theme.palette.primary.buttonActionHover}`,
-//   },
-//   '&:disabled': {
-//     backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
-//   },
-// }));
+export const SelectPhase = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+   width:'128px', 
+  maxWidth: '128px',
+  minHeight: '40px',
+  background: '#fffbf6',
+  border: '1px solid #02215f',
+  padding: '8px',
+  gap: '9px',
+  boxSizing: 'border-box',
+  zIndex: 4,
+  cursor: 'pointer',
+  ':hover': {
+    backgroundColor: '#fffbf6',
+  },
+  '&:disabled': {
+    backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
+  },
+}));
 
 interface SelectPhaseButtonProps {
   screenSize: ScreenSize;
@@ -85,20 +86,7 @@ export default function SelectPhaseButton({
     >
 
       <SelectPhase
-        sx={{
-          width:'96px', 
-          maxWidth: '96px',
-          minHeight: '23px',
-          gap: '8px',
-          backgroundColor: '#fffbf6',
-          border: '1px solid #02215f',
-          borderRadius: isSelectOpen ? '8px 8px 0 0':'8px',
-          justifyContent: 'space-between',
-          padding: '4px 8px',
-          '&:hover': {
-            backgroundColor: '#fffbf6',
-          },
-        }}
+        sx={{ borderRadius: isSelectOpen ? '8px 8px 0 0':'8px' }}
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
@@ -127,8 +115,8 @@ export default function SelectPhaseButton({
             padding: 0,
             top: "auto",
             left: 0,
-            minWidth: '114px',
-            width: '114px',
+            minWidth: '128px',
+            width: '128px',
             borderRadius: '0 0 4px 4px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',
@@ -145,8 +133,8 @@ export default function SelectPhaseButton({
             >
               <SelectMenuItem sx={{ height: '23px', padding: '4px 8px', }}>
                 <Typography
-                  fontWeight={600}
-                  fontSize="10px"
+                  fontWeight="normal"
+                  fontSize="16px"
                   fontFamily="Rubik"
                   sx={{ color: '#02215f' }}
                 >

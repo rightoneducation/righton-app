@@ -40,8 +40,9 @@ export const LabelContainer = styled(Box)(({theme}) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
-  paddingLeft: '10px',
-  paddingRight: '10px',
+  alignItems: 'center',
+  paddingLeft: '14px',
+  paddingRight: '12px',
   zIndex: 4,
   position: 'relative'
 }))
