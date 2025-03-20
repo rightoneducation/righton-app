@@ -3,34 +3,48 @@ import { IGameQuestion } from "../../../Models";
 import { 
   CreatePublicGameQuestionsInput, 
   CreatePrivateGameQuestionsInput,
+  CreateDraftGameQuestionsInput,
   CreatePublicGameQuestionsMutationVariables,
   CreatePublicGameQuestionsMutation,
   CreatePrivateGameQuestionsMutationVariables,
   CreatePrivateGameQuestionsMutation,
+  CreateDraftGameQuestionsMutationVariables,
+  CreateDraftGameQuestionsMutation,
   GetPublicGameQuestionsQuery,
   GetPublicGameQuestionsQueryVariables,
   GetPrivateGameQuestionsQuery,
   GetPrivateGameQuestionsQueryVariables,
+  GetDraftGameQuestionsQuery,
+  GetDraftGameQuestionsQueryVariables,
   DeletePublicGameQuestionsInput,
   DeletePublicGameQuestionsMutationVariables,
   DeletePublicGameQuestionsMutation,
   DeletePrivateGameQuestionsInput,
   DeletePrivateGameQuestionsMutationVariables,
   DeletePrivateGameQuestionsMutation,
+  DeleteDraftGameQuestionsInput,
+  DeleteDraftGameQuestionsMutationVariables,
+  DeleteDraftGameQuestionsMutation,
   ListPublicGameQuestionsQueryVariables,
   ListPublicGameQuestionsQuery,
   ListPrivateGameQuestionsQueryVariables,
-  ListPrivateGameQuestionsQuery
+  ListPrivateGameQuestionsQuery,
+  ListDraftGameQuestionsQueryVariables,
+  ListDraftGameQuestionsQuery
 } from "../../../AWSMobileApi";
 import {
   createPublicGameQuestions,
   createPrivateGameQuestions,
+  createDraftGameQuestions,
   getPublicGameQuestions,
   getPrivateGameQuestions,
+  getDraftGameQuestions,
   deletePublicGameQuestions,
   deletePrivateGameQuestions,
+  deleteDraftGameQuestions,
   listPublicGameQuestions,
-  listPrivateGameQuestions
+  listPrivateGameQuestions,
+  listDraftGameQuestions
 } from "../../../graphql";
 
 export interface IPublicGameQuestion {
@@ -75,6 +89,28 @@ export interface IPrivateGameQuestion {
   }
 }
 
+export interface IDraftGameQuestion {
+  create: {
+    input: CreateDraftGameQuestionsInput;
+    variables: CreateDraftGameQuestionsMutationVariables;
+    query: CreateDraftGameQuestionsMutation;
+  },
+  get: {
+    variables: GetDraftGameQuestionsQueryVariables;
+    query: GetDraftGameQuestionsQuery;
+  },
+  delete: {
+    input: DeleteDraftGameQuestionsInput;
+    variables: DeleteDraftGameQuestionsMutationVariables;
+    query: DeleteDraftGameQuestionsMutation;
+  },
+  list: {
+    variables: ListDraftGameQuestionsQueryVariables;
+    query: ListDraftGameQuestionsQuery;
+  }
+}
+
+
 // runtime mapping of game question type to mutation function
 export const gameQuestionRuntimeMap = {
   Public: {
@@ -103,6 +139,20 @@ export const gameQuestionRuntimeMap = {
     },
     list: {
       queryFunction: listPrivateGameQuestions,
+    },
+  },
+  Draft: {
+    create: {
+      queryFunction: createDraftGameQuestions,
+    },
+    get: {
+      queryFunction: getDraftGameQuestions,
+    },
+    delete: {
+      queryFunction: deleteDraftGameQuestions,
+    },
+    list: {
+      queryFunction: listDraftGameQuestions,
     },
   }
 };

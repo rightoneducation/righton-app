@@ -378,7 +378,7 @@ export default function CreateQuestion({
     }
   }
 
-  const handleSaveDraft = async () => {
+  const handleSaveDraftQuestion = async () => {
     try {
       setIsCardSubmitted(true);
       setIsCreatingTemplate(true);
@@ -474,7 +474,7 @@ export default function CreateQuestion({
           { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
             <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
-              <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
+              <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
             </Box>
           }
