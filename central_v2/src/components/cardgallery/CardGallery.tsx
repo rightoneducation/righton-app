@@ -26,6 +26,7 @@ interface CardGalleryProps<T> {
   galleryType: GalleryType;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
+  isMyLibrary?: boolean;
 }
 
 interface MostPopularComponentProps<T> {
@@ -159,6 +160,7 @@ export default function CardGallery<
   galleryType,
   setIsTabsOpen,
   handleView,
+  isMyLibrary
 }: CardGalleryProps<T>) {
   const maxCards = 12;
   const getNumColumns = () => {

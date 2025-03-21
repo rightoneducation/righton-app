@@ -1,4 +1,4 @@
-import { CentralQuestionTemplateInput, IGameTemplate, IncorrectCard } from "@righton/networking";
+import { CentralQuestionTemplateInput, IncorrectCard } from "@righton/networking";
 
 export enum ScreenType {
   GAMES,
@@ -29,6 +29,11 @@ export enum BorderStyle {
   SVG = 'svg',
 }
 
+export enum GameQuestionType {
+  GAME,
+  QUESTION
+}
+
 // enum to track the highlight card in the create question flow
 export enum CreateQuestionHighlightCard {
   QUESTIONCARD = 'questionCard',
@@ -52,9 +57,4 @@ export type CreateQuestionLocalData = {
   draftQuestion?: CentralQuestionTemplateInput | null,
   incompleteCards?: IncorrectCard[] | null,
   completeCards?: IncorrectCard[] | null
-}
-
-// type that shapes retrieved storage for gameCreation
-export type CreateGameLocalData = {
-  gameTemplate: IGameTemplate | null;
 }
