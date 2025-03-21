@@ -394,7 +394,7 @@ export default function CreateQuestion({
         url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
       }
       window.localStorage.setItem(StorageKey, '');
-      apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
+      apiClients.questionTemplate.createQuestionTemplate(PublicPrivateType.DRAFT, url, draftQuestion);
       setIsCreatingTemplate(false);
       navigate('/questions');
     } catch (e) {

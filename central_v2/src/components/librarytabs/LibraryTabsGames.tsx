@@ -112,6 +112,9 @@ const getElements = () => {
       return searchedGames.filter((game) => favGames.map((favGame) => favGame.id).includes(game.id));
     return favGames;
   }
+  if (draftGames.length > 0 && openTab === 2){
+    return draftGames;
+  }
   if (isSearchResults)
     return searchedGames 
   return mostPopularGames;

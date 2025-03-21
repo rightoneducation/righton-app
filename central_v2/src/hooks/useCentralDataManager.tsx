@@ -63,7 +63,6 @@ export default function useCentralDataManager({
 }: UseCentralDataManagerProps): UseCentralDataManagerReturnProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const debounceInterval = 800;
-  console.log(gameQuestion);
   // holding all of these seperately in state so that we can switch between them without refetching
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
   const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
@@ -384,7 +383,7 @@ export default function useCentralDataManager({
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
-          PublicPrivateType.PUBLIC,
+          PublicPrivateType.DRAFT,
           null,
           null,
           searchTerms,
@@ -393,7 +392,7 @@ export default function useCentralDataManager({
           [...selectedGrades],
           null
         ).then((response) => {
-          setFavQuestions(response.questions);
+          setDraftQuestions(response.questions);
           setNextToken(response.nextToken); 
           setIsLoading(false);
         });
@@ -401,7 +400,7 @@ export default function useCentralDataManager({
       case GameQuestionType.GAME:
       default:
         apiClients?.centralDataManager?.searchForGameTemplates(
-          PublicPrivateType.PUBLIC,
+          PublicPrivateType.DRAFT,
           null,
           null,
           searchTerms,
@@ -410,7 +409,7 @@ export default function useCentralDataManager({
           [...selectedGrades],
           null
         ).then((response) => {
-          setFavGames(response.games);
+          setDraftGames(response.games);
           setNextToken(response.nextToken); 
           setIsLoading(false);
         });

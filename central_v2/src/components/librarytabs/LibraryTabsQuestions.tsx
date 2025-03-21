@@ -96,6 +96,8 @@ const [openTab, setOpenTab] = React.useState(0);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   if (newValue === 3) {
     getFav(userProfile);
+  } else if (newValue === 2) {
+    getDrafts();
   } else {
     handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
   }
@@ -107,6 +109,9 @@ const getElements = () => {
     if (isSearchResults)
       return searchedQuestions.filter((question) => favQuestions.map((favQuestion) => favQuestion.id).includes(question.id));
     return favQuestions;
+  }
+  if (draftQuestions.length > 0 && openTab === 2){
+    return draftQuestions;
   }
   if (isSearchResults)
     return searchedQuestions 
