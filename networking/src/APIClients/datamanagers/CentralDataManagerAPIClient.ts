@@ -157,6 +157,9 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     }
   };
 
+  // public getUserEmailCognito = () => {
+  //   return this.authAPIClient.getUserEmail()
+  // }
 
   public signUpSendConfirmationCode = async (user: IUserProfile) => {
     return this.authAPIClient.awsSignUp(user.username, user.email, user.password ?? '');
@@ -183,6 +186,48 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
       updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
       this.setLocalUserProfile(updatedUser);
+      // flip manual state that causes useffect to run at the top.
+
+      return { updatedUser, images };
+    } catch (error: any) {
+      this.authAPIClient.awsUserCleaner(updatedUser);
+      throw new Error (error);
+    }
+  };
+
+
+  public signUpGoogleBuildBackendUser = async (user: IUserProfile, frontImage: File, backImage: File) => {
+    
+    // Need to put it in Email into user.
+    let getEmail = await this.authAPIClient.getUserEmail();
+    if(getEmail){
+      user.email = getEmail;
+    }
+
+    // CreatUserInput is done to avoid putting cognito ID into the dynamoDB
+    let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
+    
+    let updatedUser = JSON.parse(JSON.stringify(user));
+    try {
+      const currentUser = await getCurrentUser();
+      console.log("current: ", currentUser)
+      updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
+      const images = await Promise.all([
+        this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
+        this.authAPIClient.awsUploadImagePrivate(backImage) as any
+      ]);
+      createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
+      updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
+
+      
+      const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
+      updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      this.setLocalUserProfile(updatedUser);
+      // flip manual state that causes useffect to run at the top.
+      console.log("printing before flip:", this.authAPIClient.isUserAuth)
+      console.log("At the bottom!(In central)")
+      this.authAPIClient.isUserAuth = !this.authAPIClient.isUserAuth;
+      console.log("printing before flip:", this.authAPIClient.isUserAuth)
       return { updatedUser, images };
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);

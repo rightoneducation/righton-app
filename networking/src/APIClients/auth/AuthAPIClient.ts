@@ -24,6 +24,7 @@ import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { userCleaner } from "../../graphql";
 import { IUserProfile } from "../../Models/IUserProfile";
+// import { e } from "mathjs";
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -33,10 +34,10 @@ export class AuthAPIClient
   constructor(){
     this.isUserAuth = false;
     this.configAmplify(amplifyconfig);
-    this.authListener();
+    // this.authListener();
   }
   async init(): Promise<void> {
-    this.authEvents(null); 
+    // this.authEvents(null); 
     this.isUserAuth = await this.verifyAuth();
   }
 
@@ -92,6 +93,7 @@ export class AuthAPIClient
 
   async getUserNickname(): Promise<string | null> {
     try {
+      console.log("Updates are happening.")
       const attributes = await fetchUserAttributes();
       if (attributes && attributes.nickname !== undefined) {
         return attributes.nickname;
@@ -104,18 +106,35 @@ export class AuthAPIClient
     }
   }
 
+  async getUserEmail(): Promise<string | null> {
+    try {
+      const userAttributes = await fetchUserAttributes();
+      console.log("User Attributes:", userAttributes);
+      
+      if(userAttributes && userAttributes.email != undefined){
+        return userAttributes.email; // Email is stored under "email" key
+      } else {
+        return null
+      }
+
+    } catch (error) {
+      console.error("Error fetching user attributes:", error);
+      return null;
+    }
+  }
+
   authEvents (payload: any): void {
     if (!payload) {
-      this.isUserAuth = false;
+      // this.isUserAuth = false;
       return;
     }
     switch (payload.event) {
       case 'signedIn':
       case 'signInWithRedirect':
-        this.isUserAuth = true;
+        // this.isUserAuth = true;
         break;
       default:
-        this.isUserAuth = false;
+        // this.isUserAuth = false;
         break;
     }
   }

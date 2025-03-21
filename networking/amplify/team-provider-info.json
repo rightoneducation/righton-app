@@ -29,7 +29,7 @@
         "mobile6060603cPostConfirmation": {
           "GROUP": "authusers",
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-4a5a323836626b666e6b-build.zip"
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-464331594333592b642b-build.zip"
         },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",

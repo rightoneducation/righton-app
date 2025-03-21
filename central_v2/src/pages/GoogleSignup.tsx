@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
-import { IAPIClients, IUserProfile } from '@righton/networking';
+import { useNavigate } from 'react-router-dom'; 
+
+import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
 import RightOnLogo from "../images/RightOnLogo.png";
 import Adpic from "../images/@.svg"
 
@@ -141,7 +143,7 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 }));
 
 interface GoogleSignupProps {
-    // apiClients: IAPIClients;
+    apiClients: IAPIClients;
     userProfile: IUserProfile;
     setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>; 
     // handleUserCreate: () => void;
@@ -156,7 +158,7 @@ interface GoogleSignupProps {
 
 
 export default function GoogleSignup({
-    // apiClients,
+    apiClients,
     userProfile,  
     setUserProfile,
     frontImage,
@@ -165,6 +167,7 @@ export default function GoogleSignup({
     setBackImage
 }: GoogleSignupProps) {
 
+    const navigate = useNavigate(); // Initialize useNavigate
     const buttonTypeUpload = ButtonType.UPLOAD;
     const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
     const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
@@ -172,6 +175,18 @@ export default function GoogleSignup({
     const buttonTypeStarted = ButtonType.GETSTARTED;
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
 
+    const handleGetStarted = async () => {
+      try {
+        if(frontImage && backImage) {
+          const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(userProfile, frontImage, backImage);
+          setUserProfile((prev) => response?.updatedUser ?? prev);
+          // console.log("CurrentUserInfo: ", response?.updatedUser)
+          navigate("/")
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
     
 
   return (
@@ -336,6 +351,7 @@ export default function GoogleSignup({
                 buttonType={buttonTypeStarted} 
                 isEnabled={isGetStartedEnabled} 
                 buttonWidthOverride='150px'
+                onClick={handleGetStarted}
             />
           </GetStartedContainer>
         </InnerBodyContainer>

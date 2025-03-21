@@ -14,6 +14,7 @@ import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import Confirmation from '../pages/Confirmation';
+// import { profile } from 'console';
 
 // interface AppSwitchProps {
 // }
@@ -48,10 +49,22 @@ function AppSwitch() {
   const confirmationScreen = useMatch('/confirmation') !== null;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
+  
+  const isUserProfileComplete = (profile: IUserProfile): boolean => {
+    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
+  };
   useEffect(() => {
     const response = apiClients.auth.verifyAuth().then((status) => {
+        console.log("UseEffect is RUNNING!")
         if (status){
           const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+          // console.log("Local Profile fetched: ", localProfile)
+          if (localProfile) {
+            if (!isUserProfileComplete(localProfile)) {
+                // navigate to next step
+            }
+          }
+
           setIsUserLoggedIn(true);
           if (localProfile){
             setUserProfile(localProfile);
@@ -59,7 +72,7 @@ function AppSwitch() {
         }
       }
     )
-  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);
+  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);  // manually state that flips at the bottom.
 
   const session = apiClients.auth.verifyAuth();
   switch (true) {

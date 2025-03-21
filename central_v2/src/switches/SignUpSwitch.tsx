@@ -53,6 +53,7 @@ export default function SignUpSwitch({
     case 'googlesignup':
       return (
         <GoogleSignup
+          apiClients={apiClients}
           userProfile={userProfile}
           setUserProfile={setUserProfile}
           frontImage={frontImage}

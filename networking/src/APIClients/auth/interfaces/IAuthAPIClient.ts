@@ -35,4 +35,6 @@ export interface IAuthAPIClient {
   ): Promise<String>;
   awsDownloadImagePublic(): Promise<string>;
   awsDownloadImagePrivate(): Promise<string>;
+  getUserEmail(): Promise<string | null>;
+
 }
