@@ -37,6 +37,8 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CentralButton from '../components/button/Button';
+import CreateGameComponent from '../components/game/CreateGameComponent';
+import QuestionElements from '../components/game/QuestionGridItems';
 import {
   buttonContentMap,
   ButtonType,
@@ -57,6 +59,7 @@ import {
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateGameCardBase from '../components/cards/creategamecard/CreateGameCardBase';
 import VerticalMoreImg from '../images/buttonIconVerticalMore.svg'
+import { CreateQuestionGridContainer } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -147,9 +150,13 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       );
     });
   const [isCardSubmitted, setIsCardSubmitted] = useState<boolean>(false);
+  const [isGameCardSubmitted, setIsGameCardSubmitted] = useState<boolean>(false);
   const [isCardErrored, setIsCardErrored] = useState<boolean>(false);
+  const [isGameCardErrored, setIsGameCardErrored] = useState<boolean>(false);
   const [isAIError, setIsAIError] = useState<boolean>(false);
-  const [questionCount, setQuestionCount] = useState<number>(1)
+  const [questionCount, setQuestionCount] = useState<number>(1);
+  const [createQuestion, setCreateQuestion] = useState<boolean>(false);
+  const [openQuestionBank, setOpenQuestionBank] = useState<boolean>(false);
   // QuestionCardBase handler functions
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
     if (inputImage) {
@@ -332,13 +339,38 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     }
   };
 
-  const handleDiscardQuestion = () => {
+  const handleDiscard = () => {
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
 
+  const handleSaveGame = async () => {
+    // for now a boolean. Should become API call later
+    setIsGameCardSubmitted(true);
+    // setIsGameCardErrored -> turns placeholder text red
+    // also well make error box appear in create game card
+  }
+
+  const handleGameImageUploadClick = () => {
+
+  };
+
+  const handleCreateQuestion = () => {
+    if(openQuestionBank) {
+      setOpenQuestionBank(false)
+    }
+    setCreateQuestion((prev) => !prev)
+  }
+
+  const handleOpenQuestionBank = () => {
+if(createQuestion) {
+  setCreateQuestion(false)
+}
+setOpenQuestionBank((prev) => !prev);
+  }
+
   return (
-    <CreateGameMainContainer>
+    <CreateGameMainContainer sx={{ overflowY: 'auto'}}>
       <CreateGameBackground />
       <ModalBackground
         isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible}
@@ -349,100 +381,40 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         templateType={TemplateType.GAME}
       />
       <CreateGameBoxContainer>
-        <TitleText screenSize={currentScreenSize}>Create Game</TitleText>
-        {/* Save & Discard Button for Small & Medium Screen Size */}
-        {(currentScreenSize === ScreenSize.SMALL ||
-          currentScreenSize === ScreenSize.MEDIUM) && (
-          <CreateGameSaveDiscardBoxContainer screenSize={currentScreenSize}>
-            <CentralButton
-              buttonType={ButtonType.SAVE}
-              isEnabled
-              smallScreenOverride
-              onClick={handleSaveQuestion}
-            />
-            <CentralButton
-              buttonType={ButtonType.DISCARDBLUE}
-              isEnabled
-              smallScreenOverride
-              onClick={handleDiscardQuestion}
-            />
-          </CreateGameSaveDiscardBoxContainer>
-        )}
+     <CreateGameComponent
+     screenSize={screenSize}
+     handleSaveGame={handleSaveGame}
+     handleDiscard={handleDiscard}
+     handlePublicPrivateChange={handlePublicPrivateChange}
+     handleImageUploadClick={handleGameImageUploadClick}
+     onCreateQuestion={handleCreateQuestion}
+     onOpenQuestionBank={handleOpenQuestionBank}
+     isCardSubmitted={isGameCardSubmitted}
+     questionCount={questionCount}
+     isCardErrored={isCardErrored}
+     highlightCard={highlightCard} />
 
-        <CreateGameGridContainer container wrap="nowrap">
-          {/* Grid item for Save & Discard Buttons for Large Screen Size */}
-          <CreateGameSaveDiscardGridItem
-            item
-            sm
-            md={1}
-            lg={4}
-            >
-            {currentScreenSize !== ScreenSize.SMALL &&
-              screenSize !== ScreenSize.MEDIUM && (
-                <CreateGameSaveDiscardBoxContainer screenSize={currentScreenSize}>
-                  <CentralButton
-                    buttonType={ButtonType.SAVE}
-                    isEnabled
-                    onClick={handleSaveQuestion}
-                  />
-                  <CentralButton
-                    buttonType={ButtonType.DISCARDBLUE}
-                    isEnabled
-                    onClick={handleDiscardQuestion}
-                  />
-                </CreateGameSaveDiscardBoxContainer>
-              )}
-          </CreateGameSaveDiscardGridItem>
-          {/* Grid Item for Create Game Card */}
-          <CreateGameCardGridItem
-            item
-            sm={12}
-            md={10}
-            lg={4}
-           screenSize={screenSize}
-          >
-            <Box
-              onClick={() =>
-                handleClick(CreateQuestionHighlightCard.QUESTIONCARD)
-              }
-              style={{ width: '100%' }}
-            >
-              <CreateGameCardBase
-                screenSize={screenSize}
-                draftQuestion={draftQuestion}
-                handleTitleChange={handleDebouncedTitleChange}
-                handleCCSSClick={handleCCSSClick}
-                isHighlight={
-                  highlightCard === CreateQuestionHighlightCard.QUESTIONCARD
-                }
-                handleImageUploadClick={handleImageUploadClick}
-                handlePublicPrivateChange={handlePublicPrivateChange}
-                isCardSubmitted={isCardSubmitted}
-                isCardErrored={isCardErrored}
-              />
-            </Box>
-          </CreateGameCardGridItem>
-          <Grid sm md={1} lg={4} item />
-        </CreateGameGridContainer>
-        {/* Question Count & Add Button */}
-        <GameCreateButtonStack>  
-          <QuestionCountButton endIcon={verticalEllipsis} isDisabled={false}>
-          Question { questionCount }
-          </QuestionCountButton>
-          <AddMoreIconButton
-          >
-            <img
-              alt="add-question"
-              src={buttonContentMap[ButtonType.ADDSTEP].icon}
-            />
-          </AddMoreIconButton>
-        </GameCreateButtonStack>
-         {/* Create Question & Question Bank */}
-        <GameCreateButtonStack>
-          <CentralButton buttonType={ButtonType.CREATEQUESTION} isEnabled />
-          <CentralButton buttonType={ButtonType.QUESTIONBANK} isEnabled />
-        </GameCreateButtonStack>
+{/* Create Question Form  */}
+{createQuestion && (
+      <QuestionElements
+      screenSize={screenSize}
+      draftQuestion={draftQuestion}
+      onSetDraftQuestion={setDraftQuestion}
+      onSetHighlightCard={setHighlightCard}
+      handleDiscardQuestion={handleDiscard}
+      handleSaveQuestion={handleSaveQuestion}
+      isCardSubmitted={isCardSubmitted}
+      isCardErrored={isCardErrored}
+      highlightCard={highlightCard}
+       />
+)}
+
+{/* Question Bank goes here */}
       </CreateGameBoxContainer>
+
+
+
+
     </CreateGameMainContainer>
   );
 }
