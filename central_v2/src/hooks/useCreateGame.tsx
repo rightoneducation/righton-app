@@ -6,6 +6,7 @@ import { StorageKey } from '../lib/CentralModels';
 const useCreateGame = () => {
   const navigate = useNavigate();
   const questionComponentRef = useRef<HTMLDivElement | null>(null);
+  const topRef = useRef<HTMLDivElement | null>(null);
   const [isGameCardSubmitted, setIsGameCardSubmitted] =
     useState<boolean>(false);
   const [questionCount, setQuestionCount] = useState<number>(1);
@@ -33,15 +34,14 @@ const useCreateGame = () => {
         if(newState && questionComponentRef.current) {
             questionComponentRef.current.scrollIntoView({
                 behavior: 'smooth',
-                block: 'start',
+                block: 'end',
             })
-        }
-
-        // scroll up if clicked again.
-        if(!newState) {
-            window.scrollTo({
-                top: 0,
-                behavior:'smooth'
+        } 
+        
+        if(!newState && topRef.current) {
+            topRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
             })
         }
         return newState
@@ -68,6 +68,7 @@ const useCreateGame = () => {
 
   return {
     questionComponentRef,
+    topRef,
     isGameCardSubmitted,
     isGameCardErrored,
     questionCount,

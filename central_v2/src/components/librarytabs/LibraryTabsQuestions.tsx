@@ -26,23 +26,26 @@ import {
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
-  gameQuestion: GameQuestionType;
-  isTabsOpen: boolean;
+  // gameQuestion: GameQuestionType;
+  // isTabsOpen: boolean;
+  // setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
+  // recommendedQuestions: IQuestionTemplate[];
+  // draftQuestions: IQuestionTemplate[];
+  // nextToken: string | null;
+  // getDrafts: () => void;
+  // loadMore: () => void;
+  // publicPrivate: PublicPrivateType;
+  // userProfile: IUserProfile;
+  // getFav: (user: IUserProfile) => void;
+  // isFavTabOpen: boolean;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  userProfile: IUserProfile;
   screenSize: ScreenSize;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
-  recommendedQuestions: IQuestionTemplate[];
   mostPopularQuestions: IQuestionTemplate[];
   searchedQuestions: IQuestionTemplate[];
-  draftQuestions: IQuestionTemplate[];
   favQuestions: IQuestionTemplate[];
-  nextToken: string | null;
   isLoading: boolean;
   searchTerms: string;
   selectedGrades: GradeTarget[];
-  isFavTabOpen: boolean;
-  publicPrivate: PublicPrivateType;
   tabMap: { [key: number]: string };
   tabIconMap: { [key: number]: string };
   getLabel: (screen: ScreenSize, isSelected: boolean, value: string) => string;
@@ -55,30 +58,30 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
-  getDrafts: () => void;
-  loadMore: () => void;
   handleView: (element: T, elements: T[]) => void;
 }
 
 export default function LibraryTabsQuestions({
-  gameQuestion,
-  isTabsOpen,
+  // gameQuestion,
+  // isTabsOpen,
+  // setIsUserLoggedIn,
+  // recommendedQuestions,
+  // draftQuestions,
+  // nextToken,
+  // isFavTabOpen,
+  // publicPrivate,
+  // getDrafts,
+  // loadMore,
+  // userProfile,
+  // getFav,
   setIsTabsOpen,
-  userProfile,
   screenSize,
-  setIsUserLoggedIn,
-  recommendedQuestions,
   mostPopularQuestions,
   searchedQuestions,
-  draftQuestions,
   favQuestions,
-  nextToken,
   isLoading,
   searchTerms,
   selectedGrades,
-  isFavTabOpen,
-  publicPrivate,
   tabMap,
   tabIconMap,
   getLabel,
@@ -86,16 +89,13 @@ export default function LibraryTabsQuestions({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  getFav,
-  getDrafts,
-  loadMore,
   handleView
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
 const isSearchResults = searchTerms.length > 0;
 const [openTab, setOpenTab] = React.useState(0);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   if (newValue === 3) {
-    getFav(userProfile);
+    // getFav(userProfile);
   } else {
     handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
   }

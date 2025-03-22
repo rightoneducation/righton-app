@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, styled, keyframes } from '@mui/material';
+import { IAPIClients, IQuestionTemplate } from '@righton/networking';
+import { Fade } from '@mui/material';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
   CreateGameBoxContainer,
+  StyledFadeIn
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import { ScreenSize, StorageKey, TemplateType } from '../lib/CentralModels';
 import ModalBackground from '../components/modal/ModalBackground';
@@ -15,36 +17,12 @@ import QuestionElements from '../components/game/QuestionGridItems';
 import useCreateGame from '../hooks/useCreateGame';
 import useCreateQuestion from '../hooks/useCreateQuestion';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
-
-const fadeIn = keyframes`
-from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-interface FadeInProps {
-  visible: boolean;
-  delay?: number;
-  yAxis?: number;
-}
-
-export const StyledFadeIn = styled(Box, {
-  shouldForwardProp: (prop) =>
-    prop !== "visible" && prop !== "delay" && prop !== "yAxis",
-})<FadeInProps>(({ visible, delay, yAxis }) => ({
-  opacity: 0,
-  transform: `translateY(${yAxis ? `${yAxis}px` : "20px"})`,
-  transition: `opacity 0.5s ease-in-out ${delay}s, transform 0.5s ease-in-out ${delay}s`,
-  ...(visible && {
-    animation: `${fadeIn} 0.5s ${delay}s forwards`,
-  }),
-}));
-
+import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
+import ExploreQuestions from './ExploreQuestions';
+import tabExploreQuestionsIcon from '../images/tabExploreQuestions.svg';
+import tabMyQuestionsIcon from '../images/tabMyQuestions.svg';
+import tabDraftsIcon from '../images/tabDrafts.svg';
+import tabFavoritesIcon from '../images/tabFavorites.svg';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -52,10 +30,12 @@ interface CreateGameProps {
 
 export default function CreateGame({ screenSize }: CreateGameProps) {
   const navigate = useNavigate();
-
-
+  const [favQuestions, setFavQuestions] = useState<IQuestionTemplate[]>([]);
+  const [selectQuestions, setSelectedQuestion] = useState<IQuestionTemplate>();
+  const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([])
   const {
     questionComponentRef,
+    topRef,
     isGameCardSubmitted,
     questionCount,
     openQuestionBank,
@@ -69,7 +49,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     handleDiscardGame,
     handleGameImageUploadClick,
   } = useCreateGame();
-
   const {
     isClicked,
     isAIEnabled,
@@ -103,16 +82,61 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     completeIncorrectAnswers,
     incompleteIncorrectAnswers,
   } = useCreateQuestion();
+  const {
+    recommendedQuestions,
+    mostPopularQuestions,
+    searchedQuestions,
+    nextToken,
+    isLoading,
+    searchTerms,
+    selectedGrades,
+    isTabsOpen,
+    setIsTabsOpen,
+    handleChooseGrades,
+    handleSortChange,
+    handleSearchChange,
+    loadMoreQuestions,
+  } = useExploreQuestionsStateManager();
 
   const handleDiscard = () => {
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
 
-  console.log("Create Question clicked:", openCreateQuestion)
+  const tabMap: { [key: number]: string } = {
+    0: 'Explore Questions',
+    1: 'My Questions',
+    2: 'Favorites',
+  };
+
+  const tabIconMap: { [key: number]: string } = {
+    0: tabExploreQuestionsIcon,
+    1: tabMyQuestionsIcon,
+    2: tabFavoritesIcon,
+  };
+
+  const handleView = (
+      question: IQuestionTemplate,
+      questions: IQuestionTemplate[],
+    ) => {
+      setSelectedQuestion(question);
+      setQuestionSet(questions);
+      setIsTabsOpen(true);
+    };
+
+  const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
+      if (screen === ScreenSize.LARGE)
+        return value;
+      if (screen === ScreenSize.MEDIUM && isSelected)
+       return value;
+      return '';
+    }
 
   return (
-    <CreateGameMainContainer sx={{ overflowY: 'auto' }}>
+    <CreateGameMainContainer
+    ref={topRef}
+    sx={{ overflowY: 'auto' }}
+    >
       <CreateGameBackground />
       <ModalBackground
         isModalOpen={
@@ -127,6 +151,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         isModalOpen={isCreatingTemplate}
         templateType={TemplateType.GAME}
       />
+
       <CreateGameBoxContainer>
         <CreateGameComponent
           screenSize={screenSize}
@@ -143,7 +168,11 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         />
 
         {/* Create Question Form  */}
-            <StyledFadeIn ref={questionComponentRef} visible={openCreateQuestion} delay={0.2}>
+        {openCreateQuestion && (
+            <StyledFadeIn
+            ref={questionComponentRef}
+            visible={openCreateQuestion} 
+            delay={0.2}>
             <QuestionElements
               screenSize={screenSize}
               draftQuestion={draftQuestion}
@@ -168,13 +197,42 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
               handleCCSSClick={handleCCSSClick}
             />
             </StyledFadeIn>
+        )}
         
-
         {/* Question Bank goes here */}
-        {/* {openQuestionBank && (
-          <LibraryTabsQuestions 
-          />
-)} */}
+        {openQuestionBank && (
+          <StyledFadeIn
+          ref={questionComponentRef}
+          visible={openQuestionBank} 
+          delay={0.2}>
+
+            <LibraryTabsQuestions
+            // gameQuestion={}
+            // isTabsOpen={isTabsOpen}
+            // setIsUserLoggeIn={}
+            // recommendedQuestions={recommendedQuestions}
+            // userProfile={}
+            // nextToken={nextToken}
+            // loadMore={loadMoreQuestions}
+            favQuestions={favQuestions}
+            getLabel={getLabel}
+            setIsTabsOpen={setIsTabsOpen}
+            screenSize={screenSize}
+            mostPopularQuestions={mostPopularQuestions}
+            searchedQuestions={searchedQuestions}
+            tabMap={tabMap}
+            tabIconMap={tabIconMap}
+            isLoading={isLoading}
+            searchTerms={searchTerms}
+            selectedGrades={selectedGrades}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateQuestionChange}
+            handleView={handleView}
+            />
+          </StyledFadeIn>
+)}
       </CreateGameBoxContainer>
     </CreateGameMainContainer>
   );
