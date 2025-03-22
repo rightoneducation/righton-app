@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Collapse, Fade, styled } from '@mui/material';
+import { Box, styled, keyframes } from '@mui/material';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
@@ -16,15 +16,36 @@ import useCreateGame from '../hooks/useCreateGame';
 import useCreateQuestion from '../hooks/useCreateQuestion';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
 
-const StyledBox = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'openCreateQuestion'
-})<{openCreateQuestion: boolean}>(({theme, openCreateQuestion}) => ({
-  transition: openCreateQuestion
-  ? 'opacity 300ms ease, transform 300ms ease-in-out'
-  : 'opacity 300ms ease, transform 150ms ease-in-out',
-opacity: openCreateQuestion ? 1 : 0,
-transform: openCreateQuestion ? 'translateY(0px)' : 'translateY(-20px)',
-}))
+const fadeIn = keyframes`
+from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+interface FadeInProps {
+  visible: boolean;
+  delay?: number;
+  yAxis?: number;
+}
+
+export const StyledFadeIn = styled(Box, {
+  shouldForwardProp: (prop) =>
+    prop !== "visible" && prop !== "delay" && prop !== "yAxis",
+})<FadeInProps>(({ visible, delay, yAxis }) => ({
+  opacity: 0,
+  transform: `translateY(${yAxis ? `${yAxis}px` : "20px"})`,
+  transition: `opacity 0.5s ease-in-out ${delay}s, transform 0.5s ease-in-out ${delay}s`,
+  ...(visible && {
+    animation: `${fadeIn} 0.5s ${delay}s forwards`,
+  }),
+}));
+
+
 interface CreateGameProps {
   screenSize: ScreenSize;
 }
@@ -32,7 +53,9 @@ interface CreateGameProps {
 export default function CreateGame({ screenSize }: CreateGameProps) {
   const navigate = useNavigate();
 
+
   const {
+    questionComponentRef,
     isGameCardSubmitted,
     questionCount,
     openQuestionBank,
@@ -86,6 +109,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     navigate('/questions');
   };
 
+  console.log("Create Question clicked:", openCreateQuestion)
+
   return (
     <CreateGameMainContainer sx={{ overflowY: 'auto' }}>
       <CreateGameBackground />
@@ -118,10 +143,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         />
 
         {/* Create Question Form  */}
-        {openCreateQuestion && (
-          <Collapse in={openCreateQuestion} timeout={1000}>
-            <StyledBox openCreateQuestion={openCreateQuestion}>
-
+            <StyledFadeIn ref={questionComponentRef} visible={openCreateQuestion} delay={0.2}>
             <QuestionElements
               screenSize={screenSize}
               draftQuestion={draftQuestion}
@@ -145,9 +167,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
               handleClick={handleClick}
               handleCCSSClick={handleCCSSClick}
             />
-            </StyledBox>
-          </Collapse>
-        )}
+            </StyledFadeIn>
+        
 
         {/* Question Bank goes here */}
         {/* {openQuestionBank && (
