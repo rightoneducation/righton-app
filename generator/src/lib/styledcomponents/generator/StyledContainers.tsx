@@ -16,7 +16,7 @@ export const MainContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   boxSizing: 'border-box',
   position: 'relative',
-  gap: '20px'
+  gap: '36px'
 }));
 
 export const HeaderContainer = styled(Box)(({ theme }) => ({
@@ -47,10 +47,9 @@ export const HeaderButtonContainer = styled(Box)(({ theme }) => ({
 
 export const TextContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  paddingTop: `${theme.sizing.lgPadding}px`,
   display: 'flex', 
   flexDirection: 'column', 
-  gap: '20px',
+  gap: `${theme.sizing.smPadding}px`,
   alignItems: 'center',
   paddingLeft: `${theme.sizing.xLgPadding}px`,
   paddingRight: `${theme.sizing.xLgPadding}px`,
