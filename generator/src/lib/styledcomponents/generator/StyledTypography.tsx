@@ -1,5 +1,12 @@
 import { Typography, styled } from '@mui/material';
 
+export const HeaderText = styled(Typography)(({ theme }) => ({
+  color: 'white', 
+  fontFamily: 'Poppins', 
+  fontSize: '20px', 
+  fontWeight: 700
+}));
+
 export const CardHeaderTextStyled = styled(Typography)(({ theme }) => ({
   color: `${theme.palette.primary.darkBlue}`,
   fontSize: '16px',

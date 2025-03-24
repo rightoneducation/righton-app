@@ -21,7 +21,33 @@ export const MainContainer = styled(Box)(({ theme }) => ({
 
 export const HeaderContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  paddingTop: `${theme.sizing.mdPadding}px`,
+  display: 'flex',
+  justifyContent: 'space-between', 
+  alignItems: 'center',
+  boxSizing: 'border-box',
+  paddingLeft: `${theme.sizing.lgPadding}px`,
+  paddingRight: `${theme.sizing.lgPadding}px`,
+  paddingTop: `${theme.sizing.smPadding}px`,
+  paddingBottom: `${theme.sizing.smPadding}px`,
+  background: 'linear-gradient(to bottom, #02215F 43%, rgba(2, 33, 95, 0) 100%)'
+}));
+
+export const HeaderRightContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: '24px',
+  alignItems: 'center',
+}));
+
+export const HeaderButtonContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: '8px',
+  paddingLeft: '12px',
+  paddingRight: '12px'
+}));
+
+export const TextContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  paddingTop: `${theme.sizing.lgPadding}px`,
   display: 'flex', 
   flexDirection: 'column', 
   gap: '20px',
@@ -47,12 +73,6 @@ export const CardsContainer = styled(Grid)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
-}));
-
-export const VersionContainer = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: `${theme.sizing.smPadding}px`,
-  right: `${theme.sizing.smPadding}px`,
 }));
 
 export const QuestionContainer = styled(Box)(({ theme }) => ({

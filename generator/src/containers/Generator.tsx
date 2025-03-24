@@ -14,10 +14,14 @@ import { ExplanationCards } from '../components/ExplanationCards';
 import { version, date, model, ExplanationRegenType } from '../lib/Constants';
 import InfoIcon from '../img/InfoIcon.svg';
 import OpenAI from '../img/OpenAILogo.svg';
-import { MainContainer, HeaderContainer, VersionContainer, CardsContainer, QuestionContainer, FooterContainer } from '../lib/styledcomponents/generator/StyledContainers';
+import { MainContainer, TextContainer, HeaderContainer, HeaderRightContainer, CardsContainer, QuestionContainer, FooterContainer, HeaderButtonContainer } from '../lib/styledcomponents/generator/StyledContainers';
+import { HeaderText } from '../lib/styledcomponents/generator/StyledTypography';
 import { TooltipStyled } from '../lib/styledcomponents/generator/StyledTooltip';
 import { ButtonSaveStyled, ButtonSecondaryStyled } from '../lib/styledcomponents/generator/StyledButtons';
 import { ScreenSize } from '../lib/Models';
+import RightonLogo from '../img/RightonLogo.svg';
+import howtouse from '../img/icons/howtouse.svg';
+import saved from '../img/icons/saved.svg';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -254,41 +258,27 @@ export default function Generator() {
     <MainContainer>
       <QuestionSavedModal isModalOpen={isQuestionSaved} />
       <ModalBackground isModalOpen={isQuestionSaved} handleCloseModal={handleCloseModal} />
-      <VersionContainer>
-        <TooltipStyled 
-          title={
-            <>
-              <Typography style={{  fontFamily: 'Montserrat',  fontSize: '12px', color: 'white', textAlign: 'right'}} >
-              Version {version}
-              </Typography>
-              <Typography style={{  fontFamily: 'Montserrat',  fontSize: '12px', color: 'white', textAlign: 'right'}} >
-              Last updated: {date}
-              </Typography>
-              <Typography style={{   fontFamily: 'Montserrat', fontSize: '12px', color: 'white', textAlign: 'right'}} >
-              Model: {model}
-              </Typography>
-            </>
-          }
-          arrow
-          placement="top"
-        >
-          <img src={InfoIcon} alt="Version Info" />
-        </TooltipStyled>
-      </VersionContainer>
       <HeaderContainer>
-        <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px'}} >
-          <Typography style={{ fontFamily: 'Rubik', fontSize: '16px', lineHeight: '16px', color: 'white'}} >
-            Powered By:
-          </Typography>
-          <img src={OpenAI} alt="OpenAI Logo"/>
-        </Box>
+        <img src={RightonLogo} alt="Righton Logo"style={{height: '55px', width: 'fit-content'}}/>
+        <HeaderRightContainer>
+          <HeaderButtonContainer>
+            <img src={howtouse} alt="How to use icon"/>
+            <HeaderText>How To Use</HeaderText>
+          </HeaderButtonContainer>
+          <HeaderButtonContainer>
+            <img src={saved} alt="Save icon"/>
+            <HeaderText>Saved Explanations</HeaderText>
+          </HeaderButtonContainer>
+        </HeaderRightContainer>
+      </HeaderContainer>
+      <TextContainer>
         <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
-          Wrong Answer Explanations
+          Wrong Answer Explanation Generator
         </Typography>
         <Typography style={{ fontFamily: 'Rubik',textAlign: 'center', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
           AI-Powered Insights to Guide Student Understanding
         </Typography>
-      </HeaderContainer>
+      </TextContainer>
       { screenSize === ScreenSize.SMALL 
       ? <Swiper
           onSwiper={(swiper: any) => {
