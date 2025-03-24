@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { PublicPrivateType } from '@righton/networking';
+import { createQuestion, PublicPrivateType } from '@righton/networking';
 import { debounce } from 'lodash';
 import { Box, Grid } from '@mui/material';
 import {
@@ -21,6 +21,7 @@ import CentralButton from '../button/Button';
 import { ButtonType, buttonContentMap } from '../button/ButtonModels';
 import CreateGameCardBase from '../cards/creategamecard/CreateGameCardBase';
 import VerticalMoreImg from '../../images/buttonIconVerticalMore.svg';
+import { TGameInfo, TPhaseTime } from '../../hooks/useCreateGame';
 
 interface ICreateGameComponent {
   screenSize: ScreenSize;
@@ -29,11 +30,19 @@ interface ICreateGameComponent {
   isCardSubmitted: boolean;
   questionCount: number;
   isCardErrored: boolean;
-  highlightCard: CreateQuestionHighlightCard;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   handleImageUploadClick: () => void;
   onCreateQuestion: () => void;
   onOpenQuestionBank: () => void;
+  phaseTime: TPhaseTime;
+  handlePhaseTime: (time: TPhaseTime) => void;
+  gameTitle: string;
+  gameDescription: string;
+  onGameTitle: (val: string) => void;
+  onGameDescription: (val: string) => void;
+  onGameCardError: React.Dispatch<React.SetStateAction<boolean>>;
+  openQuestionBank: boolean;
+  openCreateQuestion: boolean;
 }
 
 // vertical ellipsis image for button
@@ -49,8 +58,22 @@ export default function CreateGameComponent({
   isCardSubmitted,
   questionCount,
   isCardErrored,
-  highlightCard,
+  phaseTime,
+  gameTitle,
+  gameDescription,
+  onGameTitle,
+  onGameDescription,
+  handlePhaseTime,
+  onGameCardError,
+  openQuestionBank,
+  openCreateQuestion,
 }: ICreateGameComponent) {
+  const [disableForm, setDisableForm] = useState<boolean>(false);
+  const [enableButton, setEnableButton] = useState<{[key: string]: boolean}>({
+    createQuestion: true,
+    questionBank: true,
+  });
+
   const handleDebouncedTitleChange = useCallback(// eslint-disable-line
     debounce((title: string) => {
       window.localStorage.setItem(StorageKey, JSON.stringify(title));
@@ -58,13 +81,37 @@ export default function CreateGameComponent({
     [],
   );
 
+  const createGameFormIsValid = 
+    phaseTime.phaseOne !== "" && 
+    phaseTime.phaseTwo !=="" &&
+    gameTitle !== "" &&
+    gameDescription !== "";
+
   const handleCreateQuestion = () => {
     // if gamecard is complete...TODO
     onCreateQuestion();
+    setEnableButton((prev) => ({ 
+      ...prev,
+      createQuestion: prev.createQuestion,
+      questionBank: !prev.questionBank,
+    }))
+    // if(createGameFormIsValid) {
+    // } else {
+    //   onGameCardError(true);
+    // }
   };
-
+  
   const handleOpenQuestionBank = () => {
     onOpenQuestionBank();
+    setEnableButton((prev) => ({ 
+      ...prev,
+      questionBank: prev.questionBank, 
+      createQuestion: !prev.createQuestion,
+    }))
+    // if(createGameFormIsValid){
+    // } else {
+    //   onGameCardError(true);
+    // }
   };
 
   return (
@@ -119,14 +166,20 @@ export default function CreateGameComponent({
           <Box style={{ width: '100%' }}>
             <CreateGameCardBase
               screenSize={screenSize}
-              handleTitleChange={handleDebouncedTitleChange}
-              isHighlight={
-                highlightCard === CreateQuestionHighlightCard.QUESTIONCARD
-              }
               handleImageUploadClick={handleImageUploadClick}
               handlePublicPrivateChange={handlePublicPrivateChange}
+              handlePhaseTime={handlePhaseTime}
+              onGameDescription={onGameDescription}
+              onGameTitle={onGameTitle}
               isCardSubmitted={isCardSubmitted}
               isCardErrored={isCardErrored}
+              phaseTime={phaseTime}
+              gameTitle={gameTitle}
+              gameDescription={gameDescription}
+              disableForm={disableForm}
+              openCreateQuestion={openCreateQuestion}
+              openQuestionBank={openQuestionBank}
+
             />
           </Box>
         </CreateGameCardGridItem>
@@ -148,12 +201,12 @@ export default function CreateGameComponent({
       <GameCreateButtonStack>
         <CentralButton
           buttonType={ButtonType.CREATEQUESTION}
-          isEnabled
+          isEnabled={enableButton.createQuestion}
           onClick={handleCreateQuestion}
         />
         <CentralButton
           buttonType={ButtonType.QUESTIONBANK}
-          isEnabled
+          isEnabled={enableButton.questionBank}
           onClick={handleOpenQuestionBank}
         />
       </GameCreateButtonStack>

@@ -40,46 +40,53 @@ import {
   CreateGameTextFieldContainer,
   CreateGameTitleBarStyled,
   CreateGameTitleText,
-  GameContentContainerStyled
+  GameContentContainerStyled,
 } from '../../../lib/styledcomponents/CreateGameStyledComponent';
+import { TPhaseTime, TGameInfo } from '../../../hooks/useCreateGame';
 
 interface CreateGameCardBaseProps {
   screenSize: ScreenSize;
-  handleTitleChange: (
-    title: string,
-    draftQuestion: CentralQuestionTemplateInput,
-  ) => void;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
-  isHighlight: boolean;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
+  phaseTime: TPhaseTime;
+  handlePhaseTime: (time: TPhaseTime) => void;
+  gameTitle: string;
+  gameDescription: string;
+  onGameTitle: (val: string) => void;
+  onGameDescription: (val: string) => void;
+  disableForm: boolean;
+  openQuestionBank: boolean;
+  openCreateQuestion: boolean;
 }
 
 export default function CreateGameCardBase({
   screenSize,
-  handleTitleChange,
   handleImageUploadClick,
   handlePublicPrivateChange,
-  isHighlight,
   isCardSubmitted,
   isCardErrored,
+  phaseTime,
+  handlePhaseTime,
+  gameTitle,
+  gameDescription,
+  onGameTitle,
+  onGameDescription,
+  disableForm,
+  openQuestionBank,
+  openCreateQuestion,
 }: CreateGameCardBaseProps) {
   const theme = useTheme();
-  const [title, setTitle] = React.useState<string>("");
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(
     PublicPrivateType.PUBLIC,
   );
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
-  const [image, setImage] = React.useState<File>()
+  const [image, setImage] = React.useState<File>();
   const getImage = () => {
-    if (
-      image &&
-      image instanceof File
-    )
-      return URL.createObjectURL(image);
+    if (image && image instanceof File) return URL.createObjectURL(image);
     return image;
   };
   const imageLink = getImage();
@@ -89,10 +96,6 @@ export default function CreateGameCardBase({
   ) => {
     setQuestionType(event.target.value as PublicPrivateType);
     handlePublicPrivateChange(event.target.value as PublicPrivateType);
-  };
-
-  const handleLocalTitleChange = (value: string) => {
-    setTitle((prev) => value);
   };
 
   const imageContents = [
@@ -134,18 +137,36 @@ export default function CreateGameCardBase({
     ),
   ];
 
-  const responsiveHeight = screenSize === ScreenSize.LARGE && !isCardErrored ? '100%' : '100%';
+  const responsiveHeight =
+    screenSize === ScreenSize.LARGE && !isCardErrored ? '100%' : '100%';
   const responsiveGap =
     screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM
       ? '24px'
       : '8px';
 
+  const handlePhaseOneTime = (val: string) => {
+    handlePhaseTime({ phaseOne: val, phaseTwo: phaseTime.phaseTwo });
+  };
+
+  const handlePhaseTwoTime = (val: string) => {
+    handlePhaseTime({ phaseOne: phaseTime.phaseOne, phaseTwo: val });
+  };
+  const cardIsComplete = 
+  phaseTime.phaseOne !== "" && 
+  phaseTime.phaseTwo !== "" &&
+  gameDescription !== "" &&
+  gameTitle !== "" && (openCreateQuestion || openQuestionBank);
+
   return (
     <BaseCardStyled
       elevation={6}
-      isHighlight={isHighlight}
-      isCardComplete={isCardErrored ?? false}
-      sx={{ height: responsiveHeight, gap: responsiveGap, padding: screenSize === ScreenSize.LARGE ? '28px': '24px', }}
+      isHighlight={false}
+      isCardComplete={cardIsComplete}
+      sx={{
+        height: responsiveHeight,
+        gap: responsiveGap,
+        padding: screenSize === ScreenSize.LARGE ? '28px' : '24px',
+      }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>
         <Box
@@ -155,7 +176,7 @@ export default function CreateGameCardBase({
             justifyContent:
               screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start',
             alignItems: screenSize === ScreenSize.SMALL ? 'start' : 'center',
-            gap: screenSize === ScreenSize.LARGE ? '9px': '16px',
+            gap: screenSize === ScreenSize.LARGE ? '9px' : '16px',
           }}
         >
           <CreateGameTitleText
@@ -170,8 +191,20 @@ export default function CreateGameCardBase({
             alignItems="center"
             justifyContent={isSmallerScreen ? 'center' : 'normal'}
           >
-            <SelectPhaseButton isCardSubmitted={isCardSubmitted} phaseNumber={1} screenSize={screenSize} />
-            <SelectPhaseButton isCardSubmitted={isCardSubmitted} phaseNumber={2} screenSize={screenSize} />
+            <SelectPhaseButton
+              onSetPhaseTime={handlePhaseOneTime}
+              phaseTime={phaseTime.phaseOne}
+              isCardSubmitted={isCardSubmitted}
+              phaseNumber={1}
+              screenSize={screenSize}
+            />
+            <SelectPhaseButton
+              onSetPhaseTime={handlePhaseTwoTime}
+              phaseTime={phaseTime.phaseTwo}
+              isCardSubmitted={isCardSubmitted}
+              phaseNumber={2}
+              screenSize={screenSize}
+            />
           </Stack>
         </Box>
 
@@ -190,29 +223,38 @@ export default function CreateGameCardBase({
       </CreateGameTitleBarStyled>
       <GameContentContainerStyled screenSize={screenSize}>
         {/* Create Question Content Left Container */}
-        <CreateGameContentLeftContainerStyled sx={{ gap: screenSize === ScreenSize.LARGE || screenSize === ScreenSize.MEDIUM ? '12px' : '8px' }}>
+        <CreateGameContentLeftContainerStyled
+          sx={{
+            gap:
+              screenSize === ScreenSize.LARGE ||
+              screenSize === ScreenSize.MEDIUM
+                ? '12px'
+                : '8px',
+          }}
+        >
           {/* Game Title TextField */}
           <CreateGameTextFieldContainer
-          isCardError={isCardErrored}
+            isCardError={isCardErrored}
+            disabled={disableForm}
             isTitle
             variant="outlined"
-           sx={{
-            '& .MuiOutlinedInput-root': {
-              height: '54px'
-            }
-           }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                height: '54px',
+              },
+            }}
             placeholder="Game title here.."
-            error={
-              isCardSubmitted && (!title || title.length === 0)
-            }
+            value={gameTitle}
+            onChange={(e) => onGameTitle(e.target.value)}
+            error={isCardSubmitted && (!gameTitle || gameTitle.length === 0)}
             InputProps={{
               startAdornment: isCardSubmitted &&
-                (!title || title.length === 0) && (
+                (!gameTitle || gameTitle.length === 0) && (
                   <InputAdornment
                     position="start"
                     sx={{
                       alignSelf: 'flex-start',
-                      margin: "auto 0",
+                      margin: 'auto 0',
                     }}
                   >
                     <ErrorIcon src={errorIcon} alt="error icon" />
@@ -220,32 +262,31 @@ export default function CreateGameCardBase({
                 ),
             }}
           >
-            {title}
+            {gameTitle}
           </CreateGameTextFieldContainer>
           {/* Game Description TextField */}
           <CreateGameTextFieldContainer
-          isCardError={isCardErrored}
-          variant="outlined"
-          sx={{
-            '& .MuiInputBase-root': {
-              height: '138px',
-              fontFamily: 'Rubik'
-            },
-            '& .MuiOutlinedInput-input': {
-            paddingBottom: 2
-            }
-          }}
+            isCardError={isCardErrored}
+            disabled={disableForm}
+            variant="outlined"
+            sx={{
+              '& .MuiInputBase-root': {
+                height: '138px',
+                fontFamily: 'Rubik',
+              },
+              '& .MuiOutlinedInput-input': {
+                paddingBottom: 2,
+              },
+            }}
             multiline
             rows={4}
             placeholder="Enter game description here..."
-            error={
-              isCardSubmitted && (!title || title.length === 0)
-            }
-            value={title}
-            onChange={(e) => handleLocalTitleChange(e.target.value)}
+            error={isCardSubmitted && (!gameTitle || gameTitle.length === 0)}
+            value={gameDescription}
+            onChange={(e) => onGameDescription(e.target.value)}
             InputProps={{
               startAdornment: isCardSubmitted &&
-                (!title || title.length === 0) && (
+                (!gameTitle || gameTitle.length === 0) && (
                   <InputAdornment
                     position="start"
                     sx={{
@@ -258,57 +299,70 @@ export default function CreateGameCardBase({
                 ),
             }}
           >
-            <Typography>{title}</Typography>
+            <Typography>{gameTitle}</Typography>
           </CreateGameTextFieldContainer>
         </CreateGameContentLeftContainerStyled>
 
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: '8px', 
-          width: '100%',
-          height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '204px' : '100%'
-          }}>
-        {/* Image Upload handled here */}
-        {imageLink ? (
-          imageContents
-        ) : (
-          <ImagePlaceholder isCardErrored={false} sx={{ 
-            height: (screenSize === ScreenSize.LARGE  || screenSize === ScreenSize.MEDIUM) ? '204px' : '202px' ,
-            }}>
-            <CentralButton
-              buttonType={ButtonType.UPLOADIMAGE}
-              isEnabled
-              smallScreenOverride
-              onClick={handleImageUploadClick}
-            />
-          </ImagePlaceholder>
-        )}
-        {/* Image Upload handled here */}
-
-        {/* card Error */}
-        {screenSize === ScreenSize.SMALL && (
-          <>
-            {isCardErrored && <CreateGameErrorBox screenSize={screenSize} />}
-            <Box
-              style={{
-                width: '100%',
-                display: 'flex',
-                gap: '8px',
-                alignItems: 'center',
-                justifyContent: 'center',
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            width: '100%',
+            height:
+              screenSize === ScreenSize.LARGE ||
+              screenSize === ScreenSize.MEDIUM
+                ? '204px'
+                : '100%',
+          }}
+        >
+          {/* Image Upload handled here */}
+          {imageLink ? (
+            imageContents
+          ) : (
+            <ImagePlaceholder
+              isCardErrored={false}
+              sx={{
+                height:
+                  screenSize === ScreenSize.LARGE ||
+                  screenSize === ScreenSize.MEDIUM
+                    ? '204px'
+                    : '202px',
               }}
             >
-              <PublicPrivateButton isDisabled={false} />
-            </Box>
-          </>
-        )}
+              <CentralButton
+                buttonType={ButtonType.UPLOADIMAGE}
+                isEnabled
+                smallScreenOverride
+                onClick={handleImageUploadClick}
+              />
+            </ImagePlaceholder>
+          )}
+          {/* Image Upload handled here */}
+
+          {/* card Error */}
+          {screenSize === ScreenSize.SMALL && (
+            <>
+              {isCardErrored && <CreateGameErrorBox screenSize={screenSize} />}
+              <Box
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  gap: '8px',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <PublicPrivateButton isDisabled={false} />
+              </Box>
+            </>
+          )}
         </Box>
       </GameContentContainerStyled>
 
       {screenSize !== ScreenSize.SMALL && isCardErrored && (
-          <CreateGameErrorBox screenSize={screenSize} />
-        )}
+        <CreateGameErrorBox screenSize={screenSize} />
+      )}
     </BaseCardStyled>
   );
 }

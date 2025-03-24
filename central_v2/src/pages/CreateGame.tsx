@@ -45,12 +45,19 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     openCreateQuestion,
     publicPrivateGame,
     isGameCardErrored,
+    phaseTime,
+    gameTitle,
+    gameDescription,
+    handleGameTitle,
+    handleGameDescription,
+    handlePhaseTime,
     handleOpenCreateQuestion,
     handleOpenQuestionBank,
     handlePublicPrivateGameChange,
     handleSaveGame,
     handleDiscardGame,
     handleGameImageUploadClick,
+    setIsGameCardErrored
   } = useCreateGame();
   const {
     isClicked,
@@ -110,11 +117,10 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           behavior: 'smooth',
           block: 'start'
         })
-      }
+      } 
     },300);
-
     return () => clearTimeout(timeout);
-  },[ref, openCreateQuestion, openQuestionBank]);
+  },[ref, openCreateQuestion, openQuestionBank,]);
   
 
   const handleDiscard = () => {
@@ -188,20 +194,30 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           handleImageUploadClick={handleGameImageUploadClick}
           onCreateQuestion={handleOpenCreateQuestion}
           onOpenQuestionBank={handleOpenQuestionBank}
+          handlePhaseTime={handlePhaseTime}
+          onGameDescription={handleGameDescription}
+          onGameTitle={handleGameTitle}
+          onGameCardError={setIsGameCardErrored}
           isCardSubmitted={isGameCardSubmitted}
           questionCount={questionCount}
           isCardErrored={isGameCardErrored}
-          highlightCard={highlightCard}
+          phaseTime={phaseTime}
+          gameTitle={gameTitle}
+          gameDescription={gameDescription}
+          openQuestionBank={openQuestionBank}
+          openCreateQuestion={openCreateQuestion}
         />
+
+        {/* Always scroll to this point */}
+        <Box ref={ref} />
 
         {/* Create Question Form  */}
         <Fade
-          
           timeout={500}
           in={openCreateQuestion}
           unmountOnExit
         >
-          <Box ref={ref}>
+          <Box>
           <QuestionElements
             screenSize={screenSize}
             draftQuestion={draftQuestion}
@@ -240,7 +256,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           unmountOnExit
           timeout={500}
         >
-          <Box ref={ref}>
+          <Box>
           <LibraryTabsQuestions
             // gameQuestion={}
             // setIsUserLoggeIn={}

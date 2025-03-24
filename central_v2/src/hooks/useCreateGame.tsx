@@ -3,6 +3,16 @@ import { PublicPrivateType } from '@righton/networking';
 import { useNavigate } from 'react-router-dom';
 import { StorageKey } from '../lib/CentralModels';
 
+export type TGameInfo = {
+  title: string;
+  description: string;
+};
+
+export type TPhaseTime = {
+  phaseOne: string;
+  phaseTwo: string;
+};
+
 const useCreateGame = () => {
   const navigate = useNavigate();
   const questionComponentRef = useRef<HTMLDivElement | null>(null);
@@ -16,6 +26,28 @@ const useCreateGame = () => {
     PublicPrivateType.PUBLIC,
   );
   const [isGameCardErrored, setIsGameCardErrored] = useState<boolean>(false);
+  const [gameTitle, setGameTitle] = useState<string>('');
+  const [gameDescription, setGameDescription] = useState<string>('');
+  const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
+    phaseOne: '',
+    phaseTwo: '',
+  });
+
+  const handleGameTitle = (val: string) => {
+    setGameTitle(val);
+  };
+
+  const handleGameDescription = (val: string) => {
+    setGameDescription(val);
+  };
+
+  const handlePhaseTime = (time: TPhaseTime) => {
+    setPhaseTime((prev) => ({
+      ...prev,
+      ...(time.phaseOne && { phaseOne: time.phaseOne }),
+      ...(time.phaseTwo && { phaseTwo: time.phaseTwo }),
+    }));
+  };
 
   const handleSaveGame = useCallback(async () => {
     // api call goes here.
@@ -26,26 +58,7 @@ const useCreateGame = () => {
     if (openQuestionBank) {
       setOpenQuestionBank(false);
     }
-
-    setOpenCreateQuestion((prev) => {
-        // note - this is true
-        const newState = !prev;
-        // scroll down to question component elment
-        if(newState && questionComponentRef.current) {
-            questionComponentRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'end',
-            })
-        } 
-        
-        if(!newState && topRef.current) {
-            topRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            })
-        }
-        return newState
-    });
+    setOpenCreateQuestion((prev) => !prev);
   }, [openQuestionBank]);
 
   const handleOpenQuestionBank = useCallback(() => {
@@ -75,6 +88,13 @@ const useCreateGame = () => {
     openQuestionBank,
     openCreateQuestion,
     publicPrivateGame,
+    phaseTime,
+    gameTitle,
+    gameDescription,
+    setIsGameCardErrored,
+    handleGameTitle,
+    handleGameDescription,
+    handlePhaseTime,
     handleOpenCreateQuestion,
     handleOpenQuestionBank,
     handlePublicPrivateGameChange,
