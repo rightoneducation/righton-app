@@ -29,6 +29,20 @@ export const ButtonSecondaryStyled = styled(ButtonStyled)(({ theme }) => ({
   },
 }));
 
+export const ButtonWrongAnswerStyled = styled(ButtonStyled)(({ theme }) => ({
+  backgroundColor: `white`,
+  color: `${theme.palette.primary.darkBlue}`,
+  border: `2px solid ${theme.palette.primary.darkBlue}`,
+  ':hover': {
+    backgroundColor: `${theme.palette.primary.buttonPrimaryDisable}`,
+  },
+  '&:disabled': {
+    backgroundColor: `${theme.palette.primary.buttonActionDisable}`,
+    color: `${theme.palette.primary.main}`,
+  },
+}));
+
+
 export const ButtonSaveStyled = styled(ButtonStyled)(({ theme }) => ({
   backgroundColor: `${theme.palette.primary.buttonSaveDefault}`,
   color: `${theme.palette.primary.buttonPrimaryDefault}`,

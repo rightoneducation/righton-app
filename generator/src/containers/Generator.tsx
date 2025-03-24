@@ -8,15 +8,11 @@ import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, crea
 import { IDiscardedExplanationToSave, IQuestionToSave, IRegenInput } from '../lib/Models';
 import QuestionSavedModal from '../components/modals/QuestionSavedModal';
 import ModalBackground from '../components/modals/ModalBackground';
-import { QuestionCard } from '../components/QuestionCard';
-import ButtonSubmitQuestion from '../components/ButtonSubmitQuestion';
+import { QuestionInfoContainer } from '../components/QuestionInfoContainer';
 import { ExplanationCards } from '../components/ExplanationCards';
 import { version, date, model, ExplanationRegenType } from '../lib/Constants';
-import InfoIcon from '../img/InfoIcon.svg';
-import OpenAI from '../img/OpenAILogo.svg';
 import { MainContainer, TextContainer, HeaderContainer, HeaderRightContainer, CardsContainer, QuestionContainer, FooterContainer, HeaderButtonContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { HeaderText } from '../lib/styledcomponents/generator/StyledTypography';
-import { TooltipStyled } from '../lib/styledcomponents/generator/StyledTooltip';
 import { ButtonSaveStyled, ButtonSecondaryStyled } from '../lib/styledcomponents/generator/StyledButtons';
 import { ScreenSize } from '../lib/Models';
 import RightonLogo from '../img/RightonLogo.svg';
@@ -42,9 +38,7 @@ export default function Generator() {
   const [formData, setFormData] = React.useState({
     question: '',
     correctAnswer: '',
-    wrongAnswer1: '',
-    wrongAnswer2: '',
-    wrongAnswer3: '',
+    wrongAnswers: [''],
   });
   const [isFormComplete, setIsFormComplete] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
@@ -78,28 +72,29 @@ export default function Generator() {
     {
       question: "A pair of shoes were 10% off last week. This week, there’s an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the shoes this week?",
       correctAnswer: "46%", 
-      wrongAnswer1: "50%",
-      wrongAnswer2: "54%",
-      wrongAnswer3: "14%"
+      wrongAnswers: ['50%', '54%', '14%']
     },
     {
       question: "A child is raising a flag up a 20-foot flag pole. She starts pulling at a rate of 2 feet per second for 5 seconds, but she starts to get tired and decreases her rate to 1/2 foot per second for the remainder of the time. In total, how many seconds does it take her to raise the flag from the bottom to the top?",
       correctAnswer: "25", 
-      wrongAnswer1: "10",
-      wrongAnswer2: "20",
-      wrongAnswer3: "13.75"
+      wrongAnswers: ['10', '20', '13.75'],
     },
     {
       question: "If f(x) = x^2 + 2x + 3, what is the value of f(x), when x = 6?",
       correctAnswer: "51", 
-      wrongAnswer1: "27",
-      wrongAnswer2: "41",
-      wrongAnswer3: "65"
+      wrongAnswers: ['27', '41', '65'],
     }
   ]
 
   useEffect(() => {
-    const formComplete = Object.values(formData).every(val => val.trim() !== '');
+    const formComplete = Object.values(formData).every(val => 
+      {
+        if (Array.isArray(val)){
+          return val.every((item) => item.trim() !== '');
+        }
+        return val.trim() !== ''
+      }
+    );
     setIsFormComplete(formComplete);
   }, [formData]);
 
@@ -129,11 +124,9 @@ export default function Generator() {
     generateWrongAnswerExplanations(formData, discardedExplanations).then((response) => {
       const explanationsArray = response ?? [];
       const wrongAnswersArray =  explanationsArray.map((explanation: string, index: number) => {
-        const adjustedIndex = index + 1;
-        const answerKey = `wrongAnswer${adjustedIndex}` as keyof typeof formData;
         return (
           {
-            answer: formData[answerKey],
+            answer: formData.wrongAnswers[index],
             selectedExplanation: explanation,
             dismissedExplanations: [],
           }
@@ -161,9 +154,7 @@ export default function Generator() {
       setFormData({
         question: '',
         correctAnswer: '',
-        wrongAnswer1: '',
-        wrongAnswer2: '',
-        wrongAnswer3: '',
+        wrongAnswers: ['']
       });
       setQuestionToSave(blankQuestion);
       setIsSubmitted(false);
@@ -179,9 +170,7 @@ export default function Generator() {
     setFormData({
       question: '',
       correctAnswer: '',
-      wrongAnswer1: '',
-      wrongAnswer2: '',
-      wrongAnswer3: '',
+      wrongAnswers: ['']
     });
     setQuestionToSave(blankQuestion);
     setIsSubmitted(false);
@@ -306,7 +295,7 @@ export default function Generator() {
           updateOnWindowResize
         >
           <SwiperSlide key="question-slide">
-            <QuestionCard 
+            <QuestionInfoContainer 
               isCustomQuestion={isCustomQuestion}
               labelText={labelText}
               handleInputChange={handleInputChange}
@@ -335,7 +324,7 @@ export default function Generator() {
         </Swiper>
       : <CardsContainer container columnSpacing={'20px'}>
           <Grid item xs={6} style={{paddingTop: 0}}>
-            <QuestionCard 
+            <QuestionInfoContainer 
               isCustomQuestion={isCustomQuestion}
               labelText={labelText}
               handleInputChange={handleInputChange}

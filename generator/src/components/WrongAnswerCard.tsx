@@ -6,10 +6,10 @@ import { QuestionContainer } from '../lib/styledcomponents/generator/StyledConta
 import { BaseCardStyled } from '../lib/styledcomponents/generator/StyledCards';
 import { TextFieldStyled } from '../lib/styledcomponents/generator/StyledTextField';
 import { CardHeaderTextStyled, FooterBoldStyled, FooterTextStyled, WrongAnswerNumberStyled, ExplanationTextStyled } from '../lib/styledcomponents/generator/StyledTypography';
-import { ButtonStyled } from '../lib/styledcomponents/generator/StyledButtons';
+import { ButtonStyled, ButtonWrongAnswerStyled } from '../lib/styledcomponents/generator/StyledButtons';
 
 
-interface QuestionCardProps {
+interface WrongAnswerCardProps {
   isCustomQuestion: boolean,
   labelText: string[],
   handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
@@ -21,7 +21,7 @@ interface QuestionCardProps {
   handleGenerateSampleQuestion: () => void,
 }
 
-export const QuestionCard = ({
+export const WrongAnswerCard = ({
   isCustomQuestion,
   labelText,
   handleInputChange,
@@ -31,7 +31,7 @@ export const QuestionCard = ({
   isQuestionGenerating,
   handleSubmitQuestion,
   handleGenerateSampleQuestion
-}: QuestionCardProps ) => {
+}: WrongAnswerCardProps ) => {
   const theme = useTheme();
   const inputs = [
     { label: 'Wrong Answer 1', name: 'wrongAnswer1' },
@@ -41,19 +41,21 @@ export const QuestionCard = ({
 
   return (
       <BaseCardStyled>
-        <CardHeaderTextStyled>
-          Question
-        </CardHeaderTextStyled>
-        { !isCustomQuestion ? 
+        <Box style={{ display: 'flex', flexDirection: 'column', paddingLeft: `${theme.sizing.smPadding}px`, paddingRight: `${theme.sizing.smPadding}px`, gap: '12px'}}>
+          <CardHeaderTextStyled>
+            Wrong Answer
+          </CardHeaderTextStyled>
           <ExplanationTextStyled>
-            {formData.question}
+            Enter the wrong answer(s) that you want the explanation for. 
           </ExplanationTextStyled>
-        : <TextFieldStyled placeholder="Enter the question here..." variant="outlined" name="question" multiline minRows={7} maxRows={7} value={formData.question} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event)}/>
-        }
-        <CardHeaderTextStyled>
-          Correct Answer
-        </CardHeaderTextStyled>
+        </Box>
         <TextFieldStyled placeholder="Enter the correct answer here..." variant="outlined" name="correctAnswer" value={formData.correctAnswer} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event)}/>
+        <ButtonWrongAnswerStyled onClick={handleSubmitQuestion}>
+          Add a Wrong Answer
+        </ButtonWrongAnswerStyled>
+        <ButtonStyled onClick={handleSubmitQuestion}>
+          Generate Explanation
+        </ButtonStyled>
         {/* <CardHeaderTextStyled>
           Incorrect Answers
         </CardHeaderTextStyled>
@@ -78,7 +80,7 @@ export const QuestionCard = ({
               </span>
             </TooltipStyled>
           : <ButtonStyled onClick={handleSubmitQuestion} disabled={!isFormComplete}>
-              Generate Explanations
+              Generate Explanationss
             </ButtonStyled>
         }
         <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xxSmPadding}px`}}>

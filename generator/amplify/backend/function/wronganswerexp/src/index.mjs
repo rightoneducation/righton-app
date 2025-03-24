@@ -11,15 +11,11 @@ export async function handler(event) {
     // Parse input data from the event object
     const question = JSON.parse(event.body).question.question;
     const correctAnswer = JSON.parse(event.body).question.correctAnswer;
-    const wrongAnswer1 = JSON.parse(event.body).question.wrongAnswer1;
-    const wrongAnswer2 = JSON.parse(event.body).question.wrongAnswer2;
-    const wrongAnswer3 = JSON.parse(event.body).question.wrongAnswer3;
+    const wrongAnswers = JSON.parse[event.body].question.wrongAnswers;
     const discardedExplanations = JSON.parse(event.body).discardedExplanations;
 
     const StructuredResponse = z.object({
-        wrongAnswerExplanation1: z.string(),
-        wrongAnswerExplanation2: z.string(),
-        wrongAnswerExplanation3: z.string(),
+        wrongAnswers: z.array(z.string()),
       });
 
     // prompt for open ai
@@ -38,7 +34,7 @@ export async function handler(event) {
         Input Parameters:
         - Math Question: ${question} - The problem posed to the student.
         - Correct Answer: ${correctAnswer} - The accurate solution.
-        - Wrong Answers Provided: ${wrongAnswer1}, ${wrongAnswer2}, ${wrongAnswer3} - The incorrect responses given by students.
+        - Wrong Answers Provided: ${wrongAnswers} - The incorrect responses given by students (stored in an array)
         - Discarded Explanations: ${discardedExplanations} - Rejected explanations that should never be regenerated. For each of these, review the discardText and discardType fields and ensure that your generated answer explanations do not follow the same logic. This is the highest priority. For discardType: "0" refers to an incorrect mathematical operation, "1" refers to tone/clarity, and "2" refers to other (and should include a discardText explanation).        
 
         Steps to generate explanations:
@@ -79,9 +75,7 @@ export async function handler(event) {
         const content = JSON.parse(completion.choices[0].message.content);
         const structuredData = StructuredResponse.parse(content);
         const explanationsArray = [
-            structuredData.wrongAnswerExplanation1,
-            structuredData.wrongAnswerExplanation2,
-            structuredData.wrongAnswerExplanation3,
+            structuredData.wrongAnswers
           ];
         // Return the response
         return {

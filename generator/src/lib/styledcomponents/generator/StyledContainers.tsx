@@ -88,7 +88,8 @@ export const QuestionContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
-  '-webkit-overflow-scrolling': 'touch'
+  '-webkit-overflow-scrolling': 'touch',
+  gap: `${theme.sizing.smPadding}px`,
 }));
 
 export const ExplanationCardContainer = styled(Box)(({ theme }) => ({

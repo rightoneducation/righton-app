@@ -9,9 +9,7 @@ export enum ScreenSize {
 export interface IQuestion {
   question: string;
   correctAnswer: string;
-  wrongAnswer1: string;
-  wrongAnswer2: string;
-  wrongAnswer3: string;
+  wrongAnswers: string[];
 }
 
 export type IWrongAnswerExplanations = string[];

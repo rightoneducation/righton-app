@@ -8,7 +8,7 @@ export const BaseCardStyled = styled(Paper)(({ theme }) => ({
   justifyContent: 'center',
   gap: `${theme.sizing.smPadding}px`,
   background: '#FFFFFF',
-  borderRadius: `${theme.sizing.smPadding}px`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   boxSizing: 'border-box',
   height: 'fit-content',
   boxShadow: `0px 4px 0px 10px rgaba(0,0,0,0.1)`,
