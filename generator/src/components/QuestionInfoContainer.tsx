@@ -14,6 +14,7 @@ interface QuestionCardProps {
   isFormComplete: boolean,
   isQuestionGenerating: boolean,
   handleSubmitQuestion: () => void,
+  handleAddWrongAnswer: () => void,
   handleGenerateSampleQuestion: () => void,
 }
 
@@ -26,6 +27,7 @@ export const QuestionInfoContainer = ({
   isFormComplete,
   isQuestionGenerating,
   handleSubmitQuestion,
+  handleAddWrongAnswer,
   handleGenerateSampleQuestion
 }: QuestionCardProps ) => {
   const theme = useTheme();
@@ -57,6 +59,7 @@ export const QuestionInfoContainer = ({
         isFormComplete={isFormComplete}
         isQuestionGenerating={isQuestionGenerating}
         handleSubmitQuestion={handleSubmitQuestion}
+        handleAddWrongAnswer={handleAddWrongAnswer}
         handleGenerateSampleQuestion={handleGenerateSampleQuestion}
       />
     </QuestionContainer>

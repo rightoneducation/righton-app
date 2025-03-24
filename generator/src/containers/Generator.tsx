@@ -166,6 +166,13 @@ export default function Generator() {
     });
   };
 
+  const handleAddWrongAnswer = () => {
+    setFormData((prev) => ({
+      ...prev,
+      wrongAnswers: [...prev.wrongAnswers, '']
+    }));
+  };
+
   const handleDiscardQuestion = () => {
     setFormData({
       question: '',
@@ -304,6 +311,7 @@ export default function Generator() {
               isFormComplete={isFormComplete}
               isQuestionGenerating={isQuestionGenerating}
               handleSubmitQuestion={handleSubmitQuestion}
+              handleAddWrongAnswer={handleAddWrongAnswer}
               handleGenerateSampleQuestion={handleGenerateSampleQuestion}
             />
           </SwiperSlide>
@@ -333,6 +341,7 @@ export default function Generator() {
               isFormComplete={isFormComplete}
               isQuestionGenerating={isQuestionGenerating}
               handleSubmitQuestion={handleSubmitQuestion}
+              handleAddWrongAnswer={handleAddWrongAnswer}
               handleGenerateSampleQuestion={handleGenerateSampleQuestion}
             />
           </Grid>
