@@ -27,22 +27,21 @@ import {
 
 interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   // gameQuestion: GameQuestionType;
-  // isTabsOpen: boolean;
   // setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
-  // recommendedQuestions: IQuestionTemplate[];
   // draftQuestions: IQuestionTemplate[];
-  // nextToken: string | null;
   // getDrafts: () => void;
-  // loadMore: () => void;
   // publicPrivate: PublicPrivateType;
   // userProfile: IUserProfile;
   // getFav: (user: IUserProfile) => void;
   // isFavTabOpen: boolean;
+  isTabsOpen: boolean;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   screenSize: ScreenSize;
+  recommendedQuestions: IQuestionTemplate[];
   mostPopularQuestions: IQuestionTemplate[];
   searchedQuestions: IQuestionTemplate[];
   favQuestions: IQuestionTemplate[];
+  nextToken: string | null;
   isLoading: boolean;
   searchTerms: string;
   selectedGrades: GradeTarget[];
@@ -58,27 +57,27 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  loadMore: () => void;
   handleView: (element: T, elements: T[]) => void;
 }
 
 export default function LibraryTabsQuestions({
   // gameQuestion,
-  // isTabsOpen,
   // setIsUserLoggedIn,
-  // recommendedQuestions,
   // draftQuestions,
-  // nextToken,
   // isFavTabOpen,
   // publicPrivate,
   // getDrafts,
-  // loadMore,
   // userProfile,
   // getFav,
+  isTabsOpen,
   setIsTabsOpen,
   screenSize,
+  recommendedQuestions,
   mostPopularQuestions,
   searchedQuestions,
   favQuestions,
+  nextToken,
   isLoading,
   searchTerms,
   selectedGrades,
@@ -89,6 +88,7 @@ export default function LibraryTabsQuestions({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
+  loadMore,
   handleView
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
 const isSearchResults = searchTerms.length > 0;

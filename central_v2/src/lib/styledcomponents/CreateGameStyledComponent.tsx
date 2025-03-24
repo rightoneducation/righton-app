@@ -303,6 +303,17 @@ from {
   }
 `;
 
+const fadeOut = keyframes`
+ from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+`
+
 interface FadeInProps {
   visible: boolean;
   delay?: number;
@@ -316,7 +327,9 @@ export const StyledFadeIn = styled(Box, {
   opacity: 0,
   transform: `translateY(${yAxis ? `${yAxis}px` : "20px"})`,
   transition: `opacity 0.5s ease-in-out ${delay}s, transform 0.5s ease-in-out ${delay}s`,
-  ...(visible && {
+  ...(visible ? {
     animation: `${fadeIn} 0.5s ${delay}s forwards`,
+  }: {
+    animation: `${fadeOut} 0.5s ${delay}s forwards`,
   }),
 }));

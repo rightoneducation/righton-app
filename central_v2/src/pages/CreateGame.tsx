@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IAPIClients, IQuestionTemplate } from '@righton/networking';
-import { Fade } from '@mui/material';
+import { Collapse, Fade, Slide } from '@mui/material';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
   CreateGameBoxContainer,
-  StyledFadeIn
+  StyledFadeIn,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import { ScreenSize, StorageKey, TemplateType } from '../lib/CentralModels';
 import ModalBackground from '../components/modal/ModalBackground';
@@ -32,7 +32,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const navigate = useNavigate();
   const [favQuestions, setFavQuestions] = useState<IQuestionTemplate[]>([]);
   const [selectQuestions, setSelectedQuestion] = useState<IQuestionTemplate>();
-  const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([])
+  const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const {
     questionComponentRef,
     topRef,
@@ -116,27 +116,22 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   };
 
   const handleView = (
-      question: IQuestionTemplate,
-      questions: IQuestionTemplate[],
-    ) => {
-      setSelectedQuestion(question);
-      setQuestionSet(questions);
-      setIsTabsOpen(true);
-    };
+    question: IQuestionTemplate,
+    questions: IQuestionTemplate[],
+  ) => {
+    setSelectedQuestion(question);
+    setQuestionSet(questions);
+    setIsTabsOpen(true);
+  };
 
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
-      if (screen === ScreenSize.LARGE)
-        return value;
-      if (screen === ScreenSize.MEDIUM && isSelected)
-       return value;
-      return '';
-    }
+    if (screen === ScreenSize.LARGE) return value;
+    if (screen === ScreenSize.MEDIUM && isSelected) return value;
+    return '';
+  };
 
   return (
-    <CreateGameMainContainer
-    ref={topRef}
-    sx={{ overflowY: 'auto' }}
-    >
+    <CreateGameMainContainer ref={topRef} sx={{ overflowY: 'auto' }}>
       <CreateGameBackground />
       <ModalBackground
         isModalOpen={
@@ -168,52 +163,66 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         />
 
         {/* Create Question Form  */}
-        {openCreateQuestion && (
+        {/* {openCreateQuestion && (
             <StyledFadeIn
             ref={questionComponentRef}
             visible={openCreateQuestion} 
             delay={0.2}>
-            <QuestionElements
-              screenSize={screenSize}
-              draftQuestion={draftQuestion}
-              completeIncorrectAnswers={completeIncorrectAnswers}
-              incompleteIncorrectAnswers={incompleteIncorrectAnswers}
-              isCardSubmitted={isQuestionCardSubmitted}
-              isCardErrored={isQuestionCardErrored}
-              highlightCard={highlightCard}
-              isAIEnabled={isAIEnabled}
-              isAIError={isAIError}
-              handleDebouncedCorrectAnswerChange={handleDebouncedCorrectAnswerChange}
-              handleDebouncedCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
-              handleDebouncedTitleChange={handleDebouncedTitleChange}
-              handlePublicPrivateChange={handlePublicPrivateQuestionChange}
-              handleDiscardQuestion={handleDiscard}
-              handleSaveQuestion={handleSaveQuestion}
-              handleAIError={handleAIError}
-              handleAIIsEnabled={handleAIIsEnabled}
-              handleNextCardButtonClick={handleNextCardButtonClick}
-              handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
-              handleClick={handleClick}
-              handleCCSSClick={handleCCSSClick}
-            />
             </StyledFadeIn>
-        )}
-        
-        {/* Question Bank goes here */}
-        {openQuestionBank && (
-          <StyledFadeIn
-          ref={questionComponentRef}
-          visible={openQuestionBank} 
-          delay={0.2}>
+        )} */}
 
-            <LibraryTabsQuestions
+        <Collapse
+          ref={questionComponentRef}
+          timeout={500}
+          in={openCreateQuestion}
+          unmountOnExit
+        >
+          <QuestionElements
+            screenSize={screenSize}
+            draftQuestion={draftQuestion}
+            completeIncorrectAnswers={completeIncorrectAnswers}
+            incompleteIncorrectAnswers={incompleteIncorrectAnswers}
+            isCardSubmitted={isQuestionCardSubmitted}
+            isCardErrored={isQuestionCardErrored}
+            highlightCard={highlightCard}
+            isAIEnabled={isAIEnabled}
+            isAIError={isAIError}
+            handleDebouncedCorrectAnswerChange={
+              handleDebouncedCorrectAnswerChange
+            }
+            handleDebouncedCorrectAnswerStepsChange={
+              handleDebouncedCorrectAnswerStepsChange
+            }
+            handleDebouncedTitleChange={handleDebouncedTitleChange}
+            handlePublicPrivateChange={handlePublicPrivateQuestionChange}
+            handleDiscardQuestion={handleDiscard}
+            handleSaveQuestion={handleSaveQuestion}
+            handleAIError={handleAIError}
+            handleAIIsEnabled={handleAIIsEnabled}
+            handleNextCardButtonClick={handleNextCardButtonClick}
+            handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
+            handleClick={handleClick}
+            handleCCSSClick={handleCCSSClick}
+          />
+        </Collapse>
+
+        {/* Question Bank goes here */}
+        <Collapse
+          in={openQuestionBank}
+          mountOnEnter
+          unmountOnExit
+          timeout={500}
+        >
+          <LibraryTabsQuestions
             // gameQuestion={}
-            // isTabsOpen={isTabsOpen}
             // setIsUserLoggeIn={}
-            // recommendedQuestions={recommendedQuestions}
             // userProfile={}
-            // nextToken={nextToken}
-            // loadMore={loadMoreQuestions}
+            // getFav={}
+            // isFavTabOpen={}
+            // publicPrivate={}
+            nextToken={nextToken}
+            isTabsOpen={isTabsOpen}
+            recommendedQuestions={recommendedQuestions}
             favQuestions={favQuestions}
             getLabel={getLabel}
             setIsTabsOpen={setIsTabsOpen}
@@ -229,10 +238,10 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateQuestionChange}
+            loadMore={loadMoreQuestions}
             handleView={handleView}
-            />
-          </StyledFadeIn>
-)}
+          />
+        </Collapse>
       </CreateGameBoxContainer>
     </CreateGameMainContainer>
   );
