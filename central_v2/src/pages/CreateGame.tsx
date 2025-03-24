@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IAPIClients, IQuestionTemplate } from '@righton/networking';
-import { Collapse, Fade, Slide } from '@mui/material';
+import { Box, Collapse, Fade, Slide } from '@mui/material';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
@@ -23,6 +23,8 @@ import tabExploreQuestionsIcon from '../images/tabExploreQuestions.svg';
 import tabMyQuestionsIcon from '../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../images/tabDrafts.svg';
 import tabFavoritesIcon from '../images/tabFavorites.svg';
+import CCSSTabs from '../components/ccsstabs/CCSSTabs';
+import ImageUploadModal from '../components/modal/ImageUploadModal';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -30,6 +32,7 @@ interface CreateGameProps {
 
 export default function CreateGame({ screenSize }: CreateGameProps) {
   const navigate = useNavigate();
+  const ref = useRef<HTMLDivElement | null>(null);
   const [favQuestions, setFavQuestions] = useState<IQuestionTemplate[]>([]);
   const [selectQuestions, setSelectedQuestion] = useState<IQuestionTemplate>();
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
@@ -55,6 +58,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     isAIError,
     handleImageChange,
     handleImageSave,
+    handleQuestionImageUploadClick,
     handlePublicPrivateQuestionChange,
     handleAIError,
     handleAIIsEnabled,
@@ -97,6 +101,21 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     handleSearchChange,
     loadMoreQuestions,
   } = useExploreQuestionsStateManager();
+
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if((openCreateQuestion || openQuestionBank) && ref.current) {
+        ref.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+      }
+    },300);
+
+    return () => clearTimeout(timeout);
+  },[ref, openCreateQuestion, openQuestionBank]);
+  
 
   const handleDiscard = () => {
     window.localStorage.setItem(StorageKey, '');
@@ -142,6 +161,19 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         }
         handleCloseModal={handleCloseQuestionModal}
       />
+      <CCSSTabs
+        screenSize={screenSize}
+        isTabsOpen={isCCSSVisible}
+        handleCCSSSubmit={handleCCSSSubmit}
+      />
+      <ImageUploadModal
+        draftQuestion={draftQuestion}
+        screenSize={screenSize}
+        isModalOpen={isImageUploadVisible}
+        handleImageChange={handleImageChange}
+        handleImageSave={handleImageSave}
+        handleCloseModal={handleCloseQuestionModal}
+      />
       <CreatingTemplateModal
         isModalOpen={isCreatingTemplate}
         templateType={TemplateType.GAME}
@@ -163,20 +195,13 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         />
 
         {/* Create Question Form  */}
-        {/* {openCreateQuestion && (
-            <StyledFadeIn
-            ref={questionComponentRef}
-            visible={openCreateQuestion} 
-            delay={0.2}>
-            </StyledFadeIn>
-        )} */}
-
-        <Collapse
-          ref={questionComponentRef}
+        <Fade
+          
           timeout={500}
           in={openCreateQuestion}
           unmountOnExit
         >
+          <Box ref={ref}>
           <QuestionElements
             screenSize={screenSize}
             draftQuestion={draftQuestion}
@@ -203,16 +228,19 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
             handleClick={handleClick}
             handleCCSSClick={handleCCSSClick}
+            handleImageUploadClick={handleQuestionImageUploadClick}
           />
-        </Collapse>
+          </Box>
+        </Fade>
 
         {/* Question Bank goes here */}
-        <Collapse
+        <Fade
           in={openQuestionBank}
           mountOnEnter
           unmountOnExit
           timeout={500}
         >
+          <Box ref={ref}>
           <LibraryTabsQuestions
             // gameQuestion={}
             // setIsUserLoggeIn={}
@@ -241,7 +269,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             loadMore={loadMoreQuestions}
             handleView={handleView}
           />
-        </Collapse>
+          </Box>
+        </Fade>
       </CreateGameBoxContainer>
     </CreateGameMainContainer>
   );

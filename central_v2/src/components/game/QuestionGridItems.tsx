@@ -48,6 +48,7 @@ interface IQuestionElements {
   highlightCard: CreateQuestionHighlightCard;
   incompleteIncorrectAnswers: IncorrectCard[];
   completeIncorrectAnswers: IncorrectCard[];
+  handleImageUploadClick: () => void;
   handlePublicPrivateChange: (val: PublicPrivateType) => void;
   handleSaveQuestion: () => Promise<void>;
   handleDiscardQuestion: () => void;
@@ -77,11 +78,10 @@ export default function QuestionElements({
   isAIEnabled,
   isAIError,
   completeIncorrectAnswers,
-        incompleteIncorrectAnswers,
+  incompleteIncorrectAnswers,
   handlePublicPrivateChange,
   handleNextCardButtonClick,
   handleIncorrectCardStackUpdate,
-  // handleDebouncedCorrectAnswerChange
   handleDebouncedCorrectAnswerChange,
   handleDebouncedTitleChange,
   handleDebouncedCorrectAnswerStepsChange,
@@ -91,11 +91,10 @@ export default function QuestionElements({
   handleClick,
   handleAIError,
   handleAIIsEnabled,
+  handleImageUploadClick,
 }: IQuestionElements) {
   const theme = useTheme();
  
-  const handleImageUploadClick = () => {};
-
   return (
     <>
       <Grid

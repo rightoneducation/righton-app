@@ -404,10 +404,13 @@ const useCreateQuestion = () => {
         setIsAIError(false);
       }
     
-        
+      const handleQuestionImageUploadClick = () => {
+        setIsImageUploadVisible(true);
+      }
 
       return {
         // handlers
+        handleQuestionImageUploadClick,
         handleNextCardButtonClick,
         handleIncorrectCardStackUpdate,
         handleAIError,
