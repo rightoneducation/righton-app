@@ -92,18 +92,14 @@ export const QuestionContainer = styled(Box)(({ theme }) => ({
   gap: `${theme.sizing.smPadding}px`,
 }));
 
-export const ExplanationCardContainer = styled(Box)(({ theme }) => ({
+export const AllExplanationCardsContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex', 
   flexDirection: 'column',
   justifyContent: 'flex-start', 
   alignItems: 'center',
-  backgroundColor: `rgba(249, 245, 242, 1)`,
-  borderRadius: `${theme.sizing.smPadding}px`,
   gap: 20,
-  padding: `${theme.sizing.smPadding}px`,
-  boxSizing: 'border-box',
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -114,12 +110,27 @@ export const ExplanationCardContainer = styled(Box)(({ theme }) => ({
   '-webkit-overflow-scrolling': 'touch'
 }));
 
-export const EmptyExplanationCardContainer = styled(ExplanationCardContainer)(({ theme }) => ({
+export const EmptyExplanationCardContainer = styled(AllExplanationCardsContainer)(({ theme }) => ({
   justifyContent: 'center', 
   maxHeight: '606px',
   backgroundColor: `rgba(249, 245, 242, 0.5)`,
   gap: '12px',
   padding: `${theme.sizing.mdPadding}px`,
+}));
+
+export const SingleExplanationCardContainer = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  paddingTop: '20px',
+  paddingBottom: '20px',
+  paddingLeft: '16px',
+  paddingRight: '16px',
+  backgroundColor: `rgba(249, 245, 242, 1)`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
+  gap: `${theme.sizing.mdPadding}px`,
+  boxSizing: 'border-box',
 }));
 
 interface FooterContainerProps {

@@ -9,11 +9,14 @@ import { z } from 'zod';
 export async function handler(event) {
      const openai = new OpenAI(process.env.OPENAI_API_KEY);
     // Parse input data from the event object
-    const question = JSON.parse(event.body).question.question;
-    const correctAnswer = JSON.parse(event.body).question.correctAnswer;
-    const wrongAnswers = JSON.parse[event.body].question.wrongAnswers;
-    const discardedExplanations = JSON.parse(event.body).discardedExplanations;
-
+    const parsedEvent = JSON.parse(event.body);
+    const {
+        question, 
+        correctAnswer, 
+        wrongAnswers, 
+    } = parsedEvent.question;
+    const discardedExplanations = parsedEvent.discardedExplanations;
+    const numWrongAnswers = wrongAnswers.length;
     const StructuredResponse = z.object({
         wrongAnswers: z.array(z.string()),
       });
@@ -35,6 +38,7 @@ export async function handler(event) {
         - Math Question: ${question} - The problem posed to the student.
         - Correct Answer: ${correctAnswer} - The accurate solution.
         - Wrong Answers Provided: ${wrongAnswers} - The incorrect responses given by students (stored in an array)
+        - The number of wrong answers: ${numWrongAnswers} - The total number of incorrect answers provided by students. Also, the number of answer explanations you should output.
         - Discarded Explanations: ${discardedExplanations} - Rejected explanations that should never be regenerated. For each of these, review the discardText and discardType fields and ensure that your generated answer explanations do not follow the same logic. This is the highest priority. For discardType: "0" refers to an incorrect mathematical operation, "1" refers to tone/clarity, and "2" refers to other (and should include a discardText explanation).        
 
         Steps to generate explanations:
@@ -60,11 +64,10 @@ export async function handler(event) {
 
         - After generating an explanation, pause. Review the mathematical operations and ensure they are correct. Avoid introducing additional, unrelated mathematical errors or random guesses from the student. For example, "for no reason" and the like are not acceptable methods of error.
         - After reviewing above, pause. Review that the output is a valid JSON string and that running JSON.parse will not result in an error. Pay special consideration to escape characters and do not embed any Latex formatting that could compromise this.
-
+        - Finally, ensure that you have generated ${numWrongAnswers} explanations, one for each incorrect answer provided by the students.
         Please ensure each explanation for the incorrect answers adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
         `,
     });
-    console.log(messages);
     try {
         // Make the API call to OpenAI
         const completion = await openai.chat.completions.create({
@@ -74,9 +77,7 @@ export async function handler(event) {
         });
         const content = JSON.parse(completion.choices[0].message.content);
         const structuredData = StructuredResponse.parse(content);
-        const explanationsArray = [
-            structuredData.wrongAnswers
-          ];
+        const explanationsArray = structuredData.wrongAnswers;
         // Return the response
         return {
             statusCode: 200,

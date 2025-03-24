@@ -8,7 +8,7 @@ import { WrongAnswerCard } from './WrongAnswerCard'
 interface QuestionCardProps {
   isCustomQuestion: boolean,
   labelText: string[],
-  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
+  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>, index?: number) => void,
   formData: IQuestion,
   isSubmitted: boolean,
   isFormComplete: boolean,

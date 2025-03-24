@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from '@mui/material';
 import { IQuestionToSave, IRegenInput } from '../lib/Models';
-import { EmptyExplanationCardContainer, ExplanationCardContainer } from '../lib/styledcomponents/generator/StyledContainers';
+import { EmptyExplanationCardContainer, AllExplanationCardsContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { PlaceholderHeaderStyled, PlaceholderBodyStyled } from '../lib/styledcomponents/generator/StyledTypography';
 import ExplanationCard from './ExplanationCard';
 
@@ -43,7 +43,7 @@ export const ExplanationCards = ({
             <CircularProgress style={{color: "#FFF"}}/>
           }
         </EmptyExplanationCardContainer>
-      : <ExplanationCardContainer>  
+      : <AllExplanationCardsContainer>  
         {isQuestionFilled && questionToSave.wrongAnswers.map((explanation, index) => {
           return (
             <ExplanationCard
@@ -60,7 +60,7 @@ export const ExplanationCards = ({
             />
           )
         })}
-      </ExplanationCardContainer>
+      </AllExplanationCardsContainer>
       }
     
     </>

@@ -12,7 +12,7 @@ import { ButtonStyled, ButtonWrongAnswerStyled } from '../lib/styledcomponents/g
 interface WrongAnswerCardProps {
   isCustomQuestion: boolean,
   labelText: string[],
-  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
+  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>, index: number) => void,
   formData: IQuestion,
   isSubmitted: boolean,
   isFormComplete: boolean,
@@ -35,26 +35,25 @@ export const WrongAnswerCard = ({
   handleGenerateSampleQuestion
 }: WrongAnswerCardProps ) => {
   const theme = useTheme();
-
   return (
-      <BaseCardStyled>
-        <Box style={{ display: 'flex', flexDirection: 'column', paddingLeft: `${theme.sizing.smPadding}px`, paddingRight: `${theme.sizing.smPadding}px`, gap: '12px'}}>
-          <CardHeaderTextStyled>
-            Wrong Answer
-          </CardHeaderTextStyled>
-          <ExplanationTextStyled>
-            Enter the wrong answer(s) that you want the explanation for. 
-          </ExplanationTextStyled>
-        </Box>
-        {formData.wrongAnswers.map((wrongAnswer, index) => {
-          return <TextFieldStyled placeholder="Enter incorrect answer..." variant="outlined" name="wrongAnswerr" value={wrongAnswer} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event)}/>
-        })}
-        <ButtonWrongAnswerStyled onClick={handleAddWrongAnswer}>
-          Add a Wrong Answer
-        </ButtonWrongAnswerStyled>
-        <ButtonStyled onClick={handleSubmitQuestion}>
-          Generate Explanation
-        </ButtonStyled>
+    <BaseCardStyled>
+      <Box style={{ display: 'flex', flexDirection: 'column', paddingLeft: `${theme.sizing.smPadding}px`, paddingRight: `${theme.sizing.smPadding}px`, gap: '12px'}}>
+        <CardHeaderTextStyled>
+          Wrong Answer
+        </CardHeaderTextStyled>
+        <ExplanationTextStyled>
+          Enter the wrong answer(s) that you want the explanation for. 
+        </ExplanationTextStyled>
+      </Box>
+      {formData.wrongAnswers.map((wrongAnswer, index) => {
+        return <TextFieldStyled placeholder="Enter incorrect answer..." variant="outlined" name="wrongAnswer" value={wrongAnswer} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event, index)}/>
+      })}
+      <ButtonWrongAnswerStyled onClick={handleAddWrongAnswer} disabled={formData.wrongAnswers.length > 3}>
+        Add a Wrong Answer
+      </ButtonWrongAnswerStyled>
+      <ButtonStyled onClick={handleSubmitQuestion}>
+        Generate Explanation
+      </ButtonStyled>
     </BaseCardStyled>
   );
 }

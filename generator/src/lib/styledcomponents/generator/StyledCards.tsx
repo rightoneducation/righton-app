@@ -27,7 +27,7 @@ export const ExplanationCardStyled = styled(Paper)<ExplanationCardStyledProps>((
   justifyContent: 'flex-start',
   padding: `${theme.sizing.mdPadding}px`,
   transition: 'opacity 0.3s ease',
-  borderRadius: '20px',
+  borderRadius: `${theme.sizing.xSmPadding}px`,
   gap: '10px',
   boxSizing: 'border-box',
   opacity: isSaved ? 0.4 : 1,

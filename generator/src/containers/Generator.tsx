@@ -112,11 +112,22 @@ export default function Generator() {
     fetchDiscardedExplanations();
   }, []);
 
-  const labelText = ['Question', 'Correct Answer', 'Wrong Answer 1', 'Wrong Answer 2', 'Wrong Answer 3'];
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const labelText = ['Question', 'Correct Answer'];
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>, index?: number) => {
     setIsQuestionSaved(false);
     const { name, value } = event.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (index !== undefined){
+      setFormData((prev) => {
+        const updatedArray = [...prev.wrongAnswers];
+        updatedArray[index] = value;
+        return {
+          ...prev,
+          wrongAnswers: updatedArray
+        }
+      });
+    }
+    else
+      setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmitQuestion = () => {
@@ -167,6 +178,7 @@ export default function Generator() {
   };
 
   const handleAddWrongAnswer = () => {
+    if (formData.wrongAnswers.length > 3) return;
     setFormData((prev) => ({
       ...prev,
       wrongAnswers: [...prev.wrongAnswers, '']
@@ -259,11 +271,15 @@ export default function Generator() {
         <HeaderRightContainer>
           <HeaderButtonContainer>
             <img src={howtouse} alt="How to use icon"/>
-            <HeaderText>How To Use</HeaderText>
+            { screenSize !== ScreenSize.SMALL && 
+              <HeaderText>How To Use</HeaderText>
+            }
           </HeaderButtonContainer>
           <HeaderButtonContainer>
             <img src={saved} alt="Save icon"/>
-            <HeaderText>Saved Explanations</HeaderText>
+            { screenSize !== ScreenSize.SMALL && 
+              <HeaderText>Saved Explanations</HeaderText>
+            }
           </HeaderButtonContainer>
         </HeaderRightContainer>
       </HeaderContainer>
@@ -363,12 +379,12 @@ export default function Generator() {
       }
       { isQuestionGenerated &&
         <FooterContainer screenSize={screenSize}>
-          <ButtonSaveStyled style={{width: '220px'}} onClick={handleSaveQuestion}>
+          {/* <ButtonSaveStyled style={{width: '220px'}} onClick={handleSaveQuestion}>
             Save Question
           </ButtonSaveStyled>
           <ButtonSecondaryStyled style={{width: '220px'}} onClick={handleDiscardQuestion}>
             Discard Question
-          </ButtonSecondaryStyled>
+          </ButtonSecondaryStyled> */}
         </FooterContainer>
       }
     </MainContainer>
