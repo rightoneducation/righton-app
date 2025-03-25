@@ -13,11 +13,12 @@
       "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-mobile-dev-567ab-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
-      "auth": {
-        "mobile6060603c": {},
-        "userPoolGroups": {}
-      },
       "function": {
+        "mobile6060603cPostConfirmation": {
+          "GROUP": "authusers",
+          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-464331594333592b642b-build.zip"
+        },
         "S3Trigger04eb3a91": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/S3Trigger04eb3a91-62396f4b372b526b2f32-build.zip"
@@ -25,11 +26,6 @@
         "createGameTest": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/createGameTest-324a487a7167484b6331-build.zip"
-        },
-        "mobile6060603cPostConfirmation": {
-          "GROUP": "authusers",
-          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-464331594333592b642b-build.zip"
         },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
@@ -50,12 +46,11 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
-        },
-        "mobile": {},
-        "mobile6060603c": {}
+        }
       },
-      "api": {
-        "mobile": {}
+      "auth": {
+        "mobile6060603c": {},
+        "userPoolGroups": {}
       },
       "storage": {
         "rightoncentralstorage": {}
