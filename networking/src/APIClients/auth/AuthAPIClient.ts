@@ -1,6 +1,6 @@
 import { Amplify  } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
-import { Hub, CookieStorage  } from 'aws-amplify/utils';
+import { CookieStorage  } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { 
   signUp, 
@@ -24,7 +24,6 @@ import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { userCleaner } from "../../graphql";
 import { IUserProfile } from "../../Models/IUserProfile";
-// import { e } from "mathjs";
 
 export class AuthAPIClient
   implements IAuthAPIClient
@@ -34,11 +33,6 @@ export class AuthAPIClient
   constructor(){
     this.isUserAuth = false;
     this.configAmplify(amplifyconfig);
-    // this.authListener();
-  }
-  async init(): Promise<void> {
-    // this.authEvents(null); 
-    this.isUserAuth = await this.verifyAuth();
   }
 
   configAmplify(awsconfig: any): void {
@@ -123,30 +117,6 @@ export class AuthAPIClient
     }
   }
 
-  authEvents (payload: any): void {
-    if (!payload) {
-      // this.isUserAuth = false;
-      return;
-    }
-    switch (payload.event) {
-      case 'signedIn':
-      case 'signInWithRedirect':
-        // this.isUserAuth = true;
-        break;
-      default:
-        // this.isUserAuth = false;
-        break;
-    }
-  }
-
-  authListener() {
-    Hub.listen('auth', ({ payload }) => {
-      console.log('auth event detected')
-      this.authEvents(payload);
-      }
-    );
-  }
-
   async awsSignUp(username: string, email: string, password: string) {
     await signUp({
       username: email,
@@ -160,9 +130,15 @@ export class AuthAPIClient
     });
   }
 
+  // not using a hub listener here and elsewhere as we need more fine-grained control over
+  // auth state handling (particularly with federated sign-in)
   async awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput> {
+    try {
     const response = await confirmSignUp({username: email, confirmationCode: code});
     return response;
+    } catch (e: any) {
+      throw new Error (e);
+    }
   }
 
   async awsSignIn(username: string, password: string): Promise<SignInOutput> {
@@ -188,7 +164,6 @@ export class AuthAPIClient
 
   async awsSignOut(): Promise<void> {
     await signOut();
-
   }
 
   async awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {
@@ -200,7 +175,6 @@ export class AuthAPIClient
     image: File,
   ): Promise<String> {
     const user = (await fetchAuthSession()).identityId;
-    console.log(user);
     const result = await uploadData({
       path: `private/${user}/${image.name}`,
       data: image,

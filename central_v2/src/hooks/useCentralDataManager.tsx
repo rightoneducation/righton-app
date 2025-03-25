@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { debounce, set } from 'lodash';
+import { useNavigate } from 'react-router-dom';
 import {
   IGameTemplate,
   PublicPrivateType,
@@ -11,6 +12,8 @@ import {
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
+import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
+import { useUserProfileContext, useUserProfileDispatchContext } from './context/useUserProfileContext';
 import { GameQuestionType } from '../lib/CentralModels';
 
 interface UseCentralDataManagerProps {
@@ -18,6 +21,8 @@ interface UseCentralDataManagerProps {
 }
 
 interface UseCentralDataManagerReturnProps {
+  userProfile: IUserProfile;
+  isUserLoggedIn: boolean;
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
@@ -35,6 +40,8 @@ interface UseCentralDataManagerReturnProps {
   isTabsOpen: boolean;
   isFavTabOpen: boolean;
   publicPrivate: PublicPrivateType;
+  isUserProfileComplete: (profile: IUserProfile) => boolean;
+  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -62,7 +69,15 @@ export default function useCentralDataManager({
   gameQuestion
 }: UseCentralDataManagerProps): UseCentralDataManagerReturnProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const userProfile = useUserProfileContext(UserProfileContext);
+  const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
+
+  const navigate = useNavigate();
+  
   const debounceInterval = 800;
+  // stateful variables related to user and userProfile data
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
+
   // holding all of these seperately in state so that we can switch between them without refetching
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
   const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
@@ -457,6 +472,10 @@ export default function useCentralDataManager({
     }
   };
 
+  const isUserProfileComplete = (profile: IUserProfile): boolean => {
+    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
+  };
+
   useEffect(() => {
     try {
       // inits games and questions only if they haven't been loaded yet
@@ -469,7 +488,34 @@ export default function useCentralDataManager({
     }
   }, [gameQuestion]); // eslint-disable-line
 
+  // useEffect for monitoring changes to auth status of Cognito User
+  useEffect(() => {
+    setIsUserLoggedIn(apiClients.auth.isUserAuth);
+  }, [apiClients.auth.isUserAuth]);
+
+  // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
+  // runs only on initial app load
+  useEffect(() => {
+    const response = apiClients.auth.verifyAuth().then((status) => {
+      if (status){
+        const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+        if (localProfile) {
+          if (!isUserProfileComplete(localProfile)) {
+            navigate('/nextstep')
+            return;
+          }
+          setIsUserLoggedIn(true);
+          return;
+        }
+      }
+      apiClients.centralDataManager?.clearLocalUserProfile();
+      setIsUserLoggedIn(false);
+    });
+  },[]) // eslint-disable-line
+
   return {
+    userProfile,
+    isUserLoggedIn,
     recommendedGames,
     mostPopularGames,
     searchedGames,
@@ -487,6 +533,8 @@ export default function useCentralDataManager({
     isTabsOpen,
     isFavTabOpen,
     publicPrivate,
+    isUserProfileComplete,
+    setIsUserLoggedIn,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,

@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Tabs
-} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { v4 as uuidv4 } from 'uuid';
 import { 
   IQuestionTemplate, 
   IGameTemplate,
@@ -19,16 +15,11 @@ import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import tabPrivateIcon from '../../images/tabPrivate.svg';
 import { ScreenSize, GameQuestionType } from '../../lib/CentralModels';
 import { 
-  LibraryTab,
   LibraryTabsStyledContainer,
   ContentFrame
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
-import { 
-  TabContent, 
-} from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 import LibraryTabsGames from './LibraryTabsGames';
 import LibraryTabsQuestions from './LibraryTabsQuestions';
-
 
 interface TabContainerProps {
   gameQuestion: GameQuestionType;

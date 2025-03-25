@@ -57,10 +57,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     else 
       newFavoriteGameTemplateIds.push(gameId);
     return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
-    // if (!response)
-    //   return null;
-    // // this.setLocalUserProfile(response);
-    // return response;
   };
 
   public favoriteQuestionTemplate = async (questionId: string, favorite: boolean) => {
@@ -169,16 +165,13 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
           ...currentDynamoDBUser
         };
       this.setLocalUserProfile(userProfile);
+      this.authAPIClient.isUserAuth = true;
      }
       return userProfile;
     } catch (error: any) {
       throw new Error(error);
     }
   };
-
-  // public getUserEmailCognito = () => {
-  //   return this.authAPIClient.getUserEmail()
-  // }
 
   public signUpSendConfirmationCode = async (user: IUserProfile) => {
     return this.authAPIClient.awsSignUp(user.username, user.email, user.password ?? '');
@@ -205,7 +198,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
       updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
       this.setLocalUserProfile(updatedUser);
-      // flip manual state that causes useffect to run at the top.
+      this.authAPIClient.isUserAuth = true;
 
       return { updatedUser, images };
     } catch (error: any) {
@@ -229,7 +222,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     let updatedUser = JSON.parse(JSON.stringify(user));
     try {
       const currentUser = await getCurrentUser();
-      console.log("current: ", currentUser)
       updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
       const images = await Promise.all([
         this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
@@ -242,11 +234,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
       updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
       this.setLocalUserProfile(updatedUser);
-      // flip manual state that causes useffect to run at the top.
-      console.log("printing before flip:", this.authAPIClient.isUserAuth)
-      console.log("At the bottom!(In central)")
-      this.authAPIClient.isUserAuth = !this.authAPIClient.isUserAuth;
-      console.log("printing before flip:", this.authAPIClient.isUserAuth)
+      this.authAPIClient.isUserAuth = true;
       return { updatedUser, images };
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);
@@ -256,6 +244,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
   public signOut = async () => {
     this.authAPIClient.awsSignOut();
+    this.authAPIClient.isUserAuth = false;
     this.clearLocalUserProfile();
   };
 }

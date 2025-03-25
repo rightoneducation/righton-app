@@ -37,16 +37,13 @@ function AppSwitch() {
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const userProfile = useUserProfileContext(UserProfileContext);
   const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
   
-  const isUserProfileComplete = (profile: IUserProfile): boolean => {
-    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
-  };
   const gameQuestion: GameQuestionType = 
     (mainScreen || (libraryScreen && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
   const {
+    userProfile,
+    isUserLoggedIn,
     recommendedGames,
     mostPopularGames,
     searchedGames,
@@ -64,6 +61,8 @@ function AppSwitch() {
     isTabsOpen,
     isFavTabOpen,
     publicPrivate,
+    isUserProfileComplete,
+    setIsUserLoggedIn,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
@@ -74,29 +73,6 @@ function AppSwitch() {
     loadMore,
   } = useCentralDataManager({gameQuestion});
   
-  useEffect(() => {
-    const response = apiClients.auth.verifyAuth().then((status) => {
-        console.log("UseEffect is RUNNING!")
-        if (status){
-          const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
-          // console.log("Local Profile fetched: ", localProfile)
-          if (localProfile) {
-            if (!isUserProfileComplete(localProfile)) {
-                // navigate to next step
-            }
-          }
-
-          setIsUserLoggedIn(true);
-          if (localProfile){
-            userProfileDispatch({type: 'update_user_profile', payload: localProfile});
-            setIsUserLoggedIn(true);
-          }
-        }
-      }
-    )
-  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth, userProfileDispatch]);
-
-  const session = apiClients.auth.verifyAuth();
   switch (true) {
     case questionScreen: {
       return (
