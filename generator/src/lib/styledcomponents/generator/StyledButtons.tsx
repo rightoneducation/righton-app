@@ -5,7 +5,6 @@ export const ButtonStyled = styled(Button)(({ theme }) => ({
   height: '38px',
   borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
-  fontWeight: 400,
   boxShadow: '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
   backgroundColor: `${theme.palette.primary.buttonPrimaryDefault}`,
   ':hover': {

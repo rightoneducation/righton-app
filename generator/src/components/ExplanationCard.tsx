@@ -243,14 +243,6 @@ export default function ExplanationCard(
               <CardHeaderTextStyled>
                 Explanation for Wrong Answer #{index + 1}
               </CardHeaderTextStyled>
-              { !isEditMode &&
-                <Box style={{display: 'flex', gap: `${theme.sizing.xSmPadding}px`}}>
-                  <EditTextStyled onClick={handleEditModeClick}>
-                    Edit
-                  </EditTextStyled>
-                  <img src={RegenArrow} alt="Regen Explanation" style={{cursor: 'pointer', height: '20px', width: 'auto'}} onClick={() => packageRegenInputAndSubmit(index, 3,  null)}/>
-                </Box>
-              }
             </Box>
             { !isEditMode ? 
               <>
@@ -282,17 +274,17 @@ export default function ExplanationCard(
     </ExplanationCardStyled>
     <Grid container spacing='8px'>
       <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <ButtonWrongAnswerStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)}>
+        <ButtonWrongAnswerStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)} style={{fontWeight: 400}}>
           Edit
         </ButtonWrongAnswerStyled>
       </Grid>
       <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <ButtonWrongAnswerStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)}>
+        <ButtonWrongAnswerStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)} style={{fontWeight: 400}}>
           Regenerate
         </ButtonWrongAnswerStyled>
       </Grid>
       <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <ButtonStyled onClick={() => {setIsDiscardEnabled(true); setIsRegenEnabled(false); setIsEditMode(false)}}>
+        <ButtonStyled onClick={() => {setIsDiscardEnabled(true); setIsRegenEnabled(false); setIsEditMode(false)}} style={{fontWeight: 400}}>
           Save
         </ButtonStyled>
       </Grid>

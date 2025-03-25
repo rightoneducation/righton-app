@@ -99,7 +99,7 @@ export const AllExplanationCardsContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'flex-start', 
   alignItems: 'center',
-  gap: 20,
+  gap: `${theme.sizing.smPadding}px`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
