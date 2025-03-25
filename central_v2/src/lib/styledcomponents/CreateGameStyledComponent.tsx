@@ -283,8 +283,14 @@ export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(({ 
   gap: screenSize === ScreenSize.SMALL ? '12px': `${theme.sizing.smPadding}px`,
 }));
 
-export const SelectPhaseLabel = styled(Typography)(({theme}) => ({
-    color: theme.palette.primary.sliderBlue,
+type SelectLabelProps = {
+  error: boolean;
+}
+
+export const SelectPhaseLabel = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== "error"
+})<SelectLabelProps>(({theme, error}) => ({
+    color: error ? '#D0254D': '#384466',
     fontFamily: theme.typography.fontFamily,
     fontSize: '16px',
     fontWeight: 600,

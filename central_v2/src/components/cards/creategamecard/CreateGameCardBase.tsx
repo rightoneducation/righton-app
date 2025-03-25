@@ -97,7 +97,6 @@ export default function CreateGameCardBase({
     setQuestionType(event.target.value as PublicPrivateType);
     handlePublicPrivateChange(event.target.value as PublicPrivateType);
   };
-
   const imageContents = [
     imageLink && (
       <Box
@@ -151,11 +150,19 @@ export default function CreateGameCardBase({
   const handlePhaseTwoTime = (val: string) => {
     handlePhaseTime({ phaseOne: phaseTime.phaseOne, phaseTwo: val });
   };
-  const cardIsComplete = 
-  phaseTime.phaseOne !== "" && 
-  phaseTime.phaseTwo !== "" &&
-  gameDescription !== "" &&
-  gameTitle !== "" && (openCreateQuestion || openQuestionBank);
+  const cardIsComplete =
+    phaseTime.phaseOne !== '' &&
+    phaseTime.phaseTwo !== '' &&
+    gameDescription !== '' &&
+    gameTitle !== '' &&
+    (openCreateQuestion || openQuestionBank);
+
+  const isTitleFieldError =
+    (isCardSubmitted && (!gameTitle || gameTitle.length === 0)) ||
+    (isCardErrored && (!gameTitle || gameTitle.length === 0));
+  const isDescriptionFieldError =
+    (isCardSubmitted && (!gameDescription || gameDescription.length === 0)) ||
+    (isCardErrored && (!gameDescription || gameDescription.length === 0));
 
   return (
     <BaseCardStyled
@@ -197,6 +204,7 @@ export default function CreateGameCardBase({
               isCardSubmitted={isCardSubmitted}
               phaseNumber={1}
               screenSize={screenSize}
+              isCardError={isCardErrored }
             />
             <SelectPhaseButton
               onSetPhaseTime={handlePhaseTwoTime}
@@ -204,6 +212,7 @@ export default function CreateGameCardBase({
               isCardSubmitted={isCardSubmitted}
               phaseNumber={2}
               screenSize={screenSize}
+              isCardError={isCardErrored}
             />
           </Stack>
         </Box>
@@ -246,25 +255,24 @@ export default function CreateGameCardBase({
             placeholder="Game title here.."
             value={gameTitle}
             onChange={(e) => onGameTitle(e.target.value)}
-            error={isCardSubmitted && (!gameTitle || gameTitle.length === 0)}
+            error={isTitleFieldError}
             InputProps={{
-              startAdornment: isCardSubmitted &&
-                (!gameTitle || gameTitle.length === 0) && (
-                  <InputAdornment
-                    position="start"
-                    sx={{
-                      alignSelf: 'flex-start',
-                      margin: 'auto 0',
-                    }}
-                  >
-                    <ErrorIcon src={errorIcon} alt="error icon" />
-                  </InputAdornment>
-                ),
+              startAdornment: isTitleFieldError && (
+                <InputAdornment
+                  position="start"
+                  sx={{
+                    alignSelf: 'flex-start',
+                    margin: 'auto 0',
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt="error icon" />
+                </InputAdornment>
+              ),
             }}
           >
             {gameTitle}
           </CreateGameTextFieldContainer>
-          {/* Game Description TextField */}
+          {/* Game Title TextField */}
           <CreateGameTextFieldContainer
             isCardError={isCardErrored}
             disabled={disableForm}
@@ -281,25 +289,24 @@ export default function CreateGameCardBase({
             multiline
             rows={4}
             placeholder="Enter game description here..."
-            error={isCardSubmitted && (!gameTitle || gameTitle.length === 0)}
+            error={isDescriptionFieldError}
             value={gameDescription}
             onChange={(e) => onGameDescription(e.target.value)}
             InputProps={{
-              startAdornment: isCardSubmitted &&
-                (!gameTitle || gameTitle.length === 0) && (
-                  <InputAdornment
-                    position="start"
-                    sx={{
-                      alignSelf: 'flex-start',
-                      mt: '10px',
-                    }}
-                  >
-                    <ErrorIcon src={errorIcon} alt="error icon" />
-                  </InputAdornment>
-                ),
+              startAdornment: isDescriptionFieldError && (
+                <InputAdornment
+                  position="start"
+                  sx={{
+                    alignSelf: 'flex-start',
+                    mt: '10px',
+                  }}
+                >
+                  <ErrorIcon src={errorIcon} alt="error icon" />
+                </InputAdornment>
+              ),
             }}
           >
-            <Typography>{gameTitle}</Typography>
+            <Typography>{gameDescription}</Typography>
           </CreateGameTextFieldContainer>
         </CreateGameContentLeftContainerStyled>
 

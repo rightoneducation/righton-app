@@ -33,6 +33,13 @@ const useCreateGame = () => {
     phaseTwo: '',
   });
 
+  const shouldOpenOnClick = 
+  gameTitle !== "" && 
+  gameDescription !== "" &&
+  phaseTime.phaseOne !== "" &&
+  phaseTime.phaseTwo !== ""
+
+
   const handleGameTitle = (val: string) => {
     setGameTitle(val);
   };
@@ -51,22 +58,27 @@ const useCreateGame = () => {
 
   const handleSaveGame = useCallback(async () => {
     // api call goes here.
+    // game card errors should be handled here too.
     setIsGameCardSubmitted(true);
   }, []);
 
   const handleOpenCreateQuestion = useCallback(() => {
-    if (openQuestionBank) {
+    if (openQuestionBank && shouldOpenOnClick) {
       setOpenQuestionBank(false);
     }
-    setOpenCreateQuestion((prev) => !prev);
-  }, [openQuestionBank]);
+    if(shouldOpenOnClick) {
+        setOpenCreateQuestion((prev) => !prev);
+    }
+  }, [openQuestionBank, shouldOpenOnClick]);
 
   const handleOpenQuestionBank = useCallback(() => {
     if (openCreateQuestion) {
       setOpenCreateQuestion(false);
     }
-    setOpenQuestionBank((prev) => !prev);
-  }, [openCreateQuestion]);
+    if(shouldOpenOnClick) {
+        setOpenQuestionBank((prev) => !prev);
+    }
+  }, [openCreateQuestion, shouldOpenOnClick]);
 
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
     setPublicPrivateGame((prev) => value);

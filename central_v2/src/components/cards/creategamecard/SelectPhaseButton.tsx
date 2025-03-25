@@ -1,40 +1,38 @@
-import React, { useState, useRef, Ref, useEffect } from 'react';
-import { Collapse, Button, Box, Divider, Typography, styled, useTheme } from '@mui/material';
-import { ButtonStyled } from '../../../lib/styledcomponents/ButtonStyledComponents';
+import React, { useState } from 'react';
 import {
-  SelectContainer,
-  SelectLabel,
+  Collapse,
+  Box,
+  Divider,
+  Typography,
+  styled,
+  useTheme,
+} from '@mui/material';
+import {
   SelectArrowContainer,
   SelectMenu,
   SelectMenuItem,
-  SelectButtonBox,
 } from '../../../lib/styledcomponents/SelectGrade';
 import SelectArrow from '../../../images/dropDownArrow.svg';
-
-import CentralButton from '../../button/Button';
-import { ButtonColor, ButtonType } from '../../button/ButtonModels';
 import { ScreenSize } from '../../../lib/CentralModels';
 import times from './time';
 import { ErrorIcon } from '../../../lib/styledcomponents/CentralStyledComponents';
 import errorIcon from '../../../images/errorIcon.svg';
 import { SelectPhaseLabel } from '../../../lib/styledcomponents/CreateGameStyledComponent';
-import { TPhaseTime } from '../../../hooks/useCreateGame';
-
 
 export const SelectPhase = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
-})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
+})<{ screenSize: ScreenSize, error: boolean }>(({ theme, screenSize, error }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
-   width:'128px', 
+  width: '128px', 
   maxWidth: '128px',
   minHeight: '40px',
   background: '#fffbf6',
   border: '1px solid #02215f',
   padding: '8px',
-  gap: '9px',
+  gap: error ? '1px': "9px", // ask design team since button width is 128px
   boxSizing: 'border-box',
   zIndex: 4,
   cursor: 'pointer',
@@ -52,6 +50,7 @@ interface SelectPhaseButtonProps {
   isCardSubmitted: boolean;
   onSetPhaseTime: (time: string) => void;
   phaseTime: string;
+  isCardError: boolean;
 }
 
 export default function SelectPhaseButton({
@@ -60,18 +59,19 @@ export default function SelectPhaseButton({
   isCardSubmitted,
   onSetPhaseTime,
   phaseTime,
+  isCardError,
 }: SelectPhaseButtonProps) {
   const theme = useTheme();
-  const [phase, setPhase] = useState<string>('');
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
-  // flag error if phase is not selected
-  const phaseError = isCardSubmitted && phase === '';
+  // flag error if phase is not selected or
+  const isPhaseError =
+    (isCardSubmitted && phaseTime === '') || (isCardError && phaseTime === "");
 
   // handle phase selection on menu item click
   const selectPhase = (phaseVal: string) => {
-    onSetPhaseTime(phaseVal)
+    onSetPhaseTime(phaseVal);
     setIsSelectOpen(false);
   };
 
@@ -89,13 +89,17 @@ export default function SelectPhaseButton({
         position: 'relative',
       }}
     >
-
       <SelectPhase
-        sx={{ borderRadius: isSelectOpen ? '8px 8px 0 0':'8px' }}
+      error={isPhaseError}
+        sx={{
+          borderRadius: isSelectOpen ? '8px 8px 0 0' : '8px',
+          ...(isPhaseError && { border: '1px solid #D0254D' }),
+        }}
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
-        <SelectPhaseLabel>
+        {isPhaseError && <ErrorIcon src={errorIcon} />}
+        <SelectPhaseLabel error={isPhaseError}>
           {phaseTime !== '' ? phaseTime : `Phase ${phaseNumber}`}
         </SelectPhaseLabel>
         {/* space between is here */}
@@ -109,7 +113,7 @@ export default function SelectPhaseButton({
           />
         </SelectArrowContainer>
       </SelectPhase>
-      
+
       <Collapse in={isSelectOpen} timeout={1000}>
         <SelectMenu
           isSelectOpen={isSelectOpen}
@@ -117,7 +121,7 @@ export default function SelectPhaseButton({
           sx={{
             backgroundColor: '#fffbf6',
             padding: 0,
-            top: "auto",
+            top: 'auto',
             left: 0,
             minWidth: '128px',
             width: '128px',
@@ -135,7 +139,7 @@ export default function SelectPhaseButton({
               onClick={() => selectPhase(time.label)}
               sx={{ cursor: 'pointer', width: '100%' }}
             >
-              <SelectMenuItem sx={{ height: '23px', padding: '4px 8px', }}>
+              <SelectMenuItem sx={{ height: '23px', padding: '4px 8px' }}>
                 <Typography
                   fontWeight="normal"
                   fontSize="16px"

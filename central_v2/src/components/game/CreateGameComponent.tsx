@@ -90,28 +90,29 @@ export default function CreateGameComponent({
   const handleCreateQuestion = () => {
     // if gamecard is complete...TODO
     onCreateQuestion();
-    setEnableButton((prev) => ({ 
-      ...prev,
-      createQuestion: prev.createQuestion,
-      questionBank: !prev.questionBank,
-    }))
-    // if(createGameFormIsValid) {
-    // } else {
-    //   onGameCardError(true);
-    // }
+    if(createGameFormIsValid) {
+      setEnableButton((prev) => ({ 
+        ...prev,
+        createQuestion: prev.createQuestion,
+        questionBank: !prev.questionBank,
+      }))
+
+    } else {
+      onGameCardError(true);
+    }
   };
   
   const handleOpenQuestionBank = () => {
     onOpenQuestionBank();
-    setEnableButton((prev) => ({ 
-      ...prev,
-      questionBank: prev.questionBank, 
-      createQuestion: !prev.createQuestion,
-    }))
-    // if(createGameFormIsValid){
-    // } else {
-    //   onGameCardError(true);
-    // }
+    if(createGameFormIsValid){
+      setEnableButton((prev) => ({ 
+        ...prev,
+        questionBank: prev.questionBank, 
+        createQuestion: !prev.createQuestion,
+      }))
+    } else {
+      onGameCardError(true);
+    }
   };
 
   return (
