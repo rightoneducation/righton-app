@@ -15,7 +15,9 @@ type TitleTextProps = {
   screenSize: ScreenSize;
 }
 
-const TitleText = styled(Typography)<TitleTextProps>(({ theme, screenSize }) => ({
+const TitleText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<TitleTextProps>(({ theme, screenSize }) => ({
   lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
   fontFamily: 'Poppins',
   fontWeight: '700',

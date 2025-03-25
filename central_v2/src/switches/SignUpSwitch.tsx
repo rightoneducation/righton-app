@@ -9,14 +9,10 @@ import Confirmation from '../pages/Confirmation';
 import GoogleSignup from '../pages/GoogleSignup';
 
 interface SignUpSwitchProps{
-  userProfile: IUserProfile;
-  setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>;
-  setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 export default function SignUpSwitch({
-  userProfile,
-  setUserProfile,
   setIsTabsOpen
 }:SignUpSwitchProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -42,8 +38,6 @@ export default function SignUpSwitch({
     case 'confirmation':
       return (
         <Confirmation
-          userProfile={userProfile}
-          setUserProfile={setUserProfile}
           frontImage={frontImage ?? new File([''], 'filename')}
           backImage={backImage ?? new File([''], 'filename')}
           handlerImageUpload={handlerImageUpload}
@@ -54,8 +48,6 @@ export default function SignUpSwitch({
       return (
         <GoogleSignup
           apiClients={apiClients}
-          userProfile={userProfile}
-          setUserProfile={setUserProfile}
           frontImage={frontImage}
           setFrontImage={setFrontImage}
           backImage={backImage}
@@ -67,8 +59,6 @@ export default function SignUpSwitch({
       return (
         <SignUp
           apiClients={apiClients}
-          userProfile={userProfile}
-          setUserProfile={setUserProfile}
           handleUserCreate={() => setStep('confirmation')}
           frontImage={frontImage}
           setFrontImage={setFrontImage}

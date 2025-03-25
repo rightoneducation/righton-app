@@ -16,6 +16,10 @@ export const createUser = /* GraphQL */ `
       password
       gamesMade
       questionsMade
+      frontIdPath
+      backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner
@@ -38,6 +42,10 @@ export const updateUser = /* GraphQL */ `
       password
       gamesMade
       questionsMade
+      frontIdPath
+      backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner
@@ -60,6 +68,10 @@ export const deleteUser = /* GraphQL */ `
       password
       gamesMade
       questionsMade
+      frontIdPath
+      backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner
@@ -277,6 +289,111 @@ export const deletePrivateGameTemplate = /* GraphQL */ `
     }
   }
 `;
+export const createDraftGameTemplate = /* GraphQL */ `
+  mutation CreateDraftGameTemplate(
+    $input: CreateDraftGameTemplateInput!
+    $condition: ModelDraftGameTemplateConditionInput
+  ) {
+    createDraftGameTemplate(input: $input, condition: $condition) {
+      id
+      title
+      lowerCaseTitle
+      version
+      description
+      lowerCaseDescription
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      owner
+      __typename
+    }
+  }
+`;
+export const updateDraftGameTemplate = /* GraphQL */ `
+  mutation UpdateDraftGameTemplate(
+    $input: UpdateDraftGameTemplateInput!
+    $condition: ModelDraftGameTemplateConditionInput
+  ) {
+    updateDraftGameTemplate(input: $input, condition: $condition) {
+      id
+      title
+      lowerCaseTitle
+      version
+      description
+      lowerCaseDescription
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteDraftGameTemplate = /* GraphQL */ `
+  mutation DeleteDraftGameTemplate(
+    $input: DeleteDraftGameTemplateInput!
+    $condition: ModelDraftGameTemplateConditionInput
+  ) {
+    deleteDraftGameTemplate(input: $input, condition: $condition) {
+      id
+      title
+      lowerCaseTitle
+      version
+      description
+      lowerCaseDescription
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      owner
+      __typename
+    }
+  }
+`;
 export const createPublicQuestionTemplate = /* GraphQL */ `
   mutation CreatePublicQuestionTemplate(
     $input: CreatePublicQuestionTemplateInput!
@@ -448,6 +565,105 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `
     $condition: ModelPrivateQuestionTemplateConditionInput
   ) {
     deletePrivateQuestionTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
+      lowerCaseTitle
+      version
+      choices
+      instructions
+      answerSettings
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      imageUrl
+      gameTemplates {
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const createDraftQuestionTemplate = /* GraphQL */ `
+  mutation CreateDraftQuestionTemplate(
+    $input: CreateDraftQuestionTemplateInput!
+    $condition: ModelDraftQuestionTemplateConditionInput
+  ) {
+    createDraftQuestionTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
+      lowerCaseTitle
+      version
+      choices
+      instructions
+      answerSettings
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      imageUrl
+      gameTemplates {
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const updateDraftQuestionTemplate = /* GraphQL */ `
+  mutation UpdateDraftQuestionTemplate(
+    $input: UpdateDraftQuestionTemplateInput!
+    $condition: ModelDraftQuestionTemplateConditionInput
+  ) {
+    updateDraftQuestionTemplate(input: $input, condition: $condition) {
+      id
+      owner
+      title
+      lowerCaseTitle
+      version
+      choices
+      instructions
+      answerSettings
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      imageUrl
+      gameTemplates {
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const deleteDraftQuestionTemplate = /* GraphQL */ `
+  mutation DeleteDraftQuestionTemplate(
+    $input: DeleteDraftQuestionTemplateInput!
+    $condition: ModelDraftQuestionTemplateConditionInput
+  ) {
+    deleteDraftQuestionTemplate(input: $input, condition: $condition) {
       id
       owner
       title
@@ -1272,6 +1488,192 @@ export const deletePrivateGameQuestions = /* GraphQL */ `
         __typename
       }
       privateQuestionTemplate {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createDraftGameQuestions = /* GraphQL */ `
+  mutation CreateDraftGameQuestions(
+    $input: CreateDraftGameQuestionsInput!
+    $condition: ModelDraftGameQuestionsConditionInput
+  ) {
+    createDraftGameQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      draftQuestionTemplateID
+      draftGameTemplate {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      draftQuestionTemplate {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateDraftGameQuestions = /* GraphQL */ `
+  mutation UpdateDraftGameQuestions(
+    $input: UpdateDraftGameQuestionsInput!
+    $condition: ModelDraftGameQuestionsConditionInput
+  ) {
+    updateDraftGameQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      draftQuestionTemplateID
+      draftGameTemplate {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      draftQuestionTemplate {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteDraftGameQuestions = /* GraphQL */ `
+  mutation DeleteDraftGameQuestions(
+    $input: DeleteDraftGameQuestionsInput!
+    $condition: ModelDraftGameQuestionsConditionInput
+  ) {
+    deleteDraftGameQuestions(input: $input, condition: $condition) {
+      id
+      draftGameTemplateID
+      draftQuestionTemplateID
+      draftGameTemplate {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      draftQuestionTemplate {
         id
         owner
         title

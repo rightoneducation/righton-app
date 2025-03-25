@@ -22,7 +22,9 @@ interface RecommendedGamesContainerProps {
   screenSize: ScreenSize;
 }
 
-const RecommendedContainer = styled(Box)<RecommendedGamesContainerProps>(
+const RecommendedContainer = styled(Box,{
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<RecommendedGamesContainerProps>(
   ({ theme, screenSize }) => ({
     // height: screenSize === ScreenSize.SMALL ? '368px': '408px',
     // height: 'auto',
@@ -36,7 +38,9 @@ const RecommendedContainer = styled(Box)<RecommendedGamesContainerProps>(
   }),
 );
 
-const Title = styled(Typography)<{ screenSize: ScreenSize }>(
+const Title = styled(Typography,{
+    shouldForwardProp: (prop) => prop !== 'screenSize',
+})<{ screenSize: ScreenSize }>(
   ({ screenSize, theme }) => ({
     fontFamily: 'Poppins',
     fontWeight: '700',

@@ -26,6 +26,7 @@ interface UseExploreQuestionsStateManagerProps {
     direction: SortDirection | null;
   }) => void;
   handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
   loadMoreQuestions: () => void;
 }
 
@@ -46,6 +47,9 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
   const [nextToken, setNextToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingInfiniteScroll, setIsLoadingInfiniteScroll] = useState(false);
+  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
+    PublicPrivateType.PUBLIC,
+  );
   const [sort, setSort] = useState<{
     field: SortType;
     direction: SortDirection | null;
@@ -78,6 +82,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
         sort.direction ?? SortDirection.ASC,
         sort.field,
         [...grades],
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -101,6 +106,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
         newSort.direction ?? SortDirection.ASC,
         newSort.field,
         selectedGrades,
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -131,6 +137,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
             sortDirection,
             sortType,
             gradeTargets,
+            null
           )
           .then((response) => {
             setIsLoading(false);
@@ -151,6 +158,28 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     );
   };
 
+  const handlePublicPrivateChange = (newPublicPrivate: PublicPrivateType) => {
+    setIsLoading(true);
+    setNextToken(null);
+    setPublicPrivate(newPublicPrivate);
+    const limit = newPublicPrivate === PublicPrivateType.PUBLIC ? 12 : null;
+    apiClients?.questionTemplate
+      ?.listQuestionTemplates(
+        newPublicPrivate,
+        limit,
+        null,
+        null,
+        null,
+        selectedGrades ?? [],
+        null
+      )
+      .then((response) => {
+        setIsLoading(false);
+        if (response)
+          setMostPopularQuestions(response.questionTemplates);
+      });
+  };
+
   const loadMoreQuestions = () => {
     if (nextToken && !isLoadingInfiniteScroll) {
       setIsLoadingInfiniteScroll(true);
@@ -162,6 +191,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
           null,
           null,
           [],
+          null
         )
         .then((response) => {
           if (response) {
@@ -200,6 +230,7 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
+    handlePublicPrivateChange,
     loadMoreQuestions,
   };
 }

@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import {
   IGameTemplate,
   PublicPrivateType,
   SortDirection,
   SortType,
   GradeTarget,
+  IUserProfile,
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
@@ -14,11 +15,14 @@ interface UseExploreGamesStateManagerProps {
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
+  favGames: IGameTemplate[];
   nextToken: string | null;
   isLoading: boolean;
   searchTerms: string;
   selectedGrades: GradeTarget[];
   isTabsOpen: boolean;
+  isFavTabOpen: boolean;
+  publicPrivate: PublicPrivateType;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
@@ -26,20 +30,27 @@ interface UseExploreGamesStateManagerProps {
     direction: SortDirection | null;
   }) => void;
   handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType) => void;
+  getFavGames: (user: IUserProfile) => void;
   loadMoreGames: () => void;
 }
 
-export default function useExploreGamesStateManager(): UseExploreGamesStateManagerProps {
+export default function useExploreGamesStateManager(
+): UseExploreGamesStateManagerProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const debounceInterval = 800;
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
   const [mostPopularGames, setMostPopularGames] = useState<IGameTemplate[]>([]);
+  const [favGames, setFavGames] = useState<IGameTemplate[]>([]);
   const [searchedGames, setSearchedGames] = useState<IGameTemplate[]>([]);
   const [searchTerms, setSearchTerms] = useState('');
   const [selectedGrades, setSelectedGrades] = useState<GradeTarget[]>([]);
   const [nextToken, setNextToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingInfiniteScroll, setIsLoadingInfiniteScroll] = useState(false);
+  const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(
+    PublicPrivateType.PUBLIC,
+  );
   const [sort, setSort] = useState<{
     field: SortType;
     direction: SortDirection | null;
@@ -48,6 +59,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     direction: null,
   });
   const [isTabsOpen, setIsTabsOpen] = useState(false);
+  const [isFavTabOpen, setIsFavTabOpen] = useState(false);
 
   const initGames = async () => {
     setIsLoading(true);
@@ -72,6 +84,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
         sort.direction ?? SortDirection.ASC,
         sort.field,
         [...grades],
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -88,13 +101,14 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     setNextToken(null);
     apiClients?.centralDataManager
       ?.searchForGameTemplates(
-        PublicPrivateType.PUBLIC,
+        publicPrivate,
         null,
         null,
         searchTerms,
         newSort.direction ?? SortDirection.ASC,
         newSort.field,
         selectedGrades,
+        null
       )
       .then((response) => {
         setIsLoading(false);
@@ -125,10 +139,11 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
             sortDirection,
             sortType,
             gradeTargets,
+            null
           )
           .then((response) => {
             setIsLoading(false);
-            setSearchedGames(response.games);
+            setMostPopularGames(response.games);
           });
       },
       debounceInterval,
@@ -145,6 +160,29 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     );
   };
 
+  const handlePublicPrivateChange = (newPublicPrivate: PublicPrivateType) => {
+    setIsLoading(true);
+    setNextToken(null);
+    setPublicPrivate(newPublicPrivate);
+    setMostPopularGames([]);
+    const limit = newPublicPrivate === PublicPrivateType.PUBLIC ? 12 : null;
+    apiClients?.gameTemplate
+      ?.listGameTemplates(
+        newPublicPrivate,
+        limit,
+        null,
+        null,
+        null,
+        selectedGrades ?? [],
+        null
+      )
+      .then((response) => {
+        setIsLoading(false);
+        if (response)
+          setMostPopularGames(response.gameTemplates);
+      });
+  };
+
   const loadMoreGames = () => {
     if (nextToken && !isLoadingInfiniteScroll) {
       setIsLoadingInfiniteScroll(true);
@@ -156,6 +194,7 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
           null,
           null,
           selectedGrades ?? [],
+          null
         )
         .then((response) => {
           if (response) {
@@ -171,6 +210,24 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
     }
   };
 
+  const getFavGames = async (user: IUserProfile) => {
+    setIsLoading(true);
+    apiClients?.centralDataManager?.searchForGameTemplates(
+      PublicPrivateType.PUBLIC,
+      12,
+      null,
+      searchTerms,
+      sort.direction ?? SortDirection.ASC,
+      sort.field,
+      [...selectedGrades],
+      user.favoriteGameTemplateIds ?? null,
+    ).then((response) => {
+      setFavGames(response.games);
+      setNextToken(response.nextToken); 
+      setIsLoading(false);
+    });
+  };
+
   useEffect(() => {
     try {
       initGames();
@@ -181,16 +238,21 @@ export default function useExploreGamesStateManager(): UseExploreGamesStateManag
   return {
     recommendedGames,
     mostPopularGames,
+    favGames,
     searchedGames,
     nextToken,
     isLoading,
     searchTerms,
     selectedGrades,
     isTabsOpen,
+    isFavTabOpen,
+    publicPrivate,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
+    handlePublicPrivateChange,
+    getFavGames,
     loadMoreGames,
   };
 }

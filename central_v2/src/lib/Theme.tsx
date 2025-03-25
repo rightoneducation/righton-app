@@ -75,6 +75,10 @@ const buttonActionDefault = '#EB147C'; // action button color
 const buttonActionDisable = '#EDBBD7'; // disabled state for action buttons
 const buttonActionHover = '#FF72B6'; // hover state for action buttons
 
+const buttonDraftDefault = '#526da3'; // draft button color
+const buttonDraftDisable = '#a9b4c9'; // disabled state for draft buttons
+const buttonDraftHover = '#7d96c7'; // hover state for draft buttons
+
 const buttonCCSSDefault = '#0076AA'; // CCSS buttons on explore game/question pages
 const buttonCCSSDisable = '#B9D5E3'; // disabled state for CCSS buttons
 const buttonCCSSHover = '#1FBBFF'; // hover state for CCSS buttons
@@ -462,6 +466,9 @@ declare module '@mui/material/styles' {
     buttonPrimaryDefault: string;
     buttonPrimaryDisable: string;
     buttonPrimaryHover: string;
+    buttonDraftDefault: string;
+    buttonDraftDisable: string;
+    buttonDraftHover: string;
     buttonActionDefault: string;
     buttonActionDisable: string;
     buttonActionHover: string;
@@ -528,6 +535,9 @@ declare module '@mui/material/styles' {
     buttonPrimaryDefault?: string;
     buttonPrimaryDisable?: string;
     buttonPrimaryHover?: string;
+    buttonDraftDefault?: string;
+    buttonDraftDisable?: string;
+    buttonDraftHover?: string;
     buttonActionDefault?: string;
     buttonActionDisable?: string;
     buttonActionHover?: string;
@@ -630,6 +640,9 @@ export default createTheme({
       buttonPrimaryDefault,
       buttonPrimaryDisable,
       buttonPrimaryHover,
+      buttonDraftDefault,
+      buttonDraftDisable,
+      buttonDraftHover,
       buttonActionDefault,
       buttonActionDisable,
       buttonActionHover,

@@ -49,7 +49,9 @@ type RadioLabelProps = {
   isSelected: boolean;
 };
 
-export const RadioLabelStyled = styled(FormControlLabel)<RadioLabelProps>(
+export const RadioLabelStyled = styled(FormControlLabel, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<RadioLabelProps>(
   ({ theme, isSelected }) => ({
     cursor: 'default',
     margin: 0,
@@ -73,7 +75,9 @@ interface ContentContainerProps {
   screenSize: ScreenSize;
 }
 
-export const ContentContainerStyled = styled(Box)<ContentContainerProps>(({ theme, screenSize }) => ({
+export const ContentContainerStyled = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<ContentContainerProps>(({ theme, screenSize }) => ({
   width: '100%',
   height: screenSize === ScreenSize.SMALL ? '100%' : '100%',
   display: 'flex',

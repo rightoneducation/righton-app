@@ -37,7 +37,9 @@ type TitleTextProps = {
   screenSize: ScreenSize;
 }
 
-const TitleText = styled(Typography)<TitleTextProps>(({ theme, screenSize }) => ({
+const TitleText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<TitleTextProps>(({ theme, screenSize }) => ({
   lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
   fontFamily: 'Poppins',
   fontWeight: '700',
@@ -376,6 +378,30 @@ export default function CreateQuestion({
     }
   }
 
+  const handleSaveDraftQuestion = async () => {
+    try {
+      setIsCardSubmitted(true);
+      setIsCreatingTemplate(true);
+      let result = null;
+      let url = '';
+      if (draftQuestion.questionCard.image){
+        const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+        // have to do a nested await here because aws-storage returns a nested promise object
+        result = await img.result;
+        if (result && result.path && result.path.length > 0)
+          url = result.path;
+      } else if (draftQuestion.questionCard.imageUrl){
+        url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+      }
+      window.localStorage.setItem(StorageKey, '');
+      apiClients.questionTemplate.createQuestionTemplate(PublicPrivateType.DRAFT, url, draftQuestion);
+      setIsCreatingTemplate(false);
+      navigate('/questions');
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const handleDiscardQuestion = () => {
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
@@ -448,6 +474,7 @@ export default function CreateQuestion({
           { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
             <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
               <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
+              <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
               <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
             </Box>
           }

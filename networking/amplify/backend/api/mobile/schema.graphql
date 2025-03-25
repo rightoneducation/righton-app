@@ -20,6 +20,8 @@ type User @model
   questionsMade: Int
   frontIdPath: String
   backIdPath: String
+  favoriteGameTemplateIds: AWSJSON
+  favoriteQuestionTemplateIds: AWSJSON
 }
 
 type Mutation {
@@ -39,10 +41,9 @@ type Mutation {
     ]
   )
   userCleaner(input: String!): String 
-  @function(name: "userCleaner-${env}") 
+  @function(name: "UserCleaner-${env}") 
   @auth(
     rules: [
-      { allow: public, provider: iam  },
       { allow: private, provider: userPools }
     ]
   )
@@ -54,6 +55,7 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+
   waegen(input: WaeGenInput): String
   @function(name: "waegen-${env}")
     @auth(
@@ -62,6 +64,7 @@ type Mutation {
       { allow: private, provider: userPools }
     ]
   )
+
   waeregen(input: WaeRegenInput): String
   @function(name: "waeregen-${env}")
     @auth(
@@ -179,6 +182,44 @@ input PrivateGameTemplateInput {
   description: String
 }
 
+type DraftGameTemplate @model
+@auth(
+  rules: [
+    { allow: owner, provider: userPools }
+  ]
+)
+@aws_iam
+@aws_cognito_user_pools
+{
+  id: ID!
+  title: String
+  lowerCaseTitle: String
+  version: Int
+  description: String
+  lowerCaseDescription: String
+  ccss: String
+  domain: String
+  cluster: String
+  grade: String
+  gradeFilter: String
+  standard: String
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  imageUrl: String
+  questionTemplates: [DraftQuestionTemplate] @manyToMany(relationName: "DraftGameQuestions")
+  questionTemplatesCount: Int! @default(value: "0")
+  questionTemplatesOrder: AWSJSON
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  type: String @default(value: "DraftGameTemplate") @index(name: "draftGameTemplatesByDate", queryField: "draftGameTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "draftGameTemplatesByGrade", queryField: "draftGameTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "draftGameTemplatesByDraftQuestionTemplatesCount", queryField: "draftGameTemplatesByDraftQuestionTemplatesCount", sortKeyFields: ["questionTemplatesCount"])
+}
+
+input DraftGameTemplateInput {
+  title: String
+  version: Int
+  description: String
+}
+
 type PublicQuestionTemplate @model 
 @auth(
   rules: [
@@ -249,6 +290,43 @@ type PrivateQuestionTemplate @model
 }
 
 input PrivateQuestionTemplateInput {
+  title: String
+  owner: String
+  version: Int
+}
+
+type DraftQuestionTemplate @model 
+@auth(
+  rules: [
+    { allow: owner, provider: userPools }
+  ]
+)
+@aws_iam
+@aws_cognito_user_pools
+{
+  id: ID
+  owner: String
+  title: String
+  lowerCaseTitle: String
+  version: Int
+  choices: AWSJSON
+  instructions: AWSJSON
+  answerSettings: AWSJSON
+  ccss: String
+  domain: String
+  cluster: String
+  grade: String
+  gradeFilter: String
+  standard: String
+  imageUrl: String
+  gameTemplates: [DraftGameTemplate] @manyToMany(relationName: "DraftGameQuestions")
+  gameTemplatesCount: Int! @default(value: "0")
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+   type: String @default(value: "DraftQuestionTemplate") @index(name: "draftQuestionTemplatesByDate", queryField: "draftQuestionTemplatesByDate", sortKeyFields: ["updatedAt"]) @index(name: "draftQuestionTemplatesByGrade", queryField: "draftQuestionTemplatesByGrade", sortKeyFields: ["grade"]) @index(name: "draftQuestionTemplatesByDraftGameTemplatesCount", queryField: "draftQuestionTemplatesByDraftGameTemplatesCount", sortKeyFields: ["gameTemplatesCount"])
+}
+
+input DraftQuestionTemplateInput {
   title: String
   owner: String
   version: Int
@@ -430,5 +508,3 @@ type Subscription {
       ]
     )
 }
-
-
