@@ -119,11 +119,6 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "userCleaner": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "waegen": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -221,22 +216,6 @@
         {
           "category": "function",
           "resourceName": "uploadExternalImageToS3"
-        }
-      ]
-    },
-    "AMPLIFY_function_userCleaner_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "userCleaner"
-        }
-      ]
-    },
-    "AMPLIFY_function_userCleaner_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "userCleaner"
         }
       ]
     },
