@@ -9,7 +9,7 @@ import Confirmation from '../pages/Confirmation';
 import GoogleSignup from '../pages/GoogleSignup';
 
 interface SignUpSwitchProps{
-  setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 export default function SignUpSwitch({

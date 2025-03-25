@@ -7,6 +7,7 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
 import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
+import useCentralDataManager from '../hooks/useCentralDataManager';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
@@ -19,6 +20,7 @@ import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
 
 function AppSwitch() {
   const theme = useTheme();
+  const mainScreen = useMatch('/') !== null;
   const questionScreen = useMatch('/questions') !== null;
   const libraryScreen = useMatch('/library') !== null;
   const signUpScreen = useMatch('/signup') !== null;
@@ -28,8 +30,7 @@ function AppSwitch() {
   const googlenextstep = useMatch('/nextstep') !== null;
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const [isTabsOpen, setIsTabsOpen] = React.useState(false);
-  const [gameQuestion, setGameQuestion] = useState<GameQuestionType>(GameQuestionType.GAME)
+  const [libraryGameQuestionSwitch, setLibraryGameQuestionSwitch] = useState<GameQuestionType>(GameQuestionType.GAME)
   const screenSize = isLargeScreen // eslint-disable-line
     ? ScreenSize.LARGE
     : isMediumScreen
@@ -43,6 +44,35 @@ function AppSwitch() {
   const isUserProfileComplete = (profile: IUserProfile): boolean => {
     return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
   };
+  const gameQuestion: GameQuestionType = 
+    (mainScreen || (libraryScreen && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
+  const {
+    recommendedGames,
+    mostPopularGames,
+    searchedGames,
+    draftGames,
+    favGames,
+    recommendedQuestions,
+    mostPopularQuestions,
+    searchedQuestions,
+    favQuestions,
+    draftQuestions,
+    nextToken,
+    isLoading,
+    searchTerms,
+    selectedGrades,
+    isTabsOpen,
+    isFavTabOpen,
+    publicPrivate,
+    setIsTabsOpen,
+    handleChooseGrades,
+    handleSortChange,
+    handleSearchChange,
+    handlePublicPrivateChange,
+    getFav,
+    loadMore,
+  } = useCentralDataManager({gameQuestion});
+  
   useEffect(() => {
     const response = apiClients.auth.verifyAuth().then((status) => {
         console.log("UseEffect is RUNNING!")
@@ -70,14 +100,64 @@ function AppSwitch() {
     case questionScreen: {
       return (
         <AppContainer isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} currentScreen={ScreenType.QUESTIONS} isUserLoggedIn={isUserLoggedIn}>
-          <ExploreQuestions isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} screenSize={screenSize} />
+          <ExploreQuestions 
+            isTabsOpen={isTabsOpen} 
+            setIsTabsOpen={setIsTabsOpen} 
+            screenSize={screenSize} 
+            publicPrivate={publicPrivate}
+            recommendedQuestions={recommendedQuestions}
+            mostPopularQuestions={mostPopularQuestions}
+            searchedQuestions={searchedQuestions}
+            favQuestions={favQuestions}
+            draftQuestions={draftQuestions}
+            nextToken={nextToken}
+            isLoading={isLoading}
+            searchTerms={searchTerms}
+            selectedGrades={selectedGrades}
+            isFavTabOpen={isFavTabOpen}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            getFav={getFav}
+            loadMore={loadMore}
+          />
         </AppContainer>
       );
     }
     case libraryScreen: {
       return (
-        <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn} gameQuestion={gameQuestion} setGameQuestion={setGameQuestion}>
-          <MyLibrary apiClients={apiClients} gameQuestion={gameQuestion}/>
+        <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn} gameQuestion={gameQuestion} setLibraryGameQuestionSwitch={setLibraryGameQuestionSwitch}>
+          <MyLibrary 
+            gameQuestion={gameQuestion}
+            isTabsOpen={isTabsOpen} 
+            setIsTabsOpen={setIsTabsOpen}
+            userProfile={userProfile} 
+            setIsUserLoggedIn={setIsUserLoggedIn}
+            screenSize={screenSize} 
+            recommendedGames={recommendedGames}
+            mostPopularGames={mostPopularGames}
+            searchedGames={searchedGames}
+            draftGames={draftGames}
+            favGames={favGames}
+            recommendedQuestions={recommendedQuestions}
+            mostPopularQuestions={mostPopularQuestions}
+            searchedQuestions={searchedQuestions}
+            draftQuestions={draftQuestions}
+            favQuestions={favQuestions}
+            nextToken={nextToken}
+            isLoading={isLoading}
+            searchTerms={searchTerms}
+            selectedGrades={selectedGrades}
+            isFavTabOpen={isFavTabOpen}
+            publicPrivate={publicPrivate}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            getFav={getFav}
+            loadMore={loadMore}
+          />
         </AppContainer>
       );
     }
@@ -114,7 +194,30 @@ function AppSwitch() {
     default:{
       return (
         <AppContainer currentScreen={ScreenType.GAMES} isUserLoggedIn={isUserLoggedIn}>
-          <ExploreGames userProfile={userProfile} screenSize={screenSize} setIsUserLoggedIn={setIsUserLoggedIn}/>
+          <ExploreGames 
+            isTabsOpen={isTabsOpen} 
+            setIsTabsOpen={setIsTabsOpen}
+            userProfile={userProfile} 
+            setIsUserLoggedIn={setIsUserLoggedIn}
+            screenSize={screenSize} 
+            recommendedGames={recommendedGames}
+            mostPopularGames={mostPopularGames}
+            searchedGames={searchedGames}
+            draftGames={draftGames}
+            favGames={favGames}
+            nextToken={nextToken}
+            isLoading={isLoading}
+            searchTerms={searchTerms}
+            selectedGrades={selectedGrades}
+            isFavTabOpen={isFavTabOpen}
+            publicPrivate={publicPrivate}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            getFav={getFav}
+            loadMore={loadMore}
+          />
         </AppContainer>
       );
     }

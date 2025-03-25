@@ -6,7 +6,12 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   ElementType,
   GalleryType,
+  SortDirection,
+  SortType,
   IQuestionTemplate,
+  IUserProfile,
+  PublicPrivateType,
+  GradeTarget
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -15,7 +20,6 @@ import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
-import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
 import CardGallery from '../components/cardgallery/CardGallery';
 import Recommended from '../components/explore/Recommended';
 import SearchBar from '../components/searchbar/SearchBar';
@@ -27,29 +31,56 @@ interface ExploreQuestionsProps {
   isTabsOpen: boolean;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   screenSize: ScreenSize;
+  recommendedQuestions: IQuestionTemplate[];
+  mostPopularQuestions: IQuestionTemplate[];
+  searchedQuestions: IQuestionTemplate[];
+  draftQuestions: IQuestionTemplate[];
+  favQuestions: IQuestionTemplate[];
+  nextToken: string | null;
+  isLoading: boolean;
+  searchTerms: string;
+  selectedGrades: GradeTarget[];
+  isFavTabOpen: boolean;
+  publicPrivate: PublicPrivateType;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (
+    newSort: {
+      field: SortType;
+      direction: SortDirection | null;
+    }
+  ) => void;
+  handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  getFav: (user: IUserProfile) => void;
+  loadMore: () => void;
 }
 
 export default function ExploreQuestions({
   isTabsOpen,
   setIsTabsOpen,
   screenSize,
+  publicPrivate,
+  recommendedQuestions,
+  mostPopularQuestions,
+  searchedQuestions,
+  favQuestions,
+  draftQuestions,
+  nextToken,
+  isLoading,
+  searchTerms,
+  selectedGrades,
+  isFavTabOpen,
+  handleChooseGrades,
+  handleSortChange,
+  handleSearchChange,
+  handlePublicPrivateChange,
+  getFav,
+  loadMore,
 }:ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const {
-    recommendedQuestions,
-    mostPopularQuestions,
-    searchedQuestions,
-    nextToken,
-    isLoading,
-    searchTerms,
-    selectedGrades,
-    handleChooseGrades,
-    handleSortChange,
-    handleSearchChange,
-    loadMoreQuestions,
-  } = useExploreQuestionsStateManager();
+ 
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
@@ -131,7 +162,7 @@ export default function ExploreQuestions({
       </ExploreGamesUpperContainer>
       <InfiniteScroll
         dataLength={mostPopularQuestions.length}
-        next={loadMoreQuestions}
+        next={loadMore}
         hasMore={nextToken !== null}
         loader=<h4>loading...</h4>
         scrollableTarget="scrollableDiv"

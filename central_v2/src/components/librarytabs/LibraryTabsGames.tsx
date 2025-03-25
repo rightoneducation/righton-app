@@ -7,11 +7,15 @@ import {
   ElementType,
   GalleryType,
   IGameTemplate,
+  IUserProfile,
+  GradeTarget,
+  SortType,
+  SortDirection,
   PublicPrivateType,
 } from '@righton/networking';
 import CardGallery from '../cardgallery/CardGallery';
 import SearchBar from '../searchbar/SearchBar';
-import { ScreenSize } from '../../lib/CentralModels';
+import { ScreenSize, GameQuestionType } from '../../lib/CentralModels';
 import { 
   ContentContainer, 
   TabContent,
@@ -24,53 +28,86 @@ import {
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface LibraryTabsGamesProps<T extends IGameTemplate> {
+  gameQuestion: GameQuestionType;
+  isTabsOpen: boolean;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
+  userProfile: IUserProfile;
   screenSize: ScreenSize;
+  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
+  recommendedGames: IGameTemplate[];
+  mostPopularGames: IGameTemplate[];
+  searchedGames: IGameTemplate[];
+  draftGames: IGameTemplate[];
+  favGames: IGameTemplate[];
+  nextToken: string | null;
+  isLoading: boolean;
+  searchTerms: string;
+  selectedGrades: GradeTarget[];
+  isFavTabOpen: boolean;
+  publicPrivate: PublicPrivateType;
   tabMap: { [key: number]: string };
   tabIconMap: { [key: number]: string };
   getLabel: (screen: ScreenSize, isSelected: boolean, value: string) => string;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (
+    newSort: {
+      field: SortType;
+      direction: SortDirection | null;
+    }
+  ) => void;
+  handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  getFav: (user: IUserProfile) => void;
+  loadMore: () => void;
   handleView: (element: T, elements: T[]) => void;
 }
 
 export default function LibraryTabsGames({
+  gameQuestion,
+  isTabsOpen,
+  setIsTabsOpen,
+  userProfile,
   screenSize,
-  tabMap,
-  tabIconMap,
-  getLabel,
-  handleView
-}: LibraryTabsGamesProps<IGameTemplate>) {
-const {
+  setIsUserLoggedIn,
   recommendedGames,
   mostPopularGames,
   searchedGames,
+  draftGames,
   favGames,
   nextToken,
   isLoading,
   searchTerms,
   selectedGrades,
-  setIsTabsOpen,
+  isFavTabOpen,
+  publicPrivate,
+  tabMap,
+  tabIconMap,
+  getLabel,
+  handlePublicPrivateChange,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  handlePublicPrivateChange,
-  getFavGames,
-  loadMoreGames,
-} = useExploreGamesStateManager();
+  getFav,
+  loadMore,
+  handleView
+}: LibraryTabsGamesProps<IGameTemplate>) {
 const isSearchResults = searchTerms.length > 0;
-const [publicPrivate, setPublicPrivate] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
 const [openTab, setOpenTab] = React.useState(0);
-const userProfile = useUserProfileContext(UserProfileContext);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   if (newValue === 3) {
-    getFavGames(userProfile);
+    getFav(userProfile);
   } else {
-    setPublicPrivate(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
     handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
   }
   setOpenTab(newValue);
 };
+
 const getElements = () => {
-  if (favGames.length > 0 && openTab === 3)
+  if (favGames.length > 0 && openTab === 3){
+    if (isSearchResults)
+      return searchedGames.filter((game) => favGames.map((favGame) => favGame.id).includes(game.id));
     return favGames;
+  }
   if (isSearchResults)
     return searchedGames 
   return mostPopularGames;
