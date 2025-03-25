@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
-import dice from '../images/Dice.svg';
+import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
 import qmark from '../images/qmark.svg';
 import qmarkPink from '../images/qmarkPink.svg';
