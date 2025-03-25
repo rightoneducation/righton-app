@@ -20,9 +20,6 @@ import {
   ContentContainer, 
   TabContent,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
-import useExploreGamesStateManager from '../../hooks/useExploreGamesStateManager';
-import { UserProfileContext } from '../../lib/context/UserProfileContext';
-import { useUserProfileContext } from '../../hooks/context/useUserProfileContext';
 import { 
   LibraryTab
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';

@@ -20,7 +20,6 @@ import {
   ContentContainer, 
   TabContent,
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
-import useExploreQuestionsStateManager from '../../hooks/useExploreQuestionsStateManager';
 import { 
   LibraryTab
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';

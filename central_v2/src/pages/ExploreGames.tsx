@@ -18,7 +18,6 @@ import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
-import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
 import Recommended from '../components/explore/Recommended';
 import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
