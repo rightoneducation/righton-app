@@ -13,6 +13,10 @@ export const getUser = /* GraphQL */ `
       password
       gamesMade
       questionsMade
+      frontIdPath
+      backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner
@@ -45,6 +49,10 @@ export const listUsers = /* GraphQL */ `
         password
         gamesMade
         questionsMade
+        frontIdPath
+        backIdPath
+        favoriteGameTemplateIds
+        favoriteQuestionTemplateIds
         createdAt
         updatedAt
         owner
@@ -80,6 +88,10 @@ export const userByUserName = /* GraphQL */ `
         password
         gamesMade
         questionsMade
+        frontIdPath
+        backIdPath
+        favoriteGameTemplateIds
+        favoriteQuestionTemplateIds
         createdAt
         updatedAt
         owner
@@ -115,6 +127,10 @@ export const userByEmail = /* GraphQL */ `
         password
         gamesMade
         questionsMade
+        frontIdPath
+        backIdPath
+        favoriteGameTemplateIds
+        favoriteQuestionTemplateIds
         createdAt
         updatedAt
         owner
@@ -545,6 +561,216 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
     }
   }
 `;
+export const getDraftGameTemplate = /* GraphQL */ `
+  query GetDraftGameTemplate($id: ID!) {
+    getDraftGameTemplate(id: $id) {
+      id
+      title
+      lowerCaseTitle
+      version
+      description
+      lowerCaseDescription
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
+      questionTemplates {
+        nextToken
+        __typename
+      }
+      questionTemplatesCount
+      questionTemplatesOrder
+      createdAt
+      updatedAt
+      type
+      owner
+      __typename
+    }
+  }
+`;
+export const listDraftGameTemplates = /* GraphQL */ `
+  query ListDraftGameTemplates(
+    $filter: ModelDraftGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDraftGameTemplates(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const draftGameTemplatesByDate = /* GraphQL */ `
+  query DraftGameTemplatesByDate(
+    $type: String!
+    $updatedAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelDraftGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    draftGameTemplatesByDate(
+      type: $type
+      updatedAt: $updatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const draftGameTemplatesByGrade = /* GraphQL */ `
+  query DraftGameTemplatesByGrade(
+    $type: String!
+    $grade: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelDraftGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    draftGameTemplatesByGrade(
+      type: $type
+      grade: $grade
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `
+  query DraftGameTemplatesByDraftQuestionTemplatesCount(
+    $type: String!
+    $questionTemplatesCount: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelDraftGameTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    draftGameTemplatesByDraftQuestionTemplatesCount(
+      type: $type
+      questionTemplatesCount: $questionTemplatesCount
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getPublicQuestionTemplate = /* GraphQL */ `
   query GetPublicQuestionTemplate($id: ID!) {
     getPublicQuestionTemplate(id: $id) {
@@ -911,6 +1137,206 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
     $nextToken: String
   ) {
     privateQuestionTemplatesByPrivateGameTemplatesCount(
+      type: $type
+      gameTemplatesCount: $gameTemplatesCount
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getDraftQuestionTemplate = /* GraphQL */ `
+  query GetDraftQuestionTemplate($id: ID!) {
+    getDraftQuestionTemplate(id: $id) {
+      id
+      owner
+      title
+      lowerCaseTitle
+      version
+      choices
+      instructions
+      answerSettings
+      ccss
+      domain
+      cluster
+      grade
+      gradeFilter
+      standard
+      imageUrl
+      gameTemplates {
+        nextToken
+        __typename
+      }
+      gameTemplatesCount
+      createdAt
+      updatedAt
+      type
+      __typename
+    }
+  }
+`;
+export const listDraftQuestionTemplates = /* GraphQL */ `
+  query ListDraftQuestionTemplates(
+    $filter: ModelDraftQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDraftQuestionTemplates(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const draftQuestionTemplatesByDate = /* GraphQL */ `
+  query DraftQuestionTemplatesByDate(
+    $type: String!
+    $updatedAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelDraftQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    draftQuestionTemplatesByDate(
+      type: $type
+      updatedAt: $updatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const draftQuestionTemplatesByGrade = /* GraphQL */ `
+  query DraftQuestionTemplatesByGrade(
+    $type: String!
+    $grade: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelDraftQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    draftQuestionTemplatesByGrade(
+      type: $type
+      grade: $grade
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `
+  query DraftQuestionTemplatesByDraftGameTemplatesCount(
+    $type: String!
+    $gameTemplatesCount: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelDraftQuestionTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    draftQuestionTemplatesByDraftGameTemplatesCount(
       type: $type
       gameTemplatesCount: $gameTemplatesCount
       sortDirection: $sortDirection
@@ -1467,6 +1893,90 @@ export const listPrivateGameQuestions = /* GraphQL */ `
         id
         privateGameTemplateID
         privateQuestionTemplateID
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getDraftGameQuestions = /* GraphQL */ `
+  query GetDraftGameQuestions($id: ID!) {
+    getDraftGameQuestions(id: $id) {
+      id
+      draftGameTemplateID
+      draftQuestionTemplateID
+      draftGameTemplate {
+        id
+        title
+        lowerCaseTitle
+        version
+        description
+        lowerCaseDescription
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
+        questionTemplatesCount
+        questionTemplatesOrder
+        createdAt
+        updatedAt
+        type
+        owner
+        __typename
+      }
+      draftQuestionTemplate {
+        id
+        owner
+        title
+        lowerCaseTitle
+        version
+        choices
+        instructions
+        answerSettings
+        ccss
+        domain
+        cluster
+        grade
+        gradeFilter
+        standard
+        imageUrl
+        gameTemplatesCount
+        createdAt
+        updatedAt
+        type
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listDraftGameQuestions = /* GraphQL */ `
+  query ListDraftGameQuestions(
+    $filter: ModelDraftGameQuestionsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDraftGameQuestions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        draftGameTemplateID
+        draftQuestionTemplateID
         createdAt
         updatedAt
         owner

@@ -3,12 +3,16 @@ import { IGameTemplate } from "../../../Models";
 import { 
   createPublicGameTemplate,
   createPrivateGameTemplate,
+  createDraftGameTemplate,
   getPublicGameTemplate,
   getPrivateGameTemplate,
+  getDraftGameTemplate,
   updatePublicGameTemplate,
   updatePrivateGameTemplate,
+  updateDraftGameTemplate,
   deletePublicGameTemplate,
   deletePrivateGameTemplate,
+  deleteDraftGameTemplate,
   listPublicGameTemplates,
   publicGameTemplatesByDate,
   publicGameTemplatesByGrade,
@@ -16,7 +20,11 @@ import {
   listPrivateGameTemplates,
   privateGameTemplatesByDate,
   privateGameTemplatesByGrade,
-  privateGameTemplatesByPrivateQuestionTemplatesCount
+  privateGameTemplatesByPrivateQuestionTemplatesCount,
+  listDraftGameTemplates,
+  draftGameTemplatesByDate,
+  draftGameTemplatesByGrade,
+  draftGameTemplatesByDraftQuestionTemplatesCount
 } from "../../../graphql";
 import {
   CreatePublicGameTemplateInput,
@@ -25,26 +33,39 @@ import {
   CreatePrivateGameTemplateInput,
   CreatePrivateGameTemplateMutationVariables,
   CreatePrivateGameTemplateMutation,
+  CreateDraftGameTemplateInput,
+  CreateDraftGameTemplateMutationVariables,
+  CreateDraftGameTemplateMutation,
   GetPublicGameTemplateQueryVariables,
   GetPublicGameTemplateQuery,
   GetPrivateGameTemplateQueryVariables,
   GetPrivateGameTemplateQuery,
+  GetDraftGameTemplateQueryVariables,
+  GetDraftGameTemplateQuery,
   UpdatePublicGameTemplateInput,
   UpdatePublicGameTemplateMutationVariables,
   UpdatePublicGameTemplateMutation,
   UpdatePrivateGameTemplateInput,
   UpdatePrivateGameTemplateMutationVariables,
   UpdatePrivateGameTemplateMutation,
+  UpdateDraftGameTemplateInput,
+  UpdateDraftGameTemplateMutationVariables,
+  UpdateDraftGameTemplateMutation,
   DeletePublicGameTemplateInput,
   DeletePublicGameTemplateMutationVariables,
   DeletePublicGameTemplateMutation,
   DeletePrivateGameTemplateInput,
   DeletePrivateGameTemplateMutationVariables,
   DeletePrivateGameTemplateMutation,
+  DeleteDraftGameTemplateInput,
+  DeleteDraftGameTemplateMutationVariables,
+  DeleteDraftGameTemplateMutation,
   ListPublicGameTemplatesQueryVariables,
   ListPublicGameTemplatesQuery,
   ListPrivateGameTemplatesQueryVariables,
-  ListPrivateGameTemplatesQuery
+  ListPrivateGameTemplatesQuery,
+  ListDraftGameTemplatesQueryVariables,
+  ListDraftGameTemplatesQuery
 } from "../../../AWSMobileApi";
 
 export interface IPublicGameTemplate {
@@ -99,6 +120,33 @@ export interface IPrivateGameTemplate {
   }
 }
 
+
+export interface IDraftGameTemplate {
+  create: {
+    input: CreateDraftGameTemplateInput;
+    variables: CreateDraftGameTemplateMutationVariables;
+    query: CreateDraftGameTemplateMutation;
+  },
+  get: {
+    variables: GetDraftGameTemplateQueryVariables;
+    query: GetDraftGameTemplateQuery;
+  },
+  update: {
+    input: UpdateDraftGameTemplateInput;
+    variables: UpdateDraftGameTemplateMutationVariables;
+    query: UpdateDraftGameTemplateMutation;
+  },
+  delete: {
+    input: DeleteDraftGameTemplateInput;
+    variables: DeleteDraftGameTemplateMutationVariables;
+    query: DeleteDraftGameTemplateMutation;
+  },
+  list: {
+    variables: ListDraftGameTemplatesQueryVariables;
+    query: ListDraftGameTemplatesQuery;
+  }
+}
+
 export const gameTemplateRuntimeMap = {
   Public: {
     create: {
@@ -141,6 +189,28 @@ export const gameTemplateRuntimeMap = {
         byDate: privateGameTemplatesByDate,
         byGrade: privateGameTemplatesByGrade,
         byQuestionTemplatesCount: privateGameTemplatesByPrivateQuestionTemplatesCount
+      },
+    },
+  },
+  Draft: {
+    create: {
+      queryFunction: createDraftGameTemplate,
+    },
+    get: {
+      queryFunction: getDraftGameTemplate,
+    },
+    update: {
+      queryFunction: updateDraftGameTemplate,
+    },
+    delete: {
+      queryFunction: deleteDraftGameTemplate,
+    },
+    list: {
+      queryFunction: {
+        default: listDraftGameTemplates,
+        byDate: draftGameTemplatesByDate,
+        byGrade: draftGameTemplatesByGrade,
+        byQuestionTemplatesCount: draftGameTemplatesByDraftQuestionTemplatesCount
       },
     },
   }

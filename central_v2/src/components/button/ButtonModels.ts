@@ -31,6 +31,7 @@ export enum ButtonType {
   CLONEANDEDIT = 'cloneandedit',
   NEXTQUESTION = 'nextquestion',
   SAVE = 'save',
+  SAVEDRAFT = 'savedraft',
   DISCARD = 'discard',
   DISCARDBLUE = 'discardblue',
   ADDSTEP = 'addstep',
@@ -56,6 +57,7 @@ export enum ButtonType {
 export enum ButtonColor {
   RED,
   BLUE,
+  LIGHTBLUE,
   NULL
 }
 
@@ -138,6 +140,12 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: save,
     textKey: ButtonType.SAVE,
     width: '200px'
+  },
+  [ButtonType.SAVEDRAFT]: {
+    icon: save,
+    textKey: ButtonType.SAVEDRAFT,
+    width: '200px',
+    color: ButtonColor.LIGHTBLUE
   },
   [ButtonType.DISCARD]: {
     icon: discard,

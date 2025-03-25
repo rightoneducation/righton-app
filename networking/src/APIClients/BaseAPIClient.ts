@@ -53,6 +53,7 @@ export enum SortDirection {
 export enum PublicPrivateType {
   PUBLIC = "Public",
   PRIVATE = "Private",
+  DRAFT = "Draft"
 }
 export interface GraphQLOptions {
   input?: object;

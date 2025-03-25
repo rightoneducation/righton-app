@@ -56,7 +56,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       newFavoriteGameTemplateIds = newFavoriteGameTemplateIds.filter((id: string) => id !== gameId);
     else 
       newFavoriteGameTemplateIds.push(gameId);
-    return await this.userAPIClient.updateUser({ id: user.id ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
+    return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
     // if (!response)
     //   return null;
     // // this.setLocalUserProfile(response);
