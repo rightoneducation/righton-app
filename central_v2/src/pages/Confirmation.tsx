@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { TextField, Box, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
-import { IUserProfile } from '@righton/networking';
+import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
+import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -97,8 +98,6 @@ const VerifyBox = styled(Box)(({ theme }) => ({
 
 // Props interface
 interface ConfirmationProps {
-    userProfile: IUserProfile;
-    setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>;
     frontImage: File;
     backImage: File;
     handlerImageUpload: (file: File) => Promise<any>;
@@ -106,12 +105,14 @@ interface ConfirmationProps {
 }
 
 // Use function declaration for the component
-function Confirmation({ userProfile, setUserProfile, frontImage, backImage, handlerImageUpload, setIsTabsOpen}: ConfirmationProps) {
+function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen}: ConfirmationProps) {
     const theme = useTheme();
     const [code, setCode] = useState(Array(6).fill(''));
     const [isVerifying, setIsVerifying] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const apiClients = useTSAPIClientsContext(APIClientsContext);
+    const userProfile = useUserProfileContext(UserProfileContext);
+    const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
     const navigate = useNavigate(); // Initialize useNavigate
 
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
@@ -147,12 +148,17 @@ function Confirmation({ userProfile, setUserProfile, frontImage, backImage, hand
         }
         try {
             const response = await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(userProfile, fullCode, frontImage, backImage);
-            setUserProfile((prev) => response?.updatedUser ?? prev);
+            userProfileDispatch({type: 'update_user_profile', payload: response?.updatedUser});
             setIsVerifying(false);
             navigate('/');
         } catch (error: any) {
             setIsVerifying(false);
-            console.dir(error);
+            const errorInfo = Object.getOwnPropertyNames(error).reduce((acc, key) => {
+                acc[key] = error[key];
+                return acc;
+              }, {} as any);
+              
+              console.log(errorInfo); // now includes message, stack, etc.
            
             if (error.message === 'CodeMismatchException: Invalid verification code provided, please try again.') {
                 handleConfirmationError();

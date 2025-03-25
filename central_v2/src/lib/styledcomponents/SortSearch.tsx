@@ -128,7 +128,9 @@ interface SortMenuItemProps {
   isSelected: boolean;
 }
 
-export const SortMenuItem = styled(Box)<SortMenuItemProps>(({ isSelected, theme }) => ({
+export const SortMenuItem = styled(Box,{
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<SortMenuItemProps>(({ isSelected, theme }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'row',

@@ -4,14 +4,9 @@ import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import { IAPIClients, IUserProfile } from '@righton/networking';
-import { fetchAuthSession, signIn, signUp, signOut,  } from 'aws-amplify/auth';
-// import { Auth } from 'aws-amplify';
-
-// import { GoogleLogin } from '@react-oauth/google';
-import { Google as GoogleIcon } from '@mui/icons-material';
 import { useGoogleLogin } from '@react-oauth/google';
-// import GoogleIcon from "@mui/icons-material/Google";
-
+import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
+import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
@@ -299,8 +294,6 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 
 interface SignUpProps {
   apiClients: IAPIClients;
-  userProfile: IUserProfile;
-  setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>; 
   handleUserCreate: () => void;
   // handleGoogleUserCreate: () => void;
   frontImage: File | null;
@@ -313,8 +306,6 @@ interface SignUpProps {
 }
 export default function SignUp({ 
   apiClients, 
-  userProfile, 
-  setUserProfile, 
   handleUserCreate, 
   frontImage, 
   setFrontImage, 
@@ -325,7 +316,8 @@ export default function SignUp({
   // handleGoogleUserCreate
 }: SignUpProps ) {
   const theme = useTheme();
-
+  const userProfile = useUserProfileContext(UserProfileContext);
+  const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
 
@@ -435,13 +427,11 @@ export default function SignUp({
             <TitleField
               select
               value={userProfile.title}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  title: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => userProfileDispatch({
+                type: 'update_user_profile', 
+                payload: {...userProfile, title: event.target.value}
+              })
+            }
               variant="outlined"
               SelectProps={{
                 IconComponent: DropDown, // Custom icon component
@@ -457,25 +447,21 @@ export default function SignUp({
               variant="outlined"
               placeholder="First Name"
               value={userProfile.firstName}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  firstName: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => userProfileDispatch({
+                type: 'update_user_profile', 
+                payload: {...userProfile, firstName: event.target.value}
+              })
+            }
             />
             <TextContainerStyled
               variant="outlined"
               placeholder="Last Name"
               value={userProfile.lastName}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  lastName: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => userProfileDispatch({
+                  type: 'update_user_profile', 
+                  payload: {...userProfile, lastName: event.target.value}
+                })
+              }
             />
           </MiddleTextFirstRow>
           <MiddleTextSecondRow>
@@ -484,13 +470,11 @@ export default function SignUp({
               variant="outlined"
               placeholder="Username..."
               value={userProfile.username}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  username: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => userProfileDispatch({
+                type: 'update_user_profile', 
+                payload: {...userProfile, username: event.target.value}
+              })
+            }
               sx={{
                 backgroundColor: 'white'
               }}
@@ -500,13 +484,11 @@ export default function SignUp({
             variant="outlined"
             placeholder="School Email..."
             value={userProfile.email}
-            onChange={(event) => setUserProfile((prev) => {
-              return {
-                ...prev,
-                email: event.target.value,
-                };
-              }
-            )}
+            onChange={(event) => userProfileDispatch({
+              type: 'update_user_profile', 
+              payload: {...userProfile, email: event.target.value}
+            })
+          }
           />
           <MiddleTextFourthRow>Teacher ID Image</MiddleTextFourthRow>
         </MiddleText>
@@ -601,13 +583,11 @@ export default function SignUp({
             variant="outlined"
             placeholder="Password..."
             value={userProfile.password}
-            onChange={(event) => setUserProfile((prev) => {
-              return {
-                ...prev,
-                password: event.target.value,
-                };
-              }
-            )}
+            onChange={(event) => userProfileDispatch({
+              type: 'update_user_profile', 
+              payload: {...userProfile, password: event.target.value}
+            })
+          }
             error={!!passwordError}
             sx={{
               backgroundColor: 'white',

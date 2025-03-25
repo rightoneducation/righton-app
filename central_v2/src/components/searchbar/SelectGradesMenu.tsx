@@ -120,7 +120,7 @@ export default function SelectGradesMenu({
       <Collapse in={isSelectOpen} timeout={1000}>
         <SelectMenu isSelectOpen={isSelectOpen} screenSize={screenSize}>
           {Object.keys(gradeMap).map((grade) => (
-            <SelectMenuItem onClick={() => handleGradesChange(grade)}>
+            <SelectMenuItem onClick={() => handleGradesChange(grade)} key={grade}>
               <Checkbox
                 checked={selectedGrades.includes(
                   gradeMap[grade as keyof typeof gradeMap],

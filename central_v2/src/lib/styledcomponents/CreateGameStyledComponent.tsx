@@ -11,7 +11,7 @@ export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
     display: 'none',
   },
   scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
+  msOverflowStyle: 'none', 
   boxSizing: 'border-box',
 }));
 

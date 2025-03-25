@@ -21,6 +21,8 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     questionsMade
     frontIdPath
     backIdPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
     createdAt
     updatedAt
     owner
@@ -54,6 +56,8 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       questionsMade
       frontIdPath
       backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner
@@ -90,6 +94,8 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
       questionsMade
       frontIdPath
       backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner
@@ -129,6 +135,8 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       questionsMade
       frontIdPath
       backIdPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
       createdAt
       updatedAt
       owner

@@ -5,6 +5,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { IUserProfile } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
+import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
@@ -12,12 +14,8 @@ import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
-import { ScreenType, ScreenSize } from '../lib/CentralModels';
-import Confirmation from '../pages/Confirmation';
-// import { profile } from 'console';
-
-// interface AppSwitchProps {
-// }
+import MyLibrary from '../pages/MyLibrary';
+import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
 
 function AppSwitch() {
   const theme = useTheme();
@@ -28,26 +26,18 @@ function AppSwitch() {
   const createQuestionScreen = useMatch('/create/question') !== null;
   const createGameScreen = useMatch('/create/game') !== null;
   const googlenextstep = useMatch('/nextstep') !== null;
-  
-  const blankUserProfile = {
-    title: 'Title...',
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    password: '',
-  }
-  const [userProfile, setUserProfile] = useState<IUserProfile>(blankUserProfile);
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [isTabsOpen, setIsTabsOpen] = React.useState(false);
+  const [gameQuestion, setGameQuestion] = useState<GameQuestionType>(GameQuestionType.GAME)
   const screenSize = isLargeScreen // eslint-disable-line
     ? ScreenSize.LARGE
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
-  const confirmationScreen = useMatch('/confirmation') !== null;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const userProfile = useUserProfileContext(UserProfileContext);
+  const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
   
   const isUserProfileComplete = (profile: IUserProfile): boolean => {
@@ -67,12 +57,13 @@ function AppSwitch() {
 
           setIsUserLoggedIn(true);
           if (localProfile){
-            setUserProfile(localProfile);
+            userProfileDispatch({type: 'update_user_profile', payload: localProfile});
+            setIsUserLoggedIn(true);
           }
         }
       }
     )
-  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);  // manually state that flips at the bottom.
+  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth, userProfileDispatch]);
 
   const session = apiClients.auth.verifyAuth();
   switch (true) {
@@ -85,20 +76,16 @@ function AppSwitch() {
     }
     case libraryScreen: {
       return (
-        <>
-          <Box />
-          <Box />
-        </>
-        // <AppContainer>
-        //   <MyLibrary apiClients={apiClients} />
-        // </AppContainer>
+        <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn} gameQuestion={gameQuestion} setGameQuestion={setGameQuestion}>
+          <MyLibrary apiClients={apiClients} gameQuestion={gameQuestion}/>
+        </AppContainer>
       );
     }
     case signUpScreen:
     case googlenextstep: {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
-          <SignUpSwitch userProfile={userProfile} setUserProfile={setUserProfile} setIsTabsOpen={setIsTabsOpen}/>
+          <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
         </AppContainer>
       );
     }

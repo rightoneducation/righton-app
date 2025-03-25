@@ -10,4 +10,6 @@ export interface IUser {
   questionsMade?: number
   frontIdPath?: string
   backIdPath?: string
+  favoriteGameTemplateIds?: string[]
+  favoriteQuestionTemplateIds?: string[]
 }

@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
-
 import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
+import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
+import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
 import RightOnLogo from "../images/RightOnLogo.png";
 import Adpic from "../images/@.svg"
 
@@ -144,8 +145,6 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 
 interface GoogleSignupProps {
     apiClients: IAPIClients;
-    userProfile: IUserProfile;
-    setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>; 
     // handleUserCreate: () => void;
     frontImage: File | null;
     setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
@@ -159,8 +158,6 @@ interface GoogleSignupProps {
 
 export default function GoogleSignup({
     apiClients,
-    userProfile,  
-    setUserProfile,
     frontImage,
     setFrontImage, 
     backImage,
@@ -174,12 +171,14 @@ export default function GoogleSignup({
 
     const buttonTypeStarted = ButtonType.GETSTARTED;
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
+    const userProfile = useUserProfileContext(UserProfileContext);
+    const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
 
     const handleGetStarted = async () => {
       try {
         if(frontImage && backImage) {
           const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(userProfile, frontImage, backImage);
-          setUserProfile((prev) => response?.updatedUser ?? prev);
+          userProfileDispatch({type: 'update_user_profile', payload: response?.updatedUser});
           // console.log("CurrentUserInfo: ", response?.updatedUser)
           navigate("/")
         }
@@ -200,13 +199,12 @@ export default function GoogleSignup({
                 <TitleField
                 select
                 value={userProfile.title}
-                onChange={(event) => setUserProfile((prev) => {
-                    return {
-                    ...prev,
-                    title: event.target.value,
-                    };
-                    }
-                )}
+                onChange={(event) => 
+                  userProfileDispatch({
+                    type: 'update_user_profile', 
+                    payload: {title: event.target.value}
+                  })
+                }
                 variant="outlined"
                 SelectProps={{
                     IconComponent: DropDown, // Custom icon component
@@ -222,25 +220,23 @@ export default function GoogleSignup({
                 variant="outlined"
                 placeholder="First Name"
                 value={userProfile.firstName}
-                onChange={(event) => setUserProfile((prev) => {
-                    return {
-                    ...prev,
-                    firstName: event.target.value,
-                    };
-                    }
-                )}
+                onChange={(event) => 
+                  userProfileDispatch({
+                    type: 'update_user_profile', 
+                    payload: {firstName: event.target.value}
+                  })
+                }
                 />
                 <TextContainerStyled
                 variant="outlined"
                 placeholder="Last Name"
                 value={userProfile.lastName}
-                onChange={(event) => setUserProfile((prev) => {
-                    return {
-                    ...prev,
-                    lastName: event.target.value,
-                    };
-                    }
-                )}
+                onChange={(event) => 
+                  userProfileDispatch({
+                    type: 'update_user_profile', 
+                    payload: {lastName: event.target.value}
+                  })
+                }
                 />
           </TitleandNameMUI>
           <UsernameMUI>
@@ -249,13 +245,12 @@ export default function GoogleSignup({
               variant="outlined"
               placeholder="Username..."
               value={userProfile.username}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  username: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => 
+                userProfileDispatch({
+                  type: 'update_user_profile', 
+                  payload: {username: event.target.value}
+                })
+              }
               sx={{
                 backgroundColor: 'white'
               }}

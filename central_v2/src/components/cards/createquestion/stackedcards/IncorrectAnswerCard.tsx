@@ -27,7 +27,9 @@ interface StyledCardProps {
   isAIRegenEnabled: boolean;
 }
 
-const AnswerCard = styled(Paper)<StyledCardProps>(({ theme, isHighlight, isCardComplete, isCardClicked, isAIEnabled, isAIExplanationGenerated, isAIRegenEnabled, isTopCard }) => ({
+const AnswerCard = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete' && prop !== 'isCardClicked' && prop !== 'isAIEnabled' && prop !== 'isAIExplanationGenerated' && prop !== 'isTopCard' && prop !== 'isAIRegenEnabled',
+})<StyledCardProps>(({ theme, isHighlight, isCardComplete, isCardClicked, isAIEnabled, isAIExplanationGenerated, isAIRegenEnabled, isTopCard }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   paddingBottom: isAIEnabled && isAIExplanationGenerated && isTopCard && !isAIRegenEnabled ? '70px' : `${theme.sizing.mdPadding}px`,

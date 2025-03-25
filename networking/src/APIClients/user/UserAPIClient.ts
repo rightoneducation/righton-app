@@ -71,12 +71,15 @@ export class UserAPIClient
   async updateUser( 
     updateUserInput: UpdateUserInput
   ): Promise<IUser | null> {
+    console.log(updateUserInput);
     const input: UpdateUserInput = updateUserInput
     const variables: UpdateUserMutationVariables = { input }
+    console.log(variables);
     const user = await this.callGraphQL<UpdateUserMutation>(
         updateUser,
         variables
     )
+    console.log(user.data.updateUser);
     if (user.data.updateUser)
       return UserParser.parseIUserfromAWSUser(user.data.updateUser) as IUser;
     return null;

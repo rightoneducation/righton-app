@@ -4,15 +4,17 @@ import { ScreenSize } from '../CentralModels';
 
 interface MostPopularContainerProps {
   screenSize: ScreenSize;
+  isMyLibrary?: boolean;
   children: React.ReactNode;
 }
 
 export function MostPopularContainer({ // eslint-disable-line
   screenSize,
+  isMyLibrary,
   children,
 }: MostPopularContainerProps) {
   const theme = useTheme();
-
+  
   return (
     <Box
       sx={{
@@ -22,11 +24,12 @@ export function MostPopularContainer({ // eslint-disable-line
         width: '100%',
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
+        backgroundColor: isMyLibrary ? `none` : `${theme.palette.primary.creamBackgroundColor}`,
         padding:
           screenSize === ScreenSize.SMALL
             ? `${theme.sizing.smPadding}px ${theme.sizing.mdPadding}px`
             : `${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.mdPadding}px ${theme.sizing.lgPadding}px`,
+        paddingBottom: '128px',
         boxSizing: 'border-box',
         gap:
           screenSize === ScreenSize.SMALL
@@ -39,7 +42,7 @@ export function MostPopularContainer({ // eslint-disable-line
           display: 'none',
         },
         scrollbarWidth: 'none', // Firefox
-        '-ms-overflow-style': 'none',
+        msOverflowStyle: 'none',
       }}
     >
       {children}

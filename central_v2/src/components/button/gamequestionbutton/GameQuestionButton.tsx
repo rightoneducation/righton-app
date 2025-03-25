@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { GameQuestionType } from '../../../lib/CentralModels';
 
-interface PublicPrivateContainerProps {
+interface GameQuestionContainerProps {
   isDisabled: boolean;
 }
 
-const PublicPrivateContainer = styled(Button, {
+const GameQuestionContainer = styled(Button,{
   shouldForwardProp: (prop) => prop !== 'isDisabled',
-})<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
-  width: '144px',
-  minHeight: '36px',
-  borderRadius: '24px',
+})<GameQuestionContainerProps>(({theme, isDisabled}) => ({
+  width: '416px',
+  minHeight: '68px',
+  borderRadius: '8px',
   background: `${theme.palette.primary.sliderGrey}`,
   ':hover': {
     background: `${theme.palette.primary.sliderGrey}`,
@@ -21,18 +22,18 @@ const PublicPrivateContainer = styled(Button, {
   cursor: isDisabled ? 'default' : 'pointer'
 }));
 
-const PublicPrivateSelectionPill = styled(Box, {
+const GameQuestionSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic',
 })<{ isPublic: boolean }>(({ theme, isPublic }) => ({
-  width: '71px',
-  height: '33px',
-  borderRadius: '24px',
+  width: '200px',
+  height: '52px',
+  borderRadius: '8px',
   background: `${theme.palette.primary.sliderBlue}`,
   ':hover': {
     background: `${theme.palette.primary.sliderBlue}`,
   },
   position: 'absolute',
-  left: isPublic ? '2px' : '70px', 
+  left: isPublic ? '8px' : '208px', 
   transition: 'left 0.3s ease-in-out',   
   boxSizing: 'border-box',
   zIndex: 3,
@@ -41,9 +42,8 @@ const PublicPrivateSelectionPill = styled(Box, {
 const LabelContainer = styled(Box)(({theme}) => ({
   width: '100%',
   display: 'flex',
-  justifyContent: 'space-between',
-  paddingLeft: '16px',
-  paddingRight: '16px',
+  justifyContent: 'flex-start',
+  paddingLeft: '8px',
   zIndex: 4,
   position: 'relative'
 }))
@@ -54,51 +54,59 @@ const SubContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  justifyContent: 'center',
   position: 'relative',
+  width: '200px',
   opacity: isSelected ? 1 : 0.5,
   transition: 'opacity 0.3 ease-in-out'
 }));
 
-interface PublicPrivateTextProps {
+interface GameQuestionTextProps {
   isSelected: boolean;
 }
 
-const PublicPrivateText = styled(Typography, {
+const GameQuestionText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'isSelected',
-})<PublicPrivateTextProps>(({isSelected, theme}) => ({
-  fontSize: '14px',
+})<GameQuestionTextProps>(({isSelected, theme}) => ({
+  fontSize: '24px',
+  fontWeight: 700,
   color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
   textTransform: 'none',
   transition: 'color 0.3 ease-in-out'
 }));
 
-interface PublicPrivateButtonInterface {
+interface GameQuestionButtonInterface {
   isDisabled: boolean;
+  gameQuestion?: GameQuestionType;
+  setGameQuestion?: (gameQuestion: GameQuestionType) => void;
 }
 
-export default function PublicPrivateButton({
-  isDisabled
-}: PublicPrivateButtonInterface) {
+export default function GameQuestionButton({
+  isDisabled,
+  gameQuestion,
+  setGameQuestion
+}: GameQuestionButtonInterface) {
   const { t } = useTranslation();
-  const [isPublic, setIsPublic] = useState<boolean>(true);
-  const handlePublicPrivateSwitch = () =>{
-    setIsPublic(!isPublic);
+  const isPublic = gameQuestion === GameQuestionType.GAME;
+  const handleGameQuestionSwitch = () =>{
+    if (setGameQuestion)
+      setGameQuestion(gameQuestion === GameQuestionType.GAME ? GameQuestionType.QUESTION : GameQuestionType.GAME);
   }
   return (
-    <PublicPrivateContainer isDisabled={isDisabled} onClick={!isDisabled ? handlePublicPrivateSwitch : undefined}>
-      <PublicPrivateSelectionPill isPublic={isPublic}/>
+    <GameQuestionContainer isDisabled={isDisabled} onClick={!isDisabled ? handleGameQuestionSwitch : undefined}>
+      <GameQuestionSelectionPill isPublic={isPublic}/>
       <LabelContainer>
         <SubContainer isSelected={isPublic}>     
-          <PublicPrivateText isSelected={isPublic}>
-            {t(`publicPrivateButton.public`)}
-          </PublicPrivateText>
+          <GameQuestionText isSelected={isPublic}>
+            {t(`gameQuestionButton.games`)}
+          </GameQuestionText>
         </SubContainer>
         <SubContainer isSelected={!isPublic}>
-          <PublicPrivateText isSelected={!isPublic}>
-            {t(`publicPrivateButton.private`)}
-          </PublicPrivateText>
+          <GameQuestionText isSelected={!isPublic}>
+            {t(`gameQuestionButton.questions`)}
+          </GameQuestionText>
         </SubContainer>
       </LabelContainer>
-    </PublicPrivateContainer>
+    </GameQuestionContainer>
   );
 }
