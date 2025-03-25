@@ -14,6 +14,7 @@ import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
 import { ScreenType, ScreenSize } from '../lib/CentralModels';
 import Confirmation from '../pages/Confirmation';
+// import { profile } from 'console';
 
 // interface AppSwitchProps {
 // }
@@ -26,6 +27,8 @@ function AppSwitch() {
   const loginScreen = useMatch('/login') !== null;
   const createQuestionScreen = useMatch('/create/question') !== null;
   const createGameScreen = useMatch('/create/game') !== null;
+  const googlenextstep = useMatch('/nextstep') !== null;
+  
   const blankUserProfile = {
     title: 'Title...',
     firstName: '',
@@ -46,22 +49,32 @@ function AppSwitch() {
   const confirmationScreen = useMatch('/confirmation') !== null;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
-
+  
+  const isUserProfileComplete = (profile: IUserProfile): boolean => {
+    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
+  };
   useEffect(() => {
-    apiClients.auth.verifyAuth().then((status) => {
+    const response = apiClients.auth.verifyAuth().then((status) => {
+        console.log("UseEffect is RUNNING!")
         if (status){
           const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+          // console.log("Local Profile fetched: ", localProfile)
+          if (localProfile) {
+            if (!isUserProfileComplete(localProfile)) {
+                // navigate to next step
+            }
+          }
+
+          setIsUserLoggedIn(true);
           if (localProfile){
             setUserProfile(localProfile);
-            setIsUserLoggedIn(true);
           }
         }
       }
     )
-  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);
+  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);  // manually state that flips at the bottom.
 
-  console.log(createGameScreen, 'createGameScreen');
-
+  const session = apiClients.auth.verifyAuth();
   switch (true) {
     case questionScreen: {
       return (
@@ -81,13 +94,15 @@ function AppSwitch() {
         // </AppContainer>
       );
     }
-    case signUpScreen: {
+    case signUpScreen:
+    case googlenextstep: {
       return (
         <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
           <SignUpSwitch userProfile={userProfile} setUserProfile={setUserProfile} setIsTabsOpen={setIsTabsOpen}/>
         </AppContainer>
       );
     }
+    
     case loginScreen: {
       return (
         <AppContainer currentScreen={ScreenType.LOGIN} isUserLoggedIn={isUserLoggedIn}>

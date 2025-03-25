@@ -1,13 +1,23 @@
 import React, { useState, useRef, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
-import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
+import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import { IAPIClients, IUserProfile } from '@righton/networking';
+import { fetchAuthSession, signIn, signUp, signOut,  } from 'aws-amplify/auth';
+// import { Auth } from 'aws-amplify';
+
+// import { GoogleLogin } from '@react-oauth/google';
+import { Google as GoogleIcon } from '@mui/icons-material';
+import { useGoogleLogin } from '@react-oauth/google';
+// import GoogleIcon from "@mui/icons-material/Google";
+
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import RightOnLogo from "../images/RightOnLogo.png";
+import GoogleImageSvg from "../images/googleicon.svg";
+
 import Adpic from "../images/@.svg"
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
 import { 
@@ -16,6 +26,8 @@ import {
 import errorIcon from '../images/errorIcon.svg';
 import SignUpErrorModal from '../components/modal/SignUpErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
+
+
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -62,6 +74,27 @@ const UpperSignupSubGoogle = styled(Typography)(({ theme }) => ({
   backgroundColor: 'white', // Set background color to white
   minHeight: '52px',
 }));
+
+const GoogleSignUpButton = styled(Button)(({ theme }) => ({
+  backgroundColor: 'transparent',  // Make background transparent
+  color: '#0966E0',
+  padding: '10px 16px',
+  fontSize: '16px',
+  fontWeight: 500,
+  fontFamily: 'Poppins, sans-serif',
+  borderRadius: '8px',
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '10px',
+  border: '2px solid #0966E0',
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: '#f0f0f0',
+  },
+}));
+
 
 const OrText = styled(Typography)(({ theme }) => ({
   width: '100%',
@@ -269,12 +302,14 @@ interface SignUpProps {
   userProfile: IUserProfile;
   setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>; 
   handleUserCreate: () => void;
+  // handleGoogleUserCreate: () => void;
   frontImage: File | null;
   setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
   backImage: File | null;
   setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
   confirmPassword: string;
   setConfirmPassword: (value: string) => void;
+  // setPressedGoogle: (value: boolean) => void
 }
 export default function SignUp({ 
   apiClients, 
@@ -286,7 +321,8 @@ export default function SignUp({
   backImage, 
   setBackImage,
   confirmPassword,
-  setConfirmPassword
+  setConfirmPassword,
+  // handleGoogleUserCreate
 }: SignUpProps ) {
   const theme = useTheme();
 
@@ -315,6 +351,7 @@ export default function SignUp({
 
 
   const handleSubmit = async () => {
+    // setPressedGoogle(true)
     setLoading(true);
     setPasswordError(""); // Reset error before validation
     setPasswordConfirmError("")
@@ -353,7 +390,27 @@ export default function SignUp({
     setLoading(false);
   };
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const idToken = credentialResponse.access_token; // Use `access_token` for OAuth login
 
+        if (idToken) {
+          const response = await apiClients.auth.awsSignInFederated();
+          // handleGoogleUserCreate()
+          
+          console.log('User signed in:', response);
+        } else {
+          console.error('Google sign-in token is missing');
+        }
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+      }
+    },
+    onError: () => {
+      console.error('Google Sign-In Failed');
+    },
+  });
   return (
     <SignUpMainContainer>
       <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
@@ -362,7 +419,13 @@ export default function SignUp({
         <UpperSignup>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
           <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
-          <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle>
+          {/* <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle> */}
+          <GoogleSignUpButton onClick={() => googleLogin()} variant="contained">
+            <img src={GoogleImageSvg} alt="Google Icon" width="30px" height="30px" />
+            Sign up with Google
+          </GoogleSignUpButton>
+
+
         </UpperSignup>
 
         <OrText>Or</OrText>

@@ -60,6 +60,7 @@ function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, isUserLoggedIn
     if (setIsTabsOpen)
       setIsTabsOpen(false);
   }
+  
   return (
     <ScreenContainer>
       <HeaderContainer>
