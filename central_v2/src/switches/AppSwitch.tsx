@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useCentralDataManager from '../hooks/useCentralDataActions';
 import AppContainer from '../containers/AppContainer';
+import AuthGuard from '../containers/AuthGuard';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUpSwitch from './SignUpSwitch';
@@ -52,31 +53,35 @@ function AppSwitch() {
     case questionScreen: {
       currentScreen = ScreenType.QUESTIONS;
       screenComponent = (
-        <ExploreQuestions 
-          screenSize={screenSize} 
-          fetchElements={fetchElements}
-          setIsTabsOpen={setIsTabsOpen}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
-          handleSearchChange={handleSearchChange}
-          loadMore={loadMore}
-        />
+        <AuthGuard>
+          <ExploreQuestions 
+            screenSize={screenSize} 
+            fetchElements={fetchElements}
+            setIsTabsOpen={setIsTabsOpen}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            loadMore={loadMore}
+          />
+        </AuthGuard>
       );
       break;
     }
     case libraryScreen: {
       currentScreen = ScreenType.LIBRARY;
       screenComponent = (
-        <MyLibrary 
-          gameQuestion={gameQuestion}
-          screenSize={screenSize} 
-          setIsTabsOpen={setIsTabsOpen}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
-          handleSearchChange={handleSearchChange}
-          handlePublicPrivateChange={handlePublicPrivateChange}
-          fetchElements={fetchElements}
-        />
+        <AuthGuard>
+          <MyLibrary 
+            gameQuestion={gameQuestion}
+            screenSize={screenSize} 
+            setIsTabsOpen={setIsTabsOpen}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            fetchElements={fetchElements}
+          />
+        </AuthGuard>
       );
       break;
     }
@@ -113,6 +118,7 @@ function AppSwitch() {
     default:{
       currentScreen = ScreenType.GAMES;
       screenComponent = (
+        <AuthGuard>
           <ExploreGames 
             screenSize={screenSize} 
             setIsTabsOpen={setIsTabsOpen}
@@ -122,6 +128,7 @@ function AppSwitch() {
             handleSearchChange={handleSearchChange}
             loadMore={loadMore}
           />
+        </AuthGuard>
       );
     }
   }
