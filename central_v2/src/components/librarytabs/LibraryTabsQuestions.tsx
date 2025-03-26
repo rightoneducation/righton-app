@@ -30,7 +30,6 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   userProfile: IUserProfile;
   screenSize: ScreenSize;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
   recommendedQuestions: IQuestionTemplate[];
   mostPopularQuestions: IQuestionTemplate[];
   searchedQuestions: IQuestionTemplate[];
@@ -66,7 +65,6 @@ export default function LibraryTabsQuestions({
   setIsTabsOpen,
   userProfile,
   screenSize,
-  setIsUserLoggedIn,
   recommendedQuestions,
   mostPopularQuestions,
   searchedQuestions,

@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
-import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
+import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
 import { ModalBackground } from '../lib/styledcomponents/QuestionTabsStyledComponents';
@@ -40,7 +40,7 @@ interface AppContainerProps {
   gameQuestion?: GameQuestionType;
   setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void
   children: React.ReactNode;
-  isUserLoggedIn: boolean;
+  userStatus: UserStatusType;
 }
 
 function AppContainer({ 
@@ -49,7 +49,7 @@ function AppContainer({
   setIsTabsOpen, 
   gameQuestion,
   setLibraryGameQuestionSwitch,
-  isUserLoggedIn, 
+  userStatus,
   children 
 }: AppContainerProps) {
   const theme = useTheme();
@@ -66,6 +66,10 @@ function AppContainer({
     if (setIsTabsOpen)
       setIsTabsOpen(false);
   }
+
+  // if (userStatus === UserStatusType.INCOMPLETE){
+  //   return fallbackComponent;
+  // }
   
   return (
     <ScreenContainer>
@@ -84,7 +88,7 @@ function AppContainer({
           gameQuestion={gameQuestion}
           setGameQuestion={setLibraryGameQuestionSwitch}
           setMenuOpen={setMenuOpen}
-          isUserLoggedIn={isUserLoggedIn}
+          userStatus={userStatus}
         />
       </HeaderContainer>
       <BodyContainer>{children}</BodyContainer>

@@ -23,7 +23,6 @@ interface MyLibraryProps {
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   userProfile: IUserProfile;
   screenSize: ScreenSize;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
@@ -60,7 +59,6 @@ export default function MyLibrary({
   setIsTabsOpen,
   userProfile,
   screenSize,
-  setIsUserLoggedIn,
   recommendedGames,
   mostPopularGames,
   searchedGames,
@@ -97,7 +95,6 @@ export default function MyLibrary({
           setIsTabsOpen={setIsTabsOpen}
           userProfile={userProfile}
           screenSize={screenSize}
-          setIsUserLoggedIn={setIsUserLoggedIn}
           recommendedGames={recommendedGames}
           mostPopularGames={mostPopularGames}
           searchedGames={searchedGames}

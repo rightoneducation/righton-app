@@ -38,12 +38,14 @@ function AppSwitch() {
       : ScreenSize.SMALL;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
+  let currentScreen: ScreenType;
+  let screenComponent;
   
   const gameQuestion: GameQuestionType = 
     (mainScreen || (libraryScreen && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
   const {
     userProfile,
-    isUserLoggedIn,
+    userStatus,
     recommendedGames,
     mostPopularGames,
     searchedGames,
@@ -61,8 +63,6 @@ function AppSwitch() {
     isTabsOpen,
     isFavTabOpen,
     publicPrivate,
-    isUserProfileComplete,
-    setIsUserLoggedIn,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
@@ -75,42 +75,41 @@ function AppSwitch() {
   
   switch (true) {
     case questionScreen: {
-      return (
-        <AppContainer isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} currentScreen={ScreenType.QUESTIONS} isUserLoggedIn={isUserLoggedIn}>
-          <ExploreQuestions 
-            isTabsOpen={isTabsOpen} 
-            setIsTabsOpen={setIsTabsOpen} 
-            screenSize={screenSize} 
-            publicPrivate={publicPrivate}
-            recommendedQuestions={recommendedQuestions}
-            mostPopularQuestions={mostPopularQuestions}
-            searchedQuestions={searchedQuestions}
-            favQuestions={favQuestions}
-            draftQuestions={draftQuestions}
-            nextToken={nextToken}
-            isLoading={isLoading}
-            searchTerms={searchTerms}
-            selectedGrades={selectedGrades}
-            isFavTabOpen={isFavTabOpen}
-            handleChooseGrades={handleChooseGrades}
-            handleSortChange={handleSortChange}
-            handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
-            loadMore={loadMore}
-          />
-        </AppContainer>
+      currentScreen = ScreenType.QUESTIONS;
+      screenComponent = (
+        <ExploreQuestions 
+          isTabsOpen={isTabsOpen} 
+          setIsTabsOpen={setIsTabsOpen} 
+          screenSize={screenSize} 
+          publicPrivate={publicPrivate}
+          recommendedQuestions={recommendedQuestions}
+          mostPopularQuestions={mostPopularQuestions}
+          searchedQuestions={searchedQuestions}
+          favQuestions={favQuestions}
+          draftQuestions={draftQuestions}
+          nextToken={nextToken}
+          isLoading={isLoading}
+          searchTerms={searchTerms}
+          selectedGrades={selectedGrades}
+          isFavTabOpen={isFavTabOpen}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+          handleSearchChange={handleSearchChange}
+          handlePublicPrivateChange={handlePublicPrivateChange}
+          getFav={getFav}
+          loadMore={loadMore}
+        />
       );
+      break;
     }
     case libraryScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn} gameQuestion={gameQuestion} setLibraryGameQuestionSwitch={setLibraryGameQuestionSwitch}>
+      currentScreen = ScreenType.LIBRARY;
+      screenComponent = (
           <MyLibrary 
             gameQuestion={gameQuestion}
             isTabsOpen={isTabsOpen} 
             setIsTabsOpen={setIsTabsOpen}
             userProfile={userProfile} 
-            setIsUserLoggedIn={setIsUserLoggedIn}
             screenSize={screenSize} 
             recommendedGames={recommendedGames}
             mostPopularGames={mostPopularGames}
@@ -136,47 +135,46 @@ function AppSwitch() {
             getDrafts={getDrafts}
             loadMore={loadMore}
           />
-        </AppContainer>
       );
+      break;
     }
     case signUpScreen:
     case googlenextstep: {
-      return (
-        <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
+      currentScreen = ScreenType.SIGNUP;
+      screenComponent = (
           <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
-        </AppContainer>
       );
+      break;
     }
     
     case loginScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.LOGIN} isUserLoggedIn={isUserLoggedIn}>
+      currentScreen = ScreenType.LOGIN;
+      screenComponent = (
           <Login />
-        </AppContainer>
       );
+      break;
     }
     case createQuestionScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.CREATEQUESTION} isUserLoggedIn={isUserLoggedIn}>
+      currentScreen = ScreenType.CREATEQUESTION;
+      screenComponent = (
           <CreateQuestion screenSize={screenSize}/>
-        </AppContainer>
       );
+      break;
     }
     case createGameScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.CREATEGAME} isUserLoggedIn={isUserLoggedIn}>
+      currentScreen = ScreenType.CREATEQUESTION;
+      screenComponent = (
           <CreateGame screenSize={screenSize}/>
-        </AppContainer>
       );
+      break
     }
     default:{
-      return (
-        <AppContainer currentScreen={ScreenType.GAMES} isUserLoggedIn={isUserLoggedIn}>
+      currentScreen = ScreenType.GAMES;
+      screenComponent = (
           <ExploreGames 
             isTabsOpen={isTabsOpen} 
             setIsTabsOpen={setIsTabsOpen}
             userProfile={userProfile} 
-            setIsUserLoggedIn={setIsUserLoggedIn}
             screenSize={screenSize} 
             recommendedGames={recommendedGames}
             mostPopularGames={mostPopularGames}
@@ -196,10 +194,15 @@ function AppSwitch() {
             getFav={getFav}
             loadMore={loadMore}
           />
-        </AppContainer>
       );
     }
   }
+
+  return (
+    <AppContainer isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} userStatus={userStatus}>
+      {screenComponent}
+    </AppContainer>
+  )
 }
 
 export default AppSwitch;

@@ -27,7 +27,6 @@ interface TabContainerProps {
   isTabsOpen: boolean;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   userProfile: IUserProfile;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
@@ -64,7 +63,6 @@ export default function LibraryTabsContainer({
   setIsTabsOpen,
   userProfile,
   screenSize,
-  setIsUserLoggedIn,
   recommendedGames,
   mostPopularGames,
   searchedGames,
@@ -125,7 +123,6 @@ export default function LibraryTabsContainer({
             isTabsOpen={isTabsOpen} 
             setIsTabsOpen={setIsTabsOpen}
             userProfile={userProfile} 
-            setIsUserLoggedIn={setIsUserLoggedIn}
             screenSize={screenSize} 
             recommendedGames={recommendedGames}
             mostPopularGames={mostPopularGames}
@@ -155,7 +152,6 @@ export default function LibraryTabsContainer({
             isTabsOpen={isTabsOpen} 
             setIsTabsOpen={setIsTabsOpen}
             userProfile={userProfile} 
-            setIsUserLoggedIn={setIsUserLoggedIn}
             screenSize={screenSize} 
             recommendedQuestions={recommendedQuestions}
             mostPopularQuestions={mostPopularQuestions}

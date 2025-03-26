@@ -1,5 +1,11 @@
 import { CentralQuestionTemplateInput, IncorrectCard } from "@righton/networking";
 
+export enum UserStatusType {
+  LOGGEDIN,
+  LOGGEDOUT,
+  INCOMPLETE
+}
+
 export enum ScreenType {
   GAMES,
   QUESTIONS,

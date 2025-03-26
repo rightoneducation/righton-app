@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { debounce, set } from 'lodash';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import {
   IGameTemplate,
   PublicPrivateType,
@@ -14,7 +14,7 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
 import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
 import { useUserProfileContext, useUserProfileDispatchContext } from './context/useUserProfileContext';
-import { GameQuestionType } from '../lib/CentralModels';
+import { UserStatusType, GameQuestionType } from '../lib/CentralModels';
 
 interface UseCentralDataManagerProps {
   gameQuestion: GameQuestionType;
@@ -22,7 +22,7 @@ interface UseCentralDataManagerProps {
 
 interface UseCentralDataManagerReturnProps {
   userProfile: IUserProfile;
-  isUserLoggedIn: boolean;
+  userStatus: UserStatusType;
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
@@ -41,7 +41,6 @@ interface UseCentralDataManagerReturnProps {
   isFavTabOpen: boolean;
   publicPrivate: PublicPrivateType;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -73,10 +72,13 @@ export default function useCentralDataManager({
   const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
 
   const navigate = useNavigate();
+  const isGames = useMatch('/');
+  const isQuestions = useMatch('/questions');
+  const isLibrary = useMatch('/library');
   
   const debounceInterval = 800;
   // stateful variables related to user and userProfile data
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
+  const [userStatus, setUserStatus] = useState(UserStatusType.LOGGEDOUT);
 
   // holding all of these seperately in state so that we can switch between them without refetching
   const [recommendedGames, setRecommendedGames] = useState<IGameTemplate[]>([]);
@@ -476,46 +478,43 @@ export default function useCentralDataManager({
     return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
   };
 
-  useEffect(() => {
-    try {
-      // inits games and questions only if they haven't been loaded yet
-      if ((gameQuestion === GameQuestionType.QUESTION && !recommendedQuestions.length || !mostPopularQuestions.length)
-        || (gameQuestion === GameQuestionType.GAME) && !recommendedGames.length || !mostPopularGames.length) {
-      init();
-      }
-    } catch (error) {
-      console.log('Error:', error);
-    }
-  }, [gameQuestion]); // eslint-disable-line
+  
 
   // useEffect for monitoring changes to auth status of Cognito User
   useEffect(() => {
-    setIsUserLoggedIn(apiClients.auth.isUserAuth);
+    console.log('authChange useEffect running');
+    if (apiClients.auth.isUserAuth) 
+      setUserStatus(UserStatusType.LOGGEDIN);
   }, [apiClients.auth.isUserAuth]);
+
+  const validateUser = async () => {
+    const status = await apiClients.auth.verifyAuth();
+    if (status) {
+      const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+      if (localProfile) {
+        if (!isUserProfileComplete(localProfile)) {
+          navigate('/nextstep');
+          setUserStatus(UserStatusType.INCOMPLETE);
+          return;
+        }
+        setUserStatus(UserStatusType.LOGGEDIN);
+        return;
+      }
+    }
+    apiClients.centralDataManager?.clearLocalUserProfile();
+    setUserStatus(UserStatusType.LOGGEDOUT);
+  };
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
-    const response = apiClients.auth.verifyAuth().then((status) => {
-      if (status){
-        const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
-        if (localProfile) {
-          if (!isUserProfileComplete(localProfile)) {
-            navigate('/nextstep')
-            return;
-          }
-          setIsUserLoggedIn(true);
-          return;
-        }
-      }
-      apiClients.centralDataManager?.clearLocalUserProfile();
-      setIsUserLoggedIn(false);
-    });
-  },[]) // eslint-disable-line
+    console.log('validateUser useEffect running');
+    validateUser();
+  }, []); // eslint-disable-line
 
   return {
     userProfile,
-    isUserLoggedIn,
+    userStatus,
     recommendedGames,
     mostPopularGames,
     searchedGames,
@@ -534,7 +533,6 @@ export default function useCentralDataManager({
     isFavTabOpen,
     publicPrivate,
     isUserProfileComplete,
-    setIsUserLoggedIn,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,

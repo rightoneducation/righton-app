@@ -30,7 +30,6 @@ interface LibraryTabsGamesProps<T extends IGameTemplate> {
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   userProfile: IUserProfile;
   screenSize: ScreenSize;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
@@ -66,7 +65,6 @@ export default function LibraryTabsGames({
   setIsTabsOpen,
   userProfile,
   screenSize,
-  setIsUserLoggedIn,
   recommendedGames,
   mostPopularGames,
   searchedGames,

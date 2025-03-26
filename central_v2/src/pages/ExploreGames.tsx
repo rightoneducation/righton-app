@@ -30,7 +30,6 @@ interface ExploreGamesProps {
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   userProfile: IUserProfile;
   screenSize: ScreenSize;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
@@ -60,7 +59,6 @@ export default function ExploreGames({
   setIsTabsOpen,
   userProfile,
   screenSize,
-  setIsUserLoggedIn,
   recommendedGames,
   mostPopularGames,
   searchedGames,
@@ -96,7 +94,6 @@ export default function ExploreGames({
     // Debug button temporarily added for QA
     const handleSignOut = async () => {
       const response = apiClients.centralDataManager?.signOut();
-      setIsUserLoggedIn(false);
     }
 
   return (
