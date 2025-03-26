@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Tabs
 } from '@mui/material';
@@ -40,9 +40,7 @@ interface LibraryTabsGamesProps<T extends IGameTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
-  getDrafts: () => void;
-  loadMore: () => void;
+  fetchElements: () => void;
   handleView: (element: T, elements: T[]) => void;
 }
 
@@ -56,25 +54,29 @@ export default function LibraryTabsGames({
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  getFav,
-  getDrafts,
-  loadMore,
+  fetchElements,
   handleView
 }: LibraryTabsGamesProps<IGameTemplate>) {
 const centralData = useCentralDataState();
 const centralDataDispatch = useCentralDataDispatch();
 const isSearchResults = centralData.searchTerms.length > 0;
 const [openTab, setOpenTab] = React.useState(0);
-const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-  if (newValue === 3) {
-    getFav(centralData.userProfile);
-  } else if (newValue === 2) {
-    getDrafts();
-  } else {
-    // TODO
-    handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
+const [hasInitialized, setHasInitialized] = useState(false);    
+if (!hasInitialized) {
+  const needsFetch = centralData.mostPopularGames.length === 0; 
+  if (needsFetch) {
+    fetchElements(); 
   }
+  setHasInitialized(true);
+}
+
+const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  if (newValue === 0)
+    handlePublicPrivateChange(PublicPrivateType.PUBLIC);
+  if (newValue === 1)
+    handlePublicPrivateChange(PublicPrivateType.PRIVATE);
   setOpenTab(newValue);
+  fetchElements();
 };
 
 const getElements = () => {

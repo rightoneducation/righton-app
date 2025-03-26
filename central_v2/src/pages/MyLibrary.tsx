@@ -24,9 +24,7 @@ interface MyLibraryProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
-  getDrafts: () => void;
-  loadMore: () => void;
+  fetchElements: () => void;
 }
 
 export default function MyLibrary({ 
@@ -37,9 +35,7 @@ export default function MyLibrary({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  getFav,
-  getDrafts,
-  loadMore,
+  fetchElements
 }: MyLibraryProps) {
   return (
     <MyLibraryMainContainer>
@@ -52,9 +48,7 @@ export default function MyLibrary({
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}
           handlePublicPrivateChange={handlePublicPrivateChange}
-          getFav={getFav}
-          getDrafts={getDrafts}
-          loadMore={loadMore}
+          fetchElements={fetchElements}
         />
     </MyLibraryMainContainer>
   );

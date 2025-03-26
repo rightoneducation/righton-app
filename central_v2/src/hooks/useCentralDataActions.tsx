@@ -13,14 +13,16 @@ import {
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
 import { useCentralDataState, useCentralDataDispatch } from './context/useCentralDataContext';
-import { UserStatusType, GameQuestionType } from '../lib/CentralModels';
+import { UserStatusType, GameQuestionType, FetchType } from '../lib/CentralModels';
 
 interface UseCentralDataManagerProps {
   gameQuestion: GameQuestionType;
+  openTab?: number;
 }
 
 interface UseCentralDataManagerReturnProps {
   setIsTabsOpen: (isOpen: boolean) => void;
+  fetchElements: () => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -45,7 +47,8 @@ interface UseCentralDataManagerReturnProps {
 * */
 
 export default function useCentralDataManager({
-  gameQuestion
+  gameQuestion,
+  openTab
 }: UseCentralDataManagerProps): UseCentralDataManagerReturnProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
@@ -55,32 +58,8 @@ export default function useCentralDataManager({
   const isGames = useMatch('/');
   const isQuestions = useMatch('/questions');
   const isLibrary = useMatch('/library');
-  
-  const debounceInterval = 800;
-  // stateful variables related to user and userProfile data
 
-  const init = async () => {
-    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    switch (gameQuestion) {
-      case GameQuestionType.QUESTION:
-        apiClients?.centralDataManager?.initQuestions().then((response) => {
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-          centralDataDispatch({ type: 'SET_RECOMMENDED_QUESTIONS', payload: response.questions });
-          centralDataDispatch({ type: 'SET_MOST_POPULAR_QUESTIONS', payload: response.questions });
-          centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
-        });
-        break;
-      case GameQuestionType.GAME:
-      default:
-        apiClients?.centralDataManager?.initGames().then((response) => {
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-          centralDataDispatch({ type: 'SET_RECOMMENDED_GAMES', payload: response.games });
-          centralDataDispatch({ type: 'SET_MOST_POPULAR_GAMES', payload: response.games });
-          centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
-        });
-        break;
-    }
-  };
+  const debounceInterval = 800;
 
   const setIsTabsOpen = (isOpen: boolean) => {
     centralDataDispatch({ type: 'SET_IS_TABS_OPEN', payload: isOpen });
@@ -430,6 +409,65 @@ export default function useCentralDataManager({
     return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
   };
 
+  const fetchElements = async () => {
+    const getFetchType = () => {
+      if (isLibrary && openTab !== undefined) {
+        switch(openTab){
+          case 3: 
+            return gameQuestion === GameQuestionType.GAME ? FetchType.FAVORITE_GAMES : FetchType.FAVORITE_QUESTIONS;
+          case 2: 
+            return gameQuestion === GameQuestionType.GAME ? FetchType.DRAFT_GAMES : FetchType.DRAFT_QUESTIONS;
+          case 1:
+            return gameQuestion === GameQuestionType.GAME ? FetchType.PRIVATE_GAMES : FetchType.PRIVATE_QUESTIONS;
+          case 0:
+          default:
+            return gameQuestion === GameQuestionType.GAME ? FetchType.PUBLIC_GAMES : FetchType.PUBLIC_QUESTIONS;
+        }
+      }
+      if (isQuestions) return FetchType.EXPLORE_QUESTIONS;
+      return FetchType.EXPLORE_GAMES;
+    }
+
+    const fetchType = getFetchType();
+    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+
+    switch (fetchType) {
+      case FetchType.PUBLIC_GAMES:
+      case FetchType.PUBLIC_QUESTIONS:
+        handlePublicPrivateChange(PublicPrivateType.PUBLIC);
+        break;
+      case FetchType.PRIVATE_QUESTIONS:
+      case FetchType.PRIVATE_GAMES:
+        handlePublicPrivateChange(PublicPrivateType.PRIVATE);
+        break;
+      case FetchType.DRAFT_QUESTIONS:
+      case FetchType.DRAFT_GAMES: 
+        getDrafts();
+        break;
+      case FetchType.FAVORITE_QUESTIONS:
+      case FetchType.FAVORITE_GAMES:
+        getFav(centralData.userProfile);
+        break;
+      case FetchType.EXPLORE_QUESTIONS:
+        apiClients?.centralDataManager?.initQuestions().then((response) => {
+          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          centralDataDispatch({ type: 'SET_RECOMMENDED_QUESTIONS', payload: response.questions });
+          centralDataDispatch({ type: 'SET_MOST_POPULAR_QUESTIONS', payload: response.questions });
+          centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+        });
+        break;
+      case FetchType.EXPLORE_GAMES:
+      default:
+        apiClients?.centralDataManager?.initGames().then((response) => {
+          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          centralDataDispatch({ type: 'SET_RECOMMENDED_GAMES', payload: response.games });
+          centralDataDispatch({ type: 'SET_MOST_POPULAR_GAMES', payload: response.games });
+          centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
+        });
+        break;
+    }
+  };
+
   // useEffect for monitoring changes to auth status of Cognito User
   useEffect(() => {
     console.log('authChange useEffect running');
@@ -448,13 +486,11 @@ export default function useCentralDataManager({
           return;
         }
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-        init();
         return;
       }
     }
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-    init();
   };
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
@@ -466,6 +502,7 @@ export default function useCentralDataManager({
 
   return {
     setIsTabsOpen,
+    fetchElements,
     isUserProfileComplete,
     handleChooseGrades,
     handleSortChange,

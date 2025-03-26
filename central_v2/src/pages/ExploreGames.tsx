@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ElementType,
   GalleryType,
@@ -29,6 +29,7 @@ import { ButtonType } from '../components/button/ButtonModels';
 interface ExploreGamesProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
+  fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -43,6 +44,7 @@ interface ExploreGamesProps {
 export default function ExploreGames({
   screenSize,
   setIsTabsOpen,
+  fetchElements,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
@@ -57,6 +59,15 @@ export default function ExploreGames({
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = centralData.searchTerms.length > 0;
+  const [hasInitialized, setHasInitialized] = useState(false);
+    
+  if (!hasInitialized) {
+    const needsFetch = centralData.recommendedGames.length === 0 || centralData.mostPopularGames.length === 0; 
+    if (needsFetch) {
+      fetchElements(); 
+    }
+    setHasInitialized(true);
+  }
 
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     setSelectedGame(game);
@@ -65,10 +76,10 @@ export default function ExploreGames({
     );
   };
 
-    // Debug button temporarily added for QA
-    const handleSignOut = async () => {
-      const response = apiClients.centralDataManager?.signOut();
-    }
+  // Debug button temporarily added for QA
+  const handleSignOut = async () => {
+    const response = apiClients.centralDataManager?.signOut();
+  }
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">

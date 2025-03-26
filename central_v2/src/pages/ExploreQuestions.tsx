@@ -31,6 +31,7 @@ import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 interface ExploreQuestionsProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
+  fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -43,8 +44,9 @@ interface ExploreQuestionsProps {
 }
 
 export default function ExploreQuestions({
-  setIsTabsOpen,
   screenSize,
+  setIsTabsOpen,
+  fetchElements,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
@@ -52,9 +54,17 @@ export default function ExploreQuestions({
 }:ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
-  const centralDataDispatch = useCentralDataDispatch();
+  const [hasInitialized, setHasInitialized] = useState(false);
+  
+  if (!hasInitialized) {
+    const needsFetch = centralData.recommendedQuestions.length === 0 || centralData.mostPopularQuestions.length === 0; 
+    if (needsFetch) {
+      fetchElements(); 
+    }
+    setHasInitialized(true);
+  }
+ 
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);

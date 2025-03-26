@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Tabs
 } from '@mui/material';
@@ -8,15 +8,14 @@ import {
   GalleryType,
   IQuestionTemplate,
   PublicPrivateType,
-  IUserProfile,
   GradeTarget,
   SortType,
   SortDirection
 } from '@righton/networking';
-import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
+import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import CardGallery from '../cardgallery/CardGallery';
 import SearchBar from '../searchbar/SearchBar';
-import { ScreenSize, GameQuestionType } from '../../lib/CentralModels';
+import { ScreenSize } from '../../lib/CentralModels';
 import { 
   ContentContainer, 
   TabContent,
@@ -40,9 +39,7 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
-  getDrafts: () => void;
-  loadMore: () => void;
+  fetchElements: () => void;
   handleView: (element: T, elements: T[]) => void;
 }
 
@@ -56,24 +53,29 @@ export default function LibraryTabsQuestions({
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  getFav,
-  getDrafts,
-  loadMore,
+  fetchElements,
   handleView
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
 const centralData = useCentralDataState();
-const centralDataDispatch = useCentralDataDispatch();
+
 const isSearchResults = centralData.searchTerms.length > 0;
 const [openTab, setOpenTab] = React.useState(0);
-const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-  if (newValue === 3) {
-    getFav(centralData.userProfile);
-  } else if (newValue === 2) {
-    getDrafts();
-  } else {
-    handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
+const [hasInitialized, setHasInitialized] = useState(false);    
+if (!hasInitialized) {
+  const needsFetch = centralData.mostPopularQuestions.length === 0; 
+  if (needsFetch) {
+    fetchElements(); 
   }
+  setHasInitialized(true);
+}
+
+const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  if (newValue === 0)
+    handlePublicPrivateChange(PublicPrivateType.PUBLIC);
+  if (newValue === 1)
+    handlePublicPrivateChange(PublicPrivateType.PRIVATE);
   setOpenTab(newValue);
+  fetchElements();
 };
 
 const getElements = () => {

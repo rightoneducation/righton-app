@@ -25,6 +25,7 @@ interface TabContainerProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
+  fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -34,22 +35,17 @@ interface TabContainerProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
-  getDrafts: () => void;
-  loadMore: () => void;
 }
 
 export default function LibraryTabsContainer({
   gameQuestion,
   screenSize,
   setIsTabsOpen,
+  fetchElements,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  handlePublicPrivateChange,
-  getFav,
-  getDrafts,
-  loadMore
+  handlePublicPrivateChange
 }: TabContainerProps) {
   const theme = useTheme();
   const tabMap: { [key: number]: string } = {
@@ -89,9 +85,7 @@ export default function LibraryTabsContainer({
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
-            getDrafts={getDrafts}
-            loadMore={loadMore}
+            fetchElements={fetchElements}
             handleView={handleView}
           />
         : <LibraryTabsQuestions
@@ -104,9 +98,7 @@ export default function LibraryTabsContainer({
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
-            getDrafts={getDrafts}
-            loadMore={loadMore}
+            fetchElements={fetchElements}
             handleView={handleView}
           />
       }

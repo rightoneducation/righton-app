@@ -45,6 +45,7 @@ function AppSwitch() {
     getFav,
     getDrafts,
     loadMore,
+    fetchElements,
   } = useCentralDataManager({gameQuestion});
   
   switch (true) {
@@ -53,6 +54,7 @@ function AppSwitch() {
       screenComponent = (
         <ExploreQuestions 
           screenSize={screenSize} 
+          fetchElements={fetchElements}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
@@ -73,9 +75,7 @@ function AppSwitch() {
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}
           handlePublicPrivateChange={handlePublicPrivateChange}
-          getFav={getFav}
-          getDrafts={getDrafts}
-          loadMore={loadMore}
+          fetchElements={fetchElements}
         />
       );
       break;
@@ -116,6 +116,7 @@ function AppSwitch() {
           <ExploreGames 
             screenSize={screenSize} 
             setIsTabsOpen={setIsTabsOpen}
+            fetchElements={fetchElements}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
