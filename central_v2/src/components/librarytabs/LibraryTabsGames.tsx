@@ -13,6 +13,8 @@ import {
   SortDirection,
   PublicPrivateType,
 } from '@righton/networking';
+import { CentralDataContext } from '../../lib/context/CentralDataContext';
+import { useCentralDataContext } from '../../hooks/context/useCentralDataContext';
 import CardGallery from '../cardgallery/CardGallery';
 import SearchBar from '../searchbar/SearchBar';
 import { ScreenSize, GameQuestionType } from '../../lib/CentralModels';
@@ -25,24 +27,10 @@ import {
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface LibraryTabsGamesProps<T extends IGameTemplate> {
-  gameQuestion: GameQuestionType;
-  isTabsOpen: boolean;
-  setIsTabsOpen: (isTabsOpen: boolean) => void;
-  userProfile: IUserProfile;
   screenSize: ScreenSize;
-  recommendedGames: IGameTemplate[];
-  mostPopularGames: IGameTemplate[];
-  searchedGames: IGameTemplate[];
-  draftGames: IGameTemplate[];
-  favGames: IGameTemplate[];
-  nextToken: string | null;
-  isLoading: boolean;
-  searchTerms: string;
-  selectedGrades: GradeTarget[];
-  isFavTabOpen: boolean;
-  publicPrivate: PublicPrivateType;
   tabMap: { [key: number]: string };
   tabIconMap: { [key: number]: string };
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   getLabel: (screen: ScreenSize, isSelected: boolean, value: string) => string;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -60,24 +48,10 @@ interface LibraryTabsGamesProps<T extends IGameTemplate> {
 }
 
 export default function LibraryTabsGames({
-  gameQuestion,
-  isTabsOpen,
-  setIsTabsOpen,
-  userProfile,
   screenSize,
-  recommendedGames,
-  mostPopularGames,
-  searchedGames,
-  draftGames,
-  favGames,
-  nextToken,
-  isLoading,
-  searchTerms,
-  selectedGrades,
-  isFavTabOpen,
-  publicPrivate,
   tabMap,
   tabIconMap,
+  setIsTabsOpen,
   getLabel,
   handlePublicPrivateChange,
   handleChooseGrades,
@@ -88,31 +62,33 @@ export default function LibraryTabsGames({
   loadMore,
   handleView
 }: LibraryTabsGamesProps<IGameTemplate>) {
-const isSearchResults = searchTerms.length > 0;
+const { centralData  } = useCentralDataContext(CentralDataContext);
+const isSearchResults = centralData.searchTerms.length > 0;
 const [openTab, setOpenTab] = React.useState(0);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   if (newValue === 3) {
-    getFav(userProfile);
+    getFav(centralData.userProfile);
   } else if (newValue === 2) {
     getDrafts();
   } else {
+    // TODO
     handlePublicPrivateChange(newValue === 1 ? PublicPrivateType.PRIVATE : PublicPrivateType.PUBLIC);
   }
   setOpenTab(newValue);
 };
 
 const getElements = () => {
-  if (favGames.length > 0 && openTab === 3){
+  if (centralData.favGames.length > 0 && openTab === 3){
     if (isSearchResults)
-      return searchedGames.filter((game) => favGames.map((favGame) => favGame.id).includes(game.id));
-    return favGames;
+      return centralData.searchedGames.filter((game) => centralData.favGames.map((favGame) => favGame.id).includes(game.id));
+    return centralData.favGames;
   }
-  if (draftGames.length > 0 && openTab === 2){
-    return draftGames;
+  if (centralData.draftGames.length > 0 && openTab === 2){
+    return centralData.draftGames;
   }
   if (isSearchResults)
-    return searchedGames 
-  return mostPopularGames;
+    return centralData.searchedGames 
+  return centralData.mostPopularGames;
 }
 
 return (
@@ -159,21 +135,21 @@ return (
     <ContentContainer>
       <SearchBar
         screenSize={screenSize}
-        searchTerms={searchTerms}
+        searchTerms={centralData.searchTerms}
         handleSearchChange={handleSearchChange}
         handleChooseGrades={handleChooseGrades}
         handleSortChange={handleSortChange}
       />
       <CardGallery<IGameTemplate>
         screenSize={screenSize}
-        searchTerm={isSearchResults ? searchTerms : undefined}
-        grades={isSearchResults ? selectedGrades : undefined}
+        searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+        grades={isSearchResults ? centralData.selectedGrades : undefined}
         galleryElements={getElements()} 
         elementType={ElementType.GAME}
         galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
         setIsTabsOpen={setIsTabsOpen}
         handleView={handleView}
-        isLoading={isLoading}
+        isLoading={centralData.isLoading}
         isMyLibrary
       />
     </ContentContainer>

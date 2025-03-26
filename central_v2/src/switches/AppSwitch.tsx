@@ -7,7 +7,7 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
 import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
-import useCentralDataManager from '../hooks/useCentralDataManager';
+import useCentralDataManager from '../hooks/useCentralDataActions';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
@@ -45,24 +45,6 @@ function AppSwitch() {
     (mainScreen || (libraryScreen && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
   const {
     userProfile,
-    userStatus,
-    recommendedGames,
-    mostPopularGames,
-    searchedGames,
-    draftGames,
-    favGames,
-    recommendedQuestions,
-    mostPopularQuestions,
-    searchedQuestions,
-    favQuestions,
-    draftQuestions,
-    nextToken,
-    isLoading,
-    searchTerms,
-    selectedGrades,
-    isTabsOpen,
-    isFavTabOpen,
-    publicPrivate,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
@@ -78,20 +60,8 @@ function AppSwitch() {
       currentScreen = ScreenType.QUESTIONS;
       screenComponent = (
         <ExploreQuestions 
-          isTabsOpen={isTabsOpen} 
-          setIsTabsOpen={setIsTabsOpen} 
           screenSize={screenSize} 
-          publicPrivate={publicPrivate}
-          recommendedQuestions={recommendedQuestions}
-          mostPopularQuestions={mostPopularQuestions}
-          searchedQuestions={searchedQuestions}
-          favQuestions={favQuestions}
-          draftQuestions={draftQuestions}
-          nextToken={nextToken}
-          isLoading={isLoading}
-          searchTerms={searchTerms}
-          selectedGrades={selectedGrades}
-          isFavTabOpen={isFavTabOpen}
+          setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}
@@ -107,26 +77,8 @@ function AppSwitch() {
       screenComponent = (
           <MyLibrary 
             gameQuestion={gameQuestion}
-            isTabsOpen={isTabsOpen} 
-            setIsTabsOpen={setIsTabsOpen}
-            userProfile={userProfile} 
             screenSize={screenSize} 
-            recommendedGames={recommendedGames}
-            mostPopularGames={mostPopularGames}
-            searchedGames={searchedGames}
-            draftGames={draftGames}
-            favGames={favGames}
-            recommendedQuestions={recommendedQuestions}
-            mostPopularQuestions={mostPopularQuestions}
-            searchedQuestions={searchedQuestions}
-            draftQuestions={draftQuestions}
-            favQuestions={favQuestions}
-            nextToken={nextToken}
-            isLoading={isLoading}
-            searchTerms={searchTerms}
-            selectedGrades={selectedGrades}
-            isFavTabOpen={isFavTabOpen}
-            publicPrivate={publicPrivate}
+            setIsTabsOpen={setIsTabsOpen}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
@@ -172,26 +124,12 @@ function AppSwitch() {
       currentScreen = ScreenType.GAMES;
       screenComponent = (
           <ExploreGames 
-            isTabsOpen={isTabsOpen} 
-            setIsTabsOpen={setIsTabsOpen}
-            userProfile={userProfile} 
             screenSize={screenSize} 
-            recommendedGames={recommendedGames}
-            mostPopularGames={mostPopularGames}
-            searchedGames={searchedGames}
-            draftGames={draftGames}
-            favGames={favGames}
-            nextToken={nextToken}
-            isLoading={isLoading}
-            searchTerms={searchTerms}
-            selectedGrades={selectedGrades}
-            isFavTabOpen={isFavTabOpen}
-            publicPrivate={publicPrivate}
+            setIsTabsOpen={setIsTabsOpen}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
             loadMore={loadMore}
           />
       );
@@ -199,7 +137,7 @@ function AppSwitch() {
   }
 
   return (
-    <AppContainer isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} userStatus={userStatus}>
+    <AppContainer setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen}>
       {screenComponent}
     </AppContainer>
   )

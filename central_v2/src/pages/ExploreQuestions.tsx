@@ -15,6 +15,8 @@ import {
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { CentralDataContext } from '../lib/context/CentralDataContext';
+import { useCentralDataContext } from '../hooks/context/useCentralDataContext';
 import { ScreenSize } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
@@ -28,20 +30,8 @@ import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabs
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 
 interface ExploreQuestionsProps {
-  isTabsOpen: boolean;
-  setIsTabsOpen: (isTabsOpen: boolean) => void;
   screenSize: ScreenSize;
-  recommendedQuestions: IQuestionTemplate[];
-  mostPopularQuestions: IQuestionTemplate[];
-  searchedQuestions: IQuestionTemplate[];
-  draftQuestions: IQuestionTemplate[];
-  favQuestions: IQuestionTemplate[];
-  nextToken: string | null;
-  isLoading: boolean;
-  searchTerms: string;
-  selectedGrades: GradeTarget[];
-  isFavTabOpen: boolean;
-  publicPrivate: PublicPrivateType;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -56,35 +46,21 @@ interface ExploreQuestionsProps {
 }
 
 export default function ExploreQuestions({
-  isTabsOpen,
   setIsTabsOpen,
   screenSize,
-  publicPrivate,
-  recommendedQuestions,
-  mostPopularQuestions,
-  searchedQuestions,
-  favQuestions,
-  draftQuestions,
-  nextToken,
-  isLoading,
-  searchTerms,
-  selectedGrades,
-  isFavTabOpen,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  handlePublicPrivateChange,
-  getFav,
   loadMore,
 }:ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
- 
+ const { centralData  } = useCentralDataContext(CentralDataContext);
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
-  const isSearchResults = searchTerms.length > 0;
+  const isSearchResults = centralData.searchTerms.length > 0;
   const handleView = (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
@@ -125,12 +101,12 @@ export default function ExploreQuestions({
       {selectedQuestion && (
         <>
           <QuestionTabsModalBackground
-            isTabsOpen={isTabsOpen}
+            isTabsOpen={centralData.isTabsOpen}
             handleBackToExplore={handleBackToExplore}
           />
           <QuestionTabs
             screenSize={screenSize}
-            isTabsOpen={isTabsOpen}
+            isTabsOpen={centralData.isTabsOpen}
             question={selectedQuestion}
             questions={questionSet}
             handleBackToExplore={handleBackToExplore}
@@ -145,7 +121,7 @@ export default function ExploreQuestions({
         }
         <SearchBar
           screenSize={screenSize}
-          searchTerms={searchTerms}
+          searchTerms={centralData.searchTerms}
           handleSearchChange={handleSearchChange}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
@@ -153,7 +129,7 @@ export default function ExploreQuestions({
         {!isSearchResults && 
           <Recommended<IQuestionTemplate>
             screenSize={screenSize}
-            recommendedElements={recommendedQuestions}
+            recommendedElements={centralData.recommendedQuestions}
             elementType={ElementType.QUESTION}
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
@@ -161,9 +137,9 @@ export default function ExploreQuestions({
         }
       </ExploreGamesUpperContainer>
       <InfiniteScroll
-        dataLength={mostPopularQuestions.length}
+        dataLength={centralData.mostPopularQuestions.length}
         next={loadMore}
-        hasMore={nextToken !== null}
+        hasMore={centralData.nextToken !== null}
         loader=<h4>loading...</h4>
         scrollableTarget="scrollableDiv"
         style={{
@@ -176,14 +152,14 @@ export default function ExploreQuestions({
       >
         <CardGallery<IQuestionTemplate>
           screenSize={screenSize}
-          searchTerm={isSearchResults ? searchTerms : undefined}
-          grades={isSearchResults ? selectedGrades : undefined}
-          galleryElements={isSearchResults ? searchedQuestions : mostPopularQuestions}
+          searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+          grades={isSearchResults ? centralData.selectedGrades : undefined}
+          galleryElements={isSearchResults ? centralData.searchedQuestions : centralData.mostPopularQuestions}
           elementType={ElementType.QUESTION}
            galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
           setIsTabsOpen={setIsTabsOpen}
           handleView={handleView}
-          isLoading={isLoading}
+          isLoading={centralData.isLoading}
         />
       </InfiniteScroll>
       <Box 

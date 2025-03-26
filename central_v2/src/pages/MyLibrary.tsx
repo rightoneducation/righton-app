@@ -12,33 +12,16 @@ import {
 } from '@righton/networking';
 import { useTranslation } from 'react-i18next';
 import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Box, Button } from '@mui/material';
+import { CentralDataContext } from '../lib/context/CentralDataContext';
+import { useCentralDataContext } from '../hooks/context/useCentralDataContext';
 import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
 import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
   gameQuestion: GameQuestionType;
-  isTabsOpen: boolean;
-  setIsTabsOpen: (isTabsOpen: boolean) => void;
-  userProfile: IUserProfile;
   screenSize: ScreenSize;
-  recommendedGames: IGameTemplate[];
-  mostPopularGames: IGameTemplate[];
-  searchedGames: IGameTemplate[];
-  draftGames: IGameTemplate[];
-  favGames: IGameTemplate[];
-  recommendedQuestions: IQuestionTemplate[];
-  mostPopularQuestions: IQuestionTemplate[];
-  searchedQuestions: IQuestionTemplate[];
-  draftQuestions: IQuestionTemplate[];
-  favQuestions: IQuestionTemplate[];
-  nextToken: string | null;
-  isLoading: boolean;
-  searchTerms: string;
-  selectedGrades: GradeTarget[];
-  isFavTabOpen: boolean;
-  publicPrivate: PublicPrivateType;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -55,26 +38,8 @@ interface MyLibraryProps {
 
 export default function MyLibrary({ 
   gameQuestion,
-  isTabsOpen,
-  setIsTabsOpen,
-  userProfile,
   screenSize,
-  recommendedGames,
-  mostPopularGames,
-  searchedGames,
-  draftGames,
-  favGames,
-  recommendedQuestions,
-  mostPopularQuestions,
-  searchedQuestions,
-  draftQuestions,
-  favQuestions,
-  nextToken,
-  isLoading,
-  searchTerms,
-  selectedGrades,
-  isFavTabOpen,
-  publicPrivate,
+  setIsTabsOpen,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
@@ -83,34 +48,13 @@ export default function MyLibrary({
   getDrafts,
   loadMore,
 }: MyLibraryProps) {
-  const theme = useTheme();
-  const { t } = useTranslation();
-
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
         <LibraryTabsContainer 
           gameQuestion={gameQuestion}
-          isTabsOpen={isTabsOpen}
-          setIsTabsOpen={setIsTabsOpen}
-          userProfile={userProfile}
           screenSize={screenSize}
-          recommendedGames={recommendedGames}
-          mostPopularGames={mostPopularGames}
-          searchedGames={searchedGames}
-          draftGames={draftGames}
-          recommendedQuestions={recommendedQuestions}
-          mostPopularQuestions={mostPopularQuestions}
-          searchedQuestions={searchedQuestions}
-          draftQuestions={draftQuestions}
-          favQuestions={favQuestions}
-          favGames={favGames}
-          nextToken={nextToken}
-          isLoading={isLoading}
-          searchTerms={searchTerms}
-          selectedGrades={selectedGrades}
-          isFavTabOpen={isFavTabOpen}
-          publicPrivate={publicPrivate}
+          setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}

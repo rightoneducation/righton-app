@@ -3,6 +3,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
+import { CentralDataContext } from '../lib/context/CentralDataContext';
+import { useCentralDataContext } from '../hooks/context/useCentralDataContext';
 import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
@@ -35,25 +37,23 @@ const BodyContainer = styled(Box)(() => {
 
 interface AppContainerProps {
   currentScreen: ScreenType;
-  isTabsOpen?: boolean;
-  setIsTabsOpen?: (isTabsOpen: boolean) => void;
   gameQuestion?: GameQuestionType;
+  setIsTabsOpen?: (isTabsOpen: boolean) => void;
   setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void
   children: React.ReactNode;
-  userStatus: UserStatusType;
+  
 }
 
 function AppContainer({ 
   currentScreen, 
-  isTabsOpen, 
-  setIsTabsOpen, 
   gameQuestion,
+  setIsTabsOpen, 
   setLibraryGameQuestionSwitch,
-  userStatus,
   children 
 }: AppContainerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const { centralData  } = useCentralDataContext(CentralDataContext);
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [menuOpen, setMenuOpen] = useState(false);
@@ -74,9 +74,9 @@ function AppContainer({
   return (
     <ScreenContainer>
       <HeaderContainer>
-        { isTabsOpen && 
+        { centralData.isTabsOpen && 
           <QuestionTabsModalBackground 
-            isTabsOpen={isTabsOpen} 
+            isTabsOpen={centralData.isTabsOpen} 
             handleBackToExplore={handleBackToExplore} 
           />
         }
@@ -88,7 +88,7 @@ function AppContainer({
           gameQuestion={gameQuestion}
           setGameQuestion={setLibraryGameQuestionSwitch}
           setMenuOpen={setMenuOpen}
-          userStatus={userStatus}
+          userStatus={centralData.userStatus}
         />
       </HeaderContainer>
       <BodyContainer>{children}</BodyContainer>

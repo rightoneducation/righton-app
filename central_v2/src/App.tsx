@@ -5,7 +5,7 @@ import {
   Route,
   RouterProvider
 } from 'react-router-dom';
-import { useAPIClients, Environment, AppType } from '@righton/networking';
+import { useAPIClients, Environment, AppType, PublicPrivateType, SortType, SortDirection } from '@righton/networking';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { APIClientsContext } from './lib/context/APIClientsContext';
@@ -14,12 +14,54 @@ import Theme from './lib/Theme';
 import AppSwitch from './switches/AppSwitch';
 import CreateQuestionLoader from './loaders/CreateQuestionLoader';
 import { UserProfileContext, UserProfileDispatchContext } from './lib/context/UserProfileContext';
+import { centralDataReducer } from './lib/reducer/CentralDataReducer';
+import { CentralDataContext } from './lib/context/CentralDataContext';
+import { ICentralDataState } from './lib/context/ICentralDataState';
+import { UserStatusType } from './lib/CentralModels';
 
 function App() {
   const { apiClients, loading } = useAPIClients(
     Environment.Developing,
     AppType.CENTRAL,
   );
+
+  // initialize centralDataState
+  const initCentralDataState: ICentralDataState = {
+    userProfile: {
+      title: 'Title...',
+      firstName: '',
+      lastName: '',
+      username: '',
+      email: '',
+      password: '',
+    },
+    userStatus: UserStatusType.LOGGEDOUT,
+    recommendedGames: [],
+    mostPopularGames: [],
+    searchedGames: [],
+    draftGames: [],
+    favGames: [],
+    recommendedQuestions: [],
+    mostPopularQuestions: [],
+    searchedQuestions: [],
+    draftQuestions: [],
+    favQuestions: [],
+    nextToken: null,
+    isLoading: false,
+    isLoadingInfiniteScroll: false,
+    searchTerms: '',
+    selectedGrades: [],
+    isTabsOpen: false,
+    isFavTabOpen: false,
+    publicPrivate: PublicPrivateType.PUBLIC,
+    sort: {
+      field: SortType.listGameTemplatesByDate,
+      direction: SortDirection.ASC,
+    }
+  }
+
+  const [centralDataState, dispatchCentralDataState] = useReducer(centralDataReducer, initCentralDataState);
+
   const blankUserProfile = {
     title: 'Title...',
     firstName: '',
@@ -63,6 +105,8 @@ function App() {
         <ThemeProvider theme={Theme}>
           {apiClients && (
             <APIClientsContext.Provider value={apiClients}>
+            { initCentralDataState &&
+              <CentralDataContext.Provider value={{centralData: centralDataState, centralDataDispatch: dispatchCentralDataState}}> 
               { userProfile &&
                 <UserProfileContext.Provider value={userProfile}>
                   <UserProfileDispatchContext.Provider value={dispatchUserProfile}>
@@ -70,6 +114,8 @@ function App() {
                   </UserProfileDispatchContext.Provider>
                 </UserProfileContext.Provider>
               }
+              </CentralDataContext.Provider>
+            }
             </APIClientsContext.Provider>
           )}
         </ThemeProvider>

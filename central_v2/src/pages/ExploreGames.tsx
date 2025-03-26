@@ -13,6 +13,8 @@ import { Box, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
+import { CentralDataContext } from '../lib/context/CentralDataContext';
+import { useCentralDataContext } from '../hooks/context/useCentralDataContext';
 import { ScreenSize } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
@@ -26,21 +28,8 @@ import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
 
 interface ExploreGamesProps {
-  isTabsOpen: boolean;
-  setIsTabsOpen: (isTabsOpen: boolean) => void;
-  userProfile: IUserProfile;
   screenSize: ScreenSize;
-  recommendedGames: IGameTemplate[];
-  mostPopularGames: IGameTemplate[];
-  searchedGames: IGameTemplate[];
-  draftGames: IGameTemplate[];
-  favGames: IGameTemplate[];
-  nextToken: string | null;
-  isLoading: boolean;
-  searchTerms: string;
-  selectedGrades: GradeTarget[];
-  isFavTabOpen: boolean;
-  publicPrivate: PublicPrivateType;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -50,39 +39,24 @@ interface ExploreGamesProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
   loadMore: () => void;
 }
 
 export default function ExploreGames({
-  isTabsOpen,
-  setIsTabsOpen,
-  userProfile,
   screenSize,
-  recommendedGames,
-  mostPopularGames,
-  searchedGames,
-  draftGames,
-  favGames,
-  nextToken,
-  isLoading,
-  searchTerms,
-  selectedGrades,
-  isFavTabOpen,
-  publicPrivate,
-  handlePublicPrivateChange,
+  setIsTabsOpen,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  getFav,
   loadMore,
 } : ExploreGamesProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const { centralData  } = useCentralDataContext(CentralDataContext);
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
-  const isSearchResults = searchTerms.length > 0;
+  const isSearchResults = centralData.searchTerms.length > 0;
 
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     setSelectedGame(game);
@@ -107,7 +81,7 @@ export default function ExploreGames({
         }
         <SearchBar
           screenSize={screenSize}
-          searchTerms={searchTerms}
+          searchTerms={centralData.searchTerms}
           handleSearchChange={handleSearchChange}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
@@ -115,7 +89,7 @@ export default function ExploreGames({
         { !isSearchResults && 
           <Recommended<IGameTemplate>
             screenSize={screenSize}
-            recommendedElements={recommendedGames}
+            recommendedElements={centralData.recommendedGames}
             elementType={ElementType.GAME}
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
@@ -123,9 +97,9 @@ export default function ExploreGames({
         }
       </ExploreGamesUpperContainer>
         <InfiniteScroll
-          dataLength={isSearchResults ? searchedGames.length : mostPopularGames.length}
+          dataLength={isSearchResults ? centralData.searchedGames.length : centralData.mostPopularGames.length}
           next={loadMore}
-          hasMore={nextToken !== null}
+          hasMore={centralData.nextToken !== null}
           loader=<h4>loading...</h4>
           scrollableTarget="scrollableDiv"
           style={{
@@ -139,14 +113,14 @@ export default function ExploreGames({
         >
           <CardGallery<IGameTemplate>
             screenSize={screenSize}
-            searchTerm={isSearchResults ? searchTerms : undefined}
-            grades={isSearchResults ? selectedGrades : undefined}
-            galleryElements={isSearchResults ? searchedGames : mostPopularGames}
+            searchTerm={isSearchResults ? centralData.searchTerms : undefined}
+            grades={isSearchResults ? centralData.selectedGrades : undefined}
+            galleryElements={isSearchResults ? centralData.searchedGames : centralData.mostPopularGames}
             elementType={ElementType.GAME}
             galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
             setIsTabsOpen={setIsTabsOpen}
             handleView={handleView}
-            isLoading={isLoading}
+            isLoading={centralData.isLoading}
           />
         </InfiniteScroll>
         <Box 
