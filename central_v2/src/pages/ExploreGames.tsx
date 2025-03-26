@@ -13,8 +13,7 @@ import { Box, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { CentralDataContext } from '../lib/context/CentralDataContext';
-import { useCentralDataContext } from '../hooks/context/useCentralDataContext';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import { ScreenSize } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
@@ -38,7 +37,6 @@ interface ExploreGamesProps {
     }
   ) => void;
   handleSearchChange: (searchString: string) => void;
-  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   loadMore: () => void;
 }
 
@@ -52,7 +50,9 @@ export default function ExploreGames({
 } : ExploreGamesProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const { centralData  } = useCentralDataContext(CentralDataContext);
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
+  
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();

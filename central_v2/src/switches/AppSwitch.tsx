@@ -1,12 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import { useMatch } from 'react-router-dom';
-import { Box, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IUserProfile } from '@righton/networking';
-import { APIClientsContext } from '../lib/context/APIClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
-import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
 import useCentralDataManager from '../hooks/useCentralDataActions';
 import AppContainer from '../containers/AppContainer';
 import ExploreGames from '../pages/ExploreGames';
@@ -36,15 +31,12 @@ function AppSwitch() {
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
   let currentScreen: ScreenType;
   let screenComponent;
   
   const gameQuestion: GameQuestionType = 
     (mainScreen || (libraryScreen && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
   const {
-    userProfile,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
@@ -65,8 +57,6 @@ function AppSwitch() {
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}
-          handlePublicPrivateChange={handlePublicPrivateChange}
-          getFav={getFav}
           loadMore={loadMore}
         />
       );
@@ -75,18 +65,18 @@ function AppSwitch() {
     case libraryScreen: {
       currentScreen = ScreenType.LIBRARY;
       screenComponent = (
-          <MyLibrary 
-            gameQuestion={gameQuestion}
-            screenSize={screenSize} 
-            setIsTabsOpen={setIsTabsOpen}
-            handleChooseGrades={handleChooseGrades}
-            handleSortChange={handleSortChange}
-            handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
-            getDrafts={getDrafts}
-            loadMore={loadMore}
-          />
+        <MyLibrary 
+          gameQuestion={gameQuestion}
+          screenSize={screenSize} 
+          setIsTabsOpen={setIsTabsOpen}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+          handleSearchChange={handleSearchChange}
+          handlePublicPrivateChange={handlePublicPrivateChange}
+          getFav={getFav}
+          getDrafts={getDrafts}
+          loadMore={loadMore}
+        />
       );
       break;
     }
@@ -129,7 +119,6 @@ function AppSwitch() {
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
             loadMore={loadMore}
           />
       );

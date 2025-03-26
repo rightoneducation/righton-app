@@ -13,8 +13,7 @@ import {
   SortDirection,
   PublicPrivateType,
 } from '@righton/networking';
-import { CentralDataContext } from '../../lib/context/CentralDataContext';
-import { useCentralDataContext } from '../../hooks/context/useCentralDataContext';
+import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 import CardGallery from '../cardgallery/CardGallery';
 import SearchBar from '../searchbar/SearchBar';
 import { ScreenSize, GameQuestionType } from '../../lib/CentralModels';
@@ -62,7 +61,8 @@ export default function LibraryTabsGames({
   loadMore,
   handleView
 }: LibraryTabsGamesProps<IGameTemplate>) {
-const { centralData  } = useCentralDataContext(CentralDataContext);
+const centralData = useCentralDataState();
+const centralDataDispatch = useCentralDataDispatch();
 const isSearchResults = centralData.searchTerms.length > 0;
 const [openTab, setOpenTab] = React.useState(0);
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {

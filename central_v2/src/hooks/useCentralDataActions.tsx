@@ -12,18 +12,14 @@ import {
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
-import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
-import { useUserProfileContext, useUserProfileDispatchContext } from './context/useUserProfileContext';
-import { useCentralDataContext } from './context/useCentralDataContext';
+import { useCentralDataState, useCentralDataDispatch } from './context/useCentralDataContext';
 import { UserStatusType, GameQuestionType } from '../lib/CentralModels';
-import { CentralDataContext } from '../lib/context/CentralDataContext';
 
 interface UseCentralDataManagerProps {
   gameQuestion: GameQuestionType;
 }
 
 interface UseCentralDataManagerReturnProps {
-  userProfile: IUserProfile;
   setIsTabsOpen: (isOpen: boolean) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -52,9 +48,8 @@ export default function useCentralDataManager({
   gameQuestion
 }: UseCentralDataManagerProps): UseCentralDataManagerReturnProps {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const { centralData, centralDataDispatch } = useCentralDataContext(CentralDataContext);
-  const userProfile = useUserProfileContext(UserProfileContext);
-  const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
 
   const navigate = useNavigate();
   const isGames = useMatch('/');
@@ -440,7 +435,7 @@ export default function useCentralDataManager({
     console.log('authChange useEffect running');
     if (apiClients.auth.isUserAuth) 
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-  }, [apiClients.auth.isUserAuth]);
+  }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
   const validateUser = async () => {
     const status = await apiClients.auth.verifyAuth();
@@ -453,11 +448,13 @@ export default function useCentralDataManager({
           return;
         }
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
+        init();
         return;
       }
     }
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    init();
   };
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
@@ -468,7 +465,6 @@ export default function useCentralDataManager({
   }, []); // eslint-disable-line
 
   return {
-    userProfile,
     setIsTabsOpen,
     isUserProfileComplete,
     handleChooseGrades,

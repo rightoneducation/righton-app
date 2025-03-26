@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { 
-  IAPIClients, 
-  IQuestionTemplate,
-  IGameTemplate,
   PublicPrivateType,
   IUserProfile,
   GradeTarget,
   SortType,
   SortDirection
 } from '@righton/networking';
-import { useTranslation } from 'react-i18next';
-import { useTheme, styled } from '@mui/material/styles';
-import { CentralDataContext } from '../lib/context/CentralDataContext';
-import { useCentralDataContext } from '../hooks/context/useCentralDataContext';
 import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
 import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';

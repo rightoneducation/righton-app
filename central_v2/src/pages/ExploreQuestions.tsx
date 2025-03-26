@@ -15,8 +15,7 @@ import {
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { CentralDataContext } from '../lib/context/CentralDataContext';
-import { useCentralDataContext } from '../hooks/context/useCentralDataContext';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import { ScreenSize } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
@@ -40,8 +39,6 @@ interface ExploreQuestionsProps {
     }
   ) => void;
   handleSearchChange: (searchString: string) => void;
-  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
   loadMore: () => void;
 }
 
@@ -56,7 +53,8 @@ export default function ExploreQuestions({
   const theme = useTheme();
   const { t } = useTranslation();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
- const { centralData  } = useCentralDataContext(CentralDataContext);
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
