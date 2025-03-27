@@ -151,7 +151,12 @@ export default function CreateGameCardBase({
       elevation={6}
       isHighlight={isHighlight}
       isCardComplete={draftQuestion.questionCard.isCardComplete}
-      sx={{ height: responsiveHeight, gap: responsiveGap, padding: screenSize === ScreenSize.LARGE ? '28px': '24px', }}
+      sx={{ 
+        height: responsiveHeight, 
+        gap: responsiveGap, 
+        padding: screenSize === ScreenSize.LARGE ? '28px': '24px',
+        borderRadius: "8px"
+      }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>
         <Box

@@ -27,12 +27,12 @@ export const SelectPhase = styled(Box, {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
-   width:'128px', 
-  maxWidth: '128px',
-  minHeight: '40px',
+   width:'96px', 
+  maxWidth: '96px',
+  minHeight: '28px',
   background: '#fffbf6',
   border: '1px solid #02215f',
-  padding: '8px',
+  padding: '4px 8px',
   gap: '9px',
   boxSizing: 'border-box',
   zIndex: 4,
@@ -61,7 +61,8 @@ export default function SelectPhaseButton({
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
   // flag error if phase is not selected
-  const phaseError = isCardSubmitted && phase === '';
+  const isPhaseError = isCardSubmitted && phase === "";
+  const phaseIsSelected = phase !== "";
 
   // handle phase selection on menu item click
   const selectPhase = (phaseVal: string) => {
@@ -86,13 +87,13 @@ export default function SelectPhaseButton({
     >
 
       <SelectPhase
-        sx={{ borderRadius: isSelectOpen ? '8px 8px 0 0':'8px' }}
+        sx={{ borderRadius: isSelectOpen ? '4px 4px 0 0':'4px' }}
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
         
-        <SelectPhaseLabel>
-          {phase !== '' ? phase : `Phase ${phaseNumber}`}
+        <SelectPhaseLabel isSelected={phaseIsSelected} error={isPhaseError}>
+          {phaseIsSelected ? phase : `Phase ${phaseNumber}`}
         </SelectPhaseLabel>
         {/* space between is here */}
         <SelectArrowContainer isSelectOpen={isSelectOpen}>
@@ -115,8 +116,8 @@ export default function SelectPhaseButton({
             padding: 0,
             top: "auto",
             left: 0,
-            minWidth: '128px',
-            width: '128px',
+            minWidth: '96px',
+            width: '96px',
             borderRadius: '0 0 4px 4px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',
@@ -134,7 +135,7 @@ export default function SelectPhaseButton({
               <SelectMenuItem sx={{ height: '23px', padding: '4px 8px', }}>
                 <Typography
                   fontWeight="normal"
-                  fontSize="16px"
+                  fontSize="14px"
                   fontFamily="Rubik"
                   sx={{ color: '#02215f' }}
                 >

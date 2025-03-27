@@ -194,7 +194,7 @@ export const CreateGameTitleBarStyled = styled(
 }));
 
 export const CreateGameTitleText = styled(Typography)(({ theme }) => ({
-  fontSize: '24px',
+  fontSize: '20px',
   lineHeight: '30px',
   fontWeight: 700,
   color: '#000',
@@ -282,10 +282,17 @@ export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(({ 
   gap: screenSize === ScreenSize.SMALL ? '12px': `${theme.sizing.smPadding}px`,
 }));
 
-export const SelectPhaseLabel = styled(Typography)(({theme}) => ({
-    color: theme.palette.primary.sliderBlue,
-    fontFamily: theme.typography.fontFamily,
-    fontSize: '16px',
-    fontWeight: 600,
+type SelectLabelProps = {
+  error: boolean;
+  isSelected: boolean;
+}
+
+export const SelectPhaseLabel = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== "error"
+})<SelectLabelProps>(({theme, error, isSelected}) => ({
+    color: error ? '#D0254D': theme.palette.primary.sliderBlue,
+    fontFamily: "Rubik",
+    fontSize: 14,
+    fontWeight: isSelected ? 'normal':'bold',
     margin: 0,
 }))
