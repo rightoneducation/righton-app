@@ -16,7 +16,7 @@ import {
 import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 import CardGallery from '../cardgallery/CardGallery';
 import SearchBar from '../searchbar/SearchBar';
-import { ScreenSize, GameQuestionType } from '../../lib/CentralModels';
+import { ScreenSize, LibraryTabEnum } from '../../lib/CentralModels';
 import { 
   ContentContainer, 
   TabContent,
@@ -40,7 +40,7 @@ interface LibraryTabsGamesProps<T extends IGameTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  fetchElements: () => void;
+  fetchElements: (libraryTab: LibraryTabEnum) => void;
   handleView: (element: T, elements: T[]) => void;
 }
 
@@ -65,7 +65,7 @@ const [hasInitialized, setHasInitialized] = useState(false);
 if (!hasInitialized) {
   const needsFetch = centralData.mostPopularGames.length === 0; 
   if (needsFetch) {
-    fetchElements(); 
+    fetchElements(openTab); 
   }
   setHasInitialized(true);
 }
@@ -76,21 +76,29 @@ const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   if (newValue === 1)
     handlePublicPrivateChange(PublicPrivateType.PRIVATE);
   setOpenTab(newValue);
-  fetchElements();
+  fetchElements(newValue);
 };
 
 const getElements = () => {
-  if (centralData.favGames.length > 0 && openTab === 3){
-    if (isSearchResults)
-      return centralData.searchedGames.filter((game) => centralData.favGames.map((favGame) => favGame.id).includes(game.id));
-    return centralData.favGames;
+  switch (openTab){
+    case 3:
+      if (isSearchResults)
+        return centralData.searchedGames.filter((game) => centralData.favGames.map((favGame) => favGame.id).includes(game.id));
+      return centralData.favGames;
+    case 2:
+      if (isSearchResults)
+        return centralData.searchedGames.filter((game) => centralData.draftGames.map((draftGame) => draftGame.id).includes(game.id));
+      return centralData.draftGames;
+    case 1:
+      if (isSearchResults)
+        return centralData.searchedGames.filter((game) => centralData.privateGames.map((privateGame) => privateGame.id).includes(game.id));
+      return centralData.privateGames;
+    case 0:
+    default:
+      if (isSearchResults)
+        return centralData.searchedGames.filter((game) => centralData.publicGames.map((publicGame) => publicGame.id).includes(game.id));
+      return centralData.publicGames;
   }
-  if (centralData.draftGames.length > 0 && openTab === 2){
-    return centralData.draftGames;
-  }
-  if (isSearchResults)
-    return centralData.searchedGames 
-  return centralData.mostPopularGames;
 }
 
 return (

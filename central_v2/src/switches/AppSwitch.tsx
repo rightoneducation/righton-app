@@ -134,7 +134,7 @@ function AppSwitch() {
   }
 
   return (
-    <AppContainer setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen}>
+    <AppContainer setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={setLibraryGameQuestionSwitch} gameQuestion={gameQuestion}>
       {screenComponent}
     </AppContainer>
   )

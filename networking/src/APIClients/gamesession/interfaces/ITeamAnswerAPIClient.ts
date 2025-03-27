@@ -7,7 +7,7 @@ export interface ITeamAnswerAPIClient {
   subscribeCreateTeamAnswer(
     id: string,
     callback: (result: BackendAnswer) => void
-  ): Subscription;
+  ): Promise<Subscription>;
 
   addTeamAnswer(
     inputAnswer: BackendAnswer
@@ -16,7 +16,7 @@ export interface ITeamAnswerAPIClient {
   subscribeUpdateTeamAnswer(
     id: string,
     callback: (result: BackendAnswer) => void
-  ): Subscription;
+  ): Promise<Subscription>;
 
   updateTeamAnswer(
     teamAnswerId: string,

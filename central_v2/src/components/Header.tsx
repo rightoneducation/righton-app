@@ -286,21 +286,21 @@ export default function Header({
                 </ButtonText>
               </TransparentButton>
               { userStatus === UserStatusType.LOGGEDIN && 
-              <TransparentButton
-                disableRipple
-                onClick={() =>
-                  handleButtonClick(ScreenType.LIBRARY)
-                }
-                isActive={selectedScreen === ScreenType.LIBRARY}
-              >
-                 { selectedScreen === ScreenType.LIBRARY
-                  ? <PinkIcon src={books} alt="Library Icon" />
-                  : <img src={books} alt="Library Icon" />
-                }
-                <ButtonText isActive={selectedScreen === ScreenType.LIBRARY}>
-                  My Library
-                </ButtonText>
-              </TransparentButton>
+                <TransparentButton
+                  disableRipple
+                  onClick={() =>
+                    handleButtonClick(ScreenType.LIBRARY)
+                  }
+                  isActive={selectedScreen === ScreenType.LIBRARY}
+                >
+                  { selectedScreen === ScreenType.LIBRARY
+                    ? <PinkIcon src={books} alt="Library Icon" />
+                    : <img src={books} alt="Library Icon" />
+                  }
+                  <ButtonText isActive={selectedScreen === ScreenType.LIBRARY}>
+                    My Library
+                  </ButtonText>
+                </TransparentButton>
               }
             </Box>
           ) : (

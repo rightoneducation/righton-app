@@ -77,3 +77,10 @@ export enum FetchType {
   FAVORITE_GAMES,
   FAVORITE_QUESTIONS
 }
+
+export enum LibraryTabEnum {
+  PUBLIC,
+  PRIVATE,
+  DRAFTS,
+  FAVORITES
+}

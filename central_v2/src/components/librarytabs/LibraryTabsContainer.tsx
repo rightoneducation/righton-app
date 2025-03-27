@@ -13,7 +13,7 @@ import tabExploreQuestionsIcon from '../../images/tabExploreQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';
 import tabPrivateIcon from '../../images/tabPrivate.svg';
-import { ScreenSize, GameQuestionType } from '../../lib/CentralModels';
+import { ScreenSize, GameQuestionType, LibraryTabEnum } from '../../lib/CentralModels';
 import { 
   LibraryTabsStyledContainer,
   ContentFrame
@@ -25,7 +25,7 @@ interface TabContainerProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  fetchElements: () => void;
+  fetchElements: (libraryTab: LibraryTabEnum) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {

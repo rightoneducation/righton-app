@@ -8,7 +8,7 @@ import {
   SortDirection
 } from '@righton/networking';
 import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
-import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
+import { ScreenSize, GameQuestionType, LibraryTabEnum } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
@@ -24,7 +24,7 @@ interface MyLibraryProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  fetchElements: () => void;
+  fetchElements: (libraryTab: LibraryTabEnum) => void;
 }
 
 export default function MyLibrary({ 
