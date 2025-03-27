@@ -87,7 +87,7 @@ export default function SelectPhaseButton({
     >
 
       <SelectPhase
-        sx={{ borderRadius: isSelectOpen ? '4px 4px 0 0':'4px' }}
+        sx={{ borderRadius: isSelectOpen ? '5px 5px 0 0':'5px' }}
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
@@ -118,7 +118,7 @@ export default function SelectPhaseButton({
             left: 0,
             minWidth: '96px',
             width: '96px',
-            borderRadius: '0 0 4px 4px',
+            borderRadius: '0 0 5px 5px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',
             borderLeft: '1px solid #02215f',
