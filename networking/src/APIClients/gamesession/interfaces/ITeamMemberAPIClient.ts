@@ -11,5 +11,5 @@ export interface ITeamMemberAPIClient {
   subscribeUpdateTeamMember(
     id: string,
     callback: (result: ITeamMember) => void
-  ): Subscription;
+  ): Promise<Subscription>;
 }

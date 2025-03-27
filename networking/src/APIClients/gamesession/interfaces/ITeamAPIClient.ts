@@ -8,12 +8,12 @@ export interface ITeamAPIClient {
   subscribeCreateTeam(
     id: string,
     callback: (result: ITeam) => void
-  ): Subscription;
+  ): Promise<Subscription>;
 
   subscribeUpdateTeam(
     id: string,
     callback: (result: ITeam) => void
-  ): Subscription;
+  ): Promise<Subscription>;
 
   updateTeam(teamInput: UpdateTeamInput): Promise<ITeam>;
 
@@ -22,7 +22,7 @@ export interface ITeamAPIClient {
   subscribeDeleteTeam(
     id: string,
     callback: (result: ITeam) => void
-  ): Subscription;
+  ): Promise<Subscription>;
 
   addTeamToGameSessionId(
     gameSessionId: string,
