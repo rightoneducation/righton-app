@@ -188,19 +188,14 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     try {
       await this.authAPIClient.awsSignIn(user.email, user.password ?? '');
       const currentUser = await getCurrentUser();
-      console.log('currentUser');
-      console.log(currentUser);
       updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
       const images = await Promise.all([
         this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
         this.authAPIClient.awsUploadImagePrivate(backImage) as any
       ]);
       createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
-      console.log(createUserInput);
       updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
       const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
-      console.log('dynamoResponse');
-      console.log(dynamoResponse);
       updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
