@@ -42,7 +42,8 @@ export const HeaderButtonContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: '8px',
   paddingLeft: '12px',
-  paddingRight: '12px'
+  paddingRight: '12px',
+  cursor: 'pointer',
 }));
 
 export const TextContainer = styled(Box)(({ theme }) => ({
@@ -129,7 +130,6 @@ export const SingleExplanationCardContainer = styled(Box)(({ theme }) => ({
   paddingRight: '16px',
   backgroundColor: `rgba(249, 245, 242, 1)`,
   borderRadius: `${theme.sizing.xSmPadding}px`,
-  gap: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
 }));
 

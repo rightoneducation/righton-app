@@ -66,6 +66,9 @@ export async function handler(event) {
         - After reviewing above, pause. Review that the output is a valid JSON string and that running JSON.parse will not result in an error. Pay special consideration to escape characters and do not embed any Latex formatting that could compromise this.
         - Finally, ensure that you have generated ${numWrongAnswers} explanations, one for each incorrect answer provided by the students.
         Please ensure each explanation for the incorrect answers adheres to the guidelines, caveats, and expectations outlined above, providing clear, concise, and educationally valuable insight into the possible misconceptions leading to the wrong answer.
+
+        DO NOT ADD ANY TEXT BEYOND THE EXPLANATIONS THEMSELVES TO THE ARRAY. DO NOT NUMBER THEM OR ADD LINE BREAKS OR FORMATTING. I WILL BE PARSING THE JSON OUTPUT AND DO NOT WANT TO HAVE TO ACCOUNT FOR ANYTHING BEYOND THE EXPLANATIONS THEMSELVES. 
+
         `,
     });
     try {

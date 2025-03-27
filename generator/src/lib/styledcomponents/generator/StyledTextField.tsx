@@ -27,3 +27,30 @@ export const TextFieldStyled = styled(TextField)(({ theme }) => ({
     }
   },
 }));
+
+export const RegenerateTextFieldStyled = styled(TextFieldStyled)(({ theme }) => ({
+  padding: 0,
+  backgroundColor: 'white',
+  '& .MuiInputBase-inputMultiline': { // targets the textarea
+    overflow: 'auto',
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE 10+
+    '&::-webkit-scrollbar': {
+      display: 'none', // Chrome, Safari
+    },
+    '-webkit-overflow-scrolling': 'touch',
+  },
+}));
+
+export const EditExplanationStyledTextField = styled(TextField)(({ theme }) => ({
+  width: '100%',
+  '& .MuiInputBase-inputMultiline': { // targets the textarea
+    overflow: 'auto',
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE 10+
+    '&::-webkit-scrollbar': {
+      display: 'none', // Chrome, Safari
+    },
+    '-webkit-overflow-scrolling': 'touch',
+  },
+}));

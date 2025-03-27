@@ -12,9 +12,11 @@ import {
   ExplanationTextStyled,
   ButtonSubtextStyled,
   SavedTextStyled,
+  EditStatusTextStyled,
   FooterBoldStyled,
   DiscardTextStyled
 } from '../lib/styledcomponents/generator/StyledTypography';
+import { EditExplanationStyledTextField } from '../lib/styledcomponents/generator/StyledTextField';
 import EditAnswer from '../img/EditAnswer.svg';
 import {
   
@@ -105,47 +107,14 @@ export default function ExplanationCard(
   const [isEditMode, setIsEditMode] = useState(false);
   // local state to store edited explanation
   const [editableExplanation, setEditableExplanation] = useState(explanation.editedExplanation ? explanation.editedExplanation : '');
+  const firstLineText = editableExplanation.length > 0 ? editableExplanation.split('.')[0] : explanation.selectedExplanation.split('.')[0];
+  const remainingText = editableExplanation.length > 0 ? editableExplanation.split('.').slice(1).join('.') : explanation.selectedExplanation.split('.').slice(1).join('.');
 
   useEffect(() => {
       if (isQuestionSaved) {
         setIsSaved(false);
       }
   }, [isQuestionSaved]);
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checkboxValue = Number(e.target.value);
-    const isChecked = e.target.checked;
-  
-    switch (checkboxValue) {
-      case DiscardOptionsEnum.incorrectMath:
-        setDiscardOptions((prev) => ({
-          ...prev,
-          incorrectMath: isChecked,
-        }));
-        break;
-      case DiscardOptionsEnum.toneClarity:
-        setDiscardOptions((prev) => ({
-          ...prev,
-          toneClarity: isChecked,
-        }));
-        break;
-      case DiscardOptionsEnum.other:
-        setDiscardOptions((prev) => ({
-          ...prev,
-          other: {
-            ...prev.other,
-            isEnabled: isChecked,
-            text: isChecked ? discardPromptText : ''
-          },
-        }));
-        break;
-      default:
-        console.warn('Unknown discard option');
-    }
-    if (checkboxValue === DiscardOptionsEnum.other && !isChecked) {
-      setDiscardPromptText('');
-    }
-  }
 
   // answer: string; selectedExplanation: string; dismissedExplanations: string[]
   const packageRegenInputAndSubmit= (index: number, action: ExplanationRegenType, discardedExplanation: IChipData | null, promptText?: string) => {
@@ -189,22 +158,22 @@ export default function ExplanationCard(
     setDiscardPromptText('');
   }
   const handleEditModeClick = () => {
-    setEditableExplanation(explanation.editedExplanation ? explanation.editedExplanation : explanation.selectedExplanation);
+    setEditableExplanation(editableExplanation.length > 0 ? editableExplanation : explanation.selectedExplanation);
     setIsEditMode(true);
-  }
-  const handleEditSave = () => {
-    const inputQuestion = JSON.parse(JSON.stringify(questionToSave));
-    inputQuestion.wrongAnswers[index].editedExplanation = editableExplanation;
-    setQuestionToSave(inputQuestion);
-    setIsEditMode(false);
-  }
-  const handleEditDiscard = () => {
-    setEditableExplanation(explanation.editedExplanation ? explanation.editedExplanation : explanation.selectedExplanation);
-    setIsEditMode(false);
   }
 
   return (
-    <SingleExplanationCardContainer style={{position: 'relative', width: '100%'}}>
+    <SingleExplanationCardContainer 
+      style={{
+        position: 'relative',
+        width: '100%'
+      }} 
+      sx={{
+        gap: (editableExplanation.length > 0 && !isEditMode && !isDiscardEnabled) 
+        ? `${theme.sizing.smPadding}px` 
+        : `${theme.sizing.mdPadding}px`
+      }}
+    >
       { isSaved &&
         <Box style={{ 
           position: 'absolute', 
@@ -247,48 +216,64 @@ export default function ExplanationCard(
             { !isEditMode ? 
               <>
                 <ExplanationTextStyled>
-                  {editableExplanation.length > 0 ? editableExplanation : explanation.selectedExplanation}
+                  {firstLineText}
                 </ExplanationTextStyled>
-                {isDiscardEnabled &&
-                  <DiscardOptions index={index} packageRegenInputAndSubmit={packageRegenInputAndSubmit}/>
-                }
+                <ExplanationTextStyled>
+                  {remainingText}
+                </ExplanationTextStyled>
               </>
               : 
               <>
-                <TextField style={{width: '100%'}} value={editableExplanation} onChange={(e) => setEditableExplanation(e.target.value)} multiline={true} maxRows={5}/>
-                <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
-                  <FooterBoldStyled style={{cursor: 'pointer'}} onClick={handleEditSave}>
-                    Save
-                  </FooterBoldStyled>
-                  <FooterBoldStyled>
-                    |
-                  </FooterBoldStyled>
-                  <FooterBoldStyled style={{cursor: 'pointer'}} onClick={handleEditDiscard}>
-                    Discard
-                  </FooterBoldStyled>
-                </Box>
+                <EditExplanationStyledTextField 
+                  value={editableExplanation} 
+                  onChange={(e) => setEditableExplanation(e.target.value)} 
+                  multiline={true} 
+                  maxRows={5}
+                />
               </>
             }
         </>
       }
     </ExplanationCardStyled>
-    <Grid container spacing='8px'>
-      <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <ButtonWrongAnswerStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)} style={{fontWeight: 400}}>
-          Edit
-        </ButtonWrongAnswerStyled>
-      </Grid>
-      <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <ButtonWrongAnswerStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)} style={{fontWeight: 400}}>
-          Regenerate
-        </ButtonWrongAnswerStyled>
-      </Grid>
-      <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <ButtonStyled onClick={() => {setIsDiscardEnabled(true); setIsRegenEnabled(false); setIsEditMode(false)}} style={{fontWeight: 400}}>
-          Save
-        </ButtonStyled>
-      </Grid>
-    </Grid>
+    { isDiscardEnabled  
+      ? <DiscardOptions index={index} packageRegenInputAndSubmit={packageRegenInputAndSubmit}/>
+      :  !isEditMode && !isSaved && (
+        <>
+          { editableExplanation.length > 0 &&
+            <EditStatusTextStyled>
+              Your edits have been updated.
+            </EditStatusTextStyled>
+          }
+          <Grid container spacing='8px'>
+          { !isEditMode ? 
+            <>
+            <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+              <ButtonWrongAnswerStyled onClick={handleEditModeClick} style={{fontWeight: 400}}>
+                Edit
+              </ButtonWrongAnswerStyled>
+            </Grid>
+            <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+              <ButtonWrongAnswerStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)} style={{fontWeight: 400}}>
+                Regenerate
+              </ButtonWrongAnswerStyled>
+            </Grid>
+            <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+              <ButtonStyled onClick={() => {setIsDiscardEnabled(true); setIsRegenEnabled(false); setIsEditMode(false)}} style={{fontWeight: 400}}>
+                Save
+              </ButtonStyled>
+            </Grid>
+            </>
+          : 
+            <Grid item xs={12} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+              <ButtonStyled onClick={() => setIsEditMode(false)} >
+                Update
+              </ButtonStyled>
+            </Grid>
+          }
+          </Grid>
+        </>
+      )
+    }
   </SingleExplanationCardContainer>
   )
 }

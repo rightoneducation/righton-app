@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createQuestion, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
 import { IDiscardedExplanationToSave, IQuestionToSave, IRegenInput } from '../lib/Models';
 import QuestionSavedModal from '../components/modals/QuestionSavedModal';
+import HowToModal from '../components/modals/HowToModal';
 import ModalBackground from '../components/modals/ModalBackground';
 import { QuestionInfoContainer } from '../components/QuestionInfoContainer';
 import { ExplanationCards } from '../components/ExplanationCards';
@@ -49,6 +50,7 @@ export default function Generator() {
   const [isQuestionGenerated, setIsQuestionGenerated] = React.useState(false);
   const [isQuestionSaved, setIsQuestionSaved] = React.useState(false);
   const [isCustomQuestion, setIsCustomQuestion] = React.useState(true);
+  const [isHowToModalOpen, setIsHowToModalOpen] = React.useState(false);
   const [selectedSampleQuestion, setSelectedSampleQuestion] = React.useState(0);
   const blankQuestion = {
     question: '',
@@ -260,16 +262,18 @@ export default function Generator() {
 
   const handleCloseModal = () => {
     setIsQuestionSaved(false);
+    setIsHowToModalOpen(false);
   };
 
   return (
     <MainContainer>
       <QuestionSavedModal isModalOpen={isQuestionSaved} />
-      <ModalBackground isModalOpen={isQuestionSaved} handleCloseModal={handleCloseModal} />
+      <HowToModal isModalOpen={isHowToModalOpen} setIsHowToModalOpen={setIsHowToModalOpen}/>
+      <ModalBackground isModalOpen={isQuestionSaved || isHowToModalOpen} handleCloseModal={handleCloseModal} />
       <HeaderContainer>
         <img src={RightonLogo} alt="Righton Logo"style={{height: '55px', width: 'fit-content'}}/>
         <HeaderRightContainer>
-          <HeaderButtonContainer>
+          <HeaderButtonContainer onClick={() => setIsHowToModalOpen(true)} >
             <img src={howtouse} alt="How to use icon"/>
             { screenSize !== ScreenSize.SMALL && 
               <HeaderText>How To Use</HeaderText>
