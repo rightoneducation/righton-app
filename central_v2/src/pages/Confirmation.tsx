@@ -152,6 +152,7 @@ function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen
             navigate('/');
         } catch (error: any) {
             setIsVerifying(false);
+            console.log(error);
             const errorInfo = Object.getOwnPropertyNames(error).reduce((acc, key) => {
                 acc[key] = error[key];
                 return acc;
