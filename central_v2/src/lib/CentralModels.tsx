@@ -29,6 +29,11 @@ export enum BorderStyle {
   SVG = 'svg',
 }
 
+export enum GameQuestionType {
+  GAME,
+  QUESTION
+}
+
 // enum to track the highlight card in the create question flow
 export enum CreateQuestionHighlightCard {
   QUESTIONCARD = 'questionCard',

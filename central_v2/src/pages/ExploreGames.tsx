@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import {
   ElementType,
   GalleryType,
+  SortDirection,
+  SortType,
+  PublicPrivateType,
   IGameTemplate,
   IUserProfile,
+  GradeTarget
 } from '@righton/networking';
 import { Box, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -14,7 +18,6 @@ import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
 } from '../lib/styledcomponents/ExploreGamesStyledComponents';
-import useExploreGamesStateManager from '../hooks/useExploreGamesStateManager';
 import Recommended from '../components/explore/Recommended';
 import CardGallery from '../components/cardgallery/CardGallery';
 import SearchBar from '../components/searchbar/SearchBar';
@@ -23,46 +26,84 @@ import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
 
 interface ExploreGamesProps {
+  isTabsOpen: boolean;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   userProfile: IUserProfile;
   screenSize: ScreenSize;
   setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
+  recommendedGames: IGameTemplate[];
+  mostPopularGames: IGameTemplate[];
+  searchedGames: IGameTemplate[];
+  draftGames: IGameTemplate[];
+  favGames: IGameTemplate[];
+  nextToken: string | null;
+  isLoading: boolean;
+  searchTerms: string;
+  selectedGrades: GradeTarget[];
+  isFavTabOpen: boolean;
+  publicPrivate: PublicPrivateType;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (
+    newSort: {
+      field: SortType;
+      direction: SortDirection | null;
+    }
+  ) => void;
+  handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  getFav: (user: IUserProfile) => void;
+  loadMore: () => void;
 }
 
 export default function ExploreGames({
+  isTabsOpen,
+  setIsTabsOpen,
   userProfile,
   screenSize,
-  setIsUserLoggedIn
+  setIsUserLoggedIn,
+  recommendedGames,
+  mostPopularGames,
+  searchedGames,
+  draftGames,
+  favGames,
+  nextToken,
+  isLoading,
+  searchTerms,
+  selectedGrades,
+  isFavTabOpen,
+  publicPrivate,
+  handlePublicPrivateChange,
+  handleChooseGrades,
+  handleSortChange,
+  handleSearchChange,
+  getFav,
+  loadMore,
 } : ExploreGamesProps) {
   const theme = useTheme();
-  const {
-    recommendedGames,
-    mostPopularGames,
-    searchedGames,
-    nextToken,
-    isLoading,
-    searchTerms,
-    selectedGrades,
-    setIsTabsOpen,
-    handleChooseGrades,
-    handleSortChange,
-    handleSearchChange,
-    loadMoreGames,
-  } = useExploreGamesStateManager();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = searchTerms.length > 0;
 
-  
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
     setSelectedGame(game);
     setGameSet(games);
-    setIsTabsOpen(true);
+    setIsTabsOpen(true
+    );
   };
+
+    // Debug button temporarily added for QA
+    const handleSignOut = async () => {
+      const response = apiClients.centralDataManager?.signOut();
+      setIsUserLoggedIn(false);
+    }
 
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
+      <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 
+        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleSignOut()} />  
+      </Box>
       <ExploreGamesUpperContainer screenSize={screenSize}>
         {!isSearchResults && 
           <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />
@@ -86,7 +127,7 @@ export default function ExploreGames({
       </ExploreGamesUpperContainer>
         <InfiniteScroll
           dataLength={isSearchResults ? searchedGames.length : mostPopularGames.length}
-          next={loadMoreGames}
+          next={loadMore}
           hasMore={nextToken !== null}
           loader=<h4>loading...</h4>
           scrollableTarget="scrollableDiv"

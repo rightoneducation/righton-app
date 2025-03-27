@@ -137,11 +137,15 @@ export class QuestionTemplateAPIClient
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.default;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `list${type}QuestionTemplates`, queryFunction, type, gradeTargets);
+    console.log(awsType);
+    console.log(`${type.toLowerCase()}QuestionTemplates`);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `list${type}QuestionTemplates`, queryFunction, type, gradeTargets, favIds);
+    console.log(response);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
@@ -151,11 +155,12 @@ export class QuestionTemplateAPIClient
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByDate`, queryFunction, type, gradeTargets);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByDate`, queryFunction, type, gradeTargets, favIds);
 
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
@@ -166,11 +171,12 @@ export class QuestionTemplateAPIClient
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGrade;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGrade`, queryFunction, type, gradeTargets);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGrade`, queryFunction, type, gradeTargets, favIds);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
@@ -180,11 +186,12 @@ export class QuestionTemplateAPIClient
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byGameTemplatesCount;
     const awsType = `${type}QuestionTemplate`;
-    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGameTemplatesCount`, queryFunction, type, gradeTargets);
+    const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByGameTemplatesCount`, queryFunction, type, gradeTargets, favIds);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 }

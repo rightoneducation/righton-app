@@ -1,13 +1,18 @@
 import React, { useState, useRef, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
-import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText,} from '@mui/material';
+import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import { IAPIClients, IUserProfile } from '@righton/networking';
+import { useGoogleLogin } from '@react-oauth/google';
+import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
+import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import RightOnLogo from "../images/RightOnLogo.png";
+import GoogleImageSvg from "../images/googleicon.svg";
+
 import Adpic from "../images/@.svg"
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
 import { 
@@ -16,6 +21,8 @@ import {
 import errorIcon from '../images/errorIcon.svg';
 import SignUpErrorModal from '../components/modal/SignUpErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
+
+
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -62,6 +69,27 @@ const UpperSignupSubGoogle = styled(Typography)(({ theme }) => ({
   backgroundColor: 'white', // Set background color to white
   minHeight: '52px',
 }));
+
+const GoogleSignUpButton = styled(Button)(({ theme }) => ({
+  backgroundColor: 'transparent',  // Make background transparent
+  color: '#0966E0',
+  padding: '10px 16px',
+  fontSize: '16px',
+  fontWeight: 500,
+  fontFamily: 'Poppins, sans-serif',
+  borderRadius: '8px',
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '10px',
+  border: '2px solid #0966E0',
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: '#f0f0f0',
+  },
+}));
+
 
 const OrText = styled(Typography)(({ theme }) => ({
   width: '100%',
@@ -266,30 +294,30 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 
 interface SignUpProps {
   apiClients: IAPIClients;
-  userProfile: IUserProfile;
-  setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>; 
   handleUserCreate: () => void;
+  // handleGoogleUserCreate: () => void;
   frontImage: File | null;
   setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
   backImage: File | null;
   setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
   confirmPassword: string;
   setConfirmPassword: (value: string) => void;
+  // setPressedGoogle: (value: boolean) => void
 }
 export default function SignUp({ 
   apiClients, 
-  userProfile, 
-  setUserProfile, 
   handleUserCreate, 
   frontImage, 
   setFrontImage, 
   backImage, 
   setBackImage,
   confirmPassword,
-  setConfirmPassword
+  setConfirmPassword,
+  // handleGoogleUserCreate
 }: SignUpProps ) {
   const theme = useTheme();
-
+  const userProfile = useUserProfileContext(UserProfileContext);
+  const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
 
@@ -315,6 +343,7 @@ export default function SignUp({
 
 
   const handleSubmit = async () => {
+    // setPressedGoogle(true)
     setLoading(true);
     setPasswordError(""); // Reset error before validation
     setPasswordConfirmError("")
@@ -353,7 +382,27 @@ export default function SignUp({
     setLoading(false);
   };
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const idToken = credentialResponse.access_token; // Use `access_token` for OAuth login
 
+        if (idToken) {
+          const response = await apiClients.auth.awsSignInFederated();
+          // handleGoogleUserCreate()
+          
+          console.log('User signed in:', response);
+        } else {
+          console.error('Google sign-in token is missing');
+        }
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+      }
+    },
+    onError: () => {
+      console.error('Google Sign-In Failed');
+    },
+  });
   return (
     <SignUpMainContainer>
       <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
@@ -362,7 +411,13 @@ export default function SignUp({
         <UpperSignup>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
           <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
-          <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle>
+          {/* <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle> */}
+          <GoogleSignUpButton onClick={() => googleLogin()} variant="contained">
+            <img src={GoogleImageSvg} alt="Google Icon" width="30px" height="30px" />
+            Sign up with Google
+          </GoogleSignUpButton>
+
+
         </UpperSignup>
 
         <OrText>Or</OrText>
@@ -372,13 +427,11 @@ export default function SignUp({
             <TitleField
               select
               value={userProfile.title}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  title: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => userProfileDispatch({
+                type: 'update_user_profile', 
+                payload: {...userProfile, title: event.target.value}
+              })
+            }
               variant="outlined"
               SelectProps={{
                 IconComponent: DropDown, // Custom icon component
@@ -394,25 +447,21 @@ export default function SignUp({
               variant="outlined"
               placeholder="First Name"
               value={userProfile.firstName}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  firstName: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => userProfileDispatch({
+                type: 'update_user_profile', 
+                payload: {...userProfile, firstName: event.target.value}
+              })
+            }
             />
             <TextContainerStyled
               variant="outlined"
               placeholder="Last Name"
               value={userProfile.lastName}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  lastName: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => userProfileDispatch({
+                  type: 'update_user_profile', 
+                  payload: {...userProfile, lastName: event.target.value}
+                })
+              }
             />
           </MiddleTextFirstRow>
           <MiddleTextSecondRow>
@@ -421,13 +470,11 @@ export default function SignUp({
               variant="outlined"
               placeholder="Username..."
               value={userProfile.username}
-              onChange={(event) => setUserProfile((prev) => {
-                return {
-                  ...prev,
-                  username: event.target.value,
-                  };
-                }
-              )}
+              onChange={(event) => userProfileDispatch({
+                type: 'update_user_profile', 
+                payload: {...userProfile, username: event.target.value}
+              })
+            }
               sx={{
                 backgroundColor: 'white'
               }}
@@ -437,13 +484,11 @@ export default function SignUp({
             variant="outlined"
             placeholder="School Email..."
             value={userProfile.email}
-            onChange={(event) => setUserProfile((prev) => {
-              return {
-                ...prev,
-                email: event.target.value,
-                };
-              }
-            )}
+            onChange={(event) => userProfileDispatch({
+              type: 'update_user_profile', 
+              payload: {...userProfile, email: event.target.value}
+            })
+          }
           />
           <MiddleTextFourthRow>Teacher ID Image</MiddleTextFourthRow>
         </MiddleText>
@@ -538,13 +583,11 @@ export default function SignUp({
             variant="outlined"
             placeholder="Password..."
             value={userProfile.password}
-            onChange={(event) => setUserProfile((prev) => {
-              return {
-                ...prev,
-                password: event.target.value,
-                };
-              }
-            )}
+            onChange={(event) => userProfileDispatch({
+              type: 'update_user_profile', 
+              payload: {...userProfile, password: event.target.value}
+            })
+          }
             error={!!passwordError}
             sx={{
               backgroundColor: 'white',

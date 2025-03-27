@@ -24,6 +24,7 @@ interface CardGalleryProps<T> {
   isLoading?: boolean;
   elementType: ElementType;
   galleryType: GalleryType;
+  isMyLibrary?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
 }
@@ -43,6 +44,7 @@ interface MostPopularGamesComponentProps {
   maxCards: number;
   numColumns: number;
   isLoading: boolean;
+  isMyLibrary?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleViewButtonClick: (element: IGameTemplate) => void;
 }
@@ -53,11 +55,12 @@ function MostPopularGamesComponent({
   maxCards,
   isLoading,
   numColumns,
+  isMyLibrary,
   setIsTabsOpen,
   handleViewButtonClick,
 }: MostPopularGamesComponentProps) {
   return (
-    <Grid container spacing={4} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: '2000px'}}>
+    <Grid container spacing={4} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: isMyLibrary ? '5000px' : '2000px'}}>
       {(mostPopularElements.length === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
@@ -102,7 +105,7 @@ function MostPopularQuestionsComponent({
     0,
   );
   return (
-    <Grid container spacing={2}   columns={{ xs: 12, sm: 12, md: 12, lg: 8 }} id="scrollableDiv">
+    <Grid container spacing={4}   columns={{ xs: 12, sm: 12, md: 12, lg: 7 }} id="scrollableDiv">
       {(elementsLength === 0 && isLoading)
         ? Array.from({ length: maxCards }).map((_, index) => {
             return (
@@ -159,6 +162,7 @@ export default function CardGallery<
   galleryType,
   setIsTabsOpen,
   handleView,
+  isMyLibrary
 }: CardGalleryProps<T>) {
   const maxCards = 12;
   const getNumColumns = () => {
@@ -198,15 +202,17 @@ export default function CardGallery<
     handleView(element, galleryElements as T[]);
   };
   return (
-    <MostPopularContainer screenSize={screenSize}>
-      <GalleryHeaderText<T>
-        searchedElements={galleryElements}
-        searchedTerm={searchTerm}
-        grades={grades}
-        isLoading={isLoading}
-        screenSize={screenSize}
-        galleryType={galleryType}
-      />
+    <MostPopularContainer screenSize={screenSize} isMyLibrary={isMyLibrary}>
+      {!isMyLibrary &&
+        <GalleryHeaderText<T>
+          searchedElements={galleryElements}
+          searchedTerm={searchTerm}
+          grades={grades}
+          isLoading={isLoading}
+          screenSize={screenSize}
+          galleryType={galleryType}
+        /> 
+      }
       {elementType === ElementType.GAME ? (
         <MostPopularGamesComponent
           screenSize={screenSize}
@@ -215,6 +221,7 @@ export default function CardGallery<
           maxCards={maxCards}
           numColumns={getNumColumns()}
           setIsTabsOpen={setIsTabsOpen}
+          isMyLibrary={isMyLibrary}
           handleViewButtonClick={
             handleViewButtonClick as (element: IGameTemplate) => void
           }

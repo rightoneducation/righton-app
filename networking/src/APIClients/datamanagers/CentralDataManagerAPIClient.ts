@@ -35,7 +35,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   } 
   
   public initGames = async () => {
-    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, []);
+    const response = await this.gameTemplateAPIClient.listGameTemplates(PublicPrivateType.PUBLIC, 12, null, SortDirection.DESC, null, [], null);
     if (response){
       return { nextToken: response.nextToken, games: response.gameTemplates };
     }
@@ -43,30 +43,49 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public initQuestions = async () => {
-    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, []);
+    const response = await this.questionTemplateAPIClient.listQuestionTemplates(PublicPrivateType.PUBLIC, 24, null, SortDirection.DESC, null, [], null);
     if (response)
       return { nextToken: response.nextToken, questions: response.questionTemplates };
     return { nextToken: null, questions: [] };
   };
 
-  public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[]) => {
+  public favoriteGameTemplate = async (gameId: string, user: IUserProfile) => {
+    let newFavoriteGameTemplateIds = user.favoriteGameTemplateIds ? JSON.parse(JSON.stringify(user.favoriteGameTemplateIds)) : [];
+    const isFav = newFavoriteGameTemplateIds.includes(gameId);
+    if (isFav === true)
+      newFavoriteGameTemplateIds = newFavoriteGameTemplateIds.filter((id: string) => id !== gameId);
+    else 
+      newFavoriteGameTemplateIds.push(gameId);
+    return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
+    // if (!response)
+    //   return null;
+    // // this.setLocalUserProfile(response);
+    // return response;
+  };
+
+  public favoriteQuestionTemplate = async (questionId: string, favorite: boolean) => {
+    console.log(questionId);
+    console.log(favorite);
+  };
+
+  public searchForGameTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null) => {
     switch(sortType){
       case SortType.listGameTemplatesByDate: {
-        const response = await this.gameTemplateAPIClient.listGameTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.gameTemplateAPIClient.listGameTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
         break;
       }
       case SortType.listGameTemplatesByGrade: {
-        const response = await this.gameTemplateAPIClient.listGameTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.gameTemplateAPIClient.listGameTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
         break;
       }
       case SortType.listGameTemplatesByQuestionCount: {
-        const response = await this.gameTemplateAPIClient.listGameTemplatesByQuestionTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.gameTemplateAPIClient.listGameTemplatesByQuestionTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
@@ -74,7 +93,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
       case SortType.listGameTemplates:
       default: {
-        const response = await this.gameTemplateAPIClient.listGameTemplates(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.gameTemplateAPIClient.listGameTemplates(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, games: response.gameTemplates };
         }
@@ -84,24 +103,24 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, games: []};
   };
 
-  public searchForQuestionTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[]) => {
+  public searchForQuestionTemplates = async (type: PublicPrivateType, limit: number | null, nextToken: string | null, search: string, sortDirection: SortDirection, sortType: SortType, gradeTargets: GradeTarget[], favIds: string[] | null) => {
     switch(sortType){
       case SortType.listQuestionTemplatesByDate: {
-        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByDate(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
         break;
       }
       case SortType.listQuestionTemplatesByGrade: {
-        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGrade(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
         break;
       }
       case SortType.listQuestionTemplatesByGameCount: {
-        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGameTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.questionTemplateAPIClient.listQuestionTemplatesByGameTemplatesCount(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
@@ -109,7 +128,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
       case SortType.listQuestionTemplates:
       default: {
-        const response = await this.questionTemplateAPIClient.listQuestionTemplates(type, limit, nextToken, sortDirection, search, gradeTargets);
+        const response = await this.questionTemplateAPIClient.listQuestionTemplates(type, limit, nextToken, sortDirection, search, gradeTargets, favIds);
         if (response){
           return { nextToken: response.nextToken, questions: response.questionTemplates };
         }
@@ -157,6 +176,9 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     }
   };
 
+  // public getUserEmailCognito = () => {
+  //   return this.authAPIClient.getUserEmail()
+  // }
 
   public signUpSendConfirmationCode = async (user: IUserProfile) => {
     return this.authAPIClient.awsSignUp(user.username, user.email, user.password ?? '');
@@ -183,10 +205,52 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
       updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
       this.setLocalUserProfile(updatedUser);
+      // flip manual state that causes useffect to run at the top.
+
       return { updatedUser, images };
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);
       throw new Error (error);
+    }
+  };
+
+
+  public signUpGoogleBuildBackendUser = async (user: IUserProfile, frontImage: File, backImage: File) => {
+    
+    // Need to put it in Email into user.
+    let getEmail = await this.authAPIClient.getUserEmail();
+    if(getEmail){
+      user.email = getEmail;
+    }
+
+    // CreatUserInput is done to avoid putting cognito ID into the dynamoDB
+    let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
+    
+    let updatedUser = JSON.parse(JSON.stringify(user));
+    try {
+      const currentUser = await getCurrentUser();
+      console.log("current: ", currentUser)
+      updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
+      const images = await Promise.all([
+        this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
+        this.authAPIClient.awsUploadImagePrivate(backImage) as any
+      ]);
+      createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
+      updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
+
+      
+      const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
+      updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      this.setLocalUserProfile(updatedUser);
+      // flip manual state that causes useffect to run at the top.
+      console.log("printing before flip:", this.authAPIClient.isUserAuth)
+      console.log("At the bottom!(In central)")
+      this.authAPIClient.isUserAuth = !this.authAPIClient.isUserAuth;
+      console.log("printing before flip:", this.authAPIClient.isUserAuth)
+      return { updatedUser, images };
+    } catch (error: any) {
+      this.authAPIClient.awsUserCleaner(updatedUser);
+      throw new Error (JSON.stringify(error));
     }
   };
 
