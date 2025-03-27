@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useMatch } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IUserProfile } from '@righton/networking';
@@ -49,30 +49,43 @@ function AppSwitch() {
   const confirmationScreen = useMatch('/confirmation') !== null;
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
-  
+  const navigate = useNavigate();
+  const isSignupPage = useMatch("/signup");  // Checks if the current route is /signup
+  const isLoginPage = useMatch("/login");    // Checks if the current route is /login
+
   const isUserProfileComplete = (profile: IUserProfile): boolean => {
-    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
+    return Object.entries(profile).every(([key, value]) => {
+      if (key === "password") return true; 
+      return value !== undefined && value !== null && value !== "";
+    });
   };
   useEffect(() => {
     const response = apiClients.auth.verifyAuth().then((status) => {
-        console.log("UseEffect is RUNNING!")
-        if (status){
-          const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
-          // console.log("Local Profile fetched: ", localProfile)
-          if (localProfile) {
-            if (!isUserProfileComplete(localProfile)) {
-                // navigate to next step
+      console.log("UseEffect is RUNNING!");
+      console.log("Status: ", status)
+      if (status) {
+        const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+        console.log("printing local profile: ", localProfile)
+        if (localProfile === null) {
+          // prevent user from going to any other page wtihout fully signing up.
+          navigate("/nextstep");  // Navigate if profile is incomplete
+        }
+          // user tries to go to signup or login page when they finished the signup process.
+        else if (localProfile !== null && localProfile !== undefined){
+          if(isUserProfileComplete(localProfile)){
+            console.log("navigating user to the current page they are in.")
+            setIsUserLoggedIn(true);
+
+            if (isSignupPage || isLoginPage) {
+              console.log("User is on signup/login, redirecting back.");
+              navigate(-1);
             }
           }
-
-          setIsUserLoggedIn(true);
-          if (localProfile){
-            setUserProfile(localProfile);
-          }
         }
+
       }
-    )
-  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth]);  // manually state that flips at the bottom.
+    });
+  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth, navigate, isSignupPage, isLoginPage]);   // manually state that flips at the bottom.
 
   const session = apiClients.auth.verifyAuth();
   switch (true) {
