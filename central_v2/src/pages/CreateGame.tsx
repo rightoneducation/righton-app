@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IQuestionTemplate } from '@righton/networking';
+import { IGameTemplate, IQuestionTemplate } from '@righton/networking';
 import { Box, Fade } from '@mui/material';
 import {
   CreateGameMainContainer,
@@ -110,6 +110,28 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     handleSearchChange,
     loadMoreQuestions,
   } = useExploreQuestionsStateManager();
+
+  const [gameTemplate, setGameTemplate] = useState<IGameTemplate>({
+    id:"",
+    title: gameTitle,
+    lowerCaseTitle: gameTitle.toLowerCase(),
+    owner: "",
+    version: 0,
+    description: gameDescription,
+    lowerCaseDescription: gameDescription.toLowerCase(),
+    domain: "",
+    cluster: "",
+    grade: "",
+    ccss: "",
+    phaseOneTime: 0,
+    phaseTwoTime: 0,
+    imageUrl: "",
+    questionTemplates: null,
+    questionTemplatesCount: 0,
+    questionTemplatesOrder: [],
+    createdAt: null,
+    updatedAt: null,
+  })
   
   const handleDiscard = () => {
     window.localStorage.setItem(StorageKey, '');

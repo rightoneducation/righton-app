@@ -89,6 +89,7 @@ export default function CreateGameCardBase({
     if (image && image instanceof File) return URL.createObjectURL(image);
     return image;
   };
+  const [completedCardClicked, setCompletedCardClicked] = React.useState<boolean>(false)
   const imageLink = getImage();
 
   const handleQuestionTypeChange = (
@@ -150,12 +151,6 @@ export default function CreateGameCardBase({
   const handlePhaseTwoTime = (val: string) => {
     handlePhaseTime({ phaseOne: phaseTime.phaseOne, phaseTwo: val });
   };
-  const cardIsComplete =
-    phaseTime.phaseOne !== '' &&
-    phaseTime.phaseTwo !== '' &&
-    gameDescription !== '' &&
-    gameTitle !== '' &&
-    (openCreateQuestion || openQuestionBank);
 
   const isTitleFieldError =
     (isCardSubmitted && (!gameTitle || gameTitle.length === 0)) ||
@@ -164,11 +159,27 @@ export default function CreateGameCardBase({
     (isCardSubmitted && (!gameDescription || gameDescription.length === 0)) ||
     (isCardErrored && (!gameDescription || gameDescription.length === 0));
 
+    // TODO: Add image to validation
+    const cardIsComplete = 
+    phaseTime.phaseOne !== '' &&
+    phaseTime.phaseTwo !== '' &&
+    gameDescription !== '' &&
+    gameTitle !== '' &&
+    (openCreateQuestion || openQuestionBank);
+
+    const handleCardClick = () => {
+      if(cardIsComplete) {
+        // temp solution for now
+        setCompletedCardClicked(true)
+      }
+    }
+
   return (
     <BaseCardStyled
+    onClick={handleCardClick}
       elevation={6}
       isHighlight={false}
-      isCardComplete={cardIsComplete}
+      isCardComplete={completedCardClicked ? false : cardIsComplete}
       sx={{
         height: responsiveHeight,
         gap: responsiveGap,

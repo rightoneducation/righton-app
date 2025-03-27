@@ -114,8 +114,10 @@ export const QuestionCountButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'disabled',
 })<QuestionCountButtonProps>(({ theme, isDisabled }) => ({
   backgroundColor: '#02215f',
-  height: '38px',
-  width: '119px',
+  height: '40px',
+  width: '123px',
+  fontSize: '16px',
+  fontWeight: 600,
   borderRadius: '8px',
   padding: '8px',
   opacity: isDisabled ? 0.3 : 1,
@@ -267,7 +269,10 @@ CreateGameTextFieldContainer = styled(TextField, {
 export const AddMoreIconButton = styled(IconButton)(({ theme }) => ({
   backgroundColor: '#02215f',
   '&:hover': { backgroundColor: '#4056ca' },
-  borderRadius: '20%',
+  borderRadius: '8px',
+  height: '40px',
+  width: '40px',
+  color: theme.palette.primary.main,
 }));
 
 interface ContentContainerProps {

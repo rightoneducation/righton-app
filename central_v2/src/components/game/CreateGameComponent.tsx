@@ -22,6 +22,7 @@ import { ButtonType, buttonContentMap } from '../button/ButtonModels';
 import CreateGameCardBase from '../cards/creategamecard/CreateGameCardBase';
 import VerticalMoreImg from '../../images/buttonIconVerticalMore.svg';
 import { TGameInfo, TPhaseTime } from '../../hooks/useCreateGame';
+import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuestionButtons';
 
 interface ICreateGameComponent {
   screenSize: ScreenSize;
@@ -192,24 +193,22 @@ export default function CreateGameComponent({
       </CreateGameGridContainer>
       {/* Question Count & Add Button */}
       <GameCreateButtonStack>
-        <QuestionCountButton endIcon={verticalEllipsis} isDisabled={false}>
-          Question {questionCount}
-        </QuestionCountButton>
-        <AddMoreIconButton>
-          <img
-            alt="add-question"
-            src={buttonContentMap[ButtonType.ADDSTEP].icon}
-          />
-        </AddMoreIconButton>
+        <ManageQuestionsButtons />
       </GameCreateButtonStack>
       {/* Create Question & Question Bank */}
-      <GameCreateButtonStack>
+      <GameCreateButtonStack sx={{ 
+        ...(screenSize === ScreenSize.SMALL && { flexDirection: 'column'})
+      }}>
         <CentralButton
+        smallScreenOverride
+        buttonWidthOverride='100%'
           buttonType={ButtonType.CREATEQUESTION}
           isEnabled={enableButton.createQuestion}
           onClick={handleCreateQuestion}
         />
         <CentralButton
+        smallScreenOverride
+        buttonWidthOverride='100%'
           buttonType={ButtonType.QUESTIONBANK}
           isEnabled={enableButton.questionBank}
           onClick={handleOpenQuestionBank}

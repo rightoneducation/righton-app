@@ -84,7 +84,12 @@ export default function DetailedQuestionSubCard({
             variant="outlined" 
             value={answerSteps[index]}
             onChange={(e) => handleStepChange(index, e.target.value)}
-            rows='4' 
+            rows='4'
+            sx={{
+              '& .MuiInputBase-root': {
+                fontFamily: 'Rubik',
+              },
+            }} 
             placeholder={`Enter step ${index + 1}...`}
             error={(isCardErrored) && (!answerSteps[index] || answerSteps[index].length === 0)}
             InputProps={{
@@ -115,7 +120,8 @@ export default function DetailedQuestionSubCard({
         variant="outlined" 
         rows='1'
         sx={{
-            '& .MuiOutlinedInput-root': {
+              '& .MuiOutlinedInput-root': {
+              fontFamily: 'Rubik',
               height: '43px',
             },
         }}

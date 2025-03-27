@@ -183,7 +183,13 @@ export default function IncorrectAnswerCard({
         <TextContainerStyled 
           multiline 
           variant="outlined" 
-          rows='1' 
+          rows='1'
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              height: '43px',
+              fontFamily: 'Rubik'
+            },
+        }} 
           placeholder="Enter Incorrect Answer..." 
           value={cardData.answer}
           onChange={(e) => handleLocalAnswerChange(e.target.value)}
@@ -225,6 +231,11 @@ export default function IncorrectAnswerCard({
           multiline 
           variant="outlined"
           rows="4"
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              fontFamily: 'Rubik',
+            },
+          }}
           placeholder="Enter Explanation here..." 
           value={cardData.explanation}
           onChange={(e) => handleLocalExplanationChange(e.target.value)}
