@@ -26,12 +26,12 @@ export const SelectPhase = styled(Box, {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
-  width: '128px', 
-  maxWidth: '128px',
-  minHeight: '40px',
+  width: error ? "110px" :"96px", 
+  maxWidth: error ? "110px" :"96px",
+  minHeight: '28px',
   background: '#fffbf6',
   border: '1px solid #02215f',
-  padding: '8px',
+  padding: '4px 8px',
   gap: error ? '1px': "9px", // ask design team since button width is 128px
   boxSizing: 'border-box',
   zIndex: 4,
@@ -92,14 +92,14 @@ export default function SelectPhaseButton({
       <SelectPhase
       error={isPhaseError}
         sx={{
-          borderRadius: isSelectOpen ? '8px 8px 0 0' : '8px',
+          borderRadius: isSelectOpen ? '5px 5px 0 0' : '5px',
           ...(isPhaseError && { border: '1px solid #D0254D' }),
         }}
         screenSize={screenSize}
         onClick={handleMenuToggle}
       >
-        {isPhaseError && <ErrorIcon src={errorIcon} />}
-        <SelectPhaseLabel error={isPhaseError}>
+        {isPhaseError && <ErrorIcon sx={{ width: 17, height: 17 }} src={errorIcon} />}
+        <SelectPhaseLabel isSelected={phaseTime !== ''} error={isPhaseError}>
           {phaseTime !== '' ? phaseTime : `Phase ${phaseNumber}`}
         </SelectPhaseLabel>
         {/* space between is here */}
@@ -123,8 +123,8 @@ export default function SelectPhaseButton({
             padding: 0,
             top: 'auto',
             left: 0,
-            minWidth: '128px',
-            width: '128px',
+            minWidth: isPhaseError ? "110px": '96px',
+            width: isPhaseError ? "110px":'96px',
             borderRadius: '0 0 4px 4px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',
@@ -142,7 +142,7 @@ export default function SelectPhaseButton({
               <SelectMenuItem sx={{ height: '23px', padding: '4px 8px' }}>
                 <Typography
                   fontWeight="normal"
-                  fontSize="16px"
+                  fontSize="14px"
                   fontFamily="Rubik"
                   sx={{ color: '#02215f' }}
                 >

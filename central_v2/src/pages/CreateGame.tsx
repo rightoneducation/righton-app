@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IAPIClients, IQuestionTemplate } from '@righton/networking';
-import { Box, Collapse, Fade, Slide } from '@mui/material';
+import { IQuestionTemplate } from '@righton/networking';
+import { Box, Fade } from '@mui/material';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
   CreateGameBoxContainer,
-  StyledFadeIn,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import { ScreenSize, StorageKey, TemplateType } from '../lib/CentralModels';
 import ModalBackground from '../components/modal/ModalBackground';
@@ -25,6 +24,7 @@ import tabDraftsIcon from '../images/tabDrafts.svg';
 import tabFavoritesIcon from '../images/tabFavorites.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
+import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -48,6 +48,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     phaseTime,
     gameTitle,
     gameDescription,
+    isGameImageUploadVisible,
+    handleCloseGameCardModal,
     handleGameTitle,
     handleGameDescription,
     handlePhaseTime,
@@ -108,21 +110,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     handleSearchChange,
     loadMoreQuestions,
   } = useExploreQuestionsStateManager();
-
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if((openCreateQuestion || openQuestionBank) && ref.current) {
-        ref.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        })
-      } 
-    },300);
-    return () => clearTimeout(timeout);
-  },[ref, openCreateQuestion, openQuestionBank,]);
   
-
   const handleDiscard = () => {
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
@@ -158,6 +146,19 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   return (
     <CreateGameMainContainer ref={topRef} sx={{ overflowY: 'auto' }}>
       <CreateGameBackground />
+
+      {/* Create Game Image Upload Modal */}
+
+      <CreateGameImageUploadModal
+        draftQuestion={draftQuestion}
+        screenSize={screenSize}
+        isModalOpen={isGameImageUploadVisible}
+        handleImageChange={handleImageChange}
+        handleImageSave={handleImageSave}
+        handleCloseModal={handleCloseGameCardModal}
+      
+      />
+       {/* Modals for Question (below) */}
       <ModalBackground
         isModalOpen={
           isImageUploadVisible ||
@@ -184,7 +185,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         isModalOpen={isCreatingTemplate}
         templateType={TemplateType.GAME}
       />
-
+      {/* Modals for Question (Above) */}
       <CreateGameBoxContainer>
         <CreateGameComponent
           screenSize={screenSize}
@@ -208,13 +209,11 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           openCreateQuestion={openCreateQuestion}
         />
 
-        {/* Always scroll to this point */}
-        <Box ref={ref} />
-
         {/* Create Question Form  */}
         <Fade
           timeout={500}
           in={openCreateQuestion}
+          mountOnEnter
           unmountOnExit
         >
           <Box>
@@ -287,6 +286,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           />
           </Box>
         </Fade>
+
       </CreateGameBoxContainer>
     </CreateGameMainContainer>
   );

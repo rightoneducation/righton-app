@@ -172,7 +172,9 @@ export default function CreateGameCardBase({
       sx={{
         height: responsiveHeight,
         gap: responsiveGap,
+        width: screenSize === ScreenSize.LARGE ? "680px": "100%",
         padding: screenSize === ScreenSize.LARGE ? '28px' : '24px',
+        borderRadius: '8px',
       }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>

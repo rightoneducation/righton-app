@@ -195,7 +195,7 @@ export const CreateGameTitleBarStyled = styled(
 }));
 
 export const CreateGameTitleText = styled(Typography)(({ theme }) => ({
-  fontSize: '24px',
+  fontSize: '20px',
   lineHeight: '30px',
   fontWeight: 700,
   color: '#000',
@@ -221,7 +221,7 @@ CreateGameTextFieldContainer = styled(TextField, {
   padding: 0,
   boxSizing: 'border-box',
   borderRadius: `${theme.sizing.xSmPadding}px`,
-  backgroundColor: '#FFFFFF', // Set background color to white
+  backgroundColor: '#FFFFFF',
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderWidth: `2px`,
@@ -285,15 +285,16 @@ export const GameContentContainerStyled = styled(Box)<ContentContainerProps>(({ 
 
 type SelectLabelProps = {
   error: boolean;
+  isSelected: boolean;
 }
 
 export const SelectPhaseLabel = styled(Typography, {
   shouldForwardProp: (prop) => prop !== "error"
-})<SelectLabelProps>(({theme, error}) => ({
-    color: error ? '#D0254D': '#384466',
-    fontFamily: theme.typography.fontFamily,
-    fontSize: '16px',
-    fontWeight: 600,
+})<SelectLabelProps>(({theme, error, isSelected}) => ({
+    color: error ? '#D0254D': theme.palette.primary.sliderBlue,
+    fontFamily: "Rubik",
+    fontSize: 14,
+    fontWeight: isSelected ? 'normal':'bold',
     margin: 0,
 }))
 

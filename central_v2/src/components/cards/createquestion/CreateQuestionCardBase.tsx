@@ -152,7 +152,7 @@ export default function CreateQuestionCardBase({
     <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
-          <QuestionTitleStyled>Create Question</QuestionTitleStyled>
+          <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
           <ButtonCCSS key={uuidv4()} onClick={handleCCSSClick}>
             {draftQuestion.questionCard.ccss}
           </ButtonCCSS>
@@ -197,7 +197,12 @@ export default function CreateQuestionCardBase({
           <TextContainerStyled 
             multiline 
             variant="outlined" 
-            rows='5' 
+            rows='5'
+            sx={{ 
+              '& .MuiInputBase-root': {
+                fontFamily: 'Rubik',
+              },
+            }}
             placeholder="Enter question here..." 
             error={(isCardSubmitted || isAIError) && (!title || title.length === 0)}
             value={title}

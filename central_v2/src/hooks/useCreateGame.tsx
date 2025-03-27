@@ -32,6 +32,8 @@ const useCreateGame = () => {
     phaseOne: '',
     phaseTwo: '',
   });
+  const [isGameImageUploadVisible, setIsGameImageUploadVisible] = useState<boolean>(false);
+  const [isGameURLUploadVisible, setIsGameURLUploadVisible] = useState<boolean>(false);
 
   const shouldOpenOnClick = 
   gameTitle !== "" && 
@@ -89,7 +91,13 @@ const useCreateGame = () => {
     navigate('/questions');
   };
 
-  const handleGameImageUploadClick = () => {};
+  const handleGameImageUploadClick = () => {
+    setIsGameImageUploadVisible(true)
+  };
+
+  const handleCloseGameCardModal = () => {
+    setIsGameImageUploadVisible(false)
+  }
 
   return {
     questionComponentRef,
@@ -103,6 +111,7 @@ const useCreateGame = () => {
     phaseTime,
     gameTitle,
     gameDescription,
+    isGameImageUploadVisible,
     setIsGameCardErrored,
     handleGameTitle,
     handleGameDescription,
@@ -113,6 +122,7 @@ const useCreateGame = () => {
     handleDiscardGame,
     handleSaveGame,
     handleGameImageUploadClick,
+    handleCloseGameCardModal
   };
 };
 

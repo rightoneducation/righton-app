@@ -88,15 +88,16 @@ export default function CreateGameComponent({
     gameDescription !== "";
 
   const handleCreateQuestion = () => {
-    // if gamecard is complete...TODO
     onCreateQuestion();
     if(createGameFormIsValid) {
-      setEnableButton((prev) => ({ 
-        ...prev,
-        createQuestion: prev.createQuestion,
-        questionBank: !prev.questionBank,
-      }))
-
+      // setEnableButton((prev) => ({ 
+      //   ...prev,
+      //   createQuestion: prev.createQuestion,
+      //   questionBank: !prev.questionBank,
+      // }))
+      if(isCardErrored) {
+        onGameCardError(false)
+      }
     } else {
       onGameCardError(true);
     }
@@ -105,11 +106,14 @@ export default function CreateGameComponent({
   const handleOpenQuestionBank = () => {
     onOpenQuestionBank();
     if(createGameFormIsValid){
-      setEnableButton((prev) => ({ 
-        ...prev,
-        questionBank: prev.questionBank, 
-        createQuestion: !prev.createQuestion,
-      }))
+      // setEnableButton((prev) => ({ 
+      //   ...prev,
+      //   questionBank: prev.questionBank, 
+      //   createQuestion: !prev.createQuestion,
+      // }))
+      if(isCardErrored) {
+        onGameCardError(false)
+      }
     } else {
       onGameCardError(true);
     }
