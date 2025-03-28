@@ -18,7 +18,6 @@ interface QuestionCardProps {
   isFormComplete: boolean,
   isQuestionGenerating: boolean,
   handleSubmitQuestion: () => void,
-  handleGenerateSampleQuestion: () => void,
 }
 
 export const QuestionCard = ({
@@ -30,7 +29,6 @@ export const QuestionCard = ({
   isFormComplete,
   isQuestionGenerating,
   handleSubmitQuestion,
-  handleGenerateSampleQuestion
 }: QuestionCardProps ) => {
   const theme = useTheme();
   const inputs = [

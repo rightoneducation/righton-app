@@ -113,12 +113,14 @@ export const AllExplanationCardsContainer = styled(Box)(({ theme }) => ({
 export const EmptyExplanationCardContainer = styled(AllExplanationCardsContainer)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center', 
+  position: 'relative',
   height: '100%',
   backgroundColor: `rgba(249, 245, 242, 0.5)`,
   gap: '12px',
   padding: `${theme.sizing.mdPadding}px`,
   borderRadius: `${theme.sizing.xSmPadding}px`,
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  overflow: 'hidden',
 }));
 
 export const SingleExplanationCardContainer = styled(Box)(({ theme }) => ({

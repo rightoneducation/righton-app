@@ -42,11 +42,13 @@ const CloseButton = styled('img')(({ theme }) => ({
 interface HowToModalProps {
   isModalOpen: boolean;
   setIsHowToModalOpen: (isOpen: boolean) => void;
+  handleGenerateSample: () => void;
 }
 
 export default function HowtoModal({
   isModalOpen,
   setIsHowToModalOpen,
+  handleGenerateSample
 }: HowToModalProps) {
   const theme = useTheme();
 
@@ -106,7 +108,7 @@ export default function HowtoModal({
           <ButtonStyled onClick={() => setIsHowToModalOpen(false)}>
             Go to generator
           </ButtonStyled>
-          <ButtonWrongAnswerStyled onClick={()=>{}}>
+          <ButtonWrongAnswerStyled onClick={handleGenerateSample}>
             Generate a sample
           </ButtonWrongAnswerStyled>
         </Box>

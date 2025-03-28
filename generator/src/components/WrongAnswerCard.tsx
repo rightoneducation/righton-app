@@ -19,7 +19,6 @@ interface WrongAnswerCardProps {
   isQuestionGenerating: boolean,
   handleSubmitQuestion: () => void,
   handleAddWrongAnswer: () => void,
-  handleGenerateSampleQuestion: () => void,
 }
 
 export const WrongAnswerCard = ({
@@ -32,7 +31,6 @@ export const WrongAnswerCard = ({
   isQuestionGenerating,
   handleSubmitQuestion,
   handleAddWrongAnswer,
-  handleGenerateSampleQuestion
 }: WrongAnswerCardProps ) => {
   const theme = useTheme();
   return (

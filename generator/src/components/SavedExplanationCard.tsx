@@ -54,7 +54,7 @@ export default function SavedExplanationCard({
   const formattedDate = `${month}/${day}/${year}`;
 
   return (
-      <IntegratedContainer elevation={12}>
+      <IntegratedContainer elevation={12} style={{zIndex: 3}}>
         <Box style={{
           width: '100%',
           display: 'flex', 

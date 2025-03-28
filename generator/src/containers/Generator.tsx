@@ -81,17 +81,23 @@ export default function Generator() {
     {
       question: "A pair of shoes were 10% off last week. This week, there’s an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the shoes this week?",
       correctAnswer: "46%", 
-      wrongAnswers: ['50%', '54%', '14%']
+      wrongAnswers: ['50%'],
+      discardedExplanations: [],
+      version
     },
     {
       question: "A child is raising a flag up a 20-foot flag pole. She starts pulling at a rate of 2 feet per second for 5 seconds, but she starts to get tired and decreases her rate to 1/2 foot per second for the remainder of the time. In total, how many seconds does it take her to raise the flag from the bottom to the top?",
       correctAnswer: "25", 
-      wrongAnswers: ['10', '20', '13.75'],
+      wrongAnswers: ['10'],
+      discardedExplanations: [],
+      version
     },
     {
       question: "If f(x) = x^2 + 2x + 3, what is the value of f(x), when x = 6?",
       correctAnswer: "51", 
-      wrongAnswers: ['27', '41', '65'],
+      wrongAnswers: ['27'],
+      discardedExplanations: [],
+      version
     }
   ]
 
@@ -141,6 +147,7 @@ export default function Generator() {
 
   const handleSubmitQuestion = () => {
     setIsQuestionGenerating(true);
+    handleChangeSlide();
     generateWrongAnswerExplanations(formData, discardedExplanations).then((response) => {
       const explanationsArray = response ?? [];
       const explanations =  explanationsArray.map((explanation: string, index: number) => {
@@ -158,7 +165,6 @@ export default function Generator() {
         )
       });
       setExplanationsToSave(explanations);
-      handleChangeSlide();
       setIsQuestionGenerating(false);
       setIsQuestionGenerated(true);
       setIsSubmitted(true);
@@ -202,22 +208,22 @@ export default function Generator() {
     });
   }
 
-  const handleGenerateSampleQuestion = () => {
-    // const randomQuestionIndex = Math.floor(Math.random() * sampleQuestions.length);
-    // setIsCustomQuestion(false);
-    // setFormData(sampleQuestions[randomQuestionIndex])
+  const handleGenerateSample = () => {
+    setIsHowToModalOpen(false);
+    const randomQuestionIndex = Math.floor(Math.random() * sampleQuestions.length);
+    setIsCustomQuestion(false);
+    setFormData(sampleQuestions[randomQuestionIndex])
   };
 
   const handleCloseModal = () => {
-    // setIsQuestionSaved(false);
-    // setIsHowToModalOpen(false);
+    setIsHowToModalOpen(false);
   };
 
   return (
     <MainContainer>
       <QuestionSavedModal isModalOpen={isQuestionSaved} />
-      <HowToModal isModalOpen={isHowToModalOpen} setIsHowToModalOpen={setIsHowToModalOpen}/>
-      <ModalBackground isModalOpen={isQuestionSaved || isHowToModalOpen} handleCloseModal={handleCloseModal} />
+      <HowToModal isModalOpen={isHowToModalOpen} setIsHowToModalOpen={setIsHowToModalOpen} handleGenerateSample={handleGenerateSample}/>
+      <ModalBackground isModalOpen={isHowToModalOpen} handleCloseModal={handleCloseModal} />
       <HeaderContainer>
         <img src={RightonLogo} alt="Righton Logo"style={{height: '55px', width: 'fit-content'}}/>
         <HeaderRightContainer>
@@ -308,11 +314,11 @@ export default function Generator() {
                 isQuestionGenerating={isQuestionGenerating}
                 handleSubmitQuestion={handleSubmitQuestion}
                 handleAddWrongAnswer={handleAddWrongAnswer}
-                handleGenerateSampleQuestion={handleGenerateSampleQuestion}
               />
             </SwiperSlide>
             <SwiperSlide key="explanation-slide">
               <ExplanationCards
+                screenSize={screenSize}
                 explanationsToSave={explanationsToSave}
                 handleUpdateExplanations={handleUpdateExplanations}
                 isQuestionGenerating={isQuestionGenerating}
@@ -333,11 +339,11 @@ export default function Generator() {
                 isQuestionGenerating={isQuestionGenerating}
                 handleSubmitQuestion={handleSubmitQuestion}
                 handleAddWrongAnswer={handleAddWrongAnswer}
-                handleGenerateSampleQuestion={handleGenerateSampleQuestion}
               />
             </Grid>
             <Grid item xs={6} style={{paddingTop: 0, height: '100%'}}>
               <ExplanationCards
+                screenSize={screenSize}
                 explanationsToSave={explanationsToSave}
                 handleUpdateExplanations={handleUpdateExplanations}
                 isQuestionGenerating={isQuestionGenerating}
