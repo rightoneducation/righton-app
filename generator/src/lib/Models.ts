@@ -34,6 +34,10 @@ export interface IExplanationToSave {
   version: string;
 }
 
+export interface ILocalExplanation extends IExplanationToSave {
+  date: string;
+}
+
 export interface IQualityData {
   version: {
     version: string;

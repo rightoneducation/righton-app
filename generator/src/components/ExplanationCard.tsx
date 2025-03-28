@@ -115,7 +115,16 @@ export default function ExplanationCard(
       case ExplanationRegenType.ACCEPT:
         createExplanation(explanationCopy);
         const savedExplanations = JSON.parse(localStorage.getItem('righton_saved_explanations') || '[]');
-        savedExplanations.push(explanationCopy);
+        const explanationToSave = {
+          question: explanationCopy.question,
+          correctAnswer: explanationCopy.correctAnswer,
+          wrongAnswer: explanationCopy.wrongAnswer,
+          genExplanation: explanationCopy.genExplanation,
+          discardedExplanations: explanationCopy.discardedExplanations,
+          version: explanationCopy.version,
+          date: new Date().toISOString()
+        }
+        savedExplanations.push(explanationToSave);
         localStorage.setItem('righton_saved_explanations', JSON.stringify(savedExplanations));
         setIsSaved(true);
       break;

@@ -5,7 +5,7 @@ import { Swiper as SwiperInstance } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
 import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createExplanation, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
-import { IQuestion, IExplanationToSave, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput } from '../lib/Models';
+import { IQuestion, IExplanationToSave, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput, ILocalExplanation } from '../lib/Models';
 import QuestionSavedModal from '../components/modals/QuestionSavedModal';
 import HowToModal from '../components/modals/HowToModal';
 import ModalBackground from '../components/modals/ModalBackground';
@@ -19,8 +19,10 @@ import { ScreenSize } from '../lib/Models';
 import RightonLogo from '../img/RightonLogo.svg';
 import howtouse from '../img/icons/howtouse.svg';
 import saved from '../img/icons/saved.svg';
+import generator from '../img/icons/generator.svg';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import SavedExplanationCard from '../components/SavedExplanationCard';
 
 export default function Generator() {
   const theme = useTheme();
@@ -54,6 +56,8 @@ export default function Generator() {
   const [isQuestionSaved, setIsQuestionSaved] = React.useState(false);
   const [isCustomQuestion, setIsCustomQuestion] = React.useState(true);
   const [isHowToModalOpen, setIsHowToModalOpen] = React.useState(false);
+  const [isSavedExplanation, setIsSavedExplanation] = React.useState(false);
+  const [savedExplanations, setSavedExplanations] = React.useState<ILocalExplanation[]>([]);
   const [selectedSampleQuestion, setSelectedSampleQuestion] = React.useState(0);
   const blankQuestion = {
     question: '',
@@ -165,6 +169,17 @@ export default function Generator() {
     createExplanation(explanation)
   };
 
+  const handleNavigateToSavedExplanations = () => {
+    setIsSavedExplanation(true);
+    const localExplanations = localStorage.getItem('righton_saved_explanations');
+    if (localExplanations){
+      setSavedExplanations(JSON.parse(localExplanations));
+    };
+  };
+  const handleNavigateToGenerator = () => {
+    setIsSavedExplanation(false);
+  };
+
   const handleAddWrongAnswer = () => {
     if (formData.wrongAnswers.length > 3) return;
     setFormData((prev) => ({
@@ -173,14 +188,10 @@ export default function Generator() {
     }));
   };
 
-  const saveDiscardExplanation = (question: string, discardedExplanation: string) => {
-    const discardedQuestionInput: IDiscardedExplanationSaveInput = {
-      question,
-      explanation: discardedExplanation,
-      discardText: "Math is incorrect",
-      version
-    }
-    const result = saveDiscardedExplanation(discardedQuestionInput);
+  const handleDiscardSavedExplanation = (explanation: IExplanationToSave) => {
+    const updatedExplanations = savedExplanations.filter((savedExplanation) => savedExplanation.question !== explanation.question);
+    setSavedExplanations(updatedExplanations);
+    localStorage.setItem('righton_saved_explanations', JSON.stringify(updatedExplanations));
   }
 
   const handleUpdateExplanations= (explanation: IExplanationToSave, index: number) => {
@@ -216,108 +227,129 @@ export default function Generator() {
               <HeaderText>How To Use</HeaderText>
             }
           </HeaderButtonContainer>
-          <HeaderButtonContainer>
-            <img src={saved} alt="Save icon"/>
-            { screenSize !== ScreenSize.SMALL && 
-              <HeaderText>Saved Explanations</HeaderText>
-            }
-          </HeaderButtonContainer>
+          { !isSavedExplanation ? 
+            <HeaderButtonContainer onClick={() => handleNavigateToSavedExplanations()}>
+              <img src={saved} alt="Save icon"/>
+              { screenSize !== ScreenSize.SMALL && 
+                <HeaderText>Saved Explanations</HeaderText>
+              }
+            </HeaderButtonContainer>
+          : 
+            <HeaderButtonContainer onClick={() => handleNavigateToGenerator()}>
+              <img src={generator} alt="Save icon"/>
+              { screenSize !== ScreenSize.SMALL && 
+                <HeaderText>Generator</HeaderText>
+              }
+            </HeaderButtonContainer>
+          }
         </HeaderRightContainer>
       </HeaderContainer>
+      { isSavedExplanation ? (
+        <>
+          <TextContainer>
+            <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
+              Saved Explanations
+            </Typography>
+          </TextContainer>
+          <CardsContainer container columnSpacing={'20px'}>
+            <Grid item xs={12} style={{paddingTop: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: '8px'}}>
+              { savedExplanations.length > 0 && savedExplanations.map((explanation, index) => {
+                  return <SavedExplanationCard explanation={explanation} handleDiscardSavedExplanation={handleDiscardSavedExplanation} key={index}/>
+                })
+              }
+            </Grid>
+          </CardsContainer>
+        </>
+        )
+      : (
+        <>
       <TextContainer>
-        <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
-          Wrong Answer Explanation Generator
-        </Typography>
-        <Typography style={{ fontFamily: 'Rubik',textAlign: 'center', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
-          AI-Powered Insights to Guide Student Understanding
-        </Typography>
-      </TextContainer>
-      { screenSize === ScreenSize.SMALL 
-      ? <Swiper
-          onSwiper={(swiper: any) => {
-            setSwiper(swiper)
-          }}
-          style={{
-            width: '100vw',
-            paddingLeft: `${theme.sizing.mdPadding}px`,
-            paddingRight: `${theme.sizing.mdPadding}px`,
-            boxSizing: 'border-box'
-          }}
-          modules={[Pagination]}
-          pagination={{
-            el: '.swiper-pagination-container',
-            bulletClass: 'swiper-pagination-bullet',
-            bulletActiveClass: 'swiper-pagination-bullet-active',
-            clickable: true,
-            renderBullet(index: number, className: string) {
-              return `<span class="${className}" style="width:20px; height:6px; border-radius:2px;"></span>`;
-            },
-          }}
-          centeredSlides
-          slidesPerView={1}
-          spaceBetween={`${theme.sizing.mdPadding}px`}
-          updateOnWindowResize
-        >
-          <SwiperSlide key="question-slide">
-            <QuestionInfoContainer 
-              isCustomQuestion={isCustomQuestion}
-              labelText={labelText}
-              handleInputChange={handleInputChange}
-              formData={formData}
-              isSubmitted={isSubmitted}
-              isFormComplete={isFormComplete}
-              isQuestionGenerating={isQuestionGenerating}
-              handleSubmitQuestion={handleSubmitQuestion}
-              handleAddWrongAnswer={handleAddWrongAnswer}
-              handleGenerateSampleQuestion={handleGenerateSampleQuestion}
-            />
-          </SwiperSlide>
-          <SwiperSlide key="explanation-slide">
-            <ExplanationCards
-              explanationsToSave={explanationsToSave}
-              handleUpdateExplanations={handleUpdateExplanations}
-              isQuestionGenerating={isQuestionGenerating}
-              isExplanationRegenerating={isExplanationRegenerating}
-              regenIndex={regenIndex}
-            />
-          </SwiperSlide>
-        </Swiper>
-      : <CardsContainer container columnSpacing={'20px'}>
-          <Grid item xs={6} style={{paddingTop: 0}}>
-            <QuestionInfoContainer 
-              isCustomQuestion={isCustomQuestion}
-              labelText={labelText}
-              handleInputChange={handleInputChange}
-              formData={formData}
-              isSubmitted={isSubmitted}
-              isFormComplete={isFormComplete}
-              isQuestionGenerating={isQuestionGenerating}
-              handleSubmitQuestion={handleSubmitQuestion}
-              handleAddWrongAnswer={handleAddWrongAnswer}
-              handleGenerateSampleQuestion={handleGenerateSampleQuestion}
-            />
-          </Grid>
-          <Grid item xs={6} style={{paddingTop: 0}}>
-            <ExplanationCards
-              explanationsToSave={explanationsToSave}
-              handleUpdateExplanations={handleUpdateExplanations}
-              isQuestionGenerating={isQuestionGenerating}
-              isExplanationRegenerating={isExplanationRegenerating}
-              regenIndex={regenIndex}
-            />
-          </Grid>
-        </CardsContainer>
-      }
-      { isQuestionGenerated &&
-        <FooterContainer screenSize={screenSize}>
-          {/* <ButtonSaveStyled style={{width: '220px'}} onClick={handleSaveQuestion}>
-            Save Question
-          </ButtonSaveStyled>
-          <ButtonSecondaryStyled style={{width: '220px'}} onClick={handleDiscardQuestion}>
-            Discard Question
-          </ButtonSecondaryStyled> */}
-        </FooterContainer>
-      }
+          <Typography style={{ fontFamily: 'Poppins', textAlign: 'center', fontWeight: 700, fontSize: '40px', lineHeight: '40px',  color: 'white'}} >
+            Wrong Answer Explanation Generator
+          </Typography>
+          <Typography style={{ fontFamily: 'Rubik',textAlign: 'center', fontSize: '16px', lineHeight: '16px',  color: 'white'}} >
+            AI-Powered Insights to Guide Student Understanding
+          </Typography>
+        </TextContainer>
+        { screenSize === ScreenSize.SMALL 
+        ? <Swiper
+            onSwiper={(swiper: any) => {
+              setSwiper(swiper)
+            }}
+            style={{
+              width: '100vw',
+              paddingLeft: `${theme.sizing.mdPadding}px`,
+              paddingRight: `${theme.sizing.mdPadding}px`,
+              boxSizing: 'border-box'
+            }}
+            modules={[Pagination]}
+            pagination={{
+              el: '.swiper-pagination-container',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              clickable: true,
+              renderBullet(index: number, className: string) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:2px;"></span>`;
+              },
+            }}
+            centeredSlides
+            slidesPerView={1}
+            spaceBetween={`${theme.sizing.mdPadding}px`}
+            updateOnWindowResize
+          >
+            <SwiperSlide key="question-slide">
+              <QuestionInfoContainer 
+                isCustomQuestion={isCustomQuestion}
+                labelText={labelText}
+                handleInputChange={handleInputChange}
+                formData={formData}
+                isSubmitted={isSubmitted}
+                isFormComplete={isFormComplete}
+                isQuestionGenerating={isQuestionGenerating}
+                handleSubmitQuestion={handleSubmitQuestion}
+                handleAddWrongAnswer={handleAddWrongAnswer}
+                handleGenerateSampleQuestion={handleGenerateSampleQuestion}
+              />
+            </SwiperSlide>
+            <SwiperSlide key="explanation-slide">
+              <ExplanationCards
+                explanationsToSave={explanationsToSave}
+                handleUpdateExplanations={handleUpdateExplanations}
+                isQuestionGenerating={isQuestionGenerating}
+                isExplanationRegenerating={isExplanationRegenerating}
+                regenIndex={regenIndex}
+              />
+            </SwiperSlide>
+          </Swiper>
+        : <CardsContainer container columnSpacing={'20px'}>
+            <Grid item xs={6} style={{paddingTop: 0}}>
+              <QuestionInfoContainer 
+                isCustomQuestion={isCustomQuestion}
+                labelText={labelText}
+                handleInputChange={handleInputChange}
+                formData={formData}
+                isSubmitted={isSubmitted}
+                isFormComplete={isFormComplete}
+                isQuestionGenerating={isQuestionGenerating}
+                handleSubmitQuestion={handleSubmitQuestion}
+                handleAddWrongAnswer={handleAddWrongAnswer}
+                handleGenerateSampleQuestion={handleGenerateSampleQuestion}
+              />
+            </Grid>
+            <Grid item xs={6} style={{paddingTop: 0}}>
+              <ExplanationCards
+                explanationsToSave={explanationsToSave}
+                handleUpdateExplanations={handleUpdateExplanations}
+                isQuestionGenerating={isQuestionGenerating}
+                isExplanationRegenerating={isExplanationRegenerating}
+                regenIndex={regenIndex}
+              />
+            </Grid>
+          </CardsContainer>
+        }
+      </>
+      )
+    }
     </MainContainer>
   );
 }
