@@ -195,7 +195,7 @@ export default function Generator() {
   };
 
   const handleDiscardSavedExplanation = (explanation: IExplanationToSave) => {
-    const updatedExplanations = savedExplanations.filter((savedExplanation) => savedExplanation.question !== explanation.question);
+    const updatedExplanations = savedExplanations.filter((savedExplanation) => savedExplanation.genExplanation.explanation !== explanation.genExplanation.explanation);
     setSavedExplanations(updatedExplanations);
     localStorage.setItem('righton_saved_explanations', JSON.stringify(updatedExplanations));
   }
