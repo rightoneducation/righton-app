@@ -51,6 +51,7 @@ export const getDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
@@ -74,6 +75,7 @@ export const listDiscardedExplanations = /* GraphQL */ `
         id
         question
         explanation
+        reason
         discardText
         version
         createdAt

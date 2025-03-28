@@ -24,6 +24,7 @@ type DiscardedExplanation @model
   id: ID!
   question: String!
   explanation: String!
+  reason: String
   discardText: String
   version: String!
 }

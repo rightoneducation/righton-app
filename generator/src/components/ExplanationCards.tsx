@@ -1,19 +1,12 @@
 import { Box, CircularProgress } from '@mui/material';
-import { IExplanationToSave, IRegenInput } from '../lib/Models';
+import { IExplanationToSave } from '../lib/Models';
 import { EmptyExplanationCardContainer, AllExplanationCardsContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { PlaceholderHeaderStyled, PlaceholderBodyStyled } from '../lib/styledcomponents/generator/StyledTypography';
 import ExplanationCard from './ExplanationCard';
 
 interface ExplanationCardsProps {
   explanationsToSave: IExplanationToSave[];
-  isSubmitted: boolean;
-  selectedCards: boolean[];
-  handleSaveExplanations: (explanation: IExplanationToSave) => void;
-  handleExplanationClick: (input: IRegenInput) => void;
-  saveDiscardExplanation: (
-    question: string, selectedExplanation: string
-  ) => void;
-  isQuestionSaved: boolean;
+  handleUpdateExplanations: (explanation: IExplanationToSave, index: number) => void;
   isQuestionGenerating: boolean;
   isExplanationRegenerating: boolean;
   regenIndex: null | number;
@@ -21,12 +14,7 @@ interface ExplanationCardsProps {
 
 export const ExplanationCards = ({
   explanationsToSave,
-  isSubmitted, 
-  selectedCards,
-  handleSaveExplanations,
-  handleExplanationClick,
-  saveDiscardExplanation,
-  isQuestionSaved,
+  handleUpdateExplanations,
   isQuestionGenerating,
   isExplanationRegenerating,
   regenIndex
@@ -48,14 +36,8 @@ export const ExplanationCards = ({
           return (
             <ExplanationCard
               index={index}
-              isSubmitted={isSubmitted}
               explanation={explanation}
-              selectedCards={selectedCards}
-              handleSaveExplanations={handleSaveExplanations}
-              handleExplanationClick={handleExplanationClick}
-              saveDiscardExplanation={saveDiscardExplanation}
-              isQuestionSaved={isQuestionSaved}
-              isRegenerating={isExplanationRegenerating && regenIndex === index}
+              handleUpdateExplanations={handleUpdateExplanations}
             />
           )
         })}

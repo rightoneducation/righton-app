@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Grid, Card, CardContent, Typography, Box, CircularProgress, TextField, RadioGroup, FormGroup, FormControl, FormControlLabel, Radio, Checkbox, Tooltip, useTheme } from '@mui/material';
+import { createExplanation, regenerateWrongAnswerExplanation, saveDiscardedExplanation, compareEditedExplanation } from '../lib/API';
 import { 
   CardHeaderTextStyled, 
   EditTextStyled,
@@ -26,22 +27,14 @@ import {
 import { SingleExplanationCardContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { TextFieldStyled } from '../lib/styledcomponents/generator/StyledTextField';
 import { ExplanationRegenType } from '../lib/Constants';
-import { IExplanationToSave, IRegenInput, IChipData } from '../lib/Models';
-import { compareEditedExplanation } from '../lib/API';
+import { IExplanationToSave, IChipData, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput  } from '../lib/Models';
 import RegenOptions from './regen/RegenOptions';
+import { createDiscardedExplanation } from '../graphql/mutations';
 
 interface ExplanationCardProps {
   index: number;
-  isSubmitted: boolean;
   explanation: IExplanationToSave;
-  selectedCards: boolean[];
-  handleSaveExplanations: (explanation: IExplanationToSave) => void;
-  handleExplanationClick: (input: IRegenInput) => void;
-  saveDiscardExplanation: (
-    question: string, selectedExplanation: string
-  ) => void;
-  isQuestionSaved: boolean;
-  isRegenerating: boolean;
+  handleUpdateExplanations: (explanation: IExplanationToSave, index: number) => void;
 }
 
 interface DiscardOptions {
@@ -62,14 +55,8 @@ enum DiscardOptionsEnum {
 export default function ExplanationCard(
   { 
     index, 
-    isSubmitted, 
     explanation, 
-    selectedCards,
-    handleSaveExplanations,
-    handleExplanationClick,
-    saveDiscardExplanation,
-    isQuestionSaved,
-    isRegenerating
+    handleUpdateExplanations
 }: ExplanationCardProps) {
   const theme = useTheme();
   const buttonStyle = {
@@ -83,6 +70,7 @@ export default function ExplanationCard(
   const [regenType, setRegenType] = useState<ExplanationRegenType>(0);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isDiscarded, setIsDiscarded] = useState<boolean>(false);
+  const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
 
   // editMode flips the explanation into a Textfield, so that a user can edit its contents
   const [isEditMode, setIsEditMode] = useState(false);
@@ -91,35 +79,48 @@ export default function ExplanationCard(
   const firstLineText = editableExplanation.length > 0 ? editableExplanation.split('.')[0] : explanation.genExplanation.explanation.split('.')[0];
   const remainingText = editableExplanation.length > 0 ? editableExplanation.split('.').slice(1).join('.') : explanation.genExplanation.explanation.split('.').slice(1).join('.');
 
-  useEffect(() => {
-      if (isQuestionSaved) {
-        setIsSaved(false);
-      }
-  }, [isQuestionSaved]);
-
   // answer: string; selectedExplanation: string; dismissedExplanations: string[]
-  const handleUpdateExplanation = (index: number, action: ExplanationRegenType, explanation: IExplanationToSave, discardedExplanation: IChipData | null, promptText?: string) => {
+  const handleUpdateExplanation = (index: number, action: ExplanationRegenType, explanation: IExplanationToSave, discardedExplanation?: IDiscardedExplanationToSave) => {
     const explanationCopy = {...explanation};
     switch (action){
       case ExplanationRegenType.ACCEPT_EDITED:        
         compareEditedExplanation(explanation.genExplanation.explanation, editableExplanation).then((response: any) => {
           explanationCopy.genExplanation.editedExplanation = editableExplanation;
-          if (!explanationCopy.genExplanation.regenExplanations) 
-            explanationCopy.genExplanation.regenExplanations = [];
-          explanationCopy.genExplanation.regenExplanations.push({reason: discardedExplanation, prompt: promptText});
-          handleExplanationClick({explanation, action, index});
+          explanationCopy.genExplanation.editReason = response.content;
         }).then(() => {
-          handleSaveExplanations(explanationCopy);
-          setIsEditMode(false);
-          setIsSaved(true);
+          handleUpdateExplanations(explanationCopy, index);
         });
         break;
       case ExplanationRegenType.REGEN:
-        // handle Regen
-        // inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: null, prompt: ''})
-        // setQuestionToSave(inputToSend.question);
+        setIsRegenerating(true);
+        regenerateWrongAnswerExplanation(explanationCopy).then((response: any) => {
+          explanationCopy.genExplanation.explanation = response.content;
+          handleUpdateExplanations(explanationCopy, index);
+          setIsRegenerating(false);
+        });
+        if (discardedExplanation){
+          const discardedExplanationInput: IDiscardedExplanationSaveInput = {
+            question: discardedExplanation.question,
+            explanation: discardedExplanation.explanation,
+            discardText: discardedExplanation.discardText,
+            version: discardedExplanation.version
+          }
+          if (discardedExplanation.reason)
+            discardedExplanationInput.reason = JSON.stringify(discardedExplanation.reason);
+          
+          saveDiscardedExplanation(discardedExplanationInput);
+        }
+        setIsRegenEnabled(false);
         break;
+      case ExplanationRegenType.ACCEPT:
+        createExplanation(explanationCopy);
+        const savedExplanations = JSON.parse(localStorage.getItem('righton_saved_explanations') || '[]');
+        savedExplanations.push(explanationCopy);
+        localStorage.setItem('righton_saved_explanations', JSON.stringify(savedExplanations));
+        setIsSaved(true);
+      break;
     }
+    setIsEditMode(false);
     setRegenType(action);
     setIsPromptEnabled(false);
     setIsRegenEnabled(false);
@@ -156,23 +157,27 @@ export default function ExplanationCard(
         <SavedTextStyled> Saved! </SavedTextStyled>
         </Box>
       }
+     
+      <ExplanationCardStyled key={index} isSaved={isSaved}>
       { isRegenerating && 
         <Box style={{ 
           position: 'absolute',
-          width: '100%',
-          height: '100%',
-          opacity: 1,
+          top: -16,
+          left: -16,
+          width: 'calc(100% + 32px)', 
+          height: 'calc(100% + 32px)',
+          opacity: 0.5,
           zIndex: 15,
-          background:  '#cccccc',
-          borderRadius: '20px',
+          background:  '#fff',
+          borderRadius: '8px',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          padding: 0
         }}>
           <CircularProgress style={{color: "#000"}}/>
         </Box>
       }
-      <ExplanationCardStyled key={index} isSaved={isSaved}>
         { isDiscarded 
         ? <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}> 
             <CardHeaderTextStyled> Thanks for your feedback! </CardHeaderTextStyled>
@@ -228,14 +233,14 @@ export default function ExplanationCard(
               </ButtonWrongAnswerStyled>
             </Grid>
             <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <ButtonStyled onClick={() => {handleSaveExplanations(explanation)}} style={{fontWeight: 400}}>
+              <ButtonStyled onClick={() => handleUpdateExplanation(index, ExplanationRegenType.ACCEPT, explanation)} style={{fontWeight: 400}}>
                 Save
               </ButtonStyled>
             </Grid>
             </>
           : 
             <Grid item xs={12} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <ButtonStyled onClick={() => setIsEditMode(false)} >
+              <ButtonStyled onClick={() => handleUpdateExplanation(index, ExplanationRegenType.ACCEPT_EDITED, explanation)} >
                 Update
               </ButtonStyled>
             </Grid>

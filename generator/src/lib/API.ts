@@ -4,7 +4,7 @@ import { Amplify} from "aws-amplify"
 import { generateClient } from 'aws-amplify/api';
 import { createSavedExplanation, createDiscardedExplanation } from "../graphql/mutations";
 import { listSavedExplanations, listDiscardedExplanations } from "../graphql/queries";
-import { IQuestion, IExplanationToSave, IWrongAnswerExplanations, IRegenInput, IDiscardedExplanationToSave } from "./Models";
+import { IQuestion, IExplanationToSave, IWrongAnswerExplanation, IWrongAnswerExplanations, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput } from "./Models";
 import awsconfig from "../aws-exports"
 
 const client = generateClient();
@@ -51,8 +51,8 @@ export async function generateWrongAnswerExplanations(
 }
 
 export async function regenerateWrongAnswerExplanation(
-    regenInputObj: IRegenInput
-  ): Promise<IWrongAnswerExplanations> {
+    regenInputObj: IExplanationToSave
+  ): Promise<IWrongAnswerExplanation> {
     return fetch(regenEndpoint, {
         method: "POST",
         headers: {
@@ -106,7 +106,7 @@ export async function returnQuestions(): Promise<any> {
 }
 
 export async function saveDiscardedExplanation(
-    discardedExplanationInput: IDiscardedExplanationToSave
+    discardedExplanationInput: IDiscardedExplanationSaveInput
 ): Promise<IDiscardedExplanationToSave>{
     let result = await client.graphql({
         query: createDiscardedExplanation,

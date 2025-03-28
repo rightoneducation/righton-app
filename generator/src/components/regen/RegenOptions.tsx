@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import { Box, useTheme } from '@mui/material';
-import { IExplanationToSave } from '../../lib/Models';
+import { ExplanationRegenType } from '../../lib/Constants';
+import { IDiscardedExplanationToSave, IExplanationToSave } from '../../lib/Models';
 import { RegenerateTextFieldStyled } from '../../lib/styledcomponents/generator/StyledTextField';
 import { ChipStyled } from '../../lib/styledcomponents/generator/StyledChip';
-import { ButtonType } from '../styledbutton/ButtonModels';
 import { 
   ButtonStyled, 
 } from '../../lib/styledcomponents/generator/StyledButtons';
@@ -15,7 +15,7 @@ import { IChipData } from '../../lib/Models';
 interface RegenOptionsProps {
   index: number;
   explanation: IExplanationToSave;
-  handleUpdateExplanation: (index: number, isEditMode: number, explanation: IExplanationToSave, discardedExplanation: IChipData | null, promptText?: string) => void;
+  handleUpdateExplanation: (index: number, isEditMode: number, explanation: IExplanationToSave, discardedExplanation: IDiscardedExplanationToSave, promptText?: string) => void;
 }
 
 export default function RegenOptions({
@@ -31,6 +31,29 @@ export default function RegenOptions({
     other: false
   });
   const buttonEnabled = selectedChips.incorrect || selectedChips.unclear || selectedChips.other;
+
+  const handleRegenClick = () => {
+    const explanationData = {
+      ...explanation,
+      genExplanation: {
+        ...explanation.genExplanation,
+        regenExplanations: [
+          {
+            reason: selectedChips,
+            prompt: discardPromptText
+          }
+        ]
+      }
+    };
+    const discardedExplanation = {
+      question: explanation.question,
+      explanation: explanation.genExplanation.explanation,
+      reason: selectedChips,
+      discardText: discardPromptText,
+      version: explanation.version
+    }
+    handleUpdateExplanation(index, ExplanationRegenType.REGEN, explanationData, discardedExplanation);
+  }
 
   return (
     <Box style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
@@ -75,7 +98,7 @@ export default function RegenOptions({
         </Box>
       </Box>
       <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
-        <ButtonStyled onClick={() => handleUpdateExplanation(index, 2, explanation, selectedChips, discardPromptText)} >
+        <ButtonStyled onClick={handleRegenClick} >
           Regenerate
         </ButtonStyled>
       </Box>

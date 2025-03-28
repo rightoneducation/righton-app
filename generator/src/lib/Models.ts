@@ -15,6 +15,7 @@ export interface IQuestion {
 }
 
 export type IWrongAnswerExplanations = string[];
+export type IWrongAnswerExplanation = string;
 
 export interface IExplanationToSave {
   question: string;
@@ -23,6 +24,7 @@ export interface IExplanationToSave {
   genExplanation:{
     explanation: string;
     editedExplanation?: string;
+    editReason?: string;
     regenExplanations?: {
       reason: IChipData | null;
       prompt?: string;
@@ -30,12 +32,6 @@ export interface IExplanationToSave {
   }
   discardedExplanations: string[];
   version: string;
-}
-
-export interface IRegenInput {
-  explanation: IExplanationToSave;
-  action: ExplanationRegenType;
-  index: number | null;
 }
 
 export interface IQualityData {
@@ -48,6 +44,15 @@ export interface IQualityData {
 export interface IDiscardedExplanationToSave {
   question: string
   explanation: string,
+  reason?: IChipData | null,
+  discardText?: string,
+  version: string
+}
+
+export interface IDiscardedExplanationSaveInput {
+  question: string
+  explanation: string,
+  reason?: string,
   discardText?: string,
   version: string
 }

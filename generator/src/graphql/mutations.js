@@ -67,6 +67,7 @@ export const createDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
@@ -84,6 +85,7 @@ export const updateDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
@@ -101,6 +103,7 @@ export const deleteDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt

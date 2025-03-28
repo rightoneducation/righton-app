@@ -5,7 +5,7 @@ import { Swiper as SwiperInstance } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
 import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createExplanation, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
-import { IQuestion, IExplanationToSave, IDiscardedExplanationToSave, IRegenInput } from '../lib/Models';
+import { IQuestion, IExplanationToSave, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput } from '../lib/Models';
 import QuestionSavedModal from '../components/modals/QuestionSavedModal';
 import HowToModal from '../components/modals/HowToModal';
 import ModalBackground from '../components/modals/ModalBackground';
@@ -161,10 +161,8 @@ export default function Generator() {
     });
   };
 
-  const handleSaveExplanation = (index: number) => {
-    createExplanation(explanationsToSave[index]).then((response) => {
-      setIsQuestionSaved(true);
-    });
+  const handleSaveExplanation = (explanation: IExplanationToSave) => {
+    createExplanation(explanation)
   };
 
   const handleAddWrongAnswer = () => {
@@ -175,54 +173,8 @@ export default function Generator() {
     }));
   };
 
-  // Add in this function if spec'd in the future
-  // const handleDiscardExplanation= () => {
-  // }
-
-  const handleExplanationClick = (input: IRegenInput) => {
-    // Toggle the selected state for the clicked card
-    setSelectedCards((current) =>
-      current.map((isSelected, idx) => (input.index === idx ? !isSelected : isSelected))
-    );
-    const fullInput = {
-      ...input,
-      discardedExplanations
-    }
-    switch (input.action){
-      case (ExplanationRegenType.ACCEPT):
-        console.log("accepted");
-        break;
-      case (ExplanationRegenType.DISCARD):
-        console.log("discard");
-        break;
-      case (ExplanationRegenType.REGEN): 
-        setIsExplanationRegenerating(true);
-        setRegenIndex(input.index);
-        if (input){
-        //   regenerateWrongAnswerExplanation(fullInput).then((response: any) => {
-        //     const newExplanation = response.content;
-        //     const oldExplanation = question.wrongAnswers[input.index ?? 0].selectedExplanation;
-        //     setQuestionToSave((prev) => {
-        //       const updatedWrongAnswers = [...prev.wrongAnswers];
-        //       updatedWrongAnswers[input.index ?? 0].selectedExplanation = newExplanation;
-        //       return {
-        //         ...prev,
-        //         wrongAnswers: updatedWrongAnswers,
-        //       };
-        //     })
-        //     setSelectedCards((current) =>
-        //       current.map((isSelected, idx) => (input.index === idx ? !isSelected : isSelected))
-        //     );
-        //     setIsExplanationRegenerating(false);
-        //   }
-        // );
-      }
-      break;
-    }
-  };
-
   const saveDiscardExplanation = (question: string, discardedExplanation: string) => {
-    const discardedQuestionInput: IDiscardedExplanationToSave = {
+    const discardedQuestionInput: IDiscardedExplanationSaveInput = {
       question,
       explanation: discardedExplanation,
       discardText: "Math is incorrect",
@@ -231,8 +183,12 @@ export default function Generator() {
     const result = saveDiscardedExplanation(discardedQuestionInput);
   }
 
-  const handleSaveExplanations = (explanation: IExplanationToSave) => {
-    setExplanationsToSave((prev) => [...prev, explanation]);
+  const handleUpdateExplanations= (explanation: IExplanationToSave, index: number) => {
+    setExplanationsToSave((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[index] = explanation;
+      return updatedArray;
+    });
   }
 
   const handleGenerateSampleQuestion = () => {
@@ -318,13 +274,8 @@ export default function Generator() {
           </SwiperSlide>
           <SwiperSlide key="explanation-slide">
             <ExplanationCards
-              isSubmitted={isSubmitted}
               explanationsToSave={explanationsToSave}
-              selectedCards={selectedCards}
-              handleSaveExplanations={handleSaveExplanations}
-              handleExplanationClick={handleExplanationClick}
-              saveDiscardExplanation={saveDiscardExplanation}
-              isQuestionSaved={isQuestionSaved}
+              handleUpdateExplanations={handleUpdateExplanations}
               isQuestionGenerating={isQuestionGenerating}
               isExplanationRegenerating={isExplanationRegenerating}
               regenIndex={regenIndex}
@@ -348,13 +299,8 @@ export default function Generator() {
           </Grid>
           <Grid item xs={6} style={{paddingTop: 0}}>
             <ExplanationCards
-              isSubmitted={isSubmitted}
               explanationsToSave={explanationsToSave}
-              selectedCards={selectedCards}
-              handleSaveExplanations={handleSaveExplanations}
-              handleExplanationClick={handleExplanationClick}
-              saveDiscardExplanation={saveDiscardExplanation}
-              isQuestionSaved={isQuestionSaved}
+              handleUpdateExplanations={handleUpdateExplanations}
               isQuestionGenerating={isQuestionGenerating}
               isExplanationRegenerating={isExplanationRegenerating}
               regenIndex={regenIndex}

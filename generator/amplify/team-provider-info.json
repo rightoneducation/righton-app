@@ -19,7 +19,7 @@
         },
         "regenwronganswerexp": {
           "deploymentBucketName": "amplify-wronganswerexp-dev-112306-deployment",
-          "s3Key": "amplify-builds/regenwronganswerexp-79516f6774664375302b-build.zip"
+          "s3Key": "amplify-builds/regenwronganswerexp-346a4f5430416e626872-build.zip"
         },
         "wronganswerexp": {
           "deploymentBucketName": "amplify-wronganswerexp-dev-112306-deployment",
