@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { Grid, Card, CardContent, Typography, Box, CircularProgress, TextField, RadioGroup, FormGroup, FormControl, FormControlLabel, Radio, Checkbox, Tooltip, useTheme } from '@mui/material';
-import AcceptAnswer from '../img/AcceptAnswer.svg';
-import RegenAnswer from '../img/RegenAnswer.svg';
-import RegenArrow from '../img/RegenArrow.svg';
-import DiscardAnswer from '../img/DiscardAnswer.svg';
-import AcceptIcon from '../img/AcceptIcon.svg';
-import RejectIcon from '../img/RejectIcon.svg';
 import { 
   CardHeaderTextStyled, 
   EditTextStyled,
@@ -32,27 +26,16 @@ import {
 import { SingleExplanationCardContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { TextFieldStyled } from '../lib/styledcomponents/generator/StyledTextField';
 import { ExplanationRegenType } from '../lib/Constants';
-import { IQuestionToSave, IRegenInput, IChipData } from '../lib/Models';
+import { IExplanationToSave, IRegenInput, IChipData } from '../lib/Models';
 import { compareEditedExplanation } from '../lib/API';
-import DiscardOptions from './discard/DiscardOptions';
-
-interface Explanation {
-  answer: string; 
-  selectedExplanation: string; 
-  editedExplanation?: string;
-  dismissedExplanations: {
-    explanation: IChipData | null;
-    prompt?: string;
-  }[]
-}
+import RegenOptions from './regen/RegenOptions';
 
 interface ExplanationCardProps {
   index: number;
-  questionToSave: IQuestionToSave
   isSubmitted: boolean;
-  explanation: Explanation;
+  explanation: IExplanationToSave;
   selectedCards: boolean[];
-  setQuestionToSave: (questionToSave: IQuestionToSave) => void;
+  handleSaveExplanations: (explanation: IExplanationToSave) => void;
   handleExplanationClick: (input: IRegenInput) => void;
   saveDiscardExplanation: (
     question: string, selectedExplanation: string
@@ -79,11 +62,10 @@ enum DiscardOptionsEnum {
 export default function ExplanationCard(
   { 
     index, 
-    questionToSave,
     isSubmitted, 
     explanation, 
     selectedCards,
-    setQuestionToSave,
+    handleSaveExplanations,
     handleExplanationClick,
     saveDiscardExplanation,
     isQuestionSaved,
@@ -94,7 +76,6 @@ export default function ExplanationCard(
     margin: '5px',
   };
   const [isPromptEnabled, setIsPromptEnabled] = useState<boolean>(false);
-  const [isDiscardEnabled, setIsDiscardEnabled] = useState<boolean>(false);
   const [isRegenEnabled, setIsRegenEnabled] = useState<boolean>(false);
   const [regenPromptText, setRegenPromptText] = useState<string|null>(null);
   const [discardPromptText, setDiscardPromptText] = useState<string>('');
@@ -106,9 +87,9 @@ export default function ExplanationCard(
   // editMode flips the explanation into a Textfield, so that a user can edit its contents
   const [isEditMode, setIsEditMode] = useState(false);
   // local state to store edited explanation
-  const [editableExplanation, setEditableExplanation] = useState(explanation.editedExplanation ? explanation.editedExplanation : '');
-  const firstLineText = editableExplanation.length > 0 ? editableExplanation.split('.')[0] : explanation.selectedExplanation.split('.')[0];
-  const remainingText = editableExplanation.length > 0 ? editableExplanation.split('.').slice(1).join('.') : explanation.selectedExplanation.split('.').slice(1).join('.');
+  const [editableExplanation, setEditableExplanation] = useState(explanation.genExplanation.editedExplanation ? explanation.genExplanation.editedExplanation : '');
+  const firstLineText = editableExplanation.length > 0 ? editableExplanation.split('.')[0] : explanation.genExplanation.explanation.split('.')[0];
+  const remainingText = editableExplanation.length > 0 ? editableExplanation.split('.').slice(1).join('.') : explanation.genExplanation.explanation.split('.').slice(1).join('.');
 
   useEffect(() => {
       if (isQuestionSaved) {
@@ -117,48 +98,37 @@ export default function ExplanationCard(
   }, [isQuestionSaved]);
 
   // answer: string; selectedExplanation: string; dismissedExplanations: string[]
-  const packageRegenInputAndSubmit= (index: number, action: ExplanationRegenType, discardedExplanation: IChipData | null, promptText?: string) => {
-    const inputToSend: IRegenInput = {
-      question: questionToSave,
-      action,
-      index 
-    }    
+  const handleUpdateExplanation = (index: number, action: ExplanationRegenType, explanation: IExplanationToSave, discardedExplanation: IChipData | null, promptText?: string) => {
+    const explanationCopy = {...explanation};
     switch (action){
-      case ExplanationRegenType.ACCEPT:
-        setIsSaved(true);
-        break;
-      case ExplanationRegenType.ACCEPT_EDITED:
-        inputToSend.question.wrongAnswers[index].selectedExplanation = explanation.selectedExplanation;
-        inputToSend.question.wrongAnswers[index].editedExplanation = editableExplanation;
-        compareEditedExplanation(explanation.selectedExplanation, editableExplanation).then((response: any) => {
-          console.log(response);
-          inputToSend.question.wrongAnswers[index].editedReason = response.content;
+      case ExplanationRegenType.ACCEPT_EDITED:        
+        compareEditedExplanation(explanation.genExplanation.explanation, editableExplanation).then((response: any) => {
+          explanationCopy.genExplanation.editedExplanation = editableExplanation;
+          if (!explanationCopy.genExplanation.regenExplanations) 
+            explanationCopy.genExplanation.regenExplanations = [];
+          explanationCopy.genExplanation.regenExplanations.push({reason: discardedExplanation, prompt: promptText});
+          handleExplanationClick({explanation, action, index});
         }).then(() => {
-          console.log(inputToSend);
-          setQuestionToSave(inputToSend.question);
+          handleSaveExplanations(explanationCopy);
           setIsEditMode(false);
           setIsSaved(true);
         });
         break;
-      case ExplanationRegenType.DISCARD:
-        setIsDiscarded(true);
-        inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: discardedExplanation, prompt: promptText})
-        setQuestionToSave(inputToSend.question);
-        break;
       case ExplanationRegenType.REGEN:
-        inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: null, prompt: ''})
-        setQuestionToSave(inputToSend.question);
+        // handle Regen
+        // inputToSend.question.wrongAnswers[index].dismissedExplanations.push({explanation: null, prompt: ''})
+        // setQuestionToSave(inputToSend.question);
         break;
     }
     setRegenType(action);
-    handleExplanationClick(inputToSend);
     setIsPromptEnabled(false);
-    setIsDiscardEnabled(false);
+    setIsRegenEnabled(false);
     setRegenPromptText(null);
     setDiscardPromptText('');
   }
+
   const handleEditModeClick = () => {
-    setEditableExplanation(editableExplanation.length > 0 ? editableExplanation : explanation.selectedExplanation);
+    setEditableExplanation(editableExplanation.length > 0 ? editableExplanation : explanation.genExplanation.explanation);
     setIsEditMode(true);
   }
 
@@ -169,7 +139,7 @@ export default function ExplanationCard(
         width: '100%'
       }} 
       sx={{
-        gap: (editableExplanation.length > 0 && !isEditMode && !isDiscardEnabled) 
+        gap: (editableExplanation.length > 0 && !isEditMode && !isRegenEnabled) 
         ? `${theme.sizing.smPadding}px` 
         : `${theme.sizing.mdPadding}px`
       }}
@@ -235,11 +205,11 @@ export default function ExplanationCard(
         </>
       }
     </ExplanationCardStyled>
-    { isDiscardEnabled  
-      ? <DiscardOptions index={index} packageRegenInputAndSubmit={packageRegenInputAndSubmit}/>
-      :  !isEditMode && !isSaved && (
-        <>
-          { editableExplanation.length > 0 &&
+    { isRegenEnabled  
+      ? <RegenOptions index={index} explanation={explanation} handleUpdateExplanation={handleUpdateExplanation}/>
+      : !isSaved && (
+        <> 
+          { editableExplanation.length > 0 && !isEditMode &&
             <EditStatusTextStyled>
               Your edits have been updated.
             </EditStatusTextStyled>
@@ -253,12 +223,12 @@ export default function ExplanationCard(
               </ButtonWrongAnswerStyled>
             </Grid>
             <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <ButtonWrongAnswerStyled disabled={isDiscardEnabled} onClick={() => packageRegenInputAndSubmit(index, isEditMode ? 1 : 0, null)} style={{fontWeight: 400}}>
+              <ButtonWrongAnswerStyled disabled={isRegenEnabled} onClick={() => setIsRegenEnabled(true)} style={{fontWeight: 400}}>
                 Regenerate
               </ButtonWrongAnswerStyled>
             </Grid>
             <Grid item xs={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <ButtonStyled onClick={() => {setIsDiscardEnabled(true); setIsRegenEnabled(false); setIsEditMode(false)}} style={{fontWeight: 400}}>
+              <ButtonStyled onClick={() => {handleSaveExplanations(explanation)}} style={{fontWeight: 400}}>
                 Save
               </ButtonStyled>
             </Grid>

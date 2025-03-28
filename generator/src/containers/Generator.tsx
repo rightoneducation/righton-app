@@ -4,8 +4,8 @@ import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Swiper as SwiperInstance } from 'swiper';
 import { Pagination } from 'swiper/modules';
 import { v4 as uuidv4 } from 'uuid';
-import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createQuestion, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
-import { IDiscardedExplanationToSave, IQuestionToSave, IRegenInput } from '../lib/Models';
+import { generateWrongAnswerExplanations, regenerateWrongAnswerExplanation, createExplanation, saveDiscardedExplanation, getDiscardedExplanations } from '../lib/API';
+import { IQuestion, IExplanationToSave, IDiscardedExplanationToSave, IRegenInput } from '../lib/Models';
 import QuestionSavedModal from '../components/modals/QuestionSavedModal';
 import HowToModal from '../components/modals/HowToModal';
 import ModalBackground from '../components/modals/ModalBackground';
@@ -36,11 +36,14 @@ export default function Generator() {
     if (swiper)
       swiper.slideTo(1, 750);
   }
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<IQuestion>({
     question: '',
     correctAnswer: '',
     wrongAnswers: [''],
+    discardedExplanations: [],
+    version
   });
+  const [explanationsToSave, setExplanationsToSave] = React.useState<IExplanationToSave[]>([]);
   const [isFormComplete, setIsFormComplete] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [isSelected, setIsSelected] = React.useState(false);
@@ -60,7 +63,7 @@ export default function Generator() {
     version
   }
   //const [wrongAnswerExplanations, setWrongAnswerExplanations] = React.useState<string[]>([]);
-  const [questionToSave, setQuestionToSave] = React.useState<IQuestionToSave>(blankQuestion);
+  const [question, setQuestion] = React.useState<IQuestion>(blankQuestion);
   const [discardedExplanations, setDiscardedExplanations] = React.useState<IDiscardedExplanationToSave[]>([]);
   
   const wrongAnswerExplanations = [
@@ -136,24 +139,21 @@ export default function Generator() {
     setIsQuestionGenerating(true);
     generateWrongAnswerExplanations(formData, discardedExplanations).then((response) => {
       const explanationsArray = response ?? [];
-      const wrongAnswersArray =  explanationsArray.map((explanation: string, index: number) => {
+      const explanations =  explanationsArray.map((explanation: string, index: number) => {
         return (
           {
-            answer: formData.wrongAnswers[index],
-            selectedExplanation: explanation,
-            dismissedExplanations: [],
+            question: formData.question,
+            correctAnswer: formData.correctAnswer,
+            wrongAnswer: formData.wrongAnswers[index],
+            genExplanation: {
+              explanation,
+            },
+            discardedExplanations: [],
+            version
           }
         )
       });
-
-      setQuestionToSave((prev) => ({
-        ...prev,
-        question: formData.question,
-        correctAnswer: formData.correctAnswer,
-        wrongAnswers: wrongAnswersArray,
-        discardedExplanations: [],
-        version
-      }));
+      setExplanationsToSave(explanations);
       handleChangeSlide();
       setIsQuestionGenerating(false);
       setIsQuestionGenerated(true);
@@ -161,21 +161,9 @@ export default function Generator() {
     });
   };
 
-  const handleSaveQuestion = () => {
-    createQuestion(questionToSave).then((response) => {
-      setQuestionToSave(blankQuestion);
-      setFormData({
-        question: '',
-        correctAnswer: '',
-        wrongAnswers: ['']
-      });
-      setQuestionToSave(blankQuestion);
-      setIsSubmitted(false);
-      setIsSelected(false);
+  const handleSaveExplanation = (index: number) => {
+    createExplanation(explanationsToSave[index]).then((response) => {
       setIsQuestionSaved(true);
-      setIsQuestionGenerated(false);
-      if (swiper)
-        swiper.slideTo(0, 750);
     });
   };
 
@@ -187,20 +175,9 @@ export default function Generator() {
     }));
   };
 
-  const handleDiscardQuestion = () => {
-    setFormData({
-      question: '',
-      correctAnswer: '',
-      wrongAnswers: ['']
-    });
-    setQuestionToSave(blankQuestion);
-    setIsSubmitted(false);
-    setIsSelected(false);
-    setIsQuestionSaved(false);
-    setIsQuestionGenerated(false);
-    if (swiper)
-      swiper.slideTo(0, 750);
-  }
+  // Add in this function if spec'd in the future
+  // const handleDiscardExplanation= () => {
+  // }
 
   const handleExplanationClick = (input: IRegenInput) => {
     // Toggle the selected state for the clicked card
@@ -222,23 +199,23 @@ export default function Generator() {
         setIsExplanationRegenerating(true);
         setRegenIndex(input.index);
         if (input){
-          regenerateWrongAnswerExplanation(fullInput).then((response: any) => {
-            const newExplanation = response.content;
-            const oldExplanation = questionToSave.wrongAnswers[input.index ?? 0].selectedExplanation;
-            setQuestionToSave((prev) => {
-              const updatedWrongAnswers = [...prev.wrongAnswers];
-              updatedWrongAnswers[input.index ?? 0].selectedExplanation = newExplanation;
-              return {
-                ...prev,
-                wrongAnswers: updatedWrongAnswers,
-              };
-            })
-            setSelectedCards((current) =>
-              current.map((isSelected, idx) => (input.index === idx ? !isSelected : isSelected))
-            );
-            setIsExplanationRegenerating(false);
-          }
-        );
+        //   regenerateWrongAnswerExplanation(fullInput).then((response: any) => {
+        //     const newExplanation = response.content;
+        //     const oldExplanation = question.wrongAnswers[input.index ?? 0].selectedExplanation;
+        //     setQuestionToSave((prev) => {
+        //       const updatedWrongAnswers = [...prev.wrongAnswers];
+        //       updatedWrongAnswers[input.index ?? 0].selectedExplanation = newExplanation;
+        //       return {
+        //         ...prev,
+        //         wrongAnswers: updatedWrongAnswers,
+        //       };
+        //     })
+        //     setSelectedCards((current) =>
+        //       current.map((isSelected, idx) => (input.index === idx ? !isSelected : isSelected))
+        //     );
+        //     setIsExplanationRegenerating(false);
+        //   }
+        // );
       }
       break;
     }
@@ -254,15 +231,19 @@ export default function Generator() {
     const result = saveDiscardedExplanation(discardedQuestionInput);
   }
 
+  const handleSaveExplanations = (explanation: IExplanationToSave) => {
+    setExplanationsToSave((prev) => [...prev, explanation]);
+  }
+
   const handleGenerateSampleQuestion = () => {
-    const randomQuestionIndex = Math.floor(Math.random() * sampleQuestions.length);
-    setIsCustomQuestion(false);
-    setFormData(sampleQuestions[randomQuestionIndex])
+    // const randomQuestionIndex = Math.floor(Math.random() * sampleQuestions.length);
+    // setIsCustomQuestion(false);
+    // setFormData(sampleQuestions[randomQuestionIndex])
   };
 
   const handleCloseModal = () => {
-    setIsQuestionSaved(false);
-    setIsHowToModalOpen(false);
+    // setIsQuestionSaved(false);
+    // setIsHowToModalOpen(false);
   };
 
   return (
@@ -338,9 +319,9 @@ export default function Generator() {
           <SwiperSlide key="explanation-slide">
             <ExplanationCards
               isSubmitted={isSubmitted}
-              questionToSave={questionToSave}
+              explanationsToSave={explanationsToSave}
               selectedCards={selectedCards}
-              setQuestionToSave={setQuestionToSave}
+              handleSaveExplanations={handleSaveExplanations}
               handleExplanationClick={handleExplanationClick}
               saveDiscardExplanation={saveDiscardExplanation}
               isQuestionSaved={isQuestionSaved}
@@ -368,9 +349,9 @@ export default function Generator() {
           <Grid item xs={6} style={{paddingTop: 0}}>
             <ExplanationCards
               isSubmitted={isSubmitted}
-              questionToSave={questionToSave}
+              explanationsToSave={explanationsToSave}
               selectedCards={selectedCards}
-              setQuestionToSave={setQuestionToSave}
+              handleSaveExplanations={handleSaveExplanations}
               handleExplanationClick={handleExplanationClick}
               saveDiscardExplanation={saveDiscardExplanation}
               isQuestionSaved={isQuestionSaved}

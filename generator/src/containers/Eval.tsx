@@ -1,14 +1,14 @@
 import react, {useState, useEffect} from 'react';
 import {FormControl, InputLabel, MenuItem} from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import {IQuestionToSave} from '../lib/Models';
+import {IExplanationToSave} from '../lib/Models';
 import {returnQuestions} from '../lib/API';
 import { version, prevVersions } from '../lib/Constants';
 import QualityChart from '../components/QualityChart';
 import { set } from 'lodash';
 
 interface VersionedQuestions {
-  [key: string]: IQuestionToSave[];
+  [key: string]: IExplanationToSave[];
 };
 
 export default function Eval(){

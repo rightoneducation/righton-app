@@ -10,30 +10,30 @@ export interface IQuestion {
   question: string;
   correctAnswer: string;
   wrongAnswers: string[];
+  discardedExplanations: string[];
+  version: string;
 }
 
 export type IWrongAnswerExplanations = string[];
 
-export interface IQuestionToSave {
+export interface IExplanationToSave {
   question: string;
   correctAnswer: string;
-  wrongAnswers: 
-    {
-      answer: string;
-      selectedExplanation: string;
-      editedExplanation?: string;
-      editedReason?: string;
-      dismissedExplanations: {
-        explanation: IChipData | null;
-        prompt?: string;
-      }[];
+  wrongAnswer: string;
+  genExplanation:{
+    explanation: string;
+    editedExplanation?: string;
+    regenExplanations?: {
+      reason: IChipData | null;
+      prompt?: string;
     }[];
+  }
   discardedExplanations: string[];
   version: string;
 }
 
 export interface IRegenInput {
-  question: IQuestionToSave;
+  explanation: IExplanationToSave;
   action: ExplanationRegenType;
   index: number | null;
 }

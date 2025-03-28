@@ -1,14 +1,14 @@
 import { Box, CircularProgress } from '@mui/material';
-import { IQuestionToSave, IRegenInput } from '../lib/Models';
+import { IExplanationToSave, IRegenInput } from '../lib/Models';
 import { EmptyExplanationCardContainer, AllExplanationCardsContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { PlaceholderHeaderStyled, PlaceholderBodyStyled } from '../lib/styledcomponents/generator/StyledTypography';
 import ExplanationCard from './ExplanationCard';
 
 interface ExplanationCardsProps {
-  questionToSave: IQuestionToSave
+  explanationsToSave: IExplanationToSave[];
   isSubmitted: boolean;
   selectedCards: boolean[];
-  setQuestionToSave: (questionToSave: IQuestionToSave) => void;
+  handleSaveExplanations: (explanation: IExplanationToSave) => void;
   handleExplanationClick: (input: IRegenInput) => void;
   saveDiscardExplanation: (
     question: string, selectedExplanation: string
@@ -20,10 +20,10 @@ interface ExplanationCardsProps {
 }
 
 export const ExplanationCards = ({
-  questionToSave,
+  explanationsToSave,
   isSubmitted, 
   selectedCards,
-  setQuestionToSave,
+  handleSaveExplanations,
   handleExplanationClick,
   saveDiscardExplanation,
   isQuestionSaved,
@@ -31,7 +31,7 @@ export const ExplanationCards = ({
   isExplanationRegenerating,
   regenIndex
 }: ExplanationCardsProps) => {
-  const isQuestionFilled = questionToSave.wrongAnswers.length > 0;
+  const isQuestionFilled = explanationsToSave.length > 0;
   return (
     <>
       {!isQuestionFilled
@@ -44,15 +44,14 @@ export const ExplanationCards = ({
           }
         </EmptyExplanationCardContainer>
       : <AllExplanationCardsContainer>  
-        {isQuestionFilled && questionToSave.wrongAnswers.map((explanation, index) => {
+        {isQuestionFilled && explanationsToSave.map((explanation, index) => {
           return (
             <ExplanationCard
               index={index}
-              questionToSave={questionToSave}
               isSubmitted={isSubmitted}
               explanation={explanation}
               selectedCards={selectedCards}
-              setQuestionToSave={setQuestionToSave}
+              handleSaveExplanations={handleSaveExplanations}
               handleExplanationClick={handleExplanationClick}
               saveDiscardExplanation={saveDiscardExplanation}
               isQuestionSaved={isQuestionSaved}

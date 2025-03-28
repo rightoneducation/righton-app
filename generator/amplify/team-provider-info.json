@@ -28,6 +28,9 @@
       },
       "api": {
         "wronganswerexp": {}
+      },
+      "auth": {
+        "generatorauth": {}
       }
     }
   }

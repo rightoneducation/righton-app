@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { Box, useTheme } from '@mui/material';
-import CentralButton from '../styledbutton/Button';
+import { IExplanationToSave } from '../../lib/Models';
 import { RegenerateTextFieldStyled } from '../../lib/styledcomponents/generator/StyledTextField';
 import { ChipStyled } from '../../lib/styledcomponents/generator/StyledChip';
 import { ButtonType } from '../styledbutton/ButtonModels';
@@ -12,15 +12,17 @@ import {
 } from '../../lib/styledcomponents/generator/StyledTypography';
 import { IChipData } from '../../lib/Models';
 
-interface DiscardOptionsProps {
+interface RegenOptionsProps {
   index: number;
-  packageRegenInputAndSubmit: (index: number, isEditMode: number, discardedExplanation: IChipData | null, promptText?: string) => void;
+  explanation: IExplanationToSave;
+  handleUpdateExplanation: (index: number, isEditMode: number, explanation: IExplanationToSave, discardedExplanation: IChipData | null, promptText?: string) => void;
 }
 
-export default function DiscardOptions({
+export default function RegenOptions({
   index,
-  packageRegenInputAndSubmit
-} : DiscardOptionsProps) {
+  explanation,
+  handleUpdateExplanation
+} : RegenOptionsProps) {
   const theme = useTheme();
   const [discardPromptText, setDiscardPromptText] = useState<string>('');
   const [selectedChips, setSelectedChips] = useState<IChipData>({
@@ -73,7 +75,7 @@ export default function DiscardOptions({
         </Box>
       </Box>
       <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xSmPadding}px`}}>
-        <ButtonStyled onClick={() => packageRegenInputAndSubmit(index, 2, selectedChips, discardPromptText)} >
+        <ButtonStyled onClick={() => handleUpdateExplanation(index, 2, explanation, selectedChips, discardPromptText)} >
           Regenerate
         </ButtonStyled>
       </Box>
