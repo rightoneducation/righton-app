@@ -60,7 +60,6 @@ export const TextContainer = styled(Box)(({ theme }) => ({
 export const CardsContainer = styled(Grid)(({ theme }) => ({ 
   maxWidth: '1013px', 
   width: '100%',
-  flexGrow: 1,
   minHeight: 0, 
   marginTop: 0,
   boxSizing: 'border-box',
@@ -112,11 +111,14 @@ export const AllExplanationCardsContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const EmptyExplanationCardContainer = styled(AllExplanationCardsContainer)(({ theme }) => ({
+  alignItems: 'center',
   justifyContent: 'center', 
-  maxHeight: '606px',
+  height: '100%',
   backgroundColor: `rgba(249, 245, 242, 0.5)`,
   gap: '12px',
   padding: `${theme.sizing.mdPadding}px`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
+  boxSizing: 'border-box'
 }));
 
 export const SingleExplanationCardContainer = styled(Box)(({ theme }) => ({

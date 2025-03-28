@@ -322,7 +322,7 @@ export default function Generator() {
             </SwiperSlide>
           </Swiper>
         : <CardsContainer container columnSpacing={'20px'}>
-            <Grid item xs={6} style={{paddingTop: 0}}>
+            <Grid item xs={6} style={{paddingTop: 0, height: 'fit-content'}}>
               <QuestionInfoContainer 
                 isCustomQuestion={isCustomQuestion}
                 labelText={labelText}
@@ -336,7 +336,7 @@ export default function Generator() {
                 handleGenerateSampleQuestion={handleGenerateSampleQuestion}
               />
             </Grid>
-            <Grid item xs={6} style={{paddingTop: 0}}>
+            <Grid item xs={6} style={{paddingTop: 0, height: '100%'}}>
               <ExplanationCards
                 explanationsToSave={explanationsToSave}
                 handleUpdateExplanations={handleUpdateExplanations}

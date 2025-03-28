@@ -21,7 +21,7 @@ export const ExplanationCards = ({
 }: ExplanationCardsProps) => {
   const isQuestionFilled = explanationsToSave.length > 0;
   return (
-    <>
+    <Box style={{height: '100%'}}>
       {!isQuestionFilled
       ?
         <EmptyExplanationCardContainer>
@@ -44,6 +44,6 @@ export const ExplanationCards = ({
       </AllExplanationCardsContainer>
       }
     
-    </>
+    </Box>
   );
 };
