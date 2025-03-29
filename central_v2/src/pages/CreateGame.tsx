@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IGameTemplate, IQuestionTemplate } from '@righton/networking';
+import { CentralQuestionTemplateInput, IGameTemplate, IQuestionTemplate } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
 import { Box, Fade } from '@mui/material';
 import {
   CreateGameMainContainer,
@@ -20,27 +21,38 @@ import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateMa
 import ExploreQuestions from './ExploreQuestions';
 import tabExploreQuestionsIcon from '../images/tabExploreQuestions.svg';
 import tabMyQuestionsIcon from '../images/tabMyQuestions.svg';
-import tabDraftsIcon from '../images/tabDrafts.svg';
 import tabFavoritesIcon from '../images/tabFavorites.svg';
+import tabDraftsIcon from '../images/tabDrafts.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
+
 
 interface CreateGameProps {
   screenSize: ScreenSize;
 }
 
+const tabMap: { [key: number]: string } = {
+  0: 'Explore Questions',
+  1: 'My Questions',
+  2: 'Favorites',
+};
+
+const tabIconMap: { [key: number]: string } = {
+  0: tabExploreQuestionsIcon,
+  1: tabMyQuestionsIcon,
+  2: tabFavoritesIcon,
+};
+
 export default function CreateGame({ screenSize }: CreateGameProps) {
   const navigate = useNavigate();
-  const ref = useRef<HTMLDivElement | null>(null);
   const [favQuestions, setFavQuestions] = useState<IQuestionTemplate[]>([]);
-  const [selectQuestions, setSelectedQuestion] = useState<IQuestionTemplate>();
-  const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
+  const [questionCount, setQuestionCount] = useState<number>(1);
+  const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const {
-    questionComponentRef,
     topRef,
     isGameCardSubmitted,
-    questionCount,
     openQuestionBank,
     openCreateQuestion,
     publicPrivateGame,
@@ -49,6 +61,10 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     gameTitle,
     gameDescription,
     isGameImageUploadVisible,
+    // gameTemplate,
+    // iconButtons,
+    // handleAddMoreQuestions, 
+    // setGameTemplate,
     handleCloseGameCardModal,
     handleGameTitle,
     handleGameDescription,
@@ -104,73 +120,37 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     searchTerms,
     selectedGrades,
     isTabsOpen,
+    selectQuestion,
+    questionSet,
+    handleView,
+    getLabel,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
     loadMoreQuestions,
   } = useExploreQuestionsStateManager();
-
-  const [gameTemplate, setGameTemplate] = useState<IGameTemplate>({
-    id:"",
-    title: gameTitle,
-    lowerCaseTitle: gameTitle.toLowerCase(),
-    owner: "",
-    version: 0,
-    description: gameDescription,
-    lowerCaseDescription: gameDescription.toLowerCase(),
-    domain: "",
-    cluster: "",
-    grade: "",
-    ccss: "",
-    phaseOneTime: 0,
-    phaseTwoTime: 0,
-    imageUrl: "",
-    questionTemplates: null,
-    questionTemplatesCount: 0,
-    questionTemplatesOrder: [],
-    createdAt: null,
-    updatedAt: null,
-  })
   
   const handleDiscard = () => {
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
 
-  const tabMap: { [key: number]: string } = {
-    0: 'Explore Questions',
-    1: 'My Questions',
-    2: 'Favorites',
-  };
+  // game template functions
+  const handleQuestionIndexChange = (index: number) => {
+    setSelectedQuestionIndex(index)
+  }
 
-  const tabIconMap: { [key: number]: string } = {
-    0: tabExploreQuestionsIcon,
-    1: tabMyQuestionsIcon,
-    2: tabFavoritesIcon,
-  };
-
-  const handleView = (
-    question: IQuestionTemplate,
-    questions: IQuestionTemplate[],
-  ) => {
-    setSelectedQuestion(question);
-    setQuestionSet(questions);
-    setIsTabsOpen(true);
-  };
-
-  const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
-    if (screen === ScreenSize.LARGE) return value;
-    if (screen === ScreenSize.MEDIUM && isSelected) return value;
-    return '';
-  };
+  const handleAddMoreQuestions = () => {
+    setQuestionCount((prev) => prev + 1);
+    setIconButtons((prev) => [...prev, prev.length + 1])
+  }
 
   return (
     <CreateGameMainContainer ref={topRef} sx={{ overflowY: 'auto' }}>
       <CreateGameBackground />
 
       {/* Create Game Image Upload Modal */}
-
       <CreateGameImageUploadModal
         draftQuestion={draftQuestion}
         screenSize={screenSize}
@@ -222,13 +202,17 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           onGameTitle={handleGameTitle}
           onGameCardError={setIsGameCardErrored}
           isCardSubmitted={isGameCardSubmitted}
-          questionCount={questionCount}
           isCardErrored={isGameCardErrored}
           phaseTime={phaseTime}
           gameTitle={gameTitle}
           gameDescription={gameDescription}
           openQuestionBank={openQuestionBank}
           openCreateQuestion={openCreateQuestion}
+          questionCount={questionCount}
+          selectedIndex={selectedQuestionIndex}
+          iconButtons={iconButtons}
+          setSelectedIndex={handleQuestionIndexChange}
+          addMoreQuestions={handleAddMoreQuestions}
         />
 
         {/* Create Question Form  */}
@@ -239,7 +223,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           unmountOnExit
         >
           <Box>
-          <QuestionElements
+           <QuestionElements
             screenSize={screenSize}
             draftQuestion={draftQuestion}
             completeIncorrectAnswers={completeIncorrectAnswers}
@@ -266,8 +250,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             handleClick={handleClick}
             handleCCSSClick={handleCCSSClick}
             handleImageUploadClick={handleQuestionImageUploadClick}
-          />
-          </Box>
+          /> </Box>
         </Fade>
 
         {/* Question Bank goes here */}

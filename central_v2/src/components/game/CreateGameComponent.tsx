@@ -29,7 +29,6 @@ interface ICreateGameComponent {
   handleSaveGame: () => Promise<void>;
   handleDiscard: () => void;
   isCardSubmitted: boolean;
-  questionCount: number;
   isCardErrored: boolean;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   handleImageUploadClick: () => void;
@@ -44,6 +43,11 @@ interface ICreateGameComponent {
   onGameCardError: React.Dispatch<React.SetStateAction<boolean>>;
   openQuestionBank: boolean;
   openCreateQuestion: boolean;
+  questionCount: number;
+  iconButtons: number[];
+  selectedIndex: number;
+  setSelectedIndex: (index: number) => void;
+  addMoreQuestions: () => void;
 }
 
 // vertical ellipsis image for button
@@ -57,7 +61,6 @@ export default function CreateGameComponent({
   onCreateQuestion,
   onOpenQuestionBank,
   isCardSubmitted,
-  questionCount,
   isCardErrored,
   phaseTime,
   gameTitle,
@@ -68,6 +71,11 @@ export default function CreateGameComponent({
   onGameCardError,
   openQuestionBank,
   openCreateQuestion,
+  questionCount,
+  iconButtons,
+  selectedIndex,
+  setSelectedIndex,
+  addMoreQuestions
 }: ICreateGameComponent) {
   const [disableForm, setDisableForm] = useState<boolean>(false);
   const [enableButton, setEnableButton] = useState<{[key: string]: boolean}>({
@@ -193,7 +201,13 @@ export default function CreateGameComponent({
       </CreateGameGridContainer>
       {/* Question Count & Add Button */}
       <GameCreateButtonStack>
-        <ManageQuestionsButtons />
+        <ManageQuestionsButtons 
+        questionCount={questionCount}
+        iconButtons={iconButtons}
+        selectedIndex={selectedIndex}
+        setSelectedIndex={setSelectedIndex}
+        addMoreQuestions={addMoreQuestions}
+        />
       </GameCreateButtonStack>
       {/* Create Question & Question Bank */}
       <GameCreateButtonStack sx={{ 

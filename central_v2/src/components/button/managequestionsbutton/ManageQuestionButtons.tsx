@@ -3,17 +3,24 @@ import { AddMoreIconButton, QuestionCountButton } from '../../../lib/styledcompo
 import VerticalMoreImg from '../../../images/buttonIconVerticalMore.svg';
 import { buttonContentMap, ButtonType } from '../ButtonModels';
 
+interface IManageButtonQuestions {
+  questionCount: number;
+  iconButtons: number[];
+  selectedIndex: number;
+  setSelectedIndex: (index: number) => void;
+  addMoreQuestions: () => void;
+}
+
 // vertical ellipsis image for button
 const verticalEllipsis = <img src={VerticalMoreImg} alt="more-elipsis" />;
-export default function ManageQuestionsButtons() {
-    const [questionCount, setQuestionCount] = useState(1); 
-    const [iconButtons, setIconButtons] = useState([1]); 
+export default function ManageQuestionsButtons({
+  questionCount,
+  iconButtons,
+  selectedIndex,
+  setSelectedIndex,
+  addMoreQuestions
+}: IManageButtonQuestions) {
   
-    const handleAddMoreClick = () => {
-      setQuestionCount(prevCount => prevCount + 1); 
-      setIconButtons(prev => [...prev, prev.length + 1]); 
-    };
-
     return (
         <>
           {/* add new button representing question count */}
@@ -24,18 +31,21 @@ export default function ManageQuestionsButtons() {
                 width: '40px', 
                 height: '40px',
                 fontWeight: 600
-                }} key={`Question--${index + 1}`} onClick={() => console.log("question set")}>
+                }} key={`Question--${index + 1}`} onClick={() => setSelectedIndex(index)}>
              {index + 1}
            </AddMoreIconButton>
           ))}
           
           {/* Track current question */}
-           <QuestionCountButton endIcon={verticalEllipsis} isDisabled={false}>
+           <QuestionCountButton
+           onClick={ () => setSelectedIndex(questionCount - 1)}
+           endIcon={verticalEllipsis} 
+           isDisabled={false}>
            Question {questionCount}
          </QuestionCountButton>
           
           {/* add new question */}
-          <AddMoreIconButton onClick={handleAddMoreClick}>
+          <AddMoreIconButton onClick={addMoreQuestions}>
           <img
             alt="add-question"
             src={buttonContentMap[ButtonType.ADDSTEP].icon}

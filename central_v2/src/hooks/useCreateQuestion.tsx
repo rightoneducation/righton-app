@@ -83,30 +83,54 @@ const useCreateQuestion = () => {
           IncorrectCard[]
         >(localData.completeCards ?? []);
 
-      const [draftQuestion, setDraftQuestion] =
-          useState<CentralQuestionTemplateInput>(() => {
-            return (
-              localData.draftQuestion ?? {
-                questionCard: {
-                  title: '',
-                  ccss: 'CCSS',
-                  isFirstEdit: true,
-                  isCardComplete: false,
-                },
-                correctCard: {
-                  answer: '',
-                  answerSteps: ['', '', ''],
-                  isFirstEdit: true,
-                  isCardComplete: false,
-                },
-                incorrectCards: [
-                  ...incompleteIncorrectAnswers,
-                  ...completeIncorrectAnswers,
-                ],
-              }
-            );
-          });
-     const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
+
+        const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
+        const [draftQuestion, setDraftQuestion] =
+            useState<CentralQuestionTemplateInput>(() => {
+              return (
+                localData.draftQuestion ?? {
+                  questionCard: {
+                    title: '',
+                    ccss: 'CCSS',
+                    isFirstEdit: true,
+                    isCardComplete: false,
+                  },
+                  correctCard: {
+                    answer: '',
+                    answerSteps: ['', '', ''],
+                    isFirstEdit: true,
+                    isCardComplete: false,
+                  },
+                  incorrectCards: [
+                    ...incompleteIncorrectAnswers,
+                    ...completeIncorrectAnswers,
+                  ],
+                }
+              );
+            });
+        const [draftQuestionsList, setDraftQuestionsList] = useState<CentralQuestionTemplateInput[]>([draftQuestion]);
+       const newEmptyTemplate = {
+          questionCard: {
+            title: '',
+            ccss: 'CCSS',
+            isFirstEdit: true,
+            isCardComplete: false,
+          },
+          correctCard: {
+            answer: '',
+            answerSteps: ['', '', ''],
+            isFirstEdit: true,
+            isCardComplete: false,
+          },
+          incorrectCards: [
+            ...incompleteIncorrectAnswers,
+            ...completeIncorrectAnswers,
+          ],
+        }
+
+     const addNewDraftQuestion = () => {
+      setDraftQuestionsList((prev) => [...prev, newEmptyTemplate])
+     }
 
       const handlePublicPrivateQuestionChange = (value: PublicPrivateType) => {
         setPublicPrivateQuestion((prev) => value);

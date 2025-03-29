@@ -9,6 +9,7 @@ import {
 } from '@righton/networking';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from './context/useAPIClientsContext';
+import { ScreenSize } from '../lib/CentralModels';
 
 interface UseExploreQuestionsStateManagerProps {
   recommendedQuestions: IQuestionTemplate[];
@@ -19,6 +20,8 @@ interface UseExploreQuestionsStateManagerProps {
   searchTerms: string;
   selectedGrades: GradeTarget[];
   isTabsOpen: boolean;
+  selectQuestion: IQuestionTemplate | null;
+  questionSet: IQuestionTemplate[];
   setIsTabsOpen: (isOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (newSort: {
@@ -27,6 +30,11 @@ interface UseExploreQuestionsStateManagerProps {
   }) => void;
   handleSearchChange: (searchString: string) => void;
   loadMoreQuestions: () => void;
+  handleView: (
+    question: IQuestionTemplate,
+    questions: IQuestionTemplate[],
+  ) => void;
+  getLabel: (screen: ScreenSize, isSelected: boolean, value: string) => string;
 }
 
 export default function useExploreQuestionsStateManager(): UseExploreQuestionsStateManagerProps {
@@ -54,6 +62,8 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     direction: null,
   });
   const [isTabsOpen, setIsTabsOpen] = useState(false);
+    const [selectQuestion, setSelectedQuestion] = useState<IQuestionTemplate | null>(null);
+    const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
 
   const initQuestions = async () => {
     setIsLoading(true);
@@ -180,6 +190,23 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     }
   };
 
+ 
+
+  const handleView = (
+    question: IQuestionTemplate,
+    questions: IQuestionTemplate[],
+  ) => {
+    setSelectedQuestion(question);
+    setQuestionSet(questions);
+    setIsTabsOpen(true);
+  };
+
+  const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
+    if (screen === ScreenSize.LARGE) return value;
+    if (screen === ScreenSize.MEDIUM && isSelected) return value;
+    return '';
+  };
+
   useEffect(() => {
     try {
       initQuestions();
@@ -196,6 +223,10 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
     searchTerms,
     selectedGrades,
     isTabsOpen,
+    selectQuestion,
+    questionSet,
+    handleView,
+    getLabel,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
