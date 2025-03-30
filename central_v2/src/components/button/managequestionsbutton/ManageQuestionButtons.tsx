@@ -26,6 +26,9 @@ export default function ManageQuestionsButtons({
           {/* add new button representing question count */}
           {questionCount > 1 && iconButtons.slice(1).map((_, index) => (
              <AddMoreIconButton sx={{ 
+              ...(selectedIndex === index && {
+                  backgroundColor: (theme) => theme.palette.primary.mediumBlue
+              }),
                 fontFamily: 'Poppins', 
                 fontSize: '16px', 
                 width: '40px', 
@@ -38,6 +41,11 @@ export default function ManageQuestionsButtons({
           
           {/* Track current question */}
            <QuestionCountButton
+           sx={{ 
+            ...(iconButtons.length > 1 && selectedIndex === questionCount - 1 && {
+                backgroundColor: (theme) => theme.palette.primary.mediumBlue
+            }),
+          }}
            onClick={ () => setSelectedIndex(questionCount - 1)}
            endIcon={verticalEllipsis} 
            isDisabled={false}>
