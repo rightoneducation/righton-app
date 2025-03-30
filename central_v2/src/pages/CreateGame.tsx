@@ -4,7 +4,9 @@ import { debounce } from 'lodash';
 import {
   CentralQuestionTemplateInput,
   IGameTemplate,
+  IncorrectCard,
   IQuestionTemplate,
+  PublicPrivateType,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { Box, Fade } from '@mui/material';
@@ -13,7 +15,12 @@ import {
   CreateGameBackground,
   CreateGameBoxContainer,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
-import { CreateQuestionHighlightCard, ScreenSize, StorageKey, TemplateType } from '../lib/CentralModels';
+import {
+  CreateQuestionHighlightCard,
+  ScreenSize,
+  StorageKey,
+  TemplateType,
+} from '../lib/CentralModels';
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 
@@ -31,6 +38,16 @@ import tabDraftsIcon from '../images/tabDrafts.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
+import {
+  updateDQwithCorrectAnswer,
+  updateDQwithCorrectAnswerSteps,
+} from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import { updateDQwithCCSS } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import {
+  getNextHighlightCard,
+  handleMoveAnswerToComplete,
+  updateDQwithIncorrectAnswers,
+} from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -54,6 +71,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [questionCount, setQuestionCount] = useState<number>(1);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
+  const [isAIError, setIsAIError] = useState<boolean>(false);
   const {
     topRef,
     isGameCardSubmitted,
@@ -84,24 +102,23 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const {
     isClicked,
     isAIEnabled,
-    isAIError,
+    // isAIError,
     handleImageChange,
     handleImageSave,
     handleQuestionImageUploadClick,
-    handlePublicPrivateQuestionChange,
+    // handlePublicPrivateQuestionChange,
     handleAIError,
     handleAIIsEnabled,
     handleSaveQuestion,
     handleClick,
     handleCloseQuestionModal,
-    handleNextCardButtonClick,
-    handleIncorrectCardStackUpdate,
+    // handleNextCardButtonClick,
+    // handleIncorrectCardStackUpdate,
     handleCCSSClick,
     setDraftQuestion,
     setHighlightCard,
-    handleDebouncedCorrectAnswerChange,
-    handleDebouncedCorrectAnswerStepsChange,
-    publicPrivateQuestion,
+    // handleDebouncedCorrectAnswerStepsChange,
+    // publicPrivateQuestion,
     isQuestionCardSubmitted,
     isQuestionCardErrored,
     isCreatingTemplate,
@@ -110,8 +127,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     draftQuestion,
     isCCSSVisible,
     highlightCard,
-    completeIncorrectAnswers,
-    incompleteIncorrectAnswers,
+    // completeIncorrectAnswers,
+    // incompleteIncorrectAnswers,
   } = useCreateQuestion();
   const {
     recommendedQuestions,
@@ -147,8 +164,27 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       isCardComplete: false,
     },
     incorrectCards: [
-      ...incompleteIncorrectAnswers,
-      ...completeIncorrectAnswers,
+      {
+        id: 'card-1',
+        answer: '',
+        explanation: '',
+        isFirstEdit: true,
+        isCardComplete: false,
+      },
+      {
+        id: 'card-2',
+        answer: '',
+        explanation: '',
+        isFirstEdit: true,
+        isCardComplete: false,
+      },
+      {
+        id: 'card-3',
+        answer: '',
+        explanation: '',
+        isFirstEdit: true,
+        isCardComplete: false,
+      },
     ],
   };
   const [draftQuestionsList, setDraftQuestionsList] = useState<
@@ -161,50 +197,224 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const [isCCSSVisibleModal, setIsCCSSVisibleModal] = useState<boolean[]>(
     new Array(draftQuestionsList.length).fill(false),
   );
+  const [publicPrivateQuestion, setPublicPrivateQuestion] = useState<
+    PublicPrivateType[]
+  >(new Array(draftQuestionsList.length).fill(PublicPrivateType.PUBLIC));
   const handleDebouncedTitleChange = useCallback(// eslint-disable-line
-      (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
-        const updateDraftQuestions = [...draftQuestionsList];
-        const questionToUpdate =  updateDraftQuestions[selectedQuestionIndex];
-        const { isFirstEdit } = questionToUpdate.questionCard;
-        const newDraftQuestion = {
-          ...questionToUpdate,
-          questionCard: {
-            ...questionToUpdate.questionCard,
-            title,
-          }
-        };
-        updateDraftQuestions[selectedQuestionIndex] = newDraftQuestion;
-        setDraftQuestionsList(updateDraftQuestions);
-           if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
-                  setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-      },
+    (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
+      const updateDraftQuestions = [...draftQuestionsList];
+      const questionToUpdate = updateDraftQuestions[selectedQuestionIndex];
+      const { isFirstEdit } = questionToUpdate.questionCard;
+      const newDraftQuestion = {
+        ...questionToUpdate,
+        questionCard: {
+          ...questionToUpdate.questionCard,
+          title,
+        },
+      };
+      updateDraftQuestions[selectedQuestionIndex] = newDraftQuestion;
+      setDraftQuestionsList(updateDraftQuestions);
+      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+    },
     [draftQuestionsList, selectedQuestionIndex, setHighlightCard],
   );
 
-    const handleCCSSSubmit = (ccssString: string) => {
-      setIsCCSSVisibleModal((prev) => {
-        const curr = [...prev];
-        curr[selectedQuestionIndex] = false;
-        return curr;
-      })
-      const updatedDraftQuestionCCSS = [...draftQuestionsList];
-      const updateCCSS = updatedDraftQuestionCCSS[selectedQuestionIndex];
-      const { isFirstEdit } = updateCCSS.questionCard;
-      const newDraftQuestion = {
-        ...updateCCSS,
-        questionCard: {
-          ...updateCCSS.questionCard,
-          ccss: ccssString,
-        }
-      };
+  const handleCCSSSubmit = (ccssString: string) => {
+    setIsCCSSVisibleModal((prev) => {
+      const curr = [...prev];
+      curr[selectedQuestionIndex] = false;
+      return curr;
+    });
+    const updatedDraftQuestionCCSS = [...draftQuestionsList];
+    const updateCCSS = updatedDraftQuestionCCSS[selectedQuestionIndex];
+    const { isFirstEdit } = updateCCSS.questionCard;
 
-      updatedDraftQuestionCCSS[selectedQuestionIndex] = newDraftQuestion;
-    
-      setDraftQuestionsList(updatedDraftQuestionCCSS);
-      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
-        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-    };
-      
+    const newDraftQuestion = updateDQwithCCSS(updateCCSS, ccssString);
+
+    updatedDraftQuestionCCSS[selectedQuestionIndex] = newDraftQuestion;
+
+    setDraftQuestionsList(updatedDraftQuestionCCSS);
+    if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+      setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+  };
+
+  const handlePublicPrivateQuestionChange = (value: PublicPrivateType) => {
+    setPublicPrivateQuestion((prev) => {
+      const publicPrivate = [...prev];
+      publicPrivate[selectedQuestionIndex] = value;
+      return publicPrivate;
+    });
+  };
+
+  // correct card stack
+  const handleDebouncedCorrectAnswerChange = useCallback(// eslint-disable-line
+    (
+      correctAnswer: string,
+      draftQuestionInput: CentralQuestionTemplateInput,
+    ) => {
+      const currentCorrectAnswer = [...draftQuestionsList];
+      const updatedCorrectAnswer = currentCorrectAnswer[selectedQuestionIndex];
+      const { isFirstEdit } = updatedCorrectAnswer.correctCard;
+      const newDraftQuestion = updateDQwithCorrectAnswer(
+        updatedCorrectAnswer,
+        correctAnswer,
+      );
+      currentCorrectAnswer[selectedQuestionIndex] = newDraftQuestion;
+      setDraftQuestionsList(currentCorrectAnswer);
+      if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
+        setHighlightCard(
+          (prev) => CreateQuestionHighlightCard.INCORRECTANSWER1,
+        );
+    },
+    [draftQuestionsList, selectedQuestionIndex, setHighlightCard],
+  );
+
+  const handleDebouncedCorrectAnswerStepsChange = useCallback(// eslint-disable-line
+
+    (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
+      const draftCorrectAnswerSteps = [...draftQuestionsList];
+      const updatedDraftCorrectAnswerSteps =
+        draftCorrectAnswerSteps[selectedQuestionIndex];
+
+      const { isFirstEdit } = updatedDraftCorrectAnswerSteps.correctCard;
+      const newDraftQuestion = updateDQwithCorrectAnswerSteps(
+        updatedDraftCorrectAnswerSteps,
+        steps,
+      );
+      draftCorrectAnswerSteps[selectedQuestionIndex] = newDraftQuestion;
+      setDraftQuestionsList(draftCorrectAnswerSteps);
+      if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
+        setHighlightCard(
+          (prev) => CreateQuestionHighlightCard.INCORRECTANSWER1,
+        );
+    },
+    [draftQuestionsList, selectedQuestionIndex, setHighlightCard],
+  );
+
+  const handleIncorrectCardStackUpdate = (
+    cardData: IncorrectCard,
+    draftQuestionInput: CentralQuestionTemplateInput,
+    completeAnswers: IncorrectCard[],
+    incompleteAnswers: IncorrectCard[],
+    isAIEnabledCard?: boolean,
+  ) => {
+    const nextCard = getNextHighlightCard(
+      cardData.id as CreateQuestionHighlightCard,
+    );
+    const currentDraftQuestion = draftQuestionsList[selectedQuestionIndex];
+
+    const isUpdateInIncompleteCards = incompleteAnswers.find(
+      (answer) => answer.id === cardData.id,
+    );
+
+    const isCardComplete =
+      cardData.answer.length > 0 && cardData.explanation.length > 0;
+
+    if (isUpdateInIncompleteCards) {
+      setIsAIError(false);
+
+      const updatedIncorrectCards = incompleteAnswers.map((answer) => {
+        if (answer.id === cardData.id) {
+          return cardData;
+        }
+        return answer;
+      });
+
+      if (isCardComplete && !isAIEnabledCard) {
+        // adjust incomplete and complete arrays, moving completed card over
+        const { newIncompleteAnswers, newCompleteAnswers } =
+          handleMoveAnswerToComplete(updatedIncorrectCards, completeAnswers);
+        // // adjust local state for the cards so that they animate properly through the stack
+
+        const newDraftQuestion = updateDQwithIncorrectAnswers(
+          currentDraftQuestion,
+          newIncompleteAnswers,
+          newCompleteAnswers,
+        );
+
+        const updatedDraftQuestionsList = [...draftQuestionsList];
+        updatedDraftQuestionsList[selectedQuestionIndex] = newDraftQuestion;
+
+        setDraftQuestionsList(updatedDraftQuestionsList);
+
+        if (cardData.isFirstEdit)
+          setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
+      } else {
+        const newDraftQuestion = updateDQwithIncorrectAnswers(
+          currentDraftQuestion,
+          updatedIncorrectCards,
+          completeAnswers,
+        );
+
+        const updatedDraftQuestionsList = [...draftQuestionsList];
+        updatedDraftQuestionsList[selectedQuestionIndex] = newDraftQuestion;
+
+        setDraftQuestionsList(updatedDraftQuestionsList);
+      }
+    } else {
+      const updatedCompleteAnswers = completeAnswers.map((answer) =>
+        answer.id === cardData.id ? cardData : answer,
+      );
+      const updatedDraftQuestion = updateDQwithIncorrectAnswers(
+        currentDraftQuestion,
+        incompleteAnswers,
+        updatedCompleteAnswers,
+      );
+      const updatedDraftQuestionsList = [...draftQuestionsList];
+      updatedDraftQuestionsList[selectedQuestionIndex] = updatedDraftQuestion;
+      setDraftQuestionsList(updatedDraftQuestionsList);
+    }
+  };
+
+  const handleNextCardButtonClick = (cardData: IncorrectCard) => {
+    if (isAIError) setIsAIError(false);
+
+    // Access the current draft question
+    const currentDraftQuestion = draftQuestionsList[selectedQuestionIndex];
+
+    // Separate incomplete and complete answers from the currentDraftQuestion
+    const incompleteAnswers = currentDraftQuestion.incorrectCards.filter(
+      (answer) => !answer.isCardComplete,
+    );
+    const completeAnswers = currentDraftQuestion.incorrectCards.filter(
+      (answer) => answer.isCardComplete,
+    );
+
+    // Update the incomplete answers array with the new card data
+    const updatedAnswers = incompleteAnswers.map((answer) => {
+      if (answer.id === cardData.id) {
+        return cardData; // Update the card with the new data
+      }
+      return answer;
+    });
+
+    // Move the updated card to the correct stack if it's complete
+    const { newIncompleteAnswers, newCompleteAnswers } =
+      handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
+
+    // Create a new draft question object with the updated cards
+    const newDraftQuestion = updateDQwithIncorrectAnswers(
+      currentDraftQuestion,
+      newIncompleteAnswers,
+      newCompleteAnswers,
+    );
+
+    // Update the draftQuestionsList with the new draft question
+    const updatedDraftQuestionsList = [...draftQuestionsList];
+    updatedDraftQuestionsList[selectedQuestionIndex] = newDraftQuestion;
+
+    // Set the updated draft questions list state
+    setDraftQuestionsList(updatedDraftQuestionsList);
+
+    // Optionally handle the next card highlight if necessary
+    const nextCard = getNextHighlightCard(
+      cardData.id as CreateQuestionHighlightCard,
+    );
+    if (nextCard) {
+      setHighlightCard(nextCard);
+    }
+  };
 
   // game template functions
   const handleQuestionIndexChange = (index: number) => {
@@ -220,22 +430,27 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
 
   const handleImageUploadClick = (index: number) => {
     const updatedModalState = [...questionImageModalIsOpen];
-    updatedModalState[index] = true; // Open the modal for the specific question
+    updatedModalState[index] = true;
     setQuestionImageModalIsOpen(updatedModalState);
   };
 
   const handleCCSSClicks = (index: number) => {
     const updatedCCSSState = [...isCCSSVisibleModal];
-    updatedCCSSState[index] = true; // Open the modal for the specific question
+    updatedCCSSState[index] = true;
     setIsCCSSVisibleModal(updatedCCSSState);
   };
 
-  
   const handleDiscard = () => {
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
-  console.log('Draft Questions List: ', draftQuestionsList);
+
+  const completeIncorrectAnswers = draftQuestionsList[
+    selectedQuestionIndex
+  ].incorrectCards.filter((card) => card.isCardComplete);
+  const incompleteIncorrectAnswers = draftQuestionsList[
+    selectedQuestionIndex
+  ].incorrectCards.filter((card) => !card.isCardComplete);
 
   return (
     <CreateGameMainContainer ref={topRef} sx={{ overflowY: 'auto' }}>
