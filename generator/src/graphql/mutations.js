@@ -1,16 +1,18 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createQuestions = /* GraphQL */ `
-  mutation CreateQuestions(
-    $input: CreateQuestionsInput!
-    $condition: ModelQuestionsConditionInput
+export const createSavedExplanation = /* GraphQL */ `
+  mutation CreateSavedExplanation(
+    $input: CreateSavedExplanationInput!
+    $condition: ModelSavedExplanationConditionInput
   ) {
-    createQuestions(input: $input, condition: $condition) {
+    createSavedExplanation(input: $input, condition: $condition) {
       id
       question
       correctAnswer
-      wrongAnswers
+      wrongAnswer
+      genExplanation
+      discardedExplanations
       version
       createdAt
       updatedAt
@@ -18,16 +20,18 @@ export const createQuestions = /* GraphQL */ `
     }
   }
 `;
-export const updateQuestions = /* GraphQL */ `
-  mutation UpdateQuestions(
-    $input: UpdateQuestionsInput!
-    $condition: ModelQuestionsConditionInput
+export const updateSavedExplanation = /* GraphQL */ `
+  mutation UpdateSavedExplanation(
+    $input: UpdateSavedExplanationInput!
+    $condition: ModelSavedExplanationConditionInput
   ) {
-    updateQuestions(input: $input, condition: $condition) {
+    updateSavedExplanation(input: $input, condition: $condition) {
       id
       question
       correctAnswer
-      wrongAnswers
+      wrongAnswer
+      genExplanation
+      discardedExplanations
       version
       createdAt
       updatedAt
@@ -35,16 +39,18 @@ export const updateQuestions = /* GraphQL */ `
     }
   }
 `;
-export const deleteQuestions = /* GraphQL */ `
-  mutation DeleteQuestions(
-    $input: DeleteQuestionsInput!
-    $condition: ModelQuestionsConditionInput
+export const deleteSavedExplanation = /* GraphQL */ `
+  mutation DeleteSavedExplanation(
+    $input: DeleteSavedExplanationInput!
+    $condition: ModelSavedExplanationConditionInput
   ) {
-    deleteQuestions(input: $input, condition: $condition) {
+    deleteSavedExplanation(input: $input, condition: $condition) {
       id
       question
       correctAnswer
-      wrongAnswers
+      wrongAnswer
+      genExplanation
+      discardedExplanations
       version
       createdAt
       updatedAt
@@ -61,6 +67,7 @@ export const createDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
@@ -78,6 +85,7 @@ export const updateDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
@@ -95,6 +103,7 @@ export const deleteDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt

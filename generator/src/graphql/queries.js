@@ -1,13 +1,15 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getQuestions = /* GraphQL */ `
-  query GetQuestions($id: ID!) {
-    getQuestions(id: $id) {
+export const getSavedExplanation = /* GraphQL */ `
+  query GetSavedExplanation($id: ID!) {
+    getSavedExplanation(id: $id) {
       id
       question
       correctAnswer
-      wrongAnswers
+      wrongAnswer
+      genExplanation
+      discardedExplanations
       version
       createdAt
       updatedAt
@@ -15,18 +17,24 @@ export const getQuestions = /* GraphQL */ `
     }
   }
 `;
-export const listQuestions = /* GraphQL */ `
-  query ListQuestions(
-    $filter: ModelQuestionsFilterInput
+export const listSavedExplanations = /* GraphQL */ `
+  query ListSavedExplanations(
+    $filter: ModelSavedExplanationFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listSavedExplanations(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         question
         correctAnswer
-        wrongAnswers
+        wrongAnswer
+        genExplanation
+        discardedExplanations
         version
         createdAt
         updatedAt
@@ -43,6 +51,7 @@ export const getDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
@@ -66,6 +75,7 @@ export const listDiscardedExplanations = /* GraphQL */ `
         id
         question
         explanation
+        reason
         discardText
         version
         createdAt

@@ -16,7 +16,7 @@ export const MainContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   boxSizing: 'border-box',
   position: 'relative',
-  gap: '20px'
+  gap: '36px'
 }));
 
 export const HeaderContainer = styled(Box)(({ theme }) => ({
@@ -42,15 +42,15 @@ export const HeaderButtonContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: '8px',
   paddingLeft: '12px',
-  paddingRight: '12px'
+  paddingRight: '12px',
+  cursor: 'pointer',
 }));
 
 export const TextContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  paddingTop: `${theme.sizing.lgPadding}px`,
   display: 'flex', 
   flexDirection: 'column', 
-  gap: '20px',
+  gap: `${theme.sizing.smPadding}px`,
   alignItems: 'center',
   paddingLeft: `${theme.sizing.xLgPadding}px`,
   paddingRight: `${theme.sizing.xLgPadding}px`,
@@ -60,7 +60,6 @@ export const TextContainer = styled(Box)(({ theme }) => ({
 export const CardsContainer = styled(Grid)(({ theme }) => ({ 
   maxWidth: '1013px', 
   width: '100%',
-  flexGrow: 1,
   minHeight: 0, 
   marginTop: 0,
   boxSizing: 'border-box',
@@ -89,21 +88,18 @@ export const QuestionContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none',
-  '-webkit-overflow-scrolling': 'touch'
+  '-webkit-overflow-scrolling': 'touch',
+  gap: `${theme.sizing.smPadding}px`,
 }));
 
-export const ExplanationCardContainer = styled(Box)(({ theme }) => ({
+export const AllExplanationCardsContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex', 
   flexDirection: 'column',
   justifyContent: 'flex-start', 
   alignItems: 'center',
-  backgroundColor: `rgba(249, 245, 242, 1)`,
-  borderRadius: `${theme.sizing.smPadding}px`,
-  gap: 20,
-  padding: `${theme.sizing.smPadding}px`,
-  boxSizing: 'border-box',
+  gap: `${theme.sizing.smPadding}px`,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
@@ -114,12 +110,31 @@ export const ExplanationCardContainer = styled(Box)(({ theme }) => ({
   '-webkit-overflow-scrolling': 'touch'
 }));
 
-export const EmptyExplanationCardContainer = styled(ExplanationCardContainer)(({ theme }) => ({
+export const EmptyExplanationCardContainer = styled(AllExplanationCardsContainer)(({ theme }) => ({
+  alignItems: 'center',
   justifyContent: 'center', 
-  maxHeight: '606px',
+  position: 'relative',
+  height: '100%',
   backgroundColor: `rgba(249, 245, 242, 0.5)`,
   gap: '12px',
   padding: `${theme.sizing.mdPadding}px`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
+  boxSizing: 'border-box',
+  overflow: 'hidden',
+}));
+
+export const SingleExplanationCardContainer = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  paddingTop: '20px',
+  paddingBottom: '20px',
+  paddingLeft: '16px',
+  paddingRight: '16px',
+  backgroundColor: `rgba(249, 245, 242, 1)`,
+  borderRadius: `${theme.sizing.xSmPadding}px`,
+  boxSizing: 'border-box',
 }));
 
 interface FooterContainerProps {

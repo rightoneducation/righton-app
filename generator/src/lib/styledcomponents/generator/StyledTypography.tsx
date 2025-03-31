@@ -61,6 +61,12 @@ export const ExplanationTextStyled = styled(Typography)(({ theme }) => ({
   wordWrap: 'break-word'
 }));
 
+export const EditStatusTextStyled = styled(ExplanationTextStyled)(({ theme }) => ({
+  fontSize: '14px',
+  lineHeight: '14px',
+  paddingLeft: '8px',
+}));
+
 interface ButtonSubtextStyledProps {
   isDiscardEnabled?: boolean;
 }
@@ -89,4 +95,23 @@ export const DiscardTextStyled = styled(Typography)(({ theme }) => ({
   fontSize: '14px',
   lineHeight: '14px',
   color: `${theme.palette.primary.darkBlue}`,
+}));
+
+export const HowToTitleStyled = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Rubik',
+  fontSize: '16px',
+  lineHeight: '16px',
+  color: `${theme.palette.primary.darkBlue}`,
+}));
+
+export const HowToListItemStyled = styled('li')(({ theme }) => ({
+  fontFamily: 'Rubik',
+  fontSize: '16px',
+  lineHeight: '16px',
+  color: `${theme.palette.primary.darkBlue}`,
+}));
+
+
+export const HowToBulletItemStyled = styled(HowToListItemStyled)(({ theme }) => ({
+  marginBottom: '16px'
 }));

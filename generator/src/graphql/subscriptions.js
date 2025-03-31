@@ -1,15 +1,17 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateQuestions = /* GraphQL */ `
-  subscription OnCreateQuestions(
-    $filter: ModelSubscriptionQuestionsFilterInput
+export const onCreateSavedExplanation = /* GraphQL */ `
+  subscription OnCreateSavedExplanation(
+    $filter: ModelSubscriptionSavedExplanationFilterInput
   ) {
-    onCreateQuestions(filter: $filter) {
+    onCreateSavedExplanation(filter: $filter) {
       id
       question
       correctAnswer
-      wrongAnswers
+      wrongAnswer
+      genExplanation
+      discardedExplanations
       version
       createdAt
       updatedAt
@@ -17,15 +19,17 @@ export const onCreateQuestions = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateQuestions = /* GraphQL */ `
-  subscription OnUpdateQuestions(
-    $filter: ModelSubscriptionQuestionsFilterInput
+export const onUpdateSavedExplanation = /* GraphQL */ `
+  subscription OnUpdateSavedExplanation(
+    $filter: ModelSubscriptionSavedExplanationFilterInput
   ) {
-    onUpdateQuestions(filter: $filter) {
+    onUpdateSavedExplanation(filter: $filter) {
       id
       question
       correctAnswer
-      wrongAnswers
+      wrongAnswer
+      genExplanation
+      discardedExplanations
       version
       createdAt
       updatedAt
@@ -33,15 +37,17 @@ export const onUpdateQuestions = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteQuestions = /* GraphQL */ `
-  subscription OnDeleteQuestions(
-    $filter: ModelSubscriptionQuestionsFilterInput
+export const onDeleteSavedExplanation = /* GraphQL */ `
+  subscription OnDeleteSavedExplanation(
+    $filter: ModelSubscriptionSavedExplanationFilterInput
   ) {
-    onDeleteQuestions(filter: $filter) {
+    onDeleteSavedExplanation(filter: $filter) {
       id
       question
       correctAnswer
-      wrongAnswers
+      wrongAnswer
+      genExplanation
+      discardedExplanations
       version
       createdAt
       updatedAt
@@ -57,6 +63,7 @@ export const onCreateDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
@@ -73,6 +80,7 @@ export const onUpdateDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
@@ -89,6 +97,7 @@ export const onDeleteDiscardedExplanation = /* GraphQL */ `
       id
       question
       explanation
+      reason
       discardText
       version
       createdAt
