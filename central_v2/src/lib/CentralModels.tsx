@@ -64,3 +64,16 @@ export type CreateQuestionLocalData = {
   incompleteCards?: IncorrectCard[] | null,
   completeCards?: IncorrectCard[] | null
 }
+
+export enum FetchType {
+  EXPLORE_GAMES,
+  EXPLORE_QUESTIONS,
+  PUBLIC_GAMES,
+  PUBLIC_QUESTIONS,
+  PRIVATE_GAMES,
+  PRIVATE_QUESTIONS,
+  DRAFT_GAMES,
+  DRAFT_QUESTIONS,
+  FAVORITE_GAMES,
+  FAVORITE_QUESTIONS
+}

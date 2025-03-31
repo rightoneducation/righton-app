@@ -24,25 +24,8 @@ import LibraryTabsQuestions from './LibraryTabsQuestions';
 interface TabContainerProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
-  isTabsOpen: boolean;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  userProfile: IUserProfile;
-  recommendedGames: IGameTemplate[];
-  mostPopularGames: IGameTemplate[];
-  searchedGames: IGameTemplate[];
-  draftGames: IGameTemplate[];
-  favGames: IGameTemplate[];
-  recommendedQuestions: IQuestionTemplate[];
-  mostPopularQuestions: IQuestionTemplate[];
-  searchedQuestions: IQuestionTemplate[];
-  draftQuestions: IQuestionTemplate[];
-  favQuestions: IQuestionTemplate[];
-  nextToken: string | null;
-  isLoading: boolean;
-  searchTerms: string;
-  selectedGrades: GradeTarget[];
-  isFavTabOpen: boolean;
-  publicPrivate: PublicPrivateType;
+  fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -52,40 +35,17 @@ interface TabContainerProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
-  getDrafts: () => void;
-  loadMore: () => void;
 }
 
 export default function LibraryTabsContainer({
   gameQuestion,
-  isTabsOpen,
-  setIsTabsOpen,
-  userProfile,
   screenSize,
-  recommendedGames,
-  mostPopularGames,
-  searchedGames,
-  draftGames,
-  favGames,
-  recommendedQuestions,
-  mostPopularQuestions,
-  searchedQuestions,
-  draftQuestions,
-  favQuestions,
-  nextToken,
-  isLoading,
-  searchTerms,
-  selectedGrades,
-  isFavTabOpen,
-  publicPrivate,
+  setIsTabsOpen,
+  fetchElements,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  handlePublicPrivateChange,
-  getFav,
-  getDrafts,
-  loadMore
+  handlePublicPrivateChange
 }: TabContainerProps) {
   const theme = useTheme();
   const tabMap: { [key: number]: string } = {
@@ -116,61 +76,29 @@ export default function LibraryTabsContainer({
     <ContentFrame>
       { gameQuestion === GameQuestionType.GAME 
         ? <LibraryTabsGames
-            gameQuestion={gameQuestion}
+            screenSize={screenSize}
             tabMap={tabMap}
             tabIconMap={tabIconMap}
             getLabel={getLabel}
-            isTabsOpen={isTabsOpen} 
             setIsTabsOpen={setIsTabsOpen}
-            userProfile={userProfile} 
-            screenSize={screenSize} 
-            recommendedGames={recommendedGames}
-            mostPopularGames={mostPopularGames}
-            searchedGames={searchedGames}
-            draftGames={draftGames}
-            favGames={favGames}
-            nextToken={nextToken}
-            isLoading={isLoading}
-            searchTerms={searchTerms}
-            selectedGrades={selectedGrades}
-            isFavTabOpen={isFavTabOpen}
-            publicPrivate={publicPrivate}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
-            getDrafts={getDrafts}
-            loadMore={loadMore}
+            fetchElements={fetchElements}
             handleView={handleView}
           />
         : <LibraryTabsQuestions
-            gameQuestion={gameQuestion}
+            screenSize={screenSize}
             tabMap={tabMap}
             tabIconMap={tabIconMap}
             getLabel={getLabel}
-            isTabsOpen={isTabsOpen} 
             setIsTabsOpen={setIsTabsOpen}
-            userProfile={userProfile} 
-            screenSize={screenSize} 
-            recommendedQuestions={recommendedQuestions}
-            mostPopularQuestions={mostPopularQuestions}
-            searchedQuestions={searchedQuestions}
-            draftQuestions={draftQuestions}
-            favQuestions={favQuestions}
-            nextToken={nextToken}
-            isLoading={isLoading}
-            searchTerms={searchTerms}
-            selectedGrades={selectedGrades}
-            isFavTabOpen={isFavTabOpen}
-            publicPrivate={publicPrivate}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
-            getDrafts={getDrafts}
-            loadMore={loadMore}
+            fetchElements={fetchElements}
             handleView={handleView}
           />
       }

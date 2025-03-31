@@ -99,8 +99,7 @@ export abstract class BaseAPIClient {
     query: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-    console.log(authMode);
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
@@ -109,21 +108,21 @@ export abstract class BaseAPIClient {
     return (result as GraphqlSubscriptionResult<T>).subscribe !== undefined;
   }
 
-  protected mutateGraphQL<T>(
+  protected async mutateGraphQL<T>(
     mutation: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     const response = client.graphql({query: mutation, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
-  protected subscribeGraphQL<T>(
+  protected async subscribeGraphQL<T>(
     subscription: any,
     callback: (value: T) => void
   ) {
     //@ts-ignore
-    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     const result = client.graphql({
       query: subscription.query,
       variables: subscription.variables,
@@ -209,7 +208,7 @@ export abstract class BaseAPIClient {
         queryParameters.sortDirection = sortDirection;
       }
       console.log(queryParameters);
-      const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+      const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
       let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode })) as { data: any };
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {
         const operationResult = result.data[queryName];

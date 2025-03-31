@@ -3,8 +3,7 @@ import { useTheme, styled} from '@mui/material/styles';
 import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
-import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
-import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import RightOnLogo from "../images/RightOnLogo.png";
 import Adpic from "../images/@.svg"
 
@@ -171,14 +170,14 @@ export default function GoogleSignup({
 
     const buttonTypeStarted = ButtonType.GETSTARTED;
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
-    const userProfile = useUserProfileContext(UserProfileContext);
-    const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
+    const centralData = useCentralDataState();
+    const centralDataDispatch = useCentralDataDispatch();
 
     const handleGetStarted = async () => {
       try {
         if(frontImage && backImage) {
-          const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(userProfile, frontImage, backImage);
-          userProfileDispatch({type: 'update_user_profile', payload: response?.updatedUser});
+          const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(centralData.userProfile, frontImage, backImage);
+          centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
           // console.log("CurrentUserInfo: ", response?.updatedUser)
           navigate("/")
         }
@@ -198,10 +197,10 @@ export default function GoogleSignup({
             <TitleandNameMUI>
                 <TitleField
                 select
-                value={userProfile.title}
+                value={centralData.userProfile.title}
                 onChange={(event) => 
-                  userProfileDispatch({
-                    type: 'update_user_profile', 
+                  centralDataDispatch({
+                    type: 'SET_USER_PROFILE', 
                     payload: {title: event.target.value}
                   })
                 }
@@ -219,10 +218,10 @@ export default function GoogleSignup({
                 <TextContainerStyled
                 variant="outlined"
                 placeholder="First Name"
-                value={userProfile.firstName}
+                value={centralData.userProfile.firstName}
                 onChange={(event) => 
-                  userProfileDispatch({
-                    type: 'update_user_profile', 
+                  centralDataDispatch({
+                    type: 'SET_USER_PROFILE', 
                     payload: {firstName: event.target.value}
                   })
                 }
@@ -230,10 +229,10 @@ export default function GoogleSignup({
                 <TextContainerStyled
                 variant="outlined"
                 placeholder="Last Name"
-                value={userProfile.lastName}
+                value={centralData.userProfile.lastName}
                 onChange={(event) => 
-                  userProfileDispatch({
-                    type: 'update_user_profile', 
+                  centralDataDispatch({
+                    type: 'SET_USER_PROFILE', 
                     payload: {lastName: event.target.value}
                   })
                 }
@@ -244,10 +243,10 @@ export default function GoogleSignup({
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
-              value={userProfile.username}
+              value={centralData.userProfile.username}
               onChange={(event) => 
-                userProfileDispatch({
-                  type: 'update_user_profile', 
+                centralDataDispatch({
+                  type: 'SET_USER_PROFILE', 
                   payload: {username: event.target.value}
                 })
               }
