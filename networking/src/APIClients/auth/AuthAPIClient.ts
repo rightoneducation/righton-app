@@ -16,7 +16,7 @@ import {
   type ResetPasswordOutput,
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
-  AuthSession
+  AuthSession,
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
@@ -45,10 +45,7 @@ export class AuthAPIClient
     const session = await fetchAuthSession();
     console.log(session);
     if (session && session.tokens && session.tokens.accessToken) {
-      const groups = session.tokens.accessToken.payload["cognito:groups"];
-      if (Array.isArray(groups) && groups.includes('authusers')) {
         return true;
-      }
     };
     return false;
   }

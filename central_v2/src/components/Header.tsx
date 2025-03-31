@@ -285,6 +285,7 @@ export default function Header({
                   Questions
                 </ButtonText>
               </TransparentButton>
+              { userStatus === UserStatusType.LOGGEDIN && 
               <TransparentButton
                 disableRipple
                 onClick={() =>
@@ -300,6 +301,7 @@ export default function Header({
                   My Library
                 </ButtonText>
               </TransparentButton>
+              }
             </Box>
           ) : (
             <IconButton onClick={handleMenuToggle}>
@@ -374,19 +376,21 @@ export default function Header({
             }
             Questions
           </TransparentButton>
-          <TransparentButton
-            onClick={() =>
-              handleButtonClick(ScreenType.LIBRARY)
-            }
-            isActive={selectedScreen === ScreenType.LIBRARY}
-            menuOpen={menuOpen}
-          >
-            { selectedScreen === ScreenType.LIBRARY
-              ? <img src={libPink} alt="Library Icon" />
-              : <img src={lib} alt="Library Icon" />
-            }
-            My Library
-          </TransparentButton>
+          {userStatus === UserStatusType.LOGGEDIN && 
+            <TransparentButton
+              onClick={() =>
+                handleButtonClick(ScreenType.LIBRARY)
+              }
+              isActive={selectedScreen === ScreenType.LIBRARY}
+              menuOpen={menuOpen}
+            >
+              { selectedScreen === ScreenType.LIBRARY
+                ? <img src={libPink} alt="Library Icon" />
+                : <img src={lib} alt="Library Icon" />
+              }
+              My Library
+            </TransparentButton>
+          }
           {userStatus === UserStatusType.LOGGEDIN && createMenu}
         </Box>
       )}

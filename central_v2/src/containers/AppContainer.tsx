@@ -7,7 +7,6 @@ import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/us
 import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
-import { ModalBackground } from '../lib/styledcomponents/QuestionTabsStyledComponents';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 
 const ScreenContainer = styled(Box)(({ theme }) => ({
@@ -67,10 +66,6 @@ function AppContainer({
       setIsTabsOpen(false);
   }
 
-  // if (userStatus === UserStatusType.INCOMPLETE){
-  //   return fallbackComponent;
-  // }
-  
   return (
     <ScreenContainer>
       <HeaderContainer>
