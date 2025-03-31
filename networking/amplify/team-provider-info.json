@@ -17,7 +17,7 @@
         "mobile6060603cPostConfirmation": {
           "GROUP": "authusers",
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-464331594333592b642b-build.zip"
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-765637304e6857356974-build.zip"
         },
         "S3Trigger04eb3a91": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
@@ -35,6 +35,10 @@
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/uploadExternalImageToS3-4e55784e7a75437a4e33-build.zip"
         },
+        "userCleaner": {
+          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
+          "s3Key": "amplify-builds/userCleaner-796975387473466f346d-build.zip"
+        },
         "waegen": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/waegen-656a7761557067327232-build.zip"
@@ -42,10 +46,6 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
-        },
-        "userCleaner": {
-          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/userCleaner-796975387473466f346d-build.zip"
         }
       },
       "auth": {
@@ -54,9 +54,6 @@
       },
       "storage": {
         "rightoncentralstorage": {}
-      },
-      "api": {
-        "mobile": {}
       }
     }
   }

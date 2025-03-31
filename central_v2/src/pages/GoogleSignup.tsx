@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
 import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
 import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
-import RightOnLogo from "../images/RightOnLogo.png";
+import RightOnLogo from '../images/RightOnUserLogo.svg';
 import Adpic from "../images/@.svg"
 
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
