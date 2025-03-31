@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Box, TextField, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
-import RightOnLogo from '../images/RightOnLogo.png';
+import RightOnLogo from '../images/RightOnUserLogo.svg';
 import CentralButton from "../components/button/Button";
 import { ButtonType } from '../components/button/ButtonModels';
 import { APIClientsContext } from '../lib/context/APIClientsContext';

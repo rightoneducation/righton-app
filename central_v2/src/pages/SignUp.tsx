@@ -10,7 +10,7 @@ import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/c
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
-import RightOnLogo from "../images/RightOnLogo.png";
+import RightOnLogo from '../images/RightOnUserLogo.svg';
 import GoogleImageSvg from "../images/googleicon.svg";
 
 import Adpic from "../images/@.svg"
