@@ -40,7 +40,7 @@ export const BaseCardStyled = styled(Paper)<BaseCardStyledProps>(({ theme, isHig
   flexDirection: 'column',
   gap: `${theme.sizing.xSmPadding}px`,
   background: '#FFFFFF',
-  borderRadius: `${theme.sizing.smPadding}px`,
+  borderRadius: `8px`,
   boxSizing: 'border-box',
   height: 'fit-content',
   boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',

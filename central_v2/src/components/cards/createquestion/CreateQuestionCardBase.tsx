@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   PublicPrivateType,
@@ -28,6 +29,8 @@ import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from './ErrorBox';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
+import { SelectArrowContainer } from '../../../lib/styledcomponents/SelectGrade';
+import SelectArrow from '../../../images/dropDownArrow.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;

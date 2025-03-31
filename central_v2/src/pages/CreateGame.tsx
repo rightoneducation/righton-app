@@ -40,12 +40,14 @@ import ImageUploadModal from '../components/modal/ImageUploadModal';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
 import {
   updateDQwithCorrectAnswer,
+  updateDQwithCorrectAnswerClick,
   updateDQwithCorrectAnswerSteps,
 } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
-import { updateDQwithCCSS, updateDQwithImage, updateDQwithImageURL } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import { updateDQwithCCSS, updateDQwithImage, updateDQwithImageURL, updateDQwithQuestionClick } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 import {
   getNextHighlightCard,
   handleMoveAnswerToComplete,
+  updateDQwithIncorrectAnswerClick,
   updateDQwithIncorrectAnswers,
 } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 
@@ -71,7 +73,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [questionCount, setQuestionCount] = useState<number>(1);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
-  const [isAIError, setIsAIError] = useState<boolean>(false);
+  // const [isAIError, setIsAIError] = useState<boolean>(false);
   const {
     topRef,
     isGameCardSubmitted,
@@ -101,16 +103,16 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   } = useCreateGame();
   const {
     isClicked,
-    isAIEnabled,
+    // isAIEnabled,
     // isAIError,
     // handleImageChange,
     // handleImageSave,
     handleQuestionImageUploadClick,
     // handlePublicPrivateQuestionChange,
     handleAIError,
-    handleAIIsEnabled,
+    // handleAIIsEnabled,
     handleSaveQuestion,
-    handleClick,
+    // handleClick,
     handleCloseQuestionModal,
     // handleNextCardButtonClick,
     // handleIncorrectCardStackUpdate,
@@ -203,7 +205,25 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const [isImageUploadVisible, setIsImageUploadVisible] =
   useState<boolean[]>(new Array(draftQuestionsList.length).fill(false));
 const [isImageURLVisible, setIsImageURLVisible] = useState<boolean[]>(new Array(draftQuestionsList.length).fill(false));
-  const handleDebouncedTitleChange = useCallback(// eslint-disable-line
+const [isAIEnabled, setIsAIEnabled] = useState<boolean[]>(new Array(draftQuestionsList.length).fill(false));
+
+const [isAIError, setIsAIError] = useState<boolean[]>(new Array(draftQuestionsList.length).fill(false));
+
+const handleAIIsEnabled = () => {
+  setIsAIEnabled((prev) => {
+    const AIListState = [...prev];
+    AIListState[selectedQuestionIndex] = !prev[selectedQuestionIndex];
+    return AIListState;
+  });
+
+  setIsAIError((prev) => {
+    const AIListState = [...prev];
+    AIListState[selectedQuestionIndex] = !prev[selectedQuestionIndex];
+    return AIListState;
+  });
+}
+
+const handleDebouncedTitleChange = useCallback(// eslint-disable-line
     (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
       const updateDraftQuestions = [...draftQuestionsList];
       const questionToUpdate = updateDraftQuestions[selectedQuestionIndex];
@@ -315,7 +335,11 @@ const [isImageURLVisible, setIsImageURLVisible] = useState<boolean[]>(new Array(
       cardData.answer.length > 0 && cardData.explanation.length > 0;
 
     if (isUpdateInIncompleteCards) {
-      setIsAIError(false);
+      setIsAIError((prev) => {
+        const AIErrorStates = [...prev];
+        AIErrorStates[selectedQuestionIndex] = false;
+        return AIErrorStates;
+      });
 
       const updatedIncorrectCards = incompleteAnswers.map((answer) => {
         if (answer.id === cardData.id) {
@@ -371,7 +395,11 @@ const [isImageURLVisible, setIsImageURLVisible] = useState<boolean[]>(new Array(
   };
 
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
-    if (isAIError) setIsAIError(false);
+    if (isAIError) setIsAIError((prev) => {
+      const AIErrorStates = [...prev];
+      AIErrorStates[selectedQuestionIndex] = false;
+      return AIErrorStates;
+    });
 
     const currentDraftQuestion = draftQuestionsList[selectedQuestionIndex];
 
@@ -511,6 +539,48 @@ const [isImageURLVisible, setIsImageURLVisible] = useState<boolean[]>(new Array(
     
   };
 
+  const handleClick = (cardType: CreateQuestionHighlightCard) => {
+    const updatedDraftQuestionsList = [...draftQuestionsList];
+  const currentDraftQuestion = updatedDraftQuestionsList[selectedQuestionIndex]; 
+      switch (cardType) {
+        case CreateQuestionHighlightCard.CORRECTANSWER:
+          if (currentDraftQuestion.correctCard.isCardComplete) {
+            const newDraftQuestion =
+              updateDQwithCorrectAnswerClick(currentDraftQuestion);
+              updatedDraftQuestionsList[selectedQuestionIndex] = newDraftQuestion;
+              setDraftQuestionsList(updatedDraftQuestionsList)
+          }
+          break;
+        case CreateQuestionHighlightCard.INCORRECTANSWER1:
+        case CreateQuestionHighlightCard.INCORRECTANSWER2:
+        case CreateQuestionHighlightCard.INCORRECTANSWER3: {
+          // then we can update the draftQuestion for the api call and the localStorage for retreival, respectively
+          const newDraftQuestion = updateDQwithIncorrectAnswerClick(
+            currentDraftQuestion,
+            cardType,
+          );
+          window.localStorage.setItem(
+            StorageKey,
+            JSON.stringify(newDraftQuestion),
+          );
+          setDraftQuestion(newDraftQuestion);
+          break;
+        }
+        case CreateQuestionHighlightCard.QUESTIONCARD:
+        default:
+          if (currentDraftQuestion.questionCard.isCardComplete) {
+            const newDraftQuestion = updateDQwithQuestionClick(currentDraftQuestion);
+            window.localStorage.setItem(
+              StorageKey,
+              JSON.stringify(newDraftQuestion),
+            );
+            updatedDraftQuestionsList[selectedQuestionIndex] = newDraftQuestion;
+            setDraftQuestionsList(updatedDraftQuestionsList);
+          }
+          break;
+      }
+    };
+
 
   const handleCCSSClicks = (index: number) => {
     const updatedCCSSState = [...isCCSSVisibleModal];
@@ -639,8 +709,8 @@ const [isImageURLVisible, setIsImageURLVisible] = useState<boolean[]>(new Array(
                     isCardSubmitted={isQuestionCardSubmitted}
                     isCardErrored={isQuestionCardErrored}
                     highlightCard={highlightCard}
-                    isAIEnabled={isAIEnabled}
-                    isAIError={isAIError}
+                    isAIEnabled={isAIEnabled[selectedQuestionIndex]}
+                    isAIError={isAIError[selectedQuestionIndex]}
                     handleDebouncedCorrectAnswerChange={
                       handleDebouncedCorrectAnswerChange
                     }
@@ -662,7 +732,7 @@ const [isImageURLVisible, setIsImageURLVisible] = useState<boolean[]>(new Array(
                     handleClick={handleClick}
                     handleCCSSClick={() => handleCCSSClicks(index)}
                     handleImageUploadClick={() => handleImageUploadClick(index)}
-                  />{' '}
+                  />
                 </Box>
               </Fade>
             ),
