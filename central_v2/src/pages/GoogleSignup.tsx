@@ -4,7 +4,7 @@ import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, List
 import { useNavigate } from 'react-router-dom'; 
 import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
-import RightOnLogo from "../images/RightOnLogo.png";
+import RightOnLogo from '../images/RightOnUserLogo.svg';
 import Adpic from "../images/@.svg"
 
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';

@@ -11,7 +11,7 @@ import {
     TextContainerStyled,
   } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
-import RightOnLogo from "../images/RightOnLogo.png";
+import RightOnLogo from '../images/RightOnUserLogo.svg';
 import ModalBackground from '../components/modal/ModalBackground';
 
 // Styled components
