@@ -14,6 +14,8 @@ import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcompon
 interface MyLibraryProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
+  isLibraryInit: boolean;
+  setIsLibraryInit: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -30,6 +32,8 @@ interface MyLibraryProps {
 export default function MyLibrary({ 
   gameQuestion,
   screenSize,
+  isLibraryInit,
+  setIsLibraryInit,
   setIsTabsOpen,
   handleChooseGrades,
   handleSortChange,
@@ -43,6 +47,8 @@ export default function MyLibrary({
         <LibraryTabsContainer 
           gameQuestion={gameQuestion}
           screenSize={screenSize}
+          isLibraryInit={isLibraryInit}
+          setIsLibraryInit={setIsLibraryInit}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}

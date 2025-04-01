@@ -32,8 +32,6 @@ interface UseCentralDataManagerReturnProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
-  getFav: (user: IUserProfile) => void;
-  getDrafts: () => void;
   loadMore: () => void;
 }
 
@@ -518,8 +516,6 @@ export default function useCentralDataManager({
     handleSortChange,
     handleSearchChange,
     getPublicPrivateElements,
-    getFav,
-    getDrafts,
     loadMore,
   };
 }

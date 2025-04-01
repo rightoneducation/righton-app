@@ -173,6 +173,7 @@ export abstract class BaseAPIClient {
       let searchFilter: any = {};
       let gradeFilter: any = {};
       let favFilter: any = {};
+      console.log('Here');
       const filterStringLowerCase = filterString?.toLowerCase();
       if (favIds && favIds.length > 0) {
         favFilter = {
@@ -212,7 +213,7 @@ export abstract class BaseAPIClient {
       if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {
         const operationResult = result.data[queryName];
         const parsedNextToken = operationResult.nextToken;
-        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate" || awsType === "DraftGameTemplate" || awsType === "FavGameTemplate") {
           const gameTemplates = operationResult.items.map((item: any) => 
               GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
           );
@@ -224,7 +225,7 @@ export abstract class BaseAPIClient {
           return { questionTemplates, nextToken: parsedNextToken };
         }
       }
-      if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+      if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate" || awsType === "DraftGameTemplate" || awsType === "FavGameTemplate") {
         return { gameTemplates: [], nextToken: null };
       } else {
         return { questionTemplates: [], nextToken: null };

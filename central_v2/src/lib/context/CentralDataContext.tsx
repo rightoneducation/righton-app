@@ -38,7 +38,7 @@ const initCentralDataState: ICentralDataState = {
   isFavTabOpen: false,
   publicPrivate: PublicPrivateType.PUBLIC,
   sort: {
-    field: SortType.listGameTemplatesByDate,
+    field: SortType.listGameTemplates,
     direction: SortDirection.ASC,
   }
 }
@@ -53,7 +53,7 @@ export const CentralDataDispatchContext = createContext<React.Dispatch<any> | un
 
 export function CentralDataProvider ({ children }: { children: React.ReactNode }) {
   const [centralData, centralDataDispatch] = useReducer(centralDataReducer, initCentralDataState);
-
+  console.log(centralData);
   return (
     <CentralDataStateContext.Provider value={centralData}>
       <CentralDataDispatchContext.Provider value={centralDataDispatch}>
