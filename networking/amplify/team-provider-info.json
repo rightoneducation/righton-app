@@ -14,11 +14,6 @@
     },
     "categories": {
       "function": {
-        "mobile6060603cPostConfirmation": {
-          "GROUP": "authusers",
-          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-765637304e6857356974-build.zip"
-        },
         "S3Trigger04eb3a91": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/S3Trigger04eb3a91-62396f4b372b526b2f32-build.zip"
@@ -46,6 +41,15 @@
         "waeregen": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
           "s3Key": "amplify-builds/waeregen-3149317a6f4c46505148-build.zip"
+        },
+        "userCleaner": {
+          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
+          "s3Key": "amplify-builds/userCleaner-796975387473466f346d-build.zip"
+        },
+        "mobile6060603cPostConfirmation": {
+          "GROUP": "authusers",
+          "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
+          "s3Key": "amplify-builds/mobile6060603cPostConfirmation-765637304e6857356974-build.zip"
         }
       },
       "auth": {

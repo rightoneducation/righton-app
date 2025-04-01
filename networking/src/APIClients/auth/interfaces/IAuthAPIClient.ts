@@ -9,7 +9,6 @@ import { IUserProfile } from "../../../Models/IUserProfile";
 
 export interface IAuthAPIClient {
   isUserAuth: boolean;
-  init(): Promise<void>;
   configAmplify(awsconfig: any): void;
   verifyAuth(): Promise<boolean>;
   verifyGameOwner(gameOwner: string): Promise<boolean>;
@@ -17,8 +16,6 @@ export interface IAuthAPIClient {
   getCurrentUserName(): Promise<string>;
   getCurrentSession(): Promise<AuthSession>;
   getUserNickname(): Promise<string | null>;
-  authEvents(payload: any): void;
-  authListener(): void;
   awsUserCleaner(userProfile: IUserProfile): Promise<void>;
   awsSignUp(username: string, email: string, password: string): void;
   awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput>;

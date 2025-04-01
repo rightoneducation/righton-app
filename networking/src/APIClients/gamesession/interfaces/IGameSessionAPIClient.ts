@@ -23,7 +23,7 @@ export interface IGameSessionAPIClient {
   subscribeUpdateGameSession(
     id: string,
     callback: (result: IGameSession) => void
-  ): Subscription;
+  ): Promise<Subscription>;
 
   getGameSessionByCode(gameCode: number): Promise<IGameSession | null>;
 }

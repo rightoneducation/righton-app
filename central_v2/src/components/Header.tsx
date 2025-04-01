@@ -16,7 +16,7 @@ import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
 import createDropdownGame from '../images/createDropdownGame.svg';
 import createDropdownQuestion from '../images/createDropdownQuestion.svg'
-import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
+import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
@@ -31,7 +31,7 @@ interface HeaderProps {
   setMenuOpen: (menuOpen: boolean) => void;
   gameQuestion?: GameQuestionType;
   setGameQuestion?: (gameQuestion: GameQuestionType) => void;
-  isUserLoggedIn: boolean;
+  userStatus: UserStatusType;
 }
 
 interface HeaderContainerProps {
@@ -161,7 +161,7 @@ export default function Header({
   setMenuOpen,
   gameQuestion,
   setGameQuestion,
-  isUserLoggedIn
+  userStatus,
 }: HeaderProps) {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -286,6 +286,7 @@ export default function Header({
                   Questions
                 </ButtonText>
               </TransparentButton>
+              { userStatus === UserStatusType.LOGGEDIN && 
               <TransparentButton
                 disableRipple
                 onClick={() =>
@@ -301,6 +302,7 @@ export default function Header({
                   My Library
                 </ButtonText>
               </TransparentButton>
+              }
             </Box>
           ) : (
             <IconButton onClick={handleMenuToggle}>
@@ -312,7 +314,7 @@ export default function Header({
           )}
         </ImageContainer>
         <Box style={{width: 'fit-content', display: 'flex', gap: '16px', justifyContent: 'center'}}>
-          {isUserLoggedIn 
+          {userStatus === UserStatusType.LOGGEDIN 
             ? loggedInUserComponents
             :
               <>
@@ -375,20 +377,22 @@ export default function Header({
             }
             Questions
           </TransparentButton>
-          <TransparentButton
-            onClick={() =>
-              handleButtonClick(ScreenType.LIBRARY)
-            }
-            isActive={selectedScreen === ScreenType.LIBRARY}
-            menuOpen={menuOpen}
-          >
-            { selectedScreen === ScreenType.LIBRARY
-              ? <img src={libPink} alt="Library Icon" />
-              : <img src={lib} alt="Library Icon" />
-            }
-            My Library
-          </TransparentButton>
-          {isUserLoggedIn && createMenu}
+          {userStatus === UserStatusType.LOGGEDIN && 
+            <TransparentButton
+              onClick={() =>
+                handleButtonClick(ScreenType.LIBRARY)
+              }
+              isActive={selectedScreen === ScreenType.LIBRARY}
+              menuOpen={menuOpen}
+            >
+              { selectedScreen === ScreenType.LIBRARY
+                ? <img src={libPink} alt="Library Icon" />
+                : <img src={lib} alt="Library Icon" />
+              }
+              My Library
+            </TransparentButton>
+          }
+          {userStatus === UserStatusType.LOGGEDIN && createMenu}
         </Box>
       )}
      </>
