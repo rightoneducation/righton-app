@@ -42,7 +42,7 @@ function AppSwitch() {
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
-    handlePublicPrivateChange,
+    getPublicPrivateElements,
     getFav,
     getDrafts,
     loadMore,
@@ -78,7 +78,7 @@ function AppSwitch() {
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
+            handlePublicPrivateChange={getPublicPrivateElements}
             fetchElements={fetchElements}
           />
         </AuthGuard>

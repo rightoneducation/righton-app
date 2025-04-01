@@ -60,7 +60,7 @@ export default function LibraryTabsGames({
 const centralData = useCentralDataState();
 const centralDataDispatch = useCentralDataDispatch();
 const isSearchResults = centralData.searchTerms.length > 0;
-const [openTab, setOpenTab] = React.useState(0);
+const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBLIC);
 const [hasInitialized, setHasInitialized] = useState(false);    
 if (!hasInitialized) {
   const needsFetch = centralData.mostPopularGames.length === 0; 
@@ -70,30 +70,26 @@ if (!hasInitialized) {
   setHasInitialized(true);
 }
 
-const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-  if (newValue === 0)
-    handlePublicPrivateChange(PublicPrivateType.PUBLIC);
-  if (newValue === 1)
-    handlePublicPrivateChange(PublicPrivateType.PRIVATE);
-  setOpenTab(newValue);
-  fetchElements(newValue);
+const handleChange = (event: React.SyntheticEvent, newTab: LibraryTabEnum) => {
+  setOpenTab(newTab);
+  fetchElements(newTab);
 };
 
 const getElements = () => {
   switch (openTab){
-    case 3:
+    case LibraryTabEnum.FAVORITES:
       if (isSearchResults)
         return centralData.searchedGames.filter((game) => centralData.favGames.map((favGame) => favGame.id).includes(game.id));
       return centralData.favGames;
-    case 2:
+    case LibraryTabEnum.DRAFTS:
       if (isSearchResults)
         return centralData.searchedGames.filter((game) => centralData.draftGames.map((draftGame) => draftGame.id).includes(game.id));
       return centralData.draftGames;
-    case 1:
+    case LibraryTabEnum.PRIVATE:
       if (isSearchResults)
         return centralData.searchedGames.filter((game) => centralData.privateGames.map((privateGame) => privateGame.id).includes(game.id));
       return centralData.privateGames;
-    case 0:
+    case LibraryTabEnum.PUBLIC:
     default:
       if (isSearchResults)
         return centralData.searchedGames.filter((game) => centralData.publicGames.map((publicGame) => publicGame.id).includes(game.id));

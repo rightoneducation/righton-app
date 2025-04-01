@@ -48,17 +48,17 @@ export default function LibraryTabsContainer({
   handlePublicPrivateChange
 }: TabContainerProps) {
   const theme = useTheme();
-  const tabMap: { [key: number]: string } = {
-    0: 'Public',
-    1: 'Private',
-    2: 'Drafts',
-    3: 'Favorites',
+  const tabMap: { [key in LibraryTabEnum]: string } = {
+    [LibraryTabEnum.PUBLIC]: 'Public',
+    [LibraryTabEnum.PRIVATE]: 'Private',
+    [LibraryTabEnum.DRAFTS]: 'Drafts',
+    [LibraryTabEnum.FAVORITES]: 'Favorites',
   };
-  const tabIconMap: { [key: number]: string } = {
-    0: tabExploreQuestionsIcon,
-    1: tabPrivateIcon,
-    2: tabDraftsIcon,
-    3: tabFavoritesIcon,
+  const tabIconMap: { [key in LibraryTabEnum]: string } = {
+    [LibraryTabEnum.PUBLIC]: tabExploreQuestionsIcon,
+    [LibraryTabEnum.PRIVATE]: tabPrivateIcon,
+    [LibraryTabEnum.DRAFTS]: tabDraftsIcon,
+    [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
   };
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE)
@@ -73,36 +73,36 @@ export default function LibraryTabsContainer({
 
   return (
     <LibraryTabsStyledContainer>
-    <ContentFrame>
-      { gameQuestion === GameQuestionType.GAME 
-        ? <LibraryTabsGames
-            screenSize={screenSize}
-            tabMap={tabMap}
-            tabIconMap={tabIconMap}
-            getLabel={getLabel}
-            setIsTabsOpen={setIsTabsOpen}
-            handleChooseGrades={handleChooseGrades}
-            handleSortChange={handleSortChange}
-            handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
-            fetchElements={fetchElements}
-            handleView={handleView}
-          />
-        : <LibraryTabsQuestions
-            screenSize={screenSize}
-            tabMap={tabMap}
-            tabIconMap={tabIconMap}
-            getLabel={getLabel}
-            setIsTabsOpen={setIsTabsOpen}
-            handleChooseGrades={handleChooseGrades}
-            handleSortChange={handleSortChange}
-            handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
-            fetchElements={fetchElements}
-            handleView={handleView}
-          />
-      }
-    </ContentFrame>
-  </LibraryTabsStyledContainer>
+      <ContentFrame>
+        { gameQuestion === GameQuestionType.GAME 
+          ? <LibraryTabsGames
+              screenSize={screenSize}
+              tabMap={tabMap}
+              tabIconMap={tabIconMap}
+              getLabel={getLabel}
+              setIsTabsOpen={setIsTabsOpen}
+              handleChooseGrades={handleChooseGrades}
+              handleSortChange={handleSortChange}
+              handleSearchChange={handleSearchChange}
+              handlePublicPrivateChange={handlePublicPrivateChange}
+              fetchElements={fetchElements}
+              handleView={handleView}
+            />
+          : <LibraryTabsQuestions
+              screenSize={screenSize}
+              tabMap={tabMap}
+              tabIconMap={tabIconMap}
+              getLabel={getLabel}
+              setIsTabsOpen={setIsTabsOpen}
+              handleChooseGrades={handleChooseGrades}
+              handleSortChange={handleSortChange}
+              handleSearchChange={handleSearchChange}
+              handlePublicPrivateChange={handlePublicPrivateChange}
+              fetchElements={fetchElements}
+              handleView={handleView}
+            />
+        }
+      </ContentFrame>
+    </LibraryTabsStyledContainer>
   );
 }

@@ -79,6 +79,8 @@ const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 };
 
 const getElements = () => {
+  console.log('getElements', openTab);
+  console.log(centralData.favQuestions);
   if (centralData.favQuestions.length > 0 && openTab === 3){
     if (isSearchResults)
       return centralData.searchedQuestions.filter((question) => centralData.favQuestions.map((favQuestion) => favQuestion.id).includes(question.id));

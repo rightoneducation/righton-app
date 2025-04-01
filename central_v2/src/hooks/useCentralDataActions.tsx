@@ -31,7 +31,7 @@ interface UseCentralDataManagerReturnProps {
     }
   ) => void;
   handleSearchChange: (searchString: string) => void;
-  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   getFav: (user: IUserProfile) => void;
   getDrafts: () => void;
   loadMore: () => void;
@@ -221,7 +221,7 @@ export default function useCentralDataManager({
     );
   };
 
-  const handlePublicPrivateChange = (newPublicPrivate: PublicPrivateType) => {
+  const getPublicPrivateElements = (newPublicPrivate: PublicPrivateType) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: null });
     centralDataDispatch({ type: 'SET_PUBLIC_PRIVATE', payload: newPublicPrivate });
@@ -231,7 +231,7 @@ export default function useCentralDataManager({
           apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
               newPublicPrivate,
-              null,
+              limit,
               null,
               centralData.searchTerms,
               centralData.sort.direction ?? SortDirection.ASC,
@@ -259,7 +259,7 @@ export default function useCentralDataManager({
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             newPublicPrivate,
-            null,
+            limit,
             null,
             centralData.searchTerms,
             centralData.sort.direction ?? SortDirection.ASC,
@@ -379,7 +379,6 @@ export default function useCentralDataManager({
   };
 
   const getFav = async (user: IUserProfile) => {
-    console.log(user.favoriteGameTemplateIds)
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
@@ -427,10 +426,8 @@ export default function useCentralDataManager({
       if (isLibrary && tab !== undefined) {
         switch(tab){
           case LibraryTabEnum.FAVORITES: 
-            console.log('favorite');
             return gameQuestion === GameQuestionType.GAME ? FetchType.FAVORITE_GAMES : FetchType.FAVORITE_QUESTIONS;
           case LibraryTabEnum.DRAFTS: 
-            console.log('draft');
             return gameQuestion === GameQuestionType.GAME ? FetchType.DRAFT_GAMES : FetchType.DRAFT_QUESTIONS;
           case LibraryTabEnum.PRIVATE:
             return gameQuestion === GameQuestionType.GAME ? FetchType.PRIVATE_GAMES : FetchType.PRIVATE_QUESTIONS;
@@ -449,11 +446,11 @@ export default function useCentralDataManager({
     switch (fetchType) {
       case FetchType.PUBLIC_GAMES:
       case FetchType.PUBLIC_QUESTIONS:
-        handlePublicPrivateChange(PublicPrivateType.PUBLIC);
+        getPublicPrivateElements(PublicPrivateType.PUBLIC);
         break;
       case FetchType.PRIVATE_QUESTIONS:
       case FetchType.PRIVATE_GAMES:
-        handlePublicPrivateChange(PublicPrivateType.PRIVATE);
+        getPublicPrivateElements(PublicPrivateType.PRIVATE);
         break;
       case FetchType.DRAFT_QUESTIONS:
       case FetchType.DRAFT_GAMES: 
@@ -485,7 +482,6 @@ export default function useCentralDataManager({
 
   // useEffect for monitoring changes to auth status of Cognito User
   useEffect(() => {
-    console.log('authChange useEffect running');
     if (apiClients.auth.isUserAuth) 
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
@@ -511,7 +507,6 @@ export default function useCentralDataManager({
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
-    console.log('validateUser useEffect running');
     validateUser();
   }, []); // eslint-disable-line
 
@@ -522,7 +517,7 @@ export default function useCentralDataManager({
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
-    handlePublicPrivateChange,
+    getPublicPrivateElements,
     getFav,
     getDrafts,
     loadMore,
