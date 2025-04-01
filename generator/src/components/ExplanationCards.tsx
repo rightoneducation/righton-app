@@ -43,11 +43,13 @@ export const ExplanationCards = ({
             exit={{ opacity: 0 }}
           >
             <EmptyExplanationCardContainer style={{ height: '100%', position: 'relative' }}>
+              { (isQuestionGenerating || isExplanationRegenerating) &&
               <PlaceholderHeaderStyled>
                 💡 Explanations Loading...
               </PlaceholderHeaderStyled>
+              }
               <PlaceholderBodyStyled>
-                Fill out all fields to generate AI-powered explanations.
+                {!isQuestionGenerating && !isExplanationRegenerating && '💡'} Fill out all fields to generate AI-powered explanations.
               </PlaceholderBodyStyled>
               {isQuestionGenerating && (
                 (screenSize != ScreenSize.SMALL) ? (
