@@ -13,6 +13,21 @@ export type TPhaseTime = {
   phaseTwo: string;
 };
 
+type TGameTemplateProps = {
+  isGameCardSubmitted: boolean;
+  questionCount: number;
+  openQuestionBank: boolean;
+  openCreateQuestion: boolean;
+  publicPrivateGame: PublicPrivateType
+  isGameCardErrored: boolean;
+  gameTitle: string;
+  gameDescription: string;
+  phaseTime: TPhaseTime,
+  isGameImageUploadVisible: boolean;
+  isGameURLUPloadVisible: boolean;
+  shouldOpen: boolean;
+}
+
 const useCreateGame = () => {
   const navigate = useNavigate();
   const questionComponentRef = useRef<HTMLDivElement | null>(null);
@@ -58,11 +73,6 @@ const useCreateGame = () => {
     }));
   };
 
-  const handleSaveGame = useCallback(async () => {
-    // api call goes here.
-    // game card errors should be handled here too.
-    setIsGameCardSubmitted(true);
-  }, []);
 
   const handleOpenCreateQuestion = useCallback(() => {
     if (openQuestionBank && shouldOpenOnClick) {
@@ -98,6 +108,13 @@ const useCreateGame = () => {
   const handleCloseGameCardModal = () => {
     setIsGameImageUploadVisible(false)
   }
+
+  const handleSaveGame = useCallback(async () => {
+    // api call goes here.
+    // game card errors should be handled here too.
+    setIsGameCardSubmitted(true);
+  }, []);
+
 
   return {
     questionComponentRef,

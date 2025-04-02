@@ -34,74 +34,93 @@ import {
   updateDQwithIncorrectAnswers,
 } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 
-const useCreateQuestion = () => {
+export type TDraftQuestionsList = {
+  publicPrivate: PublicPrivateType;
+  isAIEnabled: boolean;
+  isAIError: boolean;
+  question: CentralQuestionTemplateInput;
+  questionImageModalIsOpen: boolean;
+  isCCSSVisibleModal: boolean;
+  publicPrivateQuestion: PublicPrivateType;
+  isImageUploadVisible: boolean;
+  isImageURLVisible: boolean;
+  isCreatingTemplate: boolean;
+  highlightCard: CreateQuestionHighlightCard
+};
+
+const useCreateQuestion = (index: number) => {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const navigate = useNavigate();
+  
+   const newEmptyTemplate: CentralQuestionTemplateInput = {
+      questionCard: {
+        title: '',
+        ccss: 'CCSS',
+        isFirstEdit: true,
+        isCardComplete: false,
+      },
+      correctCard: {
+        answer: '',
+        answerSteps: ['', '', ''],
+        isFirstEdit: true,
+        isCardComplete: false,
+      },
+      incorrectCards: [
+        {
+          id: 'card-1',
+          answer: '',
+          explanation: '',
+          isFirstEdit: true,
+          isCardComplete: false,
+        },
+        {
+          id: 'card-2',
+          answer: '',
+          explanation: '',
+          isFirstEdit: true,
+          isCardComplete: false,
+        },
+        {
+          id: 'card-3',
+          answer: '',
+          explanation: '',
+          isFirstEdit: true,
+          isCardComplete: false,
+        },
+      ],
+    };
+
+    const draftTemplate: TDraftQuestionsList = {
+      publicPrivate: PublicPrivateType.PUBLIC,
+      isAIEnabled: false,
+      isAIError: false,
+      question: newEmptyTemplate,
+      questionImageModalIsOpen: false,
+      isCCSSVisibleModal: false,
+      publicPrivateQuestion: PublicPrivateType.PUBLIC,
+      isImageUploadVisible: false,
+      isImageURLVisible: false,
+      isCreatingTemplate: false,
+      highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
+    };
+  
+    const [draftQuestionsList, setDraftQuestionsList] = useState<
+      TDraftQuestionsList[]
+    >([draftTemplate]);
+ 
+  
   const [isQuestionCardSubmitted, setIsQuestionCardSubmitted] =
     useState<boolean>(false);
   const [isQuestionCardErrored, setIsQuestionCardErrored] =
     useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
-
-  const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
-
-  const [isAIError, setIsAIError] = useState<boolean>(false);
-
-  const [publicPrivateQuestion, setPublicPrivateQuestion] =
-    useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
-  const [isImageUploadVisible, setIsImageUploadVisible] =
-    useState<boolean>(false);
-  const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
-  const [highlightCard, setHighlightCard] =
-    useState<CreateQuestionHighlightCard>(
-      CreateQuestionHighlightCard.QUESTIONCARD,
-    );
 
-  const [isImagePreviewVisible, setIsImagePreviewVisible] =
-    useState<boolean>(false);
-  const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
-
-  const handlePublicPrivateQuestionChange = (value: PublicPrivateType) => {
-    setPublicPrivateQuestion((prev) => value);
-  };
-  const localData = useCreateQuestionLoader();
-
-  const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<
-    IncorrectCard[]
-  >(
-    localData.incompleteCards ?? [
-      {
-        id: 'card-1',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-      {
-        id: 'card-2',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-      {
-        id: 'card-3',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-    ],
-  );
-  const [completeIncorrectAnswers, setCompleteIncorrectAnswers] = useState<
-    IncorrectCard[]
-  >(localData.completeCards ?? []);
 
   const [draftQuestion, setDraftQuestion] =
     useState<CentralQuestionTemplateInput>(() => {
       return (
-        localData.draftQuestion ?? {
+        {
           questionCard: {
             title: '',
             ccss: 'CCSS',
@@ -115,195 +134,375 @@ const useCreateQuestion = () => {
             isCardComplete: false,
           },
           incorrectCards: [
-            ...incompleteIncorrectAnswers,
-            ...completeIncorrectAnswers,
+            {
+              id: 'card-1',
+              answer: '',
+              explanation: '',
+              isFirstEdit: true,
+              isCardComplete: false,
+            },
+            {
+              id: 'card-2',
+              answer: '',
+              explanation: '',
+              isFirstEdit: true,
+              isCardComplete: false,
+            },
+            {
+              id: 'card-3',
+              answer: '',
+              explanation: '',
+              isFirstEdit: true,
+              isCardComplete: false,
+            },
           ],
         }
       );
     });
 
 
+        const handlePublicPrivateQuestionChange = (
+          value: PublicPrivateType,
+        ) => {
+          setDraftQuestionsList((prev) => {
+            return prev.map((questionItem, i) => {
+              if (i === index) {
+                const newDraftQuestion = {
+                  ...questionItem,
+                  publicPrivate: value,
+                };
+                return newDraftQuestion;
+              }
+              return questionItem;
+            });
+          });
+        };
+
+      const handleAIIsEnabled = () => {
+        setDraftQuestionsList((prev) => {
+          return prev.map((item, i) => {
+            if (i === index) {
+              return {
+                ...item,
+                isAIEnabled: !item.isAIEnabled,
+                isAIError: !item.isAIError,
+              };
+            }
+            return item;
+          });
+        });
+      };
   // QuestionCardBase handler functions
-  const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
-    if (inputImage) {
-      const newDraftQuestion = updateDQwithImage(
-        draftQuestion,
-        undefined,
-        inputImage,
-      );
-      setDraftQuestion(newDraftQuestion);
-    } else if (inputUrl) {
-      const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
-      setDraftQuestion(newDraftQuestion);
-    }
+ const handleImageChange = async (
+    inputImage?: File,
+    inputUrl?: string,
+  ) => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === index) {
+          const currentDraftQuestion = questionItem.question;
+          if (inputImage) {
+            const newDraftQuestion = updateDQwithImage(
+              currentDraftQuestion,
+              undefined,
+              inputImage,
+            );
+            const updatedImageItem = {
+              ...questionItem,
+              question: newDraftQuestion,
+            };
+            return updatedImageItem;
+          }
+
+          if (inputUrl) {
+            const newDraftQuestion = updateDQwithImageURL(
+              currentDraftQuestion,
+              inputUrl,
+            );
+            const updatedImageURLItem = {
+              ...questionItem,
+              question: newDraftQuestion,
+            };
+            return updatedImageURLItem;
+          }
+        }
+        return questionItem;
+      });
+    });
   };
 
-  const handleImageSave = async (inputImage?: File, inputUrl?: string) => {
-    setIsImageUploadVisible(false);
-    setIsImageURLVisible(false);
-    if (inputImage) {
-      const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImage(
-        draftQuestion,
-        undefined,
-        inputImage,
-      );
-      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
-      setDraftQuestion(newDraftQuestion);
-      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
-        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-    }
-    if (inputUrl) {
-      const { isFirstEdit } = draftQuestion.questionCard;
-      const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
-      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
-      setDraftQuestion(newDraftQuestion);
-      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
-        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-    }
+  const handleImageSave = async (
+    inputImage?: File,
+    inputUrl?: string,
+  ) => {
+    setDraftQuestionsList((draftPrev) => {
+      return draftPrev.map((questionItem, i) => {
+        if (i === index) {
+          const currentDraftQuestion = questionItem.question;
+          const { isCardComplete } = questionItem.question.questionCard;
+          if (inputImage) {
+            const newDraftQuestion = updateDQwithImage(
+              currentDraftQuestion,
+              undefined,
+              inputImage,
+            );
+            const updatedDraftQuestion = {
+              ...questionItem,
+              question: newDraftQuestion,
+              isImageUploadVisible: false,
+              isImageURLVisible: false,
+              isCreatingTemplate: false,
+              isCCSSVisibleModal: false,
+              questionImageModalIsOpen: false,
+              ...(isCardComplete && {
+                highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
+              })
+            };
+            return updatedDraftQuestion;
+          }
+
+          if (inputUrl) {
+            const newDraftQuestion = updateDQwithImageURL(
+              currentDraftQuestion,
+              inputUrl,
+            );
+            const updatedDraftQuestion = {
+              ...questionItem,
+              question: newDraftQuestion,
+              isImageUploadVisible: false,
+              isImageURLVisible: false,
+              isCreatingTemplate: false,
+              isCCSSVisibleModal: false,
+              questionImageModalIsOpen: false,
+              ...(isCardComplete && {
+                highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
+              })
+            };
+            return updatedDraftQuestion;
+          }
+        }
+        return questionItem;
+      });
+    });
   };
 
-  const handleDebouncedTitleChange = useCallback(// eslint-disable-line
-    debounce(
-      (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
-        const { isFirstEdit } = draftQuestionInput.questionCard;
-        const newDraftQuestion = updateDQwithTitle(draftQuestionInput, title);
-        window.localStorage.setItem(
-          StorageKey,
-          JSON.stringify(newDraftQuestion),
-        );
-        setDraftQuestion(newDraftQuestion);
-        console.log(newDraftQuestion);
-        if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
-          setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
-      },
-      1000,
-    ),
-    [],
-  );
+   const handleDebouncedTitleChange = useCallback(// eslint-disable-line
+     (
+       title: string,
+       draftQuestionInput: CentralQuestionTemplateInput,
+     ) => {
+       setDraftQuestionsList((draftPrev) => {
+         return draftPrev.map((questionItem, i) => {
+           if (i === index) {
+             const { isCardComplete, isFirstEdit } = questionItem.question.questionCard;
+             const newDraftQuestion = updateDQwithTitle(
+               questionItem.question,
+               title,
+             );
+             const updatedItem: TDraftQuestionsList = {
+               ...questionItem,
+               question: newDraftQuestion,
+               ...(isCardComplete && isFirstEdit && {
+                 highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
+               })
+             };
+             return updatedItem;
+           }
+           return questionItem;
+         });
+       });
+     },
+     [index],
+   );
 
   const handleDebouncedCorrectAnswerChange = useCallback(// eslint-disable-line
-    debounce(
-      (
-        correctAnswer: string,
-        draftQuestionInput: CentralQuestionTemplateInput,
-      ) => {
-        const { isFirstEdit } = draftQuestionInput.correctCard;
-        const newDraftQuestion = updateDQwithCorrectAnswer(
-          draftQuestionInput,
-          correctAnswer,
-        );
-        console.log(newDraftQuestion);
-        window.localStorage.setItem(
-          StorageKey,
-          JSON.stringify(newDraftQuestion),
-        );
-        setDraftQuestion(newDraftQuestion);
-        if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-          setHighlightCard(
-            (prev) => CreateQuestionHighlightCard.INCORRECTANSWER1,
-          );
-      },
-      1000,
-    ),
-    [],
+    (
+      correctAnswer: string,
+      draftQuestionInput: CentralQuestionTemplateInput,
+    ) => {
+      setDraftQuestionsList((draftPrev) => {
+        return draftPrev.map((questionItem, i) => {
+          if (i === index) {
+            const { isCardComplete, isFirstEdit } =
+              questionItem.question.correctCard;
+            const newDraftQuestion = updateDQwithCorrectAnswer(
+              questionItem.question,
+              correctAnswer,
+            );
+            const updatedItem = {
+              ...questionItem,
+              question: newDraftQuestion,
+              ...(isCardComplete && isFirstEdit && {
+                highlightCard: CreateQuestionHighlightCard.INCORRECTANSWER1
+              })
+            };
+            return updatedItem;
+          }
+          return questionItem;
+        });
+      });
+    },
+    [index],
   );
 
   const handleDebouncedCorrectAnswerStepsChange = useCallback(// eslint-disable-line
-    debounce(
-      (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
-        const { isFirstEdit } = draftQuestionInput.correctCard;
-        const newDraftQuestion = updateDQwithCorrectAnswerSteps(
-          draftQuestionInput,
-          steps,
-        );
-        window.localStorage.setItem(
-          StorageKey,
-          JSON.stringify(newDraftQuestion),
-        );
-        setDraftQuestion(newDraftQuestion);
-        if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-          setHighlightCard(
-            (prev) => CreateQuestionHighlightCard.INCORRECTANSWER1,
-          );
-      },
-      1000,
-    ),
-    [],
+    (
+      steps: string[],
+      draftQuestionInput: CentralQuestionTemplateInput,
+    ) => {
+      setDraftQuestionsList((draftPrev) => {
+        return draftPrev.map((questionItem, i) => {
+          if (i === index) {
+            const { isCardComplete, isFirstEdit } =
+              questionItem.question.questionCard;
+            const newDraftQuestion = updateDQwithCorrectAnswerSteps(
+              questionItem.question,
+              steps,
+            );
+            const updatedItem = {
+              ...questionItem,
+              question: newDraftQuestion,
+              ...(isCardComplete && isFirstEdit && {
+                highlightCard: CreateQuestionHighlightCard.INCORRECTANSWER1
+              })
+            };
+            return updatedItem;
+          }
+          return questionItem;
+        });
+      });
+    },
+    [index],
   );
 
   const handleCloseQuestionModal = () => {
-    setIsImageUploadVisible(false);
-    setIsImageURLVisible(false);
-    setIsCreatingTemplate(false);
-    setIsCCSSVisible(false);
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === index) {
+          const updatedItem = {
+            ...questionItem,
+            isImageUploadVisible: false,
+            isImageURLVisible: false,
+            isCreatingTemplate: false,
+            isCCSSVisibleModal: false,
+            questionImageModalIsOpen: false,
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
   };
 
   const handleClick = (cardType: CreateQuestionHighlightCard) => {
-    switch (cardType) {
-      case CreateQuestionHighlightCard.CORRECTANSWER:
-        if (draftQuestion.correctCard.isCardComplete) {
-          const newDraftQuestion =
-            updateDQwithCorrectAnswerClick(draftQuestion);
-          window.localStorage.setItem(
-            StorageKey,
-            JSON.stringify(newDraftQuestion),
-          );
-          setDraftQuestion(newDraftQuestion);
-        }
-        break;
-      case CreateQuestionHighlightCard.INCORRECTANSWER1:
-      case CreateQuestionHighlightCard.INCORRECTANSWER2:
-      case CreateQuestionHighlightCard.INCORRECTANSWER3: {
-        // then we can update the draftQuestion for the api call and the localStorage for retreival, respectively
-        const newDraftQuestion = updateDQwithIncorrectAnswerClick(
-          draftQuestion,
-          cardType,
-        );
-        window.localStorage.setItem(
-          StorageKey,
-          JSON.stringify(newDraftQuestion),
-        );
-        setDraftQuestion(newDraftQuestion);
-        break;
-      }
-      case CreateQuestionHighlightCard.QUESTIONCARD:
-      default:
-        if (draftQuestion.questionCard.isCardComplete) {
-          const newDraftQuestion = updateDQwithQuestionClick(draftQuestion);
-          window.localStorage.setItem(
-            StorageKey,
-            JSON.stringify(newDraftQuestion),
-          );
-          setDraftQuestion(newDraftQuestion);
-        }
-        break;
-    }
-  };
+     setDraftQuestionsList((prev) => {
+       return prev.map((questionItem, i) => {
+         if(i === index) {
+           const currentDraftQuestion = questionItem.question;
+           const { isCardComplete: correctCardComplete } = currentDraftQuestion.correctCard;
+           const { isCardComplete: questionCardComplete } = questionItem.question.questionCard;
+           switch(cardType) {
+             case CreateQuestionHighlightCard.CORRECTANSWER:
+               if(correctCardComplete) {
+                 const newDraftQuestion = updateDQwithCorrectAnswerClick(
+                   currentDraftQuestion,
+                 );
+                 return {...questionItem, question: newDraftQuestion, }
+               }
+           break;
+           case CreateQuestionHighlightCard.INCORRECTANSWER1:
+             case CreateQuestionHighlightCard.INCORRECTANSWER2:
+             case CreateQuestionHighlightCard.INCORRECTANSWER3: {
+               // then we can update the draftQuestion for the api call and the localStorage for retreival, respectively
+               const newDraftQuestion = updateDQwithIncorrectAnswerClick(
+                 currentDraftQuestion,
+                 cardType,
+               );
+                 return {...questionItem, question: newDraftQuestion}
+               }
+               
+               case CreateQuestionHighlightCard.QUESTIONCARD:
+                 default:
+                   if (questionCardComplete) {
+                     const newDraftQuestion = updateDQwithQuestionClick(
+                       currentDraftQuestion,
+                     );
+                     return {...questionItem, question: newDraftQuestion, }
+                   }
+                   break;
+           }
+         }
+         return questionItem;
+       })
+     })
+   };
 
   const handleCCSSSubmit = (ccssString: string) => {
-    setIsCCSSVisible(false);
-    const { isFirstEdit } = draftQuestion.questionCard;
-    const newDraftQuestion = updateDQwithCCSS(draftQuestion, ccssString);
-    window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
-    setDraftQuestion(newDraftQuestion);
-    if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
-      setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+    setDraftQuestionsList((draftPrev) => {
+      return draftPrev.map((questionItem, i) => {
+        if (i === index) {
+          const { isCardComplete, isFirstEdit } =
+            questionItem.question.questionCard;
+          const newDraftQuestion = updateDQwithCCSS(
+            questionItem.question,
+            ccssString,
+          );
+          const updatedItem = {
+            ...questionItem,
+            question: newDraftQuestion,
+            isCCSSVisibleModal: false,
+            ...(isCardComplete && isFirstEdit && {
+              highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
+            })
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
   };
 
   // incorrect answer card functions
-  const handleNextCardButtonClick = (cardData: IncorrectCard) => {
-    if (isAIError) setIsAIError(false);
-    const updatedAnswers = incompleteIncorrectAnswers.map((answer) => {
-      if (answer.id === cardData.id) {
-        return cardData;
-      }
-      return answer;
+  const handleNextCardButtonClick = (
+    cardData: IncorrectCard,
+  ) => {
+    setDraftQuestionsList((prev) => {
+      const nextCard = getNextHighlightCard(
+        cardData.id as CreateQuestionHighlightCard,
+      );
+      return prev.map((questionItem, i) => {
+        if (i === index) {
+          const currentDraftQuestion = questionItem.question;
+          const incompleteAnswers = currentDraftQuestion.incorrectCards.filter(
+            (answer) => !answer.isCardComplete,
+          );
+          const completeAnswers = currentDraftQuestion.incorrectCards.filter(
+            (answer) => answer.isCardComplete,
+          );
+
+          const updatedAnswer = incompleteAnswers.map((answer) =>
+            answer.id === cardData.id ? cardData : answer,
+          );
+          const { newIncompleteAnswers, newCompleteAnswers } =
+            handleMoveAnswerToComplete(updatedAnswer, completeAnswers);
+
+          const newDraftQuestion = updateDQwithIncorrectAnswers(
+            currentDraftQuestion,
+            newIncompleteAnswers,
+            newCompleteAnswers,
+          );
+
+          const updatedItem = {
+            ...questionItem,
+            question: newDraftQuestion,
+            isAIError: false,
+            ...(nextCard && { highlightCard: nextCard as CreateQuestionHighlightCard }) 
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
     });
-    const { newIncompleteAnswers, newCompleteAnswers } =
-      handleMoveAnswerToComplete(updatedAnswers, completeIncorrectAnswers);
-    setIncompleteIncorrectAnswers(newIncompleteAnswers);
-    setCompleteIncorrectAnswers(newCompleteAnswers);
   };
 
   const handleIncorrectCardStackUpdate = (
@@ -313,84 +512,118 @@ const useCreateQuestion = () => {
     incompleteAnswers: IncorrectCard[],
     isAIEnabledCard?: boolean,
   ) => {
-    const nextCard = getNextHighlightCard(
-      cardData.id as CreateQuestionHighlightCard,
-    );
-    const isUpdateInIncompleteCards = incompleteAnswers.find(
-      (answer) => answer.id === cardData.id,
-    );
-    let newDraftQuestion = null;
-    const isCardComplete =
-      cardData.answer.length > 0 && cardData.explanation.length > 0;
-    // we need to break this up so we don't change the stateful arrays when a card is not being passed across them.
-    // everytime we update those arrays, we're going to trigger an animation, so we have to only manipulate them when we want that
-    // so in this case, if the card that is being edited is already complete, we are only going to update the draftQuestion object and leave the arrays alone
-    if (isUpdateInIncompleteCards) {
-      setIsAIError(false);
-      const updatedAnswers = incompleteAnswers.map((answer) => {
-        if (answer.id === cardData.id) {
-          return cardData;
-        }
-        return answer;
-      });
-      if (isCardComplete && !isAIEnabledCard) {
-        // adjust incomplete and complete arrays, moving completed card over
-        const { newIncompleteAnswers, newCompleteAnswers } =
-          handleMoveAnswerToComplete(updatedAnswers, completeAnswers);
-        // adjust local state for the cards so that they animate properly through the stack
-        setIncompleteIncorrectAnswers(newIncompleteAnswers);
-        setCompleteIncorrectAnswers(newCompleteAnswers);
-        newDraftQuestion = updateDQwithIncorrectAnswers(
-          draftQuestionInput,
-          newIncompleteAnswers,
-          newCompleteAnswers,
-        );
-
-        if (cardData.isFirstEdit)
-          setHighlightCard((prev) => nextCard as CreateQuestionHighlightCard);
-      } else {
-        newDraftQuestion = updateDQwithIncorrectAnswers(
-          draftQuestionInput,
-          updatedAnswers,
-          completeAnswers,
-        );
-      }
-    } else {
-      const newCompleteAnswers = completeAnswers.map((answer) => {
-        if (answer.id === cardData.id) {
-          return cardData;
-        }
-        return answer;
-      });
-      newDraftQuestion = updateDQwithIncorrectAnswers(
-        draftQuestionInput,
-        incompleteAnswers,
-        newCompleteAnswers,
+    setDraftQuestionsList((prev) => {
+      const nextCard = getNextHighlightCard(
+        cardData.id as CreateQuestionHighlightCard,
       );
-    }
+      return prev.map((questionItem, i) => {
+        if (i === index) {
+          const currentDraftQuestion = questionItem.question;
+          const isUpdateInIncompleteCards = incompleteAnswers.find(
+            (answer) => answer.id === cardData.id,
+          );
+          const isCardComplete =
+            cardData.answer.length > 0 && cardData.explanation.length > 0;
 
-    // adjust draftQuestion and localstorage for use in API call and retrieval, respectively
-    if (newDraftQuestion) {
-      setDraftQuestion(newDraftQuestion);
-      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
-    }
+          if (isUpdateInIncompleteCards) {
+            const updatedIncompleteAnswers = incompleteAnswers.map((answer) =>
+              answer.id === cardData.id ? cardData : answer,
+            );
+
+            if (isCardComplete && !isAIEnabledCard) {
+              const { newIncompleteAnswers, newCompleteAnswers } =
+                handleMoveAnswerToComplete(
+                  updatedIncompleteAnswers,
+                  completeAnswers,
+                );
+              const updatedDraftQuestion = updateDQwithIncorrectAnswers(
+                currentDraftQuestion,
+                newIncompleteAnswers,
+                newCompleteAnswers,
+              );
+              const updatedItem = {
+                ...questionItem,
+                question: updatedDraftQuestion,
+                isAIError: false,
+                ...(cardData.isFirstEdit && { highlightCard: nextCard as CreateQuestionHighlightCard })
+              };
+              return updatedItem;
+            }
+
+            // If not completed or if AI is enabled, simply update with the incomplete answers
+            const updatedDraftQuestion = updateDQwithIncorrectAnswers(
+              currentDraftQuestion,
+              updatedIncompleteAnswers,
+              completeAnswers,
+            );
+            return { ...questionItem, question: updatedDraftQuestion };
+          }
+
+          // If the card wasn't in incomplete answers, update the complete answers
+          const updatedCompleteAnswers = completeAnswers.map((answer) =>
+            answer.id === cardData.id ? cardData : answer,
+          );
+          const updatedDraftQuestion = updateDQwithIncorrectAnswers(
+            currentDraftQuestion,
+            incompleteAnswers,
+            updatedCompleteAnswers,
+          );
+          return { 
+            ...questionItem, 
+            question: updatedDraftQuestion,
+            ...(cardData.isFirstEdit && {
+              highlightCard: nextCard as CreateQuestionHighlightCard
+            }) 
+          };
+        }
+        return questionItem;
+      });
+    });
   };
 
-  const handleCCSSClick = () => {
-    setIsCCSSVisible((prev) => !prev);
+  const handleCCSSClicks = () => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === index) {
+          const updatedItem = {
+            ...questionItem,
+            isCCSSVisibleModal: true,
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
   };
 
   const handleAIError = () => {
-    setIsAIError(true);
-  };
-
-  const handleAIIsEnabled = () => {
-    setIsAIEnabled((prev) => !prev);
-    setIsAIError(false);
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if(i === index) {
+          const updatedItem = {
+            ...questionItem,
+            isAIError: !questionItem.isAIError
+          }
+          return updatedItem;
+        }
+        return questionItem;
+      })
+    })
   };
 
   const handleQuestionImageUploadClick = () => {
-    setIsImageUploadVisible(true);
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === index) {
+          const updatedItem = {
+            ...questionItem,
+            questionImageModalIsOpen: !questionItem.questionImageModalIsOpen,
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
   };
 
   const handleSaveQuestion = async () => {
@@ -425,7 +658,7 @@ const useCreateQuestion = () => {
           console.log(draftQuestion.questionCard.imageUrl);
           if (url) {
             apiClients.questionTemplate.createQuestionTemplate(
-              publicPrivateQuestion,
+              PublicPrivateType.PUBLIC,
               url,
               draftQuestion,
             );
@@ -441,6 +674,20 @@ const useCreateQuestion = () => {
     }
   };
 
+  const completeIncorrectAnswers = draftQuestionsList[
+    index
+  ].question.incorrectCards.filter((card) => card.isCardComplete);
+  const incompleteIncorrectAnswers = draftQuestionsList[
+    index
+  ].question.incorrectCards.filter((card) => !card.isCardComplete);
+
+  const openModal =
+    draftQuestionsList[index].isImageUploadVisible ||
+    draftQuestionsList[index].isImageURLVisible ||
+    draftQuestionsList[index].isCreatingTemplate ||
+    draftQuestionsList[index].isCCSSVisibleModal ||
+    draftQuestionsList[index].questionImageModalIsOpen;
+
   return {
     // handlers
     handleQuestionImageUploadClick,
@@ -454,29 +701,23 @@ const useCreateQuestion = () => {
     handleSaveQuestion,
     handleClick,
     handleCloseQuestionModal,
-    handleCCSSClick,
+    handleCCSSClicks,
     handleCCSSSubmit,
     setDraftQuestion,
-    setHighlightCard,
     handleDebouncedCorrectAnswerChange,
     handleDebouncedCorrectAnswerStepsChange,
     handleDebouncedTitleChange,
+    setDraftQuestionsList,
 
     // state
+    openModal,
     completeIncorrectAnswers,
     incompleteIncorrectAnswers,
-    publicPrivateQuestion,
     isQuestionCardSubmitted,
     isQuestionCardErrored,
     isCreatingTemplate,
-    isImageUploadVisible,
-    isImageURLVisible,
-    draftQuestion,
-    isCCSSVisible,
-    highlightCard,
+    draftQuestionsList,
     isClicked,
-    isAIEnabled,
-    isAIError,
   };
 };
 export default useCreateQuestion;
