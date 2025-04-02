@@ -90,8 +90,6 @@ const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBL
 const elements = gameQuestion === GameQuestionType.GAME ? 
   getGameElements(openTab, isSearchResults, centralData)
   : getQuestionElements(openTab, isSearchResults, centralData);
-console.log(elements);
-console.log(centralData);
 const needsFetch = elements ? elements.length === 0 : false; 
 
 if (!isLibraryInit) {

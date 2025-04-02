@@ -10,6 +10,7 @@ import {
   getCurrentUser,
   fetchUserAttributes
 } from 'aws-amplify/auth';
+import { v4 as uuidv4 } from 'uuid';
 
 export const userProfileLocalStorage = 'righton_userprofile';
 
@@ -56,6 +57,8 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       newFavoriteGameTemplateIds = newFavoriteGameTemplateIds.filter((id: string) => id !== gameId);
     else 
       newFavoriteGameTemplateIds.push(gameId);
+    console.log(newFavoriteGameTemplateIds);
+    console.log(user);
     return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
   };
 
@@ -188,15 +191,14 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     try {
       await this.authAPIClient.awsSignIn(user.email, user.password ?? '');
       const currentUser = await getCurrentUser();
-      updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
       const images = await Promise.all([
         this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
         this.authAPIClient.awsUploadImagePrivate(backImage) as any
       ]);
-      createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
-      updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
-      const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
-      updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      const dynamoId = uuidv4();
+      createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      await this.userAPIClient.createUser(createUserInput);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
 
@@ -226,12 +228,11 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
         this.authAPIClient.awsUploadImagePrivate(backImage) as any
       ]);
-      createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
-      updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
-
+      const dynamoId = uuidv4();
+      createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       
-      const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
-      updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      await this.userAPIClient.createUser(createUserInput);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
       return { updatedUser, images };

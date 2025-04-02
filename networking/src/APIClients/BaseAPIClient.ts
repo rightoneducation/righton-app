@@ -173,7 +173,6 @@ export abstract class BaseAPIClient {
       let searchFilter: any = {};
       let gradeFilter: any = {};
       let favFilter: any = {};
-      console.log('Here');
       const filterStringLowerCase = filterString?.toLowerCase();
       if (favIds && favIds.length > 0) {
         favFilter = {

@@ -4,16 +4,18 @@ import { centralDataReducer, CentralDataAction } from '../reducer/CentralDataRed
 import { ICentralDataState } from './ICentralDataState';
 import { UserStatusType } from '../CentralModels';
 
-// initialize centralDataState
-const initCentralDataState: ICentralDataState = {
-  userProfile: {
+export const userProfileInit = {
     title: 'Title...',
     firstName: '',
     lastName: '',
     username: '',
     email: '',
     password: '',
-  },
+}
+
+// initialize centralDataState
+const initCentralDataState: ICentralDataState = {
+  userProfile: userProfileInit,
   userStatus: UserStatusType.LOGGEDOUT,
   recommendedGames: [],
   mostPopularGames: [],
@@ -53,7 +55,6 @@ export const CentralDataDispatchContext = createContext<React.Dispatch<any> | un
 
 export function CentralDataProvider ({ children }: { children: React.ReactNode }) {
   const [centralData, centralDataDispatch] = useReducer(centralDataReducer, initCentralDataState);
-  console.log(centralData);
   return (
     <CentralDataStateContext.Provider value={centralData}>
       <CentralDataDispatchContext.Provider value={centralDataDispatch}>

@@ -477,7 +477,7 @@ export default function useCentralDataManager({
         break;
     }
   };
-
+  
   // useEffect for monitoring changes to auth status of Cognito User
   useEffect(() => {
     if (apiClients.auth.isUserAuth) 

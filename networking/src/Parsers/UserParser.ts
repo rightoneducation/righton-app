@@ -7,6 +7,8 @@ export class UserParser {
     const parsedUser: IUser = {
       id: user.id ?? '',
       username: user.userName,
+      dynamoId: user.dynamoId ?? '',
+      cognitoId: user.cognitoId ?? '',
       title: user.title ?? '',
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
@@ -26,6 +28,10 @@ export class UserParser {
     const parsedUser: AWSUser = {
       id: user.id,
       userName: user.username,
+      cognitoId: user.cognitoId,
+      dynamoId: user.dynamoId,
+      frontIdPath: user.frontIdPath,
+      backIdPath: user.backIdPath,
       title: user.title ?? '',
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
