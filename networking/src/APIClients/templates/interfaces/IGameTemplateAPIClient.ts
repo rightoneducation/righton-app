@@ -3,12 +3,16 @@ import { IGameTemplate } from "../../../Models";
 import { 
   createPublicGameTemplate,
   createPrivateGameTemplate,
+  createDraftGameTemplate,
   getPublicGameTemplate,
   getPrivateGameTemplate,
+  getDraftGameTemplate,
   updatePublicGameTemplate,
   updatePrivateGameTemplate,
+  updateDraftGameTemplate,
   deletePublicGameTemplate,
   deletePrivateGameTemplate,
+  deleteDraftGameTemplate,
   listPublicGameTemplates,
   publicGameTemplatesByDate,
   publicGameTemplatesByGrade,
@@ -16,7 +20,11 @@ import {
   listPrivateGameTemplates,
   privateGameTemplatesByDate,
   privateGameTemplatesByGrade,
-  privateGameTemplatesByPrivateQuestionTemplatesCount
+  privateGameTemplatesByPrivateQuestionTemplatesCount,
+  listDraftGameTemplates,
+  draftGameTemplatesByDate,
+  draftGameTemplatesByGrade,
+  draftGameTemplatesByDraftQuestionTemplatesCount
 } from "../../../graphql";
 import {
   CreatePublicGameTemplateInput,
@@ -25,26 +33,39 @@ import {
   CreatePrivateGameTemplateInput,
   CreatePrivateGameTemplateMutationVariables,
   CreatePrivateGameTemplateMutation,
+  CreateDraftGameTemplateInput,
+  CreateDraftGameTemplateMutationVariables,
+  CreateDraftGameTemplateMutation,
   GetPublicGameTemplateQueryVariables,
   GetPublicGameTemplateQuery,
   GetPrivateGameTemplateQueryVariables,
   GetPrivateGameTemplateQuery,
+  GetDraftGameTemplateQueryVariables,
+  GetDraftGameTemplateQuery,
   UpdatePublicGameTemplateInput,
   UpdatePublicGameTemplateMutationVariables,
   UpdatePublicGameTemplateMutation,
   UpdatePrivateGameTemplateInput,
   UpdatePrivateGameTemplateMutationVariables,
   UpdatePrivateGameTemplateMutation,
+  UpdateDraftGameTemplateInput,
+  UpdateDraftGameTemplateMutationVariables,
+  UpdateDraftGameTemplateMutation,
   DeletePublicGameTemplateInput,
   DeletePublicGameTemplateMutationVariables,
   DeletePublicGameTemplateMutation,
   DeletePrivateGameTemplateInput,
   DeletePrivateGameTemplateMutationVariables,
   DeletePrivateGameTemplateMutation,
+  DeleteDraftGameTemplateInput,
+  DeleteDraftGameTemplateMutationVariables,
+  DeleteDraftGameTemplateMutation,
   ListPublicGameTemplatesQueryVariables,
   ListPublicGameTemplatesQuery,
   ListPrivateGameTemplatesQueryVariables,
-  ListPrivateGameTemplatesQuery
+  ListPrivateGameTemplatesQuery,
+  ListDraftGameTemplatesQueryVariables,
+  ListDraftGameTemplatesQuery
 } from "../../../AWSMobileApi";
 
 export interface IPublicGameTemplate {
@@ -99,6 +120,33 @@ export interface IPrivateGameTemplate {
   }
 }
 
+
+export interface IDraftGameTemplate {
+  create: {
+    input: CreateDraftGameTemplateInput;
+    variables: CreateDraftGameTemplateMutationVariables;
+    query: CreateDraftGameTemplateMutation;
+  },
+  get: {
+    variables: GetDraftGameTemplateQueryVariables;
+    query: GetDraftGameTemplateQuery;
+  },
+  update: {
+    input: UpdateDraftGameTemplateInput;
+    variables: UpdateDraftGameTemplateMutationVariables;
+    query: UpdateDraftGameTemplateMutation;
+  },
+  delete: {
+    input: DeleteDraftGameTemplateInput;
+    variables: DeleteDraftGameTemplateMutationVariables;
+    query: DeleteDraftGameTemplateMutation;
+  },
+  list: {
+    variables: ListDraftGameTemplatesQueryVariables;
+    query: ListDraftGameTemplatesQuery;
+  }
+}
+
 export const gameTemplateRuntimeMap = {
   Public: {
     create: {
@@ -143,6 +191,28 @@ export const gameTemplateRuntimeMap = {
         byQuestionTemplatesCount: privateGameTemplatesByPrivateQuestionTemplatesCount
       },
     },
+  },
+  Draft: {
+    create: {
+      queryFunction: createDraftGameTemplate,
+    },
+    get: {
+      queryFunction: getDraftGameTemplate,
+    },
+    update: {
+      queryFunction: updateDraftGameTemplate,
+    },
+    delete: {
+      queryFunction: deleteDraftGameTemplate,
+    },
+    list: {
+      queryFunction: {
+        default: listDraftGameTemplates,
+        byDate: draftGameTemplatesByDate,
+        byGrade: draftGameTemplatesByGrade,
+        byQuestionTemplatesCount: draftGameTemplatesByDraftQuestionTemplatesCount
+      },
+    },
   }
 }
 
@@ -175,7 +245,8 @@ export interface IGameTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByDate<T extends PublicPrivateType>(
@@ -184,7 +255,8 @@ export interface IGameTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByGrade<T extends PublicPrivateType>(
@@ -193,7 +265,8 @@ export interface IGameTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 
   listGameTemplatesByQuestionTemplatesCount<T extends PublicPrivateType>(
@@ -202,6 +275,15 @@ export interface IGameTemplateAPIClient {
     nextToken: string | null,
     sortDirection: string | null,
     filterString: string | null,
-    gradeTargets: GradeTarget[]
+    gradeTargets: GradeTarget[],
+    favIds: string[] | null
+  ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
+
+  listGameTemplatesByFavorite<T extends PublicPrivateType>(
+    type: T,
+    limit: number | null,
+    nextToken: string | null,
+    sortDirection: string | null,
+    favIds: string[]
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 }

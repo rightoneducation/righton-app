@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import {
   Box,
   InputAdornment,
-  Typography,
   styled,
   TextField,
-  Select,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { GradeTarget, SortType, SortDirection } from '@righton/networking';
@@ -29,7 +27,9 @@ interface SearchBarProps2 {
   searchTerms?: string;
 }
 
-const SearchBarContainer = styled(TextField)<SearchBarProps2>(
+const SearchBarContainer = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'searchTerms',
+})<SearchBarProps2>(
   ({ screenSize, searchTerms, theme }) => ({
     width: '100%',
     flexGrow: 1,
@@ -65,7 +65,9 @@ const SearchBarContainer = styled(TextField)<SearchBarProps2>(
   }),
 );
 
-const SearchAndFilterContainer = styled(Box)<SearchBarProps2>(
+const SearchAndFilterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<SearchBarProps2>(
   ({ screenSize, theme }) => ({
     height: '88px',
     width: '100%',
@@ -93,7 +95,7 @@ function SearchBar({
     handleSearchChange(value);
   };
   return (
-    <SearchAndFilterContainer screenSize={screenSize} style={{backgroundColor: searchTerms.length > 0 ? theme.palette.primary.creamBackgroundColor : ''}}>
+    <SearchAndFilterContainer screenSize={screenSize}>
       <Box style={{ display: 'flex', width: '100%' }}>
         <SelectGradesMenu
           screenSize={screenSize ?? ScreenSize.SMALL}
@@ -113,7 +115,7 @@ function SearchBar({
           searchTerms={searchTerms}
           onChange={handleInputChange}
           InputProps={{
-            disableUnderline: true,
+            
             startAdornment: (
               <InputAdornment position="start">
                 <img src={SearchIcon} alt="Search Icon" />

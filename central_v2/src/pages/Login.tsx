@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography, CircularProgress, Button } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom'; 
-import RightOnLogo from '../images/RightOnLogo.png';
+import { useGoogleLogin } from '@react-oauth/google';
+import RightOnLogo from '../images/RightOnUserLogo.svg';
+import GoogleImageSvg from "../images/googleicon.svg";
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { 
   TextContainerStyled,
@@ -61,6 +63,27 @@ const UpperLoginGoogleButton = styled(Typography)(({ theme }) => ({
   minHeight: '45.77px',
   
 }));
+
+const GoogleLoginButton = styled(Button)(({ theme }) => ({
+  backgroundColor: 'transparent',  // Make background transparent
+  color: '#0966E0',
+  padding: '10px 16px',
+  fontSize: '16px',
+  fontWeight: 500,
+  fontFamily: 'Poppins, sans-serif',
+  borderRadius: '8px',
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '10px',
+  border: '2px solid #0966E0',
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: '#f0f0f0',
+  },
+}));
+
 
 const OrText = styled(Typography)(({ theme }) => ({
   width: '100%',
@@ -150,6 +173,29 @@ function Login({handleForgotPasswordClick} : LoginProps) {
     }
   };
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const idToken = credentialResponse.access_token; // Use `access_token` for OAuth login
+
+        if (idToken) {
+          console.log("logging user via google.")
+          const response = await apiClients.auth.awsSignInFederated();
+          // handleGoogleUserCreate()
+          
+          console.log('User signed in:', response);
+        } else {
+          console.error('Google sign-in token is missing');
+        }
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+      }
+    },
+    onError: () => {
+      console.error('Google Sign-In Failed');
+    },
+  });
+
   const handleSignupClick = () => {
     navigate('/Signup'); // Navigate to the Signup page
   };
@@ -162,7 +208,10 @@ function Login({handleForgotPasswordClick} : LoginProps) {
         <UpperLogin>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
           <UpperLoginText>Sign In to an Existing Account</UpperLoginText>
-          <UpperLoginGoogleButton>Log in with Google</UpperLoginGoogleButton>
+          <GoogleLoginButton onClick={() => googleLogin()} variant="contained">
+            <img src={GoogleImageSvg} alt="Google Icon" width="30px" height="30px" />
+            Login with Google
+          </GoogleLoginButton>
         </UpperLogin>
         <OrText>or</OrText>
         <MiddleContainer>

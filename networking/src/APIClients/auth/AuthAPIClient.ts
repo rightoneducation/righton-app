@@ -1,6 +1,6 @@
 import { Amplify  } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
-import { Hub, CookieStorage  } from 'aws-amplify/utils';
+import { CookieStorage  } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { 
   signUp, 
@@ -16,7 +16,7 @@ import {
   type ResetPasswordOutput,
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
-  AuthSession
+  AuthSession,
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
@@ -33,11 +33,6 @@ export class AuthAPIClient
   constructor(){
     this.isUserAuth = false;
     this.configAmplify(amplifyconfig);
-    this.authListener();
-  }
-  async init(): Promise<void> {
-    this.authEvents(null); 
-    this.isUserAuth = await this.verifyAuth();
   }
 
   configAmplify(awsconfig: any): void {
@@ -48,11 +43,9 @@ export class AuthAPIClient
 
   async verifyAuth(): Promise<boolean> {
     const session = await fetchAuthSession();
+    console.log(session);
     if (session && session.tokens && session.tokens.accessToken) {
-      const groups = session.tokens.accessToken.payload["cognito:groups"];
-      if (Array.isArray(groups) && groups.includes('authusers')) {
         return true;
-      }
     };
     return false;
   }
@@ -91,6 +84,7 @@ export class AuthAPIClient
 
   async getUserNickname(): Promise<string | null> {
     try {
+      console.log("Updates are happening.")
       const attributes = await fetchUserAttributes();
       if (attributes && attributes.nickname !== undefined) {
         return attributes.nickname;
@@ -103,28 +97,21 @@ export class AuthAPIClient
     }
   }
 
-  authEvents (payload: any): void {
-    if (!payload) {
-      this.isUserAuth = false;
-      return;
-    }
-    switch (payload.event) {
-      case 'signedIn':
-      case 'signInWithRedirect':
-        this.isUserAuth = true;
-        break;
-      default:
-        this.isUserAuth = false;
-        break;
-    }
-  }
-
-  authListener() {
-    Hub.listen('auth', ({ payload }) => {
-      console.log('auth event detected')
-      this.authEvents(payload);
+  async getUserEmail(): Promise<string | null> {
+    try {
+      const userAttributes = await fetchUserAttributes();
+      console.log("User Attributes:", userAttributes);
+      
+      if(userAttributes && userAttributes.email != undefined){
+        return userAttributes.email; // Email is stored under "email" key
+      } else {
+        return null
       }
-    );
+
+    } catch (error) {
+      console.error("Error fetching user attributes:", error);
+      return null;
+    }
   }
 
   async awsSignUp(username: string, email: string, password: string) {
@@ -140,9 +127,15 @@ export class AuthAPIClient
     });
   }
 
+  // not using a hub listener here and elsewhere as we need more fine-grained control over
+  // auth state handling (particularly with federated sign-in)
   async awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput> {
+    try {
     const response = await confirmSignUp({username: email, confirmationCode: code});
     return response;
+    } catch (e: any) {
+      throw new Error (e);
+    }
   }
 
   async awsSignIn(username: string, password: string): Promise<SignInOutput> {
@@ -168,7 +161,6 @@ export class AuthAPIClient
 
   async awsSignOut(): Promise<void> {
     await signOut();
-
   }
 
   async awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {

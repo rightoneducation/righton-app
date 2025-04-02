@@ -3,10 +3,10 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
-import { ScreenType, ScreenSize } from '../lib/CentralModels';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
+import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
-import { ModalBackground } from '../lib/styledcomponents/QuestionTabsStyledComponents';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 
 const ScreenContainer = styled(Box)(({ theme }) => ({
@@ -17,37 +17,42 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
   
 }));
 
-interface BodyContainerProps {
-  screenSize: ScreenSize;
-}
-
-const BodyContainer = styled(Box)<BodyContainerProps>(
-  ({ theme, screenSize }) => ({
-    width: '100%',
-    display: 'flex',
-    flexGrow: 1,
-    overflowY: 'auto',
-    '&::-webkit-scrollbar': {
-      // Chrome and Safari
-      display: 'none',
-    },
-    scrollbarWidth: 'none', // Firefox
-    '-ms-overflow-style': 'none',
-    position: 'relative'
-  }),
+const BodyContainer = styled(Box)(() => {
+    return {
+      width: '100%',
+      display: 'flex',
+      flexGrow: 1,
+      overflowY: 'auto',
+      '&::-webkit-scrollbar': {
+        // Chrome and Safari
+        display: 'none',
+      },
+      scrollbarWidth: 'none', // Firefox
+      msOverflowStyle: 'none',
+    }
+  }
 );
 
 interface AppContainerProps {
   currentScreen: ScreenType;
-  isTabsOpen?: boolean;
+  gameQuestion?: GameQuestionType;
   setIsTabsOpen?: (isTabsOpen: boolean) => void;
+  setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void
   children: React.ReactNode;
-  isUserLoggedIn: boolean;
+  
 }
 
-function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, isUserLoggedIn, children }: AppContainerProps) {
+function AppContainer({ 
+  currentScreen, 
+  gameQuestion,
+  setIsTabsOpen, 
+  setLibraryGameQuestionSwitch,
+  children 
+}: AppContainerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [menuOpen, setMenuOpen] = useState(false);
@@ -60,12 +65,13 @@ function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, isUserLoggedIn
     if (setIsTabsOpen)
       setIsTabsOpen(false);
   }
+
   return (
     <ScreenContainer>
       <HeaderContainer>
-        { isTabsOpen && 
+        { centralData.isTabsOpen && 
           <QuestionTabsModalBackground 
-            isTabsOpen={isTabsOpen} 
+            isTabsOpen={centralData.isTabsOpen} 
             handleBackToExplore={handleBackToExplore} 
           />
         }
@@ -74,11 +80,13 @@ function AppContainer({ currentScreen, isTabsOpen, setIsTabsOpen, isUserLoggedIn
           screenSize={screenSize}
           isLgScreen={isLgScreen}
           menuOpen={menuOpen}
+          gameQuestion={gameQuestion}
+          setGameQuestion={setLibraryGameQuestionSwitch}
           setMenuOpen={setMenuOpen}
-          isUserLoggedIn={isUserLoggedIn}
+          userStatus={centralData.userStatus}
         />
       </HeaderContainer>
-      <BodyContainer screenSize={screenSize}>{children}</BodyContainer>
+      <BodyContainer>{children}</BodyContainer>
     </ScreenContainer>
   );
 }

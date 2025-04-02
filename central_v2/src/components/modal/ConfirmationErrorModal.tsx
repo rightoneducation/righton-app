@@ -50,7 +50,7 @@ interface CreatingTemplateModalProps {
   userProfile: IUserProfile;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 export default function ConfirmationErrorModal({

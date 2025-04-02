@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider,
-  useMatch,
+  RouterProvider
 } from 'react-router-dom';
 import { useAPIClients, Environment, AppType } from '@righton/networking';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -13,6 +12,7 @@ import { APIClientsContext } from './lib/context/APIClientsContext';
 import Theme from './lib/Theme';
 import AppSwitch from './switches/AppSwitch';
 import CreateQuestionLoader from './loaders/CreateQuestionLoader';
+import { CentralDataProvider } from './lib/context/CentralDataContext';
 
 function App() {
   const { apiClients, loading } = useAPIClients(
@@ -38,6 +38,8 @@ function App() {
             <Route path="/create/game" element={<AppSwitch />} />
             <Route path="/create/question" element={<AppSwitch />} loader={CreateQuestionLoader}/>
             <Route path="/confirmation" element={<AppSwitch />} />
+            <Route path="/nextstep" element={<AppSwitch />} />
+            <Route path="/library" element={<AppSwitch />} />
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />
@@ -51,7 +53,9 @@ function App() {
         <ThemeProvider theme={Theme}>
           {apiClients && (
             <APIClientsContext.Provider value={apiClients}>
-              <RouterProvider router={router} />
+                <CentralDataProvider> 
+                  <RouterProvider router={router} />
+                </CentralDataProvider>
             </APIClientsContext.Provider>
           )}
         </ThemeProvider>

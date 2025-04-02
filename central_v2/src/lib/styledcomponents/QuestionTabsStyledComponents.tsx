@@ -22,7 +22,7 @@ export const ModalBackground = styled(Box)(({ theme }) => ({
 export const ContentFrame = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: 0,
-  paddingTop: '115px',
+  paddingTop: '32px',
   paddingLeft: '32px',
   paddingRight: '32px',
   boxSizing: 'border-box',
@@ -43,7 +43,9 @@ type StyledTabProps = {
   isSelected: boolean;
 };
 
-export const StyledTab = styled(Tab)<StyledTabProps>(({ theme, isSelected }) => ({
+export const StyledTab = styled(Tab, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<StyledTabProps>(({ theme, isSelected }) => ({
   background: '#304B7F',
   color: 'rgba(255, 255, 255, 0.5)',
   minWidth: '64px',
@@ -72,7 +74,8 @@ export const ContentContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: `${theme.sizing.mdPadding}px`,
+  padding: '24px',
+  boxSizing: 'border-box',
 }));
 
 export const ButtonContainer = styled(Box)(({ theme }) => ({

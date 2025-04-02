@@ -8,7 +8,9 @@ interface GameCardProps {
   isCarousel: boolean;
 }
 
-const GameCard = styled(Box)<GameCardProps>(({ theme, screenSize, isCarousel }) => ({
+const GameCard = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'isCarousel',
+})<GameCardProps>(({ theme, screenSize, isCarousel }) => ({
   width: screenSize !== ScreenSize.LARGE ? (isCarousel ? '290px' : '327px') : '384px', // eslint-disable-line
   height: '505px',
   gap: `${theme.sizing.smPadding}px`,

@@ -6,7 +6,9 @@ interface PublicPrivateContainerProps {
   isDisabled: boolean;
 }
 
-const PublicPrivateContainer = styled(Button)<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
+const PublicPrivateContainer = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'isDisabled',
+})<PublicPrivateContainerProps>(({theme, isDisabled}) => ({
   width: '144px',
   minHeight: '36px',
   borderRadius: '24px',
@@ -60,7 +62,9 @@ interface PublicPrivateTextProps {
   isSelected: boolean;
 }
 
-const PublicPrivateText = styled(Typography)<PublicPrivateTextProps>(({isSelected, theme}) => ({
+const PublicPrivateText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})<PublicPrivateTextProps>(({isSelected, theme}) => ({
   fontSize: '14px',
   color: isSelected ? `${theme.palette.primary.main}` : `${theme.palette.primary.sliderBlue}`,
   textTransform: 'none',

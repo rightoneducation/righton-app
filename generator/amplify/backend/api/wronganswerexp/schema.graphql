@@ -1,0 +1,30 @@
+type SavedExplanation @model 
+@auth(
+ rules: [
+    { allow: public, provider: identityPool  },
+  ]
+)
+{
+  id: ID!
+  question: String!
+  correctAnswer: String!
+  wrongAnswer: String!
+  genExplanation: AWSJSON!
+  discardedExplanations: AWSJSON
+  version: String!
+}
+
+type DiscardedExplanation @model 
+@auth(
+ rules: [
+    { allow: public, provider: identityPool  },
+  ]
+)
+{
+  id: ID!
+  question: String!
+  explanation: String!
+  reason: String
+  discardText: String
+  version: String!
+}

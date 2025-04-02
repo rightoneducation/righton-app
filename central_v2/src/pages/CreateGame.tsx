@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { debounce } from 'lodash';
 import {
   CentralQuestionTemplateInput,
   IGameTemplate,
@@ -8,8 +7,7 @@ import {
   IQuestionTemplate,
   PublicPrivateType,
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
-import { Box, Fade } from '@mui/material';
+import { Box, Fade, Typography, styled } from '@mui/material';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
@@ -23,22 +21,34 @@ import {
 } from '../lib/CentralModels';
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
-
 import CreateGameComponent from '../components/game/CreateGameComponent';
 import QuestionElements from '../components/game/QuestionGridItems';
 import useCreateGame from '../hooks/useCreateGame';
 import useCreateQuestion from '../hooks/useCreateQuestion';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
 import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
-import ExploreQuestions from './ExploreQuestions';
 import tabExploreQuestionsIcon from '../images/tabExploreQuestions.svg';
 import tabMyQuestionsIcon from '../images/tabMyQuestions.svg';
 import tabFavoritesIcon from '../images/tabFavorites.svg';
-import tabDraftsIcon from '../images/tabDrafts.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
-import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
 import { type TDraftQuestionsList } from '../hooks/useCreateQuestion';
+
+type TitleTextProps = {
+  screenSize: ScreenSize;
+}
+
+const TitleText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<TitleTextProps>(({ theme, screenSize }) => ({
+  lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
+  fontFamily: 'Poppins',
+  fontWeight: '700',
+  fontSize:
+    screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
+  color: `${theme.palette.primary.extraDarkBlue}`,
+  paddingTop: `${theme.sizing.lgPadding}px`,
+}));
 
 interface CreateGameProps {
   screenSize: ScreenSize;

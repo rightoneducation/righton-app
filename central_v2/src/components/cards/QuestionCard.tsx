@@ -103,7 +103,7 @@ export default function StyledQuestionCard({
         ? <CarouselQuestionImage src={image} alt="Tag" />  
         : <QuestionImage src={image} alt="Tag" />       
       }
-      <FavouriteButton isEnabled/>
+      <FavouriteButton isEnabled id={id}/>
       <ContentContainer>
         <TitleContainer>
           <ButtonCCSS key={`${domainAndGrade}-${id}`}>

@@ -53,6 +53,7 @@ export enum SortDirection {
 export enum PublicPrivateType {
   PUBLIC = "Public",
   PRIVATE = "Private",
+  DRAFT = "Draft"
 }
 export interface GraphQLOptions {
   input?: object;
@@ -98,7 +99,7 @@ export abstract class BaseAPIClient {
     query: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
@@ -107,21 +108,21 @@ export abstract class BaseAPIClient {
     return (result as GraphqlSubscriptionResult<T>).subscribe !== undefined;
   }
 
-  protected mutateGraphQL<T>(
+  protected async mutateGraphQL<T>(
     mutation: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     const response = client.graphql({query: mutation, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
-  protected subscribeGraphQL<T>(
+  protected async subscribeGraphQL<T>(
     subscription: any,
     callback: (value: T) => void
   ) {
     //@ts-ignore
-    const authMode = this.auth.isUserAuth ? "userPool" : "iam";
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
     const result = client.graphql({
       query: subscription.query,
       variables: subscription.variables,
@@ -163,56 +164,65 @@ export abstract class BaseAPIClient {
       query: any,
       type: PublicPrivateType,
       gradeTargets?: GradeTarget[] | null,
+      favIds?: string[] | null
     ): Promise<QueryResult | null> {
       let queryParameters: IQueryParameters = { limit, nextToken, type: awsType };
-      const filterStringLowerCase = filterString?.toLowerCase();
-      if (filterStringLowerCase != null) {
-        queryParameters.filter = { lowerCaseTitle: { contains: filterStringLowerCase } };
-      if (filterStringLowerCase != null && gradeTargets) {
-          const filters: any[] = [];
-          const gradeFilters: any[] = [];
-          filters.push({ lowerCaseTitle: { contains: filterStringLowerCase } });
-          if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-            filters.push({ lowerCaseDescription: { contains: filterStringLowerCase } });
-          }
-          filters.push({ ccss: { contains: filterStringLowerCase } });
-          if (gradeTargets.length === 0) {
-            queryParameters.filter = { 
-              or: filters 
-            };       // Match at least one of the filters (title, description, etc.)
-          } else {
-            gradeTargets.forEach((target) => {
-              if (target !== null) {
-                gradeFilters.push({ gradeFilter: { eq: target } });
-              }
-            });
-            queryParameters.filter = {
-              and: [
-                { or: gradeFilters }, // Match one of the specified grades
-                { or: filters }       // Match at least one of the filters (title, description, etc.)
-              ]
-            };
-          }
-        }
+      if (!queryParameters.filter) {
+        queryParameters.filter = { and: [] };
       }
+      let searchFilter: any = {};
+      let gradeFilter: any = {};
+      let favFilter: any = {};
+      const filterStringLowerCase = filterString?.toLowerCase();
+      if (favIds && favIds.length > 0) {
+        favFilter = {
+          or: 
+            favIds.map((id) => {
+              return { id: { eq: id }}
+            })
+        }
+        queryParameters.filter.and.push(favFilter);
+      }
+      if (filterStringLowerCase != null) {
+        searchFilter = { 
+          or: [
+            { lowerCaseTitle: { contains: filterStringLowerCase } },
+            { ccss: { contains: filterStringLowerCase } }
+          ]
+        };
+        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate")
+          searchFilter.or.push({ lowerCaseDescription: { contains: filterStringLowerCase }});
+        queryParameters.filter.and.push(searchFilter);
+      }
+      if (gradeTargets && gradeTargets.length > 0) {
+        gradeFilter = { 
+          or: 
+            gradeTargets.map((target) => {
+              return { gradeFilter: { eq: target } };
+            })
+          }
+          queryParameters.filter.and.push(gradeFilter);
+      }
+      
       if (sortDirection != null) {
         queryParameters.sortDirection = sortDirection;
       }
-      const authMode = this.auth.isUserAuth ? "userPool" : "iam";
-      let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode})) as { data: any };
-      if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {     
+      console.log(queryParameters);
+      const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
+      let result = (await client.graphql({query: query, variables: queryParameters, authMode: authMode as GraphQLAuthMode })) as { data: any };
+      if (result && result.data[queryName] && result.data[queryName].items && result.data[queryName].items.length > 0) {
         const operationResult = result.data[queryName];
         const parsedNextToken = operationResult.nextToken;
-          if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
-            const gameTemplates = operationResult.items.map((item: any) => 
-                GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
-            );
-            return { gameTemplates, nextToken: parsedNextToken };
+        if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {
+          const gameTemplates = operationResult.items.map((item: any) => 
+              GameTemplateParser.gameTemplateFromAWSGameTemplate(item, type)
+          );
+          return { gameTemplates, nextToken: parsedNextToken };
         } else {
-            const questionTemplates = operationResult.items.map((item: any) => 
-                QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
-            );
-            return { questionTemplates, nextToken: parsedNextToken };
+          const questionTemplates = operationResult.items.map((item: any) => 
+              QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(item, type)
+          );
+          return { questionTemplates, nextToken: parsedNextToken };
         }
       }
       if (awsType === "PublicGameTemplate" || awsType === "PrivateGameTemplate") {

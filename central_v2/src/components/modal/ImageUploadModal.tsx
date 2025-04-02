@@ -19,7 +19,9 @@ interface IntegratedContainerProps {
   screenSize: ScreenSize
 }
 
-const IntegratedContainer = styled(Paper)<IntegratedContainerProps>(({ screenSize, theme }) => ({
+const IntegratedContainer = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<IntegratedContainerProps>(({ screenSize, theme }) => ({
   position: 'absolute',
   width: 'calc(100% - 48px)',
   maxWidth: '800px',

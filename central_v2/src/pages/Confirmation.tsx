@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
 import { TextField, Box, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
-import { IUserProfile } from '@righton/networking';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { ButtonType } from '../components/button/ButtonModels';
@@ -11,7 +11,7 @@ import {
     TextContainerStyled,
   } from '../lib/styledcomponents/CreateQuestionStyledComponents';
 import ConfirmationErrorModal from '../components/modal/ConfirmationErrorModal';
-import RightOnLogo from "../images/RightOnLogo.png";
+import RightOnLogo from '../images/RightOnUserLogo.svg';
 import ModalBackground from '../components/modal/ModalBackground';
 
 // Styled components
@@ -97,21 +97,21 @@ const VerifyBox = styled(Box)(({ theme }) => ({
 
 // Props interface
 interface ConfirmationProps {
-    userProfile: IUserProfile;
-    setUserProfile: React.Dispatch<React.SetStateAction<IUserProfile>>;
     frontImage: File;
     backImage: File;
     handlerImageUpload: (file: File) => Promise<any>;
-    setIsTabsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsTabsOpen: (isOpen: boolean) => void;
 }
 
 // Use function declaration for the component
-function Confirmation({ userProfile, setUserProfile, frontImage, backImage, handlerImageUpload, setIsTabsOpen}: ConfirmationProps) {
+function Confirmation({ frontImage, backImage, handlerImageUpload, setIsTabsOpen}: ConfirmationProps) {
     const theme = useTheme();
     const [code, setCode] = useState(Array(6).fill(''));
     const [isVerifying, setIsVerifying] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const apiClients = useTSAPIClientsContext(APIClientsContext);
+    const centralData = useCentralDataState();
+    const centralDataDispatch = useCentralDataDispatch();
     const navigate = useNavigate(); // Initialize useNavigate
 
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // Refs for each input box
@@ -146,13 +146,19 @@ function Confirmation({ userProfile, setUserProfile, frontImage, backImage, hand
             alert('Please enter all 6 digits of the confirmation code.');
         }
         try {
-            const response = await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(userProfile, fullCode, frontImage, backImage);
-            setUserProfile((prev) => response?.updatedUser ?? prev);
+            const response = await apiClients.centralDataManager?.signUpConfirmAndBuildBackendUser(centralData.userProfile, fullCode, frontImage, backImage);
+            centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
             setIsVerifying(false);
             navigate('/');
         } catch (error: any) {
             setIsVerifying(false);
-            console.dir(error);
+            console.log(error);
+            const errorInfo = Object.getOwnPropertyNames(error).reduce((acc, key) => {
+                acc[key] = error[key];
+                return acc;
+              }, {} as any);
+              
+              console.log(errorInfo); // now includes message, stack, etc.
            
             if (error.message === 'CodeMismatchException: Invalid verification code provided, please try again.') {
                 handleConfirmationError();
@@ -161,7 +167,7 @@ function Confirmation({ userProfile, setUserProfile, frontImage, backImage, hand
     };
     const handleResendCodeClick = async () => {
         try {
-            await apiClients.auth.awsResendConfirmationCode(userProfile.email);
+            await apiClients.auth.awsResendConfirmationCode(centralData.userProfile.email);
         } catch (error) {
             console.error('Error resending confirmation code:', error);
         }
@@ -176,7 +182,7 @@ function Confirmation({ userProfile, setUserProfile, frontImage, backImage, hand
 
     return (
         <OuterBody>
-            <ConfirmationErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userProfile={userProfile} setIsTabsOpen={setIsTabsOpen}/>
+            <ConfirmationErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userProfile={centralData.userProfile} setIsTabsOpen={setIsTabsOpen}/>
             <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
             <InnerBody>
                 <ImageContainer>

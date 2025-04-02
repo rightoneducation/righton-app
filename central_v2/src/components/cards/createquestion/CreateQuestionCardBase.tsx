@@ -49,7 +49,9 @@ type ImagePlaceholderProps = {
   isCardErrored: boolean;
 }
 
-export const ImagePlaceholder = styled(Box)<ImagePlaceholderProps>(({ theme, isCardErrored }) => ({
+export const ImagePlaceholder = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isCardErrored',
+})<ImagePlaceholderProps>(({ theme, isCardErrored }) => ({
   width: '100%',
   height: '196px',
   background: `${theme.palette.primary.uploadLightGrey}`,
@@ -67,7 +69,9 @@ interface CreateQuestionTitleBarStyledProps {
   screenSize: ScreenSize;
 }
 
-export const CreateQuestionTitleBarStyled = styled(Box)<CreateQuestionTitleBarStyledProps>(({ theme, screenSize }) => ({
+export const CreateQuestionTitleBarStyled = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<CreateQuestionTitleBarStyledProps>(({ theme, screenSize }) => ({
   width: '100%',
   height: 'fit-content',
   display: 'flex',

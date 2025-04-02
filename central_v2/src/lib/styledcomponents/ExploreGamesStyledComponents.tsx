@@ -14,7 +14,7 @@ export const ExploreGamesMainContainer = styled(Box)(({ theme }) => ({
     display: 'none',
   },
   scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
+  msOverflowStyle: 'none',
 }));
 
 interface ExploreGamesUpperContainerProps {
@@ -22,7 +22,9 @@ interface ExploreGamesUpperContainerProps {
 }
 
 export const ExploreGamesUpperContainer = styled(
-  Box,
+  Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+  }
 )<ExploreGamesUpperContainerProps>(({ screenSize, theme }) => ({
   // eslint-disable-line
   display: 'flex',

@@ -1,51 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IAPIClients, IGameTemplate } from '@righton/networking';
-import { useTranslation } from 'react-i18next';
-import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Box, Button } from '@mui/material';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { ScreenSize } from '../lib/CentralModels';
+import { 
+  PublicPrivateType,
+  IUserProfile,
+  GradeTarget,
+  SortType,
+  SortDirection
+} from '@righton/networking';
+import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
+import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
+import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
-  apiClients: IAPIClients;
+  gameQuestion: GameQuestionType;
+  screenSize: ScreenSize;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (
+    newSort: {
+      field: SortType;
+      direction: SortDirection | null;
+    }
+  ) => void;
+  handleSearchChange: (searchString: string) => void;
+  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  fetchElements: () => void;
 }
 
-const MyLibraryContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  backgroundColor: `${theme.palette.primary.extraDarkBlue}`,
-  overflow: 'auto',
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none',
-  width: '100%',
-  height: '100vh',
-}));
-
-export default function MyLibrary({ apiClients }: MyLibraryProps) {
-  const theme = useTheme();
-  const { t } = useTranslation();
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const isXLScreen = useMediaQuery(theme.breakpoints.up('xl'));
-  const screenSize = isLargeScreen // eslint-disable-line
-    ? ScreenSize.LARGE
-    : isMediumScreen
-      ? ScreenSize.MEDIUM
-      : ScreenSize.SMALL;
-
-  useEffect(() => {
-    // TODO - implement api requests for my library screen
-  }, []);
-
+export default function MyLibrary({ 
+  gameQuestion,
+  screenSize,
+  setIsTabsOpen,
+  handleChooseGrades,
+  handleSortChange,
+  handleSearchChange,
+  handlePublicPrivateChange,
+  fetchElements
+}: MyLibraryProps) {
   return (
-    <MyLibraryContainer id="scrollableDiv">
-      <Typography> MY LIBRARY PAGE</Typography>
-    </MyLibraryContainer>
+    <MyLibraryMainContainer>
+      <MyLibraryBackground/>
+        <LibraryTabsContainer 
+          gameQuestion={gameQuestion}
+          screenSize={screenSize}
+          setIsTabsOpen={setIsTabsOpen}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+          handleSearchChange={handleSearchChange}
+          handlePublicPrivateChange={handlePublicPrivateChange}
+          fetchElements={fetchElements}
+        />
+    </MyLibraryMainContainer>
   );
 }

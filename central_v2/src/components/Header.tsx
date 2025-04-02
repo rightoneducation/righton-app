@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Button, Typography, Collapse, IconButton, Paper } from '@mui/material';
+import { Box, Button, Typography, Collapse, Fade, IconButton, Paper } from '@mui/material';
 import rightonlogo from '../images/rightonlogo.svg';
 import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
@@ -16,10 +16,12 @@ import hamburgerX from '../images/hamburgerX.svg';
 import plus from '../images/plus.svg';
 import createDropdownGame from '../images/createDropdownGame.svg';
 import createDropdownQuestion from '../images/createDropdownQuestion.svg'
-import { ScreenType, ScreenSize } from '../lib/CentralModels';
+import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
 import CentralButton from './button/Button';
 import { ButtonType } from './button/ButtonModels';
 import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
+import PublicPrivateButton from './button/publicprivatebutton/PublicPrivateButton';
+import GameQuestionButton from './button/gamequestionbutton/GameQuestionButton';
 
 interface HeaderProps {
   currentScreen: ScreenType;
@@ -27,21 +29,26 @@ interface HeaderProps {
   isLgScreen: boolean;
   menuOpen: boolean;
   setMenuOpen: (menuOpen: boolean) => void;
-  isUserLoggedIn: boolean;
+  gameQuestion?: GameQuestionType;
+  setGameQuestion?: (gameQuestion: GameQuestionType) => void;
+  userStatus: UserStatusType;
 }
 
 interface HeaderContainerProps {
   screenSize: ScreenSize;
   menuOpen: boolean;
+  selectedScreen: ScreenType;
 }
-const HeaderContainer = styled(Box)<HeaderContainerProps>(
-  ({ screenSize, menuOpen, theme }) => ({
-    height: '94px',
+const HeaderContainer = styled(Box, {
+ shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'menuOpen' && prop !== 'selectedScreen', 
+})<HeaderContainerProps>(
+  ({ screenSize, menuOpen, selectedScreen, theme }) => ({
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
-    padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
+    padding: `${theme.sizing.smPadding}px ${theme.sizing.xLgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.xLgPadding}px`,
     boxSizing: 'border-box',
     position: 'relative',
     backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
@@ -52,13 +59,30 @@ const HeaderContainer = styled(Box)<HeaderContainerProps>(
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'bottom', // Adjust as needed
     zIndex: 1,
+    gap: `${theme.sizing.mdPadding}px`,
+    transition: 'height 0.5s ease-in-out',
   }),
 );
 
-const TransparentButton = styled(Button)<{
-  active?: boolean;
+const HeaderFirstRow = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+}));
+
+const HeaderSecondRow = styled(HeaderFirstRow)(({ theme }) => ({
+  justifyContent: 'center'
+}));
+
+const TransparentButton = styled(Button,
+  {
+    shouldForwardProp: (prop) => prop !== 'isActive' && prop !== 'menuOpen',
+  }
+)<{
+  isActive?: boolean;
   menuOpen?: boolean;
-}>(({ active, menuOpen, theme }) => ({
+}>(({ isActive, menuOpen, theme }) => ({
   display: 'flex',
   justifyContent: menuOpen ? 'flex-start' : 'center',
   width: '200px',
@@ -100,24 +124,28 @@ const PinkIcon = styled('img')(({ theme }) => ({
 }));
 
 interface ButtonTextProps {
-  active: boolean;
+  isActive: boolean;
 }
 
-const ButtonText = styled(Typography)<ButtonTextProps>(({ active, theme }) => ({
+const ButtonText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isActive',
+})<ButtonTextProps>(({ isActive, theme }) => ({
   fontFamily: 'Poppins',
   fontSize: '20px',
   fontWeight: 700,
   lineHeight: '30px',
   textAlign: 'center',
   textTransform: 'none',
-  color: active ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
+  color: isActive ? `${theme.palette.primary.buttonNavSelected}` : '#FFFFFF',
 }));
 
 interface ImageContainerProps {
   align: 'flex-start' | 'center' | 'flex-end';
 }
 
-const ImageContainer = styled(Box)<ImageContainerProps>(({ align }) => ({
+const ImageContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'align',
+})<ImageContainerProps>(({ align }) => ({
   display: 'flex',
   justifyContent: align,
   alignItems: 'center',
@@ -131,7 +159,9 @@ export default function Header({
   isLgScreen,
   menuOpen,
   setMenuOpen,
-  isUserLoggedIn
+  gameQuestion,
+  setGameQuestion,
+  userStatus,
 }: HeaderProps) {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -166,7 +196,7 @@ export default function Header({
   };
 
   const createMenu = [
-    <CreateButtonContainer>
+    <CreateButtonContainer key="createMenu">
     <Box style={{zIndex: 4}}>
       <CentralButton buttonType={ButtonType.CREATE} isEnabled smallScreenOverride={screenSize === ScreenSize.SMALL} onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
     </Box>
@@ -191,7 +221,7 @@ export default function Header({
 
   const loggedInUserComponents = [
     isLgScreen ? (
-      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}}>
+      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}} key="lgscreen">
         {createMenu}
         <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
       </Box>
@@ -201,36 +231,23 @@ export default function Header({
   ]
 
   return (
-    <Collapse
-      in
-      timeout={500}
-      style={{
-        transition: 'height 0.5s ease-in-out',
-        height: getHeight(),
-        width: '100%',
-        overflow: !isLgScreen ? 'hidden' : 'visible',
-        zIndex: 0,
-        position: 'fixed',
-        background: 'linear-gradient(180deg, rgb(2, 33, 95) 0%, rgba(2, 33, 95, 0) 100%)',
-        padding: '0px 0px 16px 0px',
-        display: 'flex',
-        justifyContent: 'center', // Center the entire menu box horizontally
-        boxSizing: 'border-box',
-      }}
-    >
-      <HeaderContainer screenSize={screenSize} menuOpen={menuOpen}>
+    <>
+
+      <HeaderContainer screenSize={screenSize} menuOpen={menuOpen} selectedScreen={selectedScreen}>
+        <HeaderFirstRow>
         <ImageContainer
           align="flex-start"
           style={{
             width: isLgScreen ? '210px' : 'auto',
             alignItems: 'flex-start',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            
           }}
           onClick={() =>
             handleButtonClick(ScreenType.GAMES)
           }
         >
-          <img src={rightonlogo} alt="Right On Logo" />
+          <img src={rightonlogo} alt="Right On Logo" style={{maxHeight: '55px'}}/>
         </ImageContainer>
         <ImageContainer align="center" style={{ flexDirection: 'column' }}>
           {isLgScreen ? (
@@ -240,7 +257,7 @@ export default function Header({
                 onClick={() =>
                   handleButtonClick(ScreenType.GAMES)
                 }
-                active={
+                isActive={
                   selectedScreen === ScreenType.GAMES
                 }
               >
@@ -248,7 +265,7 @@ export default function Header({
                   ? <PinkIcon src={dice} alt="Games Icon" />
                   : <img src={dice} alt="Games Icon" />
                 }
-                <ButtonText active={selectedScreen === ScreenType.GAMES}>
+                <ButtonText isActive={selectedScreen === ScreenType.GAMES}>
                   Games
                 </ButtonText>
               </TransparentButton>
@@ -257,7 +274,7 @@ export default function Header({
                 onClick={() =>
                   handleButtonClick(ScreenType.QUESTIONS)
                 }
-                active={
+                isActive={
                   selectedScreen === ScreenType.QUESTIONS
                 }
               >
@@ -265,25 +282,27 @@ export default function Header({
                   ? <PinkIcon src={qmark} alt="Questions Icon" />
                   : <img src={qmark} alt="Questions Icon" />
                 }
-                <ButtonText active={selectedScreen === ScreenType.QUESTIONS}>
+                <ButtonText isActive={selectedScreen === ScreenType.QUESTIONS}>
                   Questions
                 </ButtonText>
               </TransparentButton>
+              { userStatus === UserStatusType.LOGGEDIN && 
               <TransparentButton
                 disableRipple
                 onClick={() =>
                   handleButtonClick(ScreenType.LIBRARY)
                 }
-                active={selectedScreen === ScreenType.LIBRARY}
+                isActive={selectedScreen === ScreenType.LIBRARY}
               >
                  { selectedScreen === ScreenType.LIBRARY
                   ? <PinkIcon src={books} alt="Library Icon" />
                   : <img src={books} alt="Library Icon" />
                 }
-                <ButtonText active={selectedScreen === ScreenType.LIBRARY}>
+                <ButtonText isActive={selectedScreen === ScreenType.LIBRARY}>
                   My Library
                 </ButtonText>
               </TransparentButton>
+              }
             </Box>
           ) : (
             <IconButton onClick={handleMenuToggle}>
@@ -295,7 +314,7 @@ export default function Header({
           )}
         </ImageContainer>
         <Box style={{width: 'fit-content', display: 'flex', gap: '16px', justifyContent: 'center'}}>
-          {isUserLoggedIn 
+          {userStatus === UserStatusType.LOGGEDIN 
             ? loggedInUserComponents
             :
               <>
@@ -304,6 +323,22 @@ export default function Header({
               </>
           }
         </Box>
+        </HeaderFirstRow>
+        <Collapse
+          in
+          style={{
+            transition: selectedScreen === ScreenType.LIBRARY ? 'height 0.5s ease-in-out' : 'none',
+            height: selectedScreen === ScreenType.LIBRARY ? '94px' : '0px',
+          }}
+        > 
+          <HeaderSecondRow>
+            <Fade in={selectedScreen === ScreenType.LIBRARY} timeout={{enter: 1000, exit: 0}}  style={{transition: 'height 0.5s ease-in-out'}}>
+              <div>
+              <GameQuestionButton isDisabled={false} gameQuestion={gameQuestion} setGameQuestion={setGameQuestion}/>
+              </div>
+            </Fade>
+          </HeaderSecondRow>
+          </Collapse>
       </HeaderContainer>
       {menuOpen && (
         <Box
@@ -318,7 +353,7 @@ export default function Header({
             onClick={() =>
               handleButtonClick(ScreenType.GAMES)
             }
-            active={selectedScreen === ScreenType.GAMES}
+            isActive={selectedScreen === ScreenType.GAMES}
             menuOpen={menuOpen}
           >
             { selectedScreen === ScreenType.GAMES
@@ -331,7 +366,7 @@ export default function Header({
             onClick={() =>
               handleButtonClick(ScreenType.QUESTIONS)
             }
-            active={
+            isActive={
               selectedScreen === ScreenType.QUESTIONS
             }
             menuOpen={menuOpen}
@@ -342,22 +377,25 @@ export default function Header({
             }
             Questions
           </TransparentButton>
-          <TransparentButton
-            onClick={() =>
-              handleButtonClick(ScreenType.LIBRARY)
-            }
-            active={selectedScreen === ScreenType.LIBRARY}
-            menuOpen={menuOpen}
-          >
-            { selectedScreen === ScreenType.LIBRARY
-              ? <img src={libPink} alt="Library Icon" />
-              : <img src={lib} alt="Library Icon" />
-            }
-            My Library
-          </TransparentButton>
-          {isUserLoggedIn && createMenu}
+          {userStatus === UserStatusType.LOGGEDIN && 
+            <TransparentButton
+              onClick={() =>
+                handleButtonClick(ScreenType.LIBRARY)
+              }
+              isActive={selectedScreen === ScreenType.LIBRARY}
+              menuOpen={menuOpen}
+            >
+              { selectedScreen === ScreenType.LIBRARY
+                ? <img src={libPink} alt="Library Icon" />
+                : <img src={lib} alt="Library Icon" />
+              }
+              My Library
+            </TransparentButton>
+          }
+          {userStatus === UserStatusType.LOGGEDIN && createMenu}
         </Box>
       )}
-    </Collapse>
+     </>
+    // </Collapse>
   );
 }

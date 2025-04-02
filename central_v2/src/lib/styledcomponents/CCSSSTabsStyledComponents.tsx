@@ -6,7 +6,9 @@ interface CCSSTabContainerProps {
   screenSize: ScreenSize;
 }
 
-export const CCSSTabContainer = styled(Box)<CCSSTabContainerProps>(({ theme, screenSize }) => ({
+export const CCSSTabContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<CCSSTabContainerProps>(({ theme, screenSize }) => ({
   position: 'absolute',
   top: screenSize === ScreenSize.SMALL ? '5dvh' : '15dvh',
   height: '100',
@@ -24,7 +26,9 @@ interface CCSSContentContainerProps {
   screenSize: number;
 }
 
-export const CCSSContentContainer = styled(Box)<CCSSContentContainerProps>(({ theme, screenSize }) => ({
+export const CCSSContentContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<CCSSContentContainerProps>(({ theme, screenSize }) => ({
   position: 'relative',
   width: '100%',
   background: '#02215F',
@@ -46,7 +50,9 @@ interface CCSSContentFrameProps {
   screenSize: ScreenSize
 }
 
-export const CCSSContentFrame = styled(Box)<CCSSContentFrameProps>(({theme, screenSize}) => ({ // eslint-disable-line
+export const CCSSContentFrame = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'screenSize',
+})<CCSSContentFrameProps>(({theme, screenSize}) => ({ // eslint-disable-line
   boxSizing: 'border-box',
   height: 'fit-content',
   width: screenSize === ScreenSize.LARGE ? '672px' : '100%',
