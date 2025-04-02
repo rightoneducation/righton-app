@@ -8,6 +8,7 @@ import {
   GalleryType,
   IQuestionTemplate,
   PublicPrivateType,
+  IUserProfile,
   GradeTarget,
   SortType,
   SortDirection

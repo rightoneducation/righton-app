@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   PublicPrivateType,
@@ -28,6 +29,8 @@ import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from './ErrorBox';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
+import { SelectArrowContainer } from '../../../lib/styledcomponents/SelectGrade';
+import SelectArrow from '../../../images/dropDownArrow.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -156,7 +159,7 @@ export default function CreateQuestionCardBase({
     <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
-          <QuestionTitleStyled>Create Question</QuestionTitleStyled>
+          <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
           <ButtonCCSS key={uuidv4()} onClick={handleCCSSClick}>
             {draftQuestion.questionCard.ccss}
           </ButtonCCSS>
@@ -201,7 +204,12 @@ export default function CreateQuestionCardBase({
           <TextContainerStyled 
             multiline 
             variant="outlined" 
-            rows='5' 
+            rows='5'
+            sx={{ 
+              '& .MuiInputBase-root': {
+                fontFamily: 'Rubik',
+              },
+            }}
             placeholder="Enter question here..." 
             error={(isCardSubmitted || isAIError) && (!title || title.length === 0)}
             value={title}

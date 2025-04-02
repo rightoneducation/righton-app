@@ -1,4 +1,4 @@
-import { CentralQuestionTemplateInput, IncorrectCard } from "@righton/networking";
+import { CentralQuestionTemplateInput, IGameTemplate, IncorrectCard } from "@righton/networking";
 
 export enum UserStatusType {
   LOGGEDIN,
@@ -65,6 +65,10 @@ export type CreateQuestionLocalData = {
   completeCards?: IncorrectCard[] | null
 }
 
+// type that shapes retrieved storage for gameCreation
+export type CreateGameLocalData = {
+  gameTemplate: IGameTemplate | null;
+}
 export enum FetchType {
   EXPLORE_GAMES,
   EXPLORE_QUESTIONS,

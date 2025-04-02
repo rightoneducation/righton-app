@@ -3,7 +3,7 @@ import { CentralQuestionTemplateInput, IncorrectCard } from '@righton/networking
 import { StorageKey, CreateQuestionLocalData } from '../lib/CentralModels';
 
 
-export  default function CreateQuestion(): CreateQuestionLocalData {
+export  default function useCreateMultiQuestionLoader(): CreateQuestionLocalData {
     const storageObject = window.localStorage.getItem(StorageKey);
     let parsedObject: CentralQuestionTemplateInput | null = null;
     let incompleteAnswers: IncorrectCard[] = [];
