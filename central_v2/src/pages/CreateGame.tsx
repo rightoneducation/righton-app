@@ -348,31 +348,16 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         <Fade in={openQuestionBank} mountOnEnter unmountOnExit timeout={500}>
           <Box>
             <LibraryTabsQuestions
-              // gameQuestion={}
-              // setIsUserLoggeIn={}
-              // userProfile={}
-              // getFav={}
-              // isFavTabOpen={}
-              // publicPrivate={}
-              nextToken={nextToken}
-              isTabsOpen={isTabsOpen}
-              recommendedQuestions={recommendedQuestions}
-              favQuestions={favQuestions}
-              getLabel={getLabel}
-              setIsTabsOpen={setIsTabsOpen}
               screenSize={screenSize}
-              mostPopularQuestions={mostPopularQuestions}
-              searchedQuestions={searchedQuestions}
               tabMap={tabMap}
               tabIconMap={tabIconMap}
-              isLoading={isLoading}
-              searchTerms={searchTerms}
-              selectedGrades={selectedGrades}
+              setIsTabsOpen={setIsTabsOpen}
+              getLabel={getLabel}
               handleChooseGrades={handleChooseGrades}
               handleSortChange={handleSortChange}
               handleSearchChange={handleSearchChange}
               handlePublicPrivateChange={handlePublicPrivateQuestionChange}
-              loadMore={loadMoreQuestions}
+              fetchElements={loadMoreQuestions}
               handleView={handleView}
             />
           </Box>

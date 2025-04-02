@@ -26,27 +26,10 @@ import {
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
-  // gameQuestion: GameQuestionType;
-  // setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
-  // draftQuestions: IQuestionTemplate[];
-  // getDrafts: () => void;
-  // publicPrivate: PublicPrivateType;
-  // userProfile: IUserProfile;
-  // getFav: (user: IUserProfile) => void;
-  // isFavTabOpen: boolean;
-  isTabsOpen: boolean;
-  setIsTabsOpen: (isTabsOpen: boolean) => void;
   screenSize: ScreenSize;
-  recommendedQuestions: IQuestionTemplate[];
-  mostPopularQuestions: IQuestionTemplate[];
-  searchedQuestions: IQuestionTemplate[];
-  favQuestions: IQuestionTemplate[];
-  nextToken: string | null;
-  isLoading: boolean;
-  searchTerms: string;
-  selectedGrades: GradeTarget[];
   tabMap: { [key: number]: string };
   tabIconMap: { [key: number]: string };
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   getLabel: (screen: ScreenSize, isSelected: boolean, value: string) => string;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -57,33 +40,15 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  loadMore: () => void;
   fetchElements: () => void;
   handleView: (element: T, elements: T[]) => void;
 }
 
 export default function LibraryTabsQuestions({
-  // gameQuestion,
-  // setIsUserLoggedIn,
-  // draftQuestions,
-  // isFavTabOpen,
-  // publicPrivate,
-  // getDrafts,
-  // userProfile,
-  // getFav,
-  isTabsOpen,
-  setIsTabsOpen,
   screenSize,
-  recommendedQuestions,
-  mostPopularQuestions,
-  searchedQuestions,
-  favQuestions,
-  nextToken,
-  isLoading,
-  searchTerms,
-  selectedGrades,
   tabMap,
   tabIconMap,
+  setIsTabsOpen,
   getLabel,
   handleChooseGrades,
   handleSortChange,
