@@ -34,7 +34,6 @@ const BodyContainer = styled(Box)(() => {
 );
 
 interface AppContainerProps {
-  isValidatingUser: boolean;
   currentScreen: ScreenType;
   gameQuestion?: GameQuestionType;
   setIsTabsOpen?: (isTabsOpen: boolean) => void;
@@ -44,7 +43,6 @@ interface AppContainerProps {
 }
 
 function AppContainer({ 
-  isValidatingUser,
   currentScreen, 
   gameQuestion,
   setIsTabsOpen, 
@@ -78,7 +76,6 @@ function AppContainer({
           />
         }
         <Header
-          isValidatingUser={isValidatingUser}
           currentScreen={currentScreen}
           screenSize={screenSize}
           isLgScreen={isLgScreen}

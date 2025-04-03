@@ -6,9 +6,7 @@ export class UserParser {
   static parseIUserfromAWSUser(user: AWSUser): IUser {
     const parsedUser: IUser = {
       id: user.id ?? '',
-      userName: user.userName,
-      dynamoId: user.dynamoId ?? '',
-      cognitoId: user.cognitoId ?? '',
+      username: user.userName,
       title: user.title ?? '',
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
@@ -27,11 +25,7 @@ export class UserParser {
   static parseAWSUserfromAuthUser(user: IUserProfile): AWSUser {
     const parsedUser: AWSUser = {
       id: user.id,
-      userName: user.userName,
-      cognitoId: user.cognitoId,
-      dynamoId: user.dynamoId,
-      frontIdPath: user.frontIdPath,
-      backIdPath: user.backIdPath,
+      userName: user.username,
       title: user.title ?? '',
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',

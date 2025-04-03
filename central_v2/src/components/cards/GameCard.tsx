@@ -19,7 +19,6 @@ interface StyledGameCardProps {
   game: IGameTemplate;
   isCarousel: boolean;
   screenSize: ScreenSize;
-  isFavorite: boolean;
   handleViewButtonClick: (element: IGameTemplate) => void;
 }
 
@@ -163,7 +162,6 @@ export default function StyledGameCard({
   game,
   isCarousel,
   screenSize,
-  isFavorite,
   handleViewButtonClick,
 }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);

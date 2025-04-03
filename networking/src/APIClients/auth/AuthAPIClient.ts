@@ -43,6 +43,7 @@ export class AuthAPIClient
 
   async verifyAuth(): Promise<boolean> {
     const session = await fetchAuthSession();
+    console.log(session);
     if (session && session.tokens && session.tokens.accessToken) {
         return true;
     };
@@ -83,6 +84,7 @@ export class AuthAPIClient
 
   async getUserNickname(): Promise<string | null> {
     try {
+      console.log("Updates are happening.")
       const attributes = await fetchUserAttributes();
       if (attributes && attributes.nickname !== undefined) {
         return attributes.nickname;
@@ -98,6 +100,8 @@ export class AuthAPIClient
   async getUserEmail(): Promise<string | null> {
     try {
       const userAttributes = await fetchUserAttributes();
+      console.log("User Attributes:", userAttributes);
+      
       if(userAttributes && userAttributes.email != undefined){
         return userAttributes.email; // Email is stored under "email" key
       } else {

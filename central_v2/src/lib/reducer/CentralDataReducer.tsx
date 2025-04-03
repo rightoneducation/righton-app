@@ -8,15 +8,11 @@ export type CentralDataAction =
   | { type: 'SET_RECOMMENDED_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_MOST_POPULAR_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_SEARCHED_GAMES'; payload: IGameTemplate[] }
-  | { type: 'SET_PUBLIC_GAMES'; payload: IGameTemplate[] }
-  | { type: 'SET_PRIVATE_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_DRAFT_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_FAV_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_RECOMMENDED_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_MOST_POPULAR_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_SEARCHED_QUESTIONS'; payload: IQuestionTemplate[] }
-  | { type: 'SET_PUBLIC_QUESTIONS'; payload: IQuestionTemplate[] }
-  | { type: 'SET_PRIVATE_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_DRAFT_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_FAV_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_IS_LOADING'; payload: boolean }
@@ -41,10 +37,6 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
       return { ...state, searchedGames: action.payload };
     case 'SET_MOST_POPULAR_GAMES':
       return { ...state, mostPopularGames: action.payload };
-    case 'SET_PUBLIC_GAMES':
-      return { ...state, publicGames: action.payload };
-    case 'SET_PRIVATE_GAMES':
-      return { ...state, privateGames: action.payload };
     case 'SET_DRAFT_GAMES':
       return { ...state, draftGames: action.payload };
     case 'SET_FAV_GAMES':
@@ -55,10 +47,6 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
       return { ...state, mostPopularQuestions: action.payload };
     case 'SET_SEARCHED_QUESTIONS':
       return { ...state, searchedQuestions: action.payload };
-    case 'SET_PUBLIC_QUESTIONS':
-      return { ...state, publicQuestions: action.payload };
-    case 'SET_PRIVATE_QUESTIONS':
-      return { ...state, privateQuestions: action.payload };
     case 'SET_DRAFT_QUESTIONS':
       return { ...state, draftQuestions: action.payload };
     case 'SET_FAV_QUESTIONS':

@@ -15,14 +15,10 @@ export interface ICentralDataState {
   recommendedGames: IGameTemplate[];
   mostPopularGames: IGameTemplate[];
   searchedGames: IGameTemplate[];
-  publicGames: IGameTemplate[];
-  privateGames: IGameTemplate[];
   draftGames: IGameTemplate[];
   favGames: IGameTemplate[];
   recommendedQuestions: IQuestionTemplate[];
   mostPopularQuestions: IQuestionTemplate[];
-  publicQuestions: IQuestionTemplate[];
-  privateQuestions: IQuestionTemplate[];
   searchedQuestions: IQuestionTemplate[];
   draftQuestions: IQuestionTemplate[];
   favQuestions: IQuestionTemplate[];

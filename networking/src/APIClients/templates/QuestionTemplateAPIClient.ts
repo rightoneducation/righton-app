@@ -142,7 +142,10 @@ export class QuestionTemplateAPIClient
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.default;
     const awsType = `${type}QuestionTemplate`;
+    console.log(awsType);
+    console.log(`${type.toLowerCase()}QuestionTemplates`);
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `list${type}QuestionTemplates`, queryFunction, type, gradeTargets, favIds);
+    console.log(response);
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };
   }
 
@@ -157,9 +160,6 @@ export class QuestionTemplateAPIClient
   ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
     const queryFunction = questionTemplateRuntimeMap[type].list.queryFunction.byDate;
     const awsType = `${type}QuestionTemplate`;
-    console.log(queryFunction);
-    console.log(awsType);
-    console.log(`${type.toLowerCase()}QuestionTemplatesByDate`);
     const response = await this.executeQuery(limit, nextToken, sortDirection, filterString, awsType, `${type.toLowerCase()}QuestionTemplatesByDate`, queryFunction, type, gradeTargets, favIds);
 
     return response as { questionTemplates: IQuestionTemplate[]; nextToken: string; };

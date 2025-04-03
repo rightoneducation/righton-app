@@ -14,8 +14,7 @@ export enum ScreenType {
   SIGNUP, 
   CREATEGAME,
   CREATEQUESTION,
-  CONFIRMATION,
-  NEXTSTEP
+  CONFIRMATION
 }
 
 export enum ScreenSize {
@@ -77,11 +76,4 @@ export enum FetchType {
   DRAFT_QUESTIONS,
   FAVORITE_GAMES,
   FAVORITE_QUESTIONS
-}
-
-export enum LibraryTabEnum {
-  PUBLIC,
-  PRIVATE,
-  DRAFTS,
-  FAVORITES
 }

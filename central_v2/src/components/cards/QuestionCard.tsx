@@ -13,7 +13,6 @@ interface StyledQuestionCardProps {
   image: string;
   question: IQuestionTemplate;
   isCarousel: boolean;
-  isFavorite: boolean;
   handleViewButtonClick: (element: IQuestionTemplate) => void;
 }
 
@@ -95,7 +94,6 @@ export default function StyledQuestionCard({
   image,
   question,
   isCarousel,
-  isFavorite,
   handleViewButtonClick,
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;

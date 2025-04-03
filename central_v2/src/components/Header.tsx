@@ -24,7 +24,6 @@ import PublicPrivateButton from './button/publicprivatebutton/PublicPrivateButto
 import GameQuestionButton from './button/gamequestionbutton/GameQuestionButton';
 
 interface HeaderProps {
-  isValidatingUser: boolean;
   currentScreen: ScreenType;
   screenSize: ScreenSize;
   isLgScreen: boolean;
@@ -38,12 +37,12 @@ interface HeaderProps {
 interface HeaderContainerProps {
   screenSize: ScreenSize;
   menuOpen: boolean;
-  currentScreen: ScreenType;
+  selectedScreen: ScreenType;
 }
 const HeaderContainer = styled(Box, {
- shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'menuOpen' && prop !== 'currentScreen', 
+ shouldForwardProp: (prop) => prop !== 'screenSize' && prop !== 'menuOpen' && prop !== 'selectedScreen', 
 })<HeaderContainerProps>(
-  ({ screenSize, menuOpen, currentScreen, theme }) => ({
+  ({ screenSize, menuOpen, selectedScreen, theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
@@ -155,7 +154,6 @@ const ImageContainer = styled(Box, {
 }));
 
 export default function Header({
-  isValidatingUser,
   currentScreen,
   screenSize,
   isLgScreen,
@@ -169,12 +167,16 @@ export default function Header({
   const theme = useTheme();
   
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
+  const [selectedScreen, setSelectedScreen] = useState<ScreenType>(
+    currentScreen
+  );
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
 
   const handleButtonClick = (screen: ScreenType) => {
+    setSelectedScreen(screen);
     switch (screen) {
       case ScreenType.QUESTIONS:
         navigate('/questions');
@@ -231,7 +233,7 @@ export default function Header({
   return (
     <>
 
-      <HeaderContainer screenSize={screenSize} menuOpen={menuOpen} currentScreen={currentScreen}>
+      <HeaderContainer screenSize={screenSize} menuOpen={menuOpen} selectedScreen={selectedScreen}>
         <HeaderFirstRow>
         <ImageContainer
           align="flex-start"
@@ -256,14 +258,14 @@ export default function Header({
                   handleButtonClick(ScreenType.GAMES)
                 }
                 isActive={
-                  currentScreen === ScreenType.GAMES
+                  selectedScreen === ScreenType.GAMES
                 }
               >
-                { currentScreen === ScreenType.GAMES
+                { selectedScreen === ScreenType.GAMES
                   ? <PinkIcon src={dice} alt="Games Icon" />
                   : <img src={dice} alt="Games Icon" />
                 }
-                <ButtonText isActive={currentScreen === ScreenType.GAMES}>
+                <ButtonText isActive={selectedScreen === ScreenType.GAMES}>
                   Games
                 </ButtonText>
               </TransparentButton>
@@ -273,34 +275,33 @@ export default function Header({
                   handleButtonClick(ScreenType.QUESTIONS)
                 }
                 isActive={
-                  currentScreen === ScreenType.QUESTIONS
+                  selectedScreen === ScreenType.QUESTIONS
                 }
               >
-                { currentScreen === ScreenType.QUESTIONS
+                { selectedScreen === ScreenType.QUESTIONS
                   ? <PinkIcon src={qmark} alt="Questions Icon" />
                   : <img src={qmark} alt="Questions Icon" />
                 }
-                <ButtonText isActive={currentScreen === ScreenType.QUESTIONS}>
+                <ButtonText isActive={selectedScreen === ScreenType.QUESTIONS}>
                   Questions
                 </ButtonText>
               </TransparentButton>
-              
-              { ((!isValidatingUser && userStatus === UserStatusType.LOGGEDIN) || (isValidatingUser && currentScreen === ScreenType.LIBRARY)) && 
-                <TransparentButton
-                  disableRipple
-                  onClick={() =>
-                    handleButtonClick(ScreenType.LIBRARY)
-                  }
-                  isActive={currentScreen === ScreenType.LIBRARY}
-                >
-                  { currentScreen === ScreenType.LIBRARY
-                    ? <PinkIcon src={books} alt="Library Icon" />
-                    : <img src={books} alt="Library Icon" />
-                  }
-                  <ButtonText isActive={currentScreen === ScreenType.LIBRARY}>
-                    My Library
-                  </ButtonText>
-                </TransparentButton>
+              { userStatus === UserStatusType.LOGGEDIN && 
+              <TransparentButton
+                disableRipple
+                onClick={() =>
+                  handleButtonClick(ScreenType.LIBRARY)
+                }
+                isActive={selectedScreen === ScreenType.LIBRARY}
+              >
+                 { selectedScreen === ScreenType.LIBRARY
+                  ? <PinkIcon src={books} alt="Library Icon" />
+                  : <img src={books} alt="Library Icon" />
+                }
+                <ButtonText isActive={selectedScreen === ScreenType.LIBRARY}>
+                  My Library
+                </ButtonText>
+              </TransparentButton>
               }
             </Box>
           ) : (
@@ -313,27 +314,25 @@ export default function Header({
           )}
         </ImageContainer>
         <Box style={{width: 'fit-content', display: 'flex', gap: '16px', justifyContent: 'center'}}>
-          {!isValidatingUser &&
-            userStatus === UserStatusType.LOGGEDIN 
-              ? loggedInUserComponents
-              :
-                <>
-                  <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
-                  <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
-                </>
-            
+          {userStatus === UserStatusType.LOGGEDIN 
+            ? loggedInUserComponents
+            :
+              <>
+                <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
+                <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
+              </>
           }
         </Box>
         </HeaderFirstRow>
         <Collapse
           in
           style={{
-            transition: currentScreen === ScreenType.LIBRARY ? 'height 0.5s ease-in-out' : 'none',
-            height: currentScreen === ScreenType.LIBRARY ? '94px' : '0px',
+            transition: selectedScreen === ScreenType.LIBRARY ? 'height 0.5s ease-in-out' : 'none',
+            height: selectedScreen === ScreenType.LIBRARY ? '94px' : '0px',
           }}
         > 
           <HeaderSecondRow>
-            <Fade in={currentScreen === ScreenType.LIBRARY} timeout={{enter: 1000, exit: 0}}  style={{transition: 'height 0.5s ease-in-out'}}>
+            <Fade in={selectedScreen === ScreenType.LIBRARY} timeout={{enter: 1000, exit: 0}}  style={{transition: 'height 0.5s ease-in-out'}}>
               <div>
               <GameQuestionButton isDisabled={false} gameQuestion={gameQuestion} setGameQuestion={setGameQuestion}/>
               </div>
@@ -354,10 +353,10 @@ export default function Header({
             onClick={() =>
               handleButtonClick(ScreenType.GAMES)
             }
-            isActive={currentScreen === ScreenType.GAMES}
+            isActive={selectedScreen === ScreenType.GAMES}
             menuOpen={menuOpen}
           >
-            { currentScreen === ScreenType.GAMES
+            { selectedScreen === ScreenType.GAMES
               ? <img src={dicePink} alt="Games Icon" />
               : <img src={dice} alt="Games Icon" />
             }
@@ -368,11 +367,11 @@ export default function Header({
               handleButtonClick(ScreenType.QUESTIONS)
             }
             isActive={
-              currentScreen === ScreenType.QUESTIONS
+              selectedScreen === ScreenType.QUESTIONS
             }
             menuOpen={menuOpen}
           >
-            { currentScreen === ScreenType.QUESTIONS
+            { selectedScreen === ScreenType.QUESTIONS
               ? <img src={qmarkPink} alt="Questions Icon" />
               : <img src={qmark} alt="Questions Icon" />
             }
@@ -383,10 +382,10 @@ export default function Header({
               onClick={() =>
                 handleButtonClick(ScreenType.LIBRARY)
               }
-              isActive={currentScreen === ScreenType.LIBRARY}
+              isActive={selectedScreen === ScreenType.LIBRARY}
               menuOpen={menuOpen}
             >
-              { currentScreen === ScreenType.LIBRARY
+              { selectedScreen === ScreenType.LIBRARY
                 ? <img src={libPink} alt="Library Icon" />
                 : <img src={lib} alt="Library Icon" />
               }

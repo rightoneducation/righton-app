@@ -25,7 +25,6 @@ export interface ICentralDataManagerAPIClient {
     gradeTargets: GradeTarget[],
     favIds: string[] | null
   ) => Promise<{ nextToken: string | null, questions: IQuestionTemplate[] }>;
-  refreshLocalUserProfile: () => Promise<IUserProfile | null>;
   getLocalUserProfile: () => IUserProfile | null;
   setLocalUserProfile: (userProfile: IUserProfile) => void;
   clearLocalUserProfile: () => void;

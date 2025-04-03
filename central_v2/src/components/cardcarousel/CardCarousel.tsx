@@ -14,7 +14,6 @@ import placeHolder from '../../images/placeHolder.svg';
 import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import { ScreenSize } from '../../lib/CentralModels';
-import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './CardCarousel.css';
@@ -42,9 +41,7 @@ export default function CardCarousel<
   const handleViewButtonClick = (element: T) => {
     handleView(element, recommendedElements as T[]);
   };
-  const centralData = useCentralDataState();
-  const favoriteQuestionTemplateIds = centralData.userProfile?.favoriteQuestionTemplateIds;
-  const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
+
   return (
     <Swiper
       style={{
@@ -85,7 +82,6 @@ export default function CardCarousel<
                   title={gameElement.title}
                   description={gameElement.description}
                   image={gameElement.imageUrl || placeHolder}
-                  isFavorite={favoriteGameTemplateIds?.includes(gameElement.id) || false}
                   isCarousel
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
@@ -107,7 +103,6 @@ export default function CardCarousel<
                 title={questionElement.title}
                 image={questionElement.imageUrl || placeHolder}
                 isCarousel
-                isFavorite={favoriteQuestionTemplateIds?.includes(questionElement.id) || false}
                 handleViewButtonClick={
                   handleViewButtonClick as (element: IQuestionTemplate) => void
                 }

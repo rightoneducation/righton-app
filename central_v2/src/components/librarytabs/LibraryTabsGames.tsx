@@ -6,16 +6,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { 
   ElementType,
   GalleryType,
-  IQuestionTemplate,
-  PublicPrivateType,
+  IGameTemplate,
+  IUserProfile,
   GradeTarget,
   SortType,
-  SortDirection
+  SortDirection,
+  PublicPrivateType,
 } from '@righton/networking';
-import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
+import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 import CardGallery from '../cardgallery/CardGallery';
 import SearchBar from '../searchbar/SearchBar';
-import { ScreenSize } from '../../lib/CentralModels';
+import { ScreenSize, GameQuestionType } from '../../lib/CentralModels';
 import { 
   ContentContainer, 
   TabContent,
@@ -24,7 +25,7 @@ import {
   LibraryTab
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 
-interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
+interface LibraryTabsGamesProps<T extends IGameTemplate> {
   screenSize: ScreenSize;
   tabMap: { [key: number]: string };
   tabIconMap: { [key: number]: string };
@@ -43,26 +44,26 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   handleView: (element: T, elements: T[]) => void;
 }
 
-export default function LibraryTabsQuestions({
+export default function LibraryTabsGames({
   screenSize,
   tabMap,
   tabIconMap,
   setIsTabsOpen,
   getLabel,
+  handlePublicPrivateChange,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  handlePublicPrivateChange,
   fetchElements,
   handleView
-}: LibraryTabsQuestionsProps<IQuestionTemplate>) {
+}: LibraryTabsGamesProps<IGameTemplate>) {
 const centralData = useCentralDataState();
-
+const centralDataDispatch = useCentralDataDispatch();
 const isSearchResults = centralData.searchTerms.length > 0;
 const [openTab, setOpenTab] = React.useState(0);
 const [hasInitialized, setHasInitialized] = useState(false);    
 if (!hasInitialized) {
-  const needsFetch = centralData.mostPopularQuestions.length === 0; 
+  const needsFetch = centralData.mostPopularGames.length === 0; 
   if (needsFetch) {
     fetchElements(); 
   }
@@ -79,17 +80,17 @@ const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 };
 
 const getElements = () => {
-  if (centralData.favQuestions.length > 0 && openTab === 3){
+  if (centralData.favGames.length > 0 && openTab === 3){
     if (isSearchResults)
-      return centralData.searchedQuestions.filter((question) => centralData.favQuestions.map((favQuestion) => favQuestion.id).includes(question.id));
-    return centralData.favQuestions;
+      return centralData.searchedGames.filter((game) => centralData.favGames.map((favGame) => favGame.id).includes(game.id));
+    return centralData.favGames;
   }
-  if (centralData.draftQuestions.length > 0 && openTab === 2){
-    return centralData.draftQuestions;
+  if (centralData.draftGames.length > 0 && openTab === 2){
+    return centralData.draftGames;
   }
   if (isSearchResults)
-    return centralData.searchedQuestions 
-  return centralData.mostPopularQuestions;
+    return centralData.searchedGames 
+  return centralData.mostPopularGames;
 }
 
 return (
@@ -141,12 +142,12 @@ return (
         handleChooseGrades={handleChooseGrades}
         handleSortChange={handleSortChange}
       />
-      <CardGallery<IQuestionTemplate>
+      <CardGallery<IGameTemplate>
         screenSize={screenSize}
         searchTerm={isSearchResults ? centralData.searchTerms : undefined}
         grades={isSearchResults ? centralData.selectedGrades : undefined}
         galleryElements={getElements()} 
-        elementType={ElementType.QUESTION}
+        elementType={ElementType.GAME}
         galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
         setIsTabsOpen={setIsTabsOpen}
         handleView={handleView}

@@ -102,7 +102,8 @@ function SearchBar({
           handleChooseGrades={handleChooseGrades}
         />
         <SearchBarContainer
-          maxRows={1}
+          multiline
+          maxRows={2}
           screenSize={screenSize}
           placeholder={
             screenSize === ScreenSize.SMALL
