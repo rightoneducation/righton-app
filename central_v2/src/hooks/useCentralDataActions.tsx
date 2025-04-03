@@ -495,7 +495,7 @@ export default function useCentralDataManager({
       const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
       if (localProfile) {
         if (!isUserProfileComplete(localProfile)) {
-          navigate('/nextstep');
+          // navigate('/nextstep');
           centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
           setIsValidatingUser(false);
           return;

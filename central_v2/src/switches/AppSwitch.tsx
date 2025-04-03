@@ -55,6 +55,8 @@ function AppSwitch({
     })
     setIsLibraryInit(true);  
   };
+
+  
   
   switch (currentScreen) {
     case ScreenType.QUESTIONS: {
@@ -97,7 +99,9 @@ function AppSwitch({
     case ScreenType.CONFIRMATION:
     case ScreenType.NEXTSTEP: {
       screenComponent = (
+        <AuthGuard>
           <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
+          </AuthGuard>
       );
       break;
     }

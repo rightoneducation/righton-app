@@ -18,7 +18,7 @@ export default function AuthGuard ({
   const isLibrary = useMatch('/library');
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  
+  console.log(centralData.userStatus === UserStatusType.INCOMPLETE);
   // if user is incomplete, send them to nextstep to correct
   if (centralData.userStatus === UserStatusType.INCOMPLETE) {
     return <Navigate to="/nextstep" replace />;

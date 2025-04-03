@@ -229,6 +229,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
 
   public signUpGoogleBuildBackendUser = async (user: IUserProfile, frontImage: File, backImage: File) => {
+    console.log(user);
     // Need to put it in Email into user.
     let getEmail = await this.authAPIClient.getUserEmail();
     if(getEmail){
@@ -237,7 +238,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
     // CreatUserInput is done to avoid putting cognito ID into the dynamoDB
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
-    
     let updatedUser = JSON.parse(JSON.stringify(user));
     try {
       const currentUser = await getCurrentUser();
@@ -249,11 +249,12 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const dynamoId = uuidv4();
       createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      
       await this.userAPIClient.createUser(createUserInput);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
+      //TODO: set user status to LOGGED_IN
       return { updatedUser, images };
+
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);
       throw new Error (JSON.stringify(error));

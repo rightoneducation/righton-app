@@ -15,6 +15,7 @@ import {
 
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
+import { UserStatusType } from '../lib/CentralModels';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -178,6 +179,7 @@ export default function GoogleSignup({
         if(frontImage && backImage) {
           const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(centralData.userProfile, frontImage, backImage);
           centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
+          centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
           // console.log("CurrentUserInfo: ", response?.updatedUser)
           navigate("/")
         }
@@ -247,7 +249,7 @@ export default function GoogleSignup({
               onChange={(event) => 
                 centralDataDispatch({
                   type: 'SET_USER_PROFILE', 
-                  payload: {username: event.target.value}
+                  payload: {userName: event.target.value}
                 })
               }
               sx={{
