@@ -4,25 +4,31 @@ import { centralDataReducer, CentralDataAction } from '../reducer/CentralDataRed
 import { ICentralDataState } from './ICentralDataState';
 import { UserStatusType } from '../CentralModels';
 
+export const userProfileInit = {
+  title: 'Title...',
+  firstName: '',
+  lastName: '',
+  userName: '',
+  email: '',
+  password: '',
+}
+
 // initialize centralDataState
 const initCentralDataState: ICentralDataState = {
-  userProfile: {
-    title: 'Title...',
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    password: '',
-  },
+  userProfile: userProfileInit,
   userStatus: UserStatusType.LOGGEDOUT,
   recommendedGames: [],
   mostPopularGames: [],
   searchedGames: [],
+  publicGames: [],
+  privateGames: [],
   draftGames: [],
   favGames: [],
   recommendedQuestions: [],
   mostPopularQuestions: [],
   searchedQuestions: [],
+  publicQuestions: [],
+  privateQuestions: [],
   draftQuestions: [],
   favQuestions: [],
   nextToken: null,
@@ -34,7 +40,7 @@ const initCentralDataState: ICentralDataState = {
   isFavTabOpen: false,
   publicPrivate: PublicPrivateType.PUBLIC,
   sort: {
-    field: SortType.listGameTemplatesByDate,
+    field: SortType.listGameTemplates,
     direction: SortDirection.ASC,
   }
 }

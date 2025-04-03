@@ -481,7 +481,7 @@ export default function useCentralDataManager({
       const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
       if (localProfile) {
         if (!isUserProfileComplete(localProfile)) {
-          navigate('/nextstep');
+          // navigate('/nextstep');
           centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
           return;
         }
