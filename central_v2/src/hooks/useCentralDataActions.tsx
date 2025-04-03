@@ -231,7 +231,7 @@ export default function useCentralDataManager({
           apiClients?.centralDataManager
           ?.searchForQuestionTemplates(
               newPublicPrivate,
-              limit,
+              null,
               null,
               centralData.searchTerms,
               centralData.sort.direction ?? SortDirection.ASC,
@@ -259,7 +259,7 @@ export default function useCentralDataManager({
         apiClients?.centralDataManager
           ?.searchForGameTemplates(
             newPublicPrivate,
-            limit,
+            null,
             null,
             centralData.searchTerms,
             centralData.sort.direction ?? SortDirection.ASC,
