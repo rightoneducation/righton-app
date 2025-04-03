@@ -243,7 +243,7 @@ export default function GoogleSignup({
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
-              value={centralData.userProfile.username}
+              value={centralData.userProfile.userName}
               onChange={(event) => 
                 centralDataDispatch({
                   type: 'SET_USER_PROFILE', 

@@ -8,7 +8,7 @@ export const userProfileInit = {
     title: 'Title...',
     firstName: '',
     lastName: '',
-    username: '',
+    userName: '',
     email: '',
     password: '',
 }

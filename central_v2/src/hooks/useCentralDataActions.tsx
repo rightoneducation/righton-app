@@ -378,6 +378,7 @@ export default function useCentralDataManager({
 
   const getFav = async (user: IUserProfile) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+    console.log(user);
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
@@ -407,6 +408,8 @@ export default function useCentralDataManager({
           [...centralData.selectedGrades],
           user.favoriteGameTemplateIds ?? null,
         ).then((response) => {
+          console.log(user.favoriteGameTemplateIds);
+          console.log(response);
           centralDataDispatch({ type: 'SET_FAV_GAMES', payload: response.games });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -487,7 +490,7 @@ export default function useCentralDataManager({
   const validateUser = async () => {
     const status = await apiClients.auth.verifyAuth();
     if (status) {
-      const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+      const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
       if (localProfile) {
         if (!isUserProfileComplete(localProfile)) {
           navigate('/nextstep');
