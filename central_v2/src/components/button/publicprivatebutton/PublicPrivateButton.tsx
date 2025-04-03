@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { PublicPrivateType } from '@righton/networking';
 
 interface PublicPrivateContainerProps {
   isDisabled: boolean;
@@ -73,26 +74,29 @@ const PublicPrivateText = styled(Typography, {
 
 interface PublicPrivateButtonInterface {
   isDisabled: boolean;
+  onHandlePublicPrivateChange?: (value: PublicPrivateType ) => void; 
 }
 
 export default function PublicPrivateButton({
-  isDisabled
+  isDisabled,
+  onHandlePublicPrivateChange
 }: PublicPrivateButtonInterface) {
   const { t } = useTranslation();
   const [isPublic, setIsPublic] = useState<boolean>(true);
   const handlePublicPrivateSwitch = () =>{
     setIsPublic(!isPublic);
   }
+
   return (
     <PublicPrivateContainer isDisabled={isDisabled} onClick={!isDisabled ? handlePublicPrivateSwitch : undefined}>
       <PublicPrivateSelectionPill isPublic={isPublic}/>
       <LabelContainer>
-        <SubContainer isSelected={isPublic}>     
+        <SubContainer onClick={() => onHandlePublicPrivateChange?.(PublicPrivateType.PUBLIC)} isSelected={isPublic}>     
           <PublicPrivateText isSelected={isPublic}>
             {t(`publicPrivateButton.public`)}
           </PublicPrivateText>
         </SubContainer>
-        <SubContainer isSelected={!isPublic}>
+        <SubContainer onClick={() => onHandlePublicPrivateChange?.(PublicPrivateType.PRIVATE)} isSelected={!isPublic}>
           <PublicPrivateText isSelected={!isPublic}>
             {t(`publicPrivateButton.private`)}
           </PublicPrivateText>

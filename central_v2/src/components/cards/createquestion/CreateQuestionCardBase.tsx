@@ -4,7 +4,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   PublicPrivateType,
-  CentralQuestionTemplateInput
+  CentralQuestionTemplateInput,
+  AnswerType
 } from '@righton/networking';
 import {
   QuestionTitleStyled,
@@ -164,20 +165,7 @@ export default function CreateQuestionCardBase({
             {draftQuestion.questionCard.ccss}
           </ButtonCCSS>
         </Box>
-        { screenSize !== ScreenSize.SMALL && 
-            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-              <PublicPrivateButton isDisabled={false}/>
-            </Box>
-          }
-      </CreateQuestionTitleBarStyled>
-      <ContentContainerStyled screenSize={screenSize}>
-      {imageLink 
-          ? imageContents
-          : <ImagePlaceholder isCardErrored={isCardErrored}>
-              <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
-            </ImagePlaceholder>
-        }
-        <CreateQuestionContentRightContainerStyled>
+        {screenSize === ScreenSize.SMALL && (
         <RadioContainerStyled>
           <RadioGroup
             row
@@ -201,6 +189,46 @@ export default function CreateQuestionCardBase({
             />
           </RadioGroup>
         </RadioContainerStyled>
+          )}
+        { screenSize !== ScreenSize.SMALL && 
+            <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              <PublicPrivateButton onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
+            </Box>
+          }
+      </CreateQuestionTitleBarStyled>
+      <ContentContainerStyled screenSize={screenSize}>
+      {imageLink 
+          ? imageContents
+          : <ImagePlaceholder isCardErrored={isCardErrored}>
+              <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
+            </ImagePlaceholder>
+        }
+        <CreateQuestionContentRightContainerStyled>
+          {screenSize !== ScreenSize.SMALL && (
+        <RadioContainerStyled>
+          <RadioGroup
+            row
+            value={questionType} 
+            onChange={handleQuestionTypeChange}
+            style={{overflow: 'hidden', flexWrap: 'nowrap'}}
+          >
+            <RadioLabelStyled
+              value={PublicPrivateType.PUBLIC}
+              control={<RadioStyled style={{cursor: 'pointer'}}/>}
+              label="Multiple Choice"
+              isSelected={questionType === PublicPrivateType.PUBLIC}
+              style={{cursor: 'pointer'}}
+            />
+            <RadioLabelStyled
+              value={PublicPrivateType.PRIVATE}
+              control={<RadioStyled style={{cursor: 'pointer'}}/>}
+              label="Short Answer"
+              isSelected={questionType === PublicPrivateType.PRIVATE}
+              style={{cursor: 'pointer'}}
+            />
+          </RadioGroup>
+        </RadioContainerStyled>
+          )}
           <TextContainerStyled 
             multiline 
             variant="outlined" 
@@ -237,7 +265,7 @@ export default function CreateQuestionCardBase({
               <ErrorBox/>
             }
               <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-                <PublicPrivateButton isDisabled={false}/>
+                <PublicPrivateButton onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
               </Box>
           </>
         }

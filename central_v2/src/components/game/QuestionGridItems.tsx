@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
+  AnswerType,
   CentralQuestionTemplateInput,
   IncorrectCard,
   PublicPrivateType,

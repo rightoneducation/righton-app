@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  AnswerType,
   CentralQuestionTemplateInput,
   IGameTemplate,
   IncorrectCard,
@@ -34,22 +35,6 @@ import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import { type TDraftQuestionsList } from '../hooks/useCreateQuestion';
 
-type TitleTextProps = {
-  screenSize: ScreenSize;
-}
-
-const TitleText = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'screenSize',
-})<TitleTextProps>(({ theme, screenSize }) => ({
-  lineHeight: screenSize === ScreenSize.SMALL ? '36px' : '60px',
-  fontFamily: 'Poppins',
-  fontWeight: '700',
-  fontSize:
-    screenSize === ScreenSize.SMALL ? `${theme.sizing.mdPadding}px` : '40px',
-  color: `${theme.palette.primary.extraDarkBlue}`,
-  paddingTop: `${theme.sizing.lgPadding}px`,
-}));
-
 interface CreateGameProps {
   screenSize: ScreenSize;
 }
@@ -68,25 +53,12 @@ const tabIconMap: { [key: number]: string } = {
 
 export default function CreateGame({ screenSize }: CreateGameProps) {
   const navigate = useNavigate();
-  const [favQuestions, setFavQuestions] = useState<IQuestionTemplate[]>([]);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
-  const [questionCount, setQuestionCount] = useState<number>(1);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const {
-    topRef,
-    isGameCardSubmitted,
-    openQuestionBank,
-    openCreateQuestion,
-    publicPrivateGame,
-    isGameCardErrored,
+    draftGame,
+    setDraftGame,
     phaseTime,
-    gameTitle,
-    gameDescription,
-    isGameImageUploadVisible,
-    // gameTemplate,
-    // iconButtons,
-    // handleAddMoreQuestions,
-    // setGameTemplate,
     handleCloseGameCardModal,
     handleGameTitle,
     handleGameDescription,
@@ -97,7 +69,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     handleSaveGame,
     handleDiscardGame,
     handleGameImageUploadClick,
-    setIsGameCardErrored,
   } = useCreateGame();
   const {
     handleImageChange,
@@ -116,6 +87,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     handleDebouncedCorrectAnswerChange,
     handleDebouncedCorrectAnswerStepsChange,
     handleDebouncedTitleChange,
+    handleAnswerType,
     handleSaveQuestion, // might not need this
     draftQuestionsList,
     completeIncorrectAnswers,
@@ -189,28 +161,12 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     question: newEmptyTemplate,
     questionImageModalIsOpen: false,
     isCCSSVisibleModal: false,
-    publicPrivateQuestion: PublicPrivateType.PUBLIC,
     isImageUploadVisible: false,
     isImageURLVisible: false,
     isCreatingTemplate: false,
     highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
+    answerType: AnswerType.MULTICHOICE,
   };
-
-  const newGameTemplate = {
-    id: '',
-    title: '',
-    lowerCaseTitle: '',
-    owner: '',
-    version: 0,
-    description: '',
-    lowerCaseDescription: '',
-    phaseOneTime: 0,
-    phaseTwoTime: 0,
-    questionTemplatesCount: 0,
-    questionTemplatesOrder: [],
-  };
-  const [gameTemplate, setGameTemplate] =
-    useState<IGameTemplate>(newGameTemplate);
 
   // game template functions
   const handleQuestionIndexChange = (index: number) => {
@@ -219,7 +175,13 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
 
   const handleAddMoreQuestions = () => {
     setDraftQuestionsList((prev) => [...prev, draftTemplate]);
-    setQuestionCount((prev) => prev + 1);
+    setDraftGame((prev) => ({ 
+      ...prev, 
+      questionCount: prev.questionCount + 1,
+      gameTemplate: {
+        ...prev.gameTemplate,
+      }
+     }))
     setIconButtons((prev) => [...prev, prev.length + 1]);
   };
 
@@ -229,7 +191,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   };
 
   return (
-    <CreateGameMainContainer ref={topRef} sx={{ overflowY: 'auto' }}>
+    <CreateGameMainContainer>
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
@@ -278,6 +240,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       {/* Create Game Card flow starts here */}
       <CreateGameBoxContainer>
         <CreateGameComponent
+        draftGame={draftGame}
           screenSize={screenSize}
           handleSaveGame={handleSaveGame}
           handleDiscard={handleDiscardGame}
@@ -288,15 +251,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           handlePhaseTime={handlePhaseTime}
           onGameDescription={handleGameDescription}
           onGameTitle={handleGameTitle}
-          onGameCardError={setIsGameCardErrored}
-          isCardSubmitted={isGameCardSubmitted}
-          isCardErrored={isGameCardErrored}
           phaseTime={phaseTime}
-          gameTitle={gameTitle}
-          gameDescription={gameDescription}
-          openQuestionBank={openQuestionBank}
-          openCreateQuestion={openCreateQuestion}
-          questionCount={questionCount}
           selectedIndex={selectedQuestionIndex}
           iconButtons={iconButtons}
           setSelectedIndex={handleQuestionIndexChange}
@@ -309,7 +264,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             index === selectedQuestionIndex && (
               <Fade
                 timeout={500}
-                in={openCreateQuestion}
+                in={draftGame.openCreateQuestion}
                 mountOnEnter
                 unmountOnExit
                 key={`Question--${index + 1}`}
@@ -345,7 +300,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         )}
 
         {/* Question Bank goes here */}
-        <Fade in={openQuestionBank} mountOnEnter unmountOnExit timeout={500}>
+        <Fade in={draftGame.openQuestionBank} mountOnEnter unmountOnExit timeout={500}>
           <Box>
             <LibraryTabsQuestions
               screenSize={screenSize}

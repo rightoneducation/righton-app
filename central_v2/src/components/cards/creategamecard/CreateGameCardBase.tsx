@@ -42,7 +42,7 @@ import {
   CreateGameTitleText,
   GameContentContainerStyled,
 } from '../../../lib/styledcomponents/CreateGameStyledComponent';
-import { TPhaseTime, TGameInfo } from '../../../hooks/useCreateGame';
+import { TPhaseTime, TGameInfo, TGameTemplateProps } from '../../../hooks/useCreateGame';
 
 interface CreateGameCardBaseProps {
   screenSize: ScreenSize;
@@ -56,7 +56,6 @@ interface CreateGameCardBaseProps {
   gameDescription: string;
   onGameTitle: (val: string) => void;
   onGameDescription: (val: string) => void;
-  disableForm: boolean;
   openQuestionBank: boolean;
   openCreateQuestion: boolean;
 }
@@ -73,7 +72,6 @@ export default function CreateGameCardBase({
   gameDescription,
   onGameTitle,
   onGameDescription,
-  disableForm,
   openQuestionBank,
   openCreateQuestion,
 }: CreateGameCardBaseProps) {
@@ -239,7 +237,9 @@ export default function CreateGameCardBase({
               justifyContent: 'center',
             }}
           >
-            <PublicPrivateButton isDisabled={false} />
+            <PublicPrivateButton 
+            onHandlePublicPrivateChange={handlePublicPrivateChange}  
+            isDisabled={false} />
           </Box>
         )}
       </CreateGameTitleBarStyled>
@@ -257,7 +257,6 @@ export default function CreateGameCardBase({
           {/* Game Title TextField */}
           <CreateGameTextFieldContainer
             isCardError={isCardErrored}
-            disabled={disableForm}
             isTitle
             variant="outlined"
             sx={{
@@ -288,7 +287,6 @@ export default function CreateGameCardBase({
           {/* Game Title TextField */}
           <CreateGameTextFieldContainer
             isCardError={isCardErrored}
-            disabled={disableForm}
             variant="outlined"
             sx={{
               '& .MuiInputBase-root': {
@@ -373,7 +371,9 @@ export default function CreateGameCardBase({
                   justifyContent: 'center',
                 }}
               >
-                <PublicPrivateButton isDisabled={false} />
+                <PublicPrivateButton 
+                onHandlePublicPrivateChange={handlePublicPrivateChange} 
+                isDisabled={false} />
               </Box>
             </>
           )}

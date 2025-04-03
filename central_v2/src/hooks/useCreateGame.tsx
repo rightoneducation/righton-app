@@ -1,7 +1,8 @@
 import { useState, useCallback, useRef } from 'react';
-import { PublicPrivateType } from '@righton/networking';
+import { PublicPrivateType, IGameTemplate } from '@righton/networking';
 import { useNavigate } from 'react-router-dom';
 import { StorageKey } from '../lib/CentralModels';
+import { reverseTimesMap } from '../components/cards/creategamecard/time';
 
 export type TGameInfo = {
   title: string;
@@ -13,59 +14,98 @@ export type TPhaseTime = {
   phaseTwo: string;
 };
 
-type TGameTemplateProps = {
+export type TGameTemplateProps = {
+  gameTemplate: IGameTemplate,
   isGameCardSubmitted: boolean;
   questionCount: number;
   openQuestionBank: boolean;
   openCreateQuestion: boolean;
   publicPrivateGame: PublicPrivateType
   isGameCardErrored: boolean;
-  gameTitle: string;
-  gameDescription: string;
-  phaseTime: TPhaseTime,
   isGameImageUploadVisible: boolean;
   isGameURLUPloadVisible: boolean;
-  shouldOpen: boolean;
+  image: File | null;
+  imageUrl: string;
 }
 
 const useCreateGame = () => {
   const navigate = useNavigate();
-  const questionComponentRef = useRef<HTMLDivElement | null>(null);
-  const topRef = useRef<HTMLDivElement | null>(null);
-  const [isGameCardSubmitted, setIsGameCardSubmitted] =
-    useState<boolean>(false);
-  const [questionCount, setQuestionCount] = useState<number>(1);
-  const [openQuestionBank, setOpenQuestionBank] = useState<boolean>(false);
-  const [openCreateQuestion, setOpenCreateQuestion] = useState<boolean>(false);
-  const [publicPrivateGame, setPublicPrivateGame] = useState<PublicPrivateType>(
-    PublicPrivateType.PUBLIC,
-  );
-  const [isGameCardErrored, setIsGameCardErrored] = useState<boolean>(false);
-  const [gameTitle, setGameTitle] = useState<string>('');
-  const [gameDescription, setGameDescription] = useState<string>('');
+  const newGameTemplate = {
+    id: '',
+    title: '',
+    lowerCaseTitle: '',
+    owner: '',
+    version: 0,
+    description: '',
+    lowerCaseDescription: '',
+    phaseOneTime: 0,
+    phaseTwoTime: 0,
+    questionTemplatesCount: 0,
+    questionTemplatesOrder: [],
+  };
+
+  const gameTemplate:TGameTemplateProps = {
+    gameTemplate: newGameTemplate,
+    isGameCardErrored: false,
+    isGameCardSubmitted: false,
+    questionCount: 1,
+    openCreateQuestion: false,
+    openQuestionBank: false,
+    publicPrivateGame: PublicPrivateType.PUBLIC,
+    isGameImageUploadVisible: false,
+    isGameURLUPloadVisible: false,
+    image: null,
+    imageUrl: ""
+  }
+
+  const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
     phaseOne: '',
     phaseTwo: '',
   });
-  const [isGameImageUploadVisible, setIsGameImageUploadVisible] = useState<boolean>(false);
-  const [isGameURLUploadVisible, setIsGameURLUploadVisible] = useState<boolean>(false);
 
-  const shouldOpenOnClick = 
-  gameTitle !== "" && 
-  gameDescription !== "" &&
-  phaseTime.phaseOne !== "" &&
-  phaseTime.phaseTwo !== ""
-
+  const gameFormIsValid = 
+  draftGame.gameTemplate.title !== "" && 
+  draftGame.gameTemplate.description !== "" &&
+  draftGame.gameTemplate.phaseOneTime !== 0 &&
+  draftGame.gameTemplate.phaseTwoTime !== 0;
 
   const handleGameTitle = (val: string) => {
-    setGameTitle(val);
+    setDraftGame((prev) => ({
+      ...prev,
+      gameTemplate: {
+        ...prev.gameTemplate,
+        title: val,
+        lowerCaseTitle: val.toLowerCase(),
+      }
+    }))
   };
 
   const handleGameDescription = (val: string) => {
-    setGameDescription(val);
+    setDraftGame((prev) => ({
+      ...prev,
+      gameTemplate: {
+        ...prev.gameTemplate,
+        description: val,
+        lowerCaseDescription: val.toLowerCase(),
+      }
+    }))
   };
 
   const handlePhaseTime = (time: TPhaseTime) => {
+    setDraftGame((prev) => {
+      const phaseOne = reverseTimesMap[time.phaseOne];
+      const phaseTwo = reverseTimesMap[time.phaseTwo];
+      const updatedGameTemplate = {
+        ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+         ...(time.phaseOne && { phaseOneTime: phaseOne }),
+         ...(time.phaseTwo && { phaseTwoTime: phaseTwo })
+        }
+      }
+      return updatedGameTemplate;
+    })
     setPhaseTime((prev) => ({
       ...prev,
       ...(time.phaseOne && { phaseOne: time.phaseOne }),
@@ -73,27 +113,35 @@ const useCreateGame = () => {
     }));
   };
 
+  const handleOpenCreateQuestion = () => {
+    setDraftGame((prev) => ({
+      ...prev,
+      // check if form is complete & if question bank is open, close it.
+      ...(draftGame.openQuestionBank && gameFormIsValid && { openQuestionBank: false }),
+      // check game form is complete before displaying question form
+      ...(gameFormIsValid && { openCreateQuestion: !prev.openCreateQuestion }),
+      // if the card was in an error state, but not anymore set it to false
+      ...(gameFormIsValid && draftGame.isGameCardErrored && { isGameCardErrored: false }),
+      // if the form is not valid, flag an error
+      ...(!gameFormIsValid && { isGameCardErrored: true })
+    }))
+  }
 
-  const handleOpenCreateQuestion = useCallback(() => {
-    if (openQuestionBank && shouldOpenOnClick) {
-      setOpenQuestionBank(false);
-    }
-    if(shouldOpenOnClick) {
-        setOpenCreateQuestion((prev) => !prev);
-    }
-  }, [openQuestionBank, shouldOpenOnClick]);
-
-  const handleOpenQuestionBank = useCallback(() => {
-    if (openCreateQuestion) {
-      setOpenCreateQuestion(false);
-    }
-    if(shouldOpenOnClick) {
-        setOpenQuestionBank((prev) => !prev);
-    }
-  }, [openCreateQuestion, shouldOpenOnClick]);
+  const handleOpenQuestionBank =() => {
+    setDraftGame((prev) => ({
+      ...prev,
+      ...(draftGame.openCreateQuestion && gameFormIsValid && { openCreateQuestion: false }),
+      ...(gameFormIsValid && { openQuestionBank: !prev.openQuestionBank }),
+      ...(gameFormIsValid && draftGame.isGameCardErrored && { isGameCardErrored: false }),
+      ...(!gameFormIsValid && { isGameCardErrored: true })
+    }))
+  };
 
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
-    setPublicPrivateGame((prev) => value);
+    setDraftGame((prev) => ({
+      ...prev,
+      publicPrivateGame: value
+    }))
   };
 
   const handleDiscardGame = () => {
@@ -102,34 +150,29 @@ const useCreateGame = () => {
   };
 
   const handleGameImageUploadClick = () => {
-    setIsGameImageUploadVisible(true)
+    setDraftGame((prev) => ({
+      ...prev,
+      isGameImageUploadVisible: true,
+    }))
   };
 
   const handleCloseGameCardModal = () => {
-    setIsGameImageUploadVisible(false)
+    setDraftGame((prev) => ({
+      ...prev,
+      isGameImageUploadVisible: false,
+    }))
   }
 
   const handleSaveGame = useCallback(async () => {
     // api call goes here.
     // game card errors should be handled here too.
-    setIsGameCardSubmitted(true);
+    setDraftGame((prev) => ({...prev, isGameCardSubmitted: true }))
   }, []);
 
-
   return {
-    questionComponentRef,
-    topRef,
-    isGameCardSubmitted,
-    isGameCardErrored,
-    questionCount,
-    openQuestionBank,
-    openCreateQuestion,
-    publicPrivateGame,
     phaseTime,
-    gameTitle,
-    gameDescription,
-    isGameImageUploadVisible,
-    setIsGameCardErrored,
+    draftGame,
+    setDraftGame,
     handleGameTitle,
     handleGameDescription,
     handlePhaseTime,

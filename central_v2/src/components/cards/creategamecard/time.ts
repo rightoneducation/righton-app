@@ -29,4 +29,9 @@ const times = [
     },
   ]
 
+export const reverseTimesMap = times.reduce((acc, time) => {
+  acc[time.label] = time.value;
+  return acc;
+}, {} as {[key:string]: number});
+
   export default times

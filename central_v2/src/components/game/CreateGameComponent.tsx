@@ -1,11 +1,9 @@
-import React, { useState, useCallback } from 'react';
-import { createQuestion, PublicPrivateType } from '@righton/networking';
-import { debounce } from 'lodash';
+import React, { useState } from 'react';
+import {  PublicPrivateType } from '@righton/networking';
+
 import { Box, Grid } from '@mui/material';
 import {
   ScreenSize,
-  CreateQuestionHighlightCard,
-  StorageKey,
 } from '../../lib/CentralModels';
 import {
   TitleText,
@@ -14,45 +12,34 @@ import {
   CreateGameSaveDiscardGridItem,
   CreateGameCardGridItem,
   GameCreateButtonStack,
-  QuestionCountButton,
-  AddMoreIconButton,
 } from '../../lib/styledcomponents/CreateGameStyledComponent';
 import CentralButton from '../button/Button';
 import { ButtonType, buttonContentMap } from '../button/ButtonModels';
 import CreateGameCardBase from '../cards/creategamecard/CreateGameCardBase';
-import VerticalMoreImg from '../../images/buttonIconVerticalMore.svg';
-import { TGameInfo, TPhaseTime } from '../../hooks/useCreateGame';
+import { TGameTemplateProps, TPhaseTime } from '../../hooks/useCreateGame';
 import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuestionButtons';
 
 interface ICreateGameComponent {
   screenSize: ScreenSize;
   handleSaveGame: () => Promise<void>;
+  draftGame: TGameTemplateProps;
   handleDiscard: () => void;
-  isCardSubmitted: boolean;
-  isCardErrored: boolean;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   handleImageUploadClick: () => void;
   onCreateQuestion: () => void;
   onOpenQuestionBank: () => void;
   phaseTime: TPhaseTime;
   handlePhaseTime: (time: TPhaseTime) => void;
-  gameTitle: string;
-  gameDescription: string;
   onGameTitle: (val: string) => void;
   onGameDescription: (val: string) => void;
-  onGameCardError: React.Dispatch<React.SetStateAction<boolean>>;
-  openQuestionBank: boolean;
-  openCreateQuestion: boolean;
-  questionCount: number;
   iconButtons: number[];
   selectedIndex: number;
   setSelectedIndex: (index: number) => void;
   addMoreQuestions: () => void;
 }
 
-// vertical ellipsis image for button
-const verticalEllipsis = <img src={VerticalMoreImg} alt="more-elipsis" />;
 export default function CreateGameComponent({
+  draftGame,
   screenSize,
   handleSaveGame,
   handleDiscard,
@@ -60,72 +47,23 @@ export default function CreateGameComponent({
   handleImageUploadClick,
   onCreateQuestion,
   onOpenQuestionBank,
-  isCardSubmitted,
-  isCardErrored,
   phaseTime,
-  gameTitle,
-  gameDescription,
   onGameTitle,
   onGameDescription,
   handlePhaseTime,
-  onGameCardError,
-  openQuestionBank,
-  openCreateQuestion,
-  questionCount,
   iconButtons,
   selectedIndex,
   setSelectedIndex,
   addMoreQuestions
 }: ICreateGameComponent) {
-  const [disableForm, setDisableForm] = useState<boolean>(false);
-  const [enableButton, setEnableButton] = useState<{[key: string]: boolean}>({
-    createQuestion: true,
-    questionBank: true,
-  });
-
-  const handleDebouncedTitleChange = useCallback(// eslint-disable-line
-    debounce((title: string) => {
-      window.localStorage.setItem(StorageKey, JSON.stringify(title));
-    }, 1000),
-    [],
-  );
-
-  const createGameFormIsValid = 
-    phaseTime.phaseOne !== "" && 
-    phaseTime.phaseTwo !=="" &&
-    gameTitle !== "" &&
-    gameDescription !== "";
+  const [enabled, setEnabled] = useState<boolean>(true)
 
   const handleCreateQuestion = () => {
     onCreateQuestion();
-    if(createGameFormIsValid) {
-      // setEnableButton((prev) => ({ 
-      //   ...prev,
-      //   createQuestion: prev.createQuestion,
-      //   questionBank: !prev.questionBank,
-      // }))
-      if(isCardErrored) {
-        onGameCardError(false)
-      }
-    } else {
-      onGameCardError(true);
-    }
   };
   
   const handleOpenQuestionBank = () => {
     onOpenQuestionBank();
-    if(createGameFormIsValid){
-      // setEnableButton((prev) => ({ 
-      //   ...prev,
-      //   questionBank: prev.questionBank, 
-      //   createQuestion: !prev.createQuestion,
-      // }))
-      if(isCardErrored) {
-        onGameCardError(false)
-      }
-    } else {
-      onGameCardError(true);
-    }
   };
 
   return (
@@ -185,14 +123,13 @@ export default function CreateGameComponent({
               handlePhaseTime={handlePhaseTime}
               onGameDescription={onGameDescription}
               onGameTitle={onGameTitle}
-              isCardSubmitted={isCardSubmitted}
-              isCardErrored={isCardErrored}
+              isCardSubmitted={draftGame.isGameCardSubmitted}
+              isCardErrored={draftGame.isGameCardErrored}
               phaseTime={phaseTime}
-              gameTitle={gameTitle}
-              gameDescription={gameDescription}
-              disableForm={disableForm}
-              openCreateQuestion={openCreateQuestion}
-              openQuestionBank={openQuestionBank}
+              gameTitle={draftGame.gameTemplate.title}
+              gameDescription={draftGame.gameTemplate.description}
+              openCreateQuestion={draftGame.openCreateQuestion}
+              openQuestionBank={draftGame.openQuestionBank}
 
             />
           </Box>
@@ -202,7 +139,7 @@ export default function CreateGameComponent({
       {/* Question Count & Add Button */}
       <GameCreateButtonStack>
         <ManageQuestionsButtons 
-        questionCount={questionCount}
+        questionCount={draftGame.questionCount}
         iconButtons={iconButtons}
         selectedIndex={selectedIndex}
         setSelectedIndex={setSelectedIndex}
@@ -217,14 +154,14 @@ export default function CreateGameComponent({
         smallScreenOverride
         buttonWidthOverride='100%'
           buttonType={ButtonType.CREATEQUESTION}
-          isEnabled={enableButton.createQuestion}
+         isEnabled={enabled}
           onClick={handleCreateQuestion}
         />
         <CentralButton
         smallScreenOverride
         buttonWidthOverride='100%'
           buttonType={ButtonType.QUESTIONBANK}
-          isEnabled={enableButton.questionBank}
+          isEnabled={enabled}
           onClick={handleOpenQuestionBank}
         />
       </GameCreateButtonStack>

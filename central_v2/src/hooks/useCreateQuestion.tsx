@@ -3,6 +3,7 @@ import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
   IncorrectCard,
+  AnswerType,
 } from '@righton/networking';
 import { debounce } from 'lodash';
 import { useNavigate } from 'react-router-dom';
@@ -41,11 +42,11 @@ export type TDraftQuestionsList = {
   question: CentralQuestionTemplateInput;
   questionImageModalIsOpen: boolean;
   isCCSSVisibleModal: boolean;
-  publicPrivateQuestion: PublicPrivateType;
   isImageUploadVisible: boolean;
   isImageURLVisible: boolean;
   isCreatingTemplate: boolean;
   highlightCard: CreateQuestionHighlightCard
+  answerType: AnswerType;
 };
 
 const useCreateQuestion = (index: number) => {
@@ -97,10 +98,10 @@ const useCreateQuestion = (index: number) => {
       question: newEmptyTemplate,
       questionImageModalIsOpen: false,
       isCCSSVisibleModal: false,
-      publicPrivateQuestion: PublicPrivateType.PUBLIC,
       isImageUploadVisible: false,
       isImageURLVisible: false,
       isCreatingTemplate: false,
+      answerType: AnswerType.MULTICHOICE,
       highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
     };
   
@@ -159,6 +160,21 @@ const useCreateQuestion = (index: number) => {
         }
       );
     });
+
+    const handleAnswerType = (answer: AnswerType ) => {
+      setDraftQuestionsList((prev) => {
+        return prev.map((questionItem, i) => {
+          if(i === index) {
+            const newDraftQuestion = {
+              ...questionItem,
+              answerType: answer,
+            }
+            return newDraftQuestion
+          }
+          return questionItem;
+        })
+      })
+    }
 
 
         const handlePublicPrivateQuestionChange = (
@@ -690,6 +706,7 @@ const useCreateQuestion = (index: number) => {
 
   return {
     // handlers
+    handleAnswerType,
     handleQuestionImageUploadClick,
     handleNextCardButtonClick,
     handleIncorrectCardStackUpdate,
