@@ -53,7 +53,7 @@ function AppSwitch({
       field: gameQuestionValue === GameQuestionType.GAME ? SortType.listGameTemplates : SortType.listQuestionTemplates,
       direction: SortDirection.ASC,
     })
-    setIsLibraryInit(false);  
+    setIsLibraryInit(true);  
   };
   
   switch (currentScreen) {

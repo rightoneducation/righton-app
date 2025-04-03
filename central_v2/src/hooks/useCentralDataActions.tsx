@@ -241,6 +241,7 @@ export default function useCentralDataManager({
             )
             .then((response) => {
               centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+              console.log(response);
               if (response){
                 switch (newPublicPrivate){
                   case PublicPrivateType.PRIVATE:
@@ -410,8 +411,6 @@ export default function useCentralDataManager({
           [...centralData.selectedGrades],
           user.favoriteGameTemplateIds ?? null,
         ).then((response) => {
-          console.log(user.favoriteGameTemplateIds);
-          console.log(response);
           centralDataDispatch({ type: 'SET_FAV_GAMES', payload: response.games });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
