@@ -47,9 +47,6 @@ function AppSwitch({
     fetchElements,
   } = useCentralDataManager({gameQuestion});
 
-  console.log('isValidatingUser');
-  console.log(isValidatingUser);
-
   const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
     setLibraryGameQuestionSwitch(gameQuestionValue);
     handleSortChange({

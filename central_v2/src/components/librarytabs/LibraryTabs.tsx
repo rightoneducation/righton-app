@@ -64,7 +64,7 @@ export default function LibraryTabs({
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
 const centralData = useCentralDataState();
 const centralDataDispatch = useCentralDataDispatch();
-const isSearchResults = centralData.searchTerms.length > 0;
+const isSearchResults = centralData.searchTerms.length > 0 || centralData.selectedGrades.length > 0 || (centralData.sort.field !== SortType.listGameTemplates && centralData.sort.direction !== SortDirection.ASC);
 
 const tabs: LibraryTabEnum[] = [
   LibraryTabEnum.PUBLIC,
