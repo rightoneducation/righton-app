@@ -11,6 +11,8 @@ type User @model
 {
   id: ID! @primaryKey
   userName: String! @index(name: "userNameIndex", queryField: "userByUserName")
+  dynamoId: String
+  cognitoId: String
   title: String
   firstName: String
   lastName: String
