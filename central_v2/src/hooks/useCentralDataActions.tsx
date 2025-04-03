@@ -20,6 +20,7 @@ interface UseCentralDataManagerProps {
 }
 
 interface UseCentralDataManagerReturnProps {
+  isValidatingUser: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   fetchElements: (libraryTab?: LibraryTabEnum) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
@@ -54,6 +55,7 @@ export default function useCentralDataManager({
   const isGames = useMatch('/');
   const isQuestions = useMatch('/questions');
   const isLibrary = useMatch('/library') !== null;
+  const [isValidatingUser, setIsValidatingUser] = useState(true);
 
   const debounceInterval = 800;
 
@@ -378,6 +380,7 @@ export default function useCentralDataManager({
 
   const getFav = async (user: IUserProfile) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+    console.log(user);
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
@@ -407,6 +410,8 @@ export default function useCentralDataManager({
           [...centralData.selectedGrades],
           user.favoriteGameTemplateIds ?? null,
         ).then((response) => {
+          console.log(user.favoriteGameTemplateIds);
+          console.log(response);
           centralDataDispatch({ type: 'SET_FAV_GAMES', payload: response.games });
           centralDataDispatch({ type: 'SET_NEXT_TOKEN', payload: response.nextToken });
           centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -485,16 +490,19 @@ export default function useCentralDataManager({
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
   const validateUser = async () => {
+    setIsValidatingUser(true);
     const status = await apiClients.auth.verifyAuth();
     if (status) {
-      const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+      const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
       if (localProfile) {
         if (!isUserProfileComplete(localProfile)) {
           navigate('/nextstep');
           centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
+          setIsValidatingUser(false);
           return;
         }
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
+        setIsValidatingUser(false);
         return;
       }
     }
@@ -509,6 +517,7 @@ export default function useCentralDataManager({
   }, []); // eslint-disable-line
 
   return {
+    isValidatingUser,
     setIsTabsOpen,
     fetchElements,
     isUserProfileComplete,

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { CircularProgress } from '@mui/material';
 import { 
   PublicPrivateType,
   IUserProfile,
@@ -12,6 +13,7 @@ import { ScreenSize, GameQuestionType, LibraryTabEnum } from '../lib/CentralMode
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
+  isValidatingUser: boolean;
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
   isLibraryInit: boolean;
@@ -30,6 +32,7 @@ interface MyLibraryProps {
 }
 
 export default function MyLibrary({ 
+  isValidatingUser,
   gameQuestion,
   screenSize,
   isLibraryInit,
@@ -41,21 +44,25 @@ export default function MyLibrary({
   handlePublicPrivateChange,
   fetchElements
 }: MyLibraryProps) {
+  const theme = useTheme();
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
-        <LibraryTabsContainer 
-          gameQuestion={gameQuestion}
-          screenSize={screenSize}
-          isLibraryInit={isLibraryInit}
-          setIsLibraryInit={setIsLibraryInit}
-          setIsTabsOpen={setIsTabsOpen}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
-          handleSearchChange={handleSearchChange}
-          handlePublicPrivateChange={handlePublicPrivateChange}
-          fetchElements={fetchElements}
-        />
+      {isValidatingUser 
+        ? <CircularProgress style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',   color: theme.palette.primary.darkBlueCardColor, zIndex: 1}}/>
+        : <LibraryTabsContainer 
+            gameQuestion={gameQuestion}
+            screenSize={screenSize}
+            isLibraryInit={isLibraryInit}
+            setIsLibraryInit={setIsLibraryInit}
+            setIsTabsOpen={setIsTabsOpen}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            fetchElements={fetchElements}
+          />
+      }
     </MyLibraryMainContainer>
   );
 }

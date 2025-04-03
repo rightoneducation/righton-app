@@ -64,7 +64,7 @@ export default function LibraryTabs({
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
 const centralData = useCentralDataState();
 const centralDataDispatch = useCentralDataDispatch();
-const isSearchResults = centralData.searchTerms.length > 0;
+const isSearchResults = centralData.searchTerms.length > 0 || centralData.selectedGrades.length > 0 || (centralData.sort.field !== SortType.listGameTemplates && centralData.sort.direction !== SortDirection.ASC);
 
 const tabs: LibraryTabEnum[] = [
   LibraryTabEnum.PUBLIC,
@@ -87,21 +87,18 @@ const tabIconMap: { [key in LibraryTabEnum]: string } = {
 };
 
 const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBLIC);
-const elements = gameQuestion === GameQuestionType.GAME ? 
+const elements = gameQuestion === GameQuestionType.GAME ?
   getGameElements(openTab, isSearchResults, centralData)
   : getQuestionElements(openTab, isSearchResults, centralData);
-const needsFetch = elements ? elements.length === 0 : false; 
 
-if (!isLibraryInit) {
-  if (needsFetch)
-    fetchElements(openTab); 
-  setIsLibraryInit(true);
+if (isLibraryInit) {
+  setIsLibraryInit(false);
+  fetchElements(openTab);
 }
 
 const handleChange = (event: React.SyntheticEvent, newTab: LibraryTabEnum) => {
   setOpenTab(newTab);
-  if (needsFetch)
-    fetchElements(newTab); 
+  fetchElements(newTab);
 };
 
 return (

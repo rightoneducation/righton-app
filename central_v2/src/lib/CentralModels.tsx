@@ -14,7 +14,8 @@ export enum ScreenType {
   SIGNUP, 
   CREATEGAME,
   CREATEQUESTION,
-  CONFIRMATION
+  CONFIRMATION,
+  NEXTSTEP
 }
 
 export enum ScreenSize {

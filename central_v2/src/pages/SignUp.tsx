@@ -468,10 +468,10 @@ export default function SignUp({
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
-              value={centralData.userProfile.username}
+              value={centralData.userProfile.userName}
               onChange={(event) => centralDataDispatch({
                 type: 'SET_USER_PROFILE', 
-                payload: {...centralData.userProfile, username: event.target.value}
+                payload: {...centralData.userProfile, userName: event.target.value}
               })
             }
               sx={{
