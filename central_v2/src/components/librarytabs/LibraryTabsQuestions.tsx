@@ -15,7 +15,7 @@ import {
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import CardGallery from '../cardgallery/CardGallery';
 import SearchBar from '../searchbar/SearchBar';
-import { ScreenSize } from '../../lib/CentralModels';
+import { ScreenSize, LibraryTabEnum } from '../../lib/CentralModels';
 import { 
   ContentContainer, 
   TabContent,
@@ -39,7 +39,7 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  fetchElements: () => void;
+  fetchElements: (libraryTab: LibraryTabEnum) => void;
   handleView: (element: T, elements: T[]) => void;
 }
 
@@ -64,7 +64,7 @@ const [hasInitialized, setHasInitialized] = useState(false);
 if (!hasInitialized) {
   const needsFetch = centralData.mostPopularQuestions.length === 0; 
   if (needsFetch) {
-    fetchElements(); 
+    fetchElements(openTab); 
   }
   setHasInitialized(true);
 }
@@ -75,10 +75,12 @@ const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   if (newValue === 1)
     handlePublicPrivateChange(PublicPrivateType.PRIVATE);
   setOpenTab(newValue);
-  fetchElements();
+  fetchElements(newValue);
 };
 
 const getElements = () => {
+  console.log('getElements', openTab);
+  console.log(centralData.favQuestions);
   if (centralData.favQuestions.length > 0 && openTab === 3){
     if (isSearchResults)
       return centralData.searchedQuestions.filter((question) => centralData.favQuestions.map((favQuestion) => favQuestion.id).includes(question.id));
