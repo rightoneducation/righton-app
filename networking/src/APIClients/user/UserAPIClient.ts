@@ -29,14 +29,21 @@ export class UserAPIClient
   async createUser( 
     createUserInput: CreateUserInput
   ): Promise<IUser | null> {
+    try{
     const input: CreateUserInput = createUserInput
     const variables: CreateUserMutationVariables = { input }
+    console.log(input);
+    console.log(variables);
     const user = await this.callGraphQL<CreateUserMutation>(
         createUser,
         variables
     );
+    console.log(user);
     if (user.data.createUser)
       return UserParser.parseIUserfromAWSUser(user.data.createUser) as IUser;
+    } catch (error) {
+      console.log(error);
+    }
     return null;
   } 
 

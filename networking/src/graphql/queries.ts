@@ -12,6 +12,8 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
   getUser(id: $id) {
     id
     userName
+    dynamoId
+    cognitoId
     title
     firstName
     lastName
@@ -47,6 +49,8 @@ export const listUsers = /* GraphQL */ `query ListUsers(
     items {
       id
       userName
+      dynamoId
+      cognitoId
       title
       firstName
       lastName
@@ -85,6 +89,8 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
     items {
       id
       userName
+      dynamoId
+      cognitoId
       title
       firstName
       lastName
@@ -126,6 +132,8 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
     items {
       id
       userName
+      dynamoId
+      cognitoId
       title
       firstName
       lastName

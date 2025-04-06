@@ -1,14 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import { useMatch } from 'react-router-dom';
-import { Box, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { IUserProfile } from '@righton/networking';
-import { APIClientsContext } from '../lib/context/APIClientsContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { UserProfileContext, UserProfileDispatchContext } from '../lib/context/UserProfileContext';
-import { useUserProfileContext, useUserProfileDispatchContext } from '../hooks/context/useUserProfileContext';
-import useCentralDataManager from '../hooks/useCentralDataManager';
+import { SortType, SortDirection } from '@righton/networking';
+import useCentralDataManager from '../hooks/useCentralDataActions';
 import AppContainer from '../containers/AppContainer';
+import AuthGuard from '../containers/AuthGuard';
 import ExploreGames from '../pages/ExploreGames';
 import ExploreQuestions from '../pages/ExploreQuestions';
 import SignUpSwitch from './SignUpSwitch';
@@ -18,212 +15,137 @@ import CreateGame from '../pages/CreateGame';
 import MyLibrary from '../pages/MyLibrary';
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
 
-function AppSwitch() {
+interface AppSwitchProps {
+  currentScreen: ScreenType;
+}
+
+function AppSwitch({
+  currentScreen
+}: AppSwitchProps) {
   const theme = useTheme();
-  const mainScreen = useMatch('/') !== null;
-  const questionScreen = useMatch('/questions') !== null;
-  const libraryScreen = useMatch('/library') !== null;
-  const signUpScreen = useMatch('/signup') !== null;
-  const loginScreen = useMatch('/login') !== null;
-  const createQuestionScreen = useMatch('/create/question') !== null;
-  const createGameScreen = useMatch('/create/game') !== null;
-  const googlenextstep = useMatch('/nextstep') !== null;
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const [libraryGameQuestionSwitch, setLibraryGameQuestionSwitch] = useState<GameQuestionType>(GameQuestionType.GAME)
+  const [libraryGameQuestionSwitch, setLibraryGameQuestionSwitch] = useState<GameQuestionType>(GameQuestionType.GAME);
+  const [isLibraryInit, setIsLibraryInit] = useState<boolean>(true);
   const screenSize = isLargeScreen // eslint-disable-line
     ? ScreenSize.LARGE
     : isMediumScreen
       ? ScreenSize.MEDIUM
       : ScreenSize.SMALL;
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const userProfile = useUserProfileContext(UserProfileContext);
-  const userProfileDispatch = useUserProfileDispatchContext(UserProfileDispatchContext);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(apiClients.auth.isUserAuth);
+  let screenComponent;
   
-  const isUserProfileComplete = (profile: IUserProfile): boolean => {
-    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
-  };
   const gameQuestion: GameQuestionType = 
-    (mainScreen || (libraryScreen && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
+    (currentScreen === ScreenType.GAMES|| (currentScreen === ScreenType.LIBRARY && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
   const {
-    recommendedGames,
-    mostPopularGames,
-    searchedGames,
-    draftGames,
-    favGames,
-    recommendedQuestions,
-    mostPopularQuestions,
-    searchedQuestions,
-    favQuestions,
-    draftQuestions,
-    nextToken,
-    isLoading,
-    searchTerms,
-    selectedGrades,
-    isTabsOpen,
-    isFavTabOpen,
-    publicPrivate,
+    isValidatingUser,
     setIsTabsOpen,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
-    handlePublicPrivateChange,
-    getFav,
-    getDrafts,
+    getPublicPrivateElements,
     loadMore,
+    fetchElements,
   } = useCentralDataManager({gameQuestion});
+
+  const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
+    setLibraryGameQuestionSwitch(gameQuestionValue);
+    handleSortChange({
+      field: gameQuestionValue === GameQuestionType.GAME ? SortType.listGameTemplates : SortType.listQuestionTemplates,
+      direction: SortDirection.ASC,
+    })
+    setIsLibraryInit(true);  
+  };
+
   
-  useEffect(() => {
-    const response = apiClients.auth.verifyAuth().then((status) => {
-        console.log("UseEffect is RUNNING!")
-        if (status){
-          const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
-          // console.log("Local Profile fetched: ", localProfile)
-          if (localProfile) {
-            if (!isUserProfileComplete(localProfile)) {
-                // navigate to next step
-            }
-          }
-
-          setIsUserLoggedIn(true);
-          if (localProfile){
-            userProfileDispatch({type: 'update_user_profile', payload: localProfile});
-            setIsUserLoggedIn(true);
-          }
-        }
-      }
-    )
-  }, [apiClients.auth, apiClients.centralDataManager, apiClients.auth.isUserAuth, userProfileDispatch]);
-
-  const session = apiClients.auth.verifyAuth();
-  switch (true) {
-    case questionScreen: {
-      return (
-        <AppContainer isTabsOpen={isTabsOpen} setIsTabsOpen={setIsTabsOpen} currentScreen={ScreenType.QUESTIONS} isUserLoggedIn={isUserLoggedIn}>
+  
+  switch (currentScreen) {
+    case ScreenType.QUESTIONS: {
+      screenComponent = (
+        <AuthGuard>
           <ExploreQuestions 
-            isTabsOpen={isTabsOpen} 
-            setIsTabsOpen={setIsTabsOpen} 
             screenSize={screenSize} 
-            publicPrivate={publicPrivate}
-            recommendedQuestions={recommendedQuestions}
-            mostPopularQuestions={mostPopularQuestions}
-            searchedQuestions={searchedQuestions}
-            favQuestions={favQuestions}
-            draftQuestions={draftQuestions}
-            nextToken={nextToken}
-            isLoading={isLoading}
-            searchTerms={searchTerms}
-            selectedGrades={selectedGrades}
-            isFavTabOpen={isFavTabOpen}
+            fetchElements={fetchElements}
+            setIsTabsOpen={setIsTabsOpen}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
             loadMore={loadMore}
           />
-        </AppContainer>
+        </AuthGuard>
       );
+      break;
     }
-    case libraryScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.LIBRARY} isUserLoggedIn={isUserLoggedIn} gameQuestion={gameQuestion} setLibraryGameQuestionSwitch={setLibraryGameQuestionSwitch}>
+    case ScreenType.LIBRARY: {
+      screenComponent = (
+        <AuthGuard isValidatingUser={isValidatingUser}>
           <MyLibrary 
+            isValidatingUser={isValidatingUser}
             gameQuestion={gameQuestion}
-            isTabsOpen={isTabsOpen} 
+            screenSize={screenSize}
             setIsTabsOpen={setIsTabsOpen}
-            userProfile={userProfile} 
-            setIsUserLoggedIn={setIsUserLoggedIn}
-            screenSize={screenSize} 
-            recommendedGames={recommendedGames}
-            mostPopularGames={mostPopularGames}
-            searchedGames={searchedGames}
-            draftGames={draftGames}
-            favGames={favGames}
-            recommendedQuestions={recommendedQuestions}
-            mostPopularQuestions={mostPopularQuestions}
-            searchedQuestions={searchedQuestions}
-            draftQuestions={draftQuestions}
-            favQuestions={favQuestions}
-            nextToken={nextToken}
-            isLoading={isLoading}
-            searchTerms={searchTerms}
-            selectedGrades={selectedGrades}
-            isFavTabOpen={isFavTabOpen}
-            publicPrivate={publicPrivate}
+            isLibraryInit={isLibraryInit}
+            setIsLibraryInit={setIsLibraryInit}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
-            getDrafts={getDrafts}
-            loadMore={loadMore}
+            handlePublicPrivateChange={getPublicPrivateElements}
+            fetchElements={fetchElements}
           />
-        </AppContainer>
+        </AuthGuard>
       );
+      break;
     }
-    case signUpScreen:
-    case googlenextstep: {
-      return (
-        <AppContainer currentScreen={ScreenType.SIGNUP} isUserLoggedIn={isUserLoggedIn}>
+    case ScreenType.SIGNUP:
+    case ScreenType.CONFIRMATION:
+    case ScreenType.NEXTSTEP: {
+      screenComponent = (
+        <AuthGuard>
           <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
-        </AppContainer>
+          </AuthGuard>
       );
+      break;
     }
-    
-    case loginScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.LOGIN} isUserLoggedIn={isUserLoggedIn}>
+    case ScreenType.LOGIN: {
+      screenComponent = (
           <Login />
-        </AppContainer>
       );
+      break;
     }
-    case createQuestionScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.CREATEQUESTION} isUserLoggedIn={isUserLoggedIn}>
+    case ScreenType.CREATEQUESTION: {
+      screenComponent = (
           <CreateQuestion screenSize={screenSize}/>
-        </AppContainer>
       );
+      break;
     }
-    case createGameScreen: {
-      return (
-        <AppContainer currentScreen={ScreenType.CREATEGAME} isUserLoggedIn={isUserLoggedIn}>
+    case ScreenType.CREATEGAME: {
+      screenComponent = (
           <CreateGame screenSize={screenSize}/>
-        </AppContainer>
       );
+      break
     }
+    case ScreenType.GAMES:
     default:{
-      return (
-        <AppContainer currentScreen={ScreenType.GAMES} isUserLoggedIn={isUserLoggedIn}>
+      screenComponent = (
+        <AuthGuard>
           <ExploreGames 
-            isTabsOpen={isTabsOpen} 
-            setIsTabsOpen={setIsTabsOpen}
-            userProfile={userProfile} 
-            setIsUserLoggedIn={setIsUserLoggedIn}
             screenSize={screenSize} 
-            recommendedGames={recommendedGames}
-            mostPopularGames={mostPopularGames}
-            searchedGames={searchedGames}
-            draftGames={draftGames}
-            favGames={favGames}
-            nextToken={nextToken}
-            isLoading={isLoading}
-            searchTerms={searchTerms}
-            selectedGrades={selectedGrades}
-            isFavTabOpen={isFavTabOpen}
-            publicPrivate={publicPrivate}
+            setIsTabsOpen={setIsTabsOpen}
+            fetchElements={fetchElements}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
-            handlePublicPrivateChange={handlePublicPrivateChange}
-            getFav={getFav}
             loadMore={loadMore}
           />
-        </AppContainer>
+        </AuthGuard>
       );
     }
   }
+
+  return (
+    <AppContainer isValidatingUser={isValidatingUser} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion}>
+      {screenComponent}
+    </AppContainer>
+  )
 }
 
 export default AppSwitch;

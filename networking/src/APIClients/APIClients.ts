@@ -86,7 +86,6 @@ export class APIClients {
   }
   static async create(env: Environment, appType: AppType): Promise<APIClients> {
     const authClient = new AuthAPIClient();
-    await authClient.init(); // Ensure the auth client is initialized
     return new APIClients(env, authClient, appType); 
   }
     

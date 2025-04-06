@@ -3,10 +3,10 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/material';
-import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
+import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
 import Header from '../components/Header';
 import { HeaderContainer } from '../lib/styledcomponents/HeaderContainerStyledComponent';
-import { ModalBackground } from '../lib/styledcomponents/QuestionTabsStyledComponents';
 import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 
 const ScreenContainer = styled(Box)(({ theme }) => ({
@@ -34,26 +34,27 @@ const BodyContainer = styled(Box)(() => {
 );
 
 interface AppContainerProps {
+  isValidatingUser: boolean;
   currentScreen: ScreenType;
-  isTabsOpen?: boolean;
-  setIsTabsOpen?: (isTabsOpen: boolean) => void;
   gameQuestion?: GameQuestionType;
+  setIsTabsOpen?: (isTabsOpen: boolean) => void;
   setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void
   children: React.ReactNode;
-  isUserLoggedIn: boolean;
+  
 }
 
 function AppContainer({ 
+  isValidatingUser,
   currentScreen, 
-  isTabsOpen, 
-  setIsTabsOpen, 
   gameQuestion,
+  setIsTabsOpen, 
   setLibraryGameQuestionSwitch,
-  isUserLoggedIn, 
   children 
 }: AppContainerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [menuOpen, setMenuOpen] = useState(false);
@@ -66,17 +67,18 @@ function AppContainer({
     if (setIsTabsOpen)
       setIsTabsOpen(false);
   }
-  
+
   return (
     <ScreenContainer>
       <HeaderContainer>
-        { isTabsOpen && 
+        { centralData.isTabsOpen && 
           <QuestionTabsModalBackground 
-            isTabsOpen={isTabsOpen} 
+            isTabsOpen={centralData.isTabsOpen} 
             handleBackToExplore={handleBackToExplore} 
           />
         }
         <Header
+          isValidatingUser={isValidatingUser}
           currentScreen={currentScreen}
           screenSize={screenSize}
           isLgScreen={isLgScreen}
@@ -84,7 +86,7 @@ function AppContainer({
           gameQuestion={gameQuestion}
           setGameQuestion={setLibraryGameQuestionSwitch}
           setMenuOpen={setMenuOpen}
-          isUserLoggedIn={isUserLoggedIn}
+          userStatus={centralData.userStatus}
         />
       </HeaderContainer>
       <BodyContainer>{children}</BodyContainer>

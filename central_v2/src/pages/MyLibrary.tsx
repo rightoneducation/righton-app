@@ -1,45 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { CircularProgress } from '@mui/material';
 import { 
-  IAPIClients, 
-  IQuestionTemplate,
-  IGameTemplate,
   PublicPrivateType,
   IUserProfile,
   GradeTarget,
   SortType,
   SortDirection
 } from '@righton/networking';
-import { useTranslation } from 'react-i18next';
-import { useTheme, styled } from '@mui/material/styles';
-import { Typography, Box, Button } from '@mui/material';
 import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
-import { ScreenSize, GameQuestionType } from '../lib/CentralModels';
+import { ScreenSize, GameQuestionType, LibraryTabEnum } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
+  isValidatingUser: boolean;
   gameQuestion: GameQuestionType;
-  isTabsOpen: boolean;
-  setIsTabsOpen: (isTabsOpen: boolean) => void;
-  userProfile: IUserProfile;
   screenSize: ScreenSize;
-  setIsUserLoggedIn: (isUserLoggedIn: boolean) => void;
-  recommendedGames: IGameTemplate[];
-  mostPopularGames: IGameTemplate[];
-  searchedGames: IGameTemplate[];
-  draftGames: IGameTemplate[];
-  favGames: IGameTemplate[];
-  recommendedQuestions: IQuestionTemplate[];
-  mostPopularQuestions: IQuestionTemplate[];
-  searchedQuestions: IQuestionTemplate[];
-  draftQuestions: IQuestionTemplate[];
-  favQuestions: IQuestionTemplate[];
-  nextToken: string | null;
-  isLoading: boolean;
-  searchTerms: string;
-  selectedGrades: GradeTarget[];
-  isFavTabOpen: boolean;
-  publicPrivate: PublicPrivateType;
+  isLibraryInit: boolean;
+  setIsLibraryInit: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -49,79 +28,41 @@ interface MyLibraryProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
-  getFav: (user: IUserProfile) => void;
-  getDrafts: () => void;
-  loadMore: () => void;
+  fetchElements: (libraryTab: LibraryTabEnum) => void;
 }
 
 export default function MyLibrary({ 
+  isValidatingUser,
   gameQuestion,
-  isTabsOpen,
-  setIsTabsOpen,
-  userProfile,
   screenSize,
-  setIsUserLoggedIn,
-  recommendedGames,
-  mostPopularGames,
-  searchedGames,
-  draftGames,
-  favGames,
-  recommendedQuestions,
-  mostPopularQuestions,
-  searchedQuestions,
-  draftQuestions,
-  favQuestions,
-  nextToken,
-  isLoading,
-  searchTerms,
-  selectedGrades,
-  isFavTabOpen,
-  publicPrivate,
+  isLibraryInit,
+  setIsLibraryInit,
+  setIsTabsOpen,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
   handlePublicPrivateChange,
-  getFav,
-  getDrafts,
-  loadMore,
+  fetchElements
 }: MyLibraryProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
-
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
-        <LibraryTabsContainer 
-          gameQuestion={gameQuestion}
-          isTabsOpen={isTabsOpen}
-          setIsTabsOpen={setIsTabsOpen}
-          userProfile={userProfile}
-          screenSize={screenSize}
-          setIsUserLoggedIn={setIsUserLoggedIn}
-          recommendedGames={recommendedGames}
-          mostPopularGames={mostPopularGames}
-          searchedGames={searchedGames}
-          draftGames={draftGames}
-          recommendedQuestions={recommendedQuestions}
-          mostPopularQuestions={mostPopularQuestions}
-          searchedQuestions={searchedQuestions}
-          draftQuestions={draftQuestions}
-          favQuestions={favQuestions}
-          favGames={favGames}
-          nextToken={nextToken}
-          isLoading={isLoading}
-          searchTerms={searchTerms}
-          selectedGrades={selectedGrades}
-          isFavTabOpen={isFavTabOpen}
-          publicPrivate={publicPrivate}
-          handleChooseGrades={handleChooseGrades}
-          handleSortChange={handleSortChange}
-          handleSearchChange={handleSearchChange}
-          handlePublicPrivateChange={handlePublicPrivateChange}
-          getFav={getFav}
-          getDrafts={getDrafts}
-          loadMore={loadMore}
-        />
+      {isValidatingUser 
+        ? <CircularProgress style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',   color: theme.palette.primary.darkBlueCardColor, zIndex: 1}}/>
+        : <LibraryTabsContainer 
+            gameQuestion={gameQuestion}
+            screenSize={screenSize}
+            isLibraryInit={isLibraryInit}
+            setIsLibraryInit={setIsLibraryInit}
+            setIsTabsOpen={setIsTabsOpen}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            handlePublicPrivateChange={handlePublicPrivateChange}
+            fetchElements={fetchElements}
+          />
+      }
     </MyLibraryMainContainer>
   );
 }
