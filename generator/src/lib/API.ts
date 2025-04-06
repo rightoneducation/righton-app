@@ -3,7 +3,7 @@
 import { Amplify} from "aws-amplify"
 import { generateClient } from 'aws-amplify/api';
 import { createSavedExplanation, createDiscardedExplanation } from "../graphql/mutations";
-import { listSavedExplanations, listDiscardedExplanations } from "../graphql/queries";
+import { listQuestions, listDiscardedExplanations } from "../graphql/queries";
 import { IQuestion, IExplanationToSave, IWrongAnswerExplanation, IWrongAnswerExplanations, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput } from "./Models";
 import awsconfig from "../aws-exports"
 
@@ -98,11 +98,11 @@ export async function createExplanation(
 
 export async function returnQuestions(): Promise<any> {
     const result = await client.graphql({ 
-        query: listSavedExplanations,
+        query: listQuestions,
         authMode: "iam"
     }
     ) as { data: any; };
-    return result.data.listSavedExplanations.items;
+    return result.data.listQuestions.items;
 }
 
 export async function saveDiscardedExplanation(
