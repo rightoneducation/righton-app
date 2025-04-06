@@ -3,7 +3,7 @@ import { Box, Typography, CircularProgress, Button } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom'; 
 import { useGoogleLogin } from '@react-oauth/google';
-import RightOnLogo from '../images/RightOnLogo.png';
+import RightOnLogo from '../images/RightOnUserLogo.svg';
 import GoogleImageSvg from "../images/googleicon.svg";
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { 

@@ -2,9 +2,9 @@
 
 import { Amplify} from "aws-amplify"
 import { generateClient } from 'aws-amplify/api';
-import { createQuestions, createDiscardedExplanation } from "../graphql/mutations";
+import { createSavedExplanation, createDiscardedExplanation } from "../graphql/mutations";
 import { listQuestions, listDiscardedExplanations } from "../graphql/queries";
-import { IQuestion, IQuestionToSave, IWrongAnswerExplanations, IRegenInput, IDiscardedExplanationToSave } from "./Models";
+import { IQuestion, IExplanationToSave, IWrongAnswerExplanation, IWrongAnswerExplanations, IDiscardedExplanationToSave, IDiscardedExplanationSaveInput } from "./Models";
 import awsconfig from "../aws-exports"
 
 const client = generateClient();
@@ -51,8 +51,8 @@ export async function generateWrongAnswerExplanations(
 }
 
 export async function regenerateWrongAnswerExplanation(
-    regenInputObj: IRegenInput
-  ): Promise<IWrongAnswerExplanations> {
+    regenInputObj: IExplanationToSave
+  ): Promise<IWrongAnswerExplanation> {
     return fetch(regenEndpoint, {
         method: "POST",
         headers: {
@@ -76,36 +76,44 @@ export async function regenerateWrongAnswerExplanation(
         })
   }
 
-export async function createQuestion(
-    question: IQuestionToSave
-  ): Promise<IQuestionToSave> {
+export async function createExplanation(
+    explanation: IExplanationToSave
+  ): Promise<IExplanationToSave> {
     let result = await client.graphql({
-        query: createQuestions, 
+        query: createSavedExplanation, 
         variables: {
           input: {
-            question: question.question,
-            correctAnswer: question.correctAnswer, 
-            wrongAnswers: JSON.stringify(question.wrongAnswers),
-            version: question.version 
+            question: explanation.question,
+            correctAnswer: explanation.correctAnswer, 
+            wrongAnswer: explanation.wrongAnswer,
+            genExplanation: JSON.stringify(explanation.genExplanation),
+            discardedExplanations: JSON.stringify(explanation.discardedExplanations),
+            version: explanation.version 
           }
-        }
+        },
+        authMode: "iam"
       }) as { data: any; };
     return result.data.createQuestion;
 };
 
 export async function returnQuestions(): Promise<any> {
-    const result = await client.graphql({ query: listQuestions}) as { data: any; };
+    const result = await client.graphql({ 
+        query: listQuestions,
+        authMode: "iam"
+    }
+    ) as { data: any; };
     return result.data.listQuestions.items;
 }
 
 export async function saveDiscardedExplanation(
-    discardedExplanationInput: IDiscardedExplanationToSave
+    discardedExplanationInput: IDiscardedExplanationSaveInput
 ): Promise<IDiscardedExplanationToSave>{
     let result = await client.graphql({
         query: createDiscardedExplanation,
         variables: {
             input: discardedExplanationInput
-        }
+        },
+        authMode: "iam"
     }) as { data: any; };
     return result.data.createDiscardedExplanation;
 }
@@ -117,7 +125,8 @@ export async function getDiscardedExplanations(
         query: listDiscardedExplanations,
         variables: {
             limit
-        }
+        },
+        authMode: "iam"
     }) as {data: any;};
     return result.data.listDiscardedExplanations;
 }
@@ -127,8 +136,6 @@ export async function compareEditedExplanation(
     editedExplanation: string
   ): Promise<string | null> {
       try{
-        console.log(originalExplanation);
-        console.log(editedExplanation);
           const response = 
               fetch(compareEndpoint, {
                   method: "POST",

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, useTheme } from '@mui/material';
+import { IQuestion } from '../lib/Models';
 import { TooltipStyled } from '../lib/styledcomponents/generator/StyledTooltip';
 import { QuestionContainer } from '../lib/styledcomponents/generator/StyledContainers';
 import { BaseCardStyled } from '../lib/styledcomponents/generator/StyledCards';
@@ -12,12 +13,11 @@ interface QuestionCardProps {
   isCustomQuestion: boolean,
   labelText: string[],
   handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void,
-  formData: { [key: string]: string },
+  formData: IQuestion,
   isSubmitted: boolean,
   isFormComplete: boolean,
   isQuestionGenerating: boolean,
   handleSubmitQuestion: () => void,
-  handleGenerateSampleQuestion: () => void,
 }
 
 export const QuestionCard = ({
@@ -29,7 +29,6 @@ export const QuestionCard = ({
   isFormComplete,
   isQuestionGenerating,
   handleSubmitQuestion,
-  handleGenerateSampleQuestion
 }: QuestionCardProps ) => {
   const theme = useTheme();
   const inputs = [
@@ -39,7 +38,6 @@ export const QuestionCard = ({
   ];
 
   return (
-    <QuestionContainer>
       <BaseCardStyled>
         <CardHeaderTextStyled>
           Question
@@ -48,13 +46,13 @@ export const QuestionCard = ({
           <ExplanationTextStyled>
             {formData.question}
           </ExplanationTextStyled>
-        : <TextFieldStyled placeholder="Enter the question here..." variant="outlined" name="question" value={formData.question} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event)}/>
+        : <TextFieldStyled placeholder="Enter the question here..." variant="outlined" name="question" multiline minRows={7} maxRows={7} value={formData.question} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event)}/>
         }
         <CardHeaderTextStyled>
           Correct Answer
         </CardHeaderTextStyled>
         <TextFieldStyled placeholder="Enter the correct answer here..." variant="outlined" name="correctAnswer" value={formData.correctAnswer} onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(event)}/>
-        <CardHeaderTextStyled>
+        {/* <CardHeaderTextStyled>
           Incorrect Answers
         </CardHeaderTextStyled>
         <Box style={{display: 'flex', flexDirection: 'column', gap: '16px'}}> 
@@ -84,8 +82,7 @@ export const QuestionCard = ({
         <Box style={{display: 'flex', justifyContent: 'center', gap: `${theme.sizing.xxSmPadding}px`}}>
           <FooterTextStyled>Don't have a question? </FooterTextStyled>
           <FooterBoldStyled style={{cursor: 'pointer'}} onClick={handleGenerateSampleQuestion}>Generate a sample</FooterBoldStyled>
-        </Box>
+        </Box> */}
     </BaseCardStyled>
-  </QuestionContainer>
   );
 }
