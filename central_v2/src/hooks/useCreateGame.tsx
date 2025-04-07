@@ -22,6 +22,7 @@ export type TGameTemplateProps = {
   openCreateQuestion: boolean;
   publicPrivateGame: PublicPrivateType
   isGameCardErrored: boolean;
+  isCreatingTemplate: boolean;
   isGameImageUploadVisible: boolean;
   isGameURLUploadVisible: boolean;
   image?: File | null;
@@ -54,6 +55,7 @@ const useCreateGame = () => {
     publicPrivateGame: PublicPrivateType.PUBLIC,
     isGameImageUploadVisible: false,
     isGameURLUploadVisible: false,
+    isCreatingTemplate: false,
     image: null,
     imageUrl: ""
   }

@@ -42,7 +42,7 @@ import {
   CreateGameTitleText,
   GameContentContainerStyled,
 } from '../../../lib/styledcomponents/CreateGameStyledComponent';
-import { TPhaseTime, TGameInfo, TGameTemplateProps } from '../../../hooks/useCreateGame';
+import { TPhaseTime, TGameTemplateProps } from '../../../pages/CreateGame';
 
 interface CreateGameCardBaseProps {
   draftGame: TGameTemplateProps;
