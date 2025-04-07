@@ -34,6 +34,7 @@ import tabFavoritesIcon from '../images/tabFavorites.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import { type TDraftQuestionsList } from '../hooks/useCreateQuestion';
+import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -49,6 +50,73 @@ const tabIconMap: { [key: number]: string } = {
   0: tabExploreQuestionsIcon,
   1: tabMyQuestionsIcon,
   2: tabFavoritesIcon,
+};
+
+const newEmptyTemplate: CentralQuestionTemplateInput = {
+  questionCard: {
+    title: '',
+    ccss: 'CCSS',
+    isFirstEdit: true,
+    isCardComplete: false,
+  },
+  correctCard: {
+    answer: '',
+    answerSteps: ['', '', ''],
+    isFirstEdit: true,
+    isCardComplete: false,
+  },
+  incorrectCards: [
+    {
+      id: 'card-1',
+      answer: '',
+      explanation: '',
+      isFirstEdit: true,
+      isCardComplete: false,
+    },
+    {
+      id: 'card-2',
+      answer: '',
+      explanation: '',
+      isFirstEdit: true,
+      isCardComplete: false,
+    },
+    {
+      id: 'card-3',
+      answer: '',
+      explanation: '',
+      isFirstEdit: true,
+      isCardComplete: false,
+    },
+  ],
+};
+
+const emptyQuestionTemplate: IQuestionTemplate = {
+  id: "",
+  title: "",
+  lowerCaseTitle: "",
+  version: 0,
+  ccss: "",
+  domain: "",
+  cluster: "",
+  grade: "",
+  gradeFilter: "",
+  standard: "",
+  gameTemplatesCount: 0,
+}
+
+const draftTemplate: TDraftQuestionsList = {
+  publicPrivate: PublicPrivateType.PUBLIC,
+  isAIEnabled: false,
+  isAIError: false,
+  question: newEmptyTemplate,
+  questionImageModalIsOpen: false,
+  isCCSSVisibleModal: false,
+  isImageUploadVisible: false,
+  isImageURLVisible: false,
+  isCreatingTemplate: false,
+  highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
+  answerType: AnswerType.MULTICHOICE,
+  questionTemplate: emptyQuestionTemplate,
 };
 
 export default function CreateGame({ screenSize }: CreateGameProps) {
@@ -69,6 +137,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     handleSaveGame,
     handleDiscardGame,
     handleGameImageUploadClick,
+    handleGameImageSave,
+    handleGameImageChange,
   } = useCreateGame();
   const {
     handleImageChange,
@@ -117,57 +187,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     loadMoreQuestions,
   } = useExploreQuestionsStateManager();
 
-  const newEmptyTemplate: CentralQuestionTemplateInput = {
-    questionCard: {
-      title: '',
-      ccss: 'CCSS',
-      isFirstEdit: true,
-      isCardComplete: false,
-    },
-    correctCard: {
-      answer: '',
-      answerSteps: ['', '', ''],
-      isFirstEdit: true,
-      isCardComplete: false,
-    },
-    incorrectCards: [
-      {
-        id: 'card-1',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-      {
-        id: 'card-2',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-      {
-        id: 'card-3',
-        answer: '',
-        explanation: '',
-        isFirstEdit: true,
-        isCardComplete: false,
-      },
-    ],
-  };
-  const draftTemplate: TDraftQuestionsList = {
-    publicPrivate: PublicPrivateType.PUBLIC,
-    isAIEnabled: false,
-    isAIError: false,
-    question: newEmptyTemplate,
-    questionImageModalIsOpen: false,
-    isCCSSVisibleModal: false,
-    isImageUploadVisible: false,
-    isImageURLVisible: false,
-    isCreatingTemplate: false,
-    highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
-    answerType: AnswerType.MULTICHOICE,
-  };
-
   // game template functions
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
@@ -189,6 +208,33 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
+  /**
+   *   gameDetails.grade = CCSS.split('.')[0];
+      gameDetails.domain = CCSS.split('.')[1];
+      gameDetails.cluster = CCSS.split('.')[2];
+      gameDetails.standard = CCSS.split('.')[3];
+   */
+
+  const handleCreateNewGame = async () => {
+    const draftTemplateQuestions: IQuestionTemplate[] = [];
+
+    draftQuestionsList.forEach((draftQuestion,i) => {
+      draftTemplateQuestions.push({
+        id: "",
+        title: draftQuestion.question.questionCard.title,
+        lowerCaseTitle: draftQuestion.question.questionCard.title.toLowerCase(),
+        version: 0,
+        ccss: draftQuestion.question.questionCard.ccss,
+        grade: draftQuestion.question.questionCard.ccss.split(".")[0],
+        domain:draftQuestion.question.questionCard.ccss.split(".")[1],
+        cluster: draftQuestion.question.questionCard.ccss.split(".")[2],
+        standard: draftQuestion.question.questionCard.ccss.split(".")[3],
+        gradeFilter: draftQuestion.question.questionCard.ccss.split(".")[0],
+        gameTemplatesCount: 1,
+      })
+    });
+
+  }
 
   return (
     <CreateGameMainContainer>
@@ -224,14 +270,14 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       )}
 
       {/* Create Game Image Upload Modal */}
-      {/* <CreateGameImageUploadModal
-        draftQuestion={draftQuestion}
+      <CreateGameImageUploadModal
+        draftGame={draftGame}
         screenSize={screenSize}
-        isModalOpen={isGameImageUploadVisible}
-        handleImageChange={handleImageChange}
-        handleImageSave={handleImageSave}
+        isModalOpen={draftGame.isGameImageUploadVisible}
+        handleImageChange={handleGameImageChange}
+        handleImageSave={handleGameImageSave}
         handleCloseModal={handleCloseGameCardModal}
-      /> */}
+      />
 
       <CreatingTemplateModal
         isModalOpen={isCreatingTemplate}

@@ -23,9 +23,9 @@ export type TGameTemplateProps = {
   publicPrivateGame: PublicPrivateType
   isGameCardErrored: boolean;
   isGameImageUploadVisible: boolean;
-  isGameURLUPloadVisible: boolean;
-  image: File | null;
-  imageUrl: string;
+  isGameURLUploadVisible: boolean;
+  image?: File | null;
+  imageUrl?: string | undefined;
 }
 
 const useCreateGame = () => {
@@ -53,7 +53,7 @@ const useCreateGame = () => {
     openQuestionBank: false,
     publicPrivateGame: PublicPrivateType.PUBLIC,
     isGameImageUploadVisible: false,
-    isGameURLUPloadVisible: false,
+    isGameURLUploadVisible: false,
     image: null,
     imageUrl: ""
   }
@@ -152,7 +152,7 @@ const useCreateGame = () => {
   const handleGameImageUploadClick = () => {
     setDraftGame((prev) => ({
       ...prev,
-      isGameImageUploadVisible: true,
+      isGameImageUploadVisible: !prev.isGameImageUploadVisible,
     }))
   };
 
@@ -166,12 +166,56 @@ const useCreateGame = () => {
   const handleSaveGame = useCallback(async () => {
     // api call goes here.
     // game card errors should be handled here too.
-    setDraftGame((prev) => ({...prev, isGameCardSubmitted: true }))
+    setDraftGame((prev) => ({...prev, isGameCardSubmitted: true }));
   }, []);
+
+  const handleGameImageSave = async (inputImage?: File, inputUrl?: string) => {
+    
+    if(inputImage) {
+      setDraftGame((prev) => ({ 
+        ...prev,
+        image: inputImage,
+        imageUrl: undefined,
+        isGameImageUploadVisible: false,
+        isGameURLUploadVisible: false,
+      }))
+    }
+
+    if(inputUrl) {
+      setDraftGame((prev) => ({ 
+        ...prev,
+        imageUrl: inputUrl,
+        image: undefined,
+        isGameImageUploadVisible: false,
+        isGameURLUploadVisible: false,
+      }))
+    }
+  }
+
+  const handleGameImageChange = async (inputImage?: File, inputUrl?: string) => {
+    if(inputImage) {
+      setDraftGame((prev) => ({ 
+        ...prev,
+        image: inputImage,
+        imageUrl: undefined,
+      }))
+    }
+
+    if(inputUrl) {
+      setDraftGame((prev) => ({ 
+        ...prev,
+        imageUrl: inputUrl,
+        image: undefined,
+      }))
+    }
+    
+  }
 
   return {
     phaseTime,
     draftGame,
+    handleGameImageSave,
+    handleGameImageChange,
     setDraftGame,
     handleGameTitle,
     handleGameDescription,

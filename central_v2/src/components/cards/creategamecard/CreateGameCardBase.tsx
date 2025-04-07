@@ -45,6 +45,7 @@ import {
 import { TPhaseTime, TGameInfo, TGameTemplateProps } from '../../../hooks/useCreateGame';
 
 interface CreateGameCardBaseProps {
+  draftGame: TGameTemplateProps;
   screenSize: ScreenSize;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
@@ -61,6 +62,7 @@ interface CreateGameCardBaseProps {
 }
 
 export default function CreateGameCardBase({
+  draftGame,
   screenSize,
   handleImageUploadClick,
   handlePublicPrivateChange,
@@ -76,26 +78,16 @@ export default function CreateGameCardBase({
   openCreateQuestion,
 }: CreateGameCardBaseProps) {
   const theme = useTheme();
-  const [questionType, setQuestionType] = React.useState<PublicPrivateType>(
-    PublicPrivateType.PUBLIC,
-  );
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
-  const [image, setImage] = React.useState<File>();
-  const getImage = () => {
-    if (image && image instanceof File) return URL.createObjectURL(image);
-    return image;
+  
+  const getImage = (): string => {
+    if (draftGame.image && draftGame.image instanceof File) return URL.createObjectURL(draftGame.image);
+    return String(draftGame.imageUrl);
   };
   const [completedCardClicked, setCompletedCardClicked] = React.useState<boolean>(false)
   const imageLink = getImage();
-
-  const handleQuestionTypeChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setQuestionType(event.target.value as PublicPrivateType);
-    handlePublicPrivateChange(event.target.value as PublicPrivateType);
-  };
   const imageContents = [
     imageLink && (
       <Box
@@ -159,6 +151,7 @@ export default function CreateGameCardBase({
 
     // TODO: Add image to validation
     const cardIsComplete = 
+    Boolean(draftGame.image || draftGame.imageUrl) &&
     phaseTime.phaseOne !== '' &&
     phaseTime.phaseTwo !== '' &&
     gameDescription !== '' &&

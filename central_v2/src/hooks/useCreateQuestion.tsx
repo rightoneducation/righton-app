@@ -4,6 +4,7 @@ import {
   CentralQuestionTemplateInput,
   IncorrectCard,
   AnswerType,
+  IQuestionTemplate,
 } from '@righton/networking';
 import { debounce } from 'lodash';
 import { useNavigate } from 'react-router-dom';
@@ -47,6 +48,7 @@ export type TDraftQuestionsList = {
   isCreatingTemplate: boolean;
   highlightCard: CreateQuestionHighlightCard
   answerType: AnswerType;
+  questionTemplate: IQuestionTemplate;
 };
 
 const useCreateQuestion = (index: number) => {
@@ -91,6 +93,20 @@ const useCreateQuestion = (index: number) => {
       ],
     };
 
+     const emptyQuestionTemplate: IQuestionTemplate = {
+        id: "",
+        title: "",
+        lowerCaseTitle: "",
+        version: 0,
+        ccss: "",
+        domain: "",
+        cluster: "",
+        grade: "",
+        gradeFilter: "",
+        standard: "",
+        gameTemplatesCount: 0,
+      }
+
     const draftTemplate: TDraftQuestionsList = {
       publicPrivate: PublicPrivateType.PUBLIC,
       isAIEnabled: false,
@@ -103,6 +119,7 @@ const useCreateQuestion = (index: number) => {
       isCreatingTemplate: false,
       answerType: AnswerType.MULTICHOICE,
       highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
+      questionTemplate: emptyQuestionTemplate,
     };
   
     const [draftQuestionsList, setDraftQuestionsList] = useState<
@@ -169,7 +186,7 @@ const useCreateQuestion = (index: number) => {
               ...questionItem,
               answerType: answer,
             }
-            return newDraftQuestion
+            return newDraftQuestion;
           }
           return questionItem;
         })
@@ -320,7 +337,11 @@ const useCreateQuestion = (index: number) => {
                question: newDraftQuestion,
                ...(isCardComplete && isFirstEdit && {
                  highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
-               })
+               }),
+               questionTemplate: {
+                ...questionItem.questionTemplate,
+                title,
+               }
              };
              return updatedItem;
            }
@@ -350,7 +371,11 @@ const useCreateQuestion = (index: number) => {
               question: newDraftQuestion,
               ...(isCardComplete && isFirstEdit && {
                 highlightCard: CreateQuestionHighlightCard.INCORRECTANSWER1
-              })
+              }),
+              questionTemplate: {
+                ...questionItem.questionTemplate,
+
+              }
             };
             return updatedItem;
           }
