@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ScreenSize } from '../../lib/CentralModels';
-import LabelCircle from './LabelCircle';
+import LabelCircle from '../ccsstabs/LabelCircle';
 import { 
   TabContent, 
   StyledTab, 
@@ -18,21 +18,21 @@ import {
 } from '../../lib/styledcomponents/CCSSSTabsStyledComponents';
 import { CCSSType } from '../../lib/CCSSModels';
 import ccssDictionary from '../../lib/CCSSDictionary';
-import CCSSIndicatorPill from './CCSSIndicatorPill';
+import CCSSIndicatorPill from '../ccsstabs/CCSSIndicatorPill';
 
-interface TabContainerProps {
+interface TempTabContainerProps {
   screenSize: ScreenSize;
   isTabsOpen: boolean;
   handleCCSSSubmit: (ccss: string) => void;
-  ccss?: string; 
+  ccss: string;
 }
 
-export default function CCSSTabs({
+export default function TempCCSSTabs({
   screenSize,
   isTabsOpen,
   handleCCSSSubmit,
   ccss
-}: TabContainerProps) {
+}: TempTabContainerProps) {
   const theme = useTheme();
   const [openTab, setOpenTab] = React.useState(0);
   const tabMap: { [key: number]: string } = {

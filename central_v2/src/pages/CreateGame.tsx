@@ -57,7 +57,7 @@ const tabIconMap: { [key: number]: string } = {
 };
 
 // Create Question
-export type TDraftQuestionsList = {
+type TDraftQuestionsList = {
   publicPrivate: PublicPrivateType;
   isAIEnabled: boolean;
   isAIError: boolean;
@@ -866,22 +866,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       });
     };
 
-    const createQuestionTemplateHelper = (questionSet: CentralQuestionTemplateInput): IQuestionTemplate => {
-      return {
-          id: "",
-          title: "",
-          lowerCaseTitle: "",
-          version: 0,
-          ccss: "",
-          domain: "",
-          cluster: "",
-          grade: "",
-          gradeFilter: "",
-          standard: "",
-          gameTemplatesCount: 0,
-      }
-    }
-
     const handleSaveQuestion = async () => {
       try {
         // check for incomplete questions, set error and template creation flags.
@@ -954,7 +938,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
               }
             }
     
-            // 5eturn updated question with isCreatingTemplate: false after processing
+            // return updated question with isCreatingTemplate: false after processing
             return {
               ...dq,
               isCreatingTemplate: false,
@@ -962,7 +946,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           })
         );
     
-        // Step 4: Reset data and re-direct user
+        // Reset data and re-direct user
         setDraftQuestionsList([]); 
         setIsCardErrored(false);   
         navigate("/");             
@@ -1017,14 +1001,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     navigate('/questions');
   };
 
-  // card completion state for incorrect card stack
-  const completeIncorrectAnswers = draftQuestionsList[
-    selectedQuestionIndex
-  ].question.incorrectCards.filter((card) => card.isCardComplete);
-  const incompleteIncorrectAnswers = draftQuestionsList[
-    selectedQuestionIndex
-  ].question.incorrectCards.filter((card) => !card.isCardComplete);
-
   const openModal =
     draftQuestionsList[selectedQuestionIndex].isImageUploadVisible ||
     draftQuestionsList[selectedQuestionIndex].isImageURLVisible ||
@@ -1041,18 +1017,19 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         handleCloseModal={handleCloseQuestionModal}
       />
 
-      {draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
+      {/* tracks ccss state according to index */}
+      {draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal &&
         <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={
             draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal
           }
           handleCCSSSubmit={handleCCSSSubmit}
+          ccss={draftQuestionsList[selectedQuestionIndex].question.questionCard.ccss ?? ''}
         />
-      )}
+      }
 
       {/* open modals according to correct index */}
-      {draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen && (
         <ImageUploadModal
           draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
           screenSize={screenSize}
@@ -1063,7 +1040,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           handleImageSave={handleImageSave}
           handleCloseModal={handleCloseQuestionModal}
         />
-      )}
 
       {/* Create Game Image Upload Modal */}
       <CreateGameImageUploadModal
@@ -1115,8 +1091,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                   <QuestionElements
                     screenSize={screenSize}
                     draftQuestion={draftQuestionItem.question}
-                    completeIncorrectAnswers={completeIncorrectAnswers}
-                    incompleteIncorrectAnswers={incompleteIncorrectAnswers}
+                    completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter((card) => card.isCardComplete)}
+                    incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter((card) => !card.isCardComplete)}
                     isCardSubmitted={draftQuestionItem.isQuestionCardSubmitted}
                     isCardErrored={draftQuestionItem.isQuestionCardErrored}
                     highlightCard={draftQuestionItem.highlightCard}
