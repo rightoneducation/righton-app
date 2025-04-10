@@ -74,29 +74,31 @@ const PublicPrivateText = styled(Typography, {
 
 interface PublicPrivateButtonInterface {
   isDisabled: boolean;
-  onHandlePublicPrivateChange?: (value: PublicPrivateType ) => void; 
+  onHandlePublicPrivateChange?: (value: PublicPrivateType ) => void;
+  isPublic: boolean;
 }
 
 export default function PublicPrivateButton({
   isDisabled,
-  onHandlePublicPrivateChange
+  onHandlePublicPrivateChange,
+  isPublic,
 }: PublicPrivateButtonInterface) {
   const { t } = useTranslation();
-  const [isPublic, setIsPublic] = useState<boolean>(true);
+  
   const handlePublicPrivateSwitch = () =>{
-    setIsPublic(!isPublic);
+    onHandlePublicPrivateChange?.(isPublic ? PublicPrivateType.PRIVATE:PublicPrivateType.PUBLIC)
   }
-
+  
   return (
     <PublicPrivateContainer isDisabled={isDisabled} onClick={!isDisabled ? handlePublicPrivateSwitch : undefined}>
       <PublicPrivateSelectionPill isPublic={isPublic}/>
       <LabelContainer>
-        <SubContainer onClick={() => onHandlePublicPrivateChange?.(PublicPrivateType.PUBLIC)} isSelected={isPublic}>     
+        <SubContainer isSelected={isPublic}>     
           <PublicPrivateText isSelected={isPublic}>
             {t(`publicPrivateButton.public`)}
           </PublicPrivateText>
         </SubContainer>
-        <SubContainer onClick={() => onHandlePublicPrivateChange?.(PublicPrivateType.PRIVATE)} isSelected={!isPublic}>
+        <SubContainer isSelected={!isPublic}>
           <PublicPrivateText isSelected={!isPublic}>
             {t(`publicPrivateButton.private`)}
           </PublicPrivateText>

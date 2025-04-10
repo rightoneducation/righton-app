@@ -230,7 +230,8 @@ export default function CreateGameCardBase({
               justifyContent: 'center',
             }}
           >
-            <PublicPrivateButton 
+            <PublicPrivateButton
+            isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
             onHandlePublicPrivateChange={handlePublicPrivateChange}  
             isDisabled={false} />
           </Box>
@@ -364,7 +365,8 @@ export default function CreateGameCardBase({
                   justifyContent: 'center',
                 }}
               >
-                <PublicPrivateButton 
+                <PublicPrivateButton
+                isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
                 onHandlePublicPrivateChange={handlePublicPrivateChange} 
                 isDisabled={false} />
               </Box>

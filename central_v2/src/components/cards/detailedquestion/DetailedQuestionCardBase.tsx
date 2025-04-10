@@ -49,11 +49,16 @@ export default function DetailedQuestionCardBase({
   question,
 }: DetailedQuestionCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
+  const [isPublic, setIsPublic] = React.useState<boolean>(false)
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setQuestionType((event.target as HTMLInputElement).value);
   };
+
+  const handlePublicPrivateChange = () => {
+    setIsPublic((prev) => !prev);
+  }
 
   return (
     <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false}>
@@ -66,7 +71,7 @@ export default function DetailedQuestionCardBase({
       </Box>
       { screenSize !== ScreenSize.SMALL && 
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-          <PublicPrivateButton isDisabled/>
+          <PublicPrivateButton isPublic={isPublic} isDisabled/>
         </Box>
       }
     </CreateQuestionTitleBarStyled>
@@ -118,7 +123,7 @@ export default function DetailedQuestionCardBase({
       </CreateQuestionContentRightContainerStyled>
       { screenSize === ScreenSize.SMALL && 
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
-          <PublicPrivateButton isDisabled={false}/>
+          <PublicPrivateButton isPublic={isPublic} isDisabled={false}/>
         </Box>
       }
     </ContentContainerStyled>

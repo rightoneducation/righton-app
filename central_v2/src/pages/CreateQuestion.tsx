@@ -82,6 +82,7 @@ export default function CreateQuestion({
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
+  const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
@@ -89,6 +90,7 @@ export default function CreateQuestion({
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
+  const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
   const localData = useCreateQuestionLoader();
   
   const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>( 
@@ -155,6 +157,10 @@ export default function CreateQuestion({
       const newDraftQuestion = updateDQwithImageURL(draftQuestion, inputUrl);
       setDraftQuestion(newDraftQuestion);
     }
+  }
+
+  const handleAnswerType = () => {
+    setIsMultipleChoice(!isMultipleChoice);
   }
 
   const handleImageSave = async (
@@ -505,6 +511,9 @@ export default function CreateQuestion({
               isCardSubmitted={isCardSubmitted}
               isCardErrored={isCardErrored}
               isAIError={isAIError}
+              isPublic={publicPrivate === PublicPrivateType.PUBLIC}
+              isMultipleChoice={isMultipleChoice}
+              handleAnswerType={handleAnswerType}
             />
           </Box>
           <Grid

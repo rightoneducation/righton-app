@@ -70,9 +70,10 @@ type TDraftQuestionsList = {
   isQuestionCardErrored: boolean,
   isQuestionCardSubmitted: boolean,
   highlightCard: CreateQuestionHighlightCard
-  answerType: AnswerType;
+  isMultipleChoice: boolean
   questionTemplate: IQuestionTemplate;
 };
+
 const newEmptyTemplate: CentralQuestionTemplateInput = {
   questionCard: {
     title: '',
@@ -138,7 +139,7 @@ const draftTemplate: TDraftQuestionsList = {
   isQuestionCardErrored: false,
   isQuestionCardSubmitted: false,
   highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
-  answerType: AnswerType.MULTICHOICE,
+  isMultipleChoice: true,
   questionTemplate: emptyQuestionTemplate,
 };
 
@@ -197,7 +198,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const navigate = useNavigate();
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
-  const [cardIsErrored, setIsCardErrored] = useState<boolean>(false);
+  const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
+  const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
    const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
    const [draftQuestionsList, setDraftQuestionsList] = useState<
    TDraftQuestionsList[]
@@ -362,7 +364,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             const url = null;
             if(draftGame.image) {
              /** TODO: add image storage for file and url
-              * const gameImg = await apiclients.gameTempalte.storeImageInS3(draftGame.image);
+              * const gameImg = await apiclients.gameTemplate.storeImageInS3(draftGame.image);
               * result = await gameImg.result;
               * if(result && result.path && result.path.length > 0) {
               * url = result.path
@@ -615,6 +617,21 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       },
       [selectedQuestionIndex],
     );
+
+    const handleAnswerType = () => {
+      setDraftQuestionsList((prev) => {
+        return prev.map((draftItem, i) => {
+          if(i === selectedQuestionIndex) {
+            const updatedItem = {
+              ...draftItem,
+              isMultipleChoice: !draftItem.isMultipleChoice,
+            }
+            return updatedItem;
+          }
+          return draftItem;
+        })
+      })
+    }
   
     const handleCloseQuestionModal = () => {
       setDraftQuestionsList((prev) => {
@@ -868,39 +885,24 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
 
     const handleSaveQuestion = async () => {
       try {
-        // check for incomplete questions, set error and template creation flags.
-        const updatedQuestions = draftQuestionsList.map((dq, index) => {
+        // Make sure all cards are completed for question.
+        const allDQAreValid = draftQuestionsList.every((dq, index) => {
           const isValid = dq.question.questionCard.isCardComplete &&
             dq.question.correctCard.isCardComplete &&
             dq.question.incorrectCards.every((card) => card.isCardComplete);
           
-          // if question is invalid, set error flag
-          if (!isValid) {
-            return {
-              ...dq,
-              isQuestionCardErrored: true, 
-            };
-          }
-    
-          // return valid questions with true for template creation
-          return {
-            ...dq,
-            isCreatingTemplate: true,
-          };
+            return isValid;
         });
-    
-        // if there are any errored questions, update the state and return early
-        const invalidQuestionsExist = updatedQuestions.some((dq) => dq.isQuestionCardErrored);
-        if (invalidQuestionsExist) {
-          // update the state so we know what questions are invalid
-          setDraftQuestionsList(updatedQuestions);
-          setIsCardErrored(true);
+
+        if(!allDQAreValid) {
+          setSaveQuestionError(true);
           return;
         }
-    
+        
+        setIsCreatingTemplate(true)
         // process valid questions in order
         await Promise.all(
-          updatedQuestions.map(async (dq) => {
+          draftQuestionsList.map(async (dq) => {
             let result = null;
             let url = null;
 
@@ -948,11 +950,13 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     
         // Reset data and re-direct user
         setDraftQuestionsList([]); 
-        setIsCardErrored(false);   
+        setIsCreatingTemplate(false);
+        setSaveQuestionError(false);   
         navigate("/");             
     
       } catch (err) {
-        setIsCardErrored(true);
+        setSaveQuestionError(true);
+        setIsCreatingTemplate(false);
         console.error('Error during save process:', err);
       }
     };
@@ -1098,6 +1102,9 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                     highlightCard={draftQuestionItem.highlightCard}
                     isAIEnabled={draftQuestionItem.isAIEnabled}
                     isAIError={draftQuestionItem.isAIError}
+                    isPublic={draftQuestionItem.publicPrivate === PublicPrivateType.PUBLIC}
+                    isMultipleChoice={draftQuestionItem.isMultipleChoice}
+                    handleAnswerType={handleAnswerType}
                     handleDebouncedCorrectAnswerChange={handleDebouncedCorrectAnswerChange}
                     handleDebouncedCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
                     handleDebouncedTitleChange={handleDebouncedTitleChange}

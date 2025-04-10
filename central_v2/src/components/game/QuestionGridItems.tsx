@@ -49,6 +49,9 @@ interface IQuestionElements {
   highlightCard: CreateQuestionHighlightCard;
   incompleteIncorrectAnswers: IncorrectCard[];
   completeIncorrectAnswers: IncorrectCard[];
+  isPublic: boolean;
+  isMultipleChoice: boolean;
+  handleAnswerType: () => void;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (val: PublicPrivateType) => void;
   handleSaveQuestion: () => Promise<void>;
@@ -80,6 +83,9 @@ export default function QuestionElements({
   isAIError,
   completeIncorrectAnswers,
   incompleteIncorrectAnswers,
+  isPublic,
+  isMultipleChoice,
+  handleAnswerType,
   handlePublicPrivateChange,
   handleNextCardButtonClick,
   handleIncorrectCardStackUpdate,
@@ -126,9 +132,12 @@ export default function QuestionElements({
             }
             handleImageUploadClick={handleImageUploadClick}
             handlePublicPrivateChange={handlePublicPrivateChange}
+            handleAnswerType={handleAnswerType}
             isCardSubmitted={isCardSubmitted}
             isCardErrored={isCardErrored}
             isAIError={isAIError}
+            isPublic={isPublic}
+            isMultipleChoice={isMultipleChoice}
           />
         </Box>
         <Grid container spacing={`${theme.sizing.smPadding}px`}>
