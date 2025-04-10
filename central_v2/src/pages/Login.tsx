@@ -16,6 +16,8 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import LoginErrorModal from '../components/modal/LoginErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
+import { UserStatusType } from '../lib/CentralModels';
+import { useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
@@ -159,6 +161,8 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  
+  const centralDataDispatch = useCentralDataDispatch();
 
   const handleLoginClick = async () => {
     try {
@@ -181,6 +185,10 @@ function Login({handleForgotPasswordClick} : LoginProps) {
         if (idToken) {
           console.log("logging user via google.")
           const response = await apiClients.auth.awsSignInFederated();
+          setIsLoggingIn(false);
+
+          // centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
+          
           // handleGoogleUserCreate()
           
           console.log('User signed in:', response);

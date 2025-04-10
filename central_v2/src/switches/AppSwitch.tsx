@@ -101,13 +101,15 @@ function AppSwitch({
       screenComponent = (
         <AuthGuard>
           <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
-          </AuthGuard>
+        </AuthGuard>
       );
       break;
     }
     case ScreenType.LOGIN: {
       screenComponent = (
+        <AuthGuard>
           <Login />
+        </AuthGuard>
       );
       break;
     }

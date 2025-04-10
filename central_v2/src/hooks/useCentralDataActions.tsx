@@ -56,6 +56,7 @@ export default function useCentralDataManager({
   const isQuestions = useMatch('/questions');
   const isLibrary = useMatch('/library') !== null;
   const [isValidatingUser, setIsValidatingUser] = useState(true);
+  const nextStep = useMatch('/nextstep') !== null;
 
   const debounceInterval = 800;
 
@@ -420,9 +421,11 @@ export default function useCentralDataManager({
   };
 
   const isUserProfileComplete = (profile: IUserProfile): boolean => {
-    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
-  };
-
+    return Object.entries(profile).every(([key, value]) => {
+        if (key === "password") return true; 
+        return value !== undefined && value !== null && value !== "";
+    });
+};
   const fetchElements = async (libraryTab?: LibraryTabEnum) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
       if (isLibrary && tab !== undefined) {
@@ -489,24 +492,41 @@ export default function useCentralDataManager({
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
   const validateUser = async () => {
-    setIsValidatingUser(true);
-    const status = await apiClients.auth.verifyAuth();
-    if (status) {
-      const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
-      if (localProfile) {
-        if (!isUserProfileComplete(localProfile)) {
-          // navigate('/nextstep');
-          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
-          setIsValidatingUser(false);
-          return;
-        }
-        centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-        setIsValidatingUser(false);
-        return;
-      }
-    }
-    apiClients.centralDataManager?.clearLocalUserProfile();
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    console.log("UseEffect invoked validateUser!!")
+    // setIsValidatingUser(true);
+    // const status = await apiClients.auth.verifyAuth();
+    // console.log("Printing user status inside useEffect!: ", status)
+    // if (status) {
+    //   const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
+    //   console.log("Printing local profile inside useEffect!!: ", localProfile)
+
+    //   if (localProfile) {
+    //     console.log("Local profile: ", localProfile)
+    //     if (!isUserProfileComplete(localProfile)) {
+    //       // navigate('/nextstep');
+    //       console.log("setting user status to incompelte inside localprofile if statement useEffect!!")
+    //       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
+    //       console.log("setting status to incomplete inside useEffect!!", status)
+    //       setIsValidatingUser(false);
+    //       return;
+    //     }
+    //     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
+    //     setIsValidatingUser(true);
+    //     return;
+    //   }
+    //   // This is the case if user is signing up using google button and we try to fetch local profile and intially is going to be empty
+    //   // so set their status to incomplete.
+    //   // if(nextStep){
+    //   //   console.log("setting user status to incompelte inside next step if statement useEffect!!")
+    //   //   centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
+    //   //   return
+    //   // }
+
+
+    // }
+    // apiClients.centralDataManager?.clearLocalUserProfile();
+    // console.log("Cleared userprofile inside useEffect!!")
+    // centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   };
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid

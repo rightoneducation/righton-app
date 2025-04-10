@@ -177,6 +177,7 @@ export default function GoogleSignup({
     const handleGetStarted = async () => {
       try {
         if(frontImage && backImage) {
+          console.log("Sending this userProfile to signupgooglebackend function: ", centralData.userProfile)
           const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(centralData.userProfile, frontImage, backImage);
           centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
           centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
@@ -232,11 +233,13 @@ export default function GoogleSignup({
                 variant="outlined"
                 placeholder="Last Name"
                 value={centralData.userProfile.lastName}
-                onChange={(event) => 
+                onChange={(event) => {
+                  console.log("Last Name Changed: ", centralData.userProfile); // Logs the new value of the last name
                   centralDataDispatch({
                     type: 'SET_USER_PROFILE', 
                     payload: {lastName: event.target.value}
                   })
+                }
                 }
                 />
           </TitleandNameMUI>
