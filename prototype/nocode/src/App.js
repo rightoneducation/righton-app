@@ -1,7 +1,10 @@
+import { useAPI } from './API/useAPI';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const api = useAPI();
+  
   return (
     <div className="App">
       <header className="App-header">

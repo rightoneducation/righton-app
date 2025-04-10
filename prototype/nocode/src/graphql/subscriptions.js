@@ -7,8 +7,9 @@ export const onCreateStoredData = /* GraphQL */ `
   ) {
     onCreateStoredData(filter: $filter) {
       id
-      name
-      description
+      date
+      phase1Responses
+      phase2Responses
       createdAt
       updatedAt
       __typename
@@ -21,8 +22,9 @@ export const onUpdateStoredData = /* GraphQL */ `
   ) {
     onUpdateStoredData(filter: $filter) {
       id
-      name
-      description
+      date
+      phase1Responses
+      phase2Responses
       createdAt
       updatedAt
       __typename
@@ -35,8 +37,9 @@ export const onDeleteStoredData = /* GraphQL */ `
   ) {
     onDeleteStoredData(filter: $filter) {
       id
-      name
-      description
+      date
+      phase1Responses
+      phase2Responses
       createdAt
       updatedAt
       __typename
