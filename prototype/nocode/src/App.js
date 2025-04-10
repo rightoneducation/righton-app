@@ -4,23 +4,45 @@ import './App.css';
 
 function App() {
   const api = useAPI();
-  
+  const handleButtonClick = () => {
+    const existingData = {
+      phase1Responses: []
+    }
+    api.savePhase1Response(existingData, "answer");
+  }
+
+  const handleButton2Click = () => {
+    const existingData = {
+      id: '6de69bfe-eb3b-47b8-ad11-4514d836689c',
+      phase1Responses: ["answer"]
+    }
+    api.savePhase1Response(existingData, "answer2");
+  }
+
+  const handleButton3Click = () => {
+    const existingData = {
+      id: '6de69bfe-eb3b-47b8-ad11-4514d836689c',
+      phase1Responses: ["answer"],
+      phase2Responses: []
+    }
+    api.savePhase2Response(existingData, "answer");
+  }
+
+  const handleButton4Click = () => {
+    const existingData = {
+      id: '6de69bfe-eb3b-47b8-ad11-4514d836689c',
+      phase1Responses: ["answer"],
+      phase2Responses: ["answer"]
+    }
+    api.savePhase2Response(existingData, "answer2");
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <button onClick={handleButtonClick}> click </button>
+        <button onClick={handleButton2Click}> click2 </button>
+        <button onClick={handleButton3Click}> click3 </button>
+        <button onClick={handleButton4Click}> click4 </button>
     </div>
   );
 }
