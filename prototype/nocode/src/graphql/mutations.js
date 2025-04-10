@@ -8,8 +8,9 @@ export const createStoredData = /* GraphQL */ `
   ) {
     createStoredData(input: $input, condition: $condition) {
       id
-      name
-      description
+      date
+      phase1Responses
+      phase2Responses
       createdAt
       updatedAt
       __typename
@@ -23,8 +24,9 @@ export const updateStoredData = /* GraphQL */ `
   ) {
     updateStoredData(input: $input, condition: $condition) {
       id
-      name
-      description
+      date
+      phase1Responses
+      phase2Responses
       createdAt
       updatedAt
       __typename
@@ -38,8 +40,9 @@ export const deleteStoredData = /* GraphQL */ `
   ) {
     deleteStoredData(input: $input, condition: $condition) {
       id
-      name
-      description
+      date
+      phase1Responses
+      phase2Responses
       createdAt
       updatedAt
       __typename

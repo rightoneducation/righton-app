@@ -5,8 +5,9 @@ export const getStoredData = /* GraphQL */ `
   query GetStoredData($id: ID!) {
     getStoredData(id: $id) {
       id
-      name
-      description
+      date
+      phase1Responses
+      phase2Responses
       createdAt
       updatedAt
       __typename
@@ -22,8 +23,9 @@ export const listStoredData = /* GraphQL */ `
     listStoredData(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        name
-        description
+        date
+        phase1Responses
+        phase2Responses
         createdAt
         updatedAt
         __typename

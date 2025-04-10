@@ -4,6 +4,7 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 
 type StoredData @model {
   id: ID!
-  name: String!
-  description: String
+  date: AWSDateTime!
+  phase1Responses: AWSJSON
+  phase2Responses: AWSJSON
 }
