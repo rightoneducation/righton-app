@@ -7,6 +7,7 @@ I want to analyze user data by saving it to a backend (via graphQL functions gen
 
 My engineer has created the following API.js for me:
 
+```
 import { Amplify } from "aws-amplify";
 import { GraphQLResult, generateClient } from "@aws-amplify/api";
 import { createStoredData, updateStoredData } from "../graphql/mutations";
@@ -79,10 +80,11 @@ export class API {
     return client.graphql({query: query, variables: updatedData});
   }
 }
+```
 
 It is used as such:
 
-
+```
 const api = useAPI();
   const handleButtonClick = () => {
     const existingData = {
@@ -116,5 +118,6 @@ const api = useAPI();
     }
     api.savePhase2Response(existingData, "answer2");
   }
+```
 
 When creating the app, ensure that it uses the above API to save data to the backend (so that I can analyze user data that is saved on every response).
