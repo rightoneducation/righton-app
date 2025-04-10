@@ -173,12 +173,14 @@ export default function GoogleSignup({
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
     const centralData = useCentralDataState();
     const centralDataDispatch = useCentralDataDispatch();
+//  const username 
 
     const handleGetStarted = async () => {
       try {
         if(frontImage && backImage) {
           console.log("Sending this userProfile to signupgooglebackend function: ", centralData.userProfile)
           const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(centralData.userProfile, frontImage, backImage);
+          // need if statement for response
           centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
           centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
           // console.log("CurrentUserInfo: ", response?.updatedUser)
@@ -222,11 +224,12 @@ export default function GoogleSignup({
                 variant="outlined"
                 placeholder="First Name"
                 value={centralData.userProfile.firstName}
-                onChange={(event) => 
+                onChange={(event) => {
+                  console.log("User's FirstName:",  centralData.userProfile.firstName)
                   centralDataDispatch({
                     type: 'SET_USER_PROFILE', 
                     payload: {firstName: event.target.value}
-                  })
+                  })}
                 }
                 />
                 <TextContainerStyled
