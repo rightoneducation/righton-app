@@ -10,10 +10,9 @@ My engineer has created the following API.js for me:
 
 ```
 import { Amplify } from "aws-amplify";
-import { GraphQLResult, generateClient } from "@aws-amplify/api";
+import { generateClient } from "@aws-amplify/api";
 import { createStoredData, updateStoredData } from "../graphql/mutations";
 import awsconfig from "../aws-exports";
-import { date } from "zod";
 
 export const client = generateClient({});
 
