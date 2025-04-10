@@ -1,7 +1,8 @@
 Placeholder for NoCode Prototyping
 
 
-Dev Prompt:
+### Dev Prompt:
+
 I would like you to produce a react.js webapp (without typescript) that generates code that I can use with a create-react-app set up. 
 I want to analyze user data by saving it to a backend (via graphQL functions generated via aws-amplify) and controlled via an API.
 
