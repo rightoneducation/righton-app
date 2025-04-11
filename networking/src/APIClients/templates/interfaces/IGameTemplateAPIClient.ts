@@ -225,13 +225,13 @@ export interface IGameTemplateAPIClient {
     createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate>;
 
-    storeImageInS3(
-      image: File,
-    ): Promise<UploadDataWithPathOutput>;
+  storeImageInS3(
+    image: File,
+  ): Promise<UploadDataWithPathOutput>;
   
-    storeImageUrlInS3(
-      imageUrl: string,
-    ): Promise<string>;
+  storeImageUrlInS3(
+    imageUrl: string,
+  ): Promise<string>;
   
 
   getGameTemplate<T extends PublicPrivateType>(

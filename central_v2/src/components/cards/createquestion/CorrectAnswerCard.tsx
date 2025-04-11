@@ -136,7 +136,7 @@ export default function DetailedQuestionSubCard({
               position="start" 
               sx={{ 
                 alignSelf: 'flex-start',
-                mt: '10px'
+                mt: '5px'
               }}
             >
               <ErrorIcon src={errorIcon} alt='error icon'/>

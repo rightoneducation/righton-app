@@ -8,7 +8,7 @@ import {
   IQuestionTemplate,
   PublicPrivateType,
 } from '@righton/networking';
-import { Box, Fade, } from '@mui/material';
+import { Box, Fade } from '@mui/material';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
@@ -33,9 +33,24 @@ import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
 import { reverseTimesMap } from '../components/cards/creategamecard/time';
-import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
-import { updateDQwithCCSS, updateDQwithImage, updateDQwithImageURL, updateDQwithQuestionClick, updateDQwithTitle } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerClick, updateDQwithCorrectAnswerSteps } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import {
+  getNextHighlightCard,
+  handleMoveAnswerToComplete,
+  updateDQwithIncorrectAnswerClick,
+  updateDQwithIncorrectAnswers,
+} from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
+import {
+  updateDQwithCCSS,
+  updateDQwithImage,
+  updateDQwithImageURL,
+  updateDQwithQuestionClick,
+  updateDQwithTitle,
+} from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
+import {
+  updateDQwithCorrectAnswer,
+  updateDQwithCorrectAnswerClick,
+  updateDQwithCorrectAnswerSteps,
+} from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 
@@ -67,10 +82,10 @@ type TDraftQuestionsList = {
   isImageUploadVisible: boolean;
   isImageURLVisible: boolean;
   isCreatingTemplate: boolean;
-  isQuestionCardErrored: boolean,
-  isQuestionCardSubmitted: boolean,
-  highlightCard: CreateQuestionHighlightCard
-  isMultipleChoice: boolean
+  isQuestionCardErrored: boolean;
+  isQuestionCardSubmitted: boolean;
+  highlightCard: CreateQuestionHighlightCard;
+  isMultipleChoice: boolean;
   questionTemplate: IQuestionTemplate;
 };
 
@@ -113,18 +128,18 @@ const newEmptyTemplate: CentralQuestionTemplateInput = {
 };
 
 const emptyQuestionTemplate: IQuestionTemplate = {
-  id: "",
-  title: "",
-  lowerCaseTitle: "",
+  id: '',
+  title: '',
+  lowerCaseTitle: '',
   version: 0,
-  ccss: "",
-  domain: "",
-  cluster: "",
-  grade: "",
-  gradeFilter: "",
-  standard: "",
+  ccss: '',
+  domain: '',
+  cluster: '',
+  grade: '',
+  gradeFilter: '',
+  standard: '',
   gameTemplatesCount: 0,
-}
+};
 
 const draftTemplate: TDraftQuestionsList = {
   publicPrivate: PublicPrivateType.PUBLIC,
@@ -145,19 +160,19 @@ const draftTemplate: TDraftQuestionsList = {
 
 // Create Game
 export type TGameTemplateProps = {
-  gameTemplate: IGameTemplate,
+  gameTemplate: IGameTemplate;
   isGameCardSubmitted: boolean;
   questionCount: number;
   openQuestionBank: boolean;
   openCreateQuestion: boolean;
-  publicPrivateGame: PublicPrivateType
+  publicPrivateGame: PublicPrivateType;
   isGameCardErrored: boolean;
   isGameImageUploadVisible: boolean;
   isGameURLUploadVisible: boolean;
   isCreatingTemplate: boolean;
   image?: File | null;
   imageUrl?: string | undefined;
-}
+};
 
 export type TPhaseTime = {
   phaseOne: string;
@@ -178,20 +193,20 @@ const newGameTemplate = {
   questionTemplatesOrder: [],
 };
 
-const gameTemplate:TGameTemplateProps = {
-    gameTemplate: newGameTemplate,
-    isGameCardErrored: false,
-    isGameCardSubmitted: false,
-    questionCount: 1,
-    openCreateQuestion: false,
-    openQuestionBank: false,
-    publicPrivateGame: PublicPrivateType.PUBLIC,
-    isGameImageUploadVisible: false,
-    isGameURLUploadVisible: false,
-    isCreatingTemplate: false,
-    image: null,
-    imageUrl: ""
-  }
+const gameTemplate: TGameTemplateProps = {
+  gameTemplate: newGameTemplate,
+  isGameCardErrored: false,
+  isGameCardSubmitted: false,
+  questionCount: 1,
+  openCreateQuestion: false,
+  openQuestionBank: false,
+  publicPrivateGame: PublicPrivateType.PUBLIC,
+  isGameImageUploadVisible: false,
+  isGameURLUploadVisible: false,
+  isCreatingTemplate: false,
+  image: null,
+  imageUrl: '',
+};
 
 export default function CreateGame({ screenSize }: CreateGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -200,20 +215,29 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
-   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
-   const [draftQuestionsList, setDraftQuestionsList] = useState<
-   TDraftQuestionsList[]
- >([draftTemplate]);
-    const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
-      phaseOne: '',
-      phaseTwo: '',
-    });
+  const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
+  const [draftQuestionsList, setDraftQuestionsList] = useState<
+    TDraftQuestionsList[]
+  >([draftTemplate]);
+  const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
+    phaseOne: '',
+    phaseTwo: '',
+  });
 
-  const gameFormIsValid = 
-  draftGame.gameTemplate.title !== "" && 
-  draftGame.gameTemplate.description !== "" &&
-  draftGame.gameTemplate.phaseOneTime !== 0 &&
-  draftGame.gameTemplate.phaseTwoTime !== 0;
+  const gameFormIsValid =
+    draftGame.gameTemplate.title !== '' &&
+    draftGame.gameTemplate.description !== '' &&
+    draftGame.gameTemplate.phaseOneTime !== 0 &&
+    draftGame.gameTemplate.phaseTwoTime !== 0;
+
+  const allDQAreValid = draftQuestionsList.every((dq, index) => {
+    const isValid =
+      dq.question.questionCard.isCardComplete &&
+      dq.question.correctCard.isCardComplete &&
+      dq.question.incorrectCards.every((card) => card.isCardComplete);
+
+    return isValid;
+  });
 
   /** CREATE GAME HANDLERS START HERE */
   const handleGameTitle = (val: string) => {
@@ -223,8 +247,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         ...prev.gameTemplate,
         title: val,
         lowerCaseTitle: val.toLowerCase(),
-      }
-    }))
+      },
+    }));
   };
 
   const handleGameDescription = (val: string) => {
@@ -234,171 +258,278 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         ...prev.gameTemplate,
         description: val,
         lowerCaseDescription: val.toLowerCase(),
-      }
-    }))
+      },
+    }));
   };
 
-   const handlePhaseTime = (time: TPhaseTime) => {
-      setDraftGame((prev) => {
-        const phaseOne = reverseTimesMap[time.phaseOne];
-        const phaseTwo = reverseTimesMap[time.phaseTwo];
-        const updatedGameTemplate = {
-          ...prev,
-          gameTemplate: {
-            ...prev.gameTemplate,
-           ...(time.phaseOne && { phaseOneTime: phaseOne }),
-           ...(time.phaseTwo && { phaseTwoTime: phaseTwo })
-          }
-        }
-        return updatedGameTemplate;
-      })
-      setPhaseTime((prev) => ({
+  const handlePhaseTime = (time: TPhaseTime) => {
+    setDraftGame((prev) => {
+      const phaseOne = reverseTimesMap[time.phaseOne];
+      const phaseTwo = reverseTimesMap[time.phaseTwo];
+      const updatedGameTemplate = {
         ...prev,
-        ...(time.phaseOne && { phaseOne: time.phaseOne }),
-        ...(time.phaseTwo && { phaseTwo: time.phaseTwo }),
-      }));
-    };
+        gameTemplate: {
+          ...prev.gameTemplate,
+          ...(time.phaseOne && { phaseOneTime: phaseOne }),
+          ...(time.phaseTwo && { phaseTwoTime: phaseTwo }),
+        },
+      };
+      return updatedGameTemplate;
+    });
+    setPhaseTime((prev) => ({
+      ...prev,
+      ...(time.phaseOne && { phaseOne: time.phaseOne }),
+      ...(time.phaseTwo && { phaseTwo: time.phaseTwo }),
+    }));
+  };
 
-    const handleOpenCreateQuestion = () => {
-      setDraftGame((prev) => ({
-        ...prev,
-        // check if form is complete & if question bank is open, close it.
-        ...(draftGame.openQuestionBank && gameFormIsValid && { openQuestionBank: false }),
-        // check game form is complete before displaying question form
-        ...(gameFormIsValid && { openCreateQuestion: !prev.openCreateQuestion }),
-        // if the card was in an error state, but not anymore set it to false
-        ...(gameFormIsValid && draftGame.isGameCardErrored && { isGameCardErrored: false }),
-        // if the form is not valid, flag an error
-        ...(!gameFormIsValid && { isGameCardErrored: true })
-      }))
-    }
+  const handleOpenCreateQuestion = () => {
+    setDraftGame((prev) => ({
+      ...prev,
+      // check if form is complete & if question bank is open, close it.
+      ...(draftGame.openQuestionBank &&
+        gameFormIsValid && { openQuestionBank: false }),
+      // check game form is complete before displaying question form
+      ...(gameFormIsValid && { openCreateQuestion: !prev.openCreateQuestion }),
+      // if the card was in an error state, but not anymore set it to false
+      ...(gameFormIsValid &&
+        draftGame.isGameCardErrored && { isGameCardErrored: false }),
+      // if the form is not valid, flag an error
+      ...(!gameFormIsValid && { isGameCardErrored: true }),
+    }));
+  };
 
-    const handleOpenQuestionBank =() => {
+  const handleOpenQuestionBank = () => {
+    setDraftGame((prev) => ({
+      ...prev,
+      ...(draftGame.openCreateQuestion &&
+        gameFormIsValid && { openCreateQuestion: false }),
+      ...(gameFormIsValid && { openQuestionBank: !prev.openQuestionBank }),
+      ...(gameFormIsValid &&
+        draftGame.isGameCardErrored && { isGameCardErrored: false }),
+      ...(!gameFormIsValid && { isGameCardErrored: true }),
+    }));
+  };
+
+  const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
+    setDraftGame((prev) => ({
+      ...prev,
+      publicPrivateGame: value,
+    }));
+  };
+
+  const handleDiscardGame = () => {
+    window.localStorage.setItem(StorageKey, '');
+    navigate('/questions');
+  };
+
+  const handleGameImageUploadClick = () => {
+    setDraftGame((prev) => ({
+      ...prev,
+      isGameImageUploadVisible: !prev.isGameImageUploadVisible,
+    }));
+  };
+
+  const handleCloseGameCardModal = () => {
+    setDraftGame((prev) => ({
+      ...prev,
+      isGameImageUploadVisible: false,
+    }));
+  };
+  const handleGameImageSave = async (inputImage?: File, inputUrl?: string) => {
+    if (inputImage) {
       setDraftGame((prev) => ({
         ...prev,
-        ...(draftGame.openCreateQuestion && gameFormIsValid && { openCreateQuestion: false }),
-        ...(gameFormIsValid && { openQuestionBank: !prev.openQuestionBank }),
-        ...(gameFormIsValid && draftGame.isGameCardErrored && { isGameCardErrored: false }),
-        ...(!gameFormIsValid && { isGameCardErrored: true })
-      }))
-    };
-  
-    const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
-      setDraftGame((prev) => ({
-        ...prev,
-        publicPrivateGame: value
-      }))
-    };
-  
-    const handleDiscardGame = () => {
-      window.localStorage.setItem(StorageKey, '');
-      navigate('/questions');
-    };
-  
-    const handleGameImageUploadClick = () => {
-      setDraftGame((prev) => ({
-        ...prev,
-        isGameImageUploadVisible: !prev.isGameImageUploadVisible,
-      }))
-    };
-  
-    const handleCloseGameCardModal = () => {
-      setDraftGame((prev) => ({
-        ...prev,
+        image: inputImage,
+        imageUrl: undefined,
         isGameImageUploadVisible: false,
-      }))
-    }
-    const handleGameImageSave = async (inputImage?: File, inputUrl?: string) => {
-    
-      if(inputImage) {
-        setDraftGame((prev) => ({ 
-          ...prev,
-          image: inputImage,
-          imageUrl: undefined,
-          isGameImageUploadVisible: false,
-          isGameURLUploadVisible: false,
-        }))
-      }
-  
-      if(inputUrl) {
-        setDraftGame((prev) => ({ 
-          ...prev,
-          imageUrl: inputUrl,
-          image: undefined,
-          isGameImageUploadVisible: false,
-          isGameURLUploadVisible: false,
-        }))
-      }
-    }
-  
-    const handleGameImageChange = async (inputImage?: File, inputUrl?: string) => {
-      if(inputImage) {
-        setDraftGame((prev) => ({ 
-          ...prev,
-          image: inputImage,
-          imageUrl: undefined,
-        }))
-      }
-  
-      if(inputUrl) {
-        setDraftGame((prev) => ({ 
-          ...prev,
-          imageUrl: inputUrl,
-          image: undefined,
-        }))
-      }
-      
+        isGameURLUploadVisible: false,
+      }));
     }
 
-    const handleSaveGame = async () => {
-      try {
-        setDraftGame((prev) => ({...prev, isGameCardSubmitted: true }));
+    if (inputUrl) {
+      setDraftGame((prev) => ({
+        ...prev,
+        imageUrl: inputUrl,
+        image: undefined,
+        isGameImageUploadVisible: false,
+        isGameURLUploadVisible: false,
+      }));
+    }
+  };
 
-        if(gameFormIsValid) {
-          if(draftGame.image || draftGame.imageUrl) {
+  const handleGameImageChange = async (
+    inputImage?: File,
+    inputUrl?: string,
+  ) => {
+    if (inputImage) {
+      setDraftGame((prev) => ({
+        ...prev,
+        image: inputImage,
+        imageUrl: undefined,
+      }));
+    }
+
+    if (inputUrl) {
+      setDraftGame((prev) => ({
+        ...prev,
+        imageUrl: inputUrl,
+        image: undefined,
+      }));
+    }
+  };
+
+  const handleSaveGame = async () => {
+    try {
+      // set our card submitted state to true
+      setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true }));
+
+      // check that the game form is valid as well as the questions being submitted
+      if (gameFormIsValid && allDQAreValid) {
+
+        // check if user added image or image url
+        if (draftGame.image || draftGame.imageUrl) {
+          setDraftGame((prev) => ({
+            ...prev,
+            isCreatingTemplate: true,
+          }));
+          let gameImgResult = null;
+          let gameImgUrl: string | null = null;
+
+          // handle case for image type: File
+          if (draftGame.image) {
+            const gameImg = await apiClients.gameTemplate.storeImageInS3(
+              draftGame.image,
+            );
+            gameImgResult = await gameImg.result;
+            if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
+              gameImgUrl = gameImgResult.path;
+            }
+
+            // handle case for imageUrl type: string
+          } else if (draftGame.imageUrl) {
+            gameImgUrl = await apiClients.gameTemplate.storeImageUrlInS3(
+              draftGame.imageUrl,
+            );
+          }
+
+          // store image url in draft game object
+          if (gameImgUrl) {
             setDraftGame((prev) => ({
               ...prev,
-              isCreatingTemplate: true,
-            }))
-            const result = null;
-            const url = null;
-            if(draftGame.image) {
-             /** TODO: add image storage for file and url
-              * const gameImg = await apiclients.gameTemplate.storeImageInS3(draftGame.image);
-              * result = await gameImg.result;
-              * if(result && result.path && result.path.length > 0) {
-              * url = result.path
-              * }
-              */
-            } else if (draftGame.imageUrl) {
-              /**
-               * url = await apiClients.gameTemplate.storeImageUrlIns3(draftGame.imageUrl)
-               */
+              gameTemplate: { ...prev.gameTemplate, imageUrl: gameImgUrl },
+            }));
+          }
+
+          // create game template and store in variable to retrieve id
+          const gameTemplateResponse =
+            await apiClients.gameTemplate.createGameTemplate(
+              draftGame.publicPrivateGame,
+              draftGame.gameTemplate,
+            );
+
+          // map over questions, handle image or image url cases and return updated question templates
+          const newQuestionTemplates = draftQuestionsList.map(async (dq) => {
+            let result = null;
+            let url = null;
+
+            /** handle image cases  */
+
+            // image file case
+            if (dq.question.questionCard.image) {
+              try {
+                const img = await apiClients.questionTemplate.storeImageInS3(
+                  dq.question.questionCard.image,
+                );
+                result = await img.result;
+                if (result && result.path && result.path.length > 0) {
+                  url = result.path;
+                }
+              } catch (err) {
+                console.error('Error storing image:', err);
+                throw new Error('Failed to store image.');
+              }
             }
 
-            if(url) {
-              apiClients.gameTemplate.createGameTemplate(
-                draftGame.publicPrivateGame,
-                draftGame.gameTemplate
-              )
+            // image url case
+            else if (dq.question.questionCard.imageUrl) {
+              try {
+                url = await apiClients.questionTemplate.storeImageUrlInS3(
+                  dq.question.questionCard.imageUrl,
+                );
+              } catch (err) {
+                console.error('Error storing image URL:', err);
+                throw new Error('Failed to store image URL.');
+              }
             }
-            setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false}))
-            navigate("/")
-          } 
-        } else {
-          setDraftGame((prev) => ({...prev, isGameCardErrored: true}))
+
+            let newQuestionResponse: IQuestionTemplate | undefined;
+            // if an image url is available, we can create a question template
+            if (url) {
+              try {
+                newQuestionResponse =
+                  await apiClients.questionTemplate.createQuestionTemplate(
+                    dq.publicPrivate,
+                    url,
+                    dq.question,
+                  );
+              } catch (err) {
+                console.error('Error creating question template:', err);
+                throw new Error('Failed to create question template.');
+              }
+            }
+
+            // return updated question with POST response
+            return newQuestionResponse;
+          });
+
+          // write new questions to db
+          const questionTemplateResponse =
+            await Promise.all(newQuestionTemplates);
+
+          // create an array of all the ids from the response and store in variable
+          const questionTemplateIds = questionTemplateResponse.map(
+            (question) => question?.id,
+          );
+
+          // make sure we have a gameTemplate id as well as question template ids before creating a game question
+          if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+            // map over question temple ids array and prepare for Promise.all()
+            const createGameQuestions = questionTemplateIds.map(
+              (questionId, i) => {
+                return apiClients.gameQuestions.createGameQuestions(
+                  draftGame.publicPrivateGame,
+                  {
+                    publicGameTemplateID: gameTemplateResponse.id,
+                    publicQuestionTemplateID: String(questionId),
+                  },
+                );
+              },
+            );
+            // create new game
+            await Promise.all(createGameQuestions);
+          }
+          // TODO: Consider global flag instead
+          setDraftQuestionsList((prev) =>  { 
+            return prev.map((question) => ({...question, isCreatingTemplate: false }))
+          })
+          setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
+          navigate('/');
         }
-
-      } catch(err) {
-        console.log(err)
+      } else {
+        // set draft game error
+        setDraftGame((prev) => ({ ...prev, isGameCardErrored: true }));
+        // flag error and return to stop operation.
+          setSaveQuestionError(true);
       }
-    };
+    } catch (err) {
+      console.log(err);
+    }
+  };
   /** END OF CREATE GAME HANDLERS  */
 
   /** CREATE QUESTION HANDLERS START */
-  const handlePublicPrivateQuestionChange = (
-    value: PublicPrivateType,
-  ) => {
+  const handlePublicPrivateQuestionChange = (value: PublicPrivateType) => {
     setDraftQuestionsList((prev) => {
       return prev.map((questionItem, i) => {
         if (i === selectedQuestionIndex) {
@@ -428,540 +559,541 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     });
   };
 
-  const handleImageChange = async (
-      inputImage?: File,
-      inputUrl?: string,
-    ) => {
-      setDraftQuestionsList((prev) => {
-        return prev.map((questionItem, i) => {
-          if (i === selectedQuestionIndex) {
-            const currentDraftQuestion = questionItem.question;
-            if (inputImage) {
-              const newDraftQuestion = updateDQwithImage(
-                currentDraftQuestion,
-                undefined,
-                inputImage,
-              );
-              const updatedImageItem = {
-                ...questionItem,
-                question: newDraftQuestion,
-              };
-              return updatedImageItem;
-            }
-  
-            if (inputUrl) {
-              const newDraftQuestion = updateDQwithImageURL(
-                currentDraftQuestion,
-                inputUrl,
-              );
-              const updatedImageURLItem = {
-                ...questionItem,
-                question: newDraftQuestion,
-              };
-              return updatedImageURLItem;
-            }
-          }
-          return questionItem;
-        });
-      });
-    };
-  
-    const handleImageSave = async (
-      inputImage?: File,
-      inputUrl?: string,
-    ) => {
-      setDraftQuestionsList((draftPrev) => {
-        return draftPrev.map((questionItem, i) => {
-          if (i === selectedQuestionIndex) {
-            const currentDraftQuestion = questionItem.question;
-            const { isCardComplete } = questionItem.question.questionCard;
-            if (inputImage) {
-              const newDraftQuestion = updateDQwithImage(
-                currentDraftQuestion,
-                undefined,
-                inputImage,
-              );
-              const updatedDraftQuestion = {
-                ...questionItem,
-                question: newDraftQuestion,
-                isImageUploadVisible: false,
-                isImageURLVisible: false,
-                isCreatingTemplate: false,
-                isCCSSVisibleModal: false,
-                questionImageModalIsOpen: false,
-                ...(isCardComplete && {
-                  highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
-                })
-              };
-              return updatedDraftQuestion;
-            }
-  
-            if (inputUrl) {
-              const newDraftQuestion = updateDQwithImageURL(
-                currentDraftQuestion,
-                inputUrl,
-              );
-              const updatedDraftQuestion = {
-                ...questionItem,
-                question: newDraftQuestion,
-                isImageUploadVisible: false,
-                isImageURLVisible: false,
-                isCreatingTemplate: false,
-                isCCSSVisibleModal: false,
-                questionImageModalIsOpen: false,
-                ...(isCardComplete && {
-                  highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
-                })
-              };
-              return updatedDraftQuestion;
-            }
-          }
-          return questionItem;
-        });
-      });
-    };
-  
-     const handleDebouncedTitleChange = useCallback(// eslint-disable-line
-       (
-         title: string,
-         draftQuestionInput: CentralQuestionTemplateInput,
-       ) => {
-         setDraftQuestionsList((draftPrev) => {
-           return draftPrev.map((questionItem, i) => {
-             if (i === selectedQuestionIndex) {
-               const { isCardComplete, isFirstEdit } = questionItem.question.questionCard;
-               const newDraftQuestion = updateDQwithTitle(
-                 questionItem.question,
-                 title,
-               );
-               const updatedItem: TDraftQuestionsList = {
-                 ...questionItem,
-                 question: newDraftQuestion,
-                 ...(isCardComplete && isFirstEdit && {
-                   highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
-                 }),
-                 questionTemplate: {
-                  ...questionItem.questionTemplate,
-                  title,
-                 }
-               };
-               return updatedItem;
-             }
-             return questionItem;
-           });
-         });
-       },
-       [selectedQuestionIndex],
-     );
-  
-    const handleDebouncedCorrectAnswerChange = useCallback(// eslint-disable-line
-      (
-        correctAnswer: string,
-        draftQuestionInput: CentralQuestionTemplateInput,
-      ) => {
-        setDraftQuestionsList((draftPrev) => {
-          return draftPrev.map((questionItem, i) => {
-            if (i === selectedQuestionIndex) {
-              const { isCardComplete, isFirstEdit } =
-                questionItem.question.correctCard;
-              const newDraftQuestion = updateDQwithCorrectAnswer(
-                questionItem.question,
-                correctAnswer,
-              );
-              const updatedItem = {
-                ...questionItem,
-                question: newDraftQuestion,
-                ...(isCardComplete && isFirstEdit && {
-                  highlightCard: CreateQuestionHighlightCard.INCORRECTANSWER1
-                }),
-                questionTemplate: {
-                  ...questionItem.questionTemplate,
-  
-                }
-              };
-              return updatedItem;
-            }
-            return questionItem;
-          });
-        });
-      },
-      [selectedQuestionIndex],
-    );
-  
-    const handleDebouncedCorrectAnswerStepsChange = useCallback(// eslint-disable-line
-      (
-        steps: string[],
-        draftQuestionInput: CentralQuestionTemplateInput,
-      ) => {
-        setDraftQuestionsList((draftPrev) => {
-          return draftPrev.map((questionItem, i) => {
-            if (i === selectedQuestionIndex) {
-              const { isCardComplete, isFirstEdit } =
-                questionItem.question.questionCard;
-              const newDraftQuestion = updateDQwithCorrectAnswerSteps(
-                questionItem.question,
-                steps,
-              );
-              const updatedItem = {
-                ...questionItem,
-                question: newDraftQuestion,
-                ...(isCardComplete && isFirstEdit && {
-                  highlightCard: CreateQuestionHighlightCard.INCORRECTANSWER1
-                })
-              };
-              return updatedItem;
-            }
-            return questionItem;
-          });
-        });
-      },
-      [selectedQuestionIndex],
-    );
-
-    const handleAnswerType = () => {
-      setDraftQuestionsList((prev) => {
-        return prev.map((draftItem, i) => {
-          if(i === selectedQuestionIndex) {
-            const updatedItem = {
-              ...draftItem,
-              isMultipleChoice: !draftItem.isMultipleChoice,
-            }
-            return updatedItem;
-          }
-          return draftItem;
-        })
-      })
-    }
-  
-    const handleCloseQuestionModal = () => {
-      setDraftQuestionsList((prev) => {
-        return prev.map((questionItem, i) => {
-          if (i === selectedQuestionIndex) {
-            const updatedItem = {
+  const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const currentDraftQuestion = questionItem.question;
+          if (inputImage) {
+            const newDraftQuestion = updateDQwithImage(
+              currentDraftQuestion,
+              undefined,
+              inputImage,
+            );
+            const updatedImageItem = {
               ...questionItem,
+              question: newDraftQuestion,
+            };
+            return updatedImageItem;
+          }
+
+          if (inputUrl) {
+            const newDraftQuestion = updateDQwithImageURL(
+              currentDraftQuestion,
+              inputUrl,
+            );
+            const updatedImageURLItem = {
+              ...questionItem,
+              question: newDraftQuestion,
+            };
+            return updatedImageURLItem;
+          }
+        }
+        return questionItem;
+      });
+    });
+  };
+
+  const handleImageSave = async (inputImage?: File, inputUrl?: string) => {
+    setDraftQuestionsList((draftPrev) => {
+      return draftPrev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const currentDraftQuestion = questionItem.question;
+          const { isCardComplete } = questionItem.question.questionCard;
+          if (inputImage) {
+            const newDraftQuestion = updateDQwithImage(
+              currentDraftQuestion,
+              undefined,
+              inputImage,
+            );
+            const updatedDraftQuestion = {
+              ...questionItem,
+              question: newDraftQuestion,
               isImageUploadVisible: false,
               isImageURLVisible: false,
               isCreatingTemplate: false,
               isCCSSVisibleModal: false,
               questionImageModalIsOpen: false,
+              ...(isCardComplete && {
+                highlightCard: CreateQuestionHighlightCard.CORRECTANSWER,
+              }),
             };
-            return updatedItem;
+            return updatedDraftQuestion;
           }
-          return questionItem;
-        });
+
+          if (inputUrl) {
+            const newDraftQuestion = updateDQwithImageURL(
+              currentDraftQuestion,
+              inputUrl,
+            );
+            const updatedDraftQuestion = {
+              ...questionItem,
+              question: newDraftQuestion,
+              isImageUploadVisible: false,
+              isImageURLVisible: false,
+              isCreatingTemplate: false,
+              isCCSSVisibleModal: false,
+              questionImageModalIsOpen: false,
+              ...(isCardComplete && {
+                highlightCard: CreateQuestionHighlightCard.CORRECTANSWER,
+              }),
+            };
+            return updatedDraftQuestion;
+          }
+        }
+        return questionItem;
       });
-    };
-  
-    const handleClick = (cardType: CreateQuestionHighlightCard) => {
-       setDraftQuestionsList((prev) => {
-         return prev.map((questionItem, i) => {
-           if(i === selectedQuestionIndex) {
-             const currentDraftQuestion = questionItem.question;
-             const { isCardComplete: correctCardComplete } = currentDraftQuestion.correctCard;
-             const { isCardComplete: questionCardComplete } = questionItem.question.questionCard;
-             switch(cardType) {
-               case CreateQuestionHighlightCard.CORRECTANSWER:
-                 if(correctCardComplete) {
-                   const newDraftQuestion = updateDQwithCorrectAnswerClick(
-                     currentDraftQuestion,
-                   );
-                   return {...questionItem, question: newDraftQuestion, }
-                 }
-             break;
-             case CreateQuestionHighlightCard.INCORRECTANSWER1:
-               case CreateQuestionHighlightCard.INCORRECTANSWER2:
-               case CreateQuestionHighlightCard.INCORRECTANSWER3: {
-                 // then we can update the draftQuestion for the api call and the localStorage for retreival, respectively
-                 const newDraftQuestion = updateDQwithIncorrectAnswerClick(
-                   currentDraftQuestion,
-                   cardType,
-                 );
-                   return {...questionItem, question: newDraftQuestion}
-                 }
-                 
-                 case CreateQuestionHighlightCard.QUESTIONCARD:
-                   default:
-                     if (questionCardComplete) {
-                       const newDraftQuestion = updateDQwithQuestionClick(
-                         currentDraftQuestion,
-                       );
-                       return {...questionItem, question: newDraftQuestion, }
-                     }
-                     break;
-             }
-           }
-           return questionItem;
-         })
-       })
-     };
-  
-    const handleCCSSSubmit = (ccssString: string) => {
+    });
+  };
+
+  const handleDebouncedTitleChange = useCallback(// eslint-disable-line
+    (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
       setDraftQuestionsList((draftPrev) => {
         return draftPrev.map((questionItem, i) => {
           if (i === selectedQuestionIndex) {
             const { isCardComplete, isFirstEdit } =
               questionItem.question.questionCard;
-            const newDraftQuestion = updateDQwithCCSS(
+            const newDraftQuestion = updateDQwithTitle(
               questionItem.question,
-              ccssString,
+              title,
             );
-            const updatedItem = {
+            const updatedItem: TDraftQuestionsList = {
               ...questionItem,
               question: newDraftQuestion,
-              isCCSSVisibleModal: false,
-              ...(isCardComplete && isFirstEdit && {
-                highlightCard: CreateQuestionHighlightCard.CORRECTANSWER
-              })
+              ...(isCardComplete &&
+                isFirstEdit && {
+                  highlightCard: CreateQuestionHighlightCard.CORRECTANSWER,
+                }),
+              questionTemplate: {
+                ...questionItem.questionTemplate,
+                title,
+              },
             };
             return updatedItem;
           }
           return questionItem;
         });
       });
-    };
-  
-    const handleNextCardButtonClick = (
-      cardData: IncorrectCard,
+    },
+    [selectedQuestionIndex],
+  );
+
+  const handleDebouncedCorrectAnswerChange = useCallback(// eslint-disable-line
+    (
+      correctAnswer: string,
+      draftQuestionInput: CentralQuestionTemplateInput,
     ) => {
-      setDraftQuestionsList((prev) => {
-        const nextCard = getNextHighlightCard(
-          cardData.id as CreateQuestionHighlightCard,
-        );
-        return prev.map((questionItem, i) => {
+      setDraftQuestionsList((draftPrev) => {
+        return draftPrev.map((questionItem, i) => {
           if (i === selectedQuestionIndex) {
-            const currentDraftQuestion = questionItem.question;
-            const incompleteAnswers = currentDraftQuestion.incorrectCards.filter(
-              (answer) => !answer.isCardComplete,
+            const { isCardComplete, isFirstEdit } =
+              questionItem.question.correctCard;
+            const newDraftQuestion = updateDQwithCorrectAnswer(
+              questionItem.question,
+              correctAnswer,
             );
-            const completeAnswers = currentDraftQuestion.incorrectCards.filter(
-              (answer) => answer.isCardComplete,
+            const updatedItem = {
+              ...questionItem,
+              question: newDraftQuestion,
+              ...(isCardComplete &&
+                isFirstEdit && {
+                  highlightCard: CreateQuestionHighlightCard.INCORRECTANSWER1,
+                }),
+              questionTemplate: {
+                ...questionItem.questionTemplate,
+              },
+            };
+            return updatedItem;
+          }
+          return questionItem;
+        });
+      });
+    },
+    [selectedQuestionIndex],
+  );
+
+  const handleDebouncedCorrectAnswerStepsChange = useCallback(// eslint-disable-line
+    (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
+      setDraftQuestionsList((draftPrev) => {
+        return draftPrev.map((questionItem, i) => {
+          if (i === selectedQuestionIndex) {
+            const { isCardComplete, isFirstEdit } =
+              questionItem.question.questionCard;
+            const newDraftQuestion = updateDQwithCorrectAnswerSteps(
+              questionItem.question,
+              steps,
             );
-  
-            const updatedAnswer = incompleteAnswers.map((answer) =>
+            const updatedItem = {
+              ...questionItem,
+              question: newDraftQuestion,
+              ...(isCardComplete &&
+                isFirstEdit && {
+                  highlightCard: CreateQuestionHighlightCard.INCORRECTANSWER1,
+                }),
+            };
+            return updatedItem;
+          }
+          return questionItem;
+        });
+      });
+    },
+    [selectedQuestionIndex],
+  );
+
+  const handleAnswerType = () => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((draftItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const updatedItem = {
+            ...draftItem,
+            isMultipleChoice: !draftItem.isMultipleChoice,
+          };
+          return updatedItem;
+        }
+        return draftItem;
+      });
+    });
+  };
+
+  const handleCloseQuestionModal = () => {
+    if (draftGame.isGameImageUploadVisible) {
+      setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
+    }
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const updatedItem = {
+            ...questionItem,
+            isImageUploadVisible: false,
+            isImageURLVisible: false,
+            isCreatingTemplate: false,
+            isCCSSVisibleModal: false,
+            questionImageModalIsOpen: false,
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
+  };
+
+  const handleClick = (cardType: CreateQuestionHighlightCard) => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const currentDraftQuestion = questionItem.question;
+          const { isCardComplete: correctCardComplete } =
+            currentDraftQuestion.correctCard;
+          const { isCardComplete: questionCardComplete } =
+            questionItem.question.questionCard;
+          switch (cardType) {
+            case CreateQuestionHighlightCard.CORRECTANSWER:
+              if (correctCardComplete) {
+                const newDraftQuestion =
+                  updateDQwithCorrectAnswerClick(currentDraftQuestion);
+                return { ...questionItem, question: newDraftQuestion };
+              }
+              break;
+            case CreateQuestionHighlightCard.INCORRECTANSWER1:
+            case CreateQuestionHighlightCard.INCORRECTANSWER2:
+            case CreateQuestionHighlightCard.INCORRECTANSWER3: {
+              // then we can update the draftQuestion for the api call and the localStorage for retreival, respectively
+              const newDraftQuestion = updateDQwithIncorrectAnswerClick(
+                currentDraftQuestion,
+                cardType,
+              );
+              return { ...questionItem, question: newDraftQuestion };
+            }
+
+            case CreateQuestionHighlightCard.QUESTIONCARD:
+            default:
+              if (questionCardComplete) {
+                const newDraftQuestion =
+                  updateDQwithQuestionClick(currentDraftQuestion);
+                return { ...questionItem, question: newDraftQuestion };
+              }
+              break;
+          }
+        }
+        return questionItem;
+      });
+    });
+  };
+
+  const handleCCSSSubmit = (ccssString: string) => {
+    setDraftQuestionsList((draftPrev) => {
+      return draftPrev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const { isCardComplete, isFirstEdit } =
+            questionItem.question.questionCard;
+          const newDraftQuestion = updateDQwithCCSS(
+            questionItem.question,
+            ccssString,
+          );
+          const updatedItem = {
+            ...questionItem,
+            question: newDraftQuestion,
+            isCCSSVisibleModal: false,
+            ...(isCardComplete &&
+              isFirstEdit && {
+                highlightCard: CreateQuestionHighlightCard.CORRECTANSWER,
+              }),
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
+  };
+
+  const handleNextCardButtonClick = (cardData: IncorrectCard) => {
+    setDraftQuestionsList((prev) => {
+      const nextCard = getNextHighlightCard(
+        cardData.id as CreateQuestionHighlightCard,
+      );
+      return prev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const currentDraftQuestion = questionItem.question;
+          const incompleteAnswers = currentDraftQuestion.incorrectCards.filter(
+            (answer) => !answer.isCardComplete,
+          );
+          const completeAnswers = currentDraftQuestion.incorrectCards.filter(
+            (answer) => answer.isCardComplete,
+          );
+
+          const updatedAnswer = incompleteAnswers.map((answer) =>
+            answer.id === cardData.id ? cardData : answer,
+          );
+          const { newIncompleteAnswers, newCompleteAnswers } =
+            handleMoveAnswerToComplete(updatedAnswer, completeAnswers);
+
+          const newDraftQuestion = updateDQwithIncorrectAnswers(
+            currentDraftQuestion,
+            newIncompleteAnswers,
+            newCompleteAnswers,
+          );
+
+          const updatedItem = {
+            ...questionItem,
+            question: newDraftQuestion,
+            isAIError: false,
+            ...(nextCard && {
+              highlightCard: nextCard as CreateQuestionHighlightCard,
+            }),
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
+  };
+
+  const handleIncorrectCardStackUpdate = (
+    cardData: IncorrectCard,
+    draftQuestionInput: CentralQuestionTemplateInput,
+    completeAnswers: IncorrectCard[],
+    incompleteAnswers: IncorrectCard[],
+    isAIEnabledCard?: boolean,
+  ) => {
+    setDraftQuestionsList((prev) => {
+      const nextCard = getNextHighlightCard(
+        cardData.id as CreateQuestionHighlightCard,
+      );
+      return prev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const currentDraftQuestion = questionItem.question;
+          const isUpdateInIncompleteCards = incompleteAnswers.find(
+            (answer) => answer.id === cardData.id,
+          );
+          const isCardComplete =
+            cardData.answer.length > 0 && cardData.explanation.length > 0;
+
+          if (isUpdateInIncompleteCards) {
+            const updatedIncompleteAnswers = incompleteAnswers.map((answer) =>
               answer.id === cardData.id ? cardData : answer,
             );
-            const { newIncompleteAnswers, newCompleteAnswers } =
-              handleMoveAnswerToComplete(updatedAnswer, completeAnswers);
-  
-            const newDraftQuestion = updateDQwithIncorrectAnswers(
-              currentDraftQuestion,
-              newIncompleteAnswers,
-              newCompleteAnswers,
-            );
-  
-            const updatedItem = {
-              ...questionItem,
-              question: newDraftQuestion,
-              isAIError: false,
-              ...(nextCard && { highlightCard: nextCard as CreateQuestionHighlightCard }) 
-            };
-            return updatedItem;
-          }
-          return questionItem;
-        });
-      });
-    };
-  
-    const handleIncorrectCardStackUpdate = (
-      cardData: IncorrectCard,
-      draftQuestionInput: CentralQuestionTemplateInput,
-      completeAnswers: IncorrectCard[],
-      incompleteAnswers: IncorrectCard[],
-      isAIEnabledCard?: boolean,
-    ) => {
-      setDraftQuestionsList((prev) => {
-        const nextCard = getNextHighlightCard(
-          cardData.id as CreateQuestionHighlightCard,
-        );
-        return prev.map((questionItem, i) => {
-          if (i === selectedQuestionIndex) {
-            const currentDraftQuestion = questionItem.question;
-            const isUpdateInIncompleteCards = incompleteAnswers.find(
-              (answer) => answer.id === cardData.id,
-            );
-            const isCardComplete =
-              cardData.answer.length > 0 && cardData.explanation.length > 0;
-  
-            if (isUpdateInIncompleteCards) {
-              const updatedIncompleteAnswers = incompleteAnswers.map((answer) =>
-                answer.id === cardData.id ? cardData : answer,
-              );
-  
-              if (isCardComplete && !isAIEnabledCard) {
-                const { newIncompleteAnswers, newCompleteAnswers } =
-                  handleMoveAnswerToComplete(
-                    updatedIncompleteAnswers,
-                    completeAnswers,
-                  );
-                const updatedDraftQuestion = updateDQwithIncorrectAnswers(
-                  currentDraftQuestion,
-                  newIncompleteAnswers,
-                  newCompleteAnswers,
+
+            if (isCardComplete && !isAIEnabledCard) {
+              const { newIncompleteAnswers, newCompleteAnswers } =
+                handleMoveAnswerToComplete(
+                  updatedIncompleteAnswers,
+                  completeAnswers,
                 );
-                const updatedItem = {
-                  ...questionItem,
-                  question: updatedDraftQuestion,
-                  isAIError: false,
-                  ...(cardData.isFirstEdit && { highlightCard: nextCard as CreateQuestionHighlightCard })
-                };
-                return updatedItem;
-              }
-  
-              // If not completed or if AI is enabled, simply update with the incomplete answers
               const updatedDraftQuestion = updateDQwithIncorrectAnswers(
                 currentDraftQuestion,
-                updatedIncompleteAnswers,
-                completeAnswers,
+                newIncompleteAnswers,
+                newCompleteAnswers,
               );
-              return { ...questionItem, question: updatedDraftQuestion };
+              const updatedItem = {
+                ...questionItem,
+                question: updatedDraftQuestion,
+                isAIError: false,
+                ...(cardData.isFirstEdit && {
+                  highlightCard: nextCard as CreateQuestionHighlightCard,
+                }),
+              };
+              return updatedItem;
             }
-  
-            // If the card wasn't in incomplete answers, update the complete answers
-            const updatedCompleteAnswers = completeAnswers.map((answer) =>
-              answer.id === cardData.id ? cardData : answer,
-            );
+
+            // If not completed or if AI is enabled, simply update with the incomplete answers
             const updatedDraftQuestion = updateDQwithIncorrectAnswers(
               currentDraftQuestion,
-              incompleteAnswers,
-              updatedCompleteAnswers,
+              updatedIncompleteAnswers,
+              completeAnswers,
             );
-            return { 
-              ...questionItem, 
-              question: updatedDraftQuestion,
-              ...(cardData.isFirstEdit && {
-                highlightCard: nextCard as CreateQuestionHighlightCard
-              }) 
-            };
+            return { ...questionItem, question: updatedDraftQuestion };
           }
-          return questionItem;
-        });
-      });
-    };
-  
-    const handleCCSSClicks = () => {
-      setDraftQuestionsList((prev) => {
-        return prev.map((questionItem, i) => {
-          if (i === selectedQuestionIndex) {
-            const updatedItem = {
-              ...questionItem,
-              isCCSSVisibleModal: true,
-            };
-            return updatedItem;
-          }
-          return questionItem;
-        });
-      });
-    };
-  
-    const handleAIError = () => {
-      setDraftQuestionsList((prev) => {
-        return prev.map((questionItem, i) => {
-          if(i === selectedQuestionIndex) {
-            const updatedItem = {
-              ...questionItem,
-              isAIError: !questionItem.isAIError
-            }
-            return updatedItem;
-          }
-          return questionItem;
-        })
-      })
-    };
-  
-    const handleQuestionImageUploadClick = () => {
-      setDraftQuestionsList((prev) => {
-        return prev.map((questionItem, i) => {
-          if (i === selectedQuestionIndex) {
-            const updatedItem = {
-              ...questionItem,
-              questionImageModalIsOpen: !questionItem.questionImageModalIsOpen,
-            };
-            return updatedItem;
-          }
-          return questionItem;
-        });
-      });
-    };
 
-    const handleSaveQuestion = async () => {
-      try {
-        // Make sure all cards are completed for question.
-        const allDQAreValid = draftQuestionsList.every((dq, index) => {
-          const isValid = dq.question.questionCard.isCardComplete &&
-            dq.question.correctCard.isCardComplete &&
-            dq.question.incorrectCards.every((card) => card.isCardComplete);
-          
-            return isValid;
-        });
-
-        if(!allDQAreValid) {
-          setSaveQuestionError(true);
-          return;
+          // If the card wasn't in incomplete answers, update the complete answers
+          const updatedCompleteAnswers = completeAnswers.map((answer) =>
+            answer.id === cardData.id ? cardData : answer,
+          );
+          const updatedDraftQuestion = updateDQwithIncorrectAnswers(
+            currentDraftQuestion,
+            incompleteAnswers,
+            updatedCompleteAnswers,
+          );
+          return {
+            ...questionItem,
+            question: updatedDraftQuestion,
+            ...(cardData.isFirstEdit && {
+              highlightCard: nextCard as CreateQuestionHighlightCard,
+            }),
+          };
         }
-        
-        setIsCreatingTemplate(true)
-        // process valid questions in order
-        await Promise.all(
-          draftQuestionsList.map(async (dq) => {
-            let result = null;
-            let url = null;
+        return questionItem;
+      });
+    });
+  };
 
-            /** handle image cases  */
-            // image file case
-            if (dq.question.questionCard.image) {
-              try {
-                const img = await apiClients.questionTemplate.storeImageInS3(dq.question.questionCard.image);
-                result = await img.result;
-                if (result && result.path && result.path.length > 0) {
-                  url = result.path;
-                }
-              } catch (err) {
-                console.error('Error storing image:', err);
-                throw new Error('Failed to store image.');
-              }
-            } 
-            // image url case
-            else if (dq.question.questionCard.imageUrl) {
-              try {
-                url = await apiClients.questionTemplate.storeImageUrlInS3(dq.question.questionCard.imageUrl);
-              } catch (err) {
-                console.error('Error storing image URL:', err);
-                throw new Error('Failed to store image URL.');
-              }
-            }
-    
-            // if a url is available, we can create a question template
-            if (url) {
-              try {
-                await apiClients.questionTemplate.createQuestionTemplate(dq.publicPrivate, url, dq.question);
-              } catch (err) {
-                console.error('Error creating question template:', err);
-                throw new Error('Failed to create question template.');
-              }
-            }
-    
-            // return updated question with isCreatingTemplate: false after processing
-            return {
-              ...dq,
-              isCreatingTemplate: false,
-            };
-          })
-        );
-    
-        // Reset data and re-direct user
-        setDraftQuestionsList([]); 
-        setIsCreatingTemplate(false);
-        setSaveQuestionError(false);   
-        navigate("/");             
-    
-      } catch (err) {
+  const handleCCSSClicks = () => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const updatedItem = {
+            ...questionItem,
+            isCCSSVisibleModal: true,
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
+  };
+
+  const handleAIError = () => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const updatedItem = {
+            ...questionItem,
+            isAIError: !questionItem.isAIError,
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
+  };
+
+  const handleQuestionImageUploadClick = () => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((questionItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const updatedItem = {
+            ...questionItem,
+            questionImageModalIsOpen: !questionItem.questionImageModalIsOpen,
+          };
+          return updatedItem;
+        }
+        return questionItem;
+      });
+    });
+  };
+
+  const handleSaveQuestion = async () => {
+    try {
+      // Make sure all cards are completed for question.
+      if (!allDQAreValid) {
         setSaveQuestionError(true);
-        setIsCreatingTemplate(false);
-        console.error('Error during save process:', err);
+        return;
       }
-    };
-    
+
+      setIsCreatingTemplate(true);
+      // process valid questions in order
+      await Promise.all(
+        draftQuestionsList.map(async (dq) => {
+          let result = null;
+          let url = null;
+
+          /** handle image cases  */
+          // image file case
+          if (dq.question.questionCard.image) {
+            try {
+              const img = await apiClients.questionTemplate.storeImageInS3(
+                dq.question.questionCard.image,
+              );
+              result = await img.result;
+              if (result && result.path && result.path.length > 0) {
+                url = result.path;
+              }
+            } catch (err) {
+              console.error('Error storing image:', err);
+              throw new Error('Failed to store image.');
+            }
+          }
+          // image url case
+          else if (dq.question.questionCard.imageUrl) {
+            try {
+              url = await apiClients.questionTemplate.storeImageUrlInS3(
+                dq.question.questionCard.imageUrl,
+              );
+            } catch (err) {
+              console.error('Error storing image URL:', err);
+              throw new Error('Failed to store image URL.');
+            }
+          }
+
+          // if a url is available, we can create a question template
+          if (url) {
+            try {
+              await apiClients.questionTemplate.createQuestionTemplate(
+                dq.publicPrivate,
+                url,
+                dq.question,
+              );
+            } catch (err) {
+              console.error('Error creating question template:', err);
+              throw new Error('Failed to create question template.');
+            }
+          }
+
+          // return updated question with isCreatingTemplate: false after processing
+          return {
+            ...dq,
+            isCreatingTemplate: false,
+          };
+        }),
+      );
+
+      // Reset data and re-direct user
+      setDraftQuestionsList([]);
+      setIsCreatingTemplate(false);
+      setSaveQuestionError(false);
+      navigate('/');
+    } catch (err) {
+      setSaveQuestionError(true);
+      setIsCreatingTemplate(false);
+      console.error('Error during save process:', err);
+    }
+  };
+
   /** END OF CREATE QUESTION HANDLERS  */
+
+  /** CREATE QUESTIONS & GAME */
+  const createNewGameTemplate = async () => {};
+
+  /** CREATE QUESTIONS & GAME */
 
   const {
     recommendedQuestions,
@@ -990,13 +1122,13 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
 
   const handleAddMoreQuestions = () => {
     setDraftQuestionsList((prev) => [...prev, draftTemplate]);
-    setDraftGame((prev) => ({ 
-      ...prev, 
+    setDraftGame((prev) => ({
+      ...prev,
       questionCount: prev.questionCount + 1,
       gameTemplate: {
         ...prev.gameTemplate,
-      }
-     }))
+      },
+    }));
     setIconButtons((prev) => [...prev, prev.length + 1]);
   };
 
@@ -1010,7 +1142,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     draftQuestionsList[selectedQuestionIndex].isImageURLVisible ||
     draftQuestionsList[selectedQuestionIndex].isCreatingTemplate ||
     draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal ||
-    draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen;
+    draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen ||
+    draftGame.isGameImageUploadVisible;
 
   return (
     <CreateGameMainContainer>
@@ -1022,28 +1155,31 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       />
 
       {/* tracks ccss state according to index */}
-      {draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal &&
+      {draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
         <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={
             draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal
           }
           handleCCSSSubmit={handleCCSSSubmit}
-          ccss={draftQuestionsList[selectedQuestionIndex].question.questionCard.ccss ?? ''}
+          ccss={
+            draftQuestionsList[selectedQuestionIndex].question.questionCard
+              .ccss ?? ''
+          }
         />
-      }
+      )}
 
       {/* open modals according to correct index */}
-        <ImageUploadModal
-          draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
-          screenSize={screenSize}
-          isModalOpen={
-            draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
-          }
-          handleImageChange={handleImageChange}
-          handleImageSave={handleImageSave}
-          handleCloseModal={handleCloseQuestionModal}
-        />
+      <ImageUploadModal
+        draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
+        screenSize={screenSize}
+        isModalOpen={
+          draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
+        }
+        handleImageChange={handleImageChange}
+        handleImageSave={handleImageSave}
+        handleCloseModal={handleCloseQuestionModal}
+      />
 
       {/* Create Game Image Upload Modal */}
       <CreateGameImageUploadModal
@@ -1062,7 +1198,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       {/* Create Game Card flow starts here */}
       <CreateGameBoxContainer>
         <CreateGameComponent
-        draftGame={draftGame}
+          draftGame={draftGame}
           screenSize={screenSize}
           handleSaveGame={handleSaveGame}
           handleDiscard={handleDiscardGame}
@@ -1095,26 +1231,41 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                   <QuestionElements
                     screenSize={screenSize}
                     draftQuestion={draftQuestionItem.question}
-                    completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter((card) => card.isCardComplete)}
-                    incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter((card) => !card.isCardComplete)}
+                    completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
+                      (card) => card.isCardComplete,
+                    )}
+                    incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
+                      (card) => !card.isCardComplete,
+                    )}
                     isCardSubmitted={draftQuestionItem.isQuestionCardSubmitted}
                     isCardErrored={draftQuestionItem.isQuestionCardErrored}
                     highlightCard={draftQuestionItem.highlightCard}
                     isAIEnabled={draftQuestionItem.isAIEnabled}
                     isAIError={draftQuestionItem.isAIError}
-                    isPublic={draftQuestionItem.publicPrivate === PublicPrivateType.PUBLIC}
+                    isPublic={
+                      draftQuestionItem.publicPrivate ===
+                      PublicPrivateType.PUBLIC
+                    }
                     isMultipleChoice={draftQuestionItem.isMultipleChoice}
                     handleAnswerType={handleAnswerType}
-                    handleDebouncedCorrectAnswerChange={handleDebouncedCorrectAnswerChange}
-                    handleDebouncedCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
+                    handleDebouncedCorrectAnswerChange={
+                      handleDebouncedCorrectAnswerChange
+                    }
+                    handleDebouncedCorrectAnswerStepsChange={
+                      handleDebouncedCorrectAnswerStepsChange
+                    }
                     handleDebouncedTitleChange={handleDebouncedTitleChange}
-                    handlePublicPrivateChange={handlePublicPrivateQuestionChange}
+                    handlePublicPrivateChange={
+                      handlePublicPrivateQuestionChange
+                    }
                     handleDiscardQuestion={handleDiscard}
                     handleSaveQuestion={handleSaveQuestion}
                     handleAIError={handleAIError}
                     handleAIIsEnabled={handleAIIsEnabled}
                     handleNextCardButtonClick={handleNextCardButtonClick}
-                    handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
+                    handleIncorrectCardStackUpdate={
+                      handleIncorrectCardStackUpdate
+                    }
                     handleClick={handleClick}
                     handleCCSSClick={handleCCSSClicks}
                     handleImageUploadClick={handleQuestionImageUploadClick}
@@ -1125,7 +1276,12 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         )}
 
         {/* Question Bank goes here */}
-        <Fade in={draftGame.openQuestionBank} mountOnEnter unmountOnExit timeout={500}>
+        <Fade
+          in={draftGame.openQuestionBank}
+          mountOnEnter
+          unmountOnExit
+          timeout={500}
+        >
           <Box>
             <LibraryTabsQuestions
               screenSize={screenSize}

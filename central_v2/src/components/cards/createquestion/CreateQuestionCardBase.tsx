@@ -112,6 +112,7 @@ export default function CreateQuestionCardBase({
   const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
+  const [CCSSIsOpen, setCCSSIsOpen] = React.useState<boolean>(false);
   const getImage = () => {
     if (draftQuestion.questionCard.image && draftQuestion.questionCard.image instanceof File)
       return URL.createObjectURL(draftQuestion.questionCard.image);
@@ -125,6 +126,11 @@ export default function CreateQuestionCardBase({
     setQuestionType(event.target.value as PublicPrivateType);
     handlePublicPrivateChange(event.target.value as PublicPrivateType);
   };
+
+  const handleCCSSButtonClick = () => {
+    handleCCSSClick();
+    setCCSSIsOpen((prev) => !prev);
+  }
 
   const handleLocalTitleChange = (value: string) => {
     setTitle((prev) => value);
@@ -170,9 +176,11 @@ export default function CreateQuestionCardBase({
           <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
           <Box>
 
-          <ButtonCCSS key={uuidv4()} onClick={handleCCSSClick} sx={{ gap: "3px"}}>
+          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} sx={{ gap: "3px"}}>
             {draftQuestion.questionCard.ccss}
+            <SelectArrowContainer isSelectOpen={CCSSIsOpen}>
             <img src={SelectArrow} alt="select-arrow" width={9} height={9} />
+            </SelectArrowContainer>
           </ButtonCCSS>
           
           </Box>
@@ -181,22 +189,22 @@ export default function CreateQuestionCardBase({
         <RadioContainerStyled>
           <RadioGroup
             row
-            value={questionType} 
-            onChange={handleQuestionTypeChange}
+            value={isMultipleChoice ? "multiple": "short"} 
+            onChange={handleAnswerType}
             style={{overflow: 'hidden', flexWrap: 'nowrap'}}
           >
             <RadioLabelStyled
-              value={PublicPrivateType.PUBLIC}
+              value="multiple"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Multiple Choice"
-              isSelected={questionType === PublicPrivateType.PUBLIC}
+              isSelected={isMultipleChoice}
               style={{cursor: 'pointer'}}
             />
             <RadioLabelStyled
-              value={PublicPrivateType.PRIVATE}
+              value="short"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Short Answer"
-              isSelected={questionType === PublicPrivateType.PRIVATE}
+              isSelected={!isMultipleChoice}
               style={{cursor: 'pointer'}}
             />
           </RadioGroup>
