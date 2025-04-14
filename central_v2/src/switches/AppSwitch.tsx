@@ -11,12 +11,14 @@ import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
+import ViewGame from '../pages/ViewGame';
 import MyLibrary from '../pages/MyLibrary';
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
 
 function AppSwitch() {
   const theme = useTheme();
   const mainScreen = useMatch('/') !== null;
+  const viewGameScreen = useMatch('/games/:gameId') !== null;
   const questionScreen = useMatch('/questions') !== null;
   const libraryScreen = useMatch('/library') !== null;
   const signUpScreen = useMatch('/signup') !== null;
@@ -46,6 +48,7 @@ function AppSwitch() {
     getFav,
     getDrafts,
     loadMore,
+    fetchElement,
     fetchElements,
   } = useCentralDataManager({gameQuestion});
   
@@ -113,7 +116,14 @@ function AppSwitch() {
       screenComponent = (
           <CreateGame screenSize={screenSize}/>
       );
-      break
+      break;
+    }
+    case viewGameScreen: {
+      currentScreen = ScreenType.VIEWGAME;
+      screenComponent = (
+          <ViewGame screenSize={screenSize} fetchElement={fetchElement} />
+      );
+      break;
     }
     default:{
       currentScreen = ScreenType.GAMES;

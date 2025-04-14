@@ -13,6 +13,7 @@ export enum ScreenType {
   LOGIN,
   SIGNUP, 
   CREATEGAME,
+  VIEWGAME,
   CREATEQUESTION,
   CONFIRMATION
 }

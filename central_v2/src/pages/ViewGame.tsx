@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useNavigate, useMatch } from 'react-router-dom';
 import {
   AnswerType,
   CentralQuestionTemplateInput,
@@ -15,6 +15,7 @@ import {
   CreateGameBoxContainer,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import {
+  GameQuestionType,
   CreateQuestionHighlightCard,
   ScreenSize,
   StorageKey,
@@ -53,9 +54,11 @@ import {
 } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 
 interface ViewGameProps {
   screenSize: ScreenSize;
+  fetchElement: (type: GameQuestionType, id: string) => void;
 }
 
 // Library Questions
@@ -208,9 +211,14 @@ const gameTemplate: TGameTemplateProps = {
   imageUrl: '',
 };
 
-export default function ViewGame({ screenSize }: ViewGameProps) {
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
+export default function ViewGame({ 
+  screenSize,
+  fetchElement
+}: ViewGameProps) {
   const navigate = useNavigate();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const centralData = useCentralDataState();
+  const route = useMatch('/games/:gameId');
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
@@ -238,6 +246,41 @@ export default function ViewGame({ screenSize }: ViewGameProps) {
 
     return isValid;
   });
+  
+  useEffect(() => {
+    let id = route?.params.gameId || '';
+    let title = '';
+    let description = '';
+    let phaseOneTime = 0;
+    let phaseTwoTime = 0;
+    if (centralData.selectedGame) {
+      id = centralData.selectedGame.id;
+      title = centralData.selectedGame.title;
+      description = centralData.selectedGame.description;
+      phaseOneTime = centralData.selectedGame.phaseOneTime;
+      phaseTwoTime = centralData.selectedGame.phaseTwoTime;
+    }
+    // if there isn't a selected game (user is linking to a game directly)
+    if (!centralData.selectedGame){
+      fetchElement(GameQuestionType.GAME, id);
+    }
+
+    if (id && id !== '') {
+      setDraftGame((prev) => ({
+        ...prev,
+        gameTemplate: {
+          ...prev.gameTemplate,
+          id,
+          title,
+          lowerCaseTitle: title.toLowerCase(),
+          description,
+          lowerCaseDescription: description.toLowerCase(),
+          phaseOneTime,
+          phaseTwoTime,
+        },
+      }));
+    }
+  }, [centralData.selectedGame, route ]); // eslint-disable-line 
 
   /** CREATE GAME HANDLERS START HERE */
   const handleGameTitle = (val: string) => {
@@ -1088,26 +1131,6 @@ export default function ViewGame({ screenSize }: ViewGameProps) {
 
   /** END OF CREATE QUESTION HANDLERS  */
 
-  const {
-    recommendedQuestions,
-    mostPopularQuestions,
-    searchedQuestions,
-    nextToken,
-    isLoading,
-    searchTerms,
-    selectedGrades,
-    isTabsOpen,
-    selectQuestion,
-    questionSet,
-    handleView,
-    getLabel,
-    setIsTabsOpen,
-    handleChooseGrades,
-    handleSortChange,
-    handleSearchChange,
-    loadMoreQuestions,
-  } = useExploreQuestionsStateManager();
-
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
@@ -1281,7 +1304,7 @@ export default function ViewGame({ screenSize }: ViewGameProps) {
         )}
 
         {/* Question Bank goes here */}
-        <Fade
+        {/* <Fade
           in={draftGame.openQuestionBank}
           mountOnEnter
           unmountOnExit
@@ -1302,7 +1325,7 @@ export default function ViewGame({ screenSize }: ViewGameProps) {
               handleView={handleView}
             />
           </Box>
-        </Fade>
+        </Fade> */}
       </CreateGameBoxContainer>
     </CreateGameMainContainer>
   );

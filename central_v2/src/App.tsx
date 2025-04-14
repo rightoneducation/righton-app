@@ -32,6 +32,7 @@ function App() {
         {apiClients && (
           <>
             <Route path="/" element={<AppSwitch />} />
+            <Route path="/games/:gameId" element={<AppSwitch />} />
             <Route path="/questions" element={<AppSwitch />} />
             <Route path="/signup" element={<AppSwitch />} />
             <Route path="/login" element={<AppSwitch />} />
