@@ -519,6 +519,7 @@ export default function useCentralDataManager({
   // runs only on initial app load
   useEffect(() => {
     console.log('validateUser useEffect running');
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     validateUser();
   }, []); // eslint-disable-line
 

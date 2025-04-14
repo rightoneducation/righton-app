@@ -3,7 +3,8 @@ import { CentralQuestionTemplateInput, IGameTemplate, IncorrectCard } from "@rig
 export enum UserStatusType {
   LOGGEDIN,
   LOGGEDOUT,
-  INCOMPLETE
+  INCOMPLETE,
+  LOADING
 }
 
 export enum ScreenType {

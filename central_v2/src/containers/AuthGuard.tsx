@@ -10,7 +10,6 @@ interface AuthGuardProps {
 export default function AuthGuard ({ children }: AuthGuardProps){
   const isLibrary = useMatch('/library');
   const { userStatus } = useCentralDataState();
-  console.log(userStatus)
   
   if (userStatus === UserStatusType.INCOMPLETE) {
     return <Navigate to="/nextstep" replace />;

@@ -121,7 +121,9 @@ function AppSwitch() {
     case viewGameScreen: {
       currentScreen = ScreenType.VIEWGAME;
       screenComponent = (
+        <AuthGuard>
           <ViewGame screenSize={screenSize} fetchElement={fetchElement} />
+        </AuthGuard>
       );
       break;
     }

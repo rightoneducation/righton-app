@@ -8,7 +8,7 @@ import {
   IQuestionTemplate,
   PublicPrivateType,
 } from '@righton/networking';
-import { Box, Fade } from '@mui/material';
+import { Box, CircularProgress, Fade, useTheme } from '@mui/material';
 import {
   CreateGameMainContainer,
   CreateGameBackground,
@@ -215,10 +215,12 @@ export default function ViewGame({
   screenSize,
   fetchElement
 }: ViewGameProps) {
+  const theme = useTheme();
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const route = useMatch('/games/:gameId');
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
@@ -248,6 +250,7 @@ export default function ViewGame({
   });
   
   useEffect(() => {
+    setIsLoading(false);
     let id = route?.params.gameId || '';
     let title = '';
     let description = '';
@@ -262,6 +265,7 @@ export default function ViewGame({
     }
     // if there isn't a selected game (user is linking to a game directly)
     if (!centralData.selectedGame){
+      setIsLoading(true);
       fetchElement(GameQuestionType.GAME, id);
     }
 
@@ -1175,158 +1179,168 @@ export default function ViewGame({
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
-      {/* Modals for Question (below) */}
-      <ModalBackground
-        isModalOpen={openModal}
-        handleCloseModal={handleCloseQuestionModal}
-      />
-
-      <CreatingTemplateModal
-        isModalOpen={draftGame.isCreatingTemplate}
-        templateType={TemplateType.GAME}
-      />
-
-      {/* tracks ccss state according to index */}
-      {draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
-        <CCSSTabs
-          screenSize={screenSize}
-          isTabsOpen={
-            draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal
-          }
-          handleCCSSSubmit={handleCCSSSubmit}
-          ccss={
-            draftQuestionsList[selectedQuestionIndex].question.questionCard
-              .ccss ?? ''
-          }
-        />
-      )}
-
-      {/* open modals according to correct index */}
-      <ImageUploadModal
-        draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
-        screenSize={screenSize}
-        isModalOpen={
-          draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
-        }
-        handleImageChange={handleImageChange}
-        handleImageSave={handleImageSave}
-        handleCloseModal={handleCloseQuestionModal}
-      />
-
-      {/* Create Game Image Upload Modal */}
-      <CreateGameImageUploadModal
-        draftGame={draftGame}
-        screenSize={screenSize}
-        isModalOpen={draftGame.isGameImageUploadVisible}
-        handleImageChange={handleGameImageChange}
-        handleImageSave={handleGameImageSave}
-        handleCloseModal={handleCloseGameCardModal}
-      />
-
-      {/* Create Game Card flow starts here */}
-      <CreateGameBoxContainer>
-        <CreateGameComponent
-          draftGame={draftGame}
-          screenSize={screenSize}
-          handleSaveGame={handleSaveGame}
-          handleDiscard={handleDiscardGame}
-          handlePublicPrivateChange={handlePublicPrivateGameChange}
-          handleImageUploadClick={handleGameImageUploadClick}
-          onCreateQuestion={handleOpenCreateQuestion}
-          onOpenQuestionBank={handleOpenQuestionBank}
-          handlePhaseTime={handlePhaseTime}
-          onGameDescription={handleGameDescription}
-          onGameTitle={handleGameTitle}
-          phaseTime={phaseTime}
-          selectedIndex={selectedQuestionIndex}
-          iconButtons={iconButtons}
-          setSelectedIndex={handleQuestionIndexChange}
-          addMoreQuestions={handleAddMoreQuestions}
+      { isLoading  ?
+        <Box style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <CircularProgress
+            style={{ color: `${theme.palette.primary.circularProgress}` }}
+          />
+          </Box>
+      :
+      <>
+        <ModalBackground
+          isModalOpen={openModal}
+          handleCloseModal={handleCloseQuestionModal}
         />
 
-        {/* Create Question Form(s)  */}
-        {draftQuestionsList.map(
-          (draftQuestionItem, index) =>
-            index === selectedQuestionIndex && (
-              <Fade
-                timeout={500}
-                in={draftGame.openCreateQuestion}
-                mountOnEnter
-                unmountOnExit
-                key={`Question--${index + 1}`}
-              >
-                <Box>
-                  <QuestionElements
-                    screenSize={screenSize}
-                    draftQuestion={draftQuestionItem.question}
-                    completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
-                      (card) => card.isCardComplete,
-                    )}
-                    incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
-                      (card) => !card.isCardComplete,
-                    )}
-                    isCardSubmitted={draftQuestionItem.isQuestionCardSubmitted}
-                    isCardErrored={draftQuestionItem.isQuestionCardErrored}
-                    highlightCard={draftQuestionItem.highlightCard}
-                    isAIEnabled={draftQuestionItem.isAIEnabled}
-                    isAIError={draftQuestionItem.isAIError}
-                    isPublic={
-                      draftQuestionItem.publicPrivate ===
-                      PublicPrivateType.PUBLIC
-                    }
-                    isMultipleChoice={draftQuestionItem.isMultipleChoice}
-                    handleAnswerType={handleAnswerType}
-                    handleDebouncedCorrectAnswerChange={
-                      handleDebouncedCorrectAnswerChange
-                    }
-                    handleDebouncedCorrectAnswerStepsChange={
-                      handleDebouncedCorrectAnswerStepsChange
-                    }
-                    handleDebouncedTitleChange={handleDebouncedTitleChange}
-                    handlePublicPrivateChange={
-                      handlePublicPrivateQuestionChange
-                    }
-                    handleDiscardQuestion={handleDiscard}
-                    handleSaveQuestion={handleSaveQuestion}
-                    handleAIError={handleAIError}
-                    handleAIIsEnabled={handleAIIsEnabled}
-                    handleNextCardButtonClick={handleNextCardButtonClick}
-                    handleIncorrectCardStackUpdate={
-                      handleIncorrectCardStackUpdate
-                    }
-                    handleClick={handleClick}
-                    handleCCSSClick={handleCCSSClicks}
-                    handleImageUploadClick={handleQuestionImageUploadClick}
-                  />
-                </Box>
-              </Fade>
-            ),
+        <CreatingTemplateModal
+          isModalOpen={draftGame.isCreatingTemplate}
+          templateType={TemplateType.GAME}
+        />
+
+        {/* tracks ccss state according to index */}
+        {draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal && (
+          <CCSSTabs
+            screenSize={screenSize}
+            isTabsOpen={
+              draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal
+            }
+            handleCCSSSubmit={handleCCSSSubmit}
+            ccss={
+              draftQuestionsList[selectedQuestionIndex].question.questionCard
+                .ccss ?? ''
+            }
+          />
         )}
 
-        {/* Question Bank goes here */}
-        {/* <Fade
-          in={draftGame.openQuestionBank}
-          mountOnEnter
-          unmountOnExit
-          timeout={500}
-        >
-          <Box>
-            <LibraryTabsQuestions
-              screenSize={screenSize}
-              tabMap={tabMap}
-              tabIconMap={tabIconMap}
-              setIsTabsOpen={setIsTabsOpen}
-              getLabel={getLabel}
-              handleChooseGrades={handleChooseGrades}
-              handleSortChange={handleSortChange}
-              handleSearchChange={handleSearchChange}
-              handlePublicPrivateChange={handlePublicPrivateQuestionChange}
-              fetchElements={loadMoreQuestions}
-              handleView={handleView}
-            />
-          </Box>
-        </Fade> */}
+        {/* open modals according to correct index */}
+        <ImageUploadModal
+          draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
+          screenSize={screenSize}
+          isModalOpen={
+            draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
+          }
+          handleImageChange={handleImageChange}
+          handleImageSave={handleImageSave}
+          handleCloseModal={handleCloseQuestionModal}
+        />
+
+        {/* Create Game Image Upload Modal */}
+        <CreateGameImageUploadModal
+          draftGame={draftGame}
+          screenSize={screenSize}
+          isModalOpen={draftGame.isGameImageUploadVisible}
+          handleImageChange={handleGameImageChange}
+          handleImageSave={handleGameImageSave}
+          handleCloseModal={handleCloseGameCardModal}
+        />
+
+        {/* Create Game Card flow starts here */}
+        <CreateGameBoxContainer>
+          <CreateGameComponent
+            draftGame={draftGame}
+            screenSize={screenSize}
+            handleSaveGame={handleSaveGame}
+            handleDiscard={handleDiscardGame}
+            handlePublicPrivateChange={handlePublicPrivateGameChange}
+            handleImageUploadClick={handleGameImageUploadClick}
+            onCreateQuestion={handleOpenCreateQuestion}
+            onOpenQuestionBank={handleOpenQuestionBank}
+            handlePhaseTime={handlePhaseTime}
+            onGameDescription={handleGameDescription}
+            onGameTitle={handleGameTitle}
+            phaseTime={phaseTime}
+            selectedIndex={selectedQuestionIndex}
+            iconButtons={iconButtons}
+            setSelectedIndex={handleQuestionIndexChange}
+            addMoreQuestions={handleAddMoreQuestions}
+          />
+
+          {/* Create Question Form(s)  */}
+          {draftQuestionsList.map(
+            (draftQuestionItem, index) =>
+              index === selectedQuestionIndex && (
+                <Fade
+                  timeout={500}
+                  in={draftGame.openCreateQuestion}
+                  mountOnEnter
+                  unmountOnExit
+                  key={`Question--${index + 1}`}
+                >
+                  <Box>
+                    <QuestionElements
+                      screenSize={screenSize}
+                      draftQuestion={draftQuestionItem.question}
+                      completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
+                        (card) => card.isCardComplete,
+                      )}
+                      incompleteIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
+                        (card) => !card.isCardComplete,
+                      )}
+                      isCardSubmitted={draftQuestionItem.isQuestionCardSubmitted}
+                      isCardErrored={draftQuestionItem.isQuestionCardErrored}
+                      highlightCard={draftQuestionItem.highlightCard}
+                      isAIEnabled={draftQuestionItem.isAIEnabled}
+                      isAIError={draftQuestionItem.isAIError}
+                      isPublic={
+                        draftQuestionItem.publicPrivate ===
+                        PublicPrivateType.PUBLIC
+                      }
+                      isMultipleChoice={draftQuestionItem.isMultipleChoice}
+                      handleAnswerType={handleAnswerType}
+                      handleDebouncedCorrectAnswerChange={
+                        handleDebouncedCorrectAnswerChange
+                      }
+                      handleDebouncedCorrectAnswerStepsChange={
+                        handleDebouncedCorrectAnswerStepsChange
+                      }
+                      handleDebouncedTitleChange={handleDebouncedTitleChange}
+                      handlePublicPrivateChange={
+                        handlePublicPrivateQuestionChange
+                      }
+                      handleDiscardQuestion={handleDiscard}
+                      handleSaveQuestion={handleSaveQuestion}
+                      handleAIError={handleAIError}
+                      handleAIIsEnabled={handleAIIsEnabled}
+                      handleNextCardButtonClick={handleNextCardButtonClick}
+                      handleIncorrectCardStackUpdate={
+                        handleIncorrectCardStackUpdate
+                      }
+                      handleClick={handleClick}
+                      handleCCSSClick={handleCCSSClicks}
+                      handleImageUploadClick={handleQuestionImageUploadClick}
+                    />
+                  </Box>
+                </Fade>
+              ),
+          )}
+
+          {/* Question Bank goes here */}
+          {/* <Fade
+            in={draftGame.openQuestionBank}
+            mountOnEnter
+            unmountOnExit
+            timeout={500}
+          >
+            <Box>
+              <LibraryTabsQuestions
+                screenSize={screenSize}
+                tabMap={tabMap}
+                tabIconMap={tabIconMap}
+                setIsTabsOpen={setIsTabsOpen}
+                getLabel={getLabel}
+                handleChooseGrades={handleChooseGrades}
+                handleSortChange={handleSortChange}
+                handleSearchChange={handleSearchChange}
+                handlePublicPrivateChange={handlePublicPrivateQuestionChange}
+                fetchElements={loadMoreQuestions}
+                handleView={handleView}
+              />
+            </Box>
+          </Fade> */}
+
       </CreateGameBoxContainer>
+      </>
+      }
     </CreateGameMainContainer>
   );
 }
