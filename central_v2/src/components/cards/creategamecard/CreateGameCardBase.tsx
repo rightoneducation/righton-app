@@ -208,7 +208,7 @@ export default function CreateGameCardBase({
               isCardSubmitted={isCardSubmitted}
               phaseNumber={1}
               screenSize={screenSize}
-              isCardError={isCardErrored }
+              isCardError={isCardErrored}
             />
             <SelectPhaseButton
               onSetPhaseTime={handlePhaseTwoTime}

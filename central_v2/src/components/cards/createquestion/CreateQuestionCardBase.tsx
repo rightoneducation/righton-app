@@ -129,7 +129,7 @@ export default function CreateQuestionCardBase({
 
   const handleCCSSButtonClick = () => {
     handleCCSSClick();
-    setCCSSIsOpen((prev) => !prev);
+    // setCCSSIsOpen((prev) => !prev);
   }
 
   const handleLocalTitleChange = (value: string) => {

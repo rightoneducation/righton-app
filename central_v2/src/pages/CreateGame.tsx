@@ -382,17 +382,14 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const handleSaveGame = async () => {
     try {
       // set our card submitted state to true
-      setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true }));
+      setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true, isCreatingTemplate: true }));
 
       // check that the game form is valid as well as the questions being submitted
       if (gameFormIsValid && allDQAreValid) {
+        console.log("Game form and Questions Validy check passed");
 
         // check if user added image or image url
         if (draftGame.image || draftGame.imageUrl) {
-          setDraftGame((prev) => ({
-            ...prev,
-            isCreatingTemplate: true,
-          }));
           let gameImgResult = null;
           let gameImgUrl: string | null = null;
 
@@ -428,6 +425,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
               draftGame.gameTemplate,
             );
 
+            console.log(" Line: 428 Game template creation complete");
           // map over questions, handle image or image url cases and return updated question templates
           const newQuestionTemplates = draftQuestionsList.map(async (dq) => {
             let result = null;
@@ -487,6 +485,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           const questionTemplateResponse =
             await Promise.all(newQuestionTemplates);
 
+            console.log("Line: 488 Question templates created");
           // create an array of all the ids from the response and store in variable
           const questionTemplateIds = questionTemplateResponse.map(
             (question) => question?.id,
@@ -496,8 +495,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
           if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
             // map over question temple ids array and prepare for Promise.all()
             const createGameQuestions = questionTemplateIds.map(
-              (questionId, i) => {
-                return apiClients.gameQuestions.createGameQuestions(
+             async (questionId, i) => {
+                await apiClients.gameQuestions.createGameQuestions(
                   draftGame.publicPrivateGame,
                   {
                     publicGameTemplateID: gameTemplateResponse.id,
@@ -506,24 +505,23 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                 );
               },
             );
+            console.log("Line: 508 Question templates created");
             // create new game
             await Promise.all(createGameQuestions);
           }
-          // TODO: Consider global flag instead
-          setDraftQuestionsList((prev) =>  { 
-            return prev.map((question) => ({...question, isCreatingTemplate: false }))
-          })
-          setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false }));
+          console.log("All promises complete line 512");
+          setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
           navigate('/');
         }
+
       } else {
         // set draft game error
-        setDraftGame((prev) => ({ ...prev, isGameCardErrored: true }));
+        setDraftGame((prev) => ({ ...prev, isGameCardErrored: true, isCreatingTemplate: false }));
         // flag error and return to stop operation.
           setSaveQuestionError(true);
       }
     } catch (err) {
-      console.log(err);
+      console.log(`HandleSaveGame(): caught at line 522 - error: ${err}`);
     }
   };
   /** END OF CREATE GAME HANDLERS  */
@@ -1090,11 +1088,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
 
   /** END OF CREATE QUESTION HANDLERS  */
 
-  /** CREATE QUESTIONS & GAME */
-  const createNewGameTemplate = async () => {};
-
-  /** CREATE QUESTIONS & GAME */
-
   const {
     recommendedQuestions,
     mostPopularQuestions,
@@ -1145,6 +1138,17 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen ||
     draftGame.isGameImageUploadVisible;
 
+
+    // test data to see if all is valid before real thing
+    // this will be removed when we can write successfully.
+    const handleSaveGamesTest = async () => {
+      console.log("GameTemplate: ", draftGame);
+      console.log("Draft Questions: ", draftQuestionsList)
+      console.log("GameFormIsValid: ", gameFormIsValid)
+      console.log("DQ are valid: ", allDQAreValid)
+      console.log("Can sve game: ", gameFormIsValid && allDQAreValid)
+    }
+
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
@@ -1152,6 +1156,11 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       <ModalBackground
         isModalOpen={openModal}
         handleCloseModal={handleCloseQuestionModal}
+      />
+
+      <CreatingTemplateModal
+        isModalOpen={draftGame.isCreatingTemplate}
+        templateType={TemplateType.GAME}
       />
 
       {/* tracks ccss state according to index */}
@@ -1191,10 +1200,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
         handleCloseModal={handleCloseGameCardModal}
       />
 
-      <CreatingTemplateModal
-        isModalOpen={draftGame.isCreatingTemplate}
-        templateType={TemplateType.GAME}
-      />
       {/* Create Game Card flow starts here */}
       <CreateGameBoxContainer>
         <CreateGameComponent
