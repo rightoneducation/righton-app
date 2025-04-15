@@ -14,7 +14,6 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
   height: '100dvh',
   display: 'flex',
   flexDirection: 'column',
-  
 }));
 
 const BodyContainer = styled(Box)(() => {

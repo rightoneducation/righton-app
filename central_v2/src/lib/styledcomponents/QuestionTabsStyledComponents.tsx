@@ -101,7 +101,6 @@ export const ButtonContainerRight = styled(ButtonContainerLeft)(({ theme }) => (
 
 export const CardContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  overflow: 'auto',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
