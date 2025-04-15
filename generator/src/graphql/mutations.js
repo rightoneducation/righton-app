@@ -112,3 +112,54 @@ export const deleteDiscardedExplanation = /* GraphQL */ `
     }
   }
 `;
+export const createQuestions = /* GraphQL */ `
+  mutation CreateQuestions(
+    $input: CreateQuestionsInput!
+    $condition: ModelQuestionsConditionInput
+  ) {
+    createQuestions(input: $input, condition: $condition) {
+      id
+      question
+      correctAnswer
+      wrongAnswers
+      version
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateQuestions = /* GraphQL */ `
+  mutation UpdateQuestions(
+    $input: UpdateQuestionsInput!
+    $condition: ModelQuestionsConditionInput
+  ) {
+    updateQuestions(input: $input, condition: $condition) {
+      id
+      question
+      correctAnswer
+      wrongAnswers
+      version
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteQuestions = /* GraphQL */ `
+  mutation DeleteQuestions(
+    $input: DeleteQuestionsInput!
+    $condition: ModelQuestionsConditionInput
+  ) {
+    deleteQuestions(input: $input, condition: $condition) {
+      id
+      question
+      correctAnswer
+      wrongAnswers
+      version
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

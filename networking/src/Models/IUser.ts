@@ -1,6 +1,8 @@
 export interface IUser {
   id: string
-  username: string
+  cognitoId?: string
+  dynamoId?: string
+  userName: string
   title?: string
   firstName?: string
   lastName?: string

@@ -8,7 +8,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { IQuestionTemplate } from '@righton/networking';
-import tabExploreQuestionsIcon from '../../images/tabExploreQuestions.svg';
+import tabExploreQuestionsIcon from '../../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../../images/tabMyQuestions.svg';
 import tabDraftsIcon from '../../images/tabDrafts.svg';
 import tabFavoritesIcon from '../../images/tabFavorites.svg';

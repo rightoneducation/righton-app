@@ -15,6 +15,7 @@ import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import { MostPopularContainer } from '../../lib/styledcomponents/ExploreStyledComponents';
 import GalleryHeaderText from './GalleryHeaderText';
+import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 
 interface CardGalleryProps<T> {
   screenSize: ScreenSize;
@@ -59,6 +60,8 @@ function MostPopularGamesComponent({
   setIsTabsOpen,
   handleViewButtonClick,
 }: MostPopularGamesComponentProps) {
+  const centralData = useCentralDataState();
+  const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
   return (
     <Grid container spacing={4} id="scrollableDiv" style={{display: 'flex', justifyContent: 'center', maxWidth: isMyLibrary ? '5000px' : '2000px'}}>
       {(mostPopularElements.length === 0 && isLoading)
@@ -70,7 +73,7 @@ function MostPopularGamesComponent({
             );
           })
         : mostPopularElements.map((game) => {
-          console.log(game);
+          const isFavorite = favoriteGameTemplateIds?.includes(game.id) || false;
             return (
               <Grid item key={game.id}>
                 <StyledGameCard
@@ -81,6 +84,7 @@ function MostPopularGamesComponent({
                   description={game.description}
                   image={game.imageUrl || placeHolder}
                   isCarousel={false}
+                  isFavorite={isFavorite}
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
                   }
@@ -105,6 +109,8 @@ function MostPopularQuestionsComponent({
     (acc, column) => acc + column.length,
     0,
   );
+  const centralData = useCentralDataState();
+  const favoriteQuestionTemplateIds = centralData.userProfile?.favoriteQuestionTemplateIds;
   return (
     <Grid container spacing={4}   columns={{ xs: 12, sm: 12, md: 12, lg: 7 }} id="scrollableDiv">
       {(elementsLength === 0 && isLoading)
@@ -128,6 +134,7 @@ function MostPopularQuestionsComponent({
                   {mostPopularElements[index] &&
                     mostPopularElements[index].length > 0 &&
                     mostPopularElements[index].map((question) => {
+                      const isFavorite = favoriteQuestionTemplateIds?.includes(question.id) || false;
                       return (
                         <StyledQuestionCard
                           question={question}
@@ -135,6 +142,7 @@ function MostPopularQuestionsComponent({
                           title={question.title}
                           image={question.imageUrl || placeHolder}
                           isCarousel={false}
+                          isFavorite={isFavorite}
                           handleViewButtonClick={
                             handleViewButtonClick as (
                               element: IQuestionTemplate,

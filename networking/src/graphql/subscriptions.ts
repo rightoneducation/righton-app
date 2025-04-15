@@ -15,6 +15,8 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
   onCreateUser(filter: $filter, owner: $owner) {
     id
     userName
+    dynamoId
+    cognitoId
     title
     firstName
     lastName
@@ -43,6 +45,8 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
   onUpdateUser(filter: $filter, owner: $owner) {
     id
     userName
+    dynamoId
+    cognitoId
     title
     firstName
     lastName
@@ -71,6 +75,8 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
   onDeleteUser(filter: $filter, owner: $owner) {
     id
     userName
+    dynamoId
+    cognitoId
     title
     firstName
     lastName
