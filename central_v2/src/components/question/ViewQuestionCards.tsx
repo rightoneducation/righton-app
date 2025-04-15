@@ -51,8 +51,7 @@ export default function ViewQuestionCards({
         }
       </Grid>
       <Grid
-        sm={10}
-        md={12}
+        sm={12}
         item
         style={{
           width: '100%',

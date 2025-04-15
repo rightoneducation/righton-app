@@ -40,6 +40,7 @@ export const CreateQuestionTitleBarStyled = styled(Box)<CreateQuestionTitleBarSt
 
 export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme }) => ({
   width: '100%',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   gap: `${theme.sizing.xSmPadding}px`,
@@ -71,15 +72,6 @@ export default function DetailedGameCardBase({
     <CreateQuestionTitleBarStyled screenSize={screenSize}>
       <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
         <QuestionTitleStyled>{game.title}</QuestionTitleStyled>
-        { ccssChips.length > 0 && ccssChips.map((chip) => {
-          return (
-            <ButtonCCSS key={uuidv4()}>
-            {chip}
-          </ButtonCCSS>
-          )
-        })}
-
-        
       </Box>
       { screenSize !== ScreenSize.SMALL && 
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
@@ -89,38 +81,28 @@ export default function DetailedGameCardBase({
     </CreateQuestionTitleBarStyled>
     <ContentContainerStyled screenSize={screenSize}>
       <CreateQuestionContentRightContainerStyled>
-        <RadioContainerStyled>
-          <RadioGroup
-            row
-            value={questionType} 
-            onChange={handleQuestionTypeChange}
-            style={{overflow: 'hidden', flexWrap: 'nowrap'}}
-          >
-            <RadioLabelStyled
-              value={PublicPrivateType.PUBLIC}
-              control={<RadioStyled style={{cursor: 'pointer'}}/>}
-              label="Multiple Choice"
-              isSelected={questionType === PublicPrivateType.PUBLIC}
-              style={{cursor: 'pointer'}}
-            />
-            <RadioLabelStyled
-              value={PublicPrivateType.PRIVATE}
-              control={<RadioStyled style={{cursor: 'pointer'}}/>}
-              label="Short Answer"
-              isSelected={questionType === PublicPrivateType.PRIVATE}
-              style={{cursor: 'pointer'}}
-            />
-          </RadioGroup>
-        </RadioContainerStyled>
         <Box
           style={{
+            height: '100%',
             width: '100%',
             margin: 0,
             padding: '8px',
             boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
           }}
         >
           <Typography>{game.description}</Typography>
+          <Box style={{display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px'}}>
+          { ccssChips.length > 0 && ccssChips.map((chip) => {
+          return (
+            <ButtonCCSS key={uuidv4()}>
+            {chip}
+          </ButtonCCSS>
+          )
+        })}
+        </Box>
         </Box>
       </CreateQuestionContentRightContainerStyled>
       <Box

@@ -6,7 +6,7 @@ import OwnerNamePill from './OwnerNamePill';
 import { ScreenSize } from '../../lib/CentralModels';
 
 interface OwnerTagProps {
-  screenSize: ScreenSize;
+  screenSize?: ScreenSize;
   isViewGame?: boolean;
 }
 
@@ -23,9 +23,16 @@ const OwnerTagFlexContainer = styled(Box)<OwnerTagProps>(({ theme, screenSize, i
   gap: `${theme.sizing.xSmPadding}px`,
 }));
 
-const OwnerTagGridContainer = styled(Grid)(({ theme }) => ({
+const OwnerTagGridContainer = styled(Grid)<OwnerTagProps>(({ theme, isViewGame }) => ({
   width: 'fit-content',
   height: '100%',
+  borderRadius: '8px',
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  background: isViewGame ? `${theme.palette.primary.extraDarkBlue}` : 'transparent',
+  paddingTop: `${theme.sizing.smPadding}px`,
+  paddingBottom: `${theme.sizing.smPadding}px`,
   paddingLeft: `${theme.sizing.lgPadding}px`,
   paddingRight: `${theme.sizing.lgPadding}px`,
 }));
@@ -101,7 +108,7 @@ export default function OwnerTag(
         </OwnerTagTextContainer>
       </OwnerTagFlexContainer>
     :
-      <OwnerTagGridContainer container>
+      <OwnerTagGridContainer isViewGame={isViewGame}  container>
         <OwnerTagSubGridContainer item xs={6}>
           <OwnerTagProfilePicture src={placeHolderProfilePicture} screenSize={screenSize}/>
         </OwnerTagSubGridContainer>
