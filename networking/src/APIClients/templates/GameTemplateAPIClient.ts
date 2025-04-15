@@ -1,3 +1,4 @@
+import { uploadData, UploadDataWithPathOutput } from 'aws-amplify/storage';
 import { BaseAPIClient, PublicPrivateType, GradeTarget } from "../BaseAPIClient";
 import { GameTemplateType, gameTemplateRuntimeMap, IGameTemplateAPIClient } from "./interfaces/IGameTemplateAPIClient";
 import { IGameTemplate } from "../../Models";
@@ -5,6 +6,13 @@ import { GameTemplateParser } from "../../Parsers/GameTemplateParser";
 import { AWSGameTemplate } from "../../Models";
 import { isNullOrUndefined } from "../../global";
 import { GraphQLOptions } from "../BaseAPIClient";
+import { UploadExternalImageToS3Input, UploadExternalImageToS3Mutation, UploadExternalImageToS3MutationVariables } from '../../AWSMobileApi';
+import { uploadExternalImageToS3 } from '../../graphql';
+
+
+interface GameMimeTypes {
+  [key: string]: string;
+}
 
 export class GameTemplateAPIClient
   extends BaseAPIClient
@@ -27,7 +35,41 @@ export class GameTemplateAPIClient
         throw new Error(`Failed to create game template.`)
     }
     return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data[createType] as AWSGameTemplate, type)
-  } 
+  }
+
+    // function to store image as a File in S3
+    async storeImageInS3 (
+      image: File
+    ): Promise<UploadDataWithPathOutput> {
+      const mimeTypes: GameMimeTypes = {
+        'image/jpeg': '.jpeg',
+        'image/jpg': '.jpg',
+        'image/png': '.png',
+      };
+      const extension = mimeTypes[image.type] || '';
+      const filename = `image_${Date.now()}${extension}`
+      return uploadData({path: filename, data: image, options: {contentType: image.type}});
+    };
+  
+    // function to store imageUrl as a File in S3
+    // image is fetched via a server-side proxy to avoid CORS issues
+    async storeImageUrlInS3 (
+      imageUrl: string
+    ): Promise<string> {
+      const input: UploadExternalImageToS3Input = {imageUrl};
+      const variables: UploadExternalImageToS3MutationVariables = { input }
+      const response = await this.callGraphQL<UploadExternalImageToS3Mutation>(
+          uploadExternalImageToS3,
+          variables as unknown as GraphQLOptions
+      )
+      if (
+          isNullOrUndefined(response?.data) ||
+          isNullOrUndefined(response?.data.uploadExternalImageToS3)
+      ) {
+          throw new Error(`Failed to store image in S3`);
+      }
+      return response.data.uploadExternalImageToS3;
+    }
 
   async getGameTemplate<T extends PublicPrivateType>(
     type: T,

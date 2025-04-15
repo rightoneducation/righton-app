@@ -76,7 +76,7 @@ export default function DetailedQuestionSubCard({
     </Box>,
   ];
   return (
-    <BaseCardStyled>
+    <BaseCardStyled elevation={6}>
       <QuestionTitleStyled>
         {cardType === CardType.CORRECT ? 'Correct' : 'Incorrect'} Answer
       </QuestionTitleStyled>

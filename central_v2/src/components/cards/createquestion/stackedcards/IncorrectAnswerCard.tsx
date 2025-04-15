@@ -179,14 +179,20 @@ export default function IncorrectAnswerCard({
   return (
     <Box style={{display: 'flex', flexDirection: 'column', gap: '30px'}}>
       <AnswerCard ref={cardRef} elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIGeneratedLocal} isAIRegenEnabled={isAIRegenEnabled} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
-        <QuestionTitleStyled>
+        <QuestionTitleStyled sx={{ color: "#47366C"}}>
           Incorrect Answer
         </QuestionTitleStyled>
         <TextContainerStyled 
           multiline 
           variant="outlined" 
-          rows='1' 
-          placeholder="Distractor..." 
+          rows='1'
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              height: '43px',
+              fontFamily: 'Rubik'
+            },
+        }} 
+          placeholder="Enter Incorrect Answer..." 
           value={cardData.answer}
           onChange={(e) => handleLocalAnswerChange(e.target.value)}
           error={(isCardSubmitted || isAIError) && cardData.answer.length === 0}
@@ -197,7 +203,7 @@ export default function IncorrectAnswerCard({
                 position="start" 
                 sx={{ 
                   alignSelf: 'flex-start',
-                  mt: '10px'
+                  mt: '5px'
                 }}
               >
                 <ErrorIcon src={errorIcon} alt='error icon'/>
@@ -211,7 +217,7 @@ export default function IncorrectAnswerCard({
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <QuestionTitleStyled>
+          <QuestionTitleStyled sx={{ color: "#47366C"}}>
             Mistake Explanation
           </QuestionTitleStyled>
           { isAIEnabled &&
@@ -225,8 +231,14 @@ export default function IncorrectAnswerCard({
         </Box>
         <TextContainerStyled 
           multiline 
-          variant="outlined" 
-          placeholder="Explanation..." 
+          variant="outlined"
+          rows="4"
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              fontFamily: 'Rubik',
+            },
+          }}
+          placeholder="Enter Explanation here..." 
           value={cardData.explanation}
           onChange={(e) => handleLocalExplanationChange(e.target.value)}
           error={isCardSubmitted && cardData.explanation.length === 0}

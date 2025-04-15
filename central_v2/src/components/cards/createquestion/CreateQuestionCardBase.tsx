@@ -1,9 +1,11 @@
 import React from 'react';
 import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   PublicPrivateType,
-  CentralQuestionTemplateInput
+  CentralQuestionTemplateInput,
+  AnswerType
 } from '@righton/networking';
 import {
   QuestionTitleStyled,
@@ -28,6 +30,8 @@ import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from './ErrorBox';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
+import { SelectArrowContainer } from '../../../lib/styledcomponents/SelectGrade';
+import SelectArrow from '../../../images/SelectArrow.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
@@ -35,11 +39,15 @@ interface CreateQuestionCardBaseProps {
   handleTitleChange: (title: string, draftQuestion: CentralQuestionTemplateInput) => void;
   handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
+  handleAnswerType: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
   isHighlight: boolean;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
   isAIError: boolean;
+  isPublic: boolean;
+  isMultipleChoice: boolean;
+
 }
 
 type ImagePlaceholderProps = {
@@ -92,15 +100,19 @@ export default function CreateQuestionCardBase({
   handleCCSSClick,
   handleImageUploadClick,
   handlePublicPrivateChange,
+  handleAnswerType,
+  isMultipleChoice,
   isHighlight,
   isCardSubmitted,
   isCardErrored,
-  isAIError
+  isAIError,
+  isPublic,
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
+  const [CCSSIsOpen, setCCSSIsOpen] = React.useState<boolean>(false);
   const getImage = () => {
     if (draftQuestion.questionCard.image && draftQuestion.questionCard.image instanceof File)
       return URL.createObjectURL(draftQuestion.questionCard.image);
@@ -114,6 +126,11 @@ export default function CreateQuestionCardBase({
     setQuestionType(event.target.value as PublicPrivateType);
     handlePublicPrivateChange(event.target.value as PublicPrivateType);
   };
+
+  const handleCCSSButtonClick = () => {
+    handleCCSSClick();
+    // setCCSSIsOpen((prev) => !prev);
+  }
 
   const handleLocalTitleChange = (value: string) => {
     setTitle((prev) => value);
@@ -156,14 +173,46 @@ export default function CreateQuestionCardBase({
     <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
-          <QuestionTitleStyled>Create Question</QuestionTitleStyled>
-          <ButtonCCSS key={uuidv4()} onClick={handleCCSSClick}>
+          <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
+          <Box>
+
+          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} sx={{ gap: "3px"}}>
             {draftQuestion.questionCard.ccss}
+            <SelectArrowContainer isSelectOpen={CCSSIsOpen}>
+            <img src={SelectArrow} alt="select-arrow" width={9} height={9} />
+            </SelectArrowContainer>
           </ButtonCCSS>
+          
+          </Box>
         </Box>
+        {screenSize === ScreenSize.SMALL && (
+        <RadioContainerStyled>
+          <RadioGroup
+            row
+            value={isMultipleChoice ? "multiple": "short"} 
+            onChange={handleAnswerType}
+            style={{overflow: 'hidden', flexWrap: 'nowrap'}}
+          >
+            <RadioLabelStyled
+              value="multiple"
+              control={<RadioStyled style={{cursor: 'pointer'}}/>}
+              label="Multiple Choice"
+              isSelected={isMultipleChoice}
+              style={{cursor: 'pointer'}}
+            />
+            <RadioLabelStyled
+              value="short"
+              control={<RadioStyled style={{cursor: 'pointer'}}/>}
+              label="Short Answer"
+              isSelected={!isMultipleChoice}
+              style={{cursor: 'pointer'}}
+            />
+          </RadioGroup>
+        </RadioContainerStyled>
+          )}
         { screenSize !== ScreenSize.SMALL && 
             <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-              <PublicPrivateButton isDisabled={false}/>
+              <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
             </Box>
           }
       </CreateQuestionTitleBarStyled>
@@ -175,33 +224,40 @@ export default function CreateQuestionCardBase({
             </ImagePlaceholder>
         }
         <CreateQuestionContentRightContainerStyled>
+          {screenSize !== ScreenSize.SMALL && (
         <RadioContainerStyled>
           <RadioGroup
             row
-            value={questionType} 
-            onChange={handleQuestionTypeChange}
+            value={isMultipleChoice ? "multiple": "short"} 
+            onChange={handleAnswerType}
             style={{overflow: 'hidden', flexWrap: 'nowrap'}}
           >
             <RadioLabelStyled
-              value={PublicPrivateType.PUBLIC}
+              value="multiple"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Multiple Choice"
-              isSelected={questionType === PublicPrivateType.PUBLIC}
+              isSelected={isMultipleChoice}
               style={{cursor: 'pointer'}}
             />
             <RadioLabelStyled
-              value={PublicPrivateType.PRIVATE}
+              value="short"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Short Answer"
-              isSelected={questionType === PublicPrivateType.PRIVATE}
+              isSelected={!isMultipleChoice}
               style={{cursor: 'pointer'}}
             />
           </RadioGroup>
         </RadioContainerStyled>
+          )}
           <TextContainerStyled 
             multiline 
             variant="outlined" 
-            rows='5' 
+            rows='5'
+            sx={{ 
+              '& .MuiInputBase-root': {
+                fontFamily: 'Rubik',
+              },
+            }}
             placeholder="Enter question here..." 
             error={(isCardSubmitted || isAIError) && (!title || title.length === 0)}
             value={title}
@@ -229,7 +285,7 @@ export default function CreateQuestionCardBase({
               <ErrorBox/>
             }
               <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-                <PublicPrivateButton isDisabled={false}/>
+                <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
               </Box>
           </>
         }

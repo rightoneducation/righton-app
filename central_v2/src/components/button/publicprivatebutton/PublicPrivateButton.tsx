@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { PublicPrivateType } from '@righton/networking';
 
 interface PublicPrivateContainerProps {
   isDisabled: boolean;
@@ -21,7 +22,7 @@ const PublicPrivateContainer = styled(Button, {
   cursor: isDisabled ? 'default' : 'pointer'
 }));
 
-const PublicPrivateSelectionPill = styled(Box, {
+export const PublicPrivateSelectionPill = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isPublic',
 })<{ isPublic: boolean }>(({ theme, isPublic }) => ({
   width: '71px',
@@ -38,7 +39,7 @@ const PublicPrivateSelectionPill = styled(Box, {
   zIndex: 3,
 }));
 
-const LabelContainer = styled(Box)(({theme}) => ({
+export const LabelContainer = styled(Box)(({theme}) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'space-between',
@@ -48,14 +49,13 @@ const LabelContainer = styled(Box)(({theme}) => ({
   position: 'relative'
 }))
 
-const SubContainer = styled(Box, {
+export const SubContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSelected',
 })<{ isSelected: boolean }>(({ theme, isSelected }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   position: 'relative',
-  opacity: isSelected ? 1 : 0.5,
   transition: 'opacity 0.3 ease-in-out'
 }));
 
@@ -74,16 +74,21 @@ const PublicPrivateText = styled(Typography, {
 
 interface PublicPrivateButtonInterface {
   isDisabled: boolean;
+  onHandlePublicPrivateChange?: (value: PublicPrivateType ) => void;
+  isPublic: boolean;
 }
 
 export default function PublicPrivateButton({
-  isDisabled
+  isDisabled,
+  onHandlePublicPrivateChange,
+  isPublic,
 }: PublicPrivateButtonInterface) {
   const { t } = useTranslation();
-  const [isPublic, setIsPublic] = useState<boolean>(true);
+  
   const handlePublicPrivateSwitch = () =>{
-    setIsPublic(!isPublic);
+    onHandlePublicPrivateChange?.(isPublic ? PublicPrivateType.PRIVATE:PublicPrivateType.PUBLIC)
   }
+  
   return (
     <PublicPrivateContainer isDisabled={isDisabled} onClick={!isDisabled ? handlePublicPrivateSwitch : undefined}>
       <PublicPrivateSelectionPill isPublic={isPublic}/>

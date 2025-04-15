@@ -84,8 +84,13 @@ export default function DetailedQuestionSubCard({
             variant="outlined" 
             value={answerSteps[index]}
             onChange={(e) => handleStepChange(index, e.target.value)}
-            rows='1' 
-            placeholder="Step Contents" 
+            rows='4'
+            sx={{
+              '& .MuiInputBase-root': {
+                fontFamily: 'Rubik',
+              },
+            }} 
+            placeholder={`Enter step ${index + 1}...`}
             error={(isCardErrored) && (!answerSteps[index] || answerSteps[index].length === 0)}
             InputProps={{
               startAdornment: 
@@ -107,14 +112,20 @@ export default function DetailedQuestionSubCard({
   
   return (
     <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.correctCard.isCardComplete}>
-      <QuestionTitleStyled>
+      <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Correct Answer
       </QuestionTitleStyled>
       <TextContainerStyled 
         multiline 
         variant="outlined" 
-        rows='1' 
-        placeholder="Correct Answer..." 
+        rows='1'
+        sx={{
+              '& .MuiOutlinedInput-root': {
+              fontFamily: 'Rubik',
+              height: '43px',
+            },
+        }}
+        placeholder="Enter Correct Answer..." 
         value={correctAnswer}
         onChange={(e) => handleCorrectChange(e.target.value)}
         error={(isCardSubmitted  || isAIError) && (!correctAnswer || correctAnswer.length === 0)}
@@ -125,14 +136,14 @@ export default function DetailedQuestionSubCard({
               position="start" 
               sx={{ 
                 alignSelf: 'flex-start',
-                mt: '10px'
+                mt: '5px'
               }}
             >
               <ErrorIcon src={errorIcon} alt='error icon'/>
             </InputAdornment>
         }}
       />
-      <QuestionTitleStyled>
+      <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Solution Steps
       </QuestionTitleStyled>
       {answerSteps && 

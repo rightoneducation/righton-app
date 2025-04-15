@@ -22,6 +22,7 @@ interface UseCentralDataManagerProps {
 interface UseCentralDataManagerReturnProps {
   isValidatingUser: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
+  fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: (libraryTab?: LibraryTabEnum) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -423,6 +424,25 @@ export default function useCentralDataManager({
     return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
   };
 
+  const fetchElement = async (type: GameQuestionType, id: string) => {
+    centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
+    switch (type){
+      case GameQuestionType.QUESTION:
+        apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id).then((response) => {
+          centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: response });
+          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+        });
+      break;
+      case GameQuestionType.GAME:
+      default:
+        apiClients?.gameTemplate.getGameTemplate(PublicPrivateType.PUBLIC, id).then((response) => {
+          centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: response });
+          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+        });
+      break;
+    }
+  };
+  
   const fetchElements = async (libraryTab?: LibraryTabEnum) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
       if (isLibrary && tab !== undefined) {
@@ -512,12 +532,15 @@ export default function useCentralDataManager({
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
+    console.log('validateUser useEffect running');
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     validateUser();
   }, []); // eslint-disable-line
 
   return {
     isValidatingUser,
     setIsTabsOpen,
+    fetchElement,
     fetchElements,
     isUserProfileComplete,
     handleChooseGrades,

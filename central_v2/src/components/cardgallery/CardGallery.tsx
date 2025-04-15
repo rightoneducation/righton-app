@@ -25,9 +25,9 @@ interface CardGalleryProps<T> {
   isLoading?: boolean;
   elementType: ElementType;
   galleryType: GalleryType;
-  isMyLibrary?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
+  isMyLibrary?: boolean;
 }
 
 interface MostPopularComponentProps<T> {

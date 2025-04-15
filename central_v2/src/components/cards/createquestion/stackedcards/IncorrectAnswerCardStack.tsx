@@ -119,7 +119,7 @@ export default function IncorrectAnswerCardStack({
                 style={{
                   width: '100%',
                   position: 'absolute',
-                  top:  (topCardHeight - 258) + ((index) * 50),
+                  top: (topCardHeight - 302) + ((index) * 50),
                   zIndex: incompleteIncorrectAnswers.length - index,
                   transition: 'top 0.6s ease-in-out',
                 }}
