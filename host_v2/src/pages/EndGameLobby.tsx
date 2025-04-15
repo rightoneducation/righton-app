@@ -57,7 +57,7 @@ function EndGameLobby({teams,
     const publicPrivate = PublicPrivateType.PUBLIC;
     
     useEffect(()=> {
-      apiClients.gameTemplate.listGameTemplatesByGrade(publicPrivate, 5, null, null, null, []).then((response) => {
+      apiClients.gameTemplate.listGameTemplatesByGrade(publicPrivate, 5, null, null, null, [], []).then((response) => {
         console.log(response);
         if (response && setSuggestedGameTemplates)
           setSuggestedGameTemplates(response.gameTemplates);
@@ -76,7 +76,7 @@ function EndGameLobby({teams,
     const debouncedGameTemplateSearch = useCallback( // eslint-disable-line
       debounce((search: string) => {
         console.log(search);
-        apiClients.gameTemplate.listGameTemplates(publicPrivate, 5, null, null, search, []).then((response) => {
+        apiClients.gameTemplate.listGameTemplates(publicPrivate, 5, null, null, search, [], []).then((response) => {
           console.log(response);
           console.log(search);
           if (response && setSuggestedGameTemplates)
