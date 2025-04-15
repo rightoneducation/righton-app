@@ -7,15 +7,18 @@ import { ScreenSize } from '../../lib/CentralModels';
 
 interface OwnerTagProps {
   screenSize: ScreenSize;
+  isViewGame?: boolean;
 }
 
-const OwnerTagFlexContainer = styled(Box)<OwnerTagProps>(({ theme, screenSize }) => ({
+const OwnerTagFlexContainer = styled(Box)<OwnerTagProps>(({ theme, screenSize, isViewGame }) => ({
   width: 'fit-content',
   height: 'fit-content',
   display: 'flex',
   flexDirection: screenSize === ScreenSize.MEDIUM ? 'row' : 'column',
   justifyContent: 'flex-end',
   alignItems: 'center',
+  background: isViewGame ? `${theme.palette.primary.extraDarkBlue}` : 'transparent',
+  borderRadius: '8px',
   padding: `${theme.sizing.smPadding}px`,
   gap: `${theme.sizing.xSmPadding}px`,
 }));
@@ -70,15 +73,17 @@ const OwnerTagBody = styled(OwnerTagHeader)(({ theme }) => ({
 }));
 
 export default function OwnerTag(
-  {screenSize}: OwnerTagProps,
-) {
+  {
+    screenSize,
+    isViewGame
+}: OwnerTagProps) {
   const theme = useTheme();
   const modifiedDate = '06/08/2024';
   const gamesUsed = '234';
   const userName = 'Mr. J. Jiminez';
   return (
     screenSize !== ScreenSize.SMALL ? 
-      <OwnerTagFlexContainer screenSize={screenSize}>
+      <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize}>
         <OwnerTagProfilePicture src={placeHolderProfilePicture} screenSize={screenSize}/>
         <OwnerTagTextContainer screenSize={screenSize}>
           <OwnerTagSubContainer screenSize={screenSize}>

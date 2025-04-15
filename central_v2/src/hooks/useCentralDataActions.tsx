@@ -412,8 +412,6 @@ export default function useCentralDataManager({
 
   const fetchElement = async (type: GameQuestionType, id: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    console.log('here');
-    console.log(id);
     switch (type){
       case GameQuestionType.QUESTION:
         apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id).then((response) => {

@@ -22,18 +22,20 @@ import {
 interface ViewQuestionsProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
+  isViewGame: boolean;
 }
 
 export default function ViewQuestionCards({
   screenSize,
   question,
+  isViewGame
 }: ViewQuestionsProps) {
   const theme = useTheme();
  
   return (
     <CardContainer>
     {screenSize !== ScreenSize.LARGE &&
-      <OwnerTag screenSize={screenSize}/>
+      <OwnerTag isViewGame={isViewGame} screenSize={screenSize}/>
     }
     <DetailedQuestionContainer
       container
@@ -45,7 +47,7 @@ export default function ViewQuestionCards({
         style={{ display: 'flex', justifyContent: 'flex-end' }}
       >
         {screenSize === ScreenSize.LARGE &&
-          <OwnerTag screenSize={screenSize}/>
+          <OwnerTag isViewGame={isViewGame} screenSize={screenSize}/>
         }
       </Grid>
       <Grid

@@ -70,6 +70,7 @@ function MostPopularGamesComponent({
             );
           })
         : mostPopularElements.map((game) => {
+          console.log(game);
             return (
               <Grid item key={game.id}>
                 <StyledGameCard
