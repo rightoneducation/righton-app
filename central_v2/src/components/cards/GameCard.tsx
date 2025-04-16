@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IAPIClients, IGameTemplate } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ScreenSize } from '../../lib/CentralModels';
+import { ScreenSize, CloudFrontDistributionUrl } from '../../lib/CentralModels';
 import heart from '../../images/heart.svg';
 import eyeball from '../../images/eyeball.svg';
 import rocket from '../../images/rocket.svg';
@@ -175,8 +175,8 @@ export default function StyledGameCard({
     <GameCard isCarousel={isCarousel} screenSize={screenSize}>
       <GameImageContainer>
       {isCarousel 
-        ? <CarouselGameImage src={image} alt="Tag" />
-        : <GameImage src={image} alt="Tag" />
+        ? <CarouselGameImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />
+        : <GameImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />
       }
         <FavouriteButton isEnabled id={id}/>
       </GameImageContainer>
