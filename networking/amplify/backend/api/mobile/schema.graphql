@@ -270,7 +270,6 @@ type PrivateQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
-  owner: String!
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -307,7 +306,6 @@ type DraftQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID
-  owner: String
   title: String
   lowerCaseTitle: String
   version: Int

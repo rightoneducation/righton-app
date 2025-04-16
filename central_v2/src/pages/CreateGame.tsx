@@ -23,6 +23,7 @@ import {
   StorageKey,
   TemplateType,
 } from '../lib/CentralModels';
+import useCentralDataManager from '../hooks/useCentralDataActions'
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
@@ -1093,18 +1094,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   };
 
   /** END OF CREATE QUESTION HANDLERS  */
-
+  
   const {
-    recommendedQuestions,
-    mostPopularQuestions,
-    searchedQuestions,
-    nextToken,
-    isLoading,
-    searchTerms,
-    selectedGrades,
-    isTabsOpen,
-    selectQuestion,
-    questionSet,
     handleView,
     getLabel,
     setIsTabsOpen,
@@ -1143,6 +1134,9 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal ||
     draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen ||
     draftGame.isGameImageUploadVisible;
+
+    console.log("draftGame: ", draftGame);
+    console.log("draftQuesions: ", draftQuestionsList)
 
   return (
     <CreateGameMainContainer>
