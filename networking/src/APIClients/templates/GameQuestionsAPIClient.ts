@@ -14,11 +14,12 @@ export class GameQuestionsAPIClient extends BaseAPIClient implements IGameQuesti
         const gameQuestions = await this.callGraphQL<GameQuestionType<T>['create']['query']>(
             queryFunction, variables
         ) as { data: any };
-
-        if (isNullOrUndefined(gameQuestions?.data) || isNullOrUndefined(gameQuestions?.data.createGameQuestions)) {
+        const createType = `create${type}GameQuestions`;
+        
+        if (isNullOrUndefined(gameQuestions?.data || gameQuestions?.data[createType])) {
             throw new Error(`Failed to create gameQuestions.`);
         }
-        return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions.data.createGameQuestions as AWSGameQuestion, type) as IGameQuestion;
+        return GameQuestionParser.gameQuestionFromAWSGameQuestion(gameQuestions?.data[createType] as AWSGameQuestion, type) as IGameQuestion;
     }
 
     async getGameQuestions<T extends PublicPrivateType>(
