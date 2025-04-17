@@ -1,64 +1,58 @@
 import React, { useState } from 'react';
+import { IQuestionTemplate } from '@righton/networking';
 import { AddMoreIconButton, QuestionCountButton } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 import VerticalMoreImg from '../../../images/buttonIconVerticalMore.svg';
 import { buttonContentMap, ButtonType } from '../ButtonModels';
 
 interface IManageButtonQuestions {
-  questionCount: number;
+  questions: {
+    questionTemplate: IQuestionTemplate;
+    gameQuestionId: string;
+  }[];
   iconButtons: number[];
   selectedIndex: number;
+  isCreate: boolean;
   setSelectedIndex: (index: number) => void;
-  addMoreQuestions: () => void;
+  addMoreQuestions?: () => void;
 }
 
 // vertical ellipsis image for button
 const verticalEllipsis = <img src={VerticalMoreImg} alt="more-elipsis" />;
 export default function ManageQuestionsButtons({
-  questionCount,
+  questions,
   iconButtons,
   selectedIndex,
+  isCreate,
   setSelectedIndex,
   addMoreQuestions
 }: IManageButtonQuestions) {
-  
     return (
-        <>
-          {/* add new button representing question count */}
-          {questionCount > 1 && iconButtons.slice(1).map((_, index) => (
-             <AddMoreIconButton sx={{ 
-              ...(selectedIndex === index && {
-                  backgroundColor: (theme) => theme.palette.primary.mediumBlue
-              }),
-                fontFamily: 'Poppins', 
-                fontSize: '16px', 
-                width: '40px', 
-                height: '40px',
-                fontWeight: 600
-                }} key={`Question--${index + 1}`} onClick={() => setSelectedIndex(index)}>
-             {index + 1}
-           </AddMoreIconButton>
-          ))}
-          
-          {/* Track current question */}
-           <QuestionCountButton
-           sx={{ 
-            ...(iconButtons.length > 1 && selectedIndex === questionCount - 1 && {
-                backgroundColor: (theme) => theme.palette.primary.mediumBlue
-            }),
-          }}
-           onClick={ () => setSelectedIndex(questionCount - 1)}
-           endIcon={verticalEllipsis} 
-           isDisabled={false}>
-           Question {questionCount}
-         </QuestionCountButton>
-          
-          {/* add new question */}
+      <>          
+        { questions && questions.map((question, index) => { 
+            return (
+              <QuestionCountButton
+                sx={{ 
+                  ...(iconButtons.length > 1 && selectedIndex === questions.length && {
+                      backgroundColor: (theme) => theme.palette.primary.mediumBlue
+                  }),
+                }}
+                onClick={ () => setSelectedIndex(index)}
+                isDisabled={false}
+              >
+                { index === selectedIndex && 'Question' } {index}
+                { index === selectedIndex && verticalEllipsis}
+              </QuestionCountButton>
+            )
+          })
+        }
+        { isCreate && 
           <AddMoreIconButton onClick={addMoreQuestions}>
-          <img
-            alt="add-question"
-            src={buttonContentMap[ButtonType.ADDSTEP].icon}
-          />
-        </AddMoreIconButton>
-        </>
-      );
+            <img
+              alt="add-question"
+              src={buttonContentMap[ButtonType.ADDSTEP].icon}
+            />
+          </AddMoreIconButton>
+        }
+      </>
+    );
 }

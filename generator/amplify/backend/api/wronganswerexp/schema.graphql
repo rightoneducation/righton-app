@@ -28,3 +28,18 @@ type DiscardedExplanation @model
   discardText: String
   version: String!
 }
+
+
+type Questions @model 
+@auth(
+ rules: [
+    { allow: public, provider: identityPool  },
+  ]
+)
+{
+  id: ID!
+  question: String!
+  correctAnswer: String!
+  wrongAnswers: AWSJSON!
+  version: String!
+}

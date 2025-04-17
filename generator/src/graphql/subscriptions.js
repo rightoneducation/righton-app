@@ -106,3 +106,51 @@ export const onDeleteDiscardedExplanation = /* GraphQL */ `
     }
   }
 `;
+export const onCreateQuestions = /* GraphQL */ `
+  subscription OnCreateQuestions(
+    $filter: ModelSubscriptionQuestionsFilterInput
+  ) {
+    onCreateQuestions(filter: $filter) {
+      id
+      question
+      correctAnswer
+      wrongAnswers
+      version
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateQuestions = /* GraphQL */ `
+  subscription OnUpdateQuestions(
+    $filter: ModelSubscriptionQuestionsFilterInput
+  ) {
+    onUpdateQuestions(filter: $filter) {
+      id
+      question
+      correctAnswer
+      wrongAnswers
+      version
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteQuestions = /* GraphQL */ `
+  subscription OnDeleteQuestions(
+    $filter: ModelSubscriptionQuestionsFilterInput
+  ) {
+    onDeleteQuestions(filter: $filter) {
+      id
+      question
+      correctAnswer
+      wrongAnswers
+      version
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

@@ -28,7 +28,7 @@ function App() {
             <Route path="/host/:gameSessionId" element={<GameSessionWrapper apiClients={apiClients} />}/>
           </>
         }
-        <Route path="*" element={<RedirectToCentralIfMissing />} />
+        <Route path="*" />
       </>
     ));
 

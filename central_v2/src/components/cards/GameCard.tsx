@@ -19,6 +19,7 @@ interface StyledGameCardProps {
   game: IGameTemplate;
   isCarousel: boolean;
   screenSize: ScreenSize;
+  isFavorite: boolean;
   handleViewButtonClick: (element: IGameTemplate) => void;
 }
 
@@ -162,10 +163,14 @@ export default function StyledGameCard({
   game,
   isCarousel,
   screenSize,
+  isFavorite,
   handleViewButtonClick,
 }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
-
+  const handleLaunchGame = () => {
+    const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/Public/${game.id}`;
+    window.location.href = LAUNCH_GAME_URL;
+  }
   return (
     <GameCard isCarousel={isCarousel} screenSize={screenSize}>
       <GameImageContainer>
@@ -197,7 +202,7 @@ export default function StyledGameCard({
         <CentralButton
           buttonType={ButtonType.LAUNCH}
           isEnabled
-          onClick={() => handleViewButtonClick(game)}
+          onClick={handleLaunchGame}
         />
         </ButtonContainer>
     </GameCard>

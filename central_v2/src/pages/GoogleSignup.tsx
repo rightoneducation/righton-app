@@ -4,7 +4,7 @@ import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, List
 import { useNavigate } from 'react-router-dom'; 
 import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
-import RightOnLogo from '../images/RightOnUserLogo.svg';
+import RightOnLogo from "../images/RightOnUserLogo.svg";
 import Adpic from "../images/@.svg"
 
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
@@ -15,6 +15,7 @@ import {
 
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
+import { UserStatusType } from '../lib/CentralModels';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -178,6 +179,7 @@ export default function GoogleSignup({
         if(frontImage && backImage) {
           const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(centralData.userProfile, frontImage, backImage);
           centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
+          centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
           // console.log("CurrentUserInfo: ", response?.updatedUser)
           navigate("/")
         }
@@ -243,11 +245,11 @@ export default function GoogleSignup({
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
-              value={centralData.userProfile.username}
+              value={centralData.userProfile.userName}
               onChange={(event) => 
                 centralDataDispatch({
                   type: 'SET_USER_PROFILE', 
-                  payload: {username: event.target.value}
+                  payload: {userName: event.target.value}
                 })
               }
               sx={{

@@ -10,6 +10,7 @@ import {
   getCurrentUser,
   fetchUserAttributes
 } from 'aws-amplify/auth';
+import { v4 as uuidv4 } from 'uuid';
 
 export const userProfileLocalStorage = 'righton_userprofile';
 
@@ -56,6 +57,8 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       newFavoriteGameTemplateIds = newFavoriteGameTemplateIds.filter((id: string) => id !== gameId);
     else 
       newFavoriteGameTemplateIds.push(gameId);
+    console.log(newFavoriteGameTemplateIds);
+    console.log(user);
     return await this.userAPIClient.updateUser({ id: user.dynamoId ?? '', favoriteGameTemplateIds: JSON.stringify(newFavoriteGameTemplateIds) });
   };
 
@@ -134,6 +137,24 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     return {nextToken: null, questions: []};
   };
 
+  public refreshLocalUserProfile = async () => {
+    const localUser = window.localStorage.getItem(userProfileLocalStorage);
+    const parsedLocalUser = localUser ? JSON.parse(localUser) : null;
+    if (!parsedLocalUser) return;
+
+    const result = this.userAPIClient.getUserByUserName(parsedLocalUser.userName).then((updatedUser) => {
+      if (updatedUser !== null){
+        const userProfile = { ...parsedLocalUser, ...updatedUser };
+        this.setLocalUserProfile(userProfile);
+        return userProfile;
+      } else {
+        this.clearLocalUserProfile();
+        return null;
+      }
+    });
+    return result;
+  }
+
   public getLocalUserProfile = () => {
     const profile = window.localStorage.getItem(userProfileLocalStorage);
     if (profile){
@@ -150,10 +171,10 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     window.localStorage.removeItem(userProfileLocalStorage);
   }
 
-  public loginUserAndRetrieveUserProfile = async (username: string, password: string) => {
+  public loginUserAndRetrieveUserProfile = async (userName: string, password: string) => {
     let userProfile = null;
     try {
-      await this.authAPIClient.awsSignIn(username, password);
+      await this.authAPIClient.awsSignIn(userName, password);
       const currentCognitoUser = await getCurrentUser();
       const attributes = await fetchUserAttributes();
       if (!attributes || !attributes.nickname) 
@@ -174,7 +195,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public signUpSendConfirmationCode = async (user: IUserProfile) => {
-    return this.authAPIClient.awsSignUp(user.username, user.email, user.password ?? '');
+    return this.authAPIClient.awsSignUp(user.userName, user.email, user.password ?? '');
   };
 
   public signUpConfirmAndBuildBackendUser = async (user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File) => {
@@ -188,15 +209,14 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     try {
       await this.authAPIClient.awsSignIn(user.email, user.password ?? '');
       const currentUser = await getCurrentUser();
-      updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
       const images = await Promise.all([
         this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
         this.authAPIClient.awsUploadImagePrivate(backImage) as any
       ]);
-      createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
-      updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
-      const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
-      updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      const dynamoId = uuidv4();
+      createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      await this.userAPIClient.createUser(createUserInput);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
 
@@ -209,6 +229,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
 
   public signUpGoogleBuildBackendUser = async (user: IUserProfile, frontImage: File, backImage: File) => {
+    console.log(user);
     // Need to put it in Email into user.
     let getEmail = await this.authAPIClient.getUserEmail();
     if(getEmail){
@@ -217,7 +238,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
     // CreatUserInput is done to avoid putting cognito ID into the dynamoDB
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
-    
     let updatedUser = JSON.parse(JSON.stringify(user));
     try {
       const currentUser = await getCurrentUser();
@@ -226,15 +246,15 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
         this.authAPIClient.awsUploadImagePrivate(backImage) as any
       ]);
-      createUserInput = { ...createUserInput, frontIdPath: images[0].path, backIdPath: images[1].path };
-      updatedUser = { ...updatedUser, frontIdPath: images[0].path, backIdPath: images[1].path };
-
-      
-      const dynamoResponse = await this.userAPIClient.createUser(createUserInput);
-      updatedUser = {...updatedUser, dynamoId: dynamoResponse?.id};
+      const dynamoId = uuidv4();
+      createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      await this.userAPIClient.createUser(createUserInput);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
+      //TODO: set user status to LOGGED_IN
       return { updatedUser, images };
+
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);
       throw new Error (JSON.stringify(error));

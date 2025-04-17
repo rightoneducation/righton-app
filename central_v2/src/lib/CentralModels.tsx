@@ -3,7 +3,8 @@ import { CentralQuestionTemplateInput, IGameTemplate, IncorrectCard } from "@rig
 export enum UserStatusType {
   LOGGEDIN,
   LOGGEDOUT,
-  INCOMPLETE
+  INCOMPLETE,
+  LOADING
 }
 
 export enum ScreenType {
@@ -13,8 +14,10 @@ export enum ScreenType {
   LOGIN,
   SIGNUP, 
   CREATEGAME,
+  VIEWGAME,
   CREATEQUESTION,
-  CONFIRMATION
+  CONFIRMATION,
+  NEXTSTEP
 }
 
 export enum ScreenSize {
@@ -80,4 +83,11 @@ export enum FetchType {
   DRAFT_QUESTIONS,
   FAVORITE_GAMES,
   FAVORITE_QUESTIONS
+}
+
+export enum LibraryTabEnum {
+  PUBLIC,
+  PRIVATE,
+  DRAFTS,
+  FAVORITES
 }
