@@ -218,6 +218,8 @@ export default function useExploreQuestionsStateManager(): UseExploreQuestionsSt
       console.log('Error:', error);
     }
   }, []); // eslint-disable-line
+
+  console.log("explore Questions hook", recommendedQuestions)
   return {
     recommendedQuestions,
     mostPopularQuestions,

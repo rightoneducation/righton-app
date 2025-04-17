@@ -23,6 +23,7 @@ import {
   StorageKey,
   TemplateType,
 } from '../lib/CentralModels';
+import useCentralDataManager from '../hooks/useCentralDataActions'
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
@@ -501,17 +502,24 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             const createGameQuestions = questionTemplateIds.map(
               async (questionId, i) => {
                const gameQuestion: CreatePublicGameQuestionsInput | CreatePrivateGameQuestionsInput = {
-                 publicGameTemplateID: String(gameTemplateResponse.id),
-                 publicQuestionTemplateID: String(questionId),
+                ...(draftGame.publicPrivateGame === PublicPrivateType.PUBLIC ? {
+                  publicGameTemplateID: String(gameTemplateResponse.id),
+                  publicQuestionTemplateID: String(questionId),
+                }:{
+                  privateGameTemplateID: String(gameTemplateResponse.id),
+                  privateQuestionTemplateID: String(questionId),
+                }),
                }
+               console.log("Game Question: ",gameQuestion)
               try {
-                await apiClients.gameQuestions.createGameQuestions(
+                const response = await apiClients.gameQuestions.createGameQuestions(
                   draftGame.publicPrivateGame,
                   gameQuestion,
                 );
+                console.log("Response: ", response);
               } catch(err) {
                 setDraftGame((prev) => ({...prev, isCreatingTemplate: false}))
-                console.error(`Failed to create game question at index ${i}: ${err}`)
+                console.error(`Failed to create game question at index ${i}:`, err);
               }
               },
             );
@@ -1095,16 +1103,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   /** END OF CREATE QUESTION HANDLERS  */
 
   const {
-    recommendedQuestions,
-    mostPopularQuestions,
-    searchedQuestions,
-    nextToken,
-    isLoading,
-    searchTerms,
-    selectedGrades,
-    isTabsOpen,
-    selectQuestion,
-    questionSet,
     handleView,
     getLabel,
     setIsTabsOpen,
@@ -1143,6 +1141,28 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal ||
     draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen ||
     draftGame.isGameImageUploadVisible;
+
+    console.log("draftGame: ", draftGame);
+    console.log("draftQuesions: ", draftQuestionsList);
+
+    const handleCreateGameQuestion = async () => {
+      setDraftGame((prev) => ({...prev, isCreatingTemplate: true}))
+      const gameQuestion: CreatePublicGameQuestionsInput | CreatePrivateGameQuestionsInput = {
+        publicGameTemplateID: '2967ceff-36ad-4de3-9ec8-acde827ffe36',
+        publicQuestionTemplateID: '23750fce-79db-4bff-82bd-7012f6d17e3b',
+      }
+      try {
+        await apiClients.gameQuestions.createGameQuestions(
+          draftGame.publicPrivateGame,
+          gameQuestion,
+        );
+      } catch(err) {
+        console.log("GameQuestion error", err);
+      }
+
+      setDraftGame((prev) => ({...prev, isCreatingTemplate: false}))
+     
+    }
 
   return (
     <CreateGameMainContainer>
