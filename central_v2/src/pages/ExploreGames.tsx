@@ -10,7 +10,7 @@ import {
   IUserProfile,
   GradeTarget
 } from '@righton/networking';
-import { Box, useTheme } from '@mui/material';
+import { Box, CircularProgress, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -112,7 +112,13 @@ export default function ExploreGames({
           dataLength={isSearchResults ? centralData.searchedGames.length : centralData.mostPopularGames.length}
           next={loadMore}
           hasMore={centralData.nextToken !== null}
-          loader=<h4>loading...</h4>
+          loader={
+            <Box style={{width: '100%', display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}> 
+              <h4>
+                ...
+              </h4>
+            </Box>
+          }
           scrollableTarget="scrollableDiv"
           style={{
             width: '100vw',
