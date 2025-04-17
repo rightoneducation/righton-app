@@ -40,6 +40,8 @@ function App() {
             <Route path="/confirmation" element={<AppSwitch currentScreen={ScreenType.CONFIRMATION} />} />
             <Route path="/nextstep" element={<AppSwitch currentScreen={ScreenType.NEXTSTEP} />} />
             <Route path="/library" element={<AppSwitch currentScreen={ScreenType.LIBRARY} />} />
+            <Route path="/auth" element={<AppSwitch currentScreen={ScreenType.AUTH} />} />
+
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />

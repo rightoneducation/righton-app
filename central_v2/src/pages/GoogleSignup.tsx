@@ -173,18 +173,51 @@ export default function GoogleSignup({
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
     const centralData = useCentralDataState();
     const centralDataDispatch = useCentralDataDispatch();
-//  const username 
+    
 
+    // Local temporary states
+    const [title, setTitle] = useState('Title...') 
+    const [firstName, setFirstName] = useState('') 
+    const [lastName, setLastName] = useState('') 
+    const [userName, setUserName] = useState('') 
+    const userProfileInit = {
+      title: 'Title...',
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      password: '',
+  }
+  
     const handleGetStarted = async () => {
       try {
         if(frontImage && backImage) {
+          // console.log("Local Title: ", title)
+          // console.log("Local firstName: ", firstName)
+          // console.log("Local lastName: ", lastName)
+          // console.log("Local userName: ", userName)
+
+          const updatedProfile = {
+            ...userProfileInit, // ensures all keys are there
+            firstName,
+            lastName,
+            userName,
+            title,
+          };
+
+          // centralDataDispatch({ type: 'SET_USER_PROFILE', payload: updatedProfile });
+ 
           console.log("Sending this userProfile to signupgooglebackend function: ", centralData.userProfile)
-          const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(centralData.userProfile, frontImage, backImage);
+          const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(updatedProfile, frontImage, backImage);
           // need if statement for response
-          centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
-          centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
+          if (response?.updatedUser){
+            console.log("returning from signupgooglebuildbackendnuser: ", response)
+            centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
+            centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
+            console.log("userProfile at the top component aka centraldata after returning from backend: ", centralData.userProfile)
+            // navigate("/")
+          } 
           // console.log("CurrentUserInfo: ", response?.updatedUser)
-          navigate("/")
         }
       } catch (error) {
         console.error(error);
@@ -202,13 +235,16 @@ export default function GoogleSignup({
             <TitleandNameMUI>
                 <TitleField
                 select
-                value={centralData.userProfile.title}
+                value={title}
                 onChange={(event) => 
-                  centralDataDispatch({
-                    type: 'SET_USER_PROFILE', 
-                    payload: {title: event.target.value}
-                  })
+                  setTitle(event.target.value)
                 }
+                // onChange={(event) => 
+                //   centralDataDispatch({
+                //     type: 'SET_USER_PROFILE', 
+                //     payload: {title: event.target.value}
+                //   })
+                // }
                 variant="outlined"
                 SelectProps={{
                     IconComponent: DropDown, // Custom icon component
@@ -223,27 +259,37 @@ export default function GoogleSignup({
                 <TextContainerStyled
                 variant="outlined"
                 placeholder="First Name"
-                value={centralData.userProfile.firstName}
+                value={firstName}
                 onChange={(event) => {
-                  console.log("User's FirstName:",  centralData.userProfile.firstName)
-                  centralDataDispatch({
-                    type: 'SET_USER_PROFILE', 
-                    payload: {firstName: event.target.value}
-                  })}
+                  // console.log("User's FirstName:",  centralData.userProfile.firstName)
+                  setFirstName(event.target.value)
+                  }
                 }
+                // onChange={(event) => {
+                //   console.log("User's FirstName:",  centralData.userProfile.firstName)
+                //   centralDataDispatch({
+                //     type: 'SET_USER_PROFILE', 
+                //     payload: {firstName: event.target.value}
+                //   })}
+                // }
                 />
                 <TextContainerStyled
                 variant="outlined"
                 placeholder="Last Name"
-                value={centralData.userProfile.lastName}
+                value={lastName}
                 onChange={(event) => {
-                  console.log("Last Name Changed: ", centralData.userProfile); // Logs the new value of the last name
-                  centralDataDispatch({
-                    type: 'SET_USER_PROFILE', 
-                    payload: {lastName: event.target.value}
-                  })
+                  // console.log("Last Name Changed: ", centralData.userProfile); // Logs the new value of the last name
+                  setLastName(event.target.value)
                 }
                 }
+                // onChange={(event) => {
+                //   console.log("Last Name Changed: ", centralData.userProfile); // Logs the new value of the last name
+                //   centralDataDispatch({
+                //     type: 'SET_USER_PROFILE', 
+                //     payload: {lastName: event.target.value}
+                //   })
+                // }
+                // }
                 />
           </TitleandNameMUI>
           <UsernameMUI>
@@ -251,13 +297,16 @@ export default function GoogleSignup({
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
-              value={centralData.userProfile.userName}
+              value={userName}
               onChange={(event) => 
-                centralDataDispatch({
-                  type: 'SET_USER_PROFILE', 
-                  payload: {userName: event.target.value}
-                })
+                setUserName(event.target.value)
               }
+              // onChange={(event) => 
+              //   centralDataDispatch({
+              //     type: 'SET_USER_PROFILE', 
+              //     payload: {userName: event.target.value}
+              //   })
+              // }
               sx={{
                 backgroundColor: 'white'
               }}
