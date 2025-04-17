@@ -15,7 +15,7 @@ import {
   TextContainerStyled,
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
-import { ScreenSize } from '../../../lib/CentralModels';
+import { ScreenSize, CloudFrontDistributionUrl } from '../../../lib/CentralModels';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 
 interface DetailedQuestionCardBaseProps {
@@ -86,7 +86,7 @@ export default function DetailedQuestionCardBase({
           boxSizing: 'border-box',
         }}
       >
-        <img src={question.imageUrl ?? ''} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
+        <img src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
       </Box>
       <CreateQuestionContentRightContainerStyled>
         <RadioContainerStyled>

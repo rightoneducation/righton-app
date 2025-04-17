@@ -15,7 +15,7 @@ import {
   TextContainerStyled,
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
-import { ScreenSize } from '../../../lib/CentralModels';
+import { ScreenSize, CloudFrontDistributionUrl } from '../../../lib/CentralModels';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 
 interface DetailedGameCardBaseProps {
@@ -113,7 +113,7 @@ export default function DetailedGameCardBase({
           boxSizing: 'border-box',
         }}
       >
-        <img src={game.imageUrl ?? ''} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
+        <img src={`${CloudFrontDistributionUrl}${game.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
       </Box>
       { screenSize === ScreenSize.SMALL && 
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
