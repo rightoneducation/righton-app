@@ -1,4 +1,5 @@
 import { PublicPrivateType, GradeTarget } from "../../BaseAPIClient";
+import { UploadDataWithPathOutput } from 'aws-amplify/storage';
 import { IGameTemplate } from "../../../Models";
 import { 
   createPublicGameTemplate,
@@ -223,6 +224,15 @@ export interface IGameTemplateAPIClient {
     type: T,
     createGameTemplateInput: GameTemplateType<T>['create']['input'] | IGameTemplate
   ): Promise<IGameTemplate>;
+
+  storeImageInS3(
+    image: File,
+  ): Promise<UploadDataWithPathOutput>;
+  
+  storeImageUrlInS3(
+    imageUrl: string,
+  ): Promise<string>;
+  
 
   getGameTemplate<T extends PublicPrivateType>(
     type: T,

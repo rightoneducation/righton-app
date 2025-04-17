@@ -12,6 +12,7 @@ import SignUpSwitch from './SignUpSwitch';
 import Login from '../pages/Login'
 import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
+import ViewGame from '../pages/ViewGame';
 import MyLibrary from '../pages/MyLibrary';
 import AuthStatus from '../pages/AuthStatus';
 
@@ -47,6 +48,7 @@ function AppSwitch({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
+    fetchElement,
     fetchElements,
   } = useCentralDataManager({gameQuestion});
   
@@ -129,7 +131,15 @@ function AppSwitch({
       screenComponent = (
           <CreateGame screenSize={screenSize}/>
       );
-      break
+      break;
+    }
+    case ScreenType.VIEWGAME: {
+      screenComponent = (
+        <AuthGuard>
+          <ViewGame screenSize={screenSize} fetchElement={fetchElement} />
+        </AuthGuard>
+      );
+      break;
     }
     case ScreenType.AUTH: {
       screenComponent = (

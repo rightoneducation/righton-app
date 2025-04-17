@@ -1,14 +1,14 @@
 import react, {useState, useEffect} from 'react';
 import {FormControl, InputLabel, MenuItem} from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import {IQuestionToSave} from '../lib/Models';
+import {IExplanationToSave} from '../lib/Models';
 import {returnQuestions} from '../lib/API';
 import { version, prevVersions } from '../lib/Constants';
 import QualityChart from '../components/QualityChart';
 import { set } from 'lodash';
 
 interface VersionedQuestions {
-  [key: string]: IQuestionToSave[];
+  [key: string]: IExplanationToSave[];
 };
 
 export default function Eval(){
@@ -20,12 +20,10 @@ export default function Eval(){
   const handleChange = async (event: SelectChangeEvent) => {
     const selectedVersion = event.target.value;
     const versionData = summaryData.find((data) => data.version === selectedVersion);
-    // const questions: any[] = questionsByVersion[selectedVersion];
-    // const wrongAnswers = questions.map((question) => {
-    //   return JSON.parse(question.wrongAnswers);
-    // });
-    // const dismissedExplanations = wrongAnswers.map((answer) => { if (answer.dismissedExplanations.prompt) return answer.dismissedExplanations.prompt });
-    // console.log(dismissedExplanations);
+    const questions: any[] = questionsByVersion[selectedVersion];
+    const wrongAnswers = questions.map((question) => {
+      return JSON.parse(question.wrongAnswers);
+    });
     setSelectedVersionData(versionData ?? null);
     setQueryVersion(selectedVersion ?? null);
   }

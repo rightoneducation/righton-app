@@ -3,33 +3,41 @@ import { OpenAI } from "openai"
 import ExampleQuestions  from "./lib/exampleQuestions.mjs";
 import UnacceptableExplanations from "./lib/UnacceptableExplanations.mjs";
 
+// export interface IExplanationToSave {
+//   question: string;
+//   correctAnswer: string;
+//   wrongAnswer: string;
+//   genExplanation:{
+//     explanation: string;
+//     editedExplanation?: string;
+//     editReason?: string;
+//     regenExplanations?: {
+//       reason: IChipData | null;
+//       prompt?: string;
+//     }[];
+//   }
+//   discardedExplanations: string[];
+//   version: string;
+// }
+
 export async function handler(event) {
     const openai = new OpenAI(process.env.OPENAI_API_KEY);
     // Parse input data from the event object
     const body = JSON.parse(event.body);
-    const question = body.regenInputObj.question.question;
-    const correctAnswer = body.regenInputObj.question.correctAnswer;
-    const wrongAnswers = body.regenInputObj.question.wrongAnswers;
-    const discardedExplanations = body.regenInputObj.question.discardedExplanations;
-    const index = body.regenInputObj.index;
-    const wrongAnswer = wrongAnswers[index].answer;
-    const wrongAnswerDismissedExplanations = wrongAnswers[index].dismissedExplanations;
-    const rejectedExplanations = body.regenInputObj.discardedExplanations;
-    let wrongAnswerExplanation;
-    let wrongAnswerPrompt;
-    if (wrongAnswerDismissedExplanations && wrongAnswerDismissedExplanations[wrongAnswerDismissedExplanations.length - 1]){
-        if (wrongAnswerDismissedExplanations[wrongAnswerDismissedExplanations.length - 1].explanation)
-            wrongAnswerExplanation = wrongAnswerDismissedExplanations[wrongAnswerDismissedExplanations.length - 1].explanation;
-        if (wrongAnswerDismissedExplanations[wrongAnswerDismissedExplanations.length - 1].prompt)
-            wrongAnswerPrompt = wrongAnswerDismissedExplanations[wrongAnswerDismissedExplanations.length - 1].prompt;
-    }
+    const question = body.regenInputObj.question;
+    const correctAnswer = body.regenInputObj.correctAnswer;
+    const wrongAnswer = body.regenInputObj.wrongAnswer;
+    const discardedExplanations = body.regenInputObj.discardedExplanations;
+    const wrongAnswerExplanation = body.regenInputObj.genExplanation.explanation;
+    const wrongAnswerPrompt = body.regenInputObj.genExplanation.prompt;
+    const wrongAnswerReason = body.regenInputObj.genExplanation.regenExplanations;
+   
     // prompt for open ai
     // first specify the format returned via the role
     let messages = [{
       role: "system",
       content: "You are a helpful assistant designed to output a string that exclusively contains a wrong answer explanation and no headers, or other related information."
     }];
-    console.log(rejectedExplanations);
     // then provide the actual content
     messages.push({
       role: "user",
@@ -41,10 +49,11 @@ export async function handler(event) {
         - Correct Answer: ${correctAnswer}. This is the accurate solution to the question.
         - Submitted Wrong Answer: ${wrongAnswer}. The student arrived at this incorrect solution.
         - Previously Rejected Explanation: ${wrongAnswerExplanation}. This explanation was deemed inadequate for its lack of realism or logical consistency.
-        - Discarded Explanations: ${rejectedExplanations} - Rejected explanations that should never be regenerated. For each of these, review the discardText and discardType fields and ensure that your generated answer explanations do not follow the same logic. This is the highest priority. For discardType: "0" refers to an incorrect mathematical operation, "1" refers to tone/clarity, and "2" refers to other (and should include a discardText explanation).
+        - Discarded Explanations: ${discardedExplanations} - Rejected explanations that should never be regenerated. For each of these, review the discardText and discardType fields and ensure that your generated answer explanations do not follow the same logic. This is the highest priority. For discardType: "0" refers to an incorrect mathematical operation, "1" refers to tone/clarity, and "2" refers to other (and should include a discardText explanation).
 
         Steps for New Wrong Answer Explanation:
         - If ${wrongAnswerPrompt} is provided, it contains specific instructions about the previous explanation. Use this as a foundation for your revised explanation.
+        - If ${wrongAnswerReason} is provided, it contains specific instructions about the previous explanation. Use this as a foundation for your revised explanation.
         - Avoidance of Discarded Explanations: Some explanations have been completely rejected (${discardedExplanations}). Your new explanation should offer a different perspective, ensuring it does not echo the core misconception communicated in these discarded attempts.
         - Review the unacceptable explanations and do not use the same logic or reasoning.
             Unacceptable Explanations: ${JSON.stringify(UnacceptableExplanations.UnacceptableExplanation, null, 2)}

@@ -24,12 +24,14 @@ interface TabContainerProps {
   screenSize: ScreenSize;
   isTabsOpen: boolean;
   handleCCSSSubmit: (ccss: string) => void;
+  ccss?: string; 
 }
 
 export default function CCSSTabs({
   screenSize,
   isTabsOpen,
-  handleCCSSSubmit
+  handleCCSSSubmit,
+  ccss
 }: TabContainerProps) {
   const theme = useTheme();
   const [openTab, setOpenTab] = React.useState(0);
@@ -39,10 +41,12 @@ export default function CCSSTabs({
     2: 'Cluster',
     3: 'Standard',
   };
-  const [grade, setGrade] = React.useState('');
-  const [domain, setDomain] = React.useState('');
-  const [cluster, setCluster] = React.useState('');
-  const [standard, setStandard] = React.useState('');
+const isValidCCSS = ccss && ccss.split(".").length === 4;
+
+  const [grade, setGrade] = React.useState(isValidCCSS ?  ccss?.split(".")[0] : '');
+  const [domain, setDomain] = React.useState(isValidCCSS ?  ccss?.split(".")[1] : '');
+  const [cluster, setCluster] = React.useState(isValidCCSS ?  ccss?.split(".")[2] : '');
+  const [standard, setStandard] = React.useState(isValidCCSS ?  ccss?.split(".")[3] : '');
 
   const isTabTextValid = (value: string, tabType: CCSSType): boolean => {
     switch (tabType){

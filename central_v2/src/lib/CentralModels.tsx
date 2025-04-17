@@ -1,9 +1,10 @@
-import { CentralQuestionTemplateInput, IncorrectCard } from "@righton/networking";
+import { CentralQuestionTemplateInput, IGameTemplate, IncorrectCard } from "@righton/networking";
 
 export enum UserStatusType {
   LOGGEDIN,
   LOGGEDOUT,
-  INCOMPLETE
+  INCOMPLETE,
+  LOADING
 }
 
 export enum ScreenType {
@@ -13,6 +14,7 @@ export enum ScreenType {
   LOGIN,
   SIGNUP, 
   CREATEGAME,
+  VIEWGAME,
   CREATEQUESTION,
   CONFIRMATION,
   NEXTSTEP,
@@ -67,6 +69,10 @@ export type CreateQuestionLocalData = {
   completeCards?: IncorrectCard[] | null
 }
 
+// type that shapes retrieved storage for gameCreation
+export type CreateGameLocalData = {
+  gameTemplate: IGameTemplate | null;
+}
 export enum FetchType {
   EXPLORE_GAMES,
   EXPLORE_QUESTIONS,

@@ -21,6 +21,7 @@ import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateB
 interface DetailedQuestionCardBaseProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
+  dropShadow?: boolean;
 }
 
 interface CreateQuestionTitleBarStyledProps {
@@ -47,16 +48,22 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function DetailedQuestionCardBase({
   screenSize,
   question,
+  dropShadow
 }: DetailedQuestionCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
+  const [isPublic, setIsPublic] = React.useState<boolean>(false)
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setQuestionType((event.target as HTMLInputElement).value);
   };
 
+  const handlePublicPrivateChange = () => {
+    setIsPublic((prev) => !prev);
+  }
+
   return (
-    <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false}>
+    <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
     <CreateQuestionTitleBarStyled screenSize={screenSize}>
       <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
@@ -66,7 +73,7 @@ export default function DetailedQuestionCardBase({
       </Box>
       { screenSize !== ScreenSize.SMALL && 
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-          <PublicPrivateButton isDisabled/>
+          <PublicPrivateButton isPublic={isPublic} isDisabled/>
         </Box>
       }
     </CreateQuestionTitleBarStyled>
@@ -118,7 +125,7 @@ export default function DetailedQuestionCardBase({
       </CreateQuestionContentRightContainerStyled>
       { screenSize === ScreenSize.SMALL && 
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
-          <PublicPrivateButton isDisabled={false}/>
+          <PublicPrivateButton isPublic={isPublic} isDisabled={false}/>
         </Box>
       }
     </ContentContainerStyled>

@@ -60,6 +60,7 @@ export const StyledTab = styled(Tab, {
 
 export const DetailedQuestionContainer = styled(Grid)(({ theme }) => ({
   width: '100%',
+  gap: `${theme.sizing.mdPadding}px`,
 }));
 
 export const ContentContainer = styled(Box)(({ theme }) => ({
@@ -101,7 +102,6 @@ export const ButtonContainerRight = styled(ButtonContainerLeft)(({ theme }) => (
 
 export const CardContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  overflow: 'auto',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -112,6 +112,7 @@ export const CardContainer = styled(Box)(({ theme }) => ({
   },
   scrollbarWidth: 'none', // Firefox
   '-ms-overflow-style': 'none', // IE and Edge
+  gap: '24px'
 }));
 
 export const SubCardGridItem = styled(Grid)(({ theme }) => ({

@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Box,
   Typography,
+  Paper,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -9,7 +10,7 @@ import {
 } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 
-export const BaseCardStyled = styled(Box)(({ theme }) => ({
+export const BaseCardStyled = styled(Paper)(({ theme }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
