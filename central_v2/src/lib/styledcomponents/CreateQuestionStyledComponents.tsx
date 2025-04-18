@@ -18,14 +18,22 @@ export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
 export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
-  opacity: 0.1,
   position: 'absolute',
   zIndex: 0,
   backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
-  backgroundImage: `
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    backgroundImage: `
     linear-gradient(180deg, rgb(254, 251, 247) 0%, rgba(254, 251, 247, 0) 100%),
     url(${mathSymbolsBackground})
   `,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    opacity: 0.1,
+  },
+ 
 }));
 
 interface BaseCardStyledProps {

@@ -14,7 +14,10 @@ import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
 import ViewGame from '../pages/ViewGame';
 import MyLibrary from '../pages/MyLibrary';
+import AuthStatus from '../pages/AuthStatus';
+
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
+// import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 
 interface AppSwitchProps {
   currentScreen: ScreenType;
@@ -47,8 +50,9 @@ function AppSwitch({
     loadMore,
     fetchElement,
     fetchElements,
+    handleLogOut
   } = useCentralDataManager({gameQuestion});
-
+  
   const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
     setLibraryGameQuestionSwitch(gameQuestionValue);
     handleSortChange({
@@ -57,8 +61,11 @@ function AppSwitch({
     })
     setIsLibraryInit(true);  
   };
+  // const centralData = useCentralDataState();
+  // console.log("Central data inside appswitch: ", centralData.userProfile)
 
-  
+  // somewhere here have that new auth link and set status in their for login and signup.
+  // ocne status is set this page will re render and authguard will decide what page to render wheter login or signup.
   
   switch (currentScreen) {
     case ScreenType.QUESTIONS: {
@@ -103,13 +110,15 @@ function AppSwitch({
       screenComponent = (
         <AuthGuard>
           <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
-          </AuthGuard>
+        </AuthGuard>
       );
       break;
     }
     case ScreenType.LOGIN: {
       screenComponent = (
+        <AuthGuard>
           <Login />
+        </AuthGuard>
       );
       break;
     }
@@ -133,6 +142,14 @@ function AppSwitch({
       );
       break;
     }
+    case ScreenType.AUTH: {
+      screenComponent = (
+        <AuthGuard>
+          <AuthStatus/>
+        </AuthGuard>
+      );
+      break
+    }
     case ScreenType.GAMES:
     default:{
       screenComponent = (
@@ -149,10 +166,11 @@ function AppSwitch({
         </AuthGuard>
       );
     }
+
   }
 
   return (
-    <AppContainer isValidatingUser={isValidatingUser} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion}>
+    <AppContainer isValidatingUser={isValidatingUser} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion} handleLogOut={handleLogOut}>
       {screenComponent}
     </AppContainer>
   )

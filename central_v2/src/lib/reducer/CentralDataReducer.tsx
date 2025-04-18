@@ -36,7 +36,7 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
     case 'SET_USER_STATUS':
       return { ...state, userStatus: action.payload };
     case 'SET_USER_PROFILE':
-      return { ...state, userProfile: action.payload };
+      return { ...state, userProfile: {...state.userProfile, ...action.payload},};
     case 'SET_RECOMMENDED_GAMES':
       return { ...state, recommendedGames: action.payload };
     case 'SET_SEARCHED_GAMES':

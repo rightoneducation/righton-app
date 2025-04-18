@@ -7,6 +7,7 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import SignUp from '../pages/SignUp';
 import Confirmation from '../pages/Confirmation';
 import GoogleSignup from '../pages/GoogleSignup';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 
 interface SignUpSwitchProps{
   setIsTabsOpen: (isOpen: boolean) => void;
@@ -28,7 +29,9 @@ export default function SignUpSwitch({
   
   // Override step dynamically if googlenextstep is true
   const currentStep = googlenextstep ? 'googlesignup' : step;
-  
+  const centralData = useCentralDataState();
+  console.log("Central data inside signupswitch: ", centralData.userProfile)
+
   const handlerImageUpload = async (file: File) => {
     const fileName = file.name;
     const fileType = file.type;

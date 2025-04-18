@@ -2,6 +2,7 @@ import login from '../../images/buttonIconLogin.svg';
 import signup from '../../images/buttonIconSignup.svg';
 import view from '../../images/buttonIconView.svg';
 import launch from '../../images/buttonIconLaunch.svg';
+import logout from '../../images/buttonIconLogOut.svg';
 import upload from '../../images/buttonIconUpload.svg';
 import previous from '../../images/buttonIconPrevious.svg';
 import favorite from '../../images/buttonIconFavorite.svg';
@@ -39,6 +40,7 @@ export enum ButtonType {
   CHANGEIMAGE = 'changeimage',
   NEXTCARD = 'nextcard',
   LAUNCHGAME = 'launchgame',
+  LOGOUT = 'logout',
   CREATEQUESTION = 'createquestion',
   QUESTIONBANK = 'questionbank',
   BACK = 'back',
@@ -179,6 +181,11 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.LAUNCHGAME]: {
     icon: launch,
     textKey: ButtonType.LAUNCHGAME,
+  },
+  [ButtonType.LOGOUT]: {
+    icon: logout,
+    textKey: ButtonType.LOGOUT,
+    color: ButtonColor.NULL,
   },
   [ButtonType.CREATEQUESTION]: {
     icon: create,

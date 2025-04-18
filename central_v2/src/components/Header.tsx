@@ -32,6 +32,7 @@ interface HeaderProps {
   setMenuOpen: (menuOpen: boolean) => void;
   gameQuestion?: GameQuestionType;
   setGameQuestion?: (gameQuestion: GameQuestionType) => void;
+  handleLogOut: () => void;
   userStatus: UserStatusType;
 }
 
@@ -164,6 +165,7 @@ export default function Header({
   setMenuOpen,
   gameQuestion,
   setGameQuestion,
+  handleLogOut,
   userStatus,
 }: HeaderProps) {
   const navigate = useNavigate();
@@ -191,7 +193,7 @@ export default function Header({
   };
 
   const createMenu = [
-    <CreateButtonContainer key="createMenu">
+    <CreateButtonContainer key="createMenu" style={{paddingRight: '24px'}}>
     <Box style={{zIndex: 9}}>
       <CentralButton buttonType={ButtonType.CREATE} isEnabled smallScreenOverride={screenSize === ScreenSize.SMALL} onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
     </Box>
@@ -216,8 +218,9 @@ export default function Header({
 
   const loggedInUserComponents = [
     isLgScreen ? (
-      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}} key="lgscreen">
+      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%',}} key="lgscreen">
         {createMenu}
+        <CentralButton buttonType={ButtonType.LOGOUT} isEnabled onClick={handleLogOut}/>
         <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
       </Box>
     ) : (

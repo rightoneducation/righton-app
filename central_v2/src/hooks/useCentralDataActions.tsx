@@ -35,6 +35,7 @@ interface UseCentralDataManagerReturnProps {
   handleSearchChange: (searchString: string) => void;
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
+  handleLogOut: () => void;
 }
 
 /* 
@@ -57,6 +58,7 @@ export default function useCentralDataManager({
   const isQuestions = useMatch('/questions');
   const isLibrary = useMatch('/library') !== null;
   const [isValidatingUser, setIsValidatingUser] = useState(true);
+  const nextStep = useMatch('/nextstep') !== null;
 
   const debounceInterval = 800;
 
@@ -421,8 +423,12 @@ export default function useCentralDataManager({
   };
 
   const isUserProfileComplete = (profile: IUserProfile): boolean => {
-    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
+    return Object.entries(profile).every(([key, value]) => {
+        if (key === "password") return true; 
+        return value !== undefined && value !== null && value !== "";
+    });
   };
+  
 
   const fetchElement = async (type: GameQuestionType, id: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
@@ -511,23 +517,37 @@ export default function useCentralDataManager({
   const validateUser = async () => {
     setIsValidatingUser(true);
     const status = await apiClients.auth.verifyAuth();
+    console.log("Printing user status inside useEffect!: ", status)
     if (status) {
       const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
+      console.log("Printing local profile inside useEffect!!: ", localProfile)
+
       if (localProfile) {
+        console.log("Local profile: ", localProfile)
         if (!isUserProfileComplete(localProfile)) {
           // navigate('/nextstep');
+          console.log("setting user status to incompelte inside localprofile if statement useEffect!!")
           centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
+          console.log("setting status to incomplete inside useEffect!!", status)
           setIsValidatingUser(false);
           return;
         }
+        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
         setIsValidatingUser(false);
         return;
       }
     }
     apiClients.centralDataManager?.clearLocalUserProfile();
+    console.log("Cleared userprofile inside useEffect!!")
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    setIsValidatingUser(false);
   };
+
+  const handleLogOut = () => {
+    apiClients.centralDataManager?.signOut();
+    validateUser();
+  }
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
@@ -548,5 +568,6 @@ export default function useCentralDataManager({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
+    handleLogOut
   };
 }
