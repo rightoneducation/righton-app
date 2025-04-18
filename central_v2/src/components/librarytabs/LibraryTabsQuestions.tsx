@@ -24,6 +24,7 @@ import {
 import { 
   LibraryTab
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
+import { ICentralDataState } from '../../lib/context/ICentralDataState';
 
 interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   screenSize: ScreenSize;
@@ -55,20 +56,12 @@ export default function LibraryTabsQuestions({
   handleSearchChange,
   handlePublicPrivateChange,
   fetchElements,
-  handleView
+  handleView,
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
 const centralData = useCentralDataState();
 
 const isSearchResults = centralData.searchTerms.length > 0;
 const [openTab, setOpenTab] = React.useState(0);
-const [hasInitialized, setHasInitialized] = useState(false);    
-if (!hasInitialized) {
-  const needsFetch = centralData.mostPopularQuestions.length === 0; 
-  if (needsFetch) {
-    fetchElements(); 
-  }
-  setHasInitialized(true);
-}
 
 const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   if (newValue === 0)

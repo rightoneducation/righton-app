@@ -57,6 +57,7 @@ export default function useCentralDataManager({
   const navigate = useNavigate();
   const isGames = useMatch('/');
   const isQuestions = useMatch('/questions');
+  const isCreateGame = useMatch('/create/game')
   const isLibrary = useMatch('/library');
 
   const debounceInterval = 800;
@@ -424,7 +425,7 @@ export default function useCentralDataManager({
             return gameQuestion === GameQuestionType.GAME ? FetchType.PUBLIC_GAMES : FetchType.PUBLIC_QUESTIONS;
         }
       }
-      if (isQuestions) return FetchType.EXPLORE_QUESTIONS;
+      if (isQuestions || isCreateGame) return FetchType.EXPLORE_QUESTIONS;
       return FetchType.EXPLORE_GAMES;
     }
 

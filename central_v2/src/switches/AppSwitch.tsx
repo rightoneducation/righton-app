@@ -111,7 +111,15 @@ function AppSwitch() {
     case createGameScreen: {
       currentScreen = ScreenType.CREATEQUESTION;
       screenComponent = (
-          <CreateGame screenSize={screenSize}/>
+          <CreateGame 
+          screenSize={screenSize}
+          setIsTabsOpen={setIsTabsOpen}
+          fetchElements={fetchElements}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+          handleSearchChange={handleSearchChange}
+          loadMore={loadMore}
+          />
       );
       break
     }

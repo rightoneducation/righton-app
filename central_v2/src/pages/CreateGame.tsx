@@ -9,7 +9,10 @@ import {
   PublicPrivateType,
   CreatePublicGameTemplateInput,
   CreatePrivateGameQuestionsInput,
-  CreatePublicGameQuestionsInput
+  CreatePublicGameQuestionsInput,
+  GradeTarget,
+  SortType,
+  SortDirection
 } from '@righton/networking';
 import { Box, Fade } from '@mui/material';
 import {
@@ -19,6 +22,7 @@ import {
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import {
   CreateQuestionHighlightCard,
+  GameQuestionType,
   ScreenSize,
   StorageKey,
   TemplateType,
@@ -29,7 +33,6 @@ import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
 import QuestionElements from '../components/game/QuestionGridItems';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
-import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
 import tabExploreQuestionsIcon from '../images/tabExploreQuestions.svg';
 import tabMyQuestionsIcon from '../images/tabMyQuestions.svg';
 import tabFavoritesIcon from '../images/tabFavorites.svg';
@@ -57,9 +60,21 @@ import {
 } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
+  setIsTabsOpen: (isTabsOpen: boolean) => void;
+  fetchElements: () => void;
+  handleChooseGrades: (grades: GradeTarget[]) => void;
+  handleSortChange: (
+    newSort: {
+      field: SortType;
+      direction: SortDirection | null;
+    }
+  ) => void;
+  handleSearchChange: (searchString: string) => void;
+  loadMore: () => void;
 }
 
 // Library Questions
@@ -213,11 +228,22 @@ const gameTemplate: TGameTemplateProps = {
   imageUrl: '',
 };
 
-export default function CreateGame({ screenSize }: CreateGameProps) {
+export default function CreateGame({ 
+  screenSize,
+  setIsTabsOpen,
+  fetchElements,
+  handleChooseGrades,
+  handleSearchChange,
+  handleSortChange,
+  loadMore,
+ }: CreateGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const centralData = useCentralDataState();
   const navigate = useNavigate();
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
+  const [selectQuestion, setSelectedQuestion] = useState<IQuestionTemplate | null>(null);
+  const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
@@ -228,6 +254,14 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     phaseOne: '',
     phaseTwo: '',
   });
+  const [hasInitialized, setHasInitialized] = useState(false);    
+  if (!hasInitialized) {
+    const needsFetch = centralData.mostPopularQuestions.length === 0; 
+    if (needsFetch) {
+      fetchElements(); 
+    }
+    setHasInitialized(true);
+  }
 
   const gameFormIsValid =
     draftGame.gameTemplate.title !== '' &&
@@ -510,13 +544,13 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                   privateQuestionTemplateID: String(questionId),
                 }),
                }
-               console.log("Game Question: ",gameQuestion)
+               console.log("Game Question: ", gameQuestion)
               try {
                 const response = await apiClients.gameQuestions.createGameQuestions(
                   draftGame.publicPrivateGame,
                   gameQuestion,
                 );
-                console.log("Response: ", response);
+                console.log(`${draftGame.publicPrivateGame}GameQuestion response`, response);
               } catch(err) {
                 setDraftGame((prev) => ({...prev, isCreatingTemplate: false}))
                 console.error(`Failed to create game question at index ${i}:`, err);
@@ -1102,15 +1136,27 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
 
   /** END OF CREATE QUESTION HANDLERS  */
 
-  const {
-    handleView,
-    getLabel,
-    setIsTabsOpen,
-    handleChooseGrades,
-    handleSortChange,
-    handleSearchChange,
-    loadMoreQuestions,
-  } = useExploreQuestionsStateManager();
+  /** LIBRARY HANDLER HELPERS */
+  const handleView = (
+    question: IQuestionTemplate,
+    questions: IQuestionTemplate[],
+  ) => {
+    setSelectedQuestion(question);
+    setQuestionSet(questions);
+    setIsTabsOpen(true);
+  };
+
+  const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
+    if (screen === ScreenSize.LARGE) return value;
+    if (screen === ScreenSize.MEDIUM && isSelected) return value;
+    return '';
+  };
+
+  const handleLibraryQuestionClone = (libraryQuestion: IQuestionTemplate) => {
+    // TODO: clone a library question or Id...
+    
+  }
+  /** LIBRARY HANDLER HELPERS */
 
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
@@ -1142,27 +1188,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen ||
     draftGame.isGameImageUploadVisible;
 
-    console.log("draftGame: ", draftGame);
-    console.log("draftQuesions: ", draftQuestionsList);
-
-    const handleCreateGameQuestion = async () => {
-      setDraftGame((prev) => ({...prev, isCreatingTemplate: true}))
-      const gameQuestion: CreatePublicGameQuestionsInput | CreatePrivateGameQuestionsInput = {
-        publicGameTemplateID: '2967ceff-36ad-4de3-9ec8-acde827ffe36',
-        publicQuestionTemplateID: '23750fce-79db-4bff-82bd-7012f6d17e3b',
-      }
-      try {
-        await apiClients.gameQuestions.createGameQuestions(
-          draftGame.publicPrivateGame,
-          gameQuestion,
-        );
-      } catch(err) {
-        console.log("GameQuestion error", err);
-      }
-
-      setDraftGame((prev) => ({...prev, isCreatingTemplate: false}))
-     
-    }
+    console.log("CentralDataState: ", centralData)
 
   return (
     <CreateGameMainContainer>
@@ -1313,7 +1339,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
               handleSortChange={handleSortChange}
               handleSearchChange={handleSearchChange}
               handlePublicPrivateChange={handlePublicPrivateQuestionChange}
-              fetchElements={loadMoreQuestions}
+              fetchElements={fetchElements}
               handleView={handleView}
             />
           </Box>
