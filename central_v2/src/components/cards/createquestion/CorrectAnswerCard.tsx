@@ -16,6 +16,7 @@ import {
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import ErrorBox from './ErrorBox';
+import SelectPhaseButton from './SelectPhaseButton';
 import errorIcon from '../../../images/errorIcon.svg';
 
 
@@ -142,6 +143,22 @@ export default function DetailedQuestionSubCard({
               <ErrorIcon src={errorIcon} alt='error icon'/>
             </InputAdornment>
         }}
+      />
+      <SelectPhaseButton
+        onSetPhaseTime={handlePhaseOneTime}
+        phaseTime={phaseTime.phaseOne}
+        isCardSubmitted={isCardSubmitted}
+        phaseNumber={1}
+        screenSize={screenSize}
+        isCardError={isCardErrored}
+      />
+      <SelectPhaseButton
+        onSetPhaseTime={handlePhaseTwoTime}
+        phaseTime={phaseTime.phaseTwo}
+        isCardSubmitted={isCardSubmitted}
+        phaseNumber={2}
+        screenSize={screenSize}
+        isCardError={isCardErrored}
       />
       <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Solution Steps
