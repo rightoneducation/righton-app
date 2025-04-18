@@ -38,6 +38,7 @@ interface AppContainerProps {
   gameQuestion?: GameQuestionType;
   setIsTabsOpen?: (isTabsOpen: boolean) => void;
   setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void
+  handleLogOut: () => void;
   children: React.ReactNode;
   
 }
@@ -48,6 +49,7 @@ function AppContainer({
   gameQuestion,
   setIsTabsOpen, 
   setLibraryGameQuestionSwitch,
+  handleLogOut,
   children 
 }: AppContainerProps) {
   const theme = useTheme();
@@ -85,6 +87,7 @@ function AppContainer({
           gameQuestion={gameQuestion}
           setGameQuestion={setLibraryGameQuestionSwitch}
           setMenuOpen={setMenuOpen}
+          handleLogOut={handleLogOut}
           userStatus={centralData.userStatus}
         />
       </HeaderContainer>

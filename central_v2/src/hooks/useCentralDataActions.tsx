@@ -35,6 +35,7 @@ interface UseCentralDataManagerReturnProps {
   handleSearchChange: (searchString: string) => void;
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
+  handleLogOut: () => void;
 }
 
 /* 
@@ -514,9 +515,6 @@ export default function useCentralDataManager({
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
   const validateUser = async () => {
-    console.log("UseEffect invoked validateUser!!")
-    console.log("userProfile at the top component aka centraldata after returning from backend: ", centralData.userProfile)
-
     setIsValidatingUser(true);
     const status = await apiClients.auth.verifyAuth();
     console.log("Printing user status inside useEffect!: ", status)
@@ -536,14 +534,20 @@ export default function useCentralDataManager({
         }
         centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-        setIsValidatingUser(true);
+        setIsValidatingUser(false);
         return;
       }
     }
     apiClients.centralDataManager?.clearLocalUserProfile();
     console.log("Cleared userprofile inside useEffect!!")
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    setIsValidatingUser(false);
   };
+
+  const handleLogOut = () => {
+    apiClients.centralDataManager?.signOut();
+    validateUser();
+  }
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
@@ -564,5 +568,6 @@ export default function useCentralDataManager({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
+    handleLogOut
   };
 }
