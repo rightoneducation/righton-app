@@ -116,7 +116,6 @@ export const CardContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: '24px',
   overflowY: 'auto',
-  paddingBottom: '50px',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
     display: 'none',

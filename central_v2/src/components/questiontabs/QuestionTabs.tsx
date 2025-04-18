@@ -161,7 +161,7 @@ export default function QuestionTabs({
                     />
                   </ButtonContainerRight>
                 </ButtonContainer>
-                <CardContainer>
+                <CardContainer style={{paddingBottom: '50px'}}>
                   {screenSize !== ScreenSize.LARGE &&
                     <OwnerTag screenSize={screenSize}/>
                   }
