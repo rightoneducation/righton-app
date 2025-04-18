@@ -22,7 +22,7 @@ import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
-import { userCleaner } from "../../graphql";
+import { userCleaner, userByEmail } from "../../graphql";
 import { IUserProfile } from "../../Models/IUserProfile";
 
 export class AuthAPIClient
@@ -81,6 +81,44 @@ export class AuthAPIClient
     client.graphql({query: userCleaner, variables, authMode: authMode });
   }
 
+  async getUserByEmailDB(email: string): Promise<boolean> {
+      // Determine auth mode
+      // const authSession = await fetchAuthSession(); // Can still keep this if needed
+      const authMode = "userPool";
+  
+      // 🔑 Correct way to pass variables
+      const variables = { email };
+  
+      // Generate client
+      const client = generateClient({});
+  
+      // Run query
+      const response = await client.graphql({
+        query: userByEmail, // Make sure userByEmail is imported/generated properly
+        variables,
+        authMode
+      });
+  
+      console.log("getUserByEmailDB AUTHAPICLIENT: ", response);
+  
+      // Handle response
+      if ("data" in response) {
+        console.log("User data:", response.data.userByEmail.items);
+  
+        if (response.data.userByEmail.items?.length > 0) {
+          console.log("User found:", response.data.userByEmail.items[0]);
+          return true
+        } else {
+          console.log("No user found with that email");
+          return false
+        }
+      } else {
+        console.error("Unexpected result from GraphQL query:", response);
+        return false
+      }
+  }
+  
+  
   async getUserNickname(): Promise<string | null> {
     try {
       const attributes = await fetchUserAttributes();
@@ -208,3 +246,4 @@ export class AuthAPIClient
     return imageUrl;
   }
 }
+

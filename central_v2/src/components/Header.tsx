@@ -168,7 +168,9 @@ export default function Header({
 }: HeaderProps) {
   const navigate = useNavigate();
   const theme = useTheme();
-  
+  console.log("Printing validateuser in header: ", isValidatingUser)
+  console.log("Printing currentStatus in header: ", userStatus)
+
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
 
   const handleMenuToggle = () => {
@@ -376,7 +378,7 @@ export default function Header({
           )}
         </ImageContainer>
         <Box style={{width: 'fit-content', display: 'flex', gap: '16px', justifyContent: 'center'}}>
-          {!isValidatingUser &&
+          {
             userStatus === UserStatusType.LOGGEDIN 
               ? loggedInUserComponents
               :

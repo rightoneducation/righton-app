@@ -57,6 +57,7 @@ export default function useCentralDataManager({
   const isQuestions = useMatch('/questions');
   const isLibrary = useMatch('/library') !== null;
   const [isValidatingUser, setIsValidatingUser] = useState(true);
+  const nextStep = useMatch('/nextstep') !== null;
 
   const debounceInterval = 800;
 
@@ -421,8 +422,12 @@ export default function useCentralDataManager({
   };
 
   const isUserProfileComplete = (profile: IUserProfile): boolean => {
-    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
+    return Object.entries(profile).every(([key, value]) => {
+        if (key === "password") return true; 
+        return value !== undefined && value !== null && value !== "";
+    });
   };
+  
 
   const fetchElement = async (type: GameQuestionType, id: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
@@ -509,23 +514,34 @@ export default function useCentralDataManager({
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
   const validateUser = async () => {
+    console.log("UseEffect invoked validateUser!!")
+    console.log("userProfile at the top component aka centraldata after returning from backend: ", centralData.userProfile)
+
     setIsValidatingUser(true);
     const status = await apiClients.auth.verifyAuth();
+    console.log("Printing user status inside useEffect!: ", status)
     if (status) {
       const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
+      console.log("Printing local profile inside useEffect!!: ", localProfile)
+
       if (localProfile) {
+        console.log("Local profile: ", localProfile)
         if (!isUserProfileComplete(localProfile)) {
           // navigate('/nextstep');
+          console.log("setting user status to incompelte inside localprofile if statement useEffect!!")
           centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
+          console.log("setting status to incomplete inside useEffect!!", status)
           setIsValidatingUser(false);
           return;
         }
+        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-        setIsValidatingUser(false);
+        setIsValidatingUser(true);
         return;
       }
     }
     apiClients.centralDataManager?.clearLocalUserProfile();
+    console.log("Cleared userprofile inside useEffect!!")
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   };
 
