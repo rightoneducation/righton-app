@@ -143,7 +143,9 @@ function AppSwitch({
     }
     case ScreenType.AUTH: {
       screenComponent = (
+        <AuthGuard>
           <AuthStatus/>
+        </AuthGuard>
       );
       break
     }

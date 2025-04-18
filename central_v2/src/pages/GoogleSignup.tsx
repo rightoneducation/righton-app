@@ -215,7 +215,7 @@ export default function GoogleSignup({
             centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
             centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
             console.log("userProfile at the top component aka centraldata after returning from backend: ", centralData.userProfile)
-            // navigate("/")
+            navigate("/")
           } 
           // console.log("CurrentUserInfo: ", response?.updatedUser)
         }
