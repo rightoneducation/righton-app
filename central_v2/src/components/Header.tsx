@@ -70,6 +70,7 @@ const HeaderFirstRow = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
+  zIndex: 7,
 }));
 
 const HeaderSecondRow = styled(HeaderFirstRow)(({ theme }) => ({
@@ -188,17 +189,13 @@ export default function Header({
         break;
     }
   };
-  const getHeight = () => {
-    if (menuOpen) return '418px';
-    return '94px';
-  };
 
   const createMenu = [
     <CreateButtonContainer key="createMenu">
-    <Box style={{zIndex: 4}}>
+    <Box style={{zIndex: 9}}>
       <CentralButton buttonType={ButtonType.CREATE} isEnabled smallScreenOverride={screenSize === ScreenSize.SMALL} onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
     </Box>
-    <Collapse in={isCreateMenuOpen} style={{position: 'absolute', top: '50%', zIndex: 3, width: '100%'}}>
+    <Collapse in={isCreateMenuOpen} style={{position: 'absolute', top: '50%', zIndex: 8, width: '100%'}}>
       <CreateDropDown>
         <Box style={{display: 'flex', gap: `${theme.sizing.smPadding}px`, paddingTop: `${theme.sizing.mdPadding}px`, cursor: 'pointer'}} onClick={() => { setMenuOpen(false); setIsCreateMenuOpen(false); navigate('/create/game')}}>
           <img src={createDropdownGame} alt="Create Game" />
@@ -229,9 +226,75 @@ export default function Header({
   ]
 
   return (
-    <>
-
       <HeaderContainer screenSize={screenSize} menuOpen={menuOpen} currentScreen={currentScreen}>
+      <Collapse
+        in={menuOpen === true}
+        timeout='auto'
+        collapsedSize={0}
+        style={{
+          width: '100%', 
+          zIndex: 7,
+          position: 'absolute',
+          background: `linear-gradient(180deg, rgb(2, 33, 95, 85) 60%, rgba(2, 33, 95, 0) 100%)`,
+        }}
+      > 
+        <Box
+          style={{ 
+            marginTop: '94px',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center', 
+            gap: '12px'   
+          }} 
+        >
+          <TransparentButton
+            onClick={() =>
+              handleButtonClick(ScreenType.GAMES)
+            }
+            isActive={currentScreen === ScreenType.GAMES}
+            menuOpen={menuOpen}
+          >
+            { currentScreen === ScreenType.GAMES
+              ? <img src={dicePink} alt="Games Icon" />
+              : <img src={dice} alt="Games Icon" />
+            }
+            Games
+          </TransparentButton>
+          <TransparentButton
+            onClick={() =>
+              handleButtonClick(ScreenType.QUESTIONS)
+            }
+            isActive={
+              currentScreen === ScreenType.QUESTIONS
+            }
+            menuOpen={menuOpen}
+          >
+            { currentScreen === ScreenType.QUESTIONS
+              ? <img src={qmarkPink} alt="Questions Icon" />
+              : <img src={qmark} alt="Questions Icon" />
+            }
+            Questions
+          </TransparentButton>
+          {userStatus === UserStatusType.LOGGEDIN && 
+            <TransparentButton
+              onClick={() =>
+                handleButtonClick(ScreenType.LIBRARY)
+              }
+              isActive={currentScreen === ScreenType.LIBRARY}
+              menuOpen={menuOpen}
+            >
+              { currentScreen === ScreenType.LIBRARY
+                ? <img src={libPink} alt="Library Icon" />
+                : <img src={lib} alt="Library Icon" />
+              }
+              My Library
+            </TransparentButton>
+          }
+          {userStatus === UserStatusType.LOGGEDIN && createMenu}
+        </Box>
+      </Collapse>
         <HeaderFirstRow>
         <ImageContainer
           align="flex-start"
@@ -341,62 +404,5 @@ export default function Header({
           </HeaderSecondRow>
           </Collapse>
       </HeaderContainer>
-      {menuOpen && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          gap="12px"
-          alignItems="flex-start"
-          width="200px" // Set a fixed width to the box
-          style={{ margin: '0 auto' }} // This centers the box horizontally
-        >
-          <TransparentButton
-            onClick={() =>
-              handleButtonClick(ScreenType.GAMES)
-            }
-            isActive={currentScreen === ScreenType.GAMES}
-            menuOpen={menuOpen}
-          >
-            { currentScreen === ScreenType.GAMES
-              ? <img src={dicePink} alt="Games Icon" />
-              : <img src={dice} alt="Games Icon" />
-            }
-            Games
-          </TransparentButton>
-          <TransparentButton
-            onClick={() =>
-              handleButtonClick(ScreenType.QUESTIONS)
-            }
-            isActive={
-              currentScreen === ScreenType.QUESTIONS
-            }
-            menuOpen={menuOpen}
-          >
-            { currentScreen === ScreenType.QUESTIONS
-              ? <img src={qmarkPink} alt="Questions Icon" />
-              : <img src={qmark} alt="Questions Icon" />
-            }
-            Questions
-          </TransparentButton>
-          {userStatus === UserStatusType.LOGGEDIN && 
-            <TransparentButton
-              onClick={() =>
-                handleButtonClick(ScreenType.LIBRARY)
-              }
-              isActive={currentScreen === ScreenType.LIBRARY}
-              menuOpen={menuOpen}
-            >
-              { currentScreen === ScreenType.LIBRARY
-                ? <img src={libPink} alt="Library Icon" />
-                : <img src={lib} alt="Library Icon" />
-              }
-              My Library
-            </TransparentButton>
-          }
-          {userStatus === UserStatusType.LOGGEDIN && createMenu}
-        </Box>
-      )}
-     </>
-    // </Collapse>
   );
 }
