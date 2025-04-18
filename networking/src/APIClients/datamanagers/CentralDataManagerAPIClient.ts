@@ -229,7 +229,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
 
   public signUpGoogleBuildBackendUser = async (user: IUserProfile, frontImage: File, backImage: File) => {
-    console.log(user);
+    console.log("SignupGoogleBackendUser, Intial user attributes without email:", user);
     // Need to put it in Email into user.
     let getEmail = await this.authAPIClient.getUserEmail();
     if(getEmail){
@@ -250,6 +250,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       await this.userAPIClient.createUser(createUserInput);
+      console.log("Networking, Printing update user aka local profile being set to: ", updatedUser)
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
       //TODO: set user status to LOGGED_IN

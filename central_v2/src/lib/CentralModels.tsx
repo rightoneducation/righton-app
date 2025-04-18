@@ -17,7 +17,8 @@ export enum ScreenType {
   VIEWGAME,
   CREATEQUESTION,
   CONFIRMATION,
-  NEXTSTEP
+  NEXTSTEP,
+  AUTH
 }
 
 export enum ScreenSize {
