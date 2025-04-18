@@ -4,6 +4,7 @@ import {
   Slide,
   Tabs,
   Grid,
+  Modal
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
@@ -29,7 +30,8 @@ import {
   ButtonContainerLeft,
   ButtonContainerRight,
   CardContainer,
-  SubCardGridItem
+  SubCardGridItem,
+  GridItem
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
 
 interface TabContainerProps {
@@ -83,155 +85,153 @@ export default function QuestionTabs({
     return '';
   }
   return (
-    <Slide
-      direction="up"
-      in={isTabsOpen}
-      mountOnEnter
-      unmountOnExit
-      timeout={1000}
+    <Modal
+      disableAutoFocus
+      open={isTabsOpen}
+      onClose={handleBackToExplore}
+      closeAfterTransition
+      disableScrollLock 
     >
-      <TabContainer>
-        <ContentFrame>
-          <TabContent>
-            <Tabs
-              value={openTab}
-              onChange={handleChange}
-              TabIndicatorProps={{
-                style: {
-                  display: 'none',
-                },
-              }}
-            >
-              {Object.entries(tabMap).map(([key, value], index) => {
-                const numericKey = Number(key);
-                const isSelected = openTab === numericKey;
-                return (
-                  <StyledTab
-                    key={uuidv4()}
-                    icon={
-                      <img
-                        src={tabIconMap[numericKey]}
-                        alt={value}
-                        style={{ opacity: openTab === numericKey ? 1 : 0.5, padding: 0 }}
-                      />
-                    }
-                    iconPosition="start"
-                    label={getLabel(screenSize, isSelected, value)}
-                    isSelected={isSelected}
-                    style={{ marginRight: '8px' }}
-                  />
-                );
-              })}
-            </Tabs>
-            <ContentContainer>
-              <ButtonContainer>
-                <ButtonContainerLeft>
-                  <CentralButton
-                    buttonType={ButtonType.PREVIOUSQUESTION}
-                    isEnabled
-                    isOnQuestionTab
-                    onClick={handlePrevQuestion}
-                  />
-                  <CentralButton
-                    buttonType={ButtonType.BACKTOEXPLORE}
-                    isEnabled
-                    isOnQuestionTab
-                    onClick={handleBackToExplore}
-                  />
-                </ButtonContainerLeft>
-                <ButtonContainerRight>
-                  <CentralButton 
-                    buttonType={ButtonType.FAVORITE} 
-                    isEnabled 
-                    isOnQuestionTab
-                  />
-                  <CentralButton
-                    buttonType={ButtonType.CLONEANDEDIT}
-                    isEnabled
-                    isOnQuestionTab
-                  />
-                  <CentralButton
-                    buttonType={ButtonType.NEXTQUESTION}
-                    isEnabled
-                    isOnQuestionTab
-                    onClick={handleNextQuestion}
-                  />
-                </ButtonContainerRight>
-              </ButtonContainer>
-              <CardContainer>
-                {screenSize !== ScreenSize.LARGE &&
-                  <OwnerTag screenSize={screenSize}/>
-                }
-                <DetailedQuestionContainer
-                  container
-                >
-                  <Grid
-                    sm
-                    md
-                    item
-                    style={{ display: 'flex', justifyContent: 'flex-end' }}
-                  >
-                    {screenSize === ScreenSize.LARGE &&
-                      <OwnerTag screenSize={screenSize}/>
-                    }
-                  </Grid>
-                  <Grid
-                    sm={10}
-                    md={12}
-                    item
-                    style={{
-                      width: '100%',
-                      maxWidth: '672px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: `${theme.sizing.smPadding}px`,
-                    }}
-                  >
-                    <DetailedQuestionCardBase screenSize={screenSize} question={question} />
-                    <Grid
-                      container
-                      spacing={`${theme.sizing.smPadding}px`}
-                    >
-                      <SubCardGridItem 
-                        item
-                        sm={12}
-                        md={6}
-                      >
-                        <DetailedQuestionSubCard
-                          cardType={CardType.CORRECT}
-                          answer={
-                            question?.choices?.find((answer) => answer.isAnswer)
-                              ?.text ?? ''
-                          }
-                          instructions={question?.instructions ?? []}
+    <Slide direction="up" in={isTabsOpen} timeout={1000} mountOnEnter unmountOnExit>
+        <TabContainer>
+          <ContentFrame>
+            <TabContent>
+              <Tabs
+                value={openTab}
+                onChange={handleChange}
+                TabIndicatorProps={{
+                  style: {
+                    display: 'none',
+                  },
+                }}
+              >
+                {Object.entries(tabMap).map(([key, value], index) => {
+                  const numericKey = Number(key);
+                  const isSelected = openTab === numericKey;
+                  return (
+                    <StyledTab
+                      key={uuidv4()}
+                      icon={
+                        <img
+                          src={tabIconMap[numericKey]}
+                          alt={value}
+                          style={{ opacity: openTab === numericKey ? 1 : 0.5, padding: 0 }}
                         />
-                      </SubCardGridItem>
-                      <SubCardGridItem
-                        item
-                        sm={12}
-                        md={6}
-                      >
-                        {question &&
-                          question.choices
-                            ?.filter((choice) => !choice.isAnswer)
-                            .map((choice, index) => (
-                              <DetailedQuestionSubCard
-                                key={uuidv4()}
-                                cardType={CardType.INCORRECT}
-                                answer={choice.text}
-                                answerReason={choice.reason}
-                              />
-                            ))}
-                      </SubCardGridItem>
+                      }
+                      iconPosition="start"
+                      label={getLabel(screenSize, isSelected, value)}
+                      isSelected={isSelected}
+                      style={{ marginRight: '8px' }}
+                    />
+                  );
+                })}
+              </Tabs>
+              <ContentContainer>
+                <ButtonContainer>
+                  <ButtonContainerLeft>
+                    <CentralButton
+                      buttonType={ButtonType.PREVIOUSQUESTION}
+                      isEnabled
+                      isOnQuestionTab
+                      onClick={handlePrevQuestion}
+                    />
+                    <CentralButton
+                      buttonType={ButtonType.BACKTOEXPLORE}
+                      isEnabled
+                      isOnQuestionTab
+                      onClick={handleBackToExplore}
+                    />
+                  </ButtonContainerLeft>
+                  <ButtonContainerRight>
+                    <CentralButton 
+                      buttonType={ButtonType.FAVORITE} 
+                      isEnabled 
+                      isOnQuestionTab
+                    />
+                    <CentralButton
+                      buttonType={ButtonType.CLONEANDEDIT}
+                      isEnabled
+                      isOnQuestionTab
+                    />
+                    <CentralButton
+                      buttonType={ButtonType.NEXTQUESTION}
+                      isEnabled
+                      isOnQuestionTab
+                      onClick={handleNextQuestion}
+                    />
+                  </ButtonContainerRight>
+                </ButtonContainer>
+                <CardContainer>
+                  {screenSize !== ScreenSize.LARGE &&
+                    <OwnerTag screenSize={screenSize}/>
+                  }
+                  <DetailedQuestionContainer
+                    container
+                  >
+                    <Grid
+                      sm
+                      md
+                      item
+                      style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                      {screenSize === ScreenSize.LARGE &&
+                        <OwnerTag screenSize={screenSize}/>
+                      }
                     </Grid>
-                  </Grid>
-                  <Grid sm md item />
-                </DetailedQuestionContainer>
-              </CardContainer>
-            </ContentContainer>
-          </TabContent>
-        </ContentFrame>
-      </TabContainer>
-    </Slide>
+                    <GridItem
+                      sm={10}
+                      md={12}
+                      item
+                      style={{
+                        maxWidth: '672px',
+                      }}
+                    >
+                      <DetailedQuestionCardBase screenSize={screenSize} question={question} />
+                      <Grid
+                        container
+                        spacing={`${theme.sizing.smPadding}px`}
+                      >
+                        <SubCardGridItem 
+                          item
+                          sm={12}
+                          md={6}
+                        >
+                          <DetailedQuestionSubCard
+                            cardType={CardType.CORRECT}
+                            answer={
+                              question?.choices?.find((answer) => answer.isAnswer)
+                                ?.text ?? ''
+                            }
+                            instructions={question?.instructions ?? []}
+                          />
+                        </SubCardGridItem>
+                        <SubCardGridItem
+                          item
+                          sm={12}
+                          md={6}
+                        >
+                          {question &&
+                            question.choices
+                              ?.filter((choice) => !choice.isAnswer)
+                              .map((choice, index) => (
+                                <DetailedQuestionSubCard
+                                  key={uuidv4()}
+                                  cardType={CardType.INCORRECT}
+                                  answer={choice.text}
+                                  answerReason={choice.reason}
+                                />
+                              ))}
+                        </SubCardGridItem>
+                      </Grid>
+                    </GridItem>
+                    <Grid sm md item />
+                  </DetailedQuestionContainer>
+                </CardContainer>
+              </ContentContainer>
+            </TabContent>
+          </ContentFrame>
+        </TabContainer>
+      </Slide>
+      </Modal>
   );
 }
