@@ -55,13 +55,9 @@ export default function useCentralDataManager({
   const navigate = useNavigate();
   const isGames = useMatch('/');
   const isQuestions = useMatch('/questions');
-<<<<<<< HEAD
   const isCreateGame = useMatch('/create/game')
-  const isLibrary = useMatch('/library');
-=======
   const isLibrary = useMatch('/library') !== null;
   const [isValidatingUser, setIsValidatingUser] = useState(true);
->>>>>>> origin/dev
 
   const debounceInterval = 800;
 
