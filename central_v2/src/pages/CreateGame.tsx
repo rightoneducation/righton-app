@@ -1235,9 +1235,30 @@ export default function CreateGame({
         ],
       } }
 
-      const isFirstEmpty = prev.length === 1 && !prev[0].question.questionCard.isCardComplete
+      const isFirstEmpty = prev.length === 1 && !prev[0].question.questionCard.isCardComplete;
 
-      return isFirstEmpty ? [libraryQuestion]: [...prev, libraryQuestion];
+      if(isFirstEmpty) {
+        return [libraryQuestion]
+      }
+
+      const currentIndex = prev.findIndex((q) => !q.question.questionCard.isCardComplete);
+
+      if(currentIndex !== -1) {
+        const updated = [...prev];
+        updated[currentIndex] = libraryQuestion;
+        return updated;
+      }
+
+      const updatedQuestions = [...prev, draftTemplate];
+      updatedQuestions[updatedQuestions.length - 1] = libraryQuestion;
+
+      setDraftGame((prevGame) => ({
+        ...prevGame,
+        questionCount: prevGame.questionCount + 1,
+      }));
+      setIconButtons((prevButtons) => [...prevButtons, prevButtons.length + 1]);
+
+      return updatedQuestions;
      })
     setDraftGame((prev) => ({
       ...prev, 
@@ -1246,11 +1267,11 @@ export default function CreateGame({
     }))
     };
 
-    useEffect(() => {
-      console.log("Questions List:", draftQuestionsList);
-      console.log("Selected Index:", selectedQuestionIndex);
-      console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
-    }, [draftQuestionsList, selectedQuestionIndex]);
+    // useEffect(() => {
+    //   console.log("Questions List:", draftQuestionsList);
+    //   console.log("Selected Index:", selectedQuestionIndex);
+    //   console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
+    // }, [draftQuestionsList, selectedQuestionIndex]);
 
   return (
     <CreateGameMainContainer>
