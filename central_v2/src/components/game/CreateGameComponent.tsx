@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  PublicPrivateType } from '@righton/networking';
+import {  IQuestionTemplate, PublicPrivateType } from '@righton/networking';
 
 import { Box, Grid } from '@mui/material';
 import {
@@ -38,6 +38,20 @@ interface ICreateGameComponent {
   addMoreQuestions: () => void;
 }
 
+const qt: IQuestionTemplate = {
+  id: '',
+  title: '',
+  lowerCaseTitle: '',
+  version: 0,
+  ccss: '',
+  domain: '',
+  cluster: '',
+  grade: '',
+  gradeFilter: '',
+  standard: '',
+  gameTemplatesCount: 0,
+};
+
 export default function CreateGameComponent({
   draftGame,
   screenSize,
@@ -65,6 +79,12 @@ export default function CreateGameComponent({
   const handleOpenQuestionBank = () => {
     onOpenQuestionBank();
   };
+
+  const createDraftQuestion = (): { gameQuestionId: string, questionTemplate: IQuestionTemplate} => ({
+gameQuestionId: "",
+questionTemplate: qt,
+  })
+  const questions = Array.from({ length: draftGame.questionCount }).map(() => createDraftQuestion());
 
   return (
     <>
@@ -140,7 +160,7 @@ export default function CreateGameComponent({
       {/* Question Count & Add Button */}
       <GameCreateButtonStack>
         <ManageQuestionsButtons 
-          questions={draftGame.gameTemplate.questionTemplates ?? []}
+          questions={questions}
           iconButtons={iconButtons}
           selectedIndex={selectedIndex}
           isCreate

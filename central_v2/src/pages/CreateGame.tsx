@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   AnswerType,
@@ -32,7 +32,7 @@ import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
 import QuestionElements from '../components/game/QuestionGridItems';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
-import tabExploreQuestionsIcon from '../images/tabExploreQuestions.svg';
+import tabExploreQuestionsIcon from '../images/tabPublic.svg';
 import tabMyQuestionsIcon from '../images/tabMyQuestions.svg';
 import tabFavoritesIcon from '../images/tabFavorites.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
@@ -209,7 +209,8 @@ const newGameTemplate: IGameTemplate = {
   phaseTwoTime: 0,
   questionTemplatesCount: 0,
   questionTemplatesOrder: [],
-  imageUrl: null
+  imageUrl: null,
+  questionTemplates: [{ gameQuestionId: String(0), questionTemplate: emptyQuestionTemplate }],
 };
 
 const gameTemplate: TGameTemplateProps = {
@@ -472,6 +473,12 @@ export default function CreateGame({
           const newQuestionTemplates = draftQuestionsList.map(async (dq, i) => {
             let result = null;
             let url = null;
+
+            // if existing question return its ID for Game Creation
+            if(dq.questionTemplate.id) {
+              console.log("Existing id Skipped at index: ", i)
+              return { id: dq.questionTemplate.id } as IQuestionTemplate;
+            }
 
             // image file case
             if (dq.question.questionCard.image) {
@@ -1136,14 +1143,7 @@ export default function CreateGame({
   /** END OF CREATE QUESTION HANDLERS  */
 
   /** LIBRARY HANDLER HELPERS */
-  const handleView = (
-    question: IQuestionTemplate,
-    questions: IQuestionTemplate[],
-  ) => {
-    setSelectedQuestion(question);
-    setQuestionSet(questions);
-    setIsTabsOpen(true);
-  };
+ 
 
   const getLabel = (screen: ScreenSize, isSelected: boolean, value: string) => {
     if (screen === ScreenSize.LARGE) return value;
@@ -1167,9 +1167,6 @@ export default function CreateGame({
     setDraftGame((prev) => ({
       ...prev,
       questionCount: prev.questionCount + 1,
-      gameTemplate: {
-        ...prev.gameTemplate,
-      },
     }));
     setIconButtons((prev) => [...prev, prev.length + 1]);
   };
@@ -1180,14 +1177,80 @@ export default function CreateGame({
   };
 
   const openModal =
-    draftQuestionsList[selectedQuestionIndex].isImageUploadVisible ||
-    draftQuestionsList[selectedQuestionIndex].isImageURLVisible ||
-    draftQuestionsList[selectedQuestionIndex].isCreatingTemplate ||
-    draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal ||
-    draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen ||
+    draftQuestionsList?.[selectedQuestionIndex]?.isImageUploadVisible ||
+    draftQuestionsList?.[selectedQuestionIndex]?.isImageURLVisible ||
+    draftQuestionsList?.[selectedQuestionIndex]?.isCreatingTemplate ||
+    draftQuestionsList?.[selectedQuestionIndex]?.isCCSSVisibleModal ||
+    draftQuestionsList?.[selectedQuestionIndex]?.questionImageModalIsOpen ||
     draftGame.isGameImageUploadVisible;
 
-    console.log("CentralDataState: ", centralData)
+    const handleView = (
+      question: IQuestionTemplate,
+      questions: IQuestionTemplate[],
+    ) => {
+      setSelectedQuestion(question);
+      setQuestionSet(questions);
+      setIsTabsOpen(true);
+  
+     setDraftQuestionsList((prev) => {
+      const libraryQuestion = { 
+        ...draftTemplate, 
+        questionTemplate: { ...emptyQuestionTemplate, id: question.id }, 
+        question: {
+        questionCard: {
+          imageUrl: question?.imageUrl ? question.imageUrl: "",
+          title: question?.title,
+          ccss: question?.ccss,
+          isFirstEdit: true,
+          isCardComplete: true,
+        },
+        correctCard: {
+          answer: question?.choices ? question.choices[0].text: "",
+          answerSteps: question?.instructions ? question?.instructions: ["", "", ""],
+          isFirstEdit: true,
+          isCardComplete: true,
+        },
+        incorrectCards: [
+          {
+            id: 'card-1',
+            answer: question?.choices ? question.choices[1].text:'',
+            explanation: question?.choices ? question.choices[1].reason:'',
+            isFirstEdit: true,
+            isCardComplete: true,
+          },
+          {
+            id: 'card-2',
+            answer: question?.choices ? question.choices[2].text:'',
+            explanation: question?.choices ? question.choices[2].reason:'',
+            isFirstEdit: true,
+            isCardComplete: true,
+          },
+          {
+            id: 'card-3',
+            answer: question?.choices ? question.choices[3].text:'',
+            explanation: question?.choices ? question.choices[3].reason:'',
+            isFirstEdit: true,
+            isCardComplete: true,
+          },
+        ],
+      } }
+
+      const isFirstEmpty = prev.length === 1 && !prev[0].question.questionCard.isCardComplete
+
+      return isFirstEmpty ? [libraryQuestion]: [...prev, libraryQuestion];
+     })
+    setDraftGame((prev) => ({
+      ...prev, 
+      openQuestionBank: false,
+      openCreateQuestion: true
+    }))
+    };
+
+    useEffect(() => {
+      console.log("Questions List:", draftQuestionsList);
+      console.log("Selected Index:", selectedQuestionIndex);
+      console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
+    }, [draftQuestionsList, selectedQuestionIndex]);
 
   return (
     <CreateGameMainContainer>
