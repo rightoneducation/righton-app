@@ -3,7 +3,8 @@ import { CentralQuestionTemplateInput, IGameTemplate, IncorrectCard } from "@rig
 export enum UserStatusType {
   LOGGEDIN,
   LOGGEDOUT,
-  INCOMPLETE
+  INCOMPLETE,
+  LOADING
 }
 
 export enum ScreenType {
@@ -13,8 +14,10 @@ export enum ScreenType {
   LOGIN,
   SIGNUP, 
   CREATEGAME,
+  VIEWGAME,
   CREATEQUESTION,
-  CONFIRMATION
+  CONFIRMATION,
+  NEXTSTEP
 }
 
 export enum ScreenSize {
@@ -58,6 +61,9 @@ export enum TemplateType {
 // key for storage to localStorage  
 export const StorageKey = 'rightOnCentral';
 
+// public cloudfront distribution URL for the RightOn Central app
+export const CloudFrontDistributionUrl = 'https://d1api4wn3jnenc.cloudfront.net/';
+
 // type that shapes retreived storage for createQuestion 
 export type CreateQuestionLocalData = {
   draftQuestion?: CentralQuestionTemplateInput | null,
@@ -80,4 +86,11 @@ export enum FetchType {
   DRAFT_QUESTIONS,
   FAVORITE_GAMES,
   FAVORITE_QUESTIONS
+}
+
+export enum LibraryTabEnum {
+  PUBLIC,
+  PRIVATE,
+  DRAFTS,
+  FAVORITES
 }

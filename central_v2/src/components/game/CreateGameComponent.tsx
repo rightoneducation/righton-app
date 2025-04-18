@@ -140,11 +140,12 @@ export default function CreateGameComponent({
       {/* Question Count & Add Button */}
       <GameCreateButtonStack>
         <ManageQuestionsButtons 
-        questionCount={draftGame.questionCount}
-        iconButtons={iconButtons}
-        selectedIndex={selectedIndex}
-        setSelectedIndex={setSelectedIndex}
-        addMoreQuestions={addMoreQuestions}
+          questions={draftGame.gameTemplate.questionTemplates ?? []}
+          iconButtons={iconButtons}
+          selectedIndex={selectedIndex}
+          isCreate
+          setSelectedIndex={setSelectedIndex}
+          addMoreQuestions={addMoreQuestions}
         />
       </GameCreateButtonStack>
       {/* Create Question & Question Bank */}

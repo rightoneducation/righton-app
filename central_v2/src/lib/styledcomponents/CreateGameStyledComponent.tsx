@@ -17,6 +17,7 @@ import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 // Create Game Page Components
 export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
+  position: 'relative',
   width: '100%',
   height: '100%',
   overflow: 'auto',
@@ -27,24 +28,29 @@ export const CreateGameMainContainer = styled(Box)(({ theme }) => ({
   scrollbarWidth: 'none', // Firefox
   msOverflowStyle: 'none', 
   boxSizing: 'border-box',
+  display: 'flex'
 }));
 
 export const CreateGameBackground = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '100%',
-  opacity: 0.1,
   position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  opacity: 0.1,
+  display: 'flex',
   zIndex: 0,
   backgroundColor: `${theme.palette.primary.creamBackgroundColor}`,
   backgroundImage: `
     linear-gradient(180deg, rgb(254, 251, 247) 0%, rgba(254, 251, 247, 0) 100%),
     url(${mathSymbolsBackground})
   `,
+  backgroundSize: 'cover, contain',
+  overflow: 'hidden'
 }));
 
 export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -55,6 +61,14 @@ export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   paddingLeft: `${theme.sizing.mdPadding}px`,
   paddingRight: `${theme.sizing.mdPadding}px`,
   boxSizing: 'border-box',
+  flexGrow: 1,
+  overflow: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE and Edge
 }));
 
 type TitleTextProps = {
@@ -115,16 +129,22 @@ export const QuestionCountButton = styled(Button, {
 })<QuestionCountButtonProps>(({ theme, isDisabled }) => ({
   backgroundColor: '#02215f',
   height: '40px',
-  width: '123px',
+  width: 'fit-content',
+  minWidth: '40px',
   fontSize: '16px',
   fontWeight: 600,
   borderRadius: '8px',
-  padding: '8px',
+  paddingTop: '8px',
+  paddingBottom: '8px',
+  paddingLeft: '10px',
+  paddingRight: '10px',
   opacity: isDisabled ? 0.3 : 1,
   color: '#fffff',
   '&:hover': {
     backgroundColor: '#3155c7',
   },
+  display: 'flex',
+  gap: '10px',
 }));
 
 export const CreateGameSaveDiscardGridItem = styled(Grid)(({ theme }) => ({
@@ -145,6 +165,7 @@ export const CreateGameCardGridItem = styled(Grid, {
   minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
   gap: `${theme.sizing.xLgPadding}px`,
 }));
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import {
   ElementType,
   GalleryType,
@@ -9,7 +10,7 @@ import {
   IUserProfile,
   GradeTarget
 } from '@righton/networking';
-import { Box, useTheme } from '@mui/material';
+import { Box, CircularProgress, useTheme } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
@@ -51,11 +52,12 @@ export default function ExploreGames({
   loadMore,
 } : ExploreGamesProps) {
   const theme = useTheme();
+  const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   
-  const [selectedGame, setSelectedGame] = useState<IGameTemplate | null>(null);
+  
   const [gameSet, setGameSet] = useState<IGameTemplate[]>([]);
   const [imgSrc, setImgSrc] = useState<string>();
   const isSearchResults = centralData.searchTerms.length > 0;
@@ -70,10 +72,9 @@ export default function ExploreGames({
   }
 
   const handleView = (game: IGameTemplate, games: IGameTemplate[]) => {
-    setSelectedGame(game);
+    centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: game });
     setGameSet(games);
-    setIsTabsOpen(true
-    );
+    navigate(`/games/${game.id}`);
   };
 
   // Debug button temporarily added for QA
@@ -111,7 +112,13 @@ export default function ExploreGames({
           dataLength={isSearchResults ? centralData.searchedGames.length : centralData.mostPopularGames.length}
           next={loadMore}
           hasMore={centralData.nextToken !== null}
-          loader=<h4>loading...</h4>
+          loader={
+            <Box style={{width: '100%', display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}> 
+              <h4>
+                ...
+              </h4>
+            </Box>
+          }
           scrollableTarget="scrollableDiv"
           style={{
             width: '100vw',

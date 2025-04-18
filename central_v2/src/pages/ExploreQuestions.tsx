@@ -148,7 +148,13 @@ export default function ExploreQuestions({
         dataLength={centralData.mostPopularQuestions.length}
         next={loadMore}
         hasMore={centralData.nextToken !== null}
-        loader=<h4>loading...</h4>
+        loader={
+                <Box style={{width: '100%', display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}> 
+                  <h4>
+                    ...
+                  </h4>
+                </Box>
+              }
         scrollableTarget="scrollableDiv"
         style={{
           width: '100vw',

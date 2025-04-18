@@ -57,7 +57,7 @@ export const LibraryTabsStyledContainer = styled(Box)(({ theme }) => ({
   top: 0,
   position: 'absolute',
   flexGrow: 1,
-  zIndex: 7,
+  zIndex: 4,
   overflow: 'hidden',
   pointerEvents: 'none',
 }));

@@ -31,10 +31,11 @@ export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
 interface BaseCardStyledProps {
   isHighlight: boolean,
   isCardComplete: boolean
+  dropShadow?: boolean
 }
 
 export const BaseCardStyled = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete',
+  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete' && prop !== 'dropShadow',
 })<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,

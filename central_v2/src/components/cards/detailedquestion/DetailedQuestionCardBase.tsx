@@ -15,12 +15,13 @@ import {
   TextContainerStyled,
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
-import { ScreenSize } from '../../../lib/CentralModels';
+import { ScreenSize, CloudFrontDistributionUrl } from '../../../lib/CentralModels';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 
 interface DetailedQuestionCardBaseProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
+  dropShadow?: boolean;
 }
 
 interface CreateQuestionTitleBarStyledProps {
@@ -47,6 +48,7 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function DetailedQuestionCardBase({
   screenSize,
   question,
+  dropShadow
 }: DetailedQuestionCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [isPublic, setIsPublic] = React.useState<boolean>(false)
@@ -61,7 +63,7 @@ export default function DetailedQuestionCardBase({
   }
 
   return (
-    <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false}>
+    <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
     <CreateQuestionTitleBarStyled screenSize={screenSize}>
       <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
@@ -84,7 +86,7 @@ export default function DetailedQuestionCardBase({
           boxSizing: 'border-box',
         }}
       >
-        <img src={question.imageUrl ?? ''} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
+        <img src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
       </Box>
       <CreateQuestionContentRightContainerStyled>
         <RadioContainerStyled>

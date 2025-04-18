@@ -87,3 +87,39 @@ export const listDiscardedExplanations = /* GraphQL */ `
     }
   }
 `;
+export const getQuestions = /* GraphQL */ `
+  query GetQuestions($id: ID!) {
+    getQuestions(id: $id) {
+      id
+      question
+      correctAnswer
+      wrongAnswers
+      version
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listQuestions = /* GraphQL */ `
+  query ListQuestions(
+    $filter: ModelQuestionsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        question
+        correctAnswer
+        wrongAnswers
+        version
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;

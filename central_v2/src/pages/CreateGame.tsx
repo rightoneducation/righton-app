@@ -33,7 +33,12 @@ import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
 import QuestionElements from '../components/game/QuestionGridItems';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
+<<<<<<< HEAD
 import tabExploreQuestionsIcon from '../images/tabExploreQuestions.svg';
+=======
+import useExploreQuestionsStateManager from '../hooks/useExploreQuestionsStateManager';
+import tabExploreQuestionsIcon from '../images/tabPublic.svg';
+>>>>>>> origin/dev
 import tabMyQuestionsIcon from '../images/tabMyQuestions.svg';
 import tabFavoritesIcon from '../images/tabFavorites.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';

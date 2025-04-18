@@ -20,12 +20,10 @@ export default function Eval(){
   const handleChange = async (event: SelectChangeEvent) => {
     const selectedVersion = event.target.value;
     const versionData = summaryData.find((data) => data.version === selectedVersion);
-    // const questions: any[] = questionsByVersion[selectedVersion];
-    // const wrongAnswers = questions.map((question) => {
-    //   return JSON.parse(question.wrongAnswers);
-    // });
-    // const dismissedExplanations = wrongAnswers.map((answer) => { if (answer.dismissedExplanations.prompt) return answer.dismissedExplanations.prompt });
-    // console.log(dismissedExplanations);
+    const questions: any[] = questionsByVersion[selectedVersion];
+    const wrongAnswers = questions.map((question) => {
+      return JSON.parse(question.wrongAnswers);
+    });
     setSelectedVersionData(versionData ?? null);
     setQueryVersion(selectedVersion ?? null);
   }

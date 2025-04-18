@@ -3,8 +3,8 @@ import { Box, Grid, styled, Tab } from '@mui/material';
 export const TabContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: 0,
-  height: '100dvh',
-  width: '100dvw',
+  height: '100%',
+  width: '100%',
   zIndex: 7,
   overflow: 'hidden',
   pointerEvents: 'none',
@@ -26,8 +26,8 @@ export const ContentFrame = styled(Box)(({ theme }) => ({
   paddingLeft: '32px',
   paddingRight: '32px',
   boxSizing: 'border-box',
-  height: '100%',
   width: '100%',
+  height: '100%',
 }));
 
 export const TabContent = styled(Box)(({ theme }) => ({
@@ -59,7 +59,16 @@ export const StyledTab = styled(Tab, {
 }));
 
 export const DetailedQuestionContainer = styled(Grid)(({ theme }) => ({
+  height: '100%',
   width: '100%',
+  gap: `${theme.sizing.mdPadding}px`,
+  overflowY: 'auto',
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  '-ms-overflow-style': 'none', // IE and Edge
 }));
 
 export const ContentContainer = styled(Box)(({ theme }) => ({
@@ -101,11 +110,13 @@ export const ButtonContainerRight = styled(ButtonContainerLeft)(({ theme }) => (
 
 export const CardContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  overflow: 'auto',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: '100px',
+  gap: '24px',
+  overflowY: 'auto',
+  paddingBottom: '50px',
   '&::-webkit-scrollbar': {
     // Chrome and Safari
     display: 'none',
@@ -119,4 +130,20 @@ export const SubCardGridItem = styled(Grid)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: `${theme.sizing.smPadding}px`,
+}));
+
+export const GridItem = styled(Grid)(({ theme }) => ({
+  height: '100%',
+  overflowY: 'auto',
+  width: '100%',
+  maxWidth: '672px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.smPadding}px`,
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  '-ms-overflow-style': 'none', // IE and Edge
 }));

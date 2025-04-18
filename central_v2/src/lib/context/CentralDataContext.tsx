@@ -4,27 +4,35 @@ import { centralDataReducer, CentralDataAction } from '../reducer/CentralDataRed
 import { ICentralDataState } from './ICentralDataState';
 import { UserStatusType } from '../CentralModels';
 
-// initialize centralDataState
-const initCentralDataState: ICentralDataState = {
-  userProfile: {
+export const userProfileInit = {
     title: 'Title...',
     firstName: '',
     lastName: '',
-    username: '',
+    userName: '',
     email: '',
     password: '',
-  },
+}
+
+// initialize centralDataState
+const initCentralDataState: ICentralDataState = {
+  userProfile: userProfileInit,
   userStatus: UserStatusType.LOGGEDOUT,
   recommendedGames: [],
   mostPopularGames: [],
   searchedGames: [],
+  publicGames: [],
+  privateGames: [],
   draftGames: [],
   favGames: [],
+  selectedGame: null,
   recommendedQuestions: [],
   mostPopularQuestions: [],
   searchedQuestions: [],
+  publicQuestions: [],
+  privateQuestions: [],
   draftQuestions: [],
   favQuestions: [],
+  selectedQuestion: null,
   nextToken: null,
   isLoading: false,
   isLoadingInfiniteScroll: false,
@@ -34,7 +42,7 @@ const initCentralDataState: ICentralDataState = {
   isFavTabOpen: false,
   publicPrivate: PublicPrivateType.PUBLIC,
   sort: {
-    field: SortType.listGameTemplatesByDate,
+    field: SortType.listGameTemplates,
     direction: SortDirection.ASC,
   }
 }
@@ -49,7 +57,6 @@ export const CentralDataDispatchContext = createContext<React.Dispatch<any> | un
 
 export function CentralDataProvider ({ children }: { children: React.ReactNode }) {
   const [centralData, centralDataDispatch] = useReducer(centralDataReducer, initCentralDataState);
-
   return (
     <CentralDataStateContext.Provider value={centralData}>
       <CentralDataDispatchContext.Provider value={centralDataDispatch}>

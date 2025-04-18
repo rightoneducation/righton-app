@@ -2,6 +2,7 @@ import React from 'react';
 import { IQuestionTemplate } from '@righton/networking';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { CloudFrontDistributionUrl } from '../../lib/CentralModels';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';
@@ -13,6 +14,7 @@ interface StyledQuestionCardProps {
   image: string;
   question: IQuestionTemplate;
   isCarousel: boolean;
+  isFavorite: boolean;
   handleViewButtonClick: (element: IQuestionTemplate) => void;
 }
 
@@ -94,14 +96,15 @@ export default function StyledQuestionCard({
   image,
   question,
   isCarousel,
+  isFavorite,
   handleViewButtonClick,
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;
   return (
     <QuestionCard>
       { isCarousel 
-        ? <CarouselQuestionImage src={image} alt="Tag" />  
-        : <QuestionImage src={image} alt="Tag" />       
+        ? <CarouselQuestionImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />  
+        : <QuestionImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />       
       }
       <FavouriteButton isEnabled id={id}/>
       <ContentContainer>

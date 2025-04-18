@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useState } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -13,6 +13,7 @@ import Theme from './lib/Theme';
 import AppSwitch from './switches/AppSwitch';
 import CreateQuestionLoader from './loaders/CreateQuestionLoader';
 import { CentralDataProvider } from './lib/context/CentralDataContext';
+import { ScreenType } from './lib/CentralModels';
 
 function App() {
   const { apiClients, loading } = useAPIClients(
@@ -25,21 +26,21 @@ function App() {
     return null;
   }
 
-  
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
         {apiClients && (
           <>
-            <Route path="/" element={<AppSwitch />} />
-            <Route path="/questions" element={<AppSwitch />} />
-            <Route path="/signup" element={<AppSwitch />} />
-            <Route path="/login" element={<AppSwitch />} />
-            <Route path="/create/game" element={<AppSwitch />} />
-            <Route path="/create/question" element={<AppSwitch />} loader={CreateQuestionLoader}/>
-            <Route path="/confirmation" element={<AppSwitch />} />
-            <Route path="/nextstep" element={<AppSwitch />} />
-            <Route path="/library" element={<AppSwitch />} />
+            <Route path="/" element={<AppSwitch currentScreen={ScreenType.GAMES} />} />
+            <Route path="/questions" element={<AppSwitch currentScreen={ScreenType.QUESTIONS} />} />
+            <Route path="/signup" element={<AppSwitch currentScreen={ScreenType.SIGNUP} />} />
+            <Route path="/login" element={<AppSwitch currentScreen={ScreenType.LOGIN} />} />
+            <Route path="/create/game" element={<AppSwitch currentScreen={ScreenType.CREATEGAME} />} />
+            <Route path="/games/:gameId" element={<AppSwitch currentScreen={ScreenType.VIEWGAME} />} />
+            <Route path="/create/question" element={<AppSwitch currentScreen={ScreenType.CREATEQUESTION} />} loader={CreateQuestionLoader}/>
+            <Route path="/confirmation" element={<AppSwitch currentScreen={ScreenType.CONFIRMATION} />} />
+            <Route path="/nextstep" element={<AppSwitch currentScreen={ScreenType.NEXTSTEP} />} />
+            <Route path="/library" element={<AppSwitch currentScreen={ScreenType.LIBRARY} />} />
           </>
         )}
         <Route path="*" element={<RedirectToCentralIfMissing />} />
