@@ -77,16 +77,8 @@ export default function ExploreGames({
     navigate(`/games/${game.id}`);
   };
 
-  // Debug button temporarily added for QA
-  const handleSignOut = async () => {
-    const response = apiClients.centralDataManager?.signOut();
-  }
-
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
-      <Box style={{position: 'absolute', bottom: '20px', right: '20px', zIndex: 40}}> 
-        <CentralButton buttonType={ButtonType.SIGNOUT} isEnabled smallScreenOverride onClick={() => handleSignOut()} />  
-      </Box>
       <ExploreGamesUpperContainer screenSize={screenSize}>
         {!isSearchResults && 
           <img src={mathSymbolsBackground} alt="Math Symbol Background" style={{width: '100%', height: '100%', position: 'absolute', bottom: '0', zIndex: 0, objectFit: 'none', overflow: 'hidden'}} />

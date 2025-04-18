@@ -50,6 +50,7 @@ function AppSwitch({
     loadMore,
     fetchElement,
     fetchElements,
+    handleLogOut
   } = useCentralDataManager({gameQuestion});
   
   const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
@@ -169,7 +170,7 @@ function AppSwitch({
   }
 
   return (
-    <AppContainer isValidatingUser={isValidatingUser} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion}>
+    <AppContainer isValidatingUser={isValidatingUser} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion} handleLogOut={handleLogOut}>
       {screenComponent}
     </AppContainer>
   )

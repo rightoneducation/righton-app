@@ -23,6 +23,7 @@ export default function AuthGuard ({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   console.log("Inside AuthGuard!!");
+  console.log(centralData.userStatus);
   // if user is incomplete, send them to nextstep to correct
   // if (centralData.userStatus === UserStatusType.INCOMPLETE) {
   //   console.log("Sending user to nextstep because profile incomplete. Inside AuthGuard!!")
