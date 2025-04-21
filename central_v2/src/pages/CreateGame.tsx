@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   AnswerType,
+  AnswerPrecision,
   CentralQuestionTemplateInput,
   IGameTemplate,
   IncorrectCard,
@@ -103,6 +104,8 @@ const newEmptyTemplate: CentralQuestionTemplateInput = {
   correctCard: {
     answer: '',
     answerSteps: ['', '', ''],
+    answerSettingsType: AnswerType.NUMBER,
+    answerSettingsPrecision: AnswerPrecision.WHOLE,
     isFirstEdit: true,
     isCardComplete: false,
   },

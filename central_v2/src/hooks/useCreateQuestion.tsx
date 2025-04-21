@@ -4,6 +4,7 @@ import {
   CentralQuestionTemplateInput,
   IncorrectCard,
   AnswerType,
+  AnswerPrecision,
   IQuestionTemplate,
 } from '@righton/networking';
 import { debounce } from 'lodash';
@@ -65,6 +66,8 @@ const useCreateQuestion = (index: number) => {
       correctCard: {
         answer: '',
         answerSteps: ['', '', ''],
+        answerSettingsType: AnswerType.NUMBER,
+        answerSettingsPrecision: AnswerPrecision.WHOLE,
         isFirstEdit: true,
         isCardComplete: false,
       },
@@ -148,6 +151,8 @@ const useCreateQuestion = (index: number) => {
           correctCard: {
             answer: '',
             answerSteps: ['', '', ''],
+            answerSettingsType: AnswerType.NUMBER,
+            answerSettingsPrecision: AnswerPrecision.WHOLE,
             isFirstEdit: true,
             isCardComplete: false,
           },

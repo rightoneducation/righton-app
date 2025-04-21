@@ -1,5 +1,6 @@
 import { IGameTemplate } from './IGameTemplate';
 import { IChoice } from "../Models/IQuestion";
+import {AnswerType, AnswerPrecision} from "../Models/AnswerClasses";
 
 export interface IQuestionTemplateOrder {
   questionTemplateId: string,
@@ -42,6 +43,8 @@ export type QuestionCard = {
 export type CorrectCard = {
   answer: string;
   answerSteps: string[];
+  answerSettingsType: AnswerType;
+  answerSettingsPrecision: AnswerPrecision;
   isFirstEdit: boolean;
   isCardComplete: boolean;
 }

@@ -6,6 +6,8 @@ import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
   IncorrectCard,
+  AnswerType,
+  AnswerPrecision,
 } from '@righton/networking';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
@@ -135,6 +137,8 @@ export default function CreateQuestion({
         correctCard: {
           answer: '',
           answerSteps: ['','',''],
+          answerSettingsType: AnswerType.NUMBER,
+          answerSettingsPrecision: AnswerPrecision.WHOLE,
           isFirstEdit: true,
           isCardComplete: false,
         },
@@ -527,6 +531,7 @@ export default function CreateQuestion({
             >
               <Box onClick={() => handleClick(CreateQuestionHighlightCard.CORRECTANSWER)} style={{ width: '100%' }}>
                 <CorrectAnswerCard
+                  screenSize={screenSize}
                   draftQuestion={draftQuestion}                   
                   isHighlight={highlightCard === CreateQuestionHighlightCard.CORRECTANSWER}
                   handleCorrectAnswerChange={handleDebouncedCorrectAnswerChange}

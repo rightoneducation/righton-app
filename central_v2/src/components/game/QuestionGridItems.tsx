@@ -149,6 +149,7 @@ export default function QuestionElements({
               style={{ width: '100%' }}
             >
               <CorrectAnswerCard
+                screenSize={screenSize}
                 draftQuestion={draftQuestion}
                 isHighlight={
                   highlightCard === CreateQuestionHighlightCard.CORRECTANSWER

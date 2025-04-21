@@ -7,13 +7,17 @@ import {
   styled,
   useTheme,
 } from '@mui/material';
+import { AnswerType, AnswerPrecision } from '@righton/networking';
 import {
   SelectArrowContainer,
   SelectMenu,
   SelectMenuItem,
 } from '../../../lib/styledcomponents/SelectGrade';
 import SelectArrow from '../../../images/dropDownArrow.svg';
-import { ScreenSize } from '../../../lib/CentralModels';
+import { 
+  ScreenSize,
+  AnswerSettingsDropdownType
+} from '../../../lib/CentralModels';
 import { ErrorIcon } from '../../../lib/styledcomponents/CentralStyledComponents';
 import errorIcon from '../../../images/errorIcon.svg';
 import { SelectAnswerSettingLabel } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
@@ -45,19 +49,23 @@ export const SelectAnswerSettingStyle = styled(Box, {
 
 interface SelectAnswerSettingsProps {
   screenSize: ScreenSize;
-  phaseNumber: 1 | 2;
+  type: AnswerSettingsDropdownType;
   isCardSubmitted: boolean;
-  onSetPhaseTime: (time: string) => void;
-  phaseTime: string;
+  answerSettingsType?: AnswerType | null;
+  onSetAnswerSettingsType?: (type: AnswerType) => void;
+  answerSettingsPrecisionType?: AnswerPrecision | null;
+  onSetAnswerSettingsPrecisionType?: (type: AnswerPrecision) => void;
   isCardError: boolean;
 }
 
 export default function SelectAnswerSetting({
   screenSize,
-  phaseNumber,
+  type,
   isCardSubmitted,
-  onSetPhaseTime,
-  phaseTime,
+  answerSettingsType,
+  onSetAnswerSettingsType,
+  answerSettingsPrecisionType,
+  onSetAnswerSettingsPrecisionType,
   isCardError,
 }: SelectAnswerSettingsProps) {
   const theme = useTheme();
@@ -65,28 +73,38 @@ export default function SelectAnswerSetting({
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
 
-  const answerSettingTypes = [
-    "Number",
-    "Text",
-    "Mathematical Expression",
-  ]
+const answerTypeOptions: { value: AnswerType; label: string }[] = [
+  { value: AnswerType.NUMBER, label: "Number" },
+  { value: AnswerType.STRING, label: "Text" },
+  { value: AnswerType.EXPRESSION, label: "Mathematical Expression" },
+  { value: AnswerType.MULTICHOICE, label: "Multiple Choice" },
+];
 
-  const answerSettingsNumberTypes = [
-    "Ones (0)",
-    "Tenths (0.1)",
-    "Hundredths (0.01)",
-    "Thousandths (0.001)",
-  ]
+const precisionOptions: { value: AnswerPrecision; label: string }[] = [
+  { value: AnswerPrecision.WHOLE,        label: "Ones (0)" },
+  { value: AnswerPrecision.TENTH,      label: "Tenths (0.1)" },
+  { value: AnswerPrecision.HUNDREDTH,  label: "Hundredths (0.01)" },
+  { value: AnswerPrecision.THOUSANDTH, label: "Thousandths (0.001)" },
+];
+
+  const dropdownLabel = type !== AnswerSettingsDropdownType.TYPE ? "Answer Type" : "Answer Settings";
 
   // flag error if phase is not selected or
   const isError =
-    (isCardSubmitted && phaseTime === '') || (isCardError && phaseTime === "");
+    (isCardSubmitted && answerSettingsType === null) || (isCardError && answerSettingsType === null) ||
+    (isCardSubmitted && answerSettingsPrecisionType === null) || (isCardError && answerSettingsPrecisionType === null);
 
-  // handle phase selection on menu item click
-  const selectPhase = (phaseVal: string) => {
-    onSetPhaseTime(phaseVal);
+  const selectAnswerSettingsType = (answerType: AnswerType) => {
+    if (onSetAnswerSettingsType)
+    onSetAnswerSettingsType(answerType);
     setIsSelectOpen(false);
-  };
+  }
+
+  const selectAnswerSettingsNumberType = (precisionType: AnswerPrecision) => {
+    if (onSetAnswerSettingsPrecisionType)
+    onSetAnswerSettingsPrecisionType(precisionType);
+    setIsSelectOpen(false);
+  }
 
   // open menu on click
   const handleMenuToggle = () => {
@@ -103,7 +121,7 @@ export default function SelectAnswerSetting({
       }}
     >
       <SelectAnswerSettingStyle
-      error={isError}
+        error={isError}
         sx={{
           borderRadius: isSelectOpen ? '5px 5px 0 0' : '5px',
           ...(isError && { border: '1px solid #D0254D' }),
@@ -112,9 +130,15 @@ export default function SelectAnswerSetting({
         onClick={handleMenuToggle}
       >
         {isError && <ErrorIcon sx={{ width: 17, height: 17 }} src={errorIcon} />}
-        <SelectAnswerSettingLabel isSelected={phaseTime !== ''} error={isError}>
-          {phaseTime !== '' ? phaseTime : `Phase ${phaseNumber}`}
-        </SelectAnswerSettingLabel>
+        { type === AnswerSettingsDropdownType.TYPE ?
+          <SelectAnswerSettingLabel isSelected={answerSettingsType !== null} error={isError}>
+            {answerSettingsType !== null ? answerSettingsType : dropdownLabel}
+          </SelectAnswerSettingLabel>
+        :
+          <SelectAnswerSettingLabel isSelected={answerSettingsPrecisionType !== null} error={isError}>
+            {answerSettingsPrecisionType !== null ? answerSettingsPrecisionType : dropdownLabel}
+          </SelectAnswerSettingLabel>
+        }
         {/* space between is here */}
         <SelectArrowContainer isSelectOpen={isSelectOpen}>
           <img
@@ -147,29 +171,55 @@ export default function SelectAnswerSetting({
             ...(isSmallerScreen && { zIndex: 5 }),
           }}
         >
-          {times.map((time, i) => (
-            <Box
-              onClick={() => selectPhase(time.label)}
-              sx={{ cursor: 'pointer', width: '100%' }}
-            >
-              <SelectMenuItem sx={{ height: '23px', padding: '4px 8px' }}>
-                <Typography
-                  fontWeight="normal"
-                  fontSize="14px"
-                  fontFamily="Rubik"
-                  sx={{ color: '#02215f' }}
-                >
-                  {time.label}
-                </Typography>
-              </SelectMenuItem>
-              {i !== times.length - 1 && (
-                <Divider
-                  flexItem
-                  sx={{ width: '100%', background: '#02215f', opacity: 0.5 }}
-                />
-              )}
-            </Box>
-          ))}
+          {type === AnswerSettingsDropdownType.TYPE ?
+            answerTypeOptions.map((answerTypeOption, i) => (
+              <Box
+                onClick={() => selectAnswerSettingsType(answerTypeOption.value)}
+                sx={{ cursor: 'pointer', width: '100%' }}
+              >
+                <SelectMenuItem sx={{ height: '23px', padding: '4px 8px' }}>
+                  <Typography
+                    fontWeight="normal"
+                    fontSize="14px"
+                    fontFamily="Rubik"
+                    sx={{ color: '#02215f' }}
+                  >
+                    {answerTypeOption.label}
+                  </Typography>
+                </SelectMenuItem>
+                {i !== answerTypeOptions.length - 1 && (
+                  <Divider
+                    flexItem
+                    sx={{ width: '100%', background: '#02215f', opacity: 0.5 }}
+                  />
+                )}
+              </Box>
+            ))
+          :
+            precisionOptions.map((precisionOptionType, i) => (
+              <Box
+                onClick={() => selectAnswerSettingsNumberType(precisionOptionType.value)}
+                sx={{ cursor: 'pointer', width: '100%' }}
+              >
+                <SelectMenuItem sx={{ height: '23px', padding: '4px 8px' }}>
+                  <Typography
+                    fontWeight="normal"
+                    fontSize="14px"
+                    fontFamily="Rubik"
+                    sx={{ color: '#02215f' }}
+                  >
+                    {precisionOptionType.label}
+                  </Typography>
+                </SelectMenuItem>
+                {i !== precisionOptions.length - 1 && (
+                  <Divider
+                    flexItem
+                    sx={{ width: '100%', background: '#02215f', opacity: 0.5 }}
+                  />
+                )}
+              </Box>
+            ))
+          }
         </SelectMenu>
       </Collapse>
     </Box>
