@@ -15,7 +15,7 @@ export interface IQuestionTemplate {
   version: number,
   choices?: IChoice[] | null,
   instructions?: string[] | null,
-  answerSettings?: string | null,
+  answerSettings?: AnswerSettingsType | null,
   ccss: string,
   domain: string;
   cluster: string;
@@ -37,6 +37,11 @@ export type QuestionCard = {
   ccss: string;
   isFirstEdit: boolean;
   isCardComplete: boolean;
+}
+
+export type AnswerSettingsType = {
+  answerType: AnswerType;
+  answerPrecision?: AnswerPrecision;
 }
 
 // type to handle input variables for correct card on createquestion flow

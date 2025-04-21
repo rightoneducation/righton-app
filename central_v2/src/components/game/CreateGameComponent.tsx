@@ -21,6 +21,7 @@ import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuesti
 
 interface ICreateGameComponent {
   screenSize: ScreenSize;
+  isClone: boolean;
   handleSaveGame: () => Promise<void>;
   draftGame: TGameTemplateProps;
   handleDiscard: () => void;
@@ -40,6 +41,7 @@ interface ICreateGameComponent {
 
 export default function CreateGameComponent({
   draftGame,
+  isClone,
   screenSize,
   handleSaveGame,
   handleDiscard,
@@ -68,7 +70,9 @@ export default function CreateGameComponent({
 
   return (
     <>
-      <TitleText screenSize={screenSize}>Create Game</TitleText>
+      <TitleText screenSize={screenSize}> 
+      {isClone ? 'Clone' : 'Create'} Game
+      </TitleText>
       {/* Save & Discard Button for Small & Medium Screen Size */}
       {(screenSize === ScreenSize.SMALL ||
         screenSize === ScreenSize.MEDIUM) && (

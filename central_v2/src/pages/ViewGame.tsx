@@ -65,6 +65,10 @@ export default function ViewGame({
     window.location.href = LAUNCH_GAME_URL;
   };
 
+  const handleCloneGame = () => {
+    navigate(`/clone/game/${centralData.selectedGame?.id}`);
+  };
+
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
@@ -94,7 +98,7 @@ export default function ViewGame({
                 paddingBottom: '16px',
               }}>
                  <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={() => navigate('/')} smallScreenOverride/>
-                 <CentralButton buttonType={ButtonType.CLONE} isEnabled smallScreenOverride/>
+                 <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
               </Box>
             }
             <CreateGameGridContainer container wrap="nowrap">
@@ -108,7 +112,7 @@ export default function ViewGame({
                   { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
                     <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
                       <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={() => navigate('/')}/>
-                      <CentralButton buttonType={ButtonType.CLONE} isEnabled/>
+                      <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame}/>
                     </Box>
                   }
                 </Grid>

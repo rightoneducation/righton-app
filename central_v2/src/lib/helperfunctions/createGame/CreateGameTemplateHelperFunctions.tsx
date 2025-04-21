@@ -1,4 +1,10 @@
-import { CreatePrivateGameQuestionsInput, CreatePrivateGameTemplateInput, CreatePublicGameTemplateInput } from "@righton/networking";
+import { 
+    CreatePrivateGameTemplateInput,
+    CreatePublicGameTemplateInput,
+    CentralQuestionTemplateInput,
+    IQuestionTemplate,
+    AnswerType
+} from "@righton/networking";
 
 type GameTemplate = CreatePrivateGameTemplateInput | CreatePublicGameTemplateInput;
 
@@ -19,5 +25,44 @@ return {
     cluster: template?.ccss?.split(".")[2],
     standard: template?.ccss?.split(".")[3],
     imageUrl: template?.imageUrl
+    }
+}
+
+export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQuestionTemplateInput => {
+    const correctAnswer = template.choices?.find((choice) => choice.isAnswer);
+    const incorrectAnswers = template.choices?.filter((choice) => !choice.isAnswer);
+    const blankIncorrectAnswers = Array.from({ length: 3 }, (_, i) => ({
+        id: `card-${i + 1}`,
+        answer: '',
+        explanation: '',
+        isFirstEdit: true,
+        isCardComplete: false
+    }));
+    const incorrectCards = incorrectAnswers?.map((answer, index) => ({
+        id: `card-${index + 1}`,
+        answer: answer.text,
+        explanation: answer.reason,
+        isFirstEdit: true,
+        isCardComplete: true
+    })) ?? blankIncorrectAnswers;
+    
+    return {
+       questionCard: {
+            title: template.title,
+            ccss: template.ccss,
+            isFirstEdit: true,
+            isCardComplete: false
+        },
+        correctCard: {
+            answer: correctAnswer?.text ?? '',
+            answerSteps: [],
+            answerSettings: {
+                answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
+                answerPrecision: template.answerSettings?.answerPrecision
+            },
+            isFirstEdit: true,
+            isCardComplete: true
+        },
+        incorrectCards,
     }
 }
