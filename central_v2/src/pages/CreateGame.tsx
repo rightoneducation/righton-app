@@ -1191,6 +1191,19 @@ export default function CreateGame({
       setSelectedQuestion(question);
       setQuestionSet(questions);
       setIsTabsOpen(true);
+
+      console.log("Library Question: ", question);
+
+      const correctAnswer = question.choices?.find((q) => q.isAnswer === true);
+      const incorrectAnswers = question.choices?.filter((q) => !q.isAnswer);
+
+      const incorrectCards = incorrectAnswers?.map((incorrectAnswer, i) => ({
+        id: `card-${i + 1}`,
+        answer: incorrectAnswer.text || '',
+        explanation: incorrectAnswer.reason || '',
+        isFirstEdit: true,
+        isCardComplete: true,
+      })) as IncorrectCard[]
   
      setDraftQuestionsList((prev) => {
       const libraryQuestion = { 
@@ -1205,40 +1218,28 @@ export default function CreateGame({
           isCardComplete: true,
         },
         correctCard: {
-          answer: question?.choices ? question.choices[0].text: "",
+          answer: correctAnswer ? correctAnswer?.text : "",
           answerSteps: question?.instructions ? question?.instructions: ["", "", ""],
           isFirstEdit: true,
           isCardComplete: true,
         },
-        incorrectCards: [
-          {
-            id: 'card-1',
-            answer: question?.choices ? question.choices[1].text:'',
-            explanation: question?.choices ? question.choices[1].reason:'',
-            isFirstEdit: true,
-            isCardComplete: true,
-          },
-          {
-            id: 'card-2',
-            answer: question?.choices ? question.choices[2].text:'',
-            explanation: question?.choices ? question.choices[2].reason:'',
-            isFirstEdit: true,
-            isCardComplete: true,
-          },
-          {
-            id: 'card-3',
-            answer: question?.choices ? question.choices[3].text:'',
-            explanation: question?.choices ? question.choices[3].reason:'',
-            isFirstEdit: true,
-            isCardComplete: true,
-          },
-        ],
+        incorrectCards
       } }
 
       const isFirstEmpty = prev.length === 1 && !prev[0].question.questionCard.isCardComplete;
 
       if(isFirstEmpty) {
         return [libraryQuestion]
+      }
+
+      if (
+        typeof selectedQuestionIndex === 'number' &&
+        prev[selectedQuestionIndex] &&
+        !prev[selectedQuestionIndex].question.questionCard.isCardComplete
+      ) {
+        const updated = [...prev];
+        updated[selectedQuestionIndex] = libraryQuestion;
+        return updated;
       }
 
       const currentIndex = prev.findIndex((q) => !q.question.questionCard.isCardComplete);
@@ -1267,11 +1268,11 @@ export default function CreateGame({
     }))
     };
 
-    // useEffect(() => {
-    //   console.log("Questions List:", draftQuestionsList);
-    //   console.log("Selected Index:", selectedQuestionIndex);
-    //   console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
-    // }, [draftQuestionsList, selectedQuestionIndex]);
+    useEffect(() => {
+      console.log("Questions List:", draftQuestionsList);
+      console.log("Selected Index:", selectedQuestionIndex);
+      console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
+    }, [draftQuestionsList, selectedQuestionIndex]);
 
   return (
     <CreateGameMainContainer>
