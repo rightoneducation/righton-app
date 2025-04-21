@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Typography, Box, InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { CentralQuestionTemplateInput } from '@righton/networking';
+import { Answer, CentralQuestionTemplateInput, AnswerType, AnswerPrecision } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import {
   QuestionTitleStyled,
@@ -17,23 +17,29 @@ import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import ErrorBox from './ErrorBox';
 import errorIcon from '../../../images/errorIcon.svg';
+import SelectAnswerSetting from './SelectAnswerSetting';
+import { ScreenSize, AnswerSettingsDropdownType } from '../../../lib/CentralModels';
 
 
 interface DetailedQuestionSubCardProps {
+  screenSize: ScreenSize;
   draftQuestion: CentralQuestionTemplateInput;
   isHighlight: boolean;
   handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CentralQuestionTemplateInput) => void;
   handleCorrectAnswerStepsChange: (steps: string[], draftQuestion: CentralQuestionTemplateInput) => void;
+  handleAnswerSettingsChange: (draftQuestion: CentralQuestionTemplateInput, answerType: AnswerType,  answerPrecision?: AnswerPrecision, ) => void;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
   isAIError: boolean;
 }
 
 export default function DetailedQuestionSubCard({
+  screenSize,
   draftQuestion,
   isHighlight, 
   handleCorrectAnswerChange,
   handleCorrectAnswerStepsChange,
+  handleAnswerSettingsChange,
   isCardSubmitted,
   isCardErrored,
   isAIError
@@ -41,6 +47,8 @@ export default function DetailedQuestionSubCard({
   const theme = useTheme();
   const [correctAnswer, setCorrectAnswer] = React.useState<string>(draftQuestion.correctCard.answer ?? '');
   const [answerSteps, setAnswerSteps] = React.useState(draftQuestion.correctCard.answerSteps ?? ['','','']);
+  const [answerSettingsType, setAnswerSettingsType] = React.useState<AnswerType>(AnswerType.NUMBER);
+  const [answerSettingsPrecisionType, setAnswerSettingsPrecisionType] = React.useState<AnswerPrecision>(AnswerPrecision.WHOLE);
   const addStep = () => {
     setAnswerSteps((prev) => [...prev, ''])
   };
@@ -55,6 +63,16 @@ export default function DetailedQuestionSubCard({
     newSteps[index] = value;
     setAnswerSteps(newSteps);
     handleCorrectAnswerStepsChange(newSteps, draftQuestion);
+  };
+
+  const handleAnswerSettingsTypeChange = (answerType: AnswerType) => {
+    setAnswerSettingsType(answerType);
+    handleAnswerSettingsChange(draftQuestion, answerType, answerSettingsPrecisionType,);
+  };
+
+  const handleAnswerSettingsPrecisionTypeChange = (answerPrecision: AnswerPrecision) => {
+    setAnswerSettingsPrecisionType(answerPrecision);
+    handleAnswerSettingsChange(draftQuestion, answerSettingsType, answerPrecision);
   };
 
   const answerStepsComponent = (step: string, index: number) => {
@@ -143,6 +161,24 @@ export default function DetailedQuestionSubCard({
             </InputAdornment>
         }}
       />
+      <SelectAnswerSetting
+          screenSize={screenSize}
+          type={AnswerSettingsDropdownType.TYPE}
+          isCardSubmitted={isCardSubmitted}
+          answerSettingsType={answerSettingsType}
+          onSetAnswerSettingsType={handleAnswerSettingsTypeChange}
+          isCardError={isCardErrored}
+      />
+      { answerSettingsType === AnswerType.NUMBER &&
+          <SelectAnswerSetting
+          screenSize={screenSize}
+          type={AnswerSettingsDropdownType.PRECISION}
+          isCardSubmitted={isCardSubmitted}
+          answerSettingsPrecisionType={answerSettingsPrecisionType}
+          onSetAnswerSettingsPrecisionType={handleAnswerSettingsPrecisionTypeChange}
+          isCardError={isCardErrored}
+      />
+      }
       <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Solution Steps
       </QuestionTitleStyled>

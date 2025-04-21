@@ -32,6 +32,11 @@ export enum CardType {
   INCORRECT,
 }
 
+export enum AnswerSettingsDropdownType {
+  TYPE,
+  PRECISION
+}
+
 export enum BorderStyle {
   DASHED_BORDER = 'dashedBorder',
   SOLID_BORDER = 'solid',

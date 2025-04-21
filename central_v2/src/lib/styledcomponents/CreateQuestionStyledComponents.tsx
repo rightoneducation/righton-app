@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, TextField, Paper, Button, styled } from '@mui/material';
+import { Box, Typography, Grid, TextField, Paper, Button, styled } from '@mui/material';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
 
 export const CreateQuestionMainContainer = styled(Box)(({ theme }) => ({
@@ -64,6 +64,21 @@ export const CreateQuestionGridContainer = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
 }));
+
+type SelectAnswerSettingProps = {
+  error: boolean;
+  isSelected: boolean;
+}
+
+export const SelectAnswerSettingLabel = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== "error"
+})<SelectAnswerSettingProps>(({theme, error, isSelected}) => ({
+    color: error ? '#D0254D': theme.palette.primary.sliderBlue,
+    fontFamily: "Rubik",
+    fontSize: 14,
+    fontWeight: isSelected ? 'normal':'bold',
+    margin: 0,
+}))
 
 interface TextContainerStyledProps {
   isAIEnabled?: boolean,

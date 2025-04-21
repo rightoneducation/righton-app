@@ -6,6 +6,8 @@ import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
   IncorrectCard,
+  AnswerType,
+  AnswerPrecision,
 } from '@righton/networking';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
@@ -28,7 +30,7 @@ import ImageUploadModal from '../components/modal/ImageUploadModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick, updateDQwithAnswerSettings } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import ErrorCard from '../components/cards/ErrorCard';
@@ -135,6 +137,10 @@ export default function CreateQuestion({
         correctCard: {
           answer: '',
           answerSteps: ['','',''],
+          answerSettings: {
+            answerType: AnswerType.NUMBER,
+            answerPrecision: AnswerPrecision.WHOLE,
+          },
           isFirstEdit: true,
           isCardComplete: false,
         },
@@ -254,6 +260,15 @@ export default function CreateQuestion({
     }, 1000),
     [] 
   )
+
+  const handleAnswerSettingsChange = (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType,  answerPrecision?: AnswerPrecision,) => {
+    const { isFirstEdit } = draftQuestionInput.correctCard;
+    const newDraftQuestion = updateDQwithAnswerSettings(draftQuestionInput, answerType, answerPrecision);
+    window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+    setDraftQuestion(newDraftQuestion);
+    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
+      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+  };
 
   // incorrect answer card functions
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
@@ -527,10 +542,12 @@ export default function CreateQuestion({
             >
               <Box onClick={() => handleClick(CreateQuestionHighlightCard.CORRECTANSWER)} style={{ width: '100%' }}>
                 <CorrectAnswerCard
+                  screenSize={screenSize}
                   draftQuestion={draftQuestion}                   
                   isHighlight={highlightCard === CreateQuestionHighlightCard.CORRECTANSWER}
                   handleCorrectAnswerChange={handleDebouncedCorrectAnswerChange}
                   handleCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
+                  handleAnswerSettingsChange={handleAnswerSettingsChange}
                   isCardSubmitted={isCardSubmitted}
                   isCardErrored={isCardErrored}
                   isAIError={isAIError}
