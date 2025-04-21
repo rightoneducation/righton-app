@@ -28,12 +28,14 @@ export class QuestionTemplateParser {
         });
         const choicesCorrect = {isAnswer: true, reason: '', text: createQuestionTemplateInput.correctCard.answer}; 
         const choices = JSON.stringify([choicesCorrect, ...choicesIncorrect]);
+        const answerSettings = JSON.stringify(createQuestionTemplateInput.correctCard.answerSettings);
         const questionTemplate: QuestionTemplateType<T>['create']['input'] = {
             title,
             lowerCaseTitle,
             version: 0,
             choices,
             instructions,
+            answerSettings,
             ccss,
             domain,
             cluster,
@@ -109,6 +111,7 @@ export class QuestionTemplateParser {
           imageUrl,
           gameTemplatesCount
       } = awsQuestionTemplate || {}
+      const awsAnswerSettings = !isNullOrUndefined(answerSettings) ? JSON.parse(answerSettings) : null;
       if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
           isNullOrUndefined(owner) ||
@@ -128,7 +131,7 @@ export class QuestionTemplateParser {
           version,
           choices,
           instructions,
-          answerSettings,
+          answerSettings: awsAnswerSettings,
           ccss: ccss ?? '',
           domain: domain ?? '',
           cluster: cluster ?? '',

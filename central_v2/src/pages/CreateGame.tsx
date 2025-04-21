@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   AnswerType,
+  AnswerPrecision,
   CentralQuestionTemplateInput,
   IGameTemplate,
   IncorrectCard,
@@ -54,6 +55,7 @@ import {
   updateDQwithCorrectAnswer,
   updateDQwithCorrectAnswerClick,
   updateDQwithCorrectAnswerSteps,
+  updateDQwithAnswerSettings,
 } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
@@ -103,6 +105,10 @@ const newEmptyTemplate: CentralQuestionTemplateInput = {
   correctCard: {
     answer: '',
     answerSteps: ['', '', ''],
+    answerSettings: {
+      answerType: AnswerType.NUMBER,
+      answerPrecision: AnswerPrecision.WHOLE,
+    },
     isFirstEdit: true,
     isCardComplete: false,
   },
@@ -467,7 +473,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                 throw new Error('Failed to store image URL.');
               }
             }
-
+            console.log(dq.question);
             let newQuestionResponse: IQuestionTemplate | undefined;
             // if an image url is available, we can create a question template
             if (url) {
@@ -751,6 +757,26 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     },
     [selectedQuestionIndex],
   );
+
+  const handleAnswerSettingsChange = (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType, answerPrecision?: AnswerPrecision ) => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((draftItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const currentDraftQuestion = draftItem.question;
+          const newQuestion = updateDQwithAnswerSettings(
+            currentDraftQuestion,
+            answerType,
+            answerPrecision,
+          );
+          return {
+            ...draftItem,
+            question: newQuestion,
+          };
+        }
+        return draftItem;
+      });
+    });
+  };
 
   const handleAnswerType = () => {
     setDraftQuestionsList((prev) => {
@@ -1274,6 +1300,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                     handleDebouncedCorrectAnswerStepsChange={
                       handleDebouncedCorrectAnswerStepsChange
                     }
+                    handleAnswerSettingsChange={handleAnswerSettingsChange}
                     handleDebouncedTitleChange={handleDebouncedTitleChange}
                     handlePublicPrivateChange={
                       handlePublicPrivateQuestionChange
