@@ -66,8 +66,10 @@ const useCreateQuestion = (index: number) => {
       correctCard: {
         answer: '',
         answerSteps: ['', '', ''],
-        answerSettingsType: AnswerType.NUMBER,
-        answerSettingsPrecision: AnswerPrecision.WHOLE,
+        answerSettings: {
+          answerType: AnswerType.NUMBER,
+          answerPrecision: AnswerPrecision.WHOLE,
+        },
         isFirstEdit: true,
         isCardComplete: false,
       },
@@ -151,8 +153,10 @@ const useCreateQuestion = (index: number) => {
           correctCard: {
             answer: '',
             answerSteps: ['', '', ''],
-            answerSettingsType: AnswerType.NUMBER,
-            answerSettingsPrecision: AnswerPrecision.WHOLE,
+            answerSettings: {
+              answerType: AnswerType.NUMBER,
+              answerPrecision: AnswerPrecision.WHOLE,
+            },
             isFirstEdit: true,
             isCardComplete: false,
           },

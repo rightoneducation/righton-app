@@ -29,13 +29,13 @@ export const SelectAnswerSettingStyle = styled(Box, {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
-  width: error ? "110px" :"96px", 
-  maxWidth: error ? "110px" :"96px",
+  width: error ? "220px" :"200px", 
+  maxWidth: error ? "220px" :"200px",
   minHeight: '28px',
   background: '#fffbf6',
   border: '1px solid #02215f',
   padding: '4px 8px',
-  gap: error ? '1px': "9px", // ask design team since button width is 128px
+  gap: error ? '1px': "9px",
   boxSizing: 'border-box',
   zIndex: 4,
   cursor: 'pointer',
@@ -132,11 +132,11 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
         {isError && <ErrorIcon sx={{ width: 17, height: 17 }} src={errorIcon} />}
         { type === AnswerSettingsDropdownType.TYPE ?
           <SelectAnswerSettingLabel isSelected={answerSettingsType !== null} error={isError}>
-            {answerSettingsType !== null ? answerSettingsType : dropdownLabel}
+            {(answerSettingsType !== null && answerSettingsType !== undefined) ? answerTypeOptions[answerSettingsType].label : dropdownLabel}
           </SelectAnswerSettingLabel>
         :
           <SelectAnswerSettingLabel isSelected={answerSettingsPrecisionType !== null} error={isError}>
-            {answerSettingsPrecisionType !== null ? answerSettingsPrecisionType : dropdownLabel}
+            {(answerSettingsPrecisionType !== null && answerSettingsPrecisionType !== undefined) ? precisionOptions[answerSettingsPrecisionType].label : dropdownLabel}
           </SelectAnswerSettingLabel>
         }
         {/* space between is here */}
@@ -160,8 +160,9 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
             padding: 0,
             top: 'auto',
             left: 0,
-            minWidth: isError ? "110px": '96px',
-            width: isError ? "110px":'96px',
+            width: isError ? "220px" :"200px", 
+            maxWidth: isError ? "220px" :"200px",
+            minWidth: '200px',
             borderRadius: '0 0 4px 4px',
             borderRight: '1px solid #02215f',
             borderBottom: '1px solid #02215f',
@@ -172,7 +173,9 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
           }}
         >
           {type === AnswerSettingsDropdownType.TYPE ?
-            answerTypeOptions.map((answerTypeOption, i) => (
+            answerTypeOptions.map((answerTypeOption, i) => {
+              console.log(answerTypeOption.value, answerTypeOption.label);
+              return (
               <Box
                 onClick={() => selectAnswerSettingsType(answerTypeOption.value)}
                 sx={{ cursor: 'pointer', width: '100%' }}
@@ -194,7 +197,7 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
                   />
                 )}
               </Box>
-            ))
+            )})
           :
             precisionOptions.map((precisionOptionType, i) => (
               <Box

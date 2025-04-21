@@ -27,6 +27,7 @@ interface DetailedQuestionSubCardProps {
   isHighlight: boolean;
   handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CentralQuestionTemplateInput) => void;
   handleCorrectAnswerStepsChange: (steps: string[], draftQuestion: CentralQuestionTemplateInput) => void;
+  handleAnswerSettingsChange: (draftQuestion: CentralQuestionTemplateInput, answerType: AnswerType,  answerPrecision?: AnswerPrecision, ) => void;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
   isAIError: boolean;
@@ -38,6 +39,7 @@ export default function DetailedQuestionSubCard({
   isHighlight, 
   handleCorrectAnswerChange,
   handleCorrectAnswerStepsChange,
+  handleAnswerSettingsChange,
   isCardSubmitted,
   isCardErrored,
   isAIError
@@ -61,6 +63,16 @@ export default function DetailedQuestionSubCard({
     newSteps[index] = value;
     setAnswerSteps(newSteps);
     handleCorrectAnswerStepsChange(newSteps, draftQuestion);
+  };
+
+  const handleAnswerSettingsTypeChange = (answerType: AnswerType) => {
+    setAnswerSettingsType(answerType);
+    handleAnswerSettingsChange(draftQuestion, answerType, answerSettingsPrecisionType,);
+  };
+
+  const handleAnswerSettingsPrecisionTypeChange = (answerPrecision: AnswerPrecision) => {
+    setAnswerSettingsPrecisionType(answerPrecision);
+    handleAnswerSettingsChange(draftQuestion, answerSettingsType, answerPrecision);
   };
 
   const answerStepsComponent = (step: string, index: number) => {
@@ -154,7 +166,7 @@ export default function DetailedQuestionSubCard({
           type={AnswerSettingsDropdownType.TYPE}
           isCardSubmitted={isCardSubmitted}
           answerSettingsType={answerSettingsType}
-          onSetAnswerSettingsType={setAnswerSettingsType}
+          onSetAnswerSettingsType={handleAnswerSettingsTypeChange}
           isCardError={isCardErrored}
       />
       { answerSettingsType === AnswerType.NUMBER &&
@@ -163,7 +175,7 @@ export default function DetailedQuestionSubCard({
           type={AnswerSettingsDropdownType.PRECISION}
           isCardSubmitted={isCardSubmitted}
           answerSettingsPrecisionType={answerSettingsPrecisionType}
-          onSetAnswerSettingsPrecisionType={setAnswerSettingsPrecisionType}
+          onSetAnswerSettingsPrecisionType={handleAnswerSettingsPrecisionTypeChange}
           isCardError={isCardErrored}
       />
       }

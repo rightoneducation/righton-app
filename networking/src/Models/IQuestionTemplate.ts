@@ -43,8 +43,10 @@ export type QuestionCard = {
 export type CorrectCard = {
   answer: string;
   answerSteps: string[];
-  answerSettingsType: AnswerType;
-  answerSettingsPrecision: AnswerPrecision;
+  answerSettings: {
+    answerType: AnswerType;
+    answerPrecision?: AnswerPrecision;
+  }
   isFirstEdit: boolean;
   isCardComplete: boolean;
 }

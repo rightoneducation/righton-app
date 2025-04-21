@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { debounce } from 'lodash';
-import { CentralQuestionTemplateInput } from '@righton/networking'; 
+import { CentralQuestionTemplateInput, AnswerType, AnswerPrecision } from '@righton/networking'; 
 
 export const updateDQwithCorrectAnswer = (draftQuestionInput: CentralQuestionTemplateInput, correctAnswer: string): CentralQuestionTemplateInput => {
   if (correctAnswer.length > 0 &&  draftQuestionInput.correctCard.answerSteps.length > 0 && draftQuestionInput.correctCard.answerSteps.every((answer) => answer !== '' && answer.length > 0) && correctAnswer.length > 0){
@@ -18,6 +18,19 @@ export const updateDQwithCorrectAnswerSteps = (draftQuestionInput: CentralQuesti
     return {...draftQuestionInput, correctCard: { ...draftQuestionInput.correctCard, answerSteps: steps, isCardComplete: true}};
   }
   return {...draftQuestionInput, correctCard: { ...draftQuestionInput.correctCard, answerSteps: steps}};
+}
+
+export const updateDQwithAnswerSettings = (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType, answerPrecision?: AnswerPrecision): CentralQuestionTemplateInput => {
+  const newAnswerSettings = {
+    answerType,
+    answerPrecision
+  }
+  if (draftQuestionInput.correctCard.answer.length > 0 && draftQuestionInput.correctCard.answerSteps.length > 0 && draftQuestionInput.correctCard.answerSteps.every((step) => step.length > 0)){
+    if (draftQuestionInput.incorrectCards[0].isFirstEdit)
+      return {...draftQuestionInput, correctCard: { ...draftQuestionInput.correctCard, answerSettings: newAnswerSettings, isCardComplete: true, isFirstEdit: false}};
+    return {...draftQuestionInput, correctCard: { ...draftQuestionInput.correctCard, answerSettings: newAnswerSettings, isCardComplete: true}};
+  }
+  return {...draftQuestionInput, correctCard: { ...draftQuestionInput.correctCard, answerSettings: newAnswerSettings,}};
 }
 
 export const updateDQwithCorrectAnswerClick = (draftQuestion: CentralQuestionTemplateInput): CentralQuestionTemplateInput => {
