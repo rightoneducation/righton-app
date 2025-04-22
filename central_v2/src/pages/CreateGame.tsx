@@ -681,7 +681,7 @@ export default function CreateGame({
   };
 
   const handleDebouncedTitleChange = useCallback(// eslint-disable-line
-    (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
+    (title: string) => {
       setDraftQuestionsList((draftPrev) => {
         return draftPrev.map((questionItem, i) => {
           if (i === selectedQuestionIndex) {

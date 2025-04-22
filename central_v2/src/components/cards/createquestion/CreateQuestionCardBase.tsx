@@ -38,7 +38,7 @@ interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
   isClone: boolean;
   draftQuestion: CentralQuestionTemplateInput;
-  handleTitleChange: (title: string, draftQuestion: CentralQuestionTemplateInput) => void;
+  handleTitleChange: (title: string) => void;
   handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
   handleAnswerType: () => void;
@@ -49,7 +49,6 @@ interface CreateQuestionCardBaseProps {
   isAIError: boolean;
   isPublic: boolean;
   isMultipleChoice: boolean;
-
 }
 
 type ImagePlaceholderProps = {
@@ -112,7 +111,6 @@ export default function CreateQuestionCardBase({
   isPublic,
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
-  const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const [CCSSIsOpen, setCCSSIsOpen] = React.useState<boolean>(false);
@@ -133,11 +131,6 @@ export default function CreateQuestionCardBase({
   const handleCCSSButtonClick = () => {
     handleCCSSClick();
     // setCCSSIsOpen((prev) => !prev);
-  }
-
-  const handleLocalTitleChange = (value: string) => {
-    setTitle((prev) => value);
-    handleTitleChange(value, draftQuestion);
   }
 
   const imageContents = [
@@ -262,12 +255,12 @@ export default function CreateQuestionCardBase({
               },
             }}
             placeholder="Enter question here..." 
-            error={(isCardSubmitted || isAIError) && (!title || title.length === 0)}
-            value={title}
-            onChange = {(e) => handleLocalTitleChange(e.target.value)}
+            error={(isCardSubmitted || isAIError) && (!draftQuestion.questionCard.title || draftQuestion.questionCard.title.length === 0)}
+            value={draftQuestion.questionCard.title}
+            onChange = {(e) => handleTitleChange(e.target.value)}
             InputProps={{
               startAdornment: 
-                (isCardSubmitted || isAIError) && (!title || title.length === 0) &&
+                (isCardSubmitted || isAIError) && (!draftQuestion.questionCard.title || draftQuestion.questionCard.title.length === 0) &&
                 <InputAdornment
                   position="start" 
                   sx={{ 

@@ -70,7 +70,7 @@ interface IQuestionElements {
     incompleteAnswers: IncorrectCard[],
     isAIEnabledCard?: boolean,
   ) => void;
-  handleDebouncedTitleChange: (title: string, draftQuestionInput: CentralQuestionTemplateInput) => void;
+  handleDebouncedTitleChange: (title: string) => void;
   handleDebouncedCorrectAnswerChange: (correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => void;
   handleDebouncedCorrectAnswerStepsChange: (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => void;
   handleAnswerSettingsChange: (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType, answerPrecision?: AnswerPrecision) => void;

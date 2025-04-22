@@ -5,19 +5,19 @@ import { isNullOrUndefined } from '../global';
 import {v4 as uuidv4} from 'uuid';
 
 export enum AnswerType {
-  NUMBER = 0,
-  STRING = 1,
-  EXPRESSION = 2,
-  MULTICHOICE = 3
+  NUMBER = "NUMBER",
+  STRING = "STRING",
+  EXPRESSION = "EXPRESSION",
+  MULTICHOICE = "MULTICHOICE"
 }
 
 export type NormAnswerType = string | number;
 
 export enum AnswerPrecision {
-  WHOLE = 0,
-  TENTH = 1,
-  HUNDREDTH = 2,
-  THOUSANDTH = 3,
+  WHOLE = "WHOLE",
+  TENTH = "TENTH",
+  HUNDREDTH = "HUNDREDTH",
+  THOUSANDTH = "THOUSANDTH",
 }
 
 export type Answer = NumericAnswer | StringAnswer | ExpressionAnswer | MultiChoiceAnswer
@@ -152,7 +152,23 @@ export class NumericAnswer extends BaseAnswer<Number>{
   }
 
   static isAnswerPrecisionValid(input: string, precision: AnswerPrecision): Boolean {
-    const roundedNumberAsString = Number(input).toFixed(precision);
+    let number = 0;
+    switch (precision) {
+      case AnswerPrecision.TENTH:
+        number = 1;
+        break;
+      case AnswerPrecision.HUNDREDTH:
+        number = 2;
+        break;
+      case AnswerPrecision.THOUSANDTH:
+        number = 3;
+        break;
+      case AnswerPrecision.WHOLE:
+      default:
+        number = 0;
+        break;
+    }
+    const roundedNumberAsString = Number(input).toFixed(number);
     return input.toString() === roundedNumberAsString;
   }
 }

@@ -124,7 +124,13 @@ function AppSwitch({
     }
     case ScreenType.CREATEQUESTION: {
       screenComponent = (
-          <CreateQuestion screenSize={screenSize}/>
+          <CreateQuestion screenSize={screenSize} fetchElement={fetchElement}/>
+      );
+      break;
+    }
+    case ScreenType.CLONEQUESTION: {
+      screenComponent = (
+          <CreateQuestion screenSize={screenSize} fetchElement={fetchElement}/>
       );
       break;
     }

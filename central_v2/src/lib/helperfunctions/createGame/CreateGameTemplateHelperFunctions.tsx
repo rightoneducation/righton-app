@@ -56,7 +56,7 @@ export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQu
         },
         correctCard: {
             answer: correctAnswer?.text ?? '',
-            answerSteps: [],
+            answerSteps: template.instructions ?? [],
             answerSettings: {
                 answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
                 answerPrecision: template.answerSettings?.answerPrecision

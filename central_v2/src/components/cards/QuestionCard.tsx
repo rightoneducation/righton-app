@@ -15,6 +15,7 @@ interface StyledQuestionCardProps {
   isCarousel: boolean;
   isFavorite: boolean;
   handleViewButtonClick: (element: IQuestionTemplate) => void;
+  handleCloneButtonClick: (element: IQuestionTemplate) => void;
 }
 
 const QuestionImage = styled('img')({
@@ -97,6 +98,7 @@ export default function StyledQuestionCard({
   isCarousel,
   isFavorite,
   handleViewButtonClick,
+  handleCloneButtonClick
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;
   return (
@@ -122,7 +124,7 @@ export default function StyledQuestionCard({
           <CentralButton
             buttonType={ButtonType.CLONE}
             isEnabled
-            onClick={() => handleViewButtonClick(question)}
+            onClick={() => handleCloneButtonClick(question)}
           />
         </BottomButtonBox>
       </ContentContainer>
