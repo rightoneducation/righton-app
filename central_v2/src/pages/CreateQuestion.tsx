@@ -517,6 +517,7 @@ export default function CreateQuestion({
           <Box onClick={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)} style={{ width: '100%' }}>
             <CreateQuestionCardBase
               screenSize={screenSize}
+              isClone={false}
               draftQuestion={draftQuestion}
               handleTitleChange={handleDebouncedTitleChange}
               handleCCSSClick={handleCCSSClick}

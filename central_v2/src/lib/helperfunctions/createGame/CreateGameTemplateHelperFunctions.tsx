@@ -51,7 +51,8 @@ export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQu
             title: template.title,
             ccss: template.ccss,
             isFirstEdit: true,
-            isCardComplete: false
+            isCardComplete: false,
+            imageUrl: template.imageUrl ?? '',
         },
         correctCard: {
             answer: correctAnswer?.text ?? '',

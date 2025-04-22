@@ -122,6 +122,7 @@ export default function CreateGameComponent({
           <Box style={{ width: '100%' }}>
             <CreateGameCardBase
               draftGame={draftGame}
+              isClone={isClone}
               screenSize={screenSize}
               handleImageUploadClick={handleImageUploadClick}
               handlePublicPrivateChange={handlePublicPrivateChange}

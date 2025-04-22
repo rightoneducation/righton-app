@@ -240,9 +240,6 @@ export default function CreateGame({
   >([draftTemplate]);
   const [isLoading, setIsLoading] = useState(false);
 
-  
-  console.log(draftQuestionsList);
-
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
     phaseOne: '',
     phaseTwo: '',
@@ -1144,13 +1141,15 @@ export default function CreateGame({
   useEffect(() => {
     setIsLoading(false);
     const selected = centralData.selectedGame;
+    const title = selected?.title;
     if (selected !== null) {
+      selected.title = `(Clone of) ${title}`;
       setDraftGame(prev => ({
         ...prev,
         gameTemplate: selected,
         openCreateQuestion: true,
+        imageUrl: selected.imageUrl ?? '',
       }));
-      handleImageSave( undefined, selected.imageUrl ? selected.imageUrl : undefined);
       const originals = selected?.questionTemplates;
       const assembled = originals?.map(q =>
         assembleQuestionTemplate(q.questionTemplate)
@@ -1322,6 +1321,7 @@ export default function CreateGame({
                 <Box>
                   <QuestionElements
                     screenSize={screenSize}
+                    isClone={route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0 }
                     draftQuestion={draftQuestionItem.question}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,
