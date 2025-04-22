@@ -37,7 +37,7 @@ import tabFavoritesIcon from '../images/tabFavorites.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
-import { reverseTimesMap } from '../components/cards/creategamecard/time';
+import { reverseTimesMap, timeLookup } from '../components/cards/creategamecard/time';
 import {
   getNextHighlightCard,
   handleMoveAnswerToComplete,
@@ -230,6 +230,7 @@ export default function CreateGame({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const route = useMatch('/clone/game/:gameId');
+  const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
@@ -408,7 +409,7 @@ export default function CreateGame({
       if (gameFormIsValid && allDQAreValid) {
         // check if user added image or image url
         let gameImgUrl: string | null = null;
-        if (draftGame.image || draftGame.imageUrl) {
+        if ((draftGame.image || draftGame.imageUrl) && !isClone) {
           let gameImgResult = null;
           // handle case for image type: File
           if (draftGame.image) {
@@ -426,6 +427,8 @@ export default function CreateGame({
             );
           }
         }
+        if (isClone)
+          gameImgUrl = draftGame.imageUrl ?? '';
           // create game template and store in variable to retrieve id after response
           const createGame: CreatePublicGameTemplateInput = {
             title: draftGame.gameTemplate.title,
@@ -457,7 +460,7 @@ export default function CreateGame({
             let url = null;
 
             // image file case
-            if (dq.question.questionCard.image) {
+            if (dq.question.questionCard.image && !isClone) {
               try {
                 const img = await apiClients.questionTemplate.storeImageInS3(
                   dq.question.questionCard.image,
@@ -473,7 +476,7 @@ export default function CreateGame({
             }
 
             // image url case
-            else if (dq.question.questionCard.imageUrl) {
+            else if (dq.question.questionCard.imageUrl && !isClone) {
               try {
                 url = await apiClients.questionTemplate.storeImageUrlInS3(
                   dq.question.questionCard.imageUrl,
@@ -485,6 +488,9 @@ export default function CreateGame({
             }
             console.log(dq.question);
             let newQuestionResponse: IQuestionTemplate | undefined;
+            // if we are cloning the question, we just use the image thats already in the S3 bucket
+            if (isClone)
+              url = dq.question.questionCard.imageUrl;
             // if an image url is available, we can create a question template
             if (url) {
               try {
@@ -1143,13 +1149,20 @@ export default function CreateGame({
     const selected = centralData.selectedGame;
     const title = selected?.title;
     if (selected !== null) {
-      selected.title = `(Clone of) ${title}`;
+      // regex to detect (clone of) in title
+      const regex = /\(Clone of\)/i;
+      if (title && !regex.test(title))
+        selected.title = `(Clone of) ${title}`;
       setDraftGame(prev => ({
         ...prev,
         gameTemplate: selected,
         openCreateQuestion: true,
         imageUrl: selected.imageUrl ?? '',
       }));
+      setPhaseTime({
+        phaseOne: timeLookup(selected.phaseOneTime),
+        phaseTwo: timeLookup(selected.phaseTwoTime),
+      });
       const originals = selected?.questionTemplates;
       const assembled = originals?.map(q =>
         assembleQuestionTemplate(q.questionTemplate)
@@ -1211,9 +1224,6 @@ export default function CreateGame({
     draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal ||
     draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen ||
     draftGame.isGameImageUploadVisible;
-
-    console.log("draftGame: ", draftGame);
-    console.log("draftQuesions: ", draftQuestionsList);
 
     const handleCreateGameQuestion = async () => {
       setDraftGame((prev) => ({...prev, isCreatingTemplate: true}))
@@ -1289,7 +1299,7 @@ export default function CreateGame({
       <CreateGameBoxContainer>
         <CreateGameComponent
           draftGame={draftGame}
-          isClone={route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0 }
+          isClone={isClone}
           screenSize={screenSize}
           handleSaveGame={handleSaveGame}
           handleDiscard={handleDiscardGame}
@@ -1321,7 +1331,7 @@ export default function CreateGame({
                 <Box>
                   <QuestionElements
                     screenSize={screenSize}
-                    isClone={route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0 }
+                    isClone={isClone}
                     draftQuestion={draftQuestionItem.question}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,

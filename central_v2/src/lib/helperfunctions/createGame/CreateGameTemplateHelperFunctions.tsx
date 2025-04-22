@@ -36,7 +36,7 @@ export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQu
         answer: '',
         explanation: '',
         isFirstEdit: true,
-        isCardComplete: false
+        isCardComplete: true
     }));
     const incorrectCards = incorrectAnswers?.map((answer, index) => ({
         id: `card-${index + 1}`,
@@ -51,7 +51,7 @@ export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQu
             title: template.title,
             ccss: template.ccss,
             isFirstEdit: true,
-            isCardComplete: false,
+            isCardComplete: true,
             imageUrl: template.imageUrl ?? '',
         },
         correctCard: {
@@ -62,7 +62,7 @@ export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQu
                 answerPrecision: template.answerSettings?.answerPrecision
             },
             isFirstEdit: true,
-            isCardComplete: true
+            isCardComplete: true,
         },
         incorrectCards,
     }
