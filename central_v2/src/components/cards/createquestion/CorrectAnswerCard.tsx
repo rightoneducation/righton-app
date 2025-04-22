@@ -23,6 +23,7 @@ import { ScreenSize, AnswerSettingsDropdownType } from '../../../lib/CentralMode
 
 interface DetailedQuestionSubCardProps {
   screenSize: ScreenSize;
+  isClone: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   isHighlight: boolean;
   handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CentralQuestionTemplateInput) => void;
@@ -35,6 +36,7 @@ interface DetailedQuestionSubCardProps {
 
 export default function DetailedQuestionSubCard({
   screenSize,
+  isClone,
   draftQuestion,
   isHighlight, 
   handleCorrectAnswerChange,
@@ -119,7 +121,7 @@ export default function DetailedQuestionSubCard({
   };
   
   return (
-    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.correctCard.isCardComplete}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.correctCard.isCardComplete} isClone={isClone}>
       <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Correct Answer
       </QuestionTitleStyled>

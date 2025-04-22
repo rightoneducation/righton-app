@@ -172,6 +172,7 @@ export default function CreateGameCardBase({
     onClick={handleCardClick}
       elevation={6}
       isHighlight={false}
+      isClone={isClone}
       isCardComplete={completedCardClicked ? false : cardIsComplete}
       sx={{
         height: responsiveHeight,

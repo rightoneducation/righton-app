@@ -378,14 +378,18 @@ export default function CreateQuestion({
           setIsCreatingTemplate(true);
           let result = null;
           let url = null;
-          if (draftQuestion.questionCard.image){
-            const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
-            // have to do a nested await here because aws-storage returns a nested promise object
-            result = await img.result;
-            if (result && result.path && result.path.length > 0)
-              url = result.path;
-          } else if (draftQuestion.questionCard.imageUrl){
-            url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+          if (!isClone){
+            if (draftQuestion.questionCard.image){
+              const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+              // have to do a nested await here because aws-storage returns a nested promise object
+              result = await img.result;
+              if (result && result.path && result.path.length > 0)
+                url = result.path;
+            } else if (draftQuestion.questionCard.imageUrl){
+              url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+            }
+          } else {
+            url = draftQuestion.questionCard.imageUrl;
           }
           window.localStorage.setItem(StorageKey, '');
           console.log(draftQuestion.questionCard.imageUrl);
@@ -580,6 +584,7 @@ export default function CreateQuestion({
                   <Box onClick={() => handleClick(CreateQuestionHighlightCard.CORRECTANSWER)} style={{ width: '100%' }}>
                     <CorrectAnswerCard
                       screenSize={screenSize}
+                      isClone={isClone}
                       draftQuestion={draftQuestion}                   
                       isHighlight={highlightCard === CreateQuestionHighlightCard.CORRECTANSWER}
                       handleCorrectAnswerChange={handleCorrectAnswerChange}
@@ -604,6 +609,7 @@ export default function CreateQuestion({
                   </Box>
                   <IncorrectAnswerCardStack 
                     draftQuestion={draftQuestion}
+                    isClone={isClone}
                     completeIncorrectAnswers={completeIncorrectAnswers}
                     incompleteIncorrectAnswers={incompleteIncorrectAnswers}
                     highlightCard={highlightCard} 

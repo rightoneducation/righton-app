@@ -156,6 +156,7 @@ export default function QuestionElements({
             >
               <CorrectAnswerCard
                 screenSize={screenSize}
+                isClone={isClone}
                 draftQuestion={draftQuestion}
                 isHighlight={
                   highlightCard === CreateQuestionHighlightCard.CORRECTANSWER
@@ -185,6 +186,7 @@ export default function QuestionElements({
             </Box>
             <IncorrectAnswerCardStack
               draftQuestion={draftQuestion}
+              isClone={isClone}
               completeIncorrectAnswers={completeIncorrectAnswers}
               incompleteIncorrectAnswers={incompleteIncorrectAnswers}
               highlightCard={highlightCard}
