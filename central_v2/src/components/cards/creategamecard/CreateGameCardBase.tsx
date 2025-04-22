@@ -95,7 +95,10 @@ export default function CreateGameCardBase({
         onMouseLeave={() => setIsImageHovered(false)}
         style={{
           width: '100%',
-          height: '196px',
+          height: screenSize === ScreenSize.LARGE ||
+          screenSize === ScreenSize.MEDIUM
+            ? '204px'
+            : '202px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

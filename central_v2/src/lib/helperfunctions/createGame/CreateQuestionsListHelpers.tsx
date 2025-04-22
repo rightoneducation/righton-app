@@ -1,4 +1,5 @@
 import {
+  IAPIClients,
   IncorrectCard,
   IQuestionTemplate,
   PublicPrivateType,
@@ -28,9 +29,84 @@ import {
   updateDQwithIncorrectAnswers,
 } from '../createquestion/IncorrectAnswerCardHelperFunctions';
 
-export const updatePublicPrivateAtIndex = (
-  value: PublicPrivateType,
+export const checkDQsAreValid = (
   draftQuestionsList: TDraftQuestionsList[],
+): boolean => {
+  return draftQuestionsList.every((dq, index) => {
+    const isValid =
+      dq.question.questionCard.isCardComplete &&
+      dq.question.correctCard.isCardComplete &&
+      dq.question.incorrectCards.every((card) => card.isCardComplete);
+    return isValid;
+  });
+};
+
+export const createNewQuestionTemplates = (
+  draftQuestionsList: TDraftQuestionsList[],
+  apiClients: IAPIClients,
+) => {
+  return draftQuestionsList.map(async (dq, i) => {
+    let result = null;
+    let url = null;
+
+    // if existing question return its ID for Game Creation
+    if (dq.questionTemplate.id) {
+      console.log('Existing id Skipped at index: ', i);
+      return { id: dq.questionTemplate.id } as IQuestionTemplate;
+    }
+
+    // image file case
+    if (dq.question.questionCard.image) {
+      try {
+        const img = await apiClients.questionTemplate.storeImageInS3(
+          dq.question.questionCard.image,
+        );
+        result = await img.result;
+        if (result && result.path && result.path.length > 0) {
+          url = result.path;
+        }
+      } catch (err) {
+        console.error('Error storing image:', err);
+        throw new Error('Failed to store image.');
+      }
+    }
+
+    // image url case
+    else if (dq.question.questionCard.imageUrl) {
+      try {
+        url = await apiClients.questionTemplate.storeImageUrlInS3(
+          dq.question.questionCard.imageUrl,
+        );
+      } catch (err) {
+        console.error('Error storing image URL:', err);
+        throw new Error('Failed to store image URL.');
+      }
+    }
+
+    let newQuestionResponse: IQuestionTemplate | undefined;
+    // if an image url is available, we can create a question template
+    if (url) {
+      try {
+        newQuestionResponse =
+          await apiClients.questionTemplate.createQuestionTemplate(
+            dq.publicPrivate,
+            url,
+            dq.question,
+          );
+      } catch (err) {
+        console.error('Error creating question template:', err);
+        throw new Error('Failed to create question template.');
+      }
+    }
+
+    // return updated question with POST response
+    return newQuestionResponse;
+  });
+};
+
+export const updatePublicPrivateAtIndex = (
+  draftQuestionsList: TDraftQuestionsList[],
+  value: PublicPrivateType,
   selectedIndex: number,
 ): TDraftQuestionsList[] => {
   return draftQuestionsList.map((question, i) => {
@@ -57,7 +133,7 @@ export const updateAIIsEnabledAtIndex = (
   });
 };
 
-export const udpateQuestionImageChangeAtIndex = (
+export const updateQuestionImageChangeAtIndex = (
   draftQuestionsList: TDraftQuestionsList[],
   selectedIndex: number,
   inputImage?: File,
@@ -207,7 +283,7 @@ export const updateCorrectAnswerAtIndex = (
   });
 };
 
-export const udpateCorrectAnswerStepsAtIndex = (
+export const updateCorrectAnswerStepsAtIndex = (
   draftQuestionsList: TDraftQuestionsList[],
   selectedIndex: number,
   steps: string[],
@@ -270,7 +346,7 @@ export const updateCloseQuestionModelAtIndex = (
   });
 };
 
-export const updateHandleClickAtIndex = (
+export const handleCardClickAtIndex = (
   draftQuestionsList: TDraftQuestionsList[],
   selectedIndex: number,
   cardType: CreateQuestionHighlightCard,
@@ -393,7 +469,7 @@ export const updateIncorrectCardStackAtIndex = (
   cardData: IncorrectCard,
   completeAnswers: IncorrectCard[],
   incompleteAnswers: IncorrectCard[],
-  isAIEnabledCard: boolean,
+  isAIEnabledCard?: boolean,
 ) => {
   const nextCard = getNextHighlightCard(
     cardData.id as CreateQuestionHighlightCard,
@@ -567,40 +643,44 @@ export const buildLibraryQuestionAtIndex = (
 };
 
 type UpdateDraftListResult = {
-    updatedList: TDraftQuestionsList[];
-    addNew: boolean;
-  };
+  updatedList: TDraftQuestionsList[];
+  addNew: boolean;
+};
 export const updateDraftListWithLibraryQuestion = (
-    draftQuestionsList: TDraftQuestionsList[],
-    selectedIndex: number,
-    libraryQuestion: TDraftQuestionsList,
+  draftQuestionsList: TDraftQuestionsList[],
+  selectedIndex: number,
+  libraryQuestion: TDraftQuestionsList,
 ): UpdateDraftListResult => {
-     const isFirstEmpty = draftQuestionsList.length === 1 && !draftQuestionsList[0].question.questionCard.isCardComplete;
-    
-          if(isFirstEmpty) {
-            return { updatedList: [libraryQuestion], addNew: false }
-          }
-    
-          if (
-            typeof selectedIndex === 'number' &&
-            draftQuestionsList[selectedIndex] &&
-            !draftQuestionsList[selectedIndex].question.questionCard.isCardComplete
-          ) {
-            const updated = [...draftQuestionsList];
-            updated[selectedIndex] = libraryQuestion;
-            return { updatedList: updated, addNew: false };
-          }
-    
-          const currentIndex = draftQuestionsList.findIndex((q) => !q.question.questionCard.isCardComplete);
-    
-          if(currentIndex !== -1) {
-            const updated = [...draftQuestionsList];
-            updated[currentIndex] = libraryQuestion;
-            return { updatedList: updated, addNew: false }
-          }
-    
-          const updatedQuestions = [...draftQuestionsList, draftTemplate];
-          updatedQuestions[updatedQuestions.length - 1] = libraryQuestion;
+  const isFirstEmpty =
+    draftQuestionsList.length === 1 &&
+    !draftQuestionsList[0].question.questionCard.isCardComplete;
 
-          return { updatedList: updatedQuestions, addNew: true }
-}
+  if (isFirstEmpty) {
+    return { updatedList: [libraryQuestion], addNew: false };
+  }
+
+  if (
+    typeof selectedIndex === 'number' &&
+    draftQuestionsList[selectedIndex] &&
+    !draftQuestionsList[selectedIndex].question.questionCard.isCardComplete
+  ) {
+    const updated = [...draftQuestionsList];
+    updated[selectedIndex] = libraryQuestion;
+    return { updatedList: updated, addNew: false };
+  }
+
+  const currentIndex = draftQuestionsList.findIndex(
+    (q) => !q.question.questionCard.isCardComplete,
+  );
+
+  if (currentIndex !== -1) {
+    const updated = [...draftQuestionsList];
+    updated[currentIndex] = libraryQuestion;
+    return { updatedList: updated, addNew: false };
+  }
+
+  const updatedQuestions = [...draftQuestionsList, draftTemplate];
+  updatedQuestions[updatedQuestions.length - 1] = libraryQuestion;
+
+  return { updatedList: updatedQuestions, addNew: true };
+};
