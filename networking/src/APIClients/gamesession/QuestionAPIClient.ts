@@ -23,10 +23,17 @@ export class QuestionAPIClient
   ): Promise<IQuestion> {
       const input: UpdateQuestionInput = questionInput
       const variables: UpdateQuestionMutationVariables = { input }
-      const question = await this.callGraphQL<UpdateQuestionMutation>(
+      console.log('here');
+      let question: any = {data: {updateQuestion: null}};
+      try {
+      question = await this.callGraphQL<UpdateQuestionMutation>(
           updateQuestion,
           variables
       )
+    } catch (error) {
+      console.log(error);
+    }
+      console.log('now here');
       if (
           isNullOrUndefined(question.data) ||
           isNullOrUndefined(question.data.updateQuestion)

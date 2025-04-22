@@ -11,7 +11,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import {
   PublicPrivateType,
-  CentralQuestionTemplateInput,
+  CloudFrontDistributionUrl 
 } from '@righton/networking';
 import {
   ContentContainerStyled,
@@ -26,7 +26,7 @@ import { ErrorIcon } from '../../../lib/styledcomponents/CentralStyledComponents
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
-import { ScreenSize, CloudFrontDistributionUrl } from '../../../lib/CentralModels';
+import { ScreenSize } from '../../../lib/CentralModels';
 import ErrorBox from '../createquestion/ErrorBox';
 import CreateGameErrorBox from './CreateGameErrorBox';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
