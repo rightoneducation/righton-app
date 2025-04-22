@@ -15,7 +15,7 @@ import {
   ImageURLTextContainerStyled,
   ImageURLUploadButton
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
-import { TGameTemplateProps } from '../../../hooks/useCreateGame';
+import { TGameTemplateProps } from '../../../lib/CreateGameModels';
 
 interface IntegratedContainerProps {
   screenSize: ScreenSize

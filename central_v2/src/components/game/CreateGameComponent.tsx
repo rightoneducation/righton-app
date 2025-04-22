@@ -16,7 +16,7 @@ import {
 import CentralButton from '../button/Button';
 import { ButtonType, buttonContentMap } from '../button/ButtonModels';
 import CreateGameCardBase from '../cards/creategamecard/CreateGameCardBase';
-import { TGameTemplateProps, TPhaseTime } from '../../hooks/useCreateGame';
+import { TGameTemplateProps, TPhaseTime } from '../../lib/CreateGameModels';
 import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuestionButtons';
 
 interface ICreateGameComponent {

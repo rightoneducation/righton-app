@@ -27,6 +27,14 @@ import {
   StorageKey,
   TemplateType,
 } from '../lib/CentralModels';
+import { 
+  TGameTemplateProps, 
+  TDraftQuestionsList, 
+  draftTemplate, 
+  TPhaseTime, 
+  newGameTemplate, 
+  gameTemplate,
+  emptyQuestionTemplate } from '../lib/CreateGameModels';
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
@@ -60,6 +68,17 @@ import {
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useCentralDataState } from '../hooks/context/useCentralDataContext';
+import { 
+  updateGameTitle, 
+  updateGameDescription, 
+  updateGameTemplatePhaseTime, 
+  updatePhaseTime,
+  toggleCreateQuestion,
+  toggleQuestionBank,
+  updateGameImageChange,
+  updateGameImageSave
+  } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
+
 
 interface CreateGameProps {
   screenSize: ScreenSize;
@@ -87,145 +106,6 @@ const tabIconMap: { [key: number]: string } = {
   0: tabExploreQuestionsIcon,
   1: tabMyQuestionsIcon,
   2: tabFavoritesIcon,
-};
-
-// Create Question
-type TDraftQuestionsList = {
-  publicPrivate: PublicPrivateType;
-  isAIEnabled: boolean;
-  isAIError: boolean;
-  question: CentralQuestionTemplateInput;
-  questionImageModalIsOpen: boolean;
-  isCCSSVisibleModal: boolean;
-  isImageUploadVisible: boolean;
-  isImageURLVisible: boolean;
-  isCreatingTemplate: boolean;
-  isQuestionCardErrored: boolean;
-  isQuestionCardSubmitted: boolean;
-  highlightCard: CreateQuestionHighlightCard;
-  isMultipleChoice: boolean;
-  questionTemplate: IQuestionTemplate;
-};
-
-const newEmptyTemplate: CentralQuestionTemplateInput = {
-  questionCard: {
-    title: '',
-    ccss: 'CCSS',
-    isFirstEdit: true,
-    isCardComplete: false,
-  },
-  correctCard: {
-    answer: '',
-    answerSteps: ['', '', ''],
-    isFirstEdit: true,
-    isCardComplete: false,
-  },
-  incorrectCards: [
-    {
-      id: 'card-1',
-      answer: '',
-      explanation: '',
-      isFirstEdit: true,
-      isCardComplete: false,
-    },
-    {
-      id: 'card-2',
-      answer: '',
-      explanation: '',
-      isFirstEdit: true,
-      isCardComplete: false,
-    },
-    {
-      id: 'card-3',
-      answer: '',
-      explanation: '',
-      isFirstEdit: true,
-      isCardComplete: false,
-    },
-  ],
-};
-
-const emptyQuestionTemplate: IQuestionTemplate = {
-  id: '',
-  title: '',
-  lowerCaseTitle: '',
-  version: 0,
-  ccss: '',
-  domain: '',
-  cluster: '',
-  grade: '',
-  gradeFilter: '',
-  standard: '',
-  gameTemplatesCount: 0,
-};
-
-const draftTemplate: TDraftQuestionsList = {
-  publicPrivate: PublicPrivateType.PUBLIC,
-  isAIEnabled: false,
-  isAIError: false,
-  question: newEmptyTemplate,
-  questionImageModalIsOpen: false,
-  isCCSSVisibleModal: false,
-  isImageUploadVisible: false,
-  isImageURLVisible: false,
-  isCreatingTemplate: false,
-  isQuestionCardErrored: false,
-  isQuestionCardSubmitted: false,
-  highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
-  isMultipleChoice: true,
-  questionTemplate: emptyQuestionTemplate,
-};
-
-// Create Game
-export type TGameTemplateProps = {
-  gameTemplate: IGameTemplate;
-  isGameCardSubmitted: boolean;
-  questionCount: number;
-  openQuestionBank: boolean;
-  openCreateQuestion: boolean;
-  publicPrivateGame: PublicPrivateType;
-  isGameCardErrored: boolean;
-  isGameImageUploadVisible: boolean;
-  isGameURLUploadVisible: boolean;
-  isCreatingTemplate: boolean;
-  image?: File | null;
-  imageUrl?: string | undefined;
-};
-
-export type TPhaseTime = {
-  phaseOne: string;
-  phaseTwo: string;
-};
-
-const newGameTemplate: IGameTemplate = {
-  id: '',
-  title: '',
-  lowerCaseTitle: '',
-  owner: '',
-  version: 0,
-  description: '',
-  lowerCaseDescription: '',
-  phaseOneTime: 0,
-  phaseTwoTime: 0,
-  questionTemplatesCount: 0,
-  questionTemplatesOrder: [],
-  imageUrl: null,
-  questionTemplates: [{ gameQuestionId: String(0), questionTemplate: emptyQuestionTemplate }],
-};
-
-const gameTemplate: TGameTemplateProps = {
-  gameTemplate: newGameTemplate,
-  isGameCardErrored: false,
-  isGameCardSubmitted: false,
-  questionCount: 1,
-  openCreateQuestion: false,
-  openQuestionBank: false,
-  publicPrivateGame: PublicPrivateType.PUBLIC,
-  isGameImageUploadVisible: false,
-  isGameURLUploadVisible: false,
-  isCreatingTemplate: false,
-  image: null,
-  imageUrl: '',
 };
 
 export default function CreateGame({ 
@@ -280,74 +160,30 @@ export default function CreateGame({
 
   /** CREATE GAME HANDLERS START HERE */
   const handleGameTitle = (val: string) => {
-    setDraftGame((prev) => ({
-      ...prev,
-      gameTemplate: {
-        ...prev.gameTemplate,
-        title: val,
-        lowerCaseTitle: val.toLowerCase(),
-      },
-    }));
+    const updateTitle = updateGameTitle(draftGame, val);
+    setDraftGame(updateTitle);
   };
 
   const handleGameDescription = (val: string) => {
-    setDraftGame((prev) => ({
-      ...prev,
-      gameTemplate: {
-        ...prev.gameTemplate,
-        description: val,
-        lowerCaseDescription: val.toLowerCase(),
-      },
-    }));
+    const updateDescription = updateGameDescription(draftGame, val)
+    setDraftGame(updateDescription);
   };
 
   const handlePhaseTime = (time: TPhaseTime) => {
-    setDraftGame((prev) => {
-      const phaseOne = reverseTimesMap[time.phaseOne];
-      const phaseTwo = reverseTimesMap[time.phaseTwo];
-      const updatedGameTemplate = {
-        ...prev,
-        gameTemplate: {
-          ...prev.gameTemplate,
-          ...(time.phaseOne && { phaseOneTime: phaseOne }),
-          ...(time.phaseTwo && { phaseTwoTime: phaseTwo }),
-        },
-      };
-      return updatedGameTemplate;
-    });
-    setPhaseTime((prev) => ({
-      ...prev,
-      ...(time.phaseOne && { phaseOne: time.phaseOne }),
-      ...(time.phaseTwo && { phaseTwo: time.phaseTwo }),
-    }));
+    const updateGamePhaseTime = updateGameTemplatePhaseTime(draftGame, time);
+    const phaseState = updatePhaseTime(time)
+    setDraftGame(updateGamePhaseTime);
+    setPhaseTime(phaseState);
   };
 
   const handleOpenCreateQuestion = () => {
-    setDraftGame((prev) => ({
-      ...prev,
-      // check if form is complete & if question bank is open, close it.
-      ...(draftGame.openQuestionBank &&
-        gameFormIsValid && { openQuestionBank: false }),
-      // check game form is complete before displaying question form
-      ...(gameFormIsValid && { openCreateQuestion: !prev.openCreateQuestion }),
-      // if the card was in an error state, but not anymore set it to false
-      ...(gameFormIsValid &&
-        draftGame.isGameCardErrored && { isGameCardErrored: false }),
-      // if the form is not valid, flag an error
-      ...(!gameFormIsValid && { isGameCardErrored: true }),
-    }));
+    const isCreateQuestion = toggleCreateQuestion(draftGame, gameFormIsValid)
+    setDraftGame(isCreateQuestion);
   };
 
   const handleOpenQuestionBank = () => {
-    setDraftGame((prev) => ({
-      ...prev,
-      ...(draftGame.openCreateQuestion &&
-        gameFormIsValid && { openCreateQuestion: false }),
-      ...(gameFormIsValid && { openQuestionBank: !prev.openQuestionBank }),
-      ...(gameFormIsValid &&
-        draftGame.isGameCardErrored && { isGameCardErrored: false }),
-      ...(!gameFormIsValid && { isGameCardErrored: true }),
-    }));
+    const isOpenQuestionBank = toggleQuestionBank(draftGame, gameFormIsValid)
+    setDraftGame(isOpenQuestionBank);
   };
 
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
@@ -375,47 +211,18 @@ export default function CreateGame({
       isGameImageUploadVisible: false,
     }));
   };
-  const handleGameImageSave = async (inputImage?: File, inputUrl?: string) => {
-    if (inputImage) {
-      setDraftGame((prev) => ({
-        ...prev,
-        image: inputImage,
-        imageUrl: undefined,
-        isGameImageUploadVisible: false,
-        isGameURLUploadVisible: false,
-      }));
-    }
 
-    if (inputUrl) {
-      setDraftGame((prev) => ({
-        ...prev,
-        imageUrl: inputUrl,
-        image: undefined,
-        isGameImageUploadVisible: false,
-        isGameURLUploadVisible: false,
-      }));
-    }
+  const handleGameImageSave = async (inputImage?: File, inputUrl?: string) => {
+    const savedImage = updateGameImageSave(draftGame, inputImage, inputUrl);
+    setDraftGame(savedImage);
   };
 
   const handleGameImageChange = async (
     inputImage?: File,
     inputUrl?: string,
   ) => {
-    if (inputImage) {
-      setDraftGame((prev) => ({
-        ...prev,
-        image: inputImage,
-        imageUrl: undefined,
-      }));
-    }
-
-    if (inputUrl) {
-      setDraftGame((prev) => ({
-        ...prev,
-        imageUrl: inputUrl,
-        image: undefined,
-      }));
-    }
+    const changedImage = updateGameImageChange(draftGame, inputImage, inputUrl)
+   setDraftGame(changedImage)
   };
 
   const handleSaveGame = async () => {
@@ -1151,10 +958,6 @@ export default function CreateGame({
     return '';
   };
 
-  const handleLibraryQuestionClone = (libraryQuestion: IQuestionTemplate) => {
-    // TODO: clone a library question or Id...
-    
-  }
   /** LIBRARY HANDLER HELPERS */
 
   // game questions index handlers
@@ -1269,10 +1072,11 @@ export default function CreateGame({
     };
 
     useEffect(() => {
+      console.log("Draft Game:", draftGame)
       console.log("Questions List:", draftQuestionsList);
       console.log("Selected Index:", selectedQuestionIndex);
       console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
-    }, [draftQuestionsList, selectedQuestionIndex]);
+    }, [draftQuestionsList, selectedQuestionIndex, draftGame]);
 
   return (
     <CreateGameMainContainer>
