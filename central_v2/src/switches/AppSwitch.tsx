@@ -130,7 +130,13 @@ function AppSwitch({
     }
     case ScreenType.CREATEGAME: {
       screenComponent = (
-          <CreateGame screenSize={screenSize}/>
+          <CreateGame screenSize={screenSize} fetchElement={fetchElement}/>
+      );
+      break;
+    }
+    case ScreenType.CLONEGAME: {
+      screenComponent = (
+          <CreateGame screenSize={screenSize} fetchElement={fetchElement}/>
       );
       break;
     }

@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useMatch, useNavigate } from 'react-router-dom';
 import {
   AnswerType,
   AnswerPrecision,
@@ -20,11 +20,11 @@ import {
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import {
   CreateQuestionHighlightCard,
+  GameQuestionType,
   ScreenSize,
   StorageKey,
   TemplateType,
 } from '../lib/CentralModels';
-import useCentralDataManager from '../hooks/useCentralDataActions'
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
@@ -37,7 +37,7 @@ import tabFavoritesIcon from '../images/tabFavorites.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
-import { reverseTimesMap } from '../components/cards/creategamecard/time';
+import { reverseTimesMap, timeLookup } from '../components/cards/creategamecard/time';
 import {
   getNextHighlightCard,
   handleMoveAnswerToComplete,
@@ -57,11 +57,14 @@ import {
   updateDQwithCorrectAnswerSteps,
   updateDQwithAnswerSettings,
 } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 
 interface CreateGameProps {
   screenSize: ScreenSize;
+  fetchElement: (type: GameQuestionType, id: string) => void;
 }
 
 // Library Questions
@@ -219,9 +222,15 @@ const gameTemplate: TGameTemplateProps = {
   imageUrl: '',
 };
 
-export default function CreateGame({ screenSize }: CreateGameProps) {
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
+export default function CreateGame({ 
+  screenSize,
+  fetchElement
+}: CreateGameProps) {
   const navigate = useNavigate();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const centralData = useCentralDataState();
+  const route = useMatch('/clone/game/:gameId');
+  const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
@@ -230,6 +239,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
   >([draftTemplate]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
     phaseOne: '',
     phaseTwo: '',
@@ -398,7 +409,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       if (gameFormIsValid && allDQAreValid) {
         // check if user added image or image url
         let gameImgUrl: string | null = null;
-        if (draftGame.image || draftGame.imageUrl) {
+        if ((draftGame.image || draftGame.imageUrl) && !isClone) {
           let gameImgResult = null;
           // handle case for image type: File
           if (draftGame.image) {
@@ -416,6 +427,8 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             );
           }
         }
+        if (isClone)
+          gameImgUrl = draftGame.imageUrl ?? '';
           // create game template and store in variable to retrieve id after response
           const createGame: CreatePublicGameTemplateInput = {
             title: draftGame.gameTemplate.title,
@@ -447,7 +460,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             let url = null;
 
             // image file case
-            if (dq.question.questionCard.image) {
+            if (dq.question.questionCard.image && !isClone) {
               try {
                 const img = await apiClients.questionTemplate.storeImageInS3(
                   dq.question.questionCard.image,
@@ -463,7 +476,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             }
 
             // image url case
-            else if (dq.question.questionCard.imageUrl) {
+            else if (dq.question.questionCard.imageUrl && !isClone) {
               try {
                 url = await apiClients.questionTemplate.storeImageUrlInS3(
                   dq.question.questionCard.imageUrl,
@@ -475,6 +488,9 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
             }
             console.log(dq.question);
             let newQuestionResponse: IQuestionTemplate | undefined;
+            // if we are cloning the question, we just use the image thats already in the S3 bucket
+            if (isClone)
+              url = dq.question.questionCard.imageUrl;
             // if an image url is available, we can create a question template
             if (url) {
               try {
@@ -1128,6 +1144,47 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
 
   /** END OF CREATE QUESTION HANDLERS  */
 
+  useEffect(() => {
+    setIsLoading(false);
+    const selected = centralData.selectedGame;
+    const title = selected?.title;
+    if (selected !== null) {
+      // regex to detect (clone of) in title
+      const regex = /\(Clone of\)/i;
+      if (title && !regex.test(title))
+        selected.title = `(Clone of) ${title}`;
+      setDraftGame(prev => ({
+        ...prev,
+        gameTemplate: selected,
+        openCreateQuestion: true,
+        imageUrl: selected.imageUrl ?? '',
+      }));
+      setPhaseTime({
+        phaseOne: timeLookup(selected.phaseOneTime),
+        phaseTwo: timeLookup(selected.phaseTwoTime),
+      });
+      const originals = selected?.questionTemplates;
+      const assembled = originals?.map(q =>
+        assembleQuestionTemplate(q.questionTemplate)
+      );
+    
+      if (originals && assembled && assembled.length > 0) {
+        setDraftQuestionsList(() =>
+          originals.map((orig, i) => ({
+            ...draftTemplate,
+            question: assembled[i],
+            questionTemplate: orig.questionTemplate,
+          }))
+        );
+      }
+    }
+    const id = route?.params.gameId;
+    if (!centralData.selectedGame && id){
+      setIsLoading(true);
+      fetchElement(GameQuestionType.GAME, id);
+    }
+  }, [centralData.selectedGame, route ]); // eslint-disable-line 
+
   const {
     handleView,
     getLabel,
@@ -1167,9 +1224,6 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
     draftQuestionsList[selectedQuestionIndex].isCCSSVisibleModal ||
     draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen ||
     draftGame.isGameImageUploadVisible;
-
-    console.log("draftGame: ", draftGame);
-    console.log("draftQuesions: ", draftQuestionsList);
 
     const handleCreateGameQuestion = async () => {
       setDraftGame((prev) => ({...prev, isCreatingTemplate: true}))
@@ -1245,6 +1299,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
       <CreateGameBoxContainer>
         <CreateGameComponent
           draftGame={draftGame}
+          isClone={isClone}
           screenSize={screenSize}
           handleSaveGame={handleSaveGame}
           handleDiscard={handleDiscardGame}
@@ -1276,6 +1331,7 @@ export default function CreateGame({ screenSize }: CreateGameProps) {
                 <Box>
                   <QuestionElements
                     screenSize={screenSize}
+                    isClone={isClone}
                     draftQuestion={draftQuestionItem.question}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,

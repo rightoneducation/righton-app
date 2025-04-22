@@ -36,6 +36,7 @@ function App() {
             <Route path="/signup" element={<AppSwitch currentScreen={ScreenType.SIGNUP} />} />
             <Route path="/login" element={<AppSwitch currentScreen={ScreenType.LOGIN} />} />
             <Route path="/create/game" element={<AppSwitch currentScreen={ScreenType.CREATEGAME} />} />
+            <Route path="/clone/game/:gameId" element={<AppSwitch currentScreen={ScreenType.CLONEGAME} />} />
             <Route path="/games/:gameId" element={<AppSwitch currentScreen={ScreenType.VIEWGAME} />} />
             <Route path="/create/question" element={<AppSwitch currentScreen={ScreenType.CREATEQUESTION} />} loader={CreateQuestionLoader}/>
             <Route path="/confirmation" element={<AppSwitch currentScreen={ScreenType.CONFIRMATION} />} />

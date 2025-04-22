@@ -26,7 +26,7 @@ import {
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
-import { ScreenSize } from '../../../lib/CentralModels';
+import { ScreenSize, CloudFrontDistributionUrl } from '../../../lib/CentralModels';
 import ErrorBox from './ErrorBox';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 import errorIcon from '../../../images/errorIcon.svg';
@@ -35,6 +35,7 @@ import SelectArrow from '../../../images/SelectArrow.svg';
 
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
+  isClone: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   handleTitleChange: (title: string, draftQuestion: CentralQuestionTemplateInput) => void;
   handleCCSSClick: () => void;
@@ -95,6 +96,7 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 
 export default function CreateQuestionCardBase({
   screenSize,
+  isClone,
   draftQuestion,
   handleTitleChange,
   handleCCSSClick,
@@ -119,7 +121,7 @@ export default function CreateQuestionCardBase({
     return draftQuestion.questionCard.imageUrl;
   }
   const imageLink = getImage();
-
+  console.log('imageLink', imageLink);
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -153,7 +155,7 @@ export default function CreateQuestionCardBase({
           position: 'relative',
       }}>
             <ImageStyled 
-              src={imageLink}
+              src={isClone ? `${CloudFrontDistributionUrl}${imageLink ?? ''}` : imageLink}
               alt="image" 
               style={{
                 opacity: isImageHovered ? 0.6: 1,

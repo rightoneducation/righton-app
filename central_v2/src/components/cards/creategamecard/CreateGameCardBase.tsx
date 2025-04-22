@@ -26,7 +26,7 @@ import { ErrorIcon } from '../../../lib/styledcomponents/CentralStyledComponents
 import CentralButton from '../../button/Button';
 import { ButtonType } from '../../button/ButtonModels';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
-import { ScreenSize } from '../../../lib/CentralModels';
+import { ScreenSize, CloudFrontDistributionUrl } from '../../../lib/CentralModels';
 import ErrorBox from '../createquestion/ErrorBox';
 import CreateGameErrorBox from './CreateGameErrorBox';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
@@ -46,6 +46,7 @@ import { TPhaseTime, TGameTemplateProps } from '../../../hooks/useCreateGame';
 
 interface CreateGameCardBaseProps {
   draftGame: TGameTemplateProps;
+  isClone: boolean;
   screenSize: ScreenSize;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
@@ -63,6 +64,7 @@ interface CreateGameCardBaseProps {
 
 export default function CreateGameCardBase({
   draftGame,
+  isClone,
   screenSize,
   handleImageUploadClick,
   handlePublicPrivateChange,
@@ -105,7 +107,7 @@ export default function CreateGameCardBase({
         }}
       >
         <ImageStyled
-          src={imageLink}
+          src={isClone ? `${CloudFrontDistributionUrl}${imageLink ?? ''}` : imageLink}
           alt="image"
           style={{
             opacity: isImageHovered ? 0.6 : 1,

@@ -42,6 +42,7 @@ const AISwitch = styled(Switch)(({ theme }) => ({
 
 interface IQuestionElements {
   screenSize: ScreenSize;
+  isClone: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
@@ -77,6 +78,7 @@ interface IQuestionElements {
 
 export default function QuestionElements({
   screenSize,
+  isClone,
   draftQuestion,
   isCardSubmitted,
   isCardErrored,
@@ -127,6 +129,7 @@ export default function QuestionElements({
         >
           <CreateQuestionCardBase
             screenSize={screenSize}
+            isClone={isClone}
             draftQuestion={draftQuestion}
             handleTitleChange={handleDebouncedTitleChange}
             handleCCSSClick={handleCCSSClick}
