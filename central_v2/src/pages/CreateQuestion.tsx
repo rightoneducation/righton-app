@@ -101,6 +101,7 @@ export default function CreateQuestion({
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
+  const [originalImageURl, setOriginalImageURL] = useState<string>('');
   const localData = useCreateQuestionLoader();
   
   const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>( 
@@ -378,7 +379,8 @@ export default function CreateQuestion({
           setIsCreatingTemplate(true);
           let result = null;
           let url = null;
-          if (!isClone){
+          // if the question is a clone and the image hasn't been changed, we can use the original imageUrl
+          if (!isClone || draftQuestion.questionCard.imageUrl !== originalImageURl){
             if (draftQuestion.questionCard.image){
               const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
               // have to do a nested await here because aws-storage returns a nested promise object
@@ -459,6 +461,7 @@ export default function CreateQuestion({
         ...prev,
         ...draft,
       }));
+      setOriginalImageURL(selected.imageUrl ?? '');
       setCompleteIncorrectAnswers(draft.incorrectCards.filter((card) => card.isCardComplete));
       setIncompleteIncorrectAnswers(draft.incorrectCards.filter((card) => !card.isCardComplete));
     }
