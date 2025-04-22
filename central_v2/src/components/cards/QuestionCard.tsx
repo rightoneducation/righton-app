@@ -1,8 +1,7 @@
 import React from 'react';
-import { IQuestionTemplate } from '@righton/networking';
+import { IQuestionTemplate, CloudFrontDistributionUrl  } from '@righton/networking';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { CloudFrontDistributionUrl } from '../../lib/CentralModels';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';

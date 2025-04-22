@@ -1,7 +1,7 @@
 import React from 'react';
-import { PublicPrivateType, IGameTemplate } from '@righton/networking';
 import { Typography, RadioGroup, Box, styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import { PublicPrivateType, IGameTemplate, CloudFrontDistributionUrl } from '@righton/networking';
 import {
   QuestionTitleStyled,
   RadioContainerStyled,
@@ -15,7 +15,7 @@ import {
   TextContainerStyled,
 } from '../../../lib/styledcomponents/CreateQuestionStyledComponents';
 import { ButtonCCSS } from '../../../lib/styledcomponents/ButtonStyledComponents';
-import { ScreenSize, CloudFrontDistributionUrl } from '../../../lib/CentralModels';
+import { ScreenSize } from '../../../lib/CentralModels';
 import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateButton';
 
 interface DetailedGameCardBaseProps {

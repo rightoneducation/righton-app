@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { CircularProgress, Grid, MenuItem, Divider, Typography, Box, TextField  } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
-import { IGameTemplate, ITeam } from '@righton/networking';
+import { IGameTemplate, ITeam, CloudFrontDistributionUrl } from '@righton/networking';
 import { StartEndGameScrollBoxStyled } from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import SearchIcon from '../../images/SearchIcon.svg';
 import RightOnPlaceHolder from '../../images/RightOnLogo.png';
@@ -226,7 +226,7 @@ function SuggestedGames ({
                       </Typography>    
                     </Box>
                   </LeftBox>
-                  {gameTemplate.imageUrl ? <RightBox src={gameTemplate.imageUrl} alt="Game Template" /> :
+                  {gameTemplate.imageUrl ? <RightBox src={`${CloudFrontDistributionUrl}${gameTemplate.imageUrl}`} alt="Game Template" /> :
                   <RightBox src={RightOnPlaceHolder} alt="Placeholder"/>}
                 </MenuItemStyled>
             ))}

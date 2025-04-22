@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { IAPIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate, CloudFrontDistributionUrl  } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ScreenSize, CloudFrontDistributionUrl } from '../../lib/CentralModels';
+import { ScreenSize } from '../../lib/CentralModels';
 import heart from '../../images/heart.svg';
 import eyeball from '../../images/eyeball.svg';
 import rocket from '../../images/rocket.svg';

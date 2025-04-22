@@ -68,9 +68,6 @@ export enum TemplateType {
 // key for storage to localStorage  
 export const StorageKey = 'rightOnCentral';
 
-// public cloudfront distribution URL for the RightOn Central app
-export const CloudFrontDistributionUrl = 'https://d1api4wn3jnenc.cloudfront.net/';
-
 // type that shapes retreived storage for createQuestion 
 export type CreateQuestionLocalData = {
   draftQuestion?: CentralQuestionTemplateInput | null,
