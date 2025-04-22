@@ -65,6 +65,7 @@ import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 interface CreateGameProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
+  fetchElements: () => void;
 }
 
 // Library Questions
@@ -224,7 +225,8 @@ const gameTemplate: TGameTemplateProps = {
 
 export default function CreateGame({ 
   screenSize,
-  fetchElement
+  fetchElement,
+  fetchElements
 }: CreateGameProps) {
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -555,6 +557,7 @@ export default function CreateGame({
             await Promise.all(createGameQuestions);
         }
         setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
+        fetchElements(); 
         navigate('/');
       } else {
         // set draft game error

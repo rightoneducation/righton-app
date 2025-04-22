@@ -78,11 +78,13 @@ const AISwitch = styled(Switch)(({ theme }) => ({
 interface CreateQuestionProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
+  fetchElements: () => void;
 }
 
 export default function CreateQuestion({
   screenSize,
-  fetchElement
+  fetchElement,
+  fetchElements
 }:CreateQuestionProps){
   const theme = useTheme();
   const navigate = useNavigate();
@@ -370,7 +372,7 @@ export default function CreateQuestion({
   const handleBackToExplore = () => {
     setIsCCSSVisible(false);
   };
-  // TODO: implement to save question on imageurl
+  
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
@@ -399,6 +401,7 @@ export default function CreateQuestion({
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
           }
           setIsCreatingTemplate(false);
+          fetchElements();
           navigate('/questions');
         }   
       } else {
