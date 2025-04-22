@@ -455,6 +455,8 @@ export default function CreateQuestion({
         ...prev,
         ...draft,
       }));
+      setCompleteIncorrectAnswers(draft.incorrectCards.filter((card) => card.isCardComplete));
+      setIncompleteIncorrectAnswers(draft.incorrectCards.filter((card) => !card.isCardComplete));
     }
     const id = route?.params.questionId;
     if (!centralData.selectedQuestion && id){
