@@ -88,9 +88,6 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
 ];
 
   const dropdownLabel = type !== AnswerSettingsDropdownType.TYPE ? "Answer Type" : "Answer Settings";
-  console.log(answerSettingsType);
-  console.log(answerTypeOptions.find(o => o.value === answerSettingsType as AnswerType)?.label);
-  console.log(answerSettingsPrecisionType);
   // flag error if phase is not selected or
   const isError =
     (isCardSubmitted && answerSettingsType === null) || (isCardError && answerSettingsType === null) ||

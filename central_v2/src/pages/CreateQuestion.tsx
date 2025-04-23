@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {Grid, Typography, Box, Switch, useTheme, styled, CircularProgress, Fade} from '@mui/material';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
@@ -78,11 +78,13 @@ const AISwitch = styled(Switch)(({ theme }) => ({
 interface CreateQuestionProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
+  fetchElements: () => void;
 }
 
 export default function CreateQuestion({
   screenSize,
-  fetchElement
+  fetchElement,
+  fetchElements
 }:CreateQuestionProps){
   const theme = useTheme();
   const navigate = useNavigate();
@@ -90,6 +92,7 @@ export default function CreateQuestion({
   const centralData = useCentralDataState();
   const route = useMatch('/clone/question/:questionId');
   const isClone = route?.params.questionId !== null && route?.params.questionId !== undefined && route?.params.questionId.length > 0;
+  const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
@@ -165,6 +168,7 @@ export default function CreateQuestion({
   const [isAIError, setIsAIError] = useState<boolean>(false);
   // QuestionCardBase handler functions
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
+    setIsCloneImageChanged(true);
     if (inputImage) {
       const newDraftQuestion = updateDQwithImage(draftQuestion, undefined, inputImage);
       setDraftQuestion(newDraftQuestion);
@@ -370,7 +374,7 @@ export default function CreateQuestion({
   const handleBackToExplore = () => {
     setIsCCSSVisible(false);
   };
-  // TODO: implement to save question on imageurl
+  
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
@@ -399,6 +403,7 @@ export default function CreateQuestion({
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
           }
           setIsCreatingTemplate(false);
+          fetchElements();
           navigate('/questions');
         }   
       } else {
@@ -483,6 +488,8 @@ export default function CreateQuestion({
         />
        <ImageUploadModal 
           draftQuestion={draftQuestion} 
+          isClone={isClone}
+          isCloneImageChanged={isCloneImageChanged}
           screenSize={screenSize}  
           isModalOpen={isImageUploadVisible} 
           handleImageChange={handleImageChange}
@@ -561,6 +568,7 @@ export default function CreateQuestion({
                 <CreateQuestionCardBase
                   screenSize={screenSize}
                   isClone={isClone}
+                  isCloneImageChanged={isCloneImageChanged}
                   draftQuestion={draftQuestion}
                   handleTitleChange={handleTitleChange}
                   handleCCSSClick={handleCCSSClick}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Paper, Fade, Typography, styled, useTheme } from '@mui/material';
-import { CentralQuestionTemplateInput } from '@righton/networking';
+import { CloudFrontDistributionUrl } from '@righton/networking';
 import imageUploadIcon from '../../../images/imageUploadIcon.svg';
 
 import imageUploadClose from '../../../images/imageUploadClose.svg';
@@ -78,6 +78,8 @@ const DashedBox = styled(Box)(({ theme }) => ({
 
 interface GameImageUploadModalProps {
   screenSize: ScreenSize;
+  isClone: boolean;
+  isCloneImageChanged: boolean;
   isModalOpen: boolean;
   draftGame: TGameTemplateProps
   handleImageChange: (inputImage?: File, inputUrl?: string) => void;
@@ -87,6 +89,8 @@ interface GameImageUploadModalProps {
 
 export default function GameImageUploadModal({
   screenSize,
+  isClone,
+  isCloneImageChanged,
   isModalOpen,
   draftGame,
   handleImageChange,
@@ -99,8 +103,11 @@ export default function GameImageUploadModal({
   const [isChangeImage, setIsChangeImage] = React.useState<boolean>(false);
   
   let imageLink: string | null = null;
-  if (imageUrl)
+  if (imageUrl){
     imageLink = imageUrl;
+    if (isClone && !isCloneImageChanged)
+      imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
+  }
   else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
 
@@ -148,7 +155,7 @@ export default function GameImageUploadModal({
             }}
             >
               <img
-                src={imageLink ?? ''} 
+                src={imageLink ?? ''}
                 alt="Uploaded"
                 style={{
                   width: '100%',

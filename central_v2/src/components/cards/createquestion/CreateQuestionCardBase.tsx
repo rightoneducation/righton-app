@@ -37,6 +37,7 @@ import SelectArrow from '../../../images/SelectArrow.svg';
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
   isClone: boolean;
+  isCloneImageChanged: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   handleTitleChange: (title: string) => void;
   handleCCSSClick: () => void;
@@ -97,6 +98,7 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function CreateQuestionCardBase({
   screenSize,
   isClone,
+  isCloneImageChanged,
   draftQuestion,
   handleTitleChange,
   handleCCSSClick,
@@ -111,16 +113,20 @@ export default function CreateQuestionCardBase({
   isPublic,
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
+  const { imageUrl, image } = draftQuestion.questionCard;
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const [CCSSIsOpen, setCCSSIsOpen] = React.useState<boolean>(false);
-  const getImage = () => {
-    if (draftQuestion.questionCard.image && draftQuestion.questionCard.image instanceof File)
-      return URL.createObjectURL(draftQuestion.questionCard.image);
-    return draftQuestion.questionCard.imageUrl;
+
+ let imageLink: string | null = null;
+  if (imageUrl){
+    imageLink = imageUrl;
+    if (isClone && !isCloneImageChanged)
+      imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   }
-  const imageLink = getImage();
-  console.log('imageLink', imageLink);
+  else if (image && image instanceof File)
+    imageLink = URL.createObjectURL(image);
+  
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -149,7 +155,7 @@ export default function CreateQuestionCardBase({
           position: 'relative',
       }}>
             <ImageStyled 
-              src={isClone ? `${CloudFrontDistributionUrl}${imageLink ?? ''}` : imageLink}
+              src={imageLink}
               alt="image" 
               style={{
                 opacity: isImageHovered ? 0.6: 1,
