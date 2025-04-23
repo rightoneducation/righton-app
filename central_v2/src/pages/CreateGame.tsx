@@ -94,6 +94,7 @@ type TDraftQuestionsList = {
   isCreatingTemplate: boolean;
   isQuestionCardErrored: boolean;
   isQuestionCardSubmitted: boolean;
+  isCloneQuestionImageChanged: boolean;
   highlightCard: CreateQuestionHighlightCard;
   isMultipleChoice: boolean;
   questionTemplate: IQuestionTemplate;
@@ -167,6 +168,7 @@ const draftTemplate: TDraftQuestionsList = {
   isCreatingTemplate: false,
   isQuestionCardErrored: false,
   isQuestionCardSubmitted: false,
+  isCloneQuestionImageChanged: false,
   highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
   isMultipleChoice: true,
   questionTemplate: emptyQuestionTemplate,
@@ -183,6 +185,7 @@ export type TGameTemplateProps = {
   isGameCardErrored: boolean;
   isGameImageUploadVisible: boolean;
   isGameURLUploadVisible: boolean;
+  isCloneGameImageChanged: boolean;
   isCreatingTemplate: boolean;
   image?: File | null;
   imageUrl?: string | undefined;
@@ -219,6 +222,7 @@ const gameTemplate: TGameTemplateProps = {
   isGameImageUploadVisible: false,
   isGameURLUploadVisible: false,
   isCreatingTemplate: false,
+  isCloneGameImageChanged: false,
   image: null,
   imageUrl: '',
 };
@@ -393,6 +397,7 @@ export default function CreateGame({
         ...prev,
         image: inputImage,
         imageUrl: undefined,
+        isCloneGameImageChanged: true,
       }));
     }
 
@@ -401,10 +406,10 @@ export default function CreateGame({
         ...prev,
         imageUrl: inputUrl,
         image: undefined,
+        isCloneGameImageChanged: true,
       }));
     }
   };
-
   const handleSaveGame = async () => {
     try {
       // set our card submitted state to true to check for errors and flag creating template to triggle loading modal
@@ -496,7 +501,6 @@ export default function CreateGame({
           } else {
             url = originalQuestionImageUrls[i];
           }
-          console.log(dq.question);
           let newQuestionResponse: IQuestionTemplate | undefined;
         
           // if an image url is available, we can create a question template
@@ -540,13 +544,11 @@ export default function CreateGame({
                 privateQuestionTemplateID: String(questionId),
               }),
               }
-              console.log("Game Question: ",gameQuestion)
             try {
               const response = await apiClients.gameQuestions.createGameQuestions(
                 draftGame.publicPrivateGame,
                 gameQuestion,
               );
-              console.log("Response: ", response);
             } catch(err) {
               setDraftGame((prev) => ({...prev, isCreatingTemplate: false}))
               console.error(`Failed to create game question at index ${i}:`, err);
@@ -616,6 +618,7 @@ export default function CreateGame({
             const updatedImageItem = {
               ...questionItem,
               question: newDraftQuestion,
+              isCloneQuestionImageChanged: true,
             };
             return updatedImageItem;
           }
@@ -628,6 +631,7 @@ export default function CreateGame({
             const updatedImageURLItem = {
               ...questionItem,
               question: newDraftQuestion,
+              isCloneQuestionImageChanged: true,
             };
             return updatedImageURLItem;
           }
@@ -1290,6 +1294,10 @@ export default function CreateGame({
       <ImageUploadModal
         draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
         screenSize={screenSize}
+        isClone={isClone}
+        isCloneImageChanged={
+          draftQuestionsList[selectedQuestionIndex].isCloneQuestionImageChanged
+        }
         isModalOpen={
           draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
         }
@@ -1301,6 +1309,8 @@ export default function CreateGame({
       {/* Create Game Image Upload Modal */}
       <CreateGameImageUploadModal
         draftGame={draftGame}
+        isClone={isClone}
+        isCloneImageChanged={draftGame.isCloneGameImageChanged}
         screenSize={screenSize}
         isModalOpen={draftGame.isGameImageUploadVisible}
         handleImageChange={handleGameImageChange}
@@ -1313,6 +1323,7 @@ export default function CreateGame({
         <CreateGameComponent
           draftGame={draftGame}
           isClone={isClone}
+          isCloneImageChanged={draftGame.isCloneGameImageChanged}
           screenSize={screenSize}
           handleSaveGame={handleSaveGame}
           handleDiscard={handleDiscardGame}
@@ -1345,6 +1356,9 @@ export default function CreateGame({
                   <QuestionElements
                     screenSize={screenSize}
                     isClone={isClone}
+                    isCloneImageChanged={
+                      draftQuestionItem.isCloneQuestionImageChanged
+                    }
                     draftQuestion={draftQuestionItem.question}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,

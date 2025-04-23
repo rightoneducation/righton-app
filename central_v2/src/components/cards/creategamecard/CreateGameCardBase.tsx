@@ -47,6 +47,7 @@ import { TPhaseTime, TGameTemplateProps } from '../../../hooks/useCreateGame';
 interface CreateGameCardBaseProps {
   draftGame: TGameTemplateProps;
   isClone: boolean;
+  isCloneImageChanged: boolean;
   screenSize: ScreenSize;
   handleImageUploadClick: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
@@ -65,6 +66,7 @@ interface CreateGameCardBaseProps {
 export default function CreateGameCardBase({
   draftGame,
   isClone,
+  isCloneImageChanged,
   screenSize,
   handleImageUploadClick,
   handlePublicPrivateChange,
@@ -80,16 +82,23 @@ export default function CreateGameCardBase({
   openCreateQuestion,
 }: CreateGameCardBaseProps) {
   const theme = useTheme();
+  const { imageUrl, image } = draftGame;
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
-  
-  const getImage = (): string => {
-    if (draftGame.image && draftGame.image instanceof File) return URL.createObjectURL(draftGame.image);
-    return String(draftGame.imageUrl);
-  };
   const [completedCardClicked, setCompletedCardClicked] = React.useState<boolean>(false)
-  const imageLink = getImage();
+  
+  let imageLink: string | null = null;
+  if (imageUrl){
+    imageLink = imageUrl;
+    if (isClone && !isCloneImageChanged)
+      imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
+  }
+  else if (image && image instanceof File)
+    imageLink = URL.createObjectURL(image);
+
+  console.log(imageLink);
+
   const imageContents = [
     imageLink && (
       <Box
@@ -107,7 +116,7 @@ export default function CreateGameCardBase({
         }}
       >
         <ImageStyled
-          src={isClone ? `${CloudFrontDistributionUrl}${imageLink ?? ''}` : imageLink}
+          src={imageLink}
           alt="image"
           style={{
             opacity: isImageHovered ? 0.6 : 1,
@@ -169,7 +178,7 @@ export default function CreateGameCardBase({
 
   return (
     <BaseCardStyled
-    onClick={handleCardClick}
+      onClick={handleCardClick}
       elevation={6}
       isHighlight={false}
       isClone={isClone}

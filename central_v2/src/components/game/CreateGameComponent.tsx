@@ -22,6 +22,7 @@ import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuesti
 interface ICreateGameComponent {
   screenSize: ScreenSize;
   isClone: boolean;
+  isCloneImageChanged: boolean;
   handleSaveGame: () => Promise<void>;
   draftGame: TGameTemplateProps;
   handleDiscard: () => void;
@@ -42,6 +43,7 @@ interface ICreateGameComponent {
 export default function CreateGameComponent({
   draftGame,
   isClone,
+  isCloneImageChanged,
   screenSize,
   handleSaveGame,
   handleDiscard,
@@ -59,7 +61,7 @@ export default function CreateGameComponent({
   addMoreQuestions
 }: ICreateGameComponent) {
   const [enabled, setEnabled] = useState<boolean>(true)
-
+  console.log(isCloneImageChanged);
   const handleCreateQuestion = () => {
     onCreateQuestion();
   };
@@ -123,6 +125,7 @@ export default function CreateGameComponent({
             <CreateGameCardBase
               draftGame={draftGame}
               isClone={isClone}
+              isCloneImageChanged={isCloneImageChanged}
               screenSize={screenSize}
               handleImageUploadClick={handleImageUploadClick}
               handlePublicPrivateChange={handlePublicPrivateChange}
