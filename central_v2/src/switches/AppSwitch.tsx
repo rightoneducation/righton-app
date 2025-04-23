@@ -124,19 +124,25 @@ function AppSwitch({
     }
     case ScreenType.CREATEQUESTION: {
       screenComponent = (
-          <CreateQuestion screenSize={screenSize}/>
+          <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
+      );
+      break;
+    }
+    case ScreenType.CLONEQUESTION: {
+      screenComponent = (
+          <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
       );
       break;
     }
     case ScreenType.CREATEGAME: {
       screenComponent = (
-          <CreateGame screenSize={screenSize} fetchElement={fetchElement}/>
+          <CreateGame screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
       );
       break;
     }
     case ScreenType.CLONEGAME: {
       screenComponent = (
-          <CreateGame screenSize={screenSize} fetchElement={fetchElement}/>
+          <CreateGame screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
       );
       break;
     }

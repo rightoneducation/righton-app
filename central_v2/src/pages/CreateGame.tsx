@@ -65,6 +65,7 @@ import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 interface CreateGameProps {
   screenSize: ScreenSize;
   fetchElement: (type: GameQuestionType, id: string) => void;
+  fetchElements: () => void;
 }
 
 // Library Questions
@@ -93,6 +94,7 @@ type TDraftQuestionsList = {
   isCreatingTemplate: boolean;
   isQuestionCardErrored: boolean;
   isQuestionCardSubmitted: boolean;
+  isCloneQuestionImageChanged: boolean;
   highlightCard: CreateQuestionHighlightCard;
   isMultipleChoice: boolean;
   questionTemplate: IQuestionTemplate;
@@ -166,6 +168,7 @@ const draftTemplate: TDraftQuestionsList = {
   isCreatingTemplate: false,
   isQuestionCardErrored: false,
   isQuestionCardSubmitted: false,
+  isCloneQuestionImageChanged: false,
   highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
   isMultipleChoice: true,
   questionTemplate: emptyQuestionTemplate,
@@ -182,6 +185,7 @@ export type TGameTemplateProps = {
   isGameCardErrored: boolean;
   isGameImageUploadVisible: boolean;
   isGameURLUploadVisible: boolean;
+  isCloneGameImageChanged: boolean;
   isCreatingTemplate: boolean;
   image?: File | null;
   imageUrl?: string | undefined;
@@ -218,13 +222,15 @@ const gameTemplate: TGameTemplateProps = {
   isGameImageUploadVisible: false,
   isGameURLUploadVisible: false,
   isCreatingTemplate: false,
+  isCloneGameImageChanged: false,
   image: null,
   imageUrl: '',
 };
 
 export default function CreateGame({ 
   screenSize,
-  fetchElement
+  fetchElement,
+  fetchElements
 }: CreateGameProps) {
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
@@ -236,9 +242,11 @@ export default function CreateGame({
   const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
+  const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
   >([draftTemplate]);
+  const [originalQuestionImageUrls, setOriginalQuestionImageUrls] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
@@ -389,6 +397,7 @@ export default function CreateGame({
         ...prev,
         image: inputImage,
         imageUrl: undefined,
+        isCloneGameImageChanged: true,
       }));
     }
 
@@ -397,10 +406,10 @@ export default function CreateGame({
         ...prev,
         imageUrl: inputUrl,
         image: undefined,
+        isCloneGameImageChanged: true,
       }));
     }
   };
-
   const handleSaveGame = async () => {
     try {
       // set our card submitted state to true to check for errors and flag creating template to triggle loading modal
@@ -409,58 +418,62 @@ export default function CreateGame({
       if (gameFormIsValid && allDQAreValid) {
         // check if user added image or image url
         let gameImgUrl: string | null = null;
-        if ((draftGame.image || draftGame.imageUrl) && !isClone) {
-          let gameImgResult = null;
-          // handle case for image type: File
-          if (draftGame.image) {
-            const gameImg = await apiClients.gameTemplate.storeImageInS3(
-              draftGame.image,
-            );
-            gameImgResult = await gameImg.result;
-            if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
-              gameImgUrl = gameImgResult.path;
+        if ((draftGame.image || draftGame.imageUrl)){
+          if ((!isClone || draftGame.imageUrl !== originalGameImageUrl)) {
+            let gameImgResult = null;
+            // handle case for image type: File
+            if (draftGame.image) {
+              const gameImg = await apiClients.gameTemplate.storeImageInS3(
+                draftGame.image,
+              );
+              gameImgResult = await gameImg.result;
+              if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
+                gameImgUrl = gameImgResult.path;
+              }
+              // handle case for imageUrl type: string
+            } else if (draftGame.imageUrl) {
+              gameImgUrl = await apiClients.gameTemplate.storeImageUrlInS3(
+                draftGame.imageUrl,
+              );
             }
-            // handle case for imageUrl type: string
-          } else if (draftGame.imageUrl) {
-            gameImgUrl = await apiClients.gameTemplate.storeImageUrlInS3(
-              draftGame.imageUrl,
-            );
+          } else {
+            gameImgUrl = originalGameImageUrl;
           }
         }
-        if (isClone)
-          gameImgUrl = draftGame.imageUrl ?? '';
-          // create game template and store in variable to retrieve id after response
-          const createGame: CreatePublicGameTemplateInput = {
-            title: draftGame.gameTemplate.title,
-            lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
-            description: draftGame.gameTemplate.description,
-            lowerCaseDescription: draftGame.gameTemplate.description.toLowerCase(),
-            questionTemplatesCount: 0,
-            version: 0,
-            phaseOneTime: draftGame.gameTemplate.phaseOneTime,
-            phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
-            ccss: draftQuestionsList[0].question.questionCard.ccss,
-            grade: draftQuestionsList[0].question.questionCard.ccss.split(".")[0],
-            gradeFilter: draftQuestionsList[0].question.questionCard.ccss.split(".")[0],
-            domain: draftQuestionsList[0].question.questionCard.ccss.split(".")[1],
-            cluster: draftQuestionsList[0].question.questionCard.ccss.split(".")[2],
-            standard: draftQuestionsList[0].question.questionCard.ccss.split(".")[3],
-            imageUrl: gameImgUrl
-          };
+        // create game template and store in variable to retrieve id after response
+        const createGame: CreatePublicGameTemplateInput = {
+          title: draftGame.gameTemplate.title,
+          lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
+          description: draftGame.gameTemplate.description,
+          lowerCaseDescription: draftGame.gameTemplate.description.toLowerCase(),
+          questionTemplatesCount: 0,
+          version: 0,
+          phaseOneTime: draftGame.gameTemplate.phaseOneTime,
+          phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
+          ccss: draftQuestionsList[0].question.questionCard.ccss,
+          grade: draftQuestionsList[0].question.questionCard.ccss.split(".")[0],
+          gradeFilter: draftQuestionsList[0].question.questionCard.ccss.split(".")[0],
+          domain: draftQuestionsList[0].question.questionCard.ccss.split(".")[1],
+          cluster: draftQuestionsList[0].question.questionCard.ccss.split(".")[2],
+          standard: draftQuestionsList[0].question.questionCard.ccss.split(".")[3],
+          imageUrl: gameImgUrl
+        };
 
-          const gameTemplateResponse =
-            await apiClients.gameTemplate.createGameTemplate(
-              draftGame.publicPrivateGame,
-              createGame,
-            );
+        const gameTemplateResponse =
+          await apiClients.gameTemplate.createGameTemplate(
+            draftGame.publicPrivateGame,
+            createGame,
+          );
 
-          // map over questions, handle image or image url cases and return updated question templates
-          const newQuestionTemplates = draftQuestionsList.map(async (dq, i) => {
-            let result = null;
-            let url = null;
+        // map over questions, handle image or image url cases and return updated question templates
+        const newQuestionTemplates = draftQuestionsList.map(async (dq, i) => {
+          let result = null;
+          let url = null;
 
+          // if we aren't cloning, or we have changed the image while cloning, write to s3
+          if (!isClone || dq.question.questionCard.imageUrl !== originalQuestionImageUrls[i]) {
             // image file case
-            if (dq.question.questionCard.image && !isClone) {
+            if (dq.question.questionCard.image) {
               try {
                 const img = await apiClients.questionTemplate.storeImageInS3(
                   dq.question.questionCard.image,
@@ -474,9 +487,8 @@ export default function CreateGame({
                 throw new Error('Failed to store image.');
               }
             }
-
             // image url case
-            else if (dq.question.questionCard.imageUrl && !isClone) {
+            else if (dq.question.questionCard.imageUrl) {
               try {
                 url = await apiClients.questionTemplate.storeImageUrlInS3(
                   dq.question.questionCard.imageUrl,
@@ -486,70 +498,69 @@ export default function CreateGame({
                 throw new Error('Failed to store image URL.');
               }
             }
-            console.log(dq.question);
-            let newQuestionResponse: IQuestionTemplate | undefined;
-            // if we are cloning the question, we just use the image thats already in the S3 bucket
-            if (isClone)
-              url = dq.question.questionCard.imageUrl;
-            // if an image url is available, we can create a question template
-            if (url) {
-              try {
-                newQuestionResponse =
-                  await apiClients.questionTemplate.createQuestionTemplate(
-                    dq.publicPrivate,
-                    url,
-                    dq.question,
-                  );
-              } catch (err) {
-                console.error('Error creating question template:', err);
-                throw new Error('Failed to create question template.');
-              }
-            }
-
-            // return updated question with POST response
-            return newQuestionResponse;
-          });
-
-          // write new questions to db
-          const questionTemplateResponse =
-            await Promise.all(newQuestionTemplates);
-
-          // create an array of all the ids from the response and store in variable
-          const questionTemplateIds = questionTemplateResponse.map(
-            (question) => question?.id,
-          );
-
-          // make sure we have a gameTemplate id as well as question template ids before creating a game question
-          if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
-            const createGameQuestions = questionTemplateIds.map(
-              async (questionId, i) => {
-               const gameQuestion: CreatePublicGameQuestionsInput | CreatePrivateGameQuestionsInput = {
-                ...(draftGame.publicPrivateGame === PublicPrivateType.PUBLIC ? {
-                  publicGameTemplateID: String(gameTemplateResponse.id),
-                  publicQuestionTemplateID: String(questionId),
-                }:{
-                  privateGameTemplateID: String(gameTemplateResponse.id),
-                  privateQuestionTemplateID: String(questionId),
-                }),
-               }
-               console.log("Game Question: ",gameQuestion)
-              try {
-                const response = await apiClients.gameQuestions.createGameQuestions(
-                  draftGame.publicPrivateGame,
-                  gameQuestion,
-                );
-                console.log("Response: ", response);
-              } catch(err) {
-                setDraftGame((prev) => ({...prev, isCreatingTemplate: false}))
-                console.error(`Failed to create game question at index ${i}:`, err);
-              }
-              },
-            );
-            // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
-              await Promise.all(createGameQuestions);
+          } else {
+            url = originalQuestionImageUrls[i];
           }
-          setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
-          navigate('/');
+          let newQuestionResponse: IQuestionTemplate | undefined;
+        
+          // if an image url is available, we can create a question template
+          if (url) {
+            try {
+              newQuestionResponse =
+                await apiClients.questionTemplate.createQuestionTemplate(
+                  dq.publicPrivate,
+                  url,
+                  dq.question,
+                );
+            } catch (err) {
+              console.error('Error creating question template:', err);
+              throw new Error('Failed to create question template.');
+            }
+          }
+
+          // return updated question with POST response
+          return newQuestionResponse;
+        });
+
+        // write new questions to db
+        const questionTemplateResponse =
+          await Promise.all(newQuestionTemplates);
+
+        // create an array of all the ids from the response and store in variable
+        const questionTemplateIds = questionTemplateResponse.map(
+          (question) => question?.id,
+        );
+
+        // make sure we have a gameTemplate id as well as question template ids before creating a game question
+        if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+          const createGameQuestions = questionTemplateIds.map(
+            async (questionId, i) => {
+              const gameQuestion: CreatePublicGameQuestionsInput | CreatePrivateGameQuestionsInput = {
+              ...(draftGame.publicPrivateGame === PublicPrivateType.PUBLIC ? {
+                publicGameTemplateID: String(gameTemplateResponse.id),
+                publicQuestionTemplateID: String(questionId),
+              }:{
+                privateGameTemplateID: String(gameTemplateResponse.id),
+                privateQuestionTemplateID: String(questionId),
+              }),
+              }
+            try {
+              const response = await apiClients.gameQuestions.createGameQuestions(
+                draftGame.publicPrivateGame,
+                gameQuestion,
+              );
+            } catch(err) {
+              setDraftGame((prev) => ({...prev, isCreatingTemplate: false}))
+              console.error(`Failed to create game question at index ${i}:`, err);
+            }
+            },
+          );
+          // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+            await Promise.all(createGameQuestions);
+        }
+        setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
+        fetchElements(); 
+        navigate('/');
       } else {
         // set draft game error
         setDraftGame((prev) => ({ ...prev, isGameCardErrored: true, isCreatingTemplate: false }));
@@ -607,6 +618,7 @@ export default function CreateGame({
             const updatedImageItem = {
               ...questionItem,
               question: newDraftQuestion,
+              isCloneQuestionImageChanged: true,
             };
             return updatedImageItem;
           }
@@ -619,6 +631,7 @@ export default function CreateGame({
             const updatedImageURLItem = {
               ...questionItem,
               question: newDraftQuestion,
+              isCloneQuestionImageChanged: true,
             };
             return updatedImageURLItem;
           }
@@ -681,7 +694,7 @@ export default function CreateGame({
   };
 
   const handleDebouncedTitleChange = useCallback(// eslint-disable-line
-    (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
+    (title: string) => {
       setDraftQuestionsList((draftPrev) => {
         return draftPrev.map((questionItem, i) => {
           if (i === selectedQuestionIndex) {
@@ -1159,6 +1172,7 @@ export default function CreateGame({
         openCreateQuestion: true,
         imageUrl: selected.imageUrl ?? '',
       }));
+      setOriginalGameImageUrl(selected.imageUrl ?? '');
       setPhaseTime({
         phaseOne: timeLookup(selected.phaseOneTime),
         phaseTwo: timeLookup(selected.phaseTwoTime),
@@ -1170,11 +1184,14 @@ export default function CreateGame({
     
       if (originals && assembled && assembled.length > 0) {
         setDraftQuestionsList(() =>
-          originals.map((orig, i) => ({
-            ...draftTemplate,
-            question: assembled[i],
-            questionTemplate: orig.questionTemplate,
-          }))
+          originals.map((orig, i) => {
+            setOriginalQuestionImageUrls((prev) => [...prev, orig.questionTemplate.imageUrl ?? '']);
+            return {
+              ...draftTemplate,
+              question: assembled[i],
+              questionTemplate: orig.questionTemplate,
+            }
+          })
         );
       }
     }
@@ -1277,6 +1294,10 @@ export default function CreateGame({
       <ImageUploadModal
         draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
         screenSize={screenSize}
+        isClone={isClone}
+        isCloneImageChanged={
+          draftQuestionsList[selectedQuestionIndex].isCloneQuestionImageChanged
+        }
         isModalOpen={
           draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
         }
@@ -1288,6 +1309,8 @@ export default function CreateGame({
       {/* Create Game Image Upload Modal */}
       <CreateGameImageUploadModal
         draftGame={draftGame}
+        isClone={isClone}
+        isCloneImageChanged={draftGame.isCloneGameImageChanged}
         screenSize={screenSize}
         isModalOpen={draftGame.isGameImageUploadVisible}
         handleImageChange={handleGameImageChange}
@@ -1300,6 +1323,7 @@ export default function CreateGame({
         <CreateGameComponent
           draftGame={draftGame}
           isClone={isClone}
+          isCloneImageChanged={draftGame.isCloneGameImageChanged}
           screenSize={screenSize}
           handleSaveGame={handleSaveGame}
           handleDiscard={handleDiscardGame}
@@ -1332,6 +1356,9 @@ export default function CreateGame({
                   <QuestionElements
                     screenSize={screenSize}
                     isClone={isClone}
+                    isCloneImageChanged={
+                      draftQuestionItem.isCloneQuestionImageChanged
+                    }
                     draftQuestion={draftQuestionItem.question}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,

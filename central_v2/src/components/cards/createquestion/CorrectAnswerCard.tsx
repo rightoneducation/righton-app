@@ -23,6 +23,7 @@ import { ScreenSize, AnswerSettingsDropdownType } from '../../../lib/CentralMode
 
 interface DetailedQuestionSubCardProps {
   screenSize: ScreenSize;
+  isClone: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   isHighlight: boolean;
   handleCorrectAnswerChange: (correctAnswer: string, draftQuestion: CentralQuestionTemplateInput) => void;
@@ -35,6 +36,7 @@ interface DetailedQuestionSubCardProps {
 
 export default function DetailedQuestionSubCard({
   screenSize,
+  isClone,
   draftQuestion,
   isHighlight, 
   handleCorrectAnswerChange,
@@ -45,34 +47,24 @@ export default function DetailedQuestionSubCard({
   isAIError
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
-  const [correctAnswer, setCorrectAnswer] = React.useState<string>(draftQuestion.correctCard.answer ?? '');
-  const [answerSteps, setAnswerSteps] = React.useState(draftQuestion.correctCard.answerSteps ?? ['','','']);
-  const [answerSettingsType, setAnswerSettingsType] = React.useState<AnswerType>(AnswerType.NUMBER);
-  const [answerSettingsPrecisionType, setAnswerSettingsPrecisionType] = React.useState<AnswerPrecision>(AnswerPrecision.WHOLE);
+  
   const addStep = () => {
-    setAnswerSteps((prev) => [...prev, ''])
-  };
-
-  const handleCorrectChange = (value: string ) => {
-    setCorrectAnswer((prev) => value);
-    handleCorrectAnswerChange(value, draftQuestion);
+    const newSteps = [...draftQuestion.correctCard.answerSteps, ''];
+    handleCorrectAnswerStepsChange(newSteps, draftQuestion);
   };
 
   const handleStepChange = (index: number, value: string): void => {
-    const newSteps = [...answerSteps];
+    const newSteps = [...draftQuestion.correctCard.answerSteps];
     newSteps[index] = value;
-    setAnswerSteps(newSteps);
     handleCorrectAnswerStepsChange(newSteps, draftQuestion);
   };
 
   const handleAnswerSettingsTypeChange = (answerType: AnswerType) => {
-    setAnswerSettingsType(answerType);
-    handleAnswerSettingsChange(draftQuestion, answerType, answerSettingsPrecisionType,);
+    handleAnswerSettingsChange(draftQuestion, answerType);
   };
 
   const handleAnswerSettingsPrecisionTypeChange = (answerPrecision: AnswerPrecision) => {
-    setAnswerSettingsPrecisionType(answerPrecision);
-    handleAnswerSettingsChange(draftQuestion, answerSettingsType, answerPrecision);
+    handleAnswerSettingsChange(draftQuestion, AnswerType.NUMBER, answerPrecision);
   };
 
   const answerStepsComponent = (step: string, index: number) => {
@@ -100,7 +92,7 @@ export default function DetailedQuestionSubCard({
         <TextContainerStyled 
             multiline 
             variant="outlined" 
-            value={answerSteps[index]}
+            value={draftQuestion.correctCard.answerSteps[index]}
             onChange={(e) => handleStepChange(index, e.target.value)}
             rows='4'
             sx={{
@@ -109,10 +101,10 @@ export default function DetailedQuestionSubCard({
               },
             }} 
             placeholder={`Enter step ${index + 1}...`}
-            error={(isCardErrored) && (!answerSteps[index] || answerSteps[index].length === 0)}
+            error={(isCardErrored) && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0)}
             InputProps={{
               startAdornment: 
-              isCardErrored && (!answerSteps[index] || answerSteps[index].length === 0) &&
+              isCardErrored && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0) &&
                 <InputAdornment
                   position="start" 
                   sx={{ 
@@ -129,7 +121,7 @@ export default function DetailedQuestionSubCard({
   };
   
   return (
-    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.correctCard.isCardComplete}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.correctCard.isCardComplete} isClone={isClone}>
       <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Correct Answer
       </QuestionTitleStyled>
@@ -144,12 +136,12 @@ export default function DetailedQuestionSubCard({
             },
         }}
         placeholder="Enter Correct Answer..." 
-        value={correctAnswer}
-        onChange={(e) => handleCorrectChange(e.target.value)}
-        error={(isCardSubmitted  || isAIError) && (!correctAnswer || correctAnswer.length === 0)}
+        value={draftQuestion.correctCard.answer}
+        onChange={(e) => handleCorrectAnswerChange(e.target.value, draftQuestion)}
+        error={(isCardSubmitted  || isAIError) && (!draftQuestion.correctCard.answer || draftQuestion.correctCard.answer.length === 0)}
         InputProps={{
           startAdornment: 
-          (isCardSubmitted || isAIError) && (!correctAnswer || correctAnswer.length === 0) &&
+          (isCardSubmitted || isAIError) && (!draftQuestion.correctCard.answer || draftQuestion.correctCard.answer.length === 0) &&
             <InputAdornment
               position="start" 
               sx={{ 
@@ -165,16 +157,16 @@ export default function DetailedQuestionSubCard({
           screenSize={screenSize}
           type={AnswerSettingsDropdownType.TYPE}
           isCardSubmitted={isCardSubmitted}
-          answerSettingsType={answerSettingsType}
+          answerSettingsType={draftQuestion.correctCard.answerSettings.answerType }
           onSetAnswerSettingsType={handleAnswerSettingsTypeChange}
           isCardError={isCardErrored}
       />
-      { answerSettingsType === AnswerType.NUMBER &&
+      { draftQuestion.correctCard.answerSettings.answerType === AnswerType.NUMBER &&
           <SelectAnswerSetting
           screenSize={screenSize}
           type={AnswerSettingsDropdownType.PRECISION}
           isCardSubmitted={isCardSubmitted}
-          answerSettingsPrecisionType={answerSettingsPrecisionType}
+          answerSettingsPrecisionType={draftQuestion.correctCard.answerSettings.answerPrecision}
           onSetAnswerSettingsPrecisionType={handleAnswerSettingsPrecisionTypeChange}
           isCardError={isCardErrored}
       />
@@ -182,8 +174,8 @@ export default function DetailedQuestionSubCard({
       <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Solution Steps
       </QuestionTitleStyled>
-      {answerSteps && 
-        answerSteps.map((step, index) => 
+      {draftQuestion.correctCard.answerSteps && 
+        draftQuestion.correctCard.answerSteps.map((step, index) => 
           answerStepsComponent(step, index)
         )
       }

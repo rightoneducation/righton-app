@@ -88,7 +88,6 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
 ];
 
   const dropdownLabel = type !== AnswerSettingsDropdownType.TYPE ? "Answer Type" : "Answer Settings";
-
   // flag error if phase is not selected or
   const isError =
     (isCardSubmitted && answerSettingsType === null) || (isCardError && answerSettingsType === null) ||
@@ -96,13 +95,13 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
 
   const selectAnswerSettingsType = (answerType: AnswerType) => {
     if (onSetAnswerSettingsType)
-    onSetAnswerSettingsType(answerType);
+      onSetAnswerSettingsType(answerType);
     setIsSelectOpen(false);
   }
 
   const selectAnswerSettingsNumberType = (precisionType: AnswerPrecision) => {
     if (onSetAnswerSettingsPrecisionType)
-    onSetAnswerSettingsPrecisionType(precisionType);
+      onSetAnswerSettingsPrecisionType(precisionType);
     setIsSelectOpen(false);
   }
 
@@ -132,11 +131,11 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
         {isError && <ErrorIcon sx={{ width: 17, height: 17 }} src={errorIcon} />}
         { type === AnswerSettingsDropdownType.TYPE ?
           <SelectAnswerSettingLabel isSelected={answerSettingsType !== null} error={isError}>
-            {(answerSettingsType !== null && answerSettingsType !== undefined) ? answerTypeOptions[answerSettingsType].label : dropdownLabel}
+            {(answerSettingsType !== null && answerSettingsType !== undefined) ? answerTypeOptions.find(o => o.value === answerSettingsType)?.label : dropdownLabel}
           </SelectAnswerSettingLabel>
         :
           <SelectAnswerSettingLabel isSelected={answerSettingsPrecisionType !== null} error={isError}>
-            {(answerSettingsPrecisionType !== null && answerSettingsPrecisionType !== undefined) ? precisionOptions[answerSettingsPrecisionType].label : dropdownLabel}
+            {(answerSettingsPrecisionType !== null && answerSettingsPrecisionType !== undefined) ? precisionOptions.find(o => o.value === answerSettingsPrecisionType)?.label: dropdownLabel}
           </SelectAnswerSettingLabel>
         }
         {/* space between is here */}
@@ -174,7 +173,6 @@ const precisionOptions: { value: AnswerPrecision; label: string }[] = [
         >
           {type === AnswerSettingsDropdownType.TYPE ?
             answerTypeOptions.map((answerTypeOption, i) => {
-              console.log(answerTypeOption.value, answerTypeOption.label);
               return (
               <Box
                 onClick={() => selectAnswerSettingsType(answerTypeOption.value)}

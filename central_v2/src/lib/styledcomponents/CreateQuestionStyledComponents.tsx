@@ -39,12 +39,13 @@ export const CreateQuestionBackground = styled(Box)(({ theme }) => ({
 interface BaseCardStyledProps {
   isHighlight: boolean,
   isCardComplete: boolean
+  isClone?: boolean,
   dropShadow?: boolean
 }
 
 export const BaseCardStyled = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete' && prop !== 'dropShadow',
-})<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete }) => ({
+  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete' && prop !== 'dropShadow' && prop !== 'isClone',
+})<BaseCardStyledProps>(({ theme, isHighlight, isCardComplete, isClone }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   display: 'flex',
@@ -55,7 +56,7 @@ export const BaseCardStyled = styled(Paper, {
   boxSizing: 'border-box',
   height: 'fit-content',
   boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
-  opacity: isCardComplete ? 0.6 : 1,
+  opacity: isCardComplete && !isClone ? 0.6 : 1,
   transition: 'box-shadow 0.6s, opacity  0.6s',
 }));
 

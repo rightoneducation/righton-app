@@ -37,8 +37,9 @@ import SelectArrow from '../../../images/SelectArrow.svg';
 interface CreateQuestionCardBaseProps {
   screenSize: ScreenSize;
   isClone: boolean;
+  isCloneImageChanged: boolean;
   draftQuestion: CentralQuestionTemplateInput;
-  handleTitleChange: (title: string, draftQuestion: CentralQuestionTemplateInput) => void;
+  handleTitleChange: (title: string) => void;
   handleCCSSClick: () => void;
   handleImageUploadClick: () => void;
   handleAnswerType: () => void;
@@ -49,7 +50,6 @@ interface CreateQuestionCardBaseProps {
   isAIError: boolean;
   isPublic: boolean;
   isMultipleChoice: boolean;
-
 }
 
 type ImagePlaceholderProps = {
@@ -98,6 +98,7 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function CreateQuestionCardBase({
   screenSize,
   isClone,
+  isCloneImageChanged,
   draftQuestion,
   handleTitleChange,
   handleCCSSClick,
@@ -112,17 +113,20 @@ export default function CreateQuestionCardBase({
   isPublic,
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
-  const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
+  const { imageUrl, image } = draftQuestion.questionCard;
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const [CCSSIsOpen, setCCSSIsOpen] = React.useState<boolean>(false);
-  const getImage = () => {
-    if (draftQuestion.questionCard.image && draftQuestion.questionCard.image instanceof File)
-      return URL.createObjectURL(draftQuestion.questionCard.image);
-    return draftQuestion.questionCard.imageUrl;
+
+ let imageLink: string | null = null;
+  if (imageUrl){
+    imageLink = imageUrl;
+    if (isClone && !isCloneImageChanged)
+      imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   }
-  const imageLink = getImage();
-  console.log('imageLink', imageLink);
+  else if (image && image instanceof File)
+    imageLink = URL.createObjectURL(image);
+  
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -133,11 +137,6 @@ export default function CreateQuestionCardBase({
   const handleCCSSButtonClick = () => {
     handleCCSSClick();
     // setCCSSIsOpen((prev) => !prev);
-  }
-
-  const handleLocalTitleChange = (value: string) => {
-    setTitle((prev) => value);
-    handleTitleChange(value, draftQuestion);
   }
 
   const imageContents = [
@@ -156,7 +155,7 @@ export default function CreateQuestionCardBase({
           position: 'relative',
       }}>
             <ImageStyled 
-              src={isClone ? `${CloudFrontDistributionUrl}${imageLink ?? ''}` : imageLink}
+              src={imageLink}
               alt="image" 
               style={{
                 opacity: isImageHovered ? 0.6: 1,
@@ -173,7 +172,7 @@ export default function CreateQuestionCardBase({
   ]
 
   return (
-    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
+    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete} isClone={isClone}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
           <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
@@ -262,12 +261,12 @@ export default function CreateQuestionCardBase({
               },
             }}
             placeholder="Enter question here..." 
-            error={(isCardSubmitted || isAIError) && (!title || title.length === 0)}
-            value={title}
-            onChange = {(e) => handleLocalTitleChange(e.target.value)}
+            error={(isCardSubmitted || isAIError) && (!draftQuestion.questionCard.title || draftQuestion.questionCard.title.length === 0)}
+            value={draftQuestion.questionCard.title}
+            onChange = {(e) => handleTitleChange(e.target.value)}
             InputProps={{
               startAdornment: 
-                (isCardSubmitted || isAIError) && (!title || title.length === 0) &&
+                (isCardSubmitted || isAIError) && (!draftQuestion.questionCard.title || draftQuestion.questionCard.title.length === 0) &&
                 <InputAdornment
                   position="start" 
                   sx={{ 
