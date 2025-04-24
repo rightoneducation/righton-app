@@ -33,14 +33,7 @@ export const handler = async (event) => {
         };
         const s3Response = await s3.upload(params).promise();
         const s3path = s3Response.Key;
-        return {
-            statusCode: 200,     
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "*"
-            },
-            body: s3path,
-        };
+        return s3path;
     } catch (e) {
         console.log(`ERROR: ${e}`);
     }
