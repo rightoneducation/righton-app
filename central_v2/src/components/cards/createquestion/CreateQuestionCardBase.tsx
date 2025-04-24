@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment } from '@mui/material';
+import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment, Button } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { v4 as uuidv4 } from 'uuid';
 import { 
@@ -47,7 +47,7 @@ interface CreateQuestionCardBaseProps {
   isAIError: boolean;
   isPublic: boolean;
   isMultipleChoice: boolean;
-
+  isReadOnly?: boolean;
 }
 
 type ImagePlaceholderProps = {
@@ -96,6 +96,7 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function CreateQuestionCardBase({
   screenSize,
   draftQuestion,
+  isReadOnly,
   handleTitleChange,
   handleCCSSClick,
   handleImageUploadClick,
@@ -163,7 +164,7 @@ export default function CreateQuestionCardBase({
             />
             <Fade in={isImageHovered} >
               <div>
-                <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
+                <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled={Boolean(!isReadOnly)} smallScreenOverride onClick={handleImageUploadClick} />
               </div>
             </Fade>
       </Box>
@@ -176,9 +177,9 @@ export default function CreateQuestionCardBase({
           <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
           <Box>
 
-          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} sx={{ gap: "3px"}}>
+          <ButtonCCSS aria-disabled={Boolean(isReadOnly)} key={uuidv4()} onClick={ isReadOnly ? undefined : handleCCSSButtonClick} sx={{ gap: "3px"}}>
             {draftQuestion.questionCard.ccss}
-            <SelectArrowContainer isSelectOpen={CCSSIsOpen}>
+            <SelectArrowContainer isSelectOpen={isReadOnly ? !isReadOnly : CCSSIsOpen}>
             <img src={SelectArrow} alt="select-arrow" width={9} height={9} />
             </SelectArrowContainer>
           </ButtonCCSS>
@@ -194,6 +195,7 @@ export default function CreateQuestionCardBase({
             style={{overflow: 'hidden', flexWrap: 'nowrap'}}
           >
             <RadioLabelStyled
+            disabled={isReadOnly}
               value="multiple"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Multiple Choice"
@@ -201,6 +203,7 @@ export default function CreateQuestionCardBase({
               style={{cursor: 'pointer'}}
             />
             <RadioLabelStyled
+            disabled={isReadOnly}
               value="short"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Short Answer"
@@ -212,7 +215,7 @@ export default function CreateQuestionCardBase({
           )}
         { screenSize !== ScreenSize.SMALL && 
             <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-              <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
+              <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={Boolean(isReadOnly)}/>
             </Box>
           }
       </CreateQuestionTitleBarStyled>
@@ -220,7 +223,7 @@ export default function CreateQuestionCardBase({
       {imageLink 
           ? imageContents
           : <ImagePlaceholder isCardErrored={isCardErrored}>
-              <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled smallScreenOverride onClick={handleImageUploadClick} />
+              <CentralButton buttonType={ButtonType.UPLOADIMAGE} isEnabled={Boolean(!isReadOnly)} smallScreenOverride onClick={handleImageUploadClick} />
             </ImagePlaceholder>
         }
         <CreateQuestionContentRightContainerStyled>
@@ -233,6 +236,7 @@ export default function CreateQuestionCardBase({
             style={{overflow: 'hidden', flexWrap: 'nowrap'}}
           >
             <RadioLabelStyled
+            disabled={isReadOnly}
               value="multiple"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Multiple Choice"
@@ -240,6 +244,7 @@ export default function CreateQuestionCardBase({
               style={{cursor: 'pointer'}}
             />
             <RadioLabelStyled
+            disabled={isReadOnly}
               value="short"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Short Answer"
@@ -249,7 +254,8 @@ export default function CreateQuestionCardBase({
           </RadioGroup>
         </RadioContainerStyled>
           )}
-          <TextContainerStyled 
+          <TextContainerStyled
+          disabled={isReadOnly} 
             multiline 
             variant="outlined" 
             rows='5'
@@ -285,7 +291,7 @@ export default function CreateQuestionCardBase({
               <ErrorBox/>
             }
               <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
-                <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
+                <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={Boolean(isReadOnly)}/>
               </Box>
           </>
         }

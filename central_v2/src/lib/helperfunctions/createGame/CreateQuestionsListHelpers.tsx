@@ -8,6 +8,7 @@ import {
   draftTemplate,
   TDraftQuestionsList,
   TGameTemplateProps,
+  emptyQuestionTemplate
 } from '../../CreateGameModels';
 import {
   updateDQwithCCSS,
@@ -605,7 +606,6 @@ export const openModalAtIndex = (
 
 export const buildLibraryQuestionAtIndex = (
   question: IQuestionTemplate,
-  emptyQuestionTemplate: IQuestionTemplate,
 ): TDraftQuestionsList => {
   const correctAnswer = question.choices?.find((q) => q.isAnswer === true);
   const incorrectAnswers = question.choices?.filter((q) => !q.isAnswer);

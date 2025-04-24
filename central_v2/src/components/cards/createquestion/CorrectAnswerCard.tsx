@@ -27,6 +27,7 @@ interface DetailedQuestionSubCardProps {
   isCardSubmitted: boolean;
   isCardErrored: boolean;
   isAIError: boolean;
+  isReadOnly?: boolean;
 }
 
 export default function DetailedQuestionSubCard({
@@ -36,7 +37,8 @@ export default function DetailedQuestionSubCard({
   handleCorrectAnswerStepsChange,
   isCardSubmitted,
   isCardErrored,
-  isAIError
+  isAIError,
+  isReadOnly,
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
   const [correctAnswer, setCorrectAnswer] = React.useState<string>(draftQuestion.correctCard.answer ?? '');
@@ -79,7 +81,8 @@ export default function DetailedQuestionSubCard({
         >
           {index + 1}
         </Typography>
-        <TextContainerStyled 
+        <TextContainerStyled
+        disabled={isReadOnly} 
             multiline 
             variant="outlined" 
             value={answerSteps[index]}
@@ -115,7 +118,8 @@ export default function DetailedQuestionSubCard({
       <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Correct Answer
       </QuestionTitleStyled>
-      <TextContainerStyled 
+      <TextContainerStyled
+      disabled={isReadOnly} 
         multiline 
         variant="outlined" 
         rows='1'
@@ -155,7 +159,7 @@ export default function DetailedQuestionSubCard({
           <ErrorBox/>
       }
       <Box style = {{width: '100%', display: 'flex', justifyContent: 'center'}}>
-        <CentralButton buttonType={ButtonType.ADDSTEP} isEnabled onClick={addStep}/>
+        <CentralButton buttonType={ButtonType.ADDSTEP} isEnabled={Boolean(!isReadOnly)} onClick={addStep}/>
       </Box>
     </BaseCardStyled>
   );

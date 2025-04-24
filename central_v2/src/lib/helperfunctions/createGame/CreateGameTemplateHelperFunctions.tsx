@@ -4,6 +4,7 @@ import {
   CreatePrivateGameTemplateInput,
   CreatePublicGameTemplateInput,
   PublicPrivateType,
+  IAPIClients,
 } from '@righton/networking';
 import {
   TDraftQuestionsList,
@@ -159,6 +160,30 @@ export const updateGameImageChange = (
   }
 
   return draftGame;
+};
+
+export const createGameImagePath = async (
+  draftGame: TGameTemplateProps,
+  apiClients: IAPIClients,
+): Promise<string | null> => {
+  let gameImgUrl: string | null = null;
+  let gameImgResult = null;
+  // handle case for image type: File
+  if (draftGame.image) {
+    const gameImg = await apiClients.gameTemplate.storeImageInS3(
+      draftGame.image,
+    );
+    gameImgResult = await gameImg.result;
+    if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
+      gameImgUrl = gameImgResult.path;
+    }
+    // handle case for imageUrl type: string
+  } else if (draftGame.imageUrl) {
+    gameImgUrl = await apiClients.gameTemplate.storeImageUrlInS3(
+      draftGame.imageUrl,
+    );
+  }
+  return gameImgUrl;
 };
 
 export const createGameTemplate = (

@@ -62,6 +62,7 @@ interface IncorrectAnswerCardProps {
   handleNextCardButtonClick?: (cardData: IncorrectCard) => void;
   completeAnswers: IncorrectCard[];
   incompleteAnswers: IncorrectCard[];
+  isReadOnly?: boolean;
 }
 
 export default function IncorrectAnswerCard({
@@ -79,7 +80,8 @@ export default function IncorrectAnswerCard({
   handleTopCardHeightChange,
   handleAIExplanationGenerated,
   completeAnswers,
-  incompleteAnswers
+  incompleteAnswers,
+  isReadOnly,
 } : IncorrectAnswerCardProps) {
   const theme = useTheme();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -183,6 +185,7 @@ export default function IncorrectAnswerCard({
           Incorrect Answer
         </QuestionTitleStyled>
         <TextContainerStyled 
+        disabled={isReadOnly}
           multiline 
           variant="outlined" 
           rows='1'
@@ -229,7 +232,8 @@ export default function IncorrectAnswerCard({
             />
           }
         </Box>
-        <TextContainerStyled 
+        <TextContainerStyled
+        disabled={isReadOnly} 
           multiline 
           variant="outlined"
           rows="4"

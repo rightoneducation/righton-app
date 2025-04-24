@@ -42,6 +42,7 @@ const AISwitch = styled(Switch)(({ theme }) => ({
 interface IQuestionElements {
   screenSize: ScreenSize;
   draftQuestion: CentralQuestionTemplateInput;
+  isReadOnly: boolean;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
   isAIError: boolean;
@@ -76,6 +77,7 @@ interface IQuestionElements {
 export default function QuestionElements({
   screenSize,
   draftQuestion,
+  isReadOnly,
   isCardSubmitted,
   isCardErrored,
   highlightCard,
@@ -125,6 +127,7 @@ export default function QuestionElements({
           <CreateQuestionCardBase
             screenSize={screenSize}
             draftQuestion={draftQuestion}
+            isReadOnly={isReadOnly}
             handleTitleChange={handleDebouncedTitleChange}
             handleCCSSClick={handleCCSSClick}
             isHighlight={
@@ -150,6 +153,7 @@ export default function QuestionElements({
             >
               <CorrectAnswerCard
                 draftQuestion={draftQuestion}
+                isReadOnly={isReadOnly}
                 isHighlight={
                   highlightCard === CreateQuestionHighlightCard.CORRECTANSWER
                 }
@@ -171,11 +175,13 @@ export default function QuestionElements({
                 Try our AI-Generated Wrong Answer Explanation Prototype
               </Typography>
               <AISwitch
+              disabled={isReadOnly}
                 checked={isAIEnabled}
                 onChange={() => handleAIIsEnabled()}
               />
             </Box>
             <IncorrectAnswerCardStack
+            isReadOnly={isReadOnly}
               draftQuestion={draftQuestion}
               completeIncorrectAnswers={completeIncorrectAnswers}
               incompleteIncorrectAnswers={incompleteIncorrectAnswers}

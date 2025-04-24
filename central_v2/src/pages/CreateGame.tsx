@@ -1,15 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  AnswerType,
   CentralQuestionTemplateInput,
-  IGameTemplate,
   IncorrectCard,
   IQuestionTemplate,
   PublicPrivateType,
-  CreatePublicGameTemplateInput,
-  CreatePrivateGameQuestionsInput,
-  CreatePublicGameQuestionsInput,
   GradeTarget,
   SortType,
   SortDirection
@@ -22,7 +17,6 @@ import {
 } from '../lib/styledcomponents/CreateGameStyledComponent';
 import {
   CreateQuestionHighlightCard,
-  GameQuestionType,
   ScreenSize,
   StorageKey,
   TemplateType,
@@ -46,24 +40,6 @@ import tabFavoritesIcon from '../images/tabFavorites.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
-import {
-  getNextHighlightCard,
-  handleMoveAnswerToComplete,
-  updateDQwithIncorrectAnswerClick,
-  updateDQwithIncorrectAnswers,
-} from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
-import {
-  updateDQwithCCSS,
-  updateDQwithImage,
-  updateDQwithImageURL,
-  updateDQwithQuestionClick,
-  updateDQwithTitle,
-} from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-import {
-  updateDQwithCorrectAnswer,
-  updateDQwithCorrectAnswerClick,
-  updateDQwithCorrectAnswerSteps,
-} from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useCentralDataState } from '../hooks/context/useCentralDataContext';
@@ -99,7 +75,9 @@ import {
     updateCCSSClickAtIndex,
     updateAIErrorAtIndex,
     updateImageUploadClickAtIndex,
-    openModalAtIndex 
+    openModalAtIndex,
+    buildLibraryQuestionAtIndex,
+    updateDraftListWithLibraryQuestion, 
   } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 
 
@@ -294,7 +272,7 @@ export default function CreateGame({
           setSaveQuestionError(true);
       }
     } catch (err) {
-      console.log(`HandleSaveGame - error: ${err}`);
+      console.log(`HandleSaveGame - error: `, err);
     }
   };
   /** END OF CREATE GAME HANDLERS  */
@@ -428,60 +406,8 @@ export default function CreateGame({
 
       setIsCreatingTemplate(true);
       // process valid questions in order
-      await Promise.all(
-        draftQuestionsList.map(async (dq) => {
-          let result = null;
-          let url = null;
-
-          /** handle image cases  */
-          // image file case
-          if (dq.question.questionCard.image) {
-            try {
-              const img = await apiClients.questionTemplate.storeImageInS3(
-                dq.question.questionCard.image,
-              );
-              result = await img.result;
-              if (result && result.path && result.path.length > 0) {
-                url = result.path;
-              }
-            } catch (err) {
-              console.error('Error storing image:', err);
-              throw new Error('Failed to store image.');
-            }
-          }
-          // image url case
-          else if (dq.question.questionCard.imageUrl) {
-            try {
-              url = await apiClients.questionTemplate.storeImageUrlInS3(
-                dq.question.questionCard.imageUrl,
-              );
-            } catch (err) {
-              console.error('Error storing image URL:', err);
-              throw new Error('Failed to store image URL.');
-            }
-          }
-
-          // if a url is available, we can create a question template
-          if (url) {
-            try {
-              await apiClients.questionTemplate.createQuestionTemplate(
-                dq.publicPrivate,
-                url,
-                dq.question,
-              );
-            } catch (err) {
-              console.error('Error creating question template:', err);
-              throw new Error('Failed to create question template.');
-            }
-          }
-
-          // return updated question with isCreatingTemplate: false after processing
-          return {
-            ...dq,
-            isCreatingTemplate: false,
-          };
-        }),
-      );
+      const questionTemplate = createNewQuestionTemplates(draftQuestionsList, apiClients)
+      await Promise.all(questionTemplate);
 
       // Reset data and re-direct user
       setDraftQuestionsList([]);
@@ -534,79 +460,22 @@ export default function CreateGame({
       setIsTabsOpen(true);
 
       console.log("Library Question: ", question);
-
-      const correctAnswer = question.choices?.find((q) => q.isAnswer === true);
-      const incorrectAnswers = question.choices?.filter((q) => !q.isAnswer);
-
-      const incorrectCards = incorrectAnswers?.map((incorrectAnswer, i) => ({
-        id: `card-${i + 1}`,
-        answer: incorrectAnswer.text || '',
-        explanation: incorrectAnswer.reason || '',
-        isFirstEdit: true,
-        isCardComplete: true,
-      })) as IncorrectCard[]
-  
      setDraftQuestionsList((prev) => {
-      const libraryQuestion = { 
-        ...draftTemplate, 
-        questionTemplate: { ...emptyQuestionTemplate, id: question.id }, 
-        question: {
-        questionCard: {
-          imageUrl: question?.imageUrl ? question.imageUrl: "",
-          title: question?.title,
-          ccss: question?.ccss,
-          isFirstEdit: true,
-          isCardComplete: true,
-        },
-        correctCard: {
-          answer: correctAnswer ? correctAnswer?.text : "",
-          answerSteps: question?.instructions ? question?.instructions: ["", "", ""],
-          isFirstEdit: true,
-          isCardComplete: true,
-        },
-        incorrectCards
-      } }
-
-      const isFirstEmpty = prev.length === 1 && !prev[0].question.questionCard.isCardComplete;
-
-      if(isFirstEmpty) {
-        return [libraryQuestion]
-      }
-
-      if (
-        typeof selectedQuestionIndex === 'number' &&
-        prev[selectedQuestionIndex] &&
-        !prev[selectedQuestionIndex].question.questionCard.isCardComplete
-      ) {
-        const updated = [...prev];
-        updated[selectedQuestionIndex] = libraryQuestion;
-        return updated;
-      }
-
-      const currentIndex = prev.findIndex((q) => !q.question.questionCard.isCardComplete);
-
-      if(currentIndex !== -1) {
-        const updated = [...prev];
-        updated[currentIndex] = libraryQuestion;
-        return updated;
-      }
-
-      const updatedQuestions = [...prev, draftTemplate];
-      updatedQuestions[updatedQuestions.length - 1] = libraryQuestion;
-
+      const libraryQuestion = buildLibraryQuestionAtIndex(question);
+      const { updatedList, addNew } = updateDraftListWithLibraryQuestion(
+        prev,
+        selectedQuestionIndex,
+        libraryQuestion,
+      );
       setDraftGame((prevGame) => ({
         ...prevGame,
-        questionCount: prevGame.questionCount + 1,
+        openQuestionBank: false,
+        openCreateQuestion: true,
+        ...(addNew && { questionCount: prevGame.questionCount + 1 })
       }));
-      setIconButtons((prevButtons) => [...prevButtons, prevButtons.length + 1]);
-
-      return updatedQuestions;
+      setIconButtons((prevButtons) => addNew ? [...prevButtons, prevButtons.length + 1] : prevButtons);
+      return updatedList;
      })
-    setDraftGame((prev) => ({
-      ...prev, 
-      openQuestionBank: false,
-      openCreateQuestion: true
-    }))
     };
 
     useEffect(() => {
@@ -703,6 +572,7 @@ export default function CreateGame({
                   <QuestionElements
                     screenSize={screenSize}
                     draftQuestion={draftQuestionItem.question}
+                    isReadOnly={!!draftQuestionItem.questionTemplate.id}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,
                     )}
