@@ -21,16 +21,14 @@ const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    // border: '1px solid red',
-    // boxSizing: 'border-box',
-    // alignItems:  'center',
     paddingTop: '24px',
     paddingLeft: '32px',
     paddingRight: '32px',
     paddingBottom: '172px',
     gap: '24px',
-    height: '100%'
+    height: 'fit-content'
   }));
+
 
 const MyProfileText = styled(Typography)(({ theme }) => ({
     fontFamily: 'Poppins, sans-serif',
@@ -38,28 +36,19 @@ const MyProfileText = styled(Typography)(({ theme }) => ({
     fontSize: '40px', 
     color: '#02215F',
     textAlign: 'center', 
-    // border: '1px solid green',
     lineHeight: '40px'
 }));
 
 const MiddleContentContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: '16px',
-    // border: '1px solid black',
-    // height: '100%',
-    // alignItems: 'stretch',
-    // paddingBottom: '172px',
-    // boxSizing: 'border-box',
-    // height: '891px',      // <----- HARD CODED LEFT CONTAINER
-    height: '100%'
+    height: 'fit-content'
 }));
 
 const LeftProfileContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '24px',
-    // height: '100%',
-    // border: '1px solid yellow',
     background: '#02215F',
     paddingTop: '26px',
     boxSizing: 'border-box',
@@ -67,22 +56,14 @@ const LeftProfileContainer = styled(Box)(({ theme }) => ({
     paddingRight: '16px',
     borderRadius: '16px',
     alignItems: 'center',
-    // width: '800px',
-
-    // width: '100%'
     height: '890px',      // <----- HARD CODED LEFT CONTAINER
-    // width: '338px'       // <----- HARD CODED LEFT CONTAINER
 }));
 const LeftProfileTopContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
-    // height: '100%',
-    // border: '1px solid green',
     width: '191px',
-    // width: '100%',
     alignItems: 'center',
-    // boxSizing: 'border-box',
 }));
 
 const LeftNameText = styled(Typography)(({ theme }) => ({
@@ -91,7 +72,6 @@ const LeftNameText = styled(Typography)(({ theme }) => ({
     fontSize: '40px', 
     color: '#FFFFFF',
     textAlign: 'center', 
-    // border: '1px solid pink',
     width: '100%',
 }));
 
@@ -100,13 +80,11 @@ const AtUserNameContainerAndAccount = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     width: '139px',
     gap: '8px',
-    // border: '1px solid white',
     alignItems: 'center'
 }));
 
 const AtUserNameContainer = styled(Box)(({ theme }) => ({
     width: '100%',
-    // border: '1px solid yellow'
 }));
 
 const AtUserNameText = styled(Typography)(({ theme }) => ({
@@ -122,8 +100,6 @@ const LeftAccountCreatedContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // width: '120px',
-    // border: '1px solid red'
 }));
 
 const LeftAccountCreatedInfo = styled(Typography)(({ theme }) => ({
@@ -142,22 +118,18 @@ const LeftDateText = styled(Typography)(({ theme }) => ({
 const LeftBottomContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    // border: '1px solid green',
     width: '100%',
     gap: '8px'
 }));
 
 const LeftBottomGamesQuestionContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid blue',
-    // width: '141px',
     gap: '8px'
 }));
 
 const LeftBottomGamesContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    // border: '1px solid red',
     gap: '5px',
     background: 'rgba(255, 255, 255, 0.09)', // light transparent background
     backdropFilter: 'blur(5.4px)',
@@ -186,32 +158,10 @@ const LeftBottomGamesNumber = styled(Typography)(({ theme }) => ({
     lineHeight: '100%'
 }));
 
-
-const LeftPhotoUserGameInfo = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '32px'
-}));
-
-const LeftProfileAndEdit = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px'
-}));
-
-const LeftUserGameInfoContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px'
-}));
-
-
-
 const RightProfileContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
-    // border: '1px solid red',
     width: '100%',
     paddingLeft: '32px',
     paddingTop: '36px',
@@ -221,8 +171,7 @@ const RightProfileContainer = styled(Box)(({ theme }) => ({
 const RightUserNoteContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    // gap: '16px',
-    // border: '1px solid black',
+
     textAlign: 'center'
 }));
 
@@ -246,7 +195,6 @@ const InformationText = styled(Typography)(({ theme }) => ({
     fontSize: '16px', 
     color: '#384466',
     textAlign: 'center', 
-    // border: '1px solid green',
 }));
 
 const MiddleText = styled(Box)(({ theme }) => ({
@@ -329,10 +277,10 @@ const ImageText = styled(Typography)(({ theme }) => ({
 
 
 const ImagePlaceHolder = styled('img')(({ theme }) => ({
-  width: '80%', // Set default width
-  height: 148, // Set default height
-  borderRadius: 4, // Set border radius for rounded corners
-  border: '2px solid #ccc', // Add border
+  width: '80%', 
+  height: 148, 
+  borderRadius: 4, 
+  border: '2px solid #ccc', 
   objectFit: 'cover'
 }));
 
@@ -350,7 +298,6 @@ const PasswordText = styled(Typography)(({ theme }) => ({
     fontSize: '16px', 
     color: '#000000',
     textAlign: 'center', 
-    // border: '1px solid green',
 }));
 
 export default function UserProfile() {
