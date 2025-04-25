@@ -185,6 +185,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
 
         if (idToken) {
           console.log("logging user via google.")
+          console.log("▶️ OAuth origin is:", window.location.origin);
           const response = await apiClients.auth.awsSignInFederated();
           // const userloggedin = await apiClients.auth.getCurrentSession()
           // centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});

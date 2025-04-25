@@ -6,6 +6,7 @@ import AWS from 'aws-sdk';
  */
 export const handler = async (event) => {
     try {
+        // test
         const imageUrl = event.arguments.input.imageUrl;
         const response = await fetch(imageUrl);
         // .buffer is deprecated from node-fetch and arrayBuffer replaces
