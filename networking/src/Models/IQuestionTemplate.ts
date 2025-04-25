@@ -1,5 +1,6 @@
 import { IGameTemplate } from './IGameTemplate';
 import { IChoice } from "../Models/IQuestion";
+import {AnswerType, AnswerPrecision} from "../Models/AnswerClasses";
 
 export interface IQuestionTemplateOrder {
   questionTemplateId: string,
@@ -14,7 +15,7 @@ export interface IQuestionTemplate {
   version: number,
   choices?: IChoice[] | null,
   instructions?: string[] | null,
-  answerSettings?: string | null,
+  answerSettings?: AnswerSettingsType | null,
   ccss: string,
   domain: string;
   cluster: string;
@@ -38,10 +39,19 @@ export type QuestionCard = {
   isCardComplete: boolean;
 }
 
+export type AnswerSettingsType = {
+  answerType: AnswerType;
+  answerPrecision?: AnswerPrecision;
+}
+
 // type to handle input variables for correct card on createquestion flow
 export type CorrectCard = {
   answer: string;
   answerSteps: string[];
+  answerSettings: {
+    answerType: AnswerType;
+    answerPrecision?: AnswerPrecision;
+  }
   isFirstEdit: boolean;
   isCardComplete: boolean;
 }

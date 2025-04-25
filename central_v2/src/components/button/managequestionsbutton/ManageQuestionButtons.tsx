@@ -39,7 +39,7 @@ export default function ManageQuestionsButtons({
                 onClick={ () => setSelectedIndex(index)}
                 isDisabled={false}
               >
-                { index === selectedIndex && 'Question' } {index}
+                { index === selectedIndex && 'Question' } {index + 1}
                 { index === selectedIndex && verticalEllipsis}
               </QuestionCountButton>
             )

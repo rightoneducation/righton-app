@@ -1,8 +1,7 @@
 import React from 'react';
-import { IQuestionTemplate } from '@righton/networking';
+import { IQuestionTemplate, CloudFrontDistributionUrl  } from '@righton/networking';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { CloudFrontDistributionUrl } from '../../lib/CentralModels';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';
@@ -16,6 +15,7 @@ interface StyledQuestionCardProps {
   isCarousel: boolean;
   isFavorite: boolean;
   handleViewButtonClick: (element: IQuestionTemplate) => void;
+  handleCloneButtonClick: (element: IQuestionTemplate) => void;
 }
 
 const QuestionImage = styled('img')({
@@ -98,6 +98,7 @@ export default function StyledQuestionCard({
   isCarousel,
   isFavorite,
   handleViewButtonClick,
+  handleCloneButtonClick
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;
   return (
@@ -123,7 +124,7 @@ export default function StyledQuestionCard({
           <CentralButton
             buttonType={ButtonType.CLONE}
             isEnabled
-            onClick={() => handleViewButtonClick(question)}
+            onClick={() => handleCloneButtonClick(question)}
           />
         </BottomButtonBox>
       </ContentContainer>

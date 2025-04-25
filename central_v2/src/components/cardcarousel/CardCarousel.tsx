@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -14,7 +15,7 @@ import placeHolder from '../../images/placeHolder.svg';
 import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import { ScreenSize } from '../../lib/CentralModels';
-import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
+import { useCentralDataDispatch, useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './CardCarousel.css';
@@ -37,14 +38,24 @@ export default function CardCarousel<
   handleView,
 }: CardCarouselProps<T>) {
   const theme = useTheme();
+  const navigate = useNavigate();
   const swiperRef = useRef<SwiperRef>(null);
   const maxSlides = 12;
   const handleViewButtonClick = (element: T) => {
     handleView(element, recommendedElements as T[]);
   };
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const favoriteQuestionTemplateIds = centralData.userProfile?.favoriteQuestionTemplateIds;
   const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
+
+  const handleCloneButtonClick = (element: IQuestionTemplate) => {
+    centralDataDispatch({
+      type: 'SET_SELECTED_QUESTION',
+      payload: element,
+    });
+    navigate(`/clone/question/${element.id}`);
+  }
   return (
     <Swiper
       style={{
@@ -110,6 +121,9 @@ export default function CardCarousel<
                 isFavorite={favoriteQuestionTemplateIds?.includes(questionElement.id) || false}
                 handleViewButtonClick={
                   handleViewButtonClick as (element: IQuestionTemplate) => void
+                }
+                handleCloneButtonClick={
+                  handleCloneButtonClick as (element: IQuestionTemplate) => void
                 }
               />
             ) : (

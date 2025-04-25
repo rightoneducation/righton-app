@@ -68,8 +68,11 @@ export class TeamAPIClient
         gameSessionTeamsId: gameSessionId,
         teamQuestionGameSessionId: gameSessionId,
     }
+    console.log('addTeamToGameSessionId');
+    console.log(input);
     const variables: CreateTeamMutationVariables = { input }
     console.log(variables);
+    console.log('ready to write');
     const team = await this.callGraphQL<CreateTeamMutation>(
         createTeam,
         variables

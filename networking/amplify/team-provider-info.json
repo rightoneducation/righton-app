@@ -28,7 +28,7 @@
         },
         "uploadExternalImageToS3": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/uploadExternalImageToS3-4e55784e7a75437a4e33-build.zip"
+          "s3Key": "amplify-builds/uploadExternalImageToS3-3046576f684f53704779-build.zip"
         },
         "waegen": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
