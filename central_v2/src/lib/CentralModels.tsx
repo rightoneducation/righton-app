@@ -18,6 +18,7 @@ export enum ScreenType {
   CREATEQUESTION,
   CONFIRMATION,
   NEXTSTEP,
+  USERPROFILE,
   AUTH
 }
 

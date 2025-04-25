@@ -17,6 +17,6 @@ export const SignUpMainContainer = styled(Box)(({ theme }) => ({ // eslint-disab
   // justifyContent: 'center',
   overflow: 'auto',
   flexGrow: 1,
-  boxSizing: 'border-box'
-  // border: '5px solid green'
+  boxSizing: 'border-box',
+  // border: '1px solid red'
 }));
