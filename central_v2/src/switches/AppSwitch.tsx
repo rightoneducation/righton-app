@@ -157,7 +157,7 @@ function AppSwitch({
     }
     case ScreenType.USERPROFILE: {
       screenComponent = (
-        <UserProfile />
+        <UserProfile screenSize={screenSize} />
       );
       break
     }
