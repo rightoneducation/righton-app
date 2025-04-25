@@ -21,33 +21,16 @@ const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    border: '1px solid red',
+    // border: '1px solid red',
     // boxSizing: 'border-box',
     // alignItems:  'center',
     paddingTop: '24px',
     paddingLeft: '32px',
     paddingRight: '32px',
     paddingBottom: '172px',
-
     gap: '24px',
     height: '100%'
   }));
-
-// const InnerBodyContainer = styled(Box)(({ theme }) => ({
-//   display: 'flex',
-//   // border: '1px solid blue',
-//   flexDirection: 'column',
-//   gap: '20px',
-//   height: '100%',
-//   width: '100%',
-//   maxWidth: '500px',
-//   paddingTop: '40px',
-//   paddingBottom: '40px',
-//   paddingLeft: '40px',
-//   paddingRight: '40px',
-//   boxSizing: 'border-box',
-// }));
-
 
 const MyProfileText = styled(Typography)(({ theme }) => ({
     fontFamily: 'Poppins, sans-serif',
@@ -55,14 +38,14 @@ const MyProfileText = styled(Typography)(({ theme }) => ({
     fontSize: '40px', 
     color: '#02215F',
     textAlign: 'center', 
-    border: '1px solid green',
+    // border: '1px solid green',
     lineHeight: '40px'
 }));
 
 const MiddleContentContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: '16px',
-    border: '1px solid black',
+    // border: '1px solid black',
     // height: '100%',
     // alignItems: 'stretch',
     // paddingBottom: '172px',
@@ -76,15 +59,18 @@ const LeftProfileContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     gap: '24px',
     // height: '100%',
-    border: '1px solid yellow',
+    // border: '1px solid yellow',
     background: '#02215F',
     paddingTop: '26px',
-    // boxSizing: 'border-box',
+    boxSizing: 'border-box',
     paddingLeft: '16px',
     paddingRight: '16px',
-    borderRadius: '16px'
+    borderRadius: '16px',
+    alignItems: 'center',
+    // width: '800px',
+
     // width: '100%'
-    // height: '890px',      // <----- HARD CODED LEFT CONTAINER
+    height: '890px',      // <----- HARD CODED LEFT CONTAINER
     // width: '338px'       // <----- HARD CODED LEFT CONTAINER
 }));
 const LeftProfileTopContainer = styled(Box)(({ theme }) => ({
@@ -92,8 +78,9 @@ const LeftProfileTopContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     gap: '16px',
     // height: '100%',
-    border: '1px solid green',
+    // border: '1px solid green',
     width: '191px',
+    // width: '100%',
     alignItems: 'center',
     // boxSizing: 'border-box',
 }));
@@ -104,7 +91,7 @@ const LeftNameText = styled(Typography)(({ theme }) => ({
     fontSize: '40px', 
     color: '#FFFFFF',
     textAlign: 'center', 
-    border: '1px solid pink',
+    // border: '1px solid pink',
     width: '100%',
 }));
 
@@ -113,13 +100,13 @@ const AtUserNameContainerAndAccount = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     width: '139px',
     gap: '8px',
-    border: '1px solid white',
+    // border: '1px solid white',
     alignItems: 'center'
 }));
 
 const AtUserNameContainer = styled(Box)(({ theme }) => ({
     width: '100%',
-    border: '1px solid yellow'
+    // border: '1px solid yellow'
 }));
 
 const AtUserNameText = styled(Typography)(({ theme }) => ({
@@ -135,8 +122,8 @@ const LeftAccountCreatedContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '120px',
-    border: '1px solid red'
+    // width: '120px',
+    // border: '1px solid red'
 }));
 
 const LeftAccountCreatedInfo = styled(Typography)(({ theme }) => ({
@@ -155,14 +142,14 @@ const LeftDateText = styled(Typography)(({ theme }) => ({
 const LeftBottomContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    border: '1px solid green',
-    // width: '141px',
+    // border: '1px solid green',
+    width: '100%',
     gap: '8px'
 }));
 
 const LeftBottomGamesQuestionContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    border: '1px solid blue',
+    // border: '1px solid blue',
     // width: '141px',
     gap: '8px'
 }));
@@ -170,15 +157,17 @@ const LeftBottomGamesQuestionContainer = styled(Box)(({ theme }) => ({
 const LeftBottomGamesContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    border: '1px solid red',
+    // border: '1px solid red',
     gap: '5px',
     background: 'rgba(255, 255, 255, 0.09)', // light transparent background
     backdropFilter: 'blur(5.4px)',
     borderRadius: '8px',
     paddingLeft: '8px',
     paddingRight: '8px',
-    paddingTop: '8px'
-
+    paddingTop: '8px',
+    paddingBottom: '13px',
+    boxSizing: 'border-box',
+    width: "100%"
 }));
 
 const LeftBottomGamesText = styled(Typography)(({ theme }) => ({
@@ -186,6 +175,7 @@ const LeftBottomGamesText = styled(Typography)(({ theme }) => ({
     fontWeight: 400, 
     fontSize: '12px', 
     color: '#CCCCCC',
+    minWidth: '149px'
 }));
 
 const LeftBottomGamesNumber = styled(Typography)(({ theme }) => ({
@@ -221,7 +211,7 @@ const RightProfileContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
-    border: '1px solid red',
+    // border: '1px solid red',
     width: '100%',
     paddingLeft: '32px',
     paddingTop: '36px',
@@ -232,7 +222,7 @@ const RightUserNoteContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     // gap: '16px',
-    border: '1px solid black',
+    // border: '1px solid black',
     textAlign: 'center'
 }));
 
@@ -256,7 +246,7 @@ const InformationText = styled(Typography)(({ theme }) => ({
     fontSize: '16px', 
     color: '#384466',
     textAlign: 'center', 
-    border: '1px solid green',
+    // border: '1px solid green',
 }));
 
 const MiddleText = styled(Box)(({ theme }) => ({
@@ -267,13 +257,11 @@ const MiddleText = styled(Box)(({ theme }) => ({
 
 const MiddleTextFirstRow = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid green',
     gap: '12px',
   }));
 
 const MiddleTextSecondRow = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid green',
     gap: '3.5px',
     alignItems: 'stretch'
 }));
@@ -303,7 +291,6 @@ const TitleField = styled(TextField)(({ theme }) => ({
 
 const MiddleTextFourthRow = styled(Typography)(({ theme }) => ({
   display: 'flex',
-  // border: '1px solid green',
   color: '#384466', 
   fontFamily: 'Rubik, sans-serif', 
   fontWeight: 400, 
@@ -350,15 +337,11 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 }));
 
 const EditInformationButtonContainer = styled(Box)(({ theme }) => ({
-    // display: 'flex',
     width: '168px',
-    // border: '1px solid red'
   }));
 
 const ChangePasswordButtonContainer = styled(Box)(({ theme }) => ({
-    // display: 'flex',
     width: '211px',
-    // border: '1px solid red'
 }));
 
 const PasswordText = styled(Typography)(({ theme }) => ({
@@ -367,7 +350,7 @@ const PasswordText = styled(Typography)(({ theme }) => ({
     fontSize: '16px', 
     color: '#000000',
     textAlign: 'center', 
-    border: '1px solid green',
+    // border: '1px solid green',
 }));
 
 export default function UserProfile() {
@@ -416,35 +399,36 @@ export default function UserProfile() {
                                 </LeftDateText>
                             </LeftAccountCreatedContainer>
                         </AtUserNameContainerAndAccount>
-                        <LeftBottomContainer>
-                            <LeftBottomGamesQuestionContainer>
-                                <LeftBottomGamesContainer>
-                                    <LeftBottomGamesText>
-                                        Games Made
-                                    </LeftBottomGamesText>
-                                    <LeftBottomGamesNumber>
-                                        16
-                                    </LeftBottomGamesNumber>
-                                </LeftBottomGamesContainer>
-                                <LeftBottomGamesContainer>
-                                    <LeftBottomGamesText>
-                                        Question Made
-                                    </LeftBottomGamesText>
-                                    <LeftBottomGamesNumber>
-                                        120
-                                    </LeftBottomGamesNumber>
-                                </LeftBottomGamesContainer>
-                            </LeftBottomGamesQuestionContainer>
-                            <LeftBottomGamesContainer>
-                                    <LeftBottomGamesText>
-                                        Games Used
-                                    </LeftBottomGamesText>
-                                    <LeftBottomGamesNumber>
-                                        16
-                                    </LeftBottomGamesNumber>
-                            </LeftBottomGamesContainer>
-                        </LeftBottomContainer>
                     </LeftProfileTopContainer>
+                    
+                    <LeftBottomContainer>
+                        <LeftBottomGamesQuestionContainer>
+                            <LeftBottomGamesContainer>
+                                <LeftBottomGamesText>
+                                    Games Made
+                                </LeftBottomGamesText>
+                                <LeftBottomGamesNumber>
+                                    16
+                                </LeftBottomGamesNumber>
+                            </LeftBottomGamesContainer>
+                            <LeftBottomGamesContainer>
+                                <LeftBottomGamesText>
+                                    Question Made
+                                </LeftBottomGamesText>
+                                <LeftBottomGamesNumber>
+                                    120
+                                </LeftBottomGamesNumber>
+                            </LeftBottomGamesContainer>
+                        </LeftBottomGamesQuestionContainer>
+                        <LeftBottomGamesContainer>
+                                <LeftBottomGamesText>
+                                    Games Used
+                                </LeftBottomGamesText>
+                                <LeftBottomGamesNumber>
+                                    16
+                                </LeftBottomGamesNumber>
+                        </LeftBottomGamesContainer>
+                    </LeftBottomContainer>
                 </LeftProfileContainer>
                 <RightProfileContainer>
                     <RightUserNoteContainer>
