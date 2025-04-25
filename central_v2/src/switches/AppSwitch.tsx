@@ -15,6 +15,7 @@ import CreateGame from '../pages/CreateGame';
 import ViewGame from '../pages/ViewGame';
 import MyLibrary from '../pages/MyLibrary';
 import AuthStatus from '../pages/AuthStatus';
+import UserProfile from '../pages/UserProfile';
 
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
 // import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
@@ -153,6 +154,12 @@ function AppSwitch({
         </AuthGuard>
       );
       break;
+    }
+    case ScreenType.USERPROFILE: {
+      screenComponent = (
+        <UserProfile />
+      );
+      break
     }
     case ScreenType.AUTH: {
       screenComponent = (

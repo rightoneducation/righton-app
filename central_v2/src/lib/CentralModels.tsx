@@ -20,6 +20,7 @@ export enum ScreenType {
   CLONEQUESTION,
   CONFIRMATION,
   NEXTSTEP,
+  USERPROFILE,
   AUTH
 }
 
