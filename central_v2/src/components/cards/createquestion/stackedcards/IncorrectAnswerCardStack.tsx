@@ -28,7 +28,6 @@ interface IncorrectAnswerCardStackProps {
   isCardSubmitted: boolean;
   isAIEnabled: boolean;
   isAIError: boolean;
-  isReadOnly?: boolean;
 }
 
 export default function IncorrectAnswerCardStack({
@@ -43,7 +42,6 @@ export default function IncorrectAnswerCardStack({
   isCardSubmitted,
   isAIEnabled,
   isAIError,
-  isReadOnly,
 }: IncorrectAnswerCardStackProps) {
 
   const allAnswers = [...incompleteIncorrectAnswers, ...completeIncorrectAnswers];
@@ -95,7 +93,6 @@ export default function IncorrectAnswerCardStack({
                   }}
                 >
                   <IncorrectAnswerCard
-                  isReadOnly={isReadOnly}
                     apiClients={apiClients}
                     answerData={card} 
                     draftQuestion={draftQuestion}
@@ -128,7 +125,6 @@ export default function IncorrectAnswerCardStack({
                 }}
               >
                 <IncorrectAnswerCard
-                isReadOnly={isReadOnly}
                   apiClients={apiClients}   
                   answerData={card} 
                   draftQuestion={draftQuestion}
@@ -170,7 +166,6 @@ export default function IncorrectAnswerCardStack({
             }}
           >
             <IncorrectAnswerCard
-            isReadOnly={isReadOnly}
               apiClients={apiClients}   
               answerData={card} 
               draftQuestion={draftQuestion}

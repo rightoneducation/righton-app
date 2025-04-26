@@ -382,6 +382,7 @@ export default function useCentralDataManager({
   };
 
   const getFav = async (user: IUserProfile) => {
+    console.log('📦 fetching favorite questions');
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     console.log(user);
     switch (gameQuestion){
@@ -446,7 +447,7 @@ export default function useCentralDataManager({
   
   const fetchElements = async (libraryTab?: LibraryTabEnum) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
-      if (isLibrary && tab !== undefined) {
+      if ((isLibrary || isCreateGame) && tab !== undefined) {
         switch(tab){
           case LibraryTabEnum.FAVORITES: 
             return gameQuestion === GameQuestionType.GAME ? FetchType.FAVORITE_GAMES : FetchType.FAVORITE_QUESTIONS;
@@ -459,7 +460,7 @@ export default function useCentralDataManager({
             return gameQuestion === GameQuestionType.GAME ? FetchType.PUBLIC_GAMES : FetchType.PUBLIC_QUESTIONS;
         }
       }
-      if (isQuestions || isCreateGame) return FetchType.EXPLORE_QUESTIONS;
+      if (isQuestions) return FetchType.EXPLORE_QUESTIONS;
       return FetchType.EXPLORE_GAMES;
     }
 

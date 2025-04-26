@@ -620,7 +620,7 @@ export const buildLibraryQuestionAtIndex = (
 
   return {
     ...draftTemplate,
-    questionTemplate: { ...emptyQuestionTemplate, id: question.id },
+    questionTemplate: { ...question },
     question: {
       questionCard: {
         imageUrl: question?.imageUrl ? question.imageUrl : '',
@@ -639,6 +639,7 @@ export const buildLibraryQuestionAtIndex = (
       },
       incorrectCards,
     },
+    isLibraryViewOnly: true,
   };
 };
 

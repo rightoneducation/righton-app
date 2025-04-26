@@ -121,6 +121,7 @@ function AppSwitch({
     }
     case ScreenType.CREATEGAME: {
       screenComponent = (
+        <AuthGuard>
           <CreateGame 
           screenSize={screenSize}
           setIsTabsOpen={setIsTabsOpen}
@@ -130,6 +131,7 @@ function AppSwitch({
           handleSearchChange={handleSearchChange}
           loadMore={loadMore}
           />
+        </AuthGuard>
       );
       break;
     }

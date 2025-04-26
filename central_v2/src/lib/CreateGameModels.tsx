@@ -38,6 +38,7 @@ export type TDraftQuestionsList = {
   highlightCard: CreateQuestionHighlightCard;
   isMultipleChoice: boolean;
   questionTemplate: IQuestionTemplate;
+  isLibraryViewOnly: boolean;
 };
 
 // empty centralQuestionTemplate for creating question templates
@@ -108,6 +109,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     isQuestionCardSubmitted: false,
     highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
     isMultipleChoice: true,
+    isLibraryViewOnly: false,
     questionTemplate: emptyQuestionTemplate,
   };
 

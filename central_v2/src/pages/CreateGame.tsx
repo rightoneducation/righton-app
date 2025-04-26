@@ -15,8 +15,10 @@ import {
   CreateGameBackground,
   CreateGameBoxContainer,
 } from '../lib/styledcomponents/CreateGameStyledComponent';
+import ViewQuestionCards from '../components/question/ViewQuestionCards';
 import {
   CreateQuestionHighlightCard,
+  LibraryTabEnum,
   ScreenSize,
   StorageKey,
   TemplateType,
@@ -84,7 +86,7 @@ import {
 interface CreateGameProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  fetchElements: () => void;
+  fetchElements: (libraryTab?: LibraryTabEnum) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -98,15 +100,15 @@ interface CreateGameProps {
 
 // Library Questions
 const tabMap: { [key: number]: string } = {
-  0: 'Explore Questions',
-  1: 'My Questions',
-  2: 'Favorites',
+  [LibraryTabEnum.PUBLIC]: 'Explore Questions',
+  [LibraryTabEnum.PRIVATE]: 'My Questions',
+  [LibraryTabEnum.FAVORITES]: 'Favorites',
 };
 
 const tabIconMap: { [key: number]: string } = {
-  0: tabExploreQuestionsIcon,
-  1: tabMyQuestionsIcon,
-  2: tabFavoritesIcon,
+  [LibraryTabEnum.PUBLIC]: tabExploreQuestionsIcon,
+  [LibraryTabEnum.PRIVATE]: tabMyQuestionsIcon,
+  [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
 };
 
 export default function CreateGame({ 
@@ -123,10 +125,6 @@ export default function CreateGame({
   const navigate = useNavigate();
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
-  const [selectQuestion, setSelectedQuestion] = useState<IQuestionTemplate | null>(null);
-  const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
-  const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
-  const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
@@ -135,14 +133,6 @@ export default function CreateGame({
     phaseOne: '',
     phaseTwo: '',
   });
-  const [hasInitialized, setHasInitialized] = useState(false);    
-  if (!hasInitialized) {
-    const needsFetch = centralData.mostPopularQuestions.length === 0; 
-    if (needsFetch) {
-      fetchElements(); 
-    }
-    setHasInitialized(true);
-  }
 
   const openModal = openModalAtIndex(draftGame, draftQuestionsList, selectedQuestionIndex);
   const gameFormIsValid = checkGameFormIsValid(draftGame);
@@ -268,8 +258,6 @@ export default function CreateGame({
       } else {
         // set draft game error
         setDraftGame((prev) => ({ ...prev, isGameCardErrored: true, isCreatingTemplate: false }));
-        // flag error and return to stop operation.
-          setSaveQuestionError(true);
       }
     } catch (err) {
       console.log(`HandleSaveGame - error: `, err);
@@ -400,23 +388,18 @@ export default function CreateGame({
     try {
       // Make sure all cards are completed for question.
       if (!allDQAreValid) {
-        setSaveQuestionError(true);
         return;
       }
-
-      setIsCreatingTemplate(true);
       // process valid questions in order
       const questionTemplate = createNewQuestionTemplates(draftQuestionsList, apiClients)
       await Promise.all(questionTemplate);
 
       // Reset data and re-direct user
       setDraftQuestionsList([]);
-      setIsCreatingTemplate(false);
-      setSaveQuestionError(false);
+
       navigate('/');
     } catch (err) {
-      setSaveQuestionError(true);
-      setIsCreatingTemplate(false);
+ 
       console.error('Error during save process:', err);
     }
   };
@@ -428,6 +411,31 @@ export default function CreateGame({
     if (screen === ScreenSize.LARGE) return value;
     if (screen === ScreenSize.MEDIUM && isSelected) return value;
     return '';
+  };
+
+  const handleView = (
+    question: IQuestionTemplate,
+    questions: IQuestionTemplate[],
+  ) => {
+    setIsTabsOpen(true);
+
+    console.log("Library Question: ", question);
+   setDraftQuestionsList((prev) => {
+    const libraryQuestion = buildLibraryQuestionAtIndex(question);
+    const { updatedList, addNew } = updateDraftListWithLibraryQuestion(
+      prev,
+      selectedQuestionIndex,
+      libraryQuestion,
+    );
+    setDraftGame((prevGame) => ({
+      ...prevGame,
+      openQuestionBank: false,
+      openCreateQuestion: true,
+      ...(addNew && { questionCount: prevGame.questionCount + 1 })
+    }));
+    setIconButtons((prevButtons) => addNew ? [...prevButtons, prevButtons.length + 1] : prevButtons);
+    return updatedList;
+   })
   };
 
   /** LIBRARY HANDLER HELPERS */
@@ -450,33 +458,6 @@ export default function CreateGame({
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
-
-    const handleView = (
-      question: IQuestionTemplate,
-      questions: IQuestionTemplate[],
-    ) => {
-      setSelectedQuestion(question);
-      setQuestionSet(questions);
-      setIsTabsOpen(true);
-
-      console.log("Library Question: ", question);
-     setDraftQuestionsList((prev) => {
-      const libraryQuestion = buildLibraryQuestionAtIndex(question);
-      const { updatedList, addNew } = updateDraftListWithLibraryQuestion(
-        prev,
-        selectedQuestionIndex,
-        libraryQuestion,
-      );
-      setDraftGame((prevGame) => ({
-        ...prevGame,
-        openQuestionBank: false,
-        openCreateQuestion: true,
-        ...(addNew && { questionCount: prevGame.questionCount + 1 })
-      }));
-      setIconButtons((prevButtons) => addNew ? [...prevButtons, prevButtons.length + 1] : prevButtons);
-      return updatedList;
-     })
-    };
 
     useEffect(() => {
       console.log("Draft Game:", draftGame)
@@ -569,10 +550,18 @@ export default function CreateGame({
                 key={`Question--${index + 1}`}
               >
                 <Box>
+                  {draftQuestionItem.isLibraryViewOnly ? (
+                    <ViewQuestionCards 
+                    screenSize={screenSize}
+                    question={draftQuestionItem.questionTemplate}
+                    isViewGame
+                    isCreateGame
+                     />
+
+                  ): (
                   <QuestionElements
                     screenSize={screenSize}
                     draftQuestion={draftQuestionItem.question}
-                    isReadOnly={!!draftQuestionItem.questionTemplate.id}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,
                     )}
@@ -612,12 +601,13 @@ export default function CreateGame({
                     handleCCSSClick={handleCCSSClicks}
                     handleImageUploadClick={handleQuestionImageUploadClick}
                   />
+                  )}
                 </Box>
               </Fade>
             ),
         )}
 
-        {/* Question Bank goes here */}
+        {/* Question Bank */}
         <Fade
           in={draftGame.openQuestionBank}
           mountOnEnter
@@ -637,6 +627,7 @@ export default function CreateGame({
               handlePublicPrivateChange={handlePublicPrivateQuestionChange}
               fetchElements={fetchElements}
               handleView={handleView}
+              loadMore={loadMore}
             />
           </Box>
         </Fade>
