@@ -15,11 +15,18 @@ import {
   LeftBottomGamesNumber,
   LeftBottomGamesQuestionContainer,
 } from '../../lib/styledcomponents/OwnerCardStyledComponents';
-import RightOnLogo from '../../images/rightonlogo.svg';
+import RightOnLogo from '../../images/RightOnUserLogo.svg';
+import { ScreenSize } from '../../lib/CentralModels';
 
-export default function OwnerCard(){
+interface OwnerCardProps {
+    screenSize: ScreenSize;
+}
+
+export default function OwnerCard(
+    {screenSize}: OwnerCardProps
+) {
   return (
-    <LeftProfileContainer>
+    <LeftProfileContainer screenSize={screenSize}>
       <LeftProfileTopContainer>
           <LeftNameText>
               Ms. Clark
