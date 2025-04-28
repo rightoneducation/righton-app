@@ -32,6 +32,7 @@ export enum ButtonType {
   CLONEANDEDIT = 'cloneandedit',
   NEXTQUESTION = 'nextquestion',
   SAVE = 'save',
+  SAVEPASSWORD = 'savepassword',
   SAVEDRAFT = 'savedraft',
   DISCARD = 'discard',
   DISCARDBLUE = 'discardblue',
@@ -143,6 +144,11 @@ export const buttonContentMap: ButtonContentMapProps = {
     textKey: ButtonType.SAVE,
     width: '200px'
   },
+  [ButtonType.SAVEPASSWORD]: {
+    icon: save,
+    textKey: ButtonType.SAVEPASSWORD,
+    width: '200px'
+  },
   [ButtonType.SAVEDRAFT]: {
     icon: save,
     textKey: ButtonType.SAVEDRAFT,
@@ -204,6 +210,7 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.EDITINFORMATION]: {
     textKey: ButtonType.EDITINFORMATION,
+    width: '200px'
   },
   [ButtonType.CHANGEPASSWORD]: {
     textKey: ButtonType.CHANGEPASSWORD,
