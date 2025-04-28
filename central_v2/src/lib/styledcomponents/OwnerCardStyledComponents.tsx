@@ -1,15 +1,10 @@
 import React from 'react';
 import { styled, Box, Typography } from '@mui/material';
-import { ScreenSize } from '../CentralModels';
 
-interface LeftProfileContainerProps {
-  screenSize: ScreenSize;
-}
-
-export const LeftProfileContainer = styled(Box)<LeftProfileContainerProps>(({ theme, screenSize }) => ({
+export const LeftProfileContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   maxWidth: '338px',
-  minWidth: screenSize === ScreenSize.LARGE ? '338px' : ' 139px',
+  minWidth: '338px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -56,9 +51,13 @@ export const AtUserNameText = styled(Typography)(({ theme }) => ({
   background: '#7E1E81',
   color: '#FFFFFF',
   textAlign: 'center',
-  borderRadius: '20px',
-  paddingTop: '4px',
-  paddingBottom: '4px',
+  padding: '4px',
+  boxSizing: 'border-box',
+  borderRadius: '25px',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
 }));
 
 export const LeftAccountCreatedContainer = styled(Box)(({ theme }) => ({
@@ -83,7 +82,6 @@ export const LeftDateText = styled(Typography)(({ theme }) => ({
 
 export const LeftBottomContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  flexDirection: 'column',
   width: '100%',
   gap: '8px'
 }));
@@ -121,4 +119,51 @@ export const LeftBottomGamesNumber = styled(Typography)(({ theme }) => ({
   fontSize: '36px', 
   color: '#FFFFFF',
   lineHeight: '100%'
+}));
+
+export const TopProfileContainer = styled(Box)(({ theme }) => ({
+  height: '100%',
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '24px',
+  background: '#02215F',
+  padding: '16px',
+  borderRadius: '16px',
+  boxSizing: 'border-box',
+}));
+
+export const TopNameText = styled(LeftNameText)(({ theme }) => ({
+  fontFamily: 'Poppins, sans-serif',
+  fontWeight: 'bold', 
+  fontSize: '32px', 
+  lineHeight: '32px',
+  color: '#FFFFFF',
+  textAlign: 'center',
+  width: 'fit-content'
+}));
+
+export const TopSubContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  alignItems: 'center',
+  width: '100%',
+  maxWidth: '400px'
+}));
+
+export const MobileUserNameContainer = styled(Box)(({ theme }) => ({
+  background: '#7E1E81',
+  display: 'flex',
+  width: '100%',
+  maxWidth: '191px',
+  padding: '8px',
+  boxSizing: 'border-box',
+  borderRadius: '25px',
+}));
+
+export const MobileBottomGamesContainer = styled(LeftBottomGamesContainer)(({ theme }) => ({
+  width: 'fit-content',
 }));

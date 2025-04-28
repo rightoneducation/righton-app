@@ -82,6 +82,9 @@ export default function UserProfile({
                         paddingRight: `${theme.sizing.lgPadding}px`,
                     }}
                 >
+                    {screenSize !== ScreenSize.LARGE && (
+                        <OwnerCard screenSize={screenSize}/>
+                    )}
                     <UsernameTextContainer>
                         <SubHeadingText>Username</SubHeadingText>
                         <BodyText>( Note: username cannot be edited )</BodyText>
@@ -209,7 +212,7 @@ export default function UserProfile({
                             </ImageContainer>
                         </UploadImagesContainer>
                     </UserInfoContainer>
-                   <CentralButton buttonType={ButtonType.EDITINFORMATION} isEnabled />
+                   <CentralButton buttonType={ButtonType.EDITINFORMATION} isEnabled smallScreenOverride/>
                     <SubHeadingText>
                         Password
                     </SubHeadingText>
@@ -218,7 +221,7 @@ export default function UserProfile({
                         placeholder="Password..."
                         value="********"
                     />
-                    <CentralButton buttonType={ButtonType.SAVE} isEnabled />
+                    <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride/>
                 </UserProfileGridItem>
                 <Grid  
                     sm
