@@ -382,7 +382,6 @@ export default function useCentralDataManager({
   };
 
   const getFav = async (user: IUserProfile) => {
-    console.log('📦 fetching favorite questions');
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
     console.log(user);
     switch (gameQuestion){

@@ -177,7 +177,8 @@ export default function CreateGameCardBase({
       sx={{
         height: responsiveHeight,
         gap: responsiveGap,
-        width: screenSize === ScreenSize.LARGE ? "100%": "100%",
+        width: "100%",
+        maxWidth: '672px',
         padding: screenSize === ScreenSize.LARGE ? '28px' : '24px',
         borderRadius: '8px',
       }}

@@ -36,7 +36,7 @@ export default function ViewQuestionCards({
  
   return (
     <CardContainer>
-    {screenSize !== ScreenSize.LARGE &&
+    {!isCreateGame && screenSize !== ScreenSize.LARGE &&
       <OwnerTag isViewGame={isViewGame} screenSize={screenSize}/>
     }
     <DetailedQuestionContainer

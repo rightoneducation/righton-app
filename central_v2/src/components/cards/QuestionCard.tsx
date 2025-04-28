@@ -7,6 +7,7 @@ import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';
 import FavouriteButton from '../button/favouritebutton/FavouriteButton';
+import AddToGameButton from '../button/addtogame/AddToGameButton';
 
 interface StyledQuestionCardProps {
   id: string;
@@ -16,6 +17,7 @@ interface StyledQuestionCardProps {
   isCarousel: boolean;
   isFavorite: boolean;
   handleViewButtonClick: (element: IQuestionTemplate) => void;
+  isCreateGame?: boolean;
 }
 
 const QuestionImage = styled('img')({
@@ -97,6 +99,7 @@ export default function StyledQuestionCard({
   question,
   isCarousel,
   isFavorite,
+  isCreateGame,
   handleViewButtonClick,
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;
@@ -115,7 +118,9 @@ export default function StyledQuestionCard({
         </TitleContainer>
         <DescriptionText>{title}</DescriptionText>
         <BottomButtonBox>
-          <CentralButton
+         {!isCreateGame && 
+         <>
+         <CentralButton
             buttonType={ButtonType.VIEW}
             isEnabled
             onClick={() => handleViewButtonClick(question)}
@@ -124,7 +129,14 @@ export default function StyledQuestionCard({
             buttonType={ButtonType.CLONE}
             isEnabled
             onClick={() => handleViewButtonClick(question)}
-          />
+          /> 
+         </>
+          }
+
+          {isCreateGame && (
+            <AddToGameButton  onClick={() => handleViewButtonClick(question)} />
+          )}
+
         </BottomButtonBox>
       </ContentContainer>
     </QuestionCard>

@@ -34,6 +34,23 @@ export const checkDQsAreValid = (
   draftQuestionsList: TDraftQuestionsList[],
 ): boolean => {
   return draftQuestionsList.every((dq, index) => {
+    // const { ccss, image, imageUrl, title } = dq.question.questionCard;
+    // const {answer, answerSteps } = dq.question.correctCard;
+
+    // //question
+    // const hasCCSS = ccss !== "";
+    // const hasImage = image || imageUrl
+    // const hasTitle = title !== ""
+    // //correct answer
+    // const hasAnswer = answer !== ""
+    // const answerArr = answerSteps.map((answers) => answers !== "");
+
+    // //incorrect options
+    // dq.question.incorrectCards.every((card) => {
+    //   const { answer, explanation } = card;
+    //   return answer !== "" && explanation !== ""
+    // })
+    
     const isValid =
       dq.question.questionCard.isCardComplete &&
       dq.question.correctCard.isCardComplete &&

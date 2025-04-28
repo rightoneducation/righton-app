@@ -98,19 +98,6 @@ interface CreateGameProps {
   loadMore: () => void;
 }
 
-// Library Questions
-const tabMap: { [key: number]: string } = {
-  [LibraryTabEnum.PUBLIC]: 'Explore Questions',
-  [LibraryTabEnum.PRIVATE]: 'My Questions',
-  [LibraryTabEnum.FAVORITES]: 'Favorites',
-};
-
-const tabIconMap: { [key: number]: string } = {
-  [LibraryTabEnum.PUBLIC]: tabExploreQuestionsIcon,
-  [LibraryTabEnum.PRIVATE]: tabMyQuestionsIcon,
-  [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
-};
-
 export default function CreateGame({ 
   screenSize,
   setIsTabsOpen,
@@ -443,6 +430,9 @@ export default function CreateGame({
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
+    if(draftGame.openQuestionBank) {
+      setDraftGame((prev) => toggleCreateQuestion(draftGame, gameFormIsValid))
+    }
   };
 
   const handleAddMoreQuestions = () => {
@@ -617,8 +607,6 @@ export default function CreateGame({
           <Box>
             <LibraryTabsQuestions
               screenSize={screenSize}
-              tabMap={tabMap}
-              tabIconMap={tabIconMap}
               setIsTabsOpen={setIsTabsOpen}
               getLabel={getLabel}
               handleChooseGrades={handleChooseGrades}

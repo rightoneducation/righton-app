@@ -26,12 +26,12 @@ import {
 import { 
   LibraryTab
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
-import { ICentralDataState } from '../../lib/context/ICentralDataState';
+import tabPublicIcon from '../../images/tabPublic.svg';
+import tabFavoritesIcon from '../../images/tabFavorites.svg';
+import tabPrivateIcon from '../../images/tabPrivate.svg';
 
 interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   screenSize: ScreenSize;
-  tabMap: { [key: number]: string };
-  tabIconMap: { [key: number]: string };
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   getLabel: (screen: ScreenSize, isSelected: boolean, value: string) => string;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -51,8 +51,6 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
 
 export default function LibraryTabsQuestions({
   screenSize,
-  tabMap,
-  tabIconMap,
   setIsTabsOpen,
   getLabel,
   handleChooseGrades,
@@ -66,6 +64,20 @@ export default function LibraryTabsQuestions({
   const centralData = useCentralDataState();
   
   const isSearchResults = centralData.searchTerms.length > 0;
+
+  // Library Questions
+const tabMap: { [key: number]: string } = {
+  [LibraryTabEnum.PUBLIC]: 'Public',
+  [LibraryTabEnum.PRIVATE]: 'Private',
+  [LibraryTabEnum.FAVORITES]: 'Favorites',
+};
+
+const tabIconMap: { [key:number]: string } = {
+  [LibraryTabEnum.PUBLIC]: tabPublicIcon,
+  [LibraryTabEnum.PRIVATE]: tabPrivateIcon,
+  [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
+};
+
   const tabIndexToEnum: { [key: number]: LibraryTabEnum } = {
     0: LibraryTabEnum.PUBLIC,
     1: LibraryTabEnum.PRIVATE,
@@ -98,37 +110,8 @@ export default function LibraryTabsQuestions({
       fetchElements(newTabEnum);
     };
   
-// const getElements = () => {
-//   console.log('getElements', openTab);
-//   console.log(centralData.favQuestions);
-//   console.log('centralData: ', centralData);
-  
-//   if (centralData.favQuestions.length > 0 && openTab === LibraryTabEnum.FAVORITES){
-//     if (isSearchResults)
-//       return centralData.searchedQuestions.filter((question) => centralData.favQuestions.map((favQuestion) => favQuestion.id).includes(question.id));
-//     return centralData.favQuestions;
-//   }
-//   // if (centralData.draftQuestions.length > 0 && openTab === 2){
-//   //   return centralData.draftQuestions;
-//   // }
-//   // my example
-//   if(centralData.privateQuestions && openTab === LibraryTabEnum.PRIVATE) {
-//     if(isSearchResults) {
-//       return centralData.searchedQuestions.filter(
-//         (question) => centralData.privateQuestions.filter(
-//           (privateQuestion) => privateQuestion.owner === centralData.userProfile.email).map(
-//             (q) =>q.id).includes(question.id)
-//           )
-//     }
-//     return centralData.privateQuestions.filter((question) => question.owner === centralData.userProfile.email)
-//   }
 
-//   if (isSearchResults)
-//     return centralData.searchedQuestions 
-//   return centralData.publicQuestions;
-// }
-
-const elements = getQuestionElements(openTab, isSearchResults, centralData)
+const elements = getQuestionElements(openTab, isSearchResults, centralData);
 
 console.log("elements", elements);
 console.log("centralData: ", centralData)
@@ -194,6 +177,7 @@ return (
         handleView={handleView}
         isLoading={centralData.isLoading}
         isMyLibrary
+        isCreateGame
       />
     </ContentContainer>
   </TabContent>
