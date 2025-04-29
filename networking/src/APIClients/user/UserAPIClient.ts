@@ -32,13 +32,10 @@ export class UserAPIClient
     try{
     const input: CreateUserInput = createUserInput
     const variables: CreateUserMutationVariables = { input }
-    console.log(input);
-    console.log(variables);
     const user = await this.callGraphQL<CreateUserMutation>(
         createUser,
         variables
     );
-    console.log(user);
     if (user.data.createUser)
       return UserParser.parseIUserfromAWSUser(user.data.createUser) as IUser;
     } catch (error) {
@@ -68,7 +65,6 @@ export class UserAPIClient
         userByUserName,
         {userName} as unknown as GraphQLOptions
     )
-    console.log(user);
     if (user.data.userByUserName?.items[0])
       return UserParser.parseIUserfromAWSUser(user.data.userByUserName.items[0]) as IUser;
     return null;
@@ -78,15 +74,12 @@ export class UserAPIClient
   async updateUser( 
     updateUserInput: UpdateUserInput
   ): Promise<IUser | null> {
-    console.log(updateUserInput);
     const input: UpdateUserInput = updateUserInput
     const variables: UpdateUserMutationVariables = { input }
-    console.log(variables);
     const user = await this.callGraphQL<UpdateUserMutation>(
         updateUser,
         variables
     )
-    console.log(user.data.updateUser);
     if (user.data.updateUser)
       return UserParser.parseIUserfromAWSUser(user.data.updateUser) as IUser;
     return null;

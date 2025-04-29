@@ -3,7 +3,8 @@ import {
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
   type ResetPasswordOutput,
-  AuthSession
+  AuthSession,
+  FetchUserAttributesOutput
 } from 'aws-amplify/auth';
 import { IUserProfile } from "../../../Models/IUserProfile";
 
@@ -14,6 +15,7 @@ export interface IAuthAPIClient {
   verifyGameOwner(gameOwner: string): Promise<boolean>;
   verifyQuestionOwner(questionOwner: string): Promise<boolean>;
   getCurrentUserName(): Promise<string>;
+  getFirstAndLastName(): Promise<FetchUserAttributesOutput | null>;
   getCurrentSession(): Promise<AuthSession>;
   getUserNickname(): Promise<string | null>;
   awsUserCleaner(userProfile: IUserProfile): Promise<void>;

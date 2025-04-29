@@ -1,4 +1,4 @@
-import { Amplify  } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
 import { CookieStorage  } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
@@ -17,6 +17,8 @@ import {
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
   AuthSession,
+  FetchUserAttributesOutput,
+  decodeJWT
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
@@ -68,8 +70,20 @@ export class AuthAPIClient
     return username
   }
 
+  async getFirstAndLastName(): Promise<FetchUserAttributesOutput | null>{
+    const session = await fetchAuthSession();
+    const idToken = session.tokens?.idToken;
+    if (!idToken) throw new Error('No ID token in session');
+    const {payload} = decodeJWT(String(idToken));
+    console.log(session);
+    console.log(payload);
+    return null;
+  }
+
   async getCurrentSession(): Promise<AuthSession> {
-    return await fetchAuthSession();
+    const session =  await fetchAuthSession();
+    console.log(session);
+    return session;
   }
 
   async awsUserCleaner(user: IUserProfile): Promise<void> {

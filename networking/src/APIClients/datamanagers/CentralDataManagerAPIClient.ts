@@ -229,7 +229,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
 
   public signUpGoogleBuildBackendUser = async (user: IUserProfile, frontImage: File, backImage: File) => {
-    console.log("SignupGoogleBackendUser, Intial user attributes without email:", user);
     // Need to put it in Email into user.
     let getEmail = await this.authAPIClient.getUserEmail();
     if(getEmail){

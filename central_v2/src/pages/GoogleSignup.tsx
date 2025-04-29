@@ -19,28 +19,20 @@ import { UserStatusType } from '../lib/CentralModels';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid blue',
     flexDirection: 'column',
     gap: '24px',
     height: '100%',
     width: '100%',
     maxWidth: '500px',
     marginTop: '84px',
-    // paddingBottom: '40px',
-    // paddingLeft: '40px',
-    // paddingRight: '40px',
     boxSizing: 'border-box',
-    // border: '1px solid red'
   }));
 
 const UpperSignup = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid blue',
     flexDirection: 'column',
     alignItems: 'center',
     gap: '24px',
-    // border: '1px solid green'
-
   }));
 
 const UpperSignupSubStepText = styled(Typography)(({ theme }) => ({
@@ -54,7 +46,6 @@ const UpperSignupSubStepText = styled(Typography)(({ theme }) => ({
   
 const TitleandNameMUI = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid black',
     gap: '12px',
   }));
 
@@ -83,14 +74,12 @@ const TitleField = styled(TextField)(({ theme }) => ({
 
 const UsernameMUI = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid green',
     gap: '4px',
     alignItems: 'stretch'
   }));
 
 const TeacherIdText = styled(Typography)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid green',
     color: '#384466', 
     fontFamily: 'Rubik, sans-serif', 
     fontWeight: 400, 
@@ -103,7 +92,6 @@ const UploadImages= styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: '16px',
     justifyContent: 'flex-start',
-    // border: '1px purple solid',
     marginTop: '-20px'
 }));
 
@@ -145,16 +133,11 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 
 interface GoogleSignupProps {
     apiClients: IAPIClients;
-    // handleUserCreate: () => void;
     frontImage: File | null;
     setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
     backImage: File | null;
     setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
-    // confirmPassword: string;
-    // setConfirmPassword: (value: string) => void;
-    // setPressedGoogle: (value: boolean) => void
 }
-
 
 export default function GoogleSignup({
     apiClients,
@@ -173,7 +156,8 @@ export default function GoogleSignup({
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
     const centralData = useCentralDataState();
     const centralDataDispatch = useCentralDataDispatch();
-    
+    console.log(apiClients.auth.getCurrentSession());
+    console.log(apiClients.auth.getFirstAndLastName());
 
     // Local temporary states
     const [title, setTitle] = useState('Title...') 
@@ -192,11 +176,6 @@ export default function GoogleSignup({
     const handleGetStarted = async () => {
       try {
         if(frontImage && backImage) {
-          // console.log("Local Title: ", title)
-          // console.log("Local firstName: ", firstName)
-          // console.log("Local lastName: ", lastName)
-          // console.log("Local userName: ", userName)
-
           const updatedProfile = {
             ...userProfileInit, // ensures all keys are there
             firstName,
@@ -204,20 +183,13 @@ export default function GoogleSignup({
             userName,
             title,
           };
-
-          // centralDataDispatch({ type: 'SET_USER_PROFILE', payload: updatedProfile });
- 
-          console.log("Sending this userProfile to signupgooglebackend function: ", centralData.userProfile)
           const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(updatedProfile, frontImage, backImage);
           // need if statement for response
           if (response?.updatedUser){
-            console.log("returning from signupgooglebuildbackendnuser: ", response)
             centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
             centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
-            console.log("userProfile at the top component aka centraldata after returning from backend: ", centralData.userProfile)
             navigate("/")
           } 
-          // console.log("CurrentUserInfo: ", response?.updatedUser)
         }
       } catch (error) {
         console.error(error);
@@ -239,12 +211,6 @@ export default function GoogleSignup({
                 onChange={(event) => 
                   setTitle(event.target.value)
                 }
-                // onChange={(event) => 
-                //   centralDataDispatch({
-                //     type: 'SET_USER_PROFILE', 
-                //     payload: {title: event.target.value}
-                //   })
-                // }
                 variant="outlined"
                 SelectProps={{
                     IconComponent: DropDown, // Custom icon component
@@ -261,35 +227,18 @@ export default function GoogleSignup({
                 placeholder="First Name"
                 value={firstName}
                 onChange={(event) => {
-                  // console.log("User's FirstName:",  centralData.userProfile.firstName)
                   setFirstName(event.target.value)
                   }
                 }
-                // onChange={(event) => {
-                //   console.log("User's FirstName:",  centralData.userProfile.firstName)
-                //   centralDataDispatch({
-                //     type: 'SET_USER_PROFILE', 
-                //     payload: {firstName: event.target.value}
-                //   })}
-                // }
                 />
                 <TextContainerStyled
                 variant="outlined"
                 placeholder="Last Name"
                 value={lastName}
                 onChange={(event) => {
-                  // console.log("Last Name Changed: ", centralData.userProfile); // Logs the new value of the last name
                   setLastName(event.target.value)
                 }
                 }
-                // onChange={(event) => {
-                //   console.log("Last Name Changed: ", centralData.userProfile); // Logs the new value of the last name
-                //   centralDataDispatch({
-                //     type: 'SET_USER_PROFILE', 
-                //     payload: {lastName: event.target.value}
-                //   })
-                // }
-                // }
                 />
           </TitleandNameMUI>
           <UsernameMUI>
@@ -301,12 +250,6 @@ export default function GoogleSignup({
               onChange={(event) => 
                 setUserName(event.target.value)
               }
-              // onChange={(event) => 
-              //   centralDataDispatch({
-              //     type: 'SET_USER_PROFILE', 
-              //     payload: {userName: event.target.value}
-              //   })
-              // }
               sx={{
                 backgroundColor: 'white'
               }}
@@ -354,8 +297,6 @@ export default function GoogleSignup({
                 }
 
             </UploadImageContainer>
-
-
             <UploadImageContainer>
                 <ImageText>Back</ImageText>
                 <input

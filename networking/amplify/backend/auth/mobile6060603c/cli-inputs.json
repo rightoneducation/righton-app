@@ -1,8 +1,6 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "mobile082e6f66_identitypool_082e6f66",
-    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "mobile6060603c",
     "userPoolName": "mobile6060603c_userpool_6060603c",
     "autoVerifiedAttributes": [
@@ -29,13 +27,15 @@
       "email"
     ],
     "userpoolClientReadAttributes": [
-      "email"
+      "email",
+      "family_name",
+      "given_name"
     ],
     "userpoolClientLambdaRole": "mobile6060603c_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": false,
+    "userpoolClientSetAttributes": true,
     "sharedId": "6060603c",
     "resourceName": "mobile6060603c",
-    "authSelections": "identityPoolAndUserPool",
+    "authSelections": "userPoolOnly",
     "useDefault": "manual",
     "hostedUI": true,
     "userPoolGroupList": [
@@ -68,7 +68,7 @@
         ]
       }
     ],
-    "userPoolGroups": true,
+    "userPoolGroups": false,
     "adminQueries": false,
     "triggers": {
       "PostConfirmation": [
@@ -86,9 +86,8 @@
       "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "authProviders": [],
-    "thirdPartyAuth": false,
     "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mobile6060603cPostConfirmation\"\n  }\n]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://dev-central.rightoneducation.com/auth/\"],\"LogoutURLs\":[\"https://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://dev-central.rightoneducation.com/auth/\"],\"LogoutURLs\":[\"https://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\"]}",
+    "authProviders": []
   }
 }
