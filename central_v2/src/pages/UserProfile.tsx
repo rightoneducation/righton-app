@@ -2,13 +2,7 @@ import React, { useState } from 'react'
 import { styled } from '@mui/material/styles';
 import { Box, Grid, MenuItem, useTheme } from '@mui/material';
 import Adpic from "../images/@.svg"
-<<<<<<< HEAD
-import UserProfileImageUpload from '../components/modal/UserProfileImageUpload';
-import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
-import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
-=======
 import OwnerCard from '../components/profile/OwnerCard';
->>>>>>> dev
 import { 
     TextContainerStyled,
   } from '../lib/styledcomponents/CreateQuestionStyledComponents';
@@ -33,10 +27,6 @@ import {
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import { ScreenSize } from '../lib/CentralModels';
-<<<<<<< HEAD
-import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-=======
->>>>>>> dev
 
 interface UserProfileProps {
     screenSize: ScreenSize;
@@ -67,8 +57,6 @@ export default function UserProfile({
     imageUrl: null,
   });
 
-  const screenSize = ScreenSize.SMALL
-
 
   const handleImageUploadClick = () => {
     setIsImageUploadVisible(true);
@@ -97,80 +85,6 @@ export default function UserProfile({
   }
 
   return (
-<<<<<<< HEAD
-        <InnerBodyContainer>
-            <MyProfileText>My Profile</MyProfileText>
-            <MiddleContentContainer>
-                <LeftProfileContainer>
-                    <LeftProfileTopContainer>
-                        <LeftNameText>
-                            Ms. Clark
-                        </LeftNameText>
-                        <img src={RightOnLogo} alt="Right On Logo" style={{ width: '165px', height: '165px' }} />
-                        
-                        <CentralButton buttonType={buttonEditPicture} isEnabled={isEditPicture} smallScreenOverride onClick={handleImageUploadClick}/>
-                        <UserProfileImageUpload
-                            userPic={userPic} 
-                            // isClone={isClone}
-                            // isCloneImageChanged={isCloneImageChanged}
-                            screenSize={screenSize}  
-                            isModalOpen={isImageUploadVisible} 
-                            handleImageChange={handleImageChange}
-                            handleCloseModal={handleCloseModal}
-                        />
-                        <AtUserNameContainerAndAccount>
-                            <AtUserNameContainer >
-                                <AtUserNameText>
-                                    @clarkinator27
-                                </AtUserNameText>
-                            </AtUserNameContainer>
-                            <LeftAccountCreatedContainer>
-                                <LeftAccountCreatedInfo>
-                                    Account Created
-                                </LeftAccountCreatedInfo>
-                                <LeftDateText>
-                                    11/18/2023
-                                </LeftDateText>
-                            </LeftAccountCreatedContainer>
-                        </AtUserNameContainerAndAccount>
-                    </LeftProfileTopContainer>
-                    
-                    <LeftBottomContainer>
-                        <LeftBottomGamesQuestionContainer>
-                            <LeftBottomGamesContainer>
-                                <LeftBottomGamesText>
-                                    Games Made
-                                </LeftBottomGamesText>
-                                <LeftBottomGamesNumber>
-                                    16
-                                </LeftBottomGamesNumber>
-                            </LeftBottomGamesContainer>
-                            <LeftBottomGamesContainer>
-                                <LeftBottomGamesText>
-                                    Question Made
-                                </LeftBottomGamesText>
-                                <LeftBottomGamesNumber>
-                                    120
-                                </LeftBottomGamesNumber>
-                            </LeftBottomGamesContainer>
-                        </LeftBottomGamesQuestionContainer>
-                        <LeftBottomGamesContainer>
-                                <LeftBottomGamesText>
-                                    Games Used
-                                </LeftBottomGamesText>
-                                <LeftBottomGamesNumber>
-                                    16
-                                </LeftBottomGamesNumber>
-                        </LeftBottomGamesContainer>
-                    </LeftBottomContainer>
-                </LeftProfileContainer>
-                <RightProfileContainer>
-                    <RightUserNoteContainer>
-                        <RightUsernameText>Username</RightUsernameText>
-                        <RightNoteText>(Note: username cannot be edited)</RightNoteText>
-                    </RightUserNoteContainer>
-                    <MiddleTextSecondRow>
-=======
         <UserProfileMainContainer>
             <TitleText>My Profile</TitleText>
             <UserProfileGridContainer container wrap="nowrap">
@@ -211,7 +125,6 @@ export default function UserProfile({
                         <BodyText>( Note: username cannot be edited )</BodyText>
                     </UsernameTextContainer>
                     <UsernameInputContainer>
->>>>>>> dev
                         <img src={Adpic} alt="Adpic" style={{ width: '26px' }} />
                         <TextContainerStyled
                             variant="outlined"
