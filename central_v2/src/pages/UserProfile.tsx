@@ -6,7 +6,7 @@ import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import RightOnLogo from "../images/RightOnUserLogo.svg";
 import Adpic from "../images/@.svg"
-
+import UserProfileImageUpload from '../components/modal/UserProfileImageUpload';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ReactComponent as DropDown} from "../images/dropDownArrow.svg"
 import { 
@@ -15,7 +15,8 @@ import {
 
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
-import { UserStatusType } from '../lib/CentralModels';
+import { ScreenSize } from '../lib/CentralModels';
+import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -321,6 +322,43 @@ export default function UserProfile() {
 
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
   
+  const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(true);
+  const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
+  
+  const [userPic, setUserPic] = useState<{ image: File | null; imageUrl: string | null }>({
+    image: null,
+    imageUrl: null,
+  });
+
+  const screenSize = ScreenSize.SMALL
+
+
+  const handleImageUploadClick = () => {
+    setIsImageUploadVisible(true);
+  }
+
+  const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
+    setIsCloneImageChanged(true);
+    if (inputImage) {
+        setUserPic(prev => ({
+            ...prev,
+            image: inputImage,
+          }));
+    } else if (inputUrl) {
+        setUserPic(prev => ({
+            ...prev,
+            imageUrl: inputUrl,  
+          }))
+    }
+  }
+
+  const handleCloseModal = () => {
+    setIsImageUploadVisible(false);
+    // setIsImageURLVisible(false);
+    // setIsCreatingTemplate(false);
+    // setIsCCSSVisible(false);
+  }
+
   return (
         <InnerBodyContainer>
             <MyProfileText>My Profile</MyProfileText>
@@ -331,6 +369,17 @@ export default function UserProfile() {
                             Ms. Clark
                         </LeftNameText>
                         <img src={RightOnLogo} alt="Right On Logo" style={{ width: '165px', height: '165px' }} />
+                        
+                        <CentralButton buttonType={buttonEditPicture} isEnabled={isEditPicture} smallScreenOverride onClick={handleImageUploadClick}/>
+                        <UserProfileImageUpload
+                            userPic={userPic} 
+                            // isClone={isClone}
+                            // isCloneImageChanged={isCloneImageChanged}
+                            screenSize={screenSize}  
+                            isModalOpen={isImageUploadVisible} 
+                            handleImageChange={handleImageChange}
+                            handleCloseModal={handleCloseModal}
+                        />
                         <AtUserNameContainerAndAccount>
                             <AtUserNameContainer >
                                 <AtUserNameText>

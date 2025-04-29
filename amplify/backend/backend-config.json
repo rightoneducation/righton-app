@@ -1,0 +1,293 @@
+{
+  "api": {
+    "mobile": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authmobile6060603c"
+              }
+            }
+          ],
+          "defaultAuthentication": {
+            "authenticationType": "AWS_IAM"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "auth": {
+    "mobile6060603c": {
+      "customAuth": false,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation",
+          "triggerProvider": "Cognito"
+        }
+      ],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [
+          "GOOGLE"
+        ],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    },
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "mobile6060603c"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
+    }
+  },
+  "function": {
+    "S3Trigger04eb3a91": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "createGameTest": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "mobile"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "mobile6060603cPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "teacherIdAuth": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "uploadExternalImageToS3": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "userCleaner": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "waegen": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "waeregen": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_S3Trigger04eb3a91_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ]
+    },
+    "AMPLIFY_function_S3Trigger04eb3a91_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGameTest_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGameTest"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGameTest_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGameTest"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_GROUP": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_mobile6060603cPostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mobile6060603cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_teacherIdAuth_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "teacherIdAuth"
+        }
+      ]
+    },
+    "AMPLIFY_function_teacherIdAuth_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "teacherIdAuth"
+        }
+      ]
+    },
+    "AMPLIFY_function_uploadExternalImageToS3_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "uploadExternalImageToS3"
+        }
+      ]
+    },
+    "AMPLIFY_function_uploadExternalImageToS3_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "uploadExternalImageToS3"
+        }
+      ]
+    },
+    "AMPLIFY_function_userCleaner_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_userCleaner_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userCleaner"
+        }
+      ]
+    },
+    "AMPLIFY_function_waegen_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "waegen"
+        }
+      ]
+    },
+    "AMPLIFY_function_waegen_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "waegen"
+        }
+      ]
+    },
+    "AMPLIFY_function_waeregen_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "waeregen"
+        }
+      ]
+    },
+    "AMPLIFY_function_waeregen_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "waeregen"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "rightoncentralstorage": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ],
+          "category": "function",
+          "resourceName": "S3Trigger04eb3a91"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
+}
