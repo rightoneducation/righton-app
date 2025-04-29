@@ -1,6 +1,8 @@
 {
   "version": "1",
   "cognitoConfig": {
+    "identityPoolName": "mobile5de81af7_identitypool_5de81af7",
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "mobile6060603c",
     "userPoolName": "mobile6060603c_userpool_6060603c",
     "autoVerifiedAttributes": [
@@ -24,6 +26,8 @@
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": "1",
     "userpoolClientWriteAttributes": [
+      "family_name",
+      "given_name",
       "email"
     ],
     "userpoolClientReadAttributes": [
@@ -35,7 +39,7 @@
     "userpoolClientSetAttributes": true,
     "sharedId": "6060603c",
     "resourceName": "mobile6060603c",
-    "authSelections": "userPoolOnly",
+    "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
     "hostedUI": true,
     "userPoolGroupList": [
@@ -87,7 +91,8 @@
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
     "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"mobile6060603cPostConfirmation\"\n  }\n]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://dev-central.rightoneducation.com/auth/\"],\"LogoutURLs\":[\"https://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\"]}",
-    "authProviders": []
+    "authProviders": [],
+    "thirdPartyAuth": false,
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\",\"https://dev-central.rightoneducation.com/auth/\"],\"LogoutURLs\":[\"https://localhost:3000/\",\"https://mobile85ba8a8e-85ba8a8e-dev.auth.us-east-1.amazoncognito.com/oauth2/idpresponse/\"]}"
   }
 }
