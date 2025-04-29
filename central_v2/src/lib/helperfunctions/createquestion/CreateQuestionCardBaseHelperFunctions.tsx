@@ -28,7 +28,7 @@ export const updateDQwithImageURL = (draftQuestion: CentralQuestionTemplateInput
 }
 
 export const updateDQwithTitle = (draftQuestion: CentralQuestionTemplateInput, inputTitle: string): CentralQuestionTemplateInput => {
-  if (draftQuestion.questionCard.image && draftQuestion.questionCard.ccss.length > 0 && draftQuestion.questionCard.ccss !== 'CCSS'){
+  if ((draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl) && draftQuestion.questionCard.ccss.length > 0 && draftQuestion.questionCard.ccss !== 'CCSS'){
     if (draftQuestion.correctCard.isFirstEdit){
       return {...draftQuestion, questionCard: {...draftQuestion.questionCard, title: inputTitle, isCardComplete: true, isFirstEdit: false}};
     } 
@@ -39,7 +39,7 @@ export const updateDQwithTitle = (draftQuestion: CentralQuestionTemplateInput, i
 
 
 export const updateDQwithCCSS = (draftQuestion: CentralQuestionTemplateInput, inputCCSS: string): CentralQuestionTemplateInput => {
-  if (draftQuestion.questionCard.image && draftQuestion.questionCard.title){
+  if ((draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl) && draftQuestion.questionCard.title){
     if (draftQuestion.correctCard.isFirstEdit){
       return {...draftQuestion, questionCard: {...draftQuestion.questionCard, ccss: inputCCSS, isCardComplete: true, isFirstEdit: false}};
     } 

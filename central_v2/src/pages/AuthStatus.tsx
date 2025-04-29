@@ -12,7 +12,6 @@ import { UserStatusType } from '../lib/CentralModels';
 
 
 export default function AuthStatus() {
-    console.log("Im rendering empty auth page!!")
     const apiClients = useTSAPIClientsContext(APIClientsContext);
     const centralDataDispatch = useCentralDataDispatch();
     const navigate = useNavigate(); // Initialize useNavigate
@@ -20,17 +19,15 @@ export default function AuthStatus() {
       useEffect(() => {
         const getSession = async () => {
           const response = await apiClients.auth.getUserEmail();
-          console.log("AuthStatus: ", response);
           if (response){
             const response2 = await apiClients.auth.getUserByEmailDB(response);
-            console.log("response2: ", response2)
             if (response2){
-                console.log("setting status to loggedin in authstatus")
                 centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
                 navigate('/')
             }
             else{
-                console.log("setting status to incomplete in authstatus")
+                const {firstName, lastName} = await apiClients.auth.getFirstAndLastName();
+                centralDataDispatch({type: 'SET_USER_PROFILE', payload: {firstName, lastName}});
                 centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE});
                 navigate('/nextstep')
             }
