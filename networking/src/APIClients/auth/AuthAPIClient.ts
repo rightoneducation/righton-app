@@ -17,7 +17,6 @@ import {
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
   AuthSession,
-  FetchUserAttributesOutput,
   decodeJWT
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
@@ -70,14 +69,18 @@ export class AuthAPIClient
     return username
   }
 
-  async getFirstAndLastName(): Promise<FetchUserAttributesOutput | null>{
+  async getFirstAndLastName(): Promise<{firstName: string, lastName: string}> {
     const session = await fetchAuthSession();
     const idToken = session.tokens?.idToken;
+    let firstName = '';
+    let lastName = '';
     if (!idToken) throw new Error('No ID token in session');
-    const {payload} = decodeJWT(String(idToken));
-    console.log(session);
-    console.log(payload);
-    return null;
+    const { payload } = decodeJWT(String(idToken));
+    if (payload && payload.given_name && payload.family_name) {
+      firstName = String(payload.given_name);
+      lastName = String(payload.family_name);
+    }
+    return {firstName, lastName};
   }
 
   async getCurrentSession(): Promise<AuthSession> {

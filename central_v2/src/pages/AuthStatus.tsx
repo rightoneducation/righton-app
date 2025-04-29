@@ -26,6 +26,8 @@ export default function AuthStatus() {
                 navigate('/')
             }
             else{
+                const {firstName, lastName} = await apiClients.auth.getFirstAndLastName();
+                centralDataDispatch({type: 'SET_USER_PROFILE', payload: {firstName, lastName}});
                 centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE});
                 navigate('/nextstep')
             }

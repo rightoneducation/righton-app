@@ -161,13 +161,13 @@ export default function GoogleSignup({
 
     // Local temporary states
     const [title, setTitle] = useState('Title...') 
-    const [firstName, setFirstName] = useState('') 
-    const [lastName, setLastName] = useState('') 
+    const [firstName, setFirstName] = useState(centralData.userProfile?.firstName || '') 
+    const [lastName, setLastName] = useState(centralData.userProfile?.lastName || '') 
     const [userName, setUserName] = useState('') 
     const userProfileInit = {
       title: 'Title...',
-      firstName: '',
-      lastName: '',
+      firstName: centralData.userProfile?.firstName || '',
+      lastName: centralData.userProfile?.lastName || '',
       userName: '',
       email: '',
       password: '',
