@@ -19,9 +19,6 @@ export default function SignUpSwitch({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
 
-  const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
-  const [isGoogleAuthenticated, setIsGoogleAuthenticated] = useState(true); // Track submission state
-
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
   const [step, setStep] = useState<'signup' | 'confirmation' | 'googlesignup'>('signup');
@@ -30,7 +27,6 @@ export default function SignUpSwitch({
   // Override step dynamically if googlenextstep is true
   const currentStep = googlenextstep ? 'googlesignup' : step;
   const centralData = useCentralDataState();
-  console.log("Central data inside signupswitch: ", centralData.userProfile)
 
   const handlerImageUpload = async (file: File) => {
     const fileName = file.name;
