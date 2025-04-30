@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles';
 import { Box, Grid, MenuItem, useTheme } from '@mui/material';
-import { IUserProfile } from '@righton/networking';
+import { IUserProfile, CloudFrontDistributionUrl } from '@righton/networking';
 import Adpic from "../images/@.svg"
 import OwnerCard from '../components/profile/OwnerCard';
 import UserProfileImageUploadModal from '../components/modal/UserProfileImageUploadModal';
@@ -34,6 +34,7 @@ import { ScreenSize } from '../lib/CentralModels';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 
+
 interface UserProfileProps {
     screenSize: ScreenSize;
 }
@@ -52,9 +53,10 @@ export default function UserProfile({
   const centralDataDispatch = useCentralDataDispatch();
   const [draftUserProfile, setDraftUserProfile] = useState<IUserProfile>(centralData.userProfile);  
   const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
+  console.log("Printing central on intial render: ", centralData.userProfile)
+  console.log("Printing draft on intial render: ", draftUserProfile)
 
-  const [frontImage, setFrontImage] = useState<File | null>(null);
-  const [backImage, setBackImage] = useState<File | null>(null);
+
 
   const buttonTypeUpload = ButtonType.UPLOAD;
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
@@ -66,9 +68,23 @@ export default function UserProfile({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   
 
+  // Information user can edit
+  const [title, setTitle] = useState(centralData.userProfile.title) 
+  const [firstName, setFirstName] = useState(centralData.userProfile.firstName) 
+  const [lastName, setLastName] = useState(centralData.userProfile.lastName) 
+  const [email, setEmail] = useState(centralData.userProfile.email) 
+
+  const [frontImage, setFrontImage] = useState<File | string>(
+    centralData.userProfile.frontIdPath ?? ""
+  ); 
+
+  const [backImage, setBackImage] = useState<File | string>(
+    centralData.userProfile.backIdPath ?? ""
+  ); 
   // TODO: remove this useEffect and set random default pic when user signs up
   // this is just for demo purposes
   useEffect(() => {
+
     if (draftUserProfile.profilePicPath === undefined) {
       const randomIndex = Math.floor(Math.random() * 5) + 1;
     setDraftUserProfile((prev) => ({
@@ -90,14 +106,6 @@ export default function UserProfile({
 
   const handleImageSave = async (image?: File, inputUrl?: string) => {
     setIsModalOpen(false);
-    // if (image) {
-    //     setNewProfilePic(image);
-    // } else if (inputUrl) {
-    //     setDraftUserProfile(prev => ({
-    //         ...prev,
-    //         profilePicPath: inputUrl,
-    //       }))
-    // }
   }
 
   const handleImageChange = async (inputImage?: File | null, inputUrl?: string) => {
@@ -119,16 +127,33 @@ export default function UserProfile({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    // setIsImageURLVisible(false);
-    // setIsCreatingTemplate(false);
-    // setIsCCSSVisible(false);
   }
 
 
     const handleGetStarted = async () => {
       try {
-        const response = await apiClients.centralDataManager?.userProfileImageUpdate(draftUserProfile, newProfilePic);
+        console.log("Inside HandleGetStarted. Printing Draft: ", draftUserProfile)
+        const updatedUser = { ...centralData.userProfile };
+
+        if (title !== centralData.userProfile.title) {
+          updatedUser.title = title;
+        }
+        
+        if (firstName !== centralData.userProfile.firstName) {
+          updatedUser.firstName = firstName;
+        }
+        
+        if (lastName !== centralData.userProfile.lastName) {
+          updatedUser.lastName = lastName;
+        }
+        
+        if (email !== centralData.userProfile.email) {
+          updatedUser.email = email;
+        }
+
+        const response = await apiClients.centralDataManager?.userProfileImageUpdate(centralData.userProfile, newProfilePic);
         if (response?.updatedUser){
+            console.log("Inside HandleGetStarted. Going to central dispatch updatedUSER!!!: ", response.updatedUser)
             centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
           } 
       } catch (error) {
@@ -203,7 +228,7 @@ export default function UserProfile({
                         <TextContainerStyled
                             variant="outlined"
                             placeholder="Username..."
-                            value="clarkinator27"
+                            value={centralData.userProfile.userName}
                         />
                     </UsernameInputContainer>
                     <SubHeadingText>Information</SubHeadingText>
@@ -211,7 +236,10 @@ export default function UserProfile({
                         <UserInfoItemContainer>
                             <TitleField
                                 select
-                                value="Ms."
+                                value={title}
+                                onChange={(event) => 
+                                    setTitle(event.target.value)
+                                  }   
                             >
                                 <MenuItem value="Title...">Title...</MenuItem>
                                 <MenuItem value="Mr.">Mr.</MenuItem>
@@ -222,18 +250,27 @@ export default function UserProfile({
                             <TextContainerStyled
                                 variant="outlined"
                                 placeholder="First Name"
-                                value="Abigail"                        
+                                value={firstName}
+                                onChange={(event) => 
+                                    setFirstName(event.target.value)
+                                  }                        
                             />
                             <TextContainerStyled
                                 variant="outlined"
                                 placeholder="Last Name"
-                                value="Clark"
+                                value={lastName}
+                                onChange={(event) => 
+                                    setLastName(event.target.value)
+                                  }
                             />
                         </UserInfoItemContainer>
                         <TextContainerStyled
                             variant="outlined"
                             placeholder="School Email..."
-                            value="aclark@realhighschool.edu"
+                            value={email}
+                            onChange={(event) => 
+                                setEmail(event.target.value)
+                              }
                         />
                         <SubHeadingTextLight>Teacher ID Image</SubHeadingTextLight>
                         <UploadImagesContainer>
@@ -250,10 +287,10 @@ export default function UserProfile({
                                     }
                                     }}
                                 />
-                                { frontImage  ? 
+                                {frontImage ? 
                                     ( 
                                         <ImagePlaceHolder
-                                            src={URL.createObjectURL(frontImage)}
+                                            src={`${CloudFrontDistributionUrl}${frontImage}`}
                                             alt="Uploaded Preview"
                                             />
                                         ) : (
@@ -294,7 +331,7 @@ export default function UserProfile({
                                 />
                                 {backImage 
                                 ? ( <ImagePlaceHolder
-                                src={URL.createObjectURL(backImage)}
+                                src={`${CloudFrontDistributionUrl}${backImage}`}
                                 alt="Uploaded Preview"
                                 />)
                                 : (<CentralButton 

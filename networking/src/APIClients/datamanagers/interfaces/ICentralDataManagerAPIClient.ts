@@ -36,5 +36,6 @@ export interface ICentralDataManagerAPIClient {
   signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
   signOut: () => void;
   signUpGoogleBuildBackendUser(user: IUserProfile, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
-  userProfileImageUpdate(user: IUserProfile, newProfilePic: File | null): Promise<{updatedUser: any}>;
+  userProfileImageUpdate(user: IUserProfile, newProfilePic: File | null, frontImage: File | string,
+    backImage: File | null): Promise<{updatedUser: any}>;
 }

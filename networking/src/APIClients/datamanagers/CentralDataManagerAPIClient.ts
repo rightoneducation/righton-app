@@ -263,21 +263,41 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     }
   };
 
-  public userProfileImageUpdate = async (user: IUserProfile, newProfilePic: File | null) => {
-
-    let updatedUser = JSON.parse(JSON.stringify(user));    
+  public userProfileImageUpdate = async (user: IUserProfile, newProfilePic: File | null, frontImage: File | string,
+    backImage: File | null
+  ) => {
+    console.log("Inside userProfileImageUpdate!!", user)
+    let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
+    let updatedUser = JSON.parse(JSON.stringify(createUserInput));
+    
+    if (typeof frontImage === "string" && typeof backImage === "string") {
+      updatedUser = {...updatedUser, frontIdPath: frontImage, backIdPath: backImage}
+      console.log("Going to keep the same images.")
+    } else if (frontImage instanceof File && backImage instanceof File ) {
+      try {
+        const upadtingImages = await Promise.all([
+          this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
+          this.authAPIClient.awsUploadImagePrivate(backImage) as any
+        ]);
+        updatedUser = {...updatedUser, frontIdPath: upadtingImages[0].path, backIdPath: upadtingImages[1].path}
+        console.log("Going to update images with these: ", upadtingImages)
+      }
+      catch (error: any) {
+        throw new Error (JSON.stringify(error));
+      }
+    }
     try {
       if(newProfilePic){
         const images = await Promise.all([
           this.authAPIClient.awsUploadImagePrivate(newProfilePic) as any,
         ]);
-        updatedUser = { ...user, newProfilePic: images[0].path};
+        updatedUser = { ...updatedUser, profilePicPath: images[0].path};
+        console.log("After returning from s3!!", updatedUser)
       }
 
       await this.userAPIClient.updateUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       return updatedUser;
-
     } catch (error: any) {
       throw new Error (JSON.stringify(error));
     }
