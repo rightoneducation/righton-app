@@ -151,7 +151,7 @@ export default function UserProfile({
           updatedUser.email = email;
         }
 
-        const response = await apiClients.centralDataManager?.userProfileImageUpdate(centralData.userProfile, newProfilePic);
+        const response = await apiClients.centralDataManager?.userProfileImageUpdate(centralData.userProfile, newProfilePic, frontImage, backImage);
         if (response?.updatedUser){
             console.log("Inside HandleGetStarted. Going to central dispatch updatedUSER!!!: ", response.updatedUser)
             centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});

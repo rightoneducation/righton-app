@@ -264,7 +264,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public userProfileImageUpdate = async (user: IUserProfile, newProfilePic: File | null, frontImage: File | string,
-    backImage: File | null
+    backImage: File | string
   ) => {
     console.log("Inside userProfileImageUpdate!!", user)
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
