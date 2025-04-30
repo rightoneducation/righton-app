@@ -28,7 +28,7 @@ export class UserParser {
     const parsedUser: AWSUser = {
       id: user.id,
       userName: user.userName,
-      cognitoId: user.cognitoId,
+      cognitoId: user.cognitoId ?? '',
       dynamoId: user.dynamoId,
       frontIdPath: user.frontIdPath,
       backIdPath: user.backIdPath,
