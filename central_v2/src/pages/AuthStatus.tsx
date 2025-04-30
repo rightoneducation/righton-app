@@ -11,30 +11,34 @@ import { UserStatusType } from '../lib/CentralModels';
 
 export default function AuthStatus() {
     const apiClients = useTSAPIClientsContext(APIClientsContext);
+    const centralDataState = useCentralDataState();
     const centralDataDispatch = useCentralDataDispatch();
     const navigate = useNavigate(); // Initialize useNavigate
     
-      useEffect(() => {
-        const getSession = async () => {
-          const response = await apiClients.user.getUser();
-          if (response){
-            // const response2 = await apiClients.auth.getUserByEmailDB(response);
-            // if (response2){
-            //     centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
-            //     navigate('/')
-            // }
-            // else{
-            //     const {firstName, lastName} = await apiClients.auth.getFirstAndLastName();
-            //     centralDataDispatch({type: 'SET_USER_PROFILE', payload: {firstName, lastName}});
-            //     centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE});
-            //     navigate('/nextstep')
-            // }
-          }
-        };
+      // useEffect(() => {
+      //   const getSession = async () => {
+      //     const response = await apiClients.auth.getCurrentSession();
+      //     let cognitoId = '';
+      //     if (response && response.userSub){
+      //       cognitoId = response.userSub;
+      //       console.log('cognitoId', cognitoId);
+      //       console.log(centralDataState);
+      //       console.log(centralDataState.userProfile.cognitoId);
+      //       if (cognitoId === centralDataState.userProfile.cognitoId){
+      //           centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
+      //           // navigate('/')
+      //       } else {
+      //           const {firstName, lastName} = await apiClients.auth.getFirstAndLastName();
+      //           centralDataDispatch({type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId}});
+      //           // centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE});
+      //          // navigate('/nextstep')
+      //       }
+      //     }
+      //   };
       
-        getSession();
+      //   getSession();
         
-      }, [apiClients.auth, centralDataDispatch, navigate]); // eslint-disable-line react-hooks/exhaustive-deps
+      // }, [apiClients.auth, centralDataDispatch, navigate]); // eslint-disable-line react-hooks/exhaustive-deps
 
 
     return (

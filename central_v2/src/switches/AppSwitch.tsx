@@ -107,6 +107,7 @@ function AppSwitch({
     }
     case ScreenType.SIGNUP:
     case ScreenType.CONFIRMATION:
+    case ScreenType.AUTH: 
     case ScreenType.NEXTSTEP: {
       screenComponent = (
         <AuthGuard>
@@ -158,14 +159,6 @@ function AppSwitch({
     case ScreenType.USERPROFILE: {
       screenComponent = (
         <UserProfile screenSize={screenSize} />
-      );
-      break
-    }
-    case ScreenType.AUTH: {
-      screenComponent = (
-        <AuthGuard>
-          <AuthStatus/>
-        </AuthGuard>
       );
       break
     }
