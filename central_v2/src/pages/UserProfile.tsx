@@ -31,6 +31,8 @@ import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/us
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import { ScreenSize } from '../lib/CentralModels';
+import { APIClientsContext } from '../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 
 interface UserProfileProps {
     screenSize: ScreenSize;
@@ -61,11 +63,8 @@ export default function UserProfile({
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(true);
   const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
   
-  const [userPic, setUserPic] = useState<{ image: File | null; imageUrl: string | null }>({
-    image: null,
-    imageUrl: null,
-  });
 
   // TODO: remove this useEffect and set random default pic when user signs up
   // this is just for demo purposes
@@ -124,6 +123,20 @@ export default function UserProfile({
     // setIsCreatingTemplate(false);
     // setIsCCSSVisible(false);
   }
+
+
+    const handleGetStarted = async () => {
+      try {
+        const response = await apiClients.centralDataManager?.userProfileImageUpdate(draftUserProfile, newProfilePic);
+        if (response?.updatedUser){
+            centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
+          } 
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+
 
   return (
         <UserProfileMainContainer>
@@ -317,7 +330,7 @@ export default function UserProfile({
                         placeholder="Password..."
                         value="********"
                     />
-                    <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride/>
+                    <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleGetStarted}/>
                 </UserProfileGridItem>
                 <Grid  
                     sm

@@ -12,6 +12,7 @@ export type IUserProfile = {
   questionsMade?: number
   frontIdPath?: string
   backIdPath?: string
+  profilePicPath?: string;
   favoriteGameTemplateIds?: string[]
   favoriteQuestionTemplateIds?: string[]
 }

@@ -249,8 +249,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       ]);
       const dynamoId = uuidv4();
       
-  
-      
       createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       await this.userAPIClient.createUser(createUserInput);
@@ -261,6 +259,26 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);
+      throw new Error (JSON.stringify(error));
+    }
+  };
+
+  public userProfileImageUpdate = async (user: IUserProfile, newProfilePic: File | null) => {
+
+    let updatedUser = JSON.parse(JSON.stringify(user));    
+    try {
+      if(newProfilePic){
+        const images = await Promise.all([
+          this.authAPIClient.awsUploadImagePrivate(newProfilePic) as any,
+        ]);
+        updatedUser = { ...user, newProfilePic: images[0].path};
+      }
+
+      await this.userAPIClient.updateUser(updatedUser);
+      this.setLocalUserProfile(updatedUser);
+      return updatedUser;
+
+    } catch (error: any) {
       throw new Error (JSON.stringify(error));
     }
   };

@@ -12,7 +12,7 @@ type User @model
   id: ID! @primaryKey
   userName: String! @index(name: "userNameIndex", queryField: "userByUserName")
   dynamoId: String
-  cognitoId: String
+  cognitoId: String! @index(name: "cognitoIndex", queryField: "userByCognitoId") 
   title: String
   firstName: String
   lastName: String
@@ -22,6 +22,7 @@ type User @model
   questionsMade: Int
   frontIdPath: String
   backIdPath: String
+  profilePicPath: String
   favoriteGameTemplateIds: AWSJSON
   favoriteQuestionTemplateIds: AWSJSON
 }
