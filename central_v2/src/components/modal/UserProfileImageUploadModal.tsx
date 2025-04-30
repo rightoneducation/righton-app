@@ -15,8 +15,8 @@ import {
   ImageURLUploadButton
 } from '../../lib/styledcomponents/CreateQuestionStyledComponents';
 import Avatar1 from "../../images/Avatar1.svg";
-import Avatar2 from "../../images/Avatar2.svg";
-import Avatar3 from "../../images/Avatar3.svg";
+import Avatar3 from "../../images/Avatar2.svg";
+import Avatar2 from "../../images/Avatar3.svg";
 import Avatar4 from "../../images/Avatar4.svg";
 import Avatar5 from "../../images/Avatar5.svg";
 import Avatar6 from "../../images/Avatar6.svg";
@@ -196,7 +196,6 @@ export default function UserProfileImageUploadModal({
   ];
 
   const handleAvatarClick = (path: string) => {
-    setSelectedAvatar(path);
     handleImageChange(undefined, path);
   };
 
@@ -248,7 +247,7 @@ export default function UserProfileImageUploadModal({
                             selected={selectedAvatar === avatar.name}
                             onClick={() => handleAvatarClick(avatar.path)}
                         />
-                        {selectedAvatar === avatar.path && (
+                        {draftUserProfile.profilePicPath === avatar.path && (
                             <SelectedText>
                             Currently selected
                             </SelectedText>

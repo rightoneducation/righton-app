@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles';
 import { Box, Grid, MenuItem, useTheme } from '@mui/material';
 import { IUserProfile } from '@righton/networking';
@@ -67,6 +67,20 @@ export default function UserProfile({
     imageUrl: null,
   });
 
+  // TODO: remove this useEffect and set random default pic when user signs up
+  // this is just for demo purposes
+  useEffect(() => {
+    if (draftUserProfile.profilePicPath === undefined) {
+      const randomIndex = Math.floor(Math.random() * 5) + 1;
+    setDraftUserProfile((prev) => ({
+      ...prev,
+      profilePicPath: `defaultProfilePic${randomIndex}.jpg`,
+    })
+    );
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+
   const handleEditPicture = () => {
     setIsModalOpen(true);
   };
@@ -91,6 +105,10 @@ export default function UserProfile({
     setIsCloneImageChanged(true);
     if (inputImage) {
         setNewProfilePic(inputImage);
+        setDraftUserProfile(prev => ({
+            ...prev,
+            profilePicPath: '',
+        }))
     } else if (inputUrl) {
         setNewProfilePic(null);
         setDraftUserProfile(prev => ({
