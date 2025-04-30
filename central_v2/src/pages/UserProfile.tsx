@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { styled } from '@mui/material/styles';
 import { Box, Grid, MenuItem, useTheme } from '@mui/material';
+import { IUserProfile } from '@righton/networking';
 import Adpic from "../images/@.svg"
 import OwnerCard from '../components/profile/OwnerCard';
+import UserProfileImageUploadModal from '../components/modal/UserProfileImageUploadModal';
+import ModalBackground from '../components/modal/ModalBackground';
 import { 
     TextContainerStyled,
   } from '../lib/styledcomponents/CreateQuestionStyledComponents';
@@ -24,6 +27,7 @@ import {
     UsernameInputContainer,
     TitleField
 } from '../lib/styledcomponents/UserProfileStyledComponents';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import { ButtonType } from '../components/button/ButtonModels';
 import CentralButton from "../components/button/Button";
 import { ScreenSize } from '../lib/CentralModels';
@@ -42,6 +46,11 @@ export default function UserProfile({
   const buttonChangePassword = ButtonType.CHANGEPASSWORD;
   const [isChangePassword , setIsChangePassword ] = useState(true);
 
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
+  const [draftUserProfile, setDraftUserProfile] = useState<IUserProfile>(centralData.userProfile);  
+  const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
+
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
 
@@ -51,34 +60,48 @@ export default function UserProfile({
   
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(true);
   const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
   const [userPic, setUserPic] = useState<{ image: File | null; imageUrl: string | null }>({
     image: null,
     imageUrl: null,
   });
 
+  const handleEditPicture = () => {
+    setIsModalOpen(true);
+  };
 
   const handleImageUploadClick = () => {
     setIsImageUploadVisible(true);
   }
 
-  const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
+  const handleImageSave = async (image?: File, inputUrl?: string) => {
+    setIsModalOpen(false);
+    // if (image) {
+    //     setNewProfilePic(image);
+    // } else if (inputUrl) {
+    //     setDraftUserProfile(prev => ({
+    //         ...prev,
+    //         profilePicPath: inputUrl,
+    //       }))
+    // }
+  }
+
+  const handleImageChange = async (inputImage?: File | null, inputUrl?: string) => {
     setIsCloneImageChanged(true);
     if (inputImage) {
-        setUserPic(prev => ({
-            ...prev,
-            image: inputImage,
-          }));
+        setNewProfilePic(inputImage);
     } else if (inputUrl) {
-        setUserPic(prev => ({
+        setNewProfilePic(null);
+        setDraftUserProfile(prev => ({
             ...prev,
-            imageUrl: inputUrl,  
-          }))
+            profilePicPath: inputUrl,
+        }))
     }
   }
 
   const handleCloseModal = () => {
-    setIsImageUploadVisible(false);
+    setIsModalOpen(false);
     // setIsImageURLVisible(false);
     // setIsCreatingTemplate(false);
     // setIsCCSSVisible(false);
@@ -86,6 +109,16 @@ export default function UserProfile({
 
   return (
         <UserProfileMainContainer>
+             <UserProfileImageUploadModal 
+                screenSize={screenSize}
+                draftUserProfile={draftUserProfile}
+                newProfilePic={newProfilePic}
+                isModalOpen={isModalOpen} 
+                handleImageChange={handleImageChange}
+                handleImageSave={handleImageSave} 
+                handleCloseModal={handleCloseModal}
+            />
+            <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
             <TitleText>My Profile</TitleText>
             <UserProfileGridContainer container wrap="nowrap">
                 <Grid
@@ -97,7 +130,12 @@ export default function UserProfile({
                 >
                     { screenSize === ScreenSize.LARGE && (
                         <Box style={{paddingLeft: `${theme.sizing.lgPadding}px`}}>
-                            <OwnerCard screenSize={screenSize}/>
+                            <OwnerCard 
+                              screenSize={screenSize} 
+                              draftUserProfile={draftUserProfile}
+                              newProfilePic={newProfilePic}
+                              handleEditPicture={handleEditPicture}
+                            />
                         </Box>
                     )}
                 </Grid>
@@ -118,7 +156,12 @@ export default function UserProfile({
                     }}
                 >
                     {screenSize !== ScreenSize.LARGE && (
-                        <OwnerCard screenSize={screenSize}/>
+                          <OwnerCard 
+                            screenSize={screenSize} 
+                            draftUserProfile={draftUserProfile}
+                            newProfilePic={newProfilePic}
+                            handleEditPicture={handleEditPicture}
+                          />
                     )}
                     <UsernameTextContainer>
                         <SubHeadingText>Username</SubHeadingText>

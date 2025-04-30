@@ -46,6 +46,7 @@ export enum ButtonType {
   QUESTIONBANK = 'questionbank',
   BACK = 'back',
   EDITPICTURE = 'editpicture',
+  EDITPROFILEPICTURE = 'editprofilepicture',
   EDITINFORMATION = 'editinformation',
   CHANGEPASSWORD = 'changepassword',
   CREATE = 'create',
@@ -207,6 +208,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.EDITPICTURE]: {
     textKey: ButtonType.EDITPICTURE,
+  },
+  [ButtonType.EDITPROFILEPICTURE]: {
+    textKey: ButtonType.EDITPICTURE,
+    color: ButtonColor.NULL,
   },
   [ButtonType.EDITINFORMATION]: {
     textKey: ButtonType.EDITINFORMATION,

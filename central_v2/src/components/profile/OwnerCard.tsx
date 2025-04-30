@@ -1,5 +1,6 @@
 import React from 'react';
 import { styled, Box, Typography } from '@mui/material';
+import { IUserProfile, CloudFrontDistributionUrl } from '@righton/networking';
 import {
   LeftProfileContainer,
   LeftProfileTopContainer,
@@ -23,14 +24,31 @@ import {
 } from '../../lib/styledcomponents/OwnerCardStyledComponents';
 import profilePic from '../../images/profilePicGreen.png';
 import { ScreenSize } from '../../lib/CentralModels';
+import { ButtonType } from '../button/ButtonModels';
+import CentralButton from "../button/Button";
 
 interface OwnerCardProps {
     screenSize: ScreenSize;
+    draftUserProfile: IUserProfile;
+    newProfilePic: File | null;
+    handleEditPicture: () => void;
 }
 
-export default function OwnerCard(
-    {screenSize}: OwnerCardProps
-) {
+export default function OwnerCard({
+    screenSize,
+    draftUserProfile,
+    newProfilePic,
+    handleEditPicture
+}: OwnerCardProps) {
+
+  let imageLink = '';
+  if (newProfilePic) {
+    const localURL = URL.createObjectURL(newProfilePic);
+    imageLink = localURL;
+  } else {
+    imageLink = `${CloudFrontDistributionUrl}${draftUserProfile.profilePicPath}`;
+  }
+
   return (
     screenSize === ScreenSize.LARGE ? (
         <LeftProfileContainer>
@@ -38,7 +56,8 @@ export default function OwnerCard(
             <LeftNameText>
                 Ms. Clark
             </LeftNameText>
-            <img src={profilePic} alt="Right On Logo" style={{ width: '165px', height: '165px' }} />
+            <img src={imageLink} alt="Right On Logo" style={{ width: '165px', height: '165px', borderRadius: '128px', objectFit: 'cover' }} />
+            <CentralButton buttonType={ButtonType.EDITPROFILEPICTURE} isEnabled onClick={handleEditPicture}/>
             <AtUserNameContainerAndAccount>
                 <AtUserNameContainer >
                     <AtUserNameText>

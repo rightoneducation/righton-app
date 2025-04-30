@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Paper, Fade, Typography, styled, useTheme, Avatar } from '@mui/material';
-import { CentralQuestionTemplateInput, CloudFrontDistributionUrl } from '@righton/networking';
+import { CentralQuestionTemplateInput, CloudFrontDistributionUrl, IUserProfile } from '@righton/networking';
 import imageUploadIcon from '../../images/imageUploadIcon.svg';
 import imageUploadClose from '../../images/imageUploadClose.svg';
 import CentralButton from '../button/Button';
@@ -145,46 +145,34 @@ const AvatarAndImageSelectedContainer = styled(Box)(({ theme }) => ({
     boxSizing: 'border-box',
 }));
 
-interface UserProfileImageUploadProps {
+interface UserProfileImageUploadModalProps {
   screenSize: ScreenSize;
-//   isClone: boolean;
-//   isCloneImageChanged: boolean;
+  draftUserProfile: IUserProfile;
+  newProfilePic: File | null;
   isModalOpen: boolean;
-  userPic: {
-    image: File | null;
-    imageUrl: string | null;
-  };
   handleImageChange: (inputImage?: File, inputUrl?: string) => void;
-//   handleImageSave: (image?: File, inputUrl?: string) => void;
+  handleImageSave: (image?: File, inputUrl?: string) => void;
   handleCloseModal: () => void;
 }
 
-export default function UserProfileImageUpload({
+export default function UserProfileImageUploadModal({
   screenSize,
-//   isClone,
-//   isCloneImageChanged,
+  draftUserProfile,
+  newProfilePic,
   isModalOpen,
-  userPic,
   handleImageChange,
+  handleImageSave,
   handleCloseModal,
-}: UserProfileImageUploadProps) {
+}: UserProfileImageUploadModalProps) {
   const theme = useTheme();
-  const { imageUrl } = userPic;
-  const { image } = userPic;
+  const { profilePicPath } = draftUserProfile;
   const [isChangeImage, setIsChangeImage] = React.useState<boolean>(false);
   
   let imageLink: string | null = null;
-  if (imageUrl){
-    imageLink = imageUrl;
-    imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
-  } else if (image && image instanceof File)
-        imageLink = URL.createObjectURL(image);
-  //   if (imageUrl)
-//     imageLink = imageUrl;
-//       if (isClone && !isCloneImageChanged)
-//         imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
-//   else if (image && image instanceof File)
-//     imageLink = URL.createObjectURL(image);
+  if (newProfilePic) {
+    const localURL = URL.createObjectURL(newProfilePic);
+    imageLink = localURL;
+  }
 
   const handleChangeClick = (newImage: File) => {
     setIsChangeImage(false);
@@ -196,22 +184,21 @@ export default function UserProfileImageUpload({
     handleCloseModal();
   }
 
-
   const [selectedAvatar, setSelectedAvatar] = React.useState<string | null>(null);
 
   const avatars = [
-    { src: Avatar1, name: 'Avatar 1' },
-    { src: Avatar2, name: 'Avatar 2' },
-    { src: Avatar3, name: 'Avatar 3' },
-    { src: Avatar4, name: 'Avatar 4' },
-    { src: Avatar5, name: 'Avatar 5' },
-    { src: Avatar6, name: 'Avatar 6' },
+    { src: Avatar1, name: 'Avatar 1', path: 'defaultProfilePic1.jpg' },
+    { src: Avatar2, name: 'Avatar 2', path: 'defaultProfilePic2.jpg' },
+    { src: Avatar3, name: 'Avatar 3', path: 'defaultProfilePic3.jpg' },
+    { src: Avatar4, name: 'Avatar 4', path: 'defaultProfilePic4.jpg' },
+    { src: Avatar5, name: 'Avatar 5', path: 'defaultProfilePic5.jpg' },
+    { src: Avatar6, name: 'Avatar 6', path: 'defaultProfilePic6.jpg' },
   ];
 
-  const handleAvatarClick = (name: string) => {
-    setSelectedAvatar(name);
+  const handleAvatarClick = (path: string) => {
+    setSelectedAvatar(path);
+    handleImageChange(undefined, path);
   };
-
 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}>
@@ -220,13 +207,10 @@ export default function UserProfileImageUpload({
           <CloseButton src={imageUploadClose} alt="imageUploadClose" onClick={handleClose} />
         </Box>
         <QuestionTitleStyled style={{fontSize: '27px'}}>
-            { image || imageUrl
-              ? 'Image preview'
-              : 'Choose your own picture!'
-            }
+            Image preview
         </QuestionTitleStyled>
         <DashedBox>
-          {((image || imageUrl) && !isChangeImage) ? (
+          {((imageLink || newProfilePic) && !isChangeImage) ? (
             <Box style={{
               width: '100%',
               height: '100%',
@@ -258,13 +242,13 @@ export default function UserProfileImageUpload({
                     {avatars.map((avatar) => (
                      <AvatarAndImageSelectedContainer key={avatar.name}>
                         <AvatarImage
-                            key={avatar.name}  // Use 'name' or 'src' as the unique key
+                            key={avatar.name}
                             src={avatar.src}
                             alt={avatar.name}
                             selected={selectedAvatar === avatar.name}
-                            onClick={() => handleAvatarClick(avatar.name)}
+                            onClick={() => handleAvatarClick(avatar.path)}
                         />
-                        {selectedAvatar === avatar.name && (
+                        {selectedAvatar === avatar.path && (
                             <SelectedText>
                             Currently selected
                             </SelectedText>
@@ -273,6 +257,16 @@ export default function UserProfileImageUpload({
                     ))}
                 </AvatarContainer>
         </AvatarAndTextContainer>
+        <Box style={{width: '100%', display: 'flex', flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.mdPadding}px`}}>
+          <CentralButton 
+            buttonType={ButtonType.CHANGEIMAGE} 
+            isEnabled 
+            smallScreenOverride 
+            buttonWidthOverride={screenSize === ScreenSize.SMALL ? '100%' : undefined}
+            onClick={() => setIsChangeImage(true)}
+          />
+          <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleImageSave} />
+        </Box>
       </IntegratedContainer>      
     </Fade>
   );
