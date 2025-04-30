@@ -18,7 +18,7 @@ export default function AuthStatus() {
     
       useEffect(() => {
         const getSession = async () => {
-          const response = await apiClients.auth.getUserEmail();
+          const response = await apiClients.user.getUser();
           if (response){
             const response2 = await apiClients.auth.getUserByEmailDB(response);
             if (response2){

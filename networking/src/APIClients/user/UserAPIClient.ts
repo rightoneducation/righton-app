@@ -8,12 +8,15 @@ import {
   DeleteUserInput,
   DeleteUserMutation,
   DeleteUserMutationVariables,
+  GetUserQueryVariables,
   UpdateUserInput,
   UpdateUserMutation,
   UpdateUserMutationVariables,
-  UserByUserNameQuery
+  UserByUserNameQuery,
+  GetUserQuery
 } from "../../AWSMobileApi";
 import {
+  getUser,
   createUser,
   deleteUser,
   updateUser, 
@@ -55,6 +58,20 @@ export class UserAPIClient
     )
     if (user.data.deleteUser)
       return UserParser.parseIUserfromAWSUser(user.data.deleteUser) as IUser;
+    return null;
+  }
+
+  async getUser(
+    id: string
+  ): Promise<IUser | null> {
+    if (!id) return null;
+    const variables: GetUserQueryVariables = { id }
+    const user = await this.callGraphQL<GetUserQuery>(
+        getUser,
+        variables as unknown as GraphQLOptions
+    )
+    if (user.data.getUser)
+      return UserParser.parseIUserfromAWSUser(user.data.getUser) as IUser;
     return null;
   }
 
