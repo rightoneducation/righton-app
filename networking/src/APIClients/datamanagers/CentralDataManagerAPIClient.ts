@@ -216,7 +216,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const dynamoId = uuidv4();
       createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      await this.userAPIClient.createUser(createUserInput);
+      await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
 
@@ -251,7 +251,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       
       createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      await this.userAPIClient.createUser(createUserInput);
+      await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
       //TODO: set user status to LOGGED_IN
