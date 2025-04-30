@@ -37,7 +37,8 @@
     "signout": "Debug Sign Out",
     "test": "Test",
     "cancel": "Cancel",
-    "retry": "Retry"
+    "retry": "Retry",
+    "addtogame": "Add to Game"
   },
   "imageButton": {
     "imageupload": "Upload Image",

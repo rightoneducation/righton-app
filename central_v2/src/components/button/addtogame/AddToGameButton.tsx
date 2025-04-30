@@ -16,9 +16,9 @@ return (
     sx={{  fontWeight: 600, fontSize: "20px" }}
     >
       <ButtonContent>
-              <ButtonIconContainer>
+              {/* <ButtonIconContainer>
                <img src={AddIcon} alt="Add-to-game" />
-              </ButtonIconContainer>
+              </ButtonIconContainer> */}
             Add To Game
           </ButtonContent>
     </ButtonStyled>

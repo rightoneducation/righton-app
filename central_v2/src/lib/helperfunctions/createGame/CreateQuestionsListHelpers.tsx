@@ -59,7 +59,7 @@ export const checkDQsAreValid = (
   });
 };
 
-export const createNewQuestionTemplates = (
+export const buildQuestionTemplatePromises = (
   draftQuestionsList: TDraftQuestionsList[],
   apiClients: IAPIClients,
 ) => {

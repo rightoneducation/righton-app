@@ -54,13 +54,14 @@ import {
   toggleQuestionBank,
   updateGameImageChange,
   updateGameImageSave,
-  createGameTemplate,
+  buildGameTemplate,
   checkGameFormIsValid,
-  createGameQuestion
+  buildGameQuestionPromises,
+  createGameImagePath
   } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
   import { 
     checkDQsAreValid, 
-    createNewQuestionTemplates,
+    buildQuestionTemplatePromises,
     updatePublicPrivateAtIndex,
     updateAIIsEnabledAtIndex,
     updateQuestionImageChangeAtIndex,
@@ -108,7 +109,6 @@ export default function CreateGame({
   loadMore,
  }: CreateGameProps) {
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  const centralData = useCentralDataState();
   const navigate = useNavigate();
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -174,71 +174,47 @@ export default function CreateGame({
 
   const handleSaveGame = async () => {
     try {
-     
       setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true, isCreatingTemplate: true }));
-      // check that the game form and question form is valid
+      // confirm game & question form validity
       if (gameFormIsValid && allDQAreValid) {
-        // check if user added image or image url
-        let gameImgUrl: string | null = null;
-        if (draftGame.image || draftGame.imageUrl) {
-          let gameImgResult = null;
-          // handle case for image type: File
-          if (draftGame.image) {
-            const gameImg = await apiClients.gameTemplate.storeImageInS3(
-              draftGame.image,
-            );
-            gameImgResult = await gameImg.result;
-            if (gameImgResult && gameImgResult.path && gameImgResult.path.length > 0) {
-              gameImgUrl = gameImgResult.path;
-            }
-            // handle case for imageUrl type: string
-          } else if (draftGame.imageUrl) {
-            gameImgUrl = await apiClients.gameTemplate.storeImageUrlInS3(
-              draftGame.imageUrl,
-            );
-          }
-        }
-          // create game template and store in variable to retrieve id after response
-          const createGame = createGameTemplate(draftGame, draftQuestionsList, gameImgUrl);
 
-          const gameTemplateResponse =
-            await apiClients.gameTemplate.createGameTemplate(
+        // check for images on draft game 
+        let gameImgUrl: string | null = null;
+        if(draftGame.image || draftGame.imageUrl) {
+         gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        }
+
+          // create & store game template in variable to retrieve id after response
+          const createGame = buildGameTemplate(draftGame, draftQuestionsList, gameImgUrl);
+          const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
               draftGame.publicPrivateGame,
               createGame,
             );
 
-          // convert questions to array of promises
-          const newQuestionTemplates = createNewQuestionTemplates(draftQuestionsList, apiClients);
+          // convert questions to array of promises & write to db
+          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, apiClients);
+          const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
-          // write new questions to db
-          const questionTemplateResponse =
-            await Promise.all(newQuestionTemplates);
-
-          // create an array of all the ids from the response and store in variable
+          // create an array of all the ids from the response 
           const questionTemplateIds = questionTemplateResponse.map(
-            (question) => question?.id,
+            (question) => String(question?.id),
           );
 
           // make sure we have a gameTemplate id as well as question template ids before creating a game question
           if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
-            const createGameQuestions = questionTemplateIds.map(
-              async (questionId, i) => {
-                const gameQuestion = createGameQuestion(draftGame, String(gameTemplateResponse.id), String(questionId));
-               console.log("Game Question: ", gameQuestion)
-              try {
-                const response = await apiClients.gameQuestions.createGameQuestions(
-                  draftGame.publicPrivateGame,
-                  gameQuestion,
-                );
-                console.log(`${draftGame.publicPrivateGame}GameQuestion response`, response);
-              } catch(err) {
-                setDraftGame((prev) => ({...prev, isCreatingTemplate: false}))
-                console.error(`Failed to create game question at index ${i}:`, err);
-              }
-              },
-            );
-            // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
-              await Promise.all(createGameQuestions);
+            try {
+              const createGameQuestions = buildGameQuestionPromises(
+                draftGame, 
+                gameTemplateResponse.id, 
+                questionTemplateIds, 
+                apiClients
+              );
+              // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+                await Promise.all(createGameQuestions);
+            } catch (err) {
+              setDraftGame(prev => ({ ...prev, isCreatingTemplate: false }));
+              console.error(`Failed to create one or more game questions:`, err);
+            }
           }
           setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
           navigate('/');
@@ -378,7 +354,7 @@ export default function CreateGame({
         return;
       }
       // process valid questions in order
-      const questionTemplate = createNewQuestionTemplates(draftQuestionsList, apiClients)
+      const questionTemplate = buildQuestionTemplatePromises(draftQuestionsList, apiClients);
       await Promise.all(questionTemplate);
 
       // Reset data and re-direct user
@@ -386,7 +362,6 @@ export default function CreateGame({
 
       navigate('/');
     } catch (err) {
- 
       console.error('Error during save process:', err);
     }
   };
@@ -404,8 +379,6 @@ export default function CreateGame({
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
-    setIsTabsOpen(true);
-
     console.log("Library Question: ", question);
    setDraftQuestionsList((prev) => {
     const libraryQuestion = buildLibraryQuestionAtIndex(question);
@@ -420,6 +393,7 @@ export default function CreateGame({
       openCreateQuestion: true,
       ...(addNew && { questionCount: prevGame.questionCount + 1 })
     }));
+    setSelectedQuestionIndex((prevIndex) => addNew ? prevIndex + 1 : prevIndex)
     setIconButtons((prevButtons) => addNew ? [...prevButtons, prevButtons.length + 1] : prevButtons);
     return updatedList;
    })
@@ -547,7 +521,6 @@ export default function CreateGame({
                     isViewGame
                     isCreateGame
                      />
-
                   ): (
                   <QuestionElements
                     screenSize={screenSize}
@@ -604,7 +577,7 @@ export default function CreateGame({
           unmountOnExit
           timeout={500}
         >
-          <Box>
+          <Box sx={{ width: '100%' }}>
             <LibraryTabsQuestions
               screenSize={screenSize}
               setIsTabsOpen={setIsTabsOpen}

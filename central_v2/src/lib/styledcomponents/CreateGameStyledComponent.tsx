@@ -98,7 +98,7 @@ export const CreateGameSaveDiscardBoxContainer = styled(Box, {
     screenSize !== ScreenSize.MEDIUM && {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'flex-Start',
+      justifyContent: 'center',
       alignItems: 'center',
       gap: `${theme.sizing.xSmPadding}px`,
       paddingRight: '30px',
@@ -110,7 +110,6 @@ export const CreateGameSaveDiscardBoxContainer = styled(Box, {
     justifyContent: 'center',
     alignItems: 'center',
     gap: `${theme.sizing.xSmPadding}px`,
-    paddingBottom: '16px',
   }),
 }));
 

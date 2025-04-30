@@ -17,7 +17,6 @@ interface StyledQuestionCardProps {
   isCarousel: boolean;
   isFavorite: boolean;
   handleViewButtonClick: (element: IQuestionTemplate) => void;
-  isCreateGame?: boolean;
 }
 
 const QuestionImage = styled('img')({
@@ -99,7 +98,6 @@ export default function StyledQuestionCard({
   question,
   isCarousel,
   isFavorite,
-  isCreateGame,
   handleViewButtonClick,
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;
@@ -118,25 +116,16 @@ export default function StyledQuestionCard({
         </TitleContainer>
         <DescriptionText>{title}</DescriptionText>
         <BottomButtonBox>
-         {!isCreateGame && 
-         <>
          <CentralButton
             buttonType={ButtonType.VIEW}
             isEnabled
             onClick={() => handleViewButtonClick(question)}
-          />
+            />
           <CentralButton
             buttonType={ButtonType.CLONE}
             isEnabled
             onClick={() => handleViewButtonClick(question)}
           /> 
-         </>
-          }
-
-          {isCreateGame && (
-            <AddToGameButton  onClick={() => handleViewButtonClick(question)} />
-          )}
-
         </BottomButtonBox>
       </ContentContainer>
     </QuestionCard>

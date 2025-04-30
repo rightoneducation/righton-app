@@ -186,7 +186,7 @@ export const createGameImagePath = async (
   return gameImgUrl;
 };
 
-export const createGameTemplate = (
+export const buildGameTemplate = (
   draftGame: TGameTemplateProps,
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
@@ -214,7 +214,7 @@ export const createGameTemplate = (
   };
 };
 
-export const createGameQuestion = (
+export const buildGameQuestion = (
   draftGame: TGameTemplateProps,
   gameTemplateId: string,
   questionTemplateId: string,
@@ -230,4 +230,28 @@ export const createGameQuestion = (
           privateQuestionTemplateID: String(questionTemplateId),
         }),
   };
+};
+
+export const buildGameQuestionPromises = (
+  draftGame: TGameTemplateProps,
+  gameTemplateId: string,
+  questionTemplateIds: string[],
+  apiClients: IAPIClients,
+) => {
+  return questionTemplateIds.map(async (questionId, i) => {
+    const gameQuestion = buildGameQuestion(
+      draftGame,
+      String(gameTemplateId),
+      String(questionId),
+    );
+    console.log('Game Question: ', gameQuestion);
+    const response = await apiClients.gameQuestions.createGameQuestions(
+      draftGame.publicPrivateGame,
+      gameQuestion,
+    );
+    console.log(
+      `${draftGame.publicPrivateGame}GameQuestion response`,
+      response,
+    );
+  });
 };

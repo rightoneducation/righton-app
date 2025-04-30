@@ -175,7 +175,12 @@ export default function CreateQuestionCardBase({
           <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
           <Box>
 
-          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} sx={{ gap: "3px"}}>
+          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} sx={{ 
+            gap: "3px",
+            boxShadow: screenSize === ScreenSize.SMALL ? 
+            "0px 2px 9px 0px rgb(149, 0, 35, 30%)" 
+            : 'none'
+            }}>
             {draftQuestion.questionCard.ccss}
             <SelectArrowContainer isSelectOpen={CCSSIsOpen}>
             <img src={SelectArrow} alt="select-arrow" width={9} height={9} />

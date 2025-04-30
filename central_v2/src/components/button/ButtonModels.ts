@@ -51,7 +51,8 @@ export enum ButtonType {
   SIGNOUT = 'signout',
   TEST = 'test',
   RETRY = 'retry',
-  CANCEL = 'cancel'
+  CANCEL = 'cancel',
+  ADDTOGAME = 'addtogame',
 }
 
 export enum ButtonColor {
@@ -159,6 +160,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.ADDSTEP]: {
     icon: add,
     textKey: ButtonType.ADDSTEP,
+  },
+  [ButtonType.ADDTOGAME]: {
+    icon: add,
+    textKey: ButtonType.ADDTOGAME,
   },
   [ButtonType.BROWSEFILES]: {
     icon: upload,

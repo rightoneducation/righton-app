@@ -50,6 +50,7 @@ interface MostPopularGamesComponentProps {
   isMyLibrary?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleViewButtonClick: (element: IGameTemplate) => void;
+  isCreateGame?: boolean;
 }
 
 function MostPopularGamesComponent({
@@ -61,6 +62,7 @@ function MostPopularGamesComponent({
   isMyLibrary,
   setIsTabsOpen,
   handleViewButtonClick,
+  isCreateGame,
 }: MostPopularGamesComponentProps) {
   const centralData = useCentralDataState();
   const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
@@ -81,6 +83,7 @@ function MostPopularGamesComponent({
                 <StyledGameCard
                   screenSize={screenSize}
                   game={game}
+                  isCreateGame={isCreateGame}
                   id={game.id}
                   title={game.title}
                   description={game.description}
@@ -146,7 +149,6 @@ function MostPopularQuestionsComponent({
                           image={question.imageUrl || placeHolder}
                           isCarousel={false}
                           isFavorite={isFavorite}
-                          isCreateGame={isCreateGame}
                           handleViewButtonClick={
                             handleViewButtonClick as (
                               element: IQuestionTemplate,
@@ -236,6 +238,7 @@ export default function CardGallery<
           numColumns={getNumColumns()}
           setIsTabsOpen={setIsTabsOpen}
           isMyLibrary={isMyLibrary}
+          isCreateGame={isCreateGame}
           handleViewButtonClick={
             handleViewButtonClick as (element: IGameTemplate) => void
           }

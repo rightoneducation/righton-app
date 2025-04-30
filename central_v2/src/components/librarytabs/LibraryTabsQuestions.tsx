@@ -114,7 +114,7 @@ const tabIconMap: { [key:number]: string } = {
 const elements = getQuestionElements(openTab, isSearchResults, centralData);
 
 console.log("elements", elements);
-console.log("centralData: ", centralData)
+console.log("centralData: ", centralData);
 
 return (
   <TabContent>
@@ -171,7 +171,7 @@ return (
         searchTerm={isSearchResults ? centralData.searchTerms : undefined}
         grades={isSearchResults ? centralData.selectedGrades : undefined}
         galleryElements={elements as IQuestionTemplate[]} 
-        elementType={ElementType.QUESTION}
+        elementType={ElementType.GAME}
         galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
         setIsTabsOpen={setIsTabsOpen}
         handleView={handleView}

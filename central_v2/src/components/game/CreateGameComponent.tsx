@@ -97,12 +97,14 @@ questionTemplate: qt,
             buttonType={ButtonType.SAVE}
             isEnabled
             smallScreenOverride
+            buttonWidthOverride="105px"
             onClick={handleSaveGame}
           />
           <CentralButton
             buttonType={ButtonType.DISCARDBLUE}
             isEnabled
             smallScreenOverride
+            buttonWidthOverride="134px"
             onClick={handleDiscard}
           />
         </CreateGameSaveDiscardBoxContainer>
@@ -174,14 +176,16 @@ questionTemplate: qt,
       }}>
         <CentralButton
         smallScreenOverride
-        buttonWidthOverride='100%'
+        buttonWidthOverride={(screenSize === ScreenSize.SMALL ||
+          screenSize === ScreenSize.MEDIUM) ? '222px': '100%'}
           buttonType={ButtonType.CREATEQUESTION}
          isEnabled={enabled}
           onClick={handleCreateQuestion}
         />
         <CentralButton
         smallScreenOverride
-        buttonWidthOverride='100%'
+        buttonWidthOverride={(screenSize === ScreenSize.SMALL ||
+          screenSize === ScreenSize.MEDIUM) ? '200px': '100%'}
           buttonType={ButtonType.QUESTIONBANK}
           isEnabled={enabled}
           onClick={handleOpenQuestionBank}
