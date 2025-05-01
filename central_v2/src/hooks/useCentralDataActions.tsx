@@ -515,20 +515,16 @@ export default function useCentralDataManager({
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
   const validateUser = async () => {
-    setIsValidatingUser(true);
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     const status = await apiClients.auth.verifyAuth();
-    console.log("Printing user status inside useEffect!: ", status)
     if (status) {
-      const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
-      console.log("Printing local profile inside useEffect!!: ", localProfile)
-
+      const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+      const currentSession = await apiClients.auth.getCurrentSession();
+      const cognitoId = currentSession?.userSub;
       if (localProfile) {
-        console.log("Local profile: ", localProfile)
-        if (!isUserProfileComplete(localProfile)) {
-          // navigate('/nextstep');
-          console.log("setting user status to incompelte inside localprofile if statement useEffect!!")
-          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
-          console.log("setting status to incomplete inside useEffect!!", status)
+        if (!isUserProfileComplete(localProfile) || cognitoId !== localProfile.cognitoId) {
+          apiClients.centralDataManager?.clearLocalUserProfile();
+          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
           setIsValidatingUser(false);
           return;
         }
@@ -537,23 +533,27 @@ export default function useCentralDataManager({
         setIsValidatingUser(false);
         return;
       }
+      // case for google oauth sign in, cognito present, but no local profile
+      const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
+      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
+      setIsValidatingUser(false);
+      return;
     }
     apiClients.centralDataManager?.clearLocalUserProfile();
-    console.log("Cleared userprofile inside useEffect!!")
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
     setIsValidatingUser(false);
   };
 
   const handleLogOut = () => {
     apiClients.centralDataManager?.signOut();
-    validateUser();
+    apiClients.centralDataManager?.clearLocalUserProfile();
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   }
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
-    console.log('validateUser useEffect running');
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     validateUser();
   }, []); // eslint-disable-line
 

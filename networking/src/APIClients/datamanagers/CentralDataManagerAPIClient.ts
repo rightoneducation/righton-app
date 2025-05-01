@@ -216,7 +216,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       const dynamoId = uuidv4();
       createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
       updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      await this.userAPIClient.createUser(createUserInput);
+      await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
 
@@ -235,7 +235,6 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       user.email = getEmail;
     }
 
-    // CreatUserInput is done to avoid putting cognito ID into the dynamoDB
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
     let updatedUser = JSON.parse(JSON.stringify(user));
     let firstName = createUserInput.firstName;
@@ -251,9 +250,9 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       
   
       
-      createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId ?? '', dynamoId: dynamoId };
       updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      await this.userAPIClient.createUser(createUserInput);
+      await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
       //TODO: set user status to LOGGED_IN
