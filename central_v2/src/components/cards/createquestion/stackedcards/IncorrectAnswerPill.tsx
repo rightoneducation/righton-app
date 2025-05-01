@@ -40,7 +40,7 @@ export default function IncorrectAnswerPill({index, selectedIndex}: IncorrectAns
   };
   return (
     <StyledPill style={style()}>
-      {index}
+      {index + 1}
     </StyledPill>
   )
 }

@@ -40,6 +40,7 @@ export default function ViewQuestionCards({
       <OwnerTag isViewGame={isViewGame} screenSize={screenSize}/>
     }
     <DetailedQuestionContainer
+    sx={{ gap: isCreateGame && screenSize === ScreenSize.SMALL ? 0 : `${theme.sizing.mdPadding}px` }}
       container
     >
       <Grid

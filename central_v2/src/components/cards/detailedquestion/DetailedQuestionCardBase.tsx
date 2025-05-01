@@ -53,7 +53,13 @@ export default function DetailedQuestionCardBase({
   isCreateGame,
 }: DetailedQuestionCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
-  const [isPublic, setIsPublic] = React.useState<boolean>(false)
+  const [isPublic, setIsPublic] = React.useState<boolean>(false);
+
+    const isCreateGamePage = 
+    isCreateGame && screenSize === ScreenSize.LARGE ||
+    isCreateGame && screenSize === ScreenSize.MEDIUM ||
+    isCreateGame && screenSize === ScreenSize.SMALL;
+
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -65,7 +71,7 @@ export default function DetailedQuestionCardBase({
   }
 
   return (
-    <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
+    <BaseCardStyled id="detailed-card" elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
     <CreateQuestionTitleBarStyled screenSize={screenSize}>
       <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
@@ -78,6 +84,31 @@ export default function DetailedQuestionCardBase({
           <PublicPrivateButton isPublic={isPublic} isDisabled/>
         </Box>
       }
+      {isCreateGame && (
+         <RadioContainerStyled>
+         <RadioGroup
+           row
+           value={questionType} 
+           onChange={handleQuestionTypeChange}
+           style={{overflow: 'hidden', flexWrap: 'nowrap'}}
+         >
+           <RadioLabelStyled
+             value={PublicPrivateType.PUBLIC}
+             control={<RadioStyled style={{cursor: 'pointer'}}/>}
+             label="Multiple Choice"
+             isSelected={questionType === PublicPrivateType.PUBLIC}
+             style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap'})}}
+           />
+           <RadioLabelStyled
+             value={PublicPrivateType.PRIVATE}
+             control={<RadioStyled style={{cursor: 'pointer'}}/>}
+             label="Short Answer"
+             isSelected={questionType === PublicPrivateType.PRIVATE}
+             style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap'})}}
+           />
+         </RadioGroup>
+       </RadioContainerStyled>
+      )}
     </CreateQuestionTitleBarStyled>
     <ContentContainerStyled screenSize={screenSize}>
       <Box
@@ -88,10 +119,10 @@ export default function DetailedQuestionCardBase({
           boxSizing: 'border-box',
         }}
       >
-        <img src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
+        <img src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover', borderRadius: isCreateGame ? "8px" : "0px",}}/>
       </Box>
       <CreateQuestionContentRightContainerStyled>
-        <RadioContainerStyled>
+        {!isCreateGame && <RadioContainerStyled>
           <RadioGroup
             row
             value={questionType} 
@@ -113,7 +144,7 @@ export default function DetailedQuestionCardBase({
               style={{cursor: 'pointer'}}
             />
           </RadioGroup>
-        </RadioContainerStyled>
+        </RadioContainerStyled>}
         <Box
           style={{
             width: '100%',

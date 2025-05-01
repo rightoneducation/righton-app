@@ -121,6 +121,11 @@ export default function CreateQuestionCardBase({
   }
   const imageLink = getImage();
 
+  const isCreateGamePage = 
+  isCreateGame && screenSize === ScreenSize.LARGE ||
+  isCreateGame && screenSize === ScreenSize.MEDIUM ||
+  isCreateGame && screenSize === ScreenSize.SMALL;
+
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -130,7 +135,6 @@ export default function CreateQuestionCardBase({
 
   const handleCCSSButtonClick = () => {
     handleCCSSClick();
-    // setCCSSIsOpen((prev) => !prev);
   }
 
   const handleLocalTitleChange = (value: string) => {
@@ -184,14 +188,14 @@ export default function CreateQuestionCardBase({
             : 'none'
             }}>
             {draftQuestion.questionCard.ccss}
-            <SelectArrowContainer isSelectOpen={CCSSIsOpen}>
+            <Box>
             <img src={SelectArrow} alt="select-arrow" width={9} height={9} />
-            </SelectArrowContainer>
+            </Box>
           </ButtonCCSS>
           
           </Box>
         </Box>
-        {screenSize === ScreenSize.SMALL && (
+        {(isCreateGamePage || screenSize === ScreenSize.SMALL) && (
         <RadioContainerStyled>
           <RadioGroup
             row
@@ -204,19 +208,19 @@ export default function CreateQuestionCardBase({
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Multiple Choice"
               isSelected={isMultipleChoice}
-              style={{cursor: 'pointer'}}
+              style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap' })}}
             />
             <RadioLabelStyled
               value="short"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Short Answer"
               isSelected={!isMultipleChoice}
-              style={{cursor: 'pointer'}}
+              style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap' })}}
             />
           </RadioGroup>
         </RadioContainerStyled>
           )}
-        { screenSize !== ScreenSize.SMALL && !isCreateGame &&
+        {screenSize !== ScreenSize.SMALL && !isCreateGame &&
             <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
               <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
             </Box>
@@ -230,7 +234,7 @@ export default function CreateQuestionCardBase({
             </ImagePlaceholder>
         }
         <CreateQuestionContentRightContainerStyled>
-          {screenSize !== ScreenSize.SMALL && (
+          {!isCreateGamePage && screenSize !== ScreenSize.SMALL && (
         <RadioContainerStyled>
           <RadioGroup
             row
@@ -258,10 +262,25 @@ export default function CreateQuestionCardBase({
           <TextContainerStyled
             multiline 
             variant="outlined" 
-            rows='5'
+            rows={isCreateGamePage ? '7': '5'}
             sx={{ 
               '& .MuiInputBase-root': {
                 fontFamily: 'Rubik',
+                ...(isCreateGamePage && { height: '196px' })
+              },
+              '& .MuiInputBase-input': {
+                '&::placeholder': {
+                  color: '#384466',
+                  opacity: 0.5
+                },
+                '&:focus': {
+                  color: '#384466',
+                  opacity: 1,
+                },
+                '&:focus::placeholder': {
+                  color: '#384466',
+                  opacity: 1,
+                },
               },
             }}
             placeholder="Enter question here..." 

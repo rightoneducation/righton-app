@@ -145,7 +145,7 @@ export default function CreateGame({
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
     const isPublicPrivateMatch = draftQuestionsList.every((question) => question.publicPrivate === value);
     if(!isPublicPrivateMatch) {
-      const newDraft = [ { ...draftTemplate, publicPrivate: value } ]
+      const newDraft = [ { ...draftTemplate, publicPrivate: value } ];
       setDraftQuestionsList(newDraft);
       setIconButtons([1]);
       setSelectedQuestionIndex(0);
@@ -311,7 +311,7 @@ export default function CreateGame({
   };
 
   const handleCCSSSubmit = (ccssString: string) => {
-    setDraftQuestionsList((prev) => updateCCSSAtIndex(prev, selectedQuestionIndex, ccssString))
+    setDraftQuestionsList((prev) => updateCCSSAtIndex(prev, selectedQuestionIndex, ccssString));
   };
 
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
@@ -425,6 +425,13 @@ export default function CreateGame({
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
+
+  useEffect(() => {
+    console.log("Draft Game:", draftGame)
+    console.log("Questions List:", draftQuestionsList);
+    console.log("Selected Index:", selectedQuestionIndex);
+    console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
+  }, [draftQuestionsList, selectedQuestionIndex, draftGame]);
 
   return (
     <CreateGameMainContainer>

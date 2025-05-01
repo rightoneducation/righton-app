@@ -194,6 +194,20 @@ export default function IncorrectAnswerCard({
               height: '43px',
               fontFamily: 'Rubik'
             },
+         '& .MuiInputBase-input': {
+              '&::placeholder': {
+                color: '#47366C',
+                opacity: 0.5
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
+            },
         }} 
           placeholder="Enter Incorrect Answer..." 
           value={cardData.answer}
@@ -240,6 +254,20 @@ export default function IncorrectAnswerCard({
           sx={{
             '& .MuiOutlinedInput-root': {
               fontFamily: 'Rubik',
+            },
+            '& .MuiInputBase-input': {
+              '&::placeholder': {
+                color: '#47366C',
+                opacity: 0.5
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
             },
           }}
           placeholder="Enter Explanation here..." 

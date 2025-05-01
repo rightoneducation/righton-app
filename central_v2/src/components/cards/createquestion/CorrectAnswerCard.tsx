@@ -89,6 +89,20 @@ export default function DetailedQuestionSubCard({
               '& .MuiInputBase-root': {
                 fontFamily: 'Rubik',
               },
+             '& .MuiInputBase-input': {
+              '&::placeholder': {
+                color: '#47366C',
+                opacity: 0.5
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
+            },
             }} 
             placeholder={`Enter step ${index + 1}...`}
             error={(isCardErrored) && (!answerSteps[index] || answerSteps[index].length === 0)}
@@ -123,6 +137,20 @@ export default function DetailedQuestionSubCard({
               '& .MuiOutlinedInput-root': {
               fontFamily: 'Rubik',
               height: '43px',
+            },
+          '& .MuiInputBase-input': {
+              '&::placeholder': {
+                color: '#47366C',
+                opacity: 0.5
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
             },
         }}
         placeholder="Enter Correct Answer..." 

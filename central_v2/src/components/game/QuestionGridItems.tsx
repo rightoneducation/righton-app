@@ -25,19 +25,41 @@ import CreateQuestionCardBase from '../cards/createquestion/CreateQuestionCardBa
 import IncorrectAnswerCardStack from '../cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 
 const AISwitch = styled(Switch)(({ theme }) => ({
-  '& .MuiSwitch-thumb': {
-    background: theme.palette.primary.aiGradient,
-  },
+  padding: 8,
   '& .MuiSwitch-track': {
-    backgroundColor: '#111111',
+    borderRadius: 22 / 2,
+    backgroundColor: '#CCCCCC',
+    opacity: 1,
+    '&::before, &::after': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: 16,
+      height: 16,
+    },
+    '&::before': {
+      left: 12,
+    },
+    '&::after': {
+      right: 12,
+    },
   },
   '& .MuiSwitch-switchBase.Mui-checked': {
     color: '#FFFFFF',
   },
+  '& .MuiSwitch-thumb': {
+    background: theme.palette.primary.aiGradient,
+    boxShadow: 'none',
+    width: 16,
+    height: 16,
+    margin: 2,
+  },
   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#111111',
+    backgroundColor: '#CCCCCC',
   },
 }));
+
 
 interface IQuestionElements {
   screenSize: ScreenSize;
@@ -123,7 +145,7 @@ export default function QuestionElements({
           style={{ width: '100%' }}
         >
           <CreateQuestionCardBase
-          isCreateGame
+            isCreateGame
             screenSize={screenSize}
             draftQuestion={draftQuestion}
             handleTitleChange={handleDebouncedTitleChange}
