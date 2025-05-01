@@ -24,7 +24,6 @@ import PublicPrivateButton from './button/publicprivatebutton/PublicPrivateButto
 import GameQuestionButton from './button/gamequestionbutton/GameQuestionButton';
 
 interface HeaderProps {
-  isValidatingUser: boolean;
   currentScreen: ScreenType;
   screenSize: ScreenSize;
   isLgScreen: boolean;
@@ -157,7 +156,6 @@ const ImageContainer = styled(Box, {
 }));
 
 export default function Header({
-  isValidatingUser,
   currentScreen,
   screenSize,
   isLgScreen,
@@ -351,7 +349,7 @@ export default function Header({
                 </ButtonText>
               </TransparentButton>
               
-              { ((!isValidatingUser && userStatus === UserStatusType.LOGGEDIN) || (isValidatingUser && currentScreen === ScreenType.LIBRARY)) && 
+              { ((userStatus === UserStatusType.LOGGEDIN) || (currentScreen === ScreenType.LIBRARY)) && 
                 <TransparentButton
                   disableRipple
                   onClick={() =>
@@ -379,15 +377,15 @@ export default function Header({
           )}
         </ImageContainer>
         <Box style={{width: 'fit-content', display: 'flex', gap: '16px', justifyContent: 'center'}}>
-          {!isValidatingUser &&
-            userStatus === UserStatusType.LOGGEDIN 
-              ? loggedInUserComponents
-              :
-                <>
-                  <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
-                  <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
-                </>
-            
+          { userStatus !== UserStatusType.LOADING && (
+              userStatus === UserStatusType.LOGGEDIN 
+                ? loggedInUserComponents
+                :
+                  <>
+                    <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
+                    <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
+                  </>
+              )
           }
         </Box>
         </HeaderFirstRow>

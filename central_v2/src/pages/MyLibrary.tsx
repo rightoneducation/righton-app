@@ -8,16 +8,14 @@ import {
   SortType,
   SortDirection
 } from '@righton/networking';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
-import { ScreenSize, GameQuestionType, LibraryTabEnum } from '../lib/CentralModels';
+import { ScreenSize, GameQuestionType, LibraryTabEnum, UserStatusType } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
 
 interface MyLibraryProps {
-  isValidatingUser: boolean;
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
-  isLibraryInit: boolean;
-  setIsLibraryInit: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -32,11 +30,8 @@ interface MyLibraryProps {
 }
 
 export default function MyLibrary({ 
-  isValidatingUser,
   gameQuestion,
   screenSize,
-  isLibraryInit,
-  setIsLibraryInit,
   setIsTabsOpen,
   handleChooseGrades,
   handleSortChange,
@@ -45,16 +40,15 @@ export default function MyLibrary({
   fetchElements
 }: MyLibraryProps) {
   const theme = useTheme();
+  const centralData = useCentralDataState();
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
-      {isValidatingUser 
+      {centralData.userStatus === UserStatusType.LOADING
         ? <CircularProgress style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',   color: theme.palette.primary.darkBlueCardColor, zIndex: 1}}/>
         : <LibraryTabsContainer 
             gameQuestion={gameQuestion}
             screenSize={screenSize}
-            isLibraryInit={isLibraryInit}
-            setIsLibraryInit={setIsLibraryInit}
             setIsTabsOpen={setIsTabsOpen}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}

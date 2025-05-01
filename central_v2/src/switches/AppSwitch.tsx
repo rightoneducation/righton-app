@@ -14,7 +14,6 @@ import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
 import ViewGame from '../pages/ViewGame';
 import MyLibrary from '../pages/MyLibrary';
-import AuthStatus from '../pages/AuthStatus';
 import UserProfile from '../pages/UserProfile';
 
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
@@ -31,7 +30,6 @@ function AppSwitch({
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [libraryGameQuestionSwitch, setLibraryGameQuestionSwitch] = useState<GameQuestionType>(GameQuestionType.GAME);
-  const [isLibraryInit, setIsLibraryInit] = useState<boolean>(true);
   const screenSize = isLargeScreen // eslint-disable-line
     ? ScreenSize.LARGE
     : isMediumScreen
@@ -42,8 +40,8 @@ function AppSwitch({
   const gameQuestion: GameQuestionType = 
     (currentScreen === ScreenType.GAMES|| (currentScreen === ScreenType.LIBRARY && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
   const {
-    isValidatingUser,
     setIsTabsOpen,
+    handleLibraryInit,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
@@ -60,7 +58,7 @@ function AppSwitch({
       field: gameQuestionValue === GameQuestionType.GAME ? SortType.listGameTemplates : SortType.listQuestionTemplates,
       direction: SortDirection.ASC,
     })
-    setIsLibraryInit(true);  
+    handleLibraryInit(true);
   };
   
   switch (currentScreen) {
@@ -82,14 +80,11 @@ function AppSwitch({
     }
     case ScreenType.LIBRARY: {
       screenComponent = (
-        <AuthGuard handleLogOut={handleLogOut} isValidatingUser={isValidatingUser}>
+        <AuthGuard handleLogOut={handleLogOut}>
           <MyLibrary 
-            isValidatingUser={isValidatingUser}
             gameQuestion={gameQuestion}
             screenSize={screenSize}
             setIsTabsOpen={setIsTabsOpen}
-            isLibraryInit={isLibraryInit}
-            setIsLibraryInit={setIsLibraryInit}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
@@ -177,7 +172,7 @@ function AppSwitch({
   }
 
   return (
-    <AppContainer isValidatingUser={isValidatingUser} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion} handleLogOut={handleLogOut}>
+    <AppContainer setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion} handleLogOut={handleLogOut}>
       {screenComponent}
     </AppContainer>
   )

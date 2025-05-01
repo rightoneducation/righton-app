@@ -20,8 +20,8 @@ interface UseCentralDataManagerProps {
 }
 
 interface UseCentralDataManagerReturnProps {
-  isValidatingUser: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
+  handleLibraryInit: (isInit: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: (libraryTab?: LibraryTabEnum) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
@@ -53,17 +53,17 @@ export default function useCentralDataManager({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
 
-  const navigate = useNavigate();
-  const isGames = useMatch('/');
   const isQuestions = useMatch('/questions');
   const isLibrary = useMatch('/library') !== null;
-  const [isValidatingUser, setIsValidatingUser] = useState(true);
-  const nextStep = useMatch('/nextstep') !== null;
 
   const debounceInterval = 800;
 
   const setIsTabsOpen = (isOpen: boolean) => {
     centralDataDispatch({ type: 'SET_IS_TABS_OPEN', payload: isOpen });
+  }
+
+  const handleLibraryInit = (isInit: boolean) => {
+    centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: isInit });
   }
 
   const handleChooseGrades = (grades: GradeTarget[]) => {
@@ -525,24 +525,20 @@ export default function useCentralDataManager({
         if (!isUserProfileComplete(localProfile) || cognitoId !== localProfile.cognitoId) {
           apiClients.centralDataManager?.clearLocalUserProfile();
           centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-          setIsValidatingUser(false);
           return;
         }
         centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-        setIsValidatingUser(false);
         return;
       }
       // case for google oauth sign in, cognito present, but no local profile
       const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
       centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
-      setIsValidatingUser(false);
       return;
     }
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-    setIsValidatingUser(false);
   };
 
   const handleLogOut = () => {
@@ -558,8 +554,8 @@ export default function useCentralDataManager({
   }, []); // eslint-disable-line
 
   return {
-    isValidatingUser,
     setIsTabsOpen,
+    handleLibraryInit,
     fetchElement,
     fetchElements,
     isUserProfileComplete,
