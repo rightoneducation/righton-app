@@ -16,7 +16,7 @@ export const userProfileInit = {
 // initialize centralDataState
 const initCentralDataState: ICentralDataState = {
   userProfile: userProfileInit,
-  userStatus: UserStatusType.LOGGEDOUT,
+  userStatus: UserStatusType.LOADING,
   recommendedGames: [],
   mostPopularGames: [],
   searchedGames: [],
@@ -38,6 +38,7 @@ const initCentralDataState: ICentralDataState = {
   isLoadingInfiniteScroll: false,
   searchTerms: '',
   selectedGrades: [],
+  isLibraryInit: true,
   isTabsOpen: false,
   isFavTabOpen: false,
   publicPrivate: PublicPrivateType.PUBLIC,

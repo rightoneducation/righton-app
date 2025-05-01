@@ -1,23 +1,17 @@
 import React from 'react';
-import { Navigate, useMatch, useNavigate } from 'react-router-dom';
+import { Navigate, useMatch } from 'react-router-dom';
 import { useTheme, CircularProgress } from '@mui/material';
-import { userProfileLocalStorage } from '@righton/networking';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
-import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
-import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { UserStatusType } from '../lib/CentralModels';
-import { userProfileInit } from '../lib/context/CentralDataContext';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
 
 
 interface AuthGuardProps {
-  isValidatingUser?: boolean;
   handleLogOut: () => void;
   children: JSX.Element | null;
 }
 
 export default function AuthGuard ({
-   isValidatingUser,
    handleLogOut,
    children
 }: AuthGuardProps){
@@ -26,14 +20,12 @@ export default function AuthGuard ({
   const isAuthPage = useMatch('/auth');
   const isSignupPage = useMatch('/signup');
   const isLoginPage = useMatch('/login');
-  const isNextStepPage = useMatch('/nextstep');
-
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  const navigate = useNavigate();
-  
+
   console.log('AUTH_STATUS');
+  console.log(isLibrary);
   const userStatusMap = [
     'UserStatusType.LOGGEDIN',
     'UserStatusType.LOGGEDOUT',
@@ -43,24 +35,10 @@ export default function AuthGuard ({
   console.log(userStatusMap[centralData.userStatus]);
   console.log(centralData.userProfile);
 
-  /* case 1: user navigates to main page while logged in
-  * user is logged in but they dont have centraldata.userprofile set
-  * set it from local storage
-  * redirect to main page
-  * -> CONFIRMED
-
-  * case 2: user navigates to main page while logged out
-
-  */
 
   switch (centralData.userStatus) {
-    case UserStatusType.LOGGEDIN:
-      if (isAuthPage || isLoginPage || isSignupPage) {
-        return <Navigate to="/" replace />;
-      }
-      break;
     case UserStatusType.LOGGEDOUT:
-      if (isLibrary && !isValidatingUser) {
+      if (isLibrary) {
         return <Navigate to="/" replace />;
       }
       break;
@@ -72,9 +50,13 @@ export default function AuthGuard ({
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
       break;
     case UserStatusType.LOADING:
+      return <SignUpMainContainer> <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/> </SignUpMainContainer>      
+    case UserStatusType.LOGGEDIN:
     default:
-      return <SignUpMainContainer> <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/> </SignUpMainContainer>
+      if (isAuthPage || isLoginPage || isSignupPage) {
+        return <Navigate to="/" replace />;
+      }
+      break; 
   }
-  
   return children as JSX.Element;
 }

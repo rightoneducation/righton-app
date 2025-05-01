@@ -26,6 +26,7 @@ export type CentralDataAction =
   | { type: 'SET_NEXT_TOKEN'; payload: string | null}
   | { type: 'SET_SEARCH_TERMS'; payload: string }
   | { type: 'SET_SELECTED_GRADES'; payload: GradeTarget[] }
+  | { type: 'SET_IS_LIBRARY_INIT'; payload: boolean }
   | { type: 'SET_IS_TABS_OPEN'; payload: boolean }
   | { type: 'SET_IS_FAV_TAB_OPEN'; payload: boolean }
   | { type: 'SET_PUBLIC_PRIVATE'; payload: PublicPrivateType }
@@ -79,6 +80,8 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
       return {...state, searchTerms: action.payload};
     case 'SET_SELECTED_GRADES':
       return {...state, selectedGrades: action.payload};
+    case 'SET_IS_LIBRARY_INIT':
+      return {...state, isLibraryInit: action.payload};
     case 'SET_IS_TABS_OPEN':
       return {...state, isTabsOpen: action.payload};
     case 'SET_IS_FAV_TAB_OPEN':
