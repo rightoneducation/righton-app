@@ -22,6 +22,7 @@ interface DetailedQuestionCardBaseProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
   dropShadow?: boolean;
+  isCreateGame?: boolean;
 }
 
 interface CreateQuestionTitleBarStyledProps {
@@ -48,7 +49,8 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function DetailedQuestionCardBase({
   screenSize,
   question,
-  dropShadow
+  dropShadow,
+  isCreateGame,
 }: DetailedQuestionCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
   const [isPublic, setIsPublic] = React.useState<boolean>(false)
@@ -71,7 +73,7 @@ export default function DetailedQuestionCardBase({
           {question.ccss}
         </ButtonCCSS>
       </Box>
-      { screenSize !== ScreenSize.SMALL && 
+      { screenSize !== ScreenSize.SMALL && !isCreateGame &&
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
           <PublicPrivateButton isPublic={isPublic} isDisabled/>
         </Box>
@@ -123,7 +125,7 @@ export default function DetailedQuestionCardBase({
           <Typography>{question.title}</Typography>
         </Box>
       </CreateQuestionContentRightContainerStyled>
-      { screenSize === ScreenSize.SMALL && 
+      { screenSize === ScreenSize.SMALL && !isCreateGame &&
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
           <PublicPrivateButton isPublic={isPublic} isDisabled={false}/>
         </Box>

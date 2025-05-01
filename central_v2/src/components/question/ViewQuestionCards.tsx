@@ -63,7 +63,7 @@ export default function ViewQuestionCards({
           gap: `${theme.sizing.smPadding}px`,
         }}
       >
-        <DetailedQuestionCardBase dropShadow screenSize={screenSize} question={question} />
+        <DetailedQuestionCardBase isCreateGame={isCreateGame} dropShadow screenSize={screenSize} question={question} />
         <Grid
           container
           spacing={`${theme.sizing.smPadding}px`}

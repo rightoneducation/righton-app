@@ -69,7 +69,6 @@ export const buildQuestionTemplatePromises = (
 
     // if existing question return its ID for Game Creation
     if (dq.questionTemplate.id) {
-      console.log('Existing id Skipped at index: ', i);
       return { id: dq.questionTemplate.id } as IQuestionTemplate;
     }
 
@@ -125,13 +124,9 @@ export const buildQuestionTemplatePromises = (
 export const updatePublicPrivateAtIndex = (
   draftQuestionsList: TDraftQuestionsList[],
   value: PublicPrivateType,
-  selectedIndex: number,
 ): TDraftQuestionsList[] => {
   return draftQuestionsList.map((question, i) => {
-    if (i === selectedIndex) {
-      return { ...question, publicPrivate: value };
-    }
-    return question;
+      return { ...question, publicPrivate: value }
   });
 };
 
@@ -623,6 +618,7 @@ export const openModalAtIndex = (
 
 export const buildLibraryQuestionAtIndex = (
   question: IQuestionTemplate,
+  publicPrivate: PublicPrivateType
 ): TDraftQuestionsList => {
   const correctAnswer = question.choices?.find((q) => q.isAnswer === true);
   const incorrectAnswers = question.choices?.filter((q) => !q.isAnswer);
@@ -637,6 +633,7 @@ export const buildLibraryQuestionAtIndex = (
 
   return {
     ...draftTemplate,
+    publicPrivate,
     questionTemplate: { ...question },
     question: {
       questionCard: {

@@ -55,7 +55,7 @@ export default function useCentralDataManager({
   const navigate = useNavigate();
   const isGames = useMatch('/');
   const isQuestions = useMatch('/questions');
-  const isCreateGame = useMatch('/create/game')
+  const isCreateGame = useMatch('/create/game');
   const isLibrary = useMatch('/library') !== null;
   const [isValidatingUser, setIsValidatingUser] = useState(true);
 

@@ -244,7 +244,6 @@ export const buildGameQuestionPromises = (
       String(gameTemplateId),
       String(questionId),
     );
-    console.log('Game Question: ', gameQuestion);
     const response = await apiClients.gameQuestions.createGameQuestions(
       draftGame.publicPrivateGame,
       gameQuestion,

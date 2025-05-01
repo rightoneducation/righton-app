@@ -32,8 +32,8 @@ import tabPrivateIcon from '../../images/tabPrivate.svg';
 
 interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
   screenSize: ScreenSize;
+  isPublic: boolean;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
-  getLabel: (screen: ScreenSize, isSelected: boolean, value: string) => string;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
     newSort: {
@@ -42,34 +42,29 @@ interface LibraryTabsQuestionsProps<T extends IQuestionTemplate> {
     }
   ) => void;
   handleSearchChange: (searchString: string) => void;
-  handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   fetchElements: (libraryTab: LibraryTabEnum) => void;
   handleView: (element: T, elements: T[]) => void;
-  loadMore: () => void;
 }
 
 
 export default function LibraryTabsQuestions({
   screenSize,
   setIsTabsOpen,
-  getLabel,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  handlePublicPrivateChange,
   fetchElements,
   handleView,
-  loadMore,
+  isPublic
 }: LibraryTabsQuestionsProps<IQuestionTemplate>) {
-  const centralData = useCentralDataState();
+const centralData = useCentralDataState();
   
-  const isSearchResults = centralData.searchTerms.length > 0;
+const isSearchResults = centralData.searchTerms.length > 0;
 
-  // Library Questions
 const tabMap: { [key: number]: string } = {
   [LibraryTabEnum.PUBLIC]: 'Public',
-  [LibraryTabEnum.PRIVATE]: 'Private',
   [LibraryTabEnum.FAVORITES]: 'Favorites',
+  [LibraryTabEnum.PRIVATE]: 'Private',
 };
 
 const tabIconMap: { [key:number]: string } = {
@@ -78,25 +73,20 @@ const tabIconMap: { [key:number]: string } = {
   [LibraryTabEnum.FAVORITES]: tabFavoritesIcon,
 };
 
-  const tabIndexToEnum: { [key: number]: LibraryTabEnum } = {
-    0: LibraryTabEnum.PUBLIC,
-    1: LibraryTabEnum.PRIVATE,
-    2: LibraryTabEnum.FAVORITES,
-  };
+const tabIndexToEnum: { [key: number]: LibraryTabEnum } = isPublic
+  ? { 0: LibraryTabEnum.PUBLIC, 1: LibraryTabEnum.FAVORITES, }
+  : { 0: LibraryTabEnum.PRIVATE };
+
+const enumToTabIndex: { [key in LibraryTabEnum]?: number } = isPublic
+  ? {[LibraryTabEnum.PUBLIC]: 0,[LibraryTabEnum.FAVORITES]: 1 }
+  : { [LibraryTabEnum.PRIVATE]: 0 };
   
-  const enumToTabIndex: { [key in LibraryTabEnum]?: number } = {
-    [LibraryTabEnum.PUBLIC]: 0,
-    [LibraryTabEnum.PRIVATE]: 1,
-    [LibraryTabEnum.FAVORITES]: 2,
-  };
+const tabs: LibraryTabEnum[] = isPublic ? 
+  [LibraryTabEnum.PUBLIC, LibraryTabEnum.FAVORITES]
+  : [LibraryTabEnum.PRIVATE];
 
-  const tabs: LibraryTabEnum[] = [
-    LibraryTabEnum.PUBLIC,
-    LibraryTabEnum.PRIVATE,
-    LibraryTabEnum.FAVORITES,
-  ];
 
-  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBLIC);
+  const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(isPublic ? LibraryTabEnum.PUBLIC : LibraryTabEnum.PRIVATE);
   const [hasInitialized, setHasInitialized] = useState(false);  
   if (!hasInitialized) {
     fetchElements(openTab); 
@@ -104,17 +94,12 @@ const tabIconMap: { [key:number]: string } = {
   }
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-      const newTabEnum = tabIndexToEnum[newValue];
-      console.log("library enum", newTabEnum)
+      const newTabEnum = tabIndexToEnum[newValue as number];
       setOpenTab(newTabEnum);
       fetchElements(newTabEnum);
     };
-  
 
 const elements = getQuestionElements(openTab, isSearchResults, centralData);
-
-console.log("elements", elements);
-console.log("centralData: ", centralData);
 
 return (
   <TabContent>

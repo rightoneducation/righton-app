@@ -28,7 +28,6 @@ import {
   TDraftQuestionsList, 
   draftTemplate, 
   TPhaseTime, 
-  newGameTemplate, 
   gameTemplate,
   emptyQuestionTemplate } from '../lib/CreateGameModels';
 import ModalBackground from '../components/modal/ModalBackground';
@@ -36,15 +35,11 @@ import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
 import QuestionElements from '../components/game/QuestionGridItems';
 import LibraryTabsQuestions from '../components/librarytabs/LibraryTabsQuestions';
-import tabExploreQuestionsIcon from '../images/tabPublic.svg';
-import tabMyQuestionsIcon from '../images/tabMyQuestions.svg';
-import tabFavoritesIcon from '../images/tabFavorites.svg';
 import CCSSTabs from '../components/ccsstabs/CCSSTabs';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
 import CreateGameImageUploadModal from '../components/cards/creategamecard/CreateGameImageUpload';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
-import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { 
   updateGameTitle, 
   updateGameDescription, 
@@ -148,12 +143,22 @@ export default function CreateGame({
   };
 
   const handlePublicPrivateGameChange = (value: PublicPrivateType) => {
+    const isPublicPrivateMatch = draftQuestionsList.every((question) => question.publicPrivate === value);
+    if(!isPublicPrivateMatch) {
+      const newDraft = [ { ...draftTemplate, publicPrivate: value } ]
+      setDraftQuestionsList(newDraft);
+      setIconButtons([1]);
+      setSelectedQuestionIndex(0);
+      setDraftGame((prev) => ({ ...prev, publicPrivateGame: value, questionCount: newDraft.length }));
+      return;
+    }
     setDraftGame((prev) => ({ ...prev, publicPrivateGame: value, }));
+   setDraftQuestionsList((prev) => updatePublicPrivateAtIndex(prev, value));
   };
 
   const handleDiscardGame = () => {
     window.localStorage.setItem(StorageKey, '');
-    navigate('/questions');
+    navigate('/');
   };
 
   const handleGameImageUploadClick = () => {
@@ -219,7 +224,6 @@ export default function CreateGame({
           setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
           navigate('/');
       } else {
-        // set draft game error
         setDraftGame((prev) => ({ ...prev, isGameCardErrored: true, isCreatingTemplate: false }));
       }
     } catch (err) {
@@ -230,7 +234,7 @@ export default function CreateGame({
 
   /** CREATE QUESTION HANDLERS START */
   const handlePublicPrivateQuestionChange = (value: PublicPrivateType) => {
-    setDraftQuestionsList((prev) => updatePublicPrivateAtIndex(prev, value, selectedQuestionIndex));
+    setDraftQuestionsList((prev) => updatePublicPrivateAtIndex(prev, value));
   };
 
   const handleAIIsEnabled = () => {
@@ -379,9 +383,8 @@ export default function CreateGame({
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
-    console.log("Library Question: ", question);
    setDraftQuestionsList((prev) => {
-    const libraryQuestion = buildLibraryQuestionAtIndex(question);
+    const libraryQuestion = buildLibraryQuestionAtIndex(question, draftGame.publicPrivateGame);
     const { updatedList, addNew } = updateDraftListWithLibraryQuestion(
       prev,
       selectedQuestionIndex,
@@ -410,7 +413,7 @@ export default function CreateGame({
   };
 
   const handleAddMoreQuestions = () => {
-    setDraftQuestionsList((prev) => [...prev, draftTemplate]);
+    setDraftQuestionsList((prev) => [...prev, { ...draftTemplate, publicPrivate: draftGame.publicPrivateGame }]);
     setDraftGame((prev) => ({
       ...prev,
       questionCount: prev.questionCount + 1,
@@ -422,13 +425,6 @@ export default function CreateGame({
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
-
-    useEffect(() => {
-      console.log("Draft Game:", draftGame)
-      console.log("Questions List:", draftQuestionsList);
-      console.log("Selected Index:", selectedQuestionIndex);
-      console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
-    }, [draftQuestionsList, selectedQuestionIndex, draftGame]);
 
   return (
     <CreateGameMainContainer>
@@ -513,7 +509,7 @@ export default function CreateGame({
                 unmountOnExit
                 key={`Question--${index + 1}`}
               >
-                <Box>
+                <Box sx={{ width: draftQuestionItem.isLibraryViewOnly ? '100%' : 'auto' }}>
                   {draftQuestionItem.isLibraryViewOnly ? (
                     <ViewQuestionCards 
                     screenSize={screenSize}
@@ -536,10 +532,7 @@ export default function CreateGame({
                     highlightCard={draftQuestionItem.highlightCard}
                     isAIEnabled={draftQuestionItem.isAIEnabled}
                     isAIError={draftQuestionItem.isAIError}
-                    isPublic={
-                      draftQuestionItem.publicPrivate ===
-                      PublicPrivateType.PUBLIC
-                    }
+                    isPublic={draftQuestionItem.publicPrivate === PublicPrivateType.PUBLIC}
                     isMultipleChoice={draftQuestionItem.isMultipleChoice}
                     handleAnswerType={handleAnswerType}
                     handleDebouncedCorrectAnswerChange={
@@ -579,16 +572,14 @@ export default function CreateGame({
         >
           <Box sx={{ width: '100%' }}>
             <LibraryTabsQuestions
+              isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC}
               screenSize={screenSize}
               setIsTabsOpen={setIsTabsOpen}
-              getLabel={getLabel}
               handleChooseGrades={handleChooseGrades}
               handleSortChange={handleSortChange}
               handleSearchChange={handleSearchChange}
-              handlePublicPrivateChange={handlePublicPrivateQuestionChange}
               fetchElements={fetchElements}
               handleView={handleView}
-              loadMore={loadMore}
             />
           </Box>
         </Fade>

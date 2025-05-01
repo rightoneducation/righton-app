@@ -47,6 +47,7 @@ interface CreateQuestionCardBaseProps {
   isAIError: boolean;
   isPublic: boolean;
   isMultipleChoice: boolean;
+  isCreateGame?: boolean;
 }
 
 type ImagePlaceholderProps = {
@@ -106,6 +107,7 @@ export default function CreateQuestionCardBase({
   isCardErrored,
   isAIError,
   isPublic,
+  isCreateGame,
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const [title, setTitle] = React.useState<string>(draftQuestion.questionCard.title);
@@ -214,7 +216,7 @@ export default function CreateQuestionCardBase({
           </RadioGroup>
         </RadioContainerStyled>
           )}
-        { screenSize !== ScreenSize.SMALL && 
+        { screenSize !== ScreenSize.SMALL && !isCreateGame &&
             <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
               <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
             </Box>
@@ -288,9 +290,9 @@ export default function CreateQuestionCardBase({
             { isCardErrored &&
               <ErrorBox/>
             }
-              <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              {!isCreateGame && <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
                 <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
-              </Box>
+              </Box>}
           </>
         }
       </ContentContainerStyled>

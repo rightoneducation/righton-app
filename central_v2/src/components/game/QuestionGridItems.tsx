@@ -123,6 +123,7 @@ export default function QuestionElements({
           style={{ width: '100%' }}
         >
           <CreateQuestionCardBase
+          isCreateGame
             screenSize={screenSize}
             draftQuestion={draftQuestion}
             handleTitleChange={handleDebouncedTitleChange}
