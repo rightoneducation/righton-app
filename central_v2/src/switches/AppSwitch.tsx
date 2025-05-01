@@ -62,16 +62,11 @@ function AppSwitch({
     })
     setIsLibraryInit(true);  
   };
-  // const centralData = useCentralDataState();
-  // console.log("Central data inside appswitch: ", centralData.userProfile)
-
-  // somewhere here have that new auth link and set status in their for login and signup.
-  // ocne status is set this page will re render and authguard will decide what page to render wheter login or signup.
   
   switch (currentScreen) {
     case ScreenType.QUESTIONS: {
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <ExploreQuestions 
             screenSize={screenSize} 
             fetchElements={fetchElements}
@@ -87,7 +82,7 @@ function AppSwitch({
     }
     case ScreenType.LIBRARY: {
       screenComponent = (
-        <AuthGuard isValidatingUser={isValidatingUser}>
+        <AuthGuard handleLogOut={handleLogOut} isValidatingUser={isValidatingUser}>
           <MyLibrary 
             isValidatingUser={isValidatingUser}
             gameQuestion={gameQuestion}
@@ -110,7 +105,7 @@ function AppSwitch({
     case ScreenType.AUTH: 
     case ScreenType.NEXTSTEP: {
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
         </AuthGuard>
       );
@@ -118,8 +113,8 @@ function AppSwitch({
     }
     case ScreenType.LOGIN: {
       screenComponent = (
-        <AuthGuard>
-          <Login />
+        <AuthGuard handleLogOut={handleLogOut}>
+          <Login handleLogOut={handleLogOut}/>
         </AuthGuard>
       );
       break;
@@ -150,7 +145,7 @@ function AppSwitch({
     }
     case ScreenType.VIEWGAME: {
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <ViewGame screenSize={screenSize} fetchElement={fetchElement} />
         </AuthGuard>
       );
@@ -165,7 +160,7 @@ function AppSwitch({
     case ScreenType.GAMES:
     default:{
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <ExploreGames 
             screenSize={screenSize} 
             setIsTabsOpen={setIsTabsOpen}

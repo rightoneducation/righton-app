@@ -142,11 +142,11 @@ const NoAccountText = styled(Typography)(({ theme }) => ({
 }));
 
 interface LoginProps{
-  handleForgotPasswordClick: () => void
-
+  handleForgotPasswordClick: () => void;
+  handleLogOut: () => void;
 }
 
-function Login({handleForgotPasswordClick} : LoginProps) {
+function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
   const theme = useTheme();
   const navigate = useNavigate(); // Initialize useNavigate
   const [userName, setUserName] = useState('');
@@ -169,7 +169,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
       setIsLoggingIn(true);
       await apiClients.centralDataManager?.loginUserAndRetrieveUserProfile(userName, password);
       setIsLoggingIn(false);
-      navigate('/'); // Navigate to the Signup page
+      navigate('/');
     } catch (error) {
       setIsModalOpen(true);
       setIsLoggingIn(false);
@@ -211,7 +211,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   
   return (
     <SignUpMainContainer>
-      <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleLogOut={handleLogOut}/>
       <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
       <InnerBodyContainer>
         <UpperLogin>
@@ -257,7 +257,11 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   );
 }
 
-export default function LoginSwitch() {
+interface LoginSwitchProps {
+  handleLogOut: () => void;
+}
+
+export default function LoginSwitch({handleLogOut}: LoginSwitchProps) {
   const [isPasswordForgot, setisPasswordForgot] = useState(false); // Track submission state
 
   const handleForgotPasswordClick = () => {
@@ -267,7 +271,7 @@ export default function LoginSwitch() {
   return isPasswordForgot? (
     <ResetPassword />
   ) : (
-    <Login handleForgotPasswordClick={handleForgotPasswordClick}/>
+    <Login handleForgotPasswordClick={handleForgotPasswordClick} handleLogOut={handleLogOut}/>
   )
 
 }

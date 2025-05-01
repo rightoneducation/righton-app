@@ -22,6 +22,7 @@ type User @model
   questionsMade: Int
   frontIdPath: String
   backIdPath: String
+  profilePicPath: String
   favoriteGameTemplateIds: AWSJSON
   favoriteQuestionTemplateIds: AWSJSON
 }

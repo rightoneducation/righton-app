@@ -515,18 +515,16 @@ export default function useCentralDataManager({
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
   const validateUser = async () => {
-    setIsValidatingUser(true);
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     const status = await apiClients.auth.verifyAuth();
     if (status) {
-      const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
-
+      const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+      const currentSession = await apiClients.auth.getCurrentSession();
+      const cognitoId = currentSession?.userSub;
       if (localProfile) {
-        const currentSession = await apiClients.auth.getCurrentSession();
-        const cognitoId = currentSession?.userSub;
         if (!isUserProfileComplete(localProfile) || cognitoId !== localProfile.cognitoId) {
-          const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
-          centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
-          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
+          apiClients.centralDataManager?.clearLocalUserProfile();
+          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
           setIsValidatingUser(false);
           return;
         }
@@ -535,6 +533,9 @@ export default function useCentralDataManager({
         setIsValidatingUser(false);
         return;
       }
+      // case for google oauth sign in, cognito present, but no local profile
+      const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
       setIsValidatingUser(false);
       return;
@@ -546,13 +547,13 @@ export default function useCentralDataManager({
 
   const handleLogOut = () => {
     apiClients.centralDataManager?.signOut();
-    validateUser();
+    apiClients.centralDataManager?.clearLocalUserProfile();
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   }
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     validateUser();
   }, []); // eslint-disable-line
 
