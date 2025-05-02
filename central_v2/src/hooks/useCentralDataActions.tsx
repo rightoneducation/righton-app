@@ -519,6 +519,7 @@ export default function useCentralDataManager({
     const status = await apiClients.auth.verifyAuth();
     if (status) {
       const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
+      console.log('localProfile', localProfile);
       const currentSession = await apiClients.auth.getCurrentSession();
       const cognitoId = currentSession?.userSub;
       if (localProfile) {

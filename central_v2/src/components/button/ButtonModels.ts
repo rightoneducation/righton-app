@@ -1,4 +1,5 @@
 import login from '../../images/buttonIconLogin.svg';
+import loginheader from '../../images/buttonIconLoginHeader.svg';
 import signup from '../../images/buttonIconSignup.svg';
 import view from '../../images/buttonIconView.svg';
 import launch from '../../images/buttonIconLaunch.svg';
@@ -16,6 +17,7 @@ import bank from '../../images/buttonIconBank.svg';
 
 export enum ButtonType {
   LOGIN = 'login',
+  LOGINHEADER = 'loginheader',
   SIGNUP = 'signup',
   VIEW = 'view',
   LAUNCH = 'launch',
@@ -46,6 +48,7 @@ export enum ButtonType {
   QUESTIONBANK = 'questionbank',
   BACK = 'back',
   EDITPICTURE = 'editpicture',
+  EDITPROFILEPICTURE = 'editprofilepicture',
   EDITINFORMATION = 'editinformation',
   CHANGEPASSWORD = 'changepassword',
   CREATE = 'create',
@@ -63,6 +66,7 @@ export enum ButtonColor {
   RED,
   BLUE,
   LIGHTBLUE,
+  WHITE,
   NULL
 }
 
@@ -78,14 +82,19 @@ type ButtonContentMapProps = {
 
 // textKey data is duplicated to improve clarity of object and centralize all button content properties
 export const buttonContentMap: ButtonContentMapProps = {
+  [ButtonType.LOGINHEADER]: {
+    icon: loginheader,
+    textKey: ButtonType.LOGIN,
+    color: ButtonColor.WHITE,
+  },
   [ButtonType.LOGIN]: {
     icon: login,
     textKey: ButtonType.LOGIN,
-    color: ButtonColor.RED,
   },
   [ButtonType.SIGNUP]: {
     icon: signup,
     textKey: ButtonType.SIGNUP,
+    color: ButtonColor.RED,
   },
   [ButtonType.VIEW]: {
     icon: view,
@@ -209,6 +218,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.EDITPICTURE]: {
     textKey: ButtonType.EDITPICTURE,
+  },
+  [ButtonType.EDITPROFILEPICTURE]: {
+    textKey: ButtonType.EDITPICTURE,
+    color: ButtonColor.NULL,
   },
   [ButtonType.EDITINFORMATION]: {
     textKey: ButtonType.EDITINFORMATION,

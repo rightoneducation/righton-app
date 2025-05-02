@@ -15,6 +15,8 @@ const getBackgroundColor = (theme: any, buttonColor: ButtonColor) => {
       return 'transparent';
     case ButtonColor.LIGHTBLUE:
       return `${theme.palette.primary.buttonDraftDefault}`;
+    case ButtonColor.WHITE:
+      return `#FFF`;
     case ButtonColor.BLUE:
     default:
       return `${theme.palette.primary.buttonPrimaryDefault}`;
@@ -26,10 +28,12 @@ const getHoverColor = (theme: any, buttonColor: ButtonColor, buttonType: ButtonT
     case ButtonColor.RED:
       return `${theme.palette.primary.buttonActionHover}`;
     case ButtonColor.NULL:
-      if (buttonType === ButtonType.LOGOUT) {
+      if (buttonType === ButtonType.LOGOUT || ButtonType.EDITPROFILEPICTURE) {
         return `rgba(255, 255, 255, 0.25)`;
       }
       return 'transparent';
+    case ButtonColor.WHITE:
+      return `rgba(255, 255, 255,0.80)`;
     case ButtonColor.LIGHTBLUE:
       return `${theme.palette.primary.buttonDraftHover}`;
     case ButtonColor.BLUE:
@@ -46,6 +50,8 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
       return 'transparent';
     case ButtonColor.LIGHTBLUE:
       return `${theme.palette.primary.buttonDraftDisable}`;
+    case ButtonColor.WHITE:
+        return `rgba(255, 255, 255,0.50)`;
     case ButtonColor.BLUE:
     default:
       return `${theme.palette.primary.buttonPrimaryDisable}`;
@@ -60,7 +66,7 @@ export const ButtonStyled = styled(Button, {
   padding: isOnQuestionTab ? '8px' : 0,
   borderRadius: `${theme.sizing.xSmPadding}px`,
   textTransform: 'none',
-  boxShadow: (isOnQuestionTab || buttonType === ButtonType.LOGOUT) ? 'none' : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
+  boxShadow: (isOnQuestionTab || buttonType === ButtonType.LOGOUT || ButtonType.EDITPROFILEPICTURE) ? 'none' : '0px 5px 22px 0px rgba(71, 217, 255, 0.15)',
   borderStyle: buttonColor === ButtonColor.NULL ? 'solid' : 'none',
   borderWidth: buttonColor === ButtonColor.NULL ? '2px' : '0px',
   borderColor: buttonColor === ButtonColor.NULL ? (buttonType === ButtonType.CHANGEIMAGE ? `${theme.palette.primary.buttonPrimaryDefault}` : `#FFF` ) : 'none', // eslint-disable-line no-nested-ternary
@@ -102,7 +108,7 @@ export const ButtonTypography = styled(Typography, {
   fontWeight: '600',
   textTransform: 'none',
   padding: 0,
-  color: buttonType === ButtonType.CHANGEIMAGE ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
   whiteSpace: 'nowrap',
 }));
 

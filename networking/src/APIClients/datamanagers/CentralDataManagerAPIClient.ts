@@ -215,7 +215,11 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       ]);
       const dynamoId = uuidv4();
       createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+
+      const randomIndex = Math.floor(Math.random() * 5) + 1;
+      
+      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg`};
+      
       await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
@@ -248,10 +252,10 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       ]);
       const dynamoId = uuidv4();
       
-  
-      
-      createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId ?? '', dynamoId: dynamoId };
-      updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      const randomIndex = Math.floor(Math.random() * 5) + 1;
+
+      updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg` };
       await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
@@ -260,6 +264,44 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
     } catch (error: any) {
       this.authAPIClient.awsUserCleaner(updatedUser);
+      throw new Error (JSON.stringify(error));
+    }
+  };
+
+  public userProfileImageUpdate = async (user: IUserProfile, newProfilePic: File | null, frontImage?: File | null,
+    backImage?: File | null
+  ) => {
+    console.log("Inside userProfileImageUpdate!!", user)
+    let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
+    let updatedUser = JSON.parse(JSON.stringify(createUserInput));
+    
+    if (frontImage && backImage) {
+      try {
+        const upadtingImages = await Promise.all([
+          this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
+          this.authAPIClient.awsUploadImagePrivate(backImage) as any
+        ]);
+        updatedUser = {...updatedUser, frontIdPath: upadtingImages[0].path, backIdPath: upadtingImages[1].path}
+        console.log("Going to update images with these: ", upadtingImages)
+      }
+      catch (error: any) {
+        throw new Error (JSON.stringify(error));
+      }
+    }
+
+    try {
+      if(newProfilePic){
+        const images = await Promise.all([
+          this.authAPIClient.awsUploadImagePrivate(newProfilePic) as any,
+        ]);
+        updatedUser = { ...updatedUser, profilePicPath: images[0].path};
+        console.log("After returning from s3!!", updatedUser)
+      }
+
+      await this.userAPIClient.updateUser(updatedUser);
+      this.setLocalUserProfile(updatedUser);
+      return {updatedUser};
+    } catch (error: any) {
       throw new Error (JSON.stringify(error));
     }
   };

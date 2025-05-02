@@ -18,6 +18,7 @@ export class UserParser {
       questionsMade: user.questionsMade ?? 0,
       frontIdPath: user.frontIdPath ?? '',
       backIdPath: user.backIdPath ?? '',
+      profilePicPath: user.profilePicPath ?? '',
       favoriteGameTemplateIds: user.favoriteGameTemplateIds ? JSON.parse(user.favoriteGameTemplateIds) : [],
       favoriteQuestionTemplateIds: user.favoriteQuestionTemplateIds ? JSON.parse(user.favoriteQuestionTemplateIds) : []
     }
@@ -32,6 +33,7 @@ export class UserParser {
       dynamoId: user.dynamoId,
       frontIdPath: user.frontIdPath,
       backIdPath: user.backIdPath,
+      profilePicPath: user.profilePicPath,
       title: user.title ?? '',
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
