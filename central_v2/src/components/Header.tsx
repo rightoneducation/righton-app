@@ -172,7 +172,6 @@ export default function Header({
   const centralData = useCentralDataState();
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const profilePicPath = centralData.userProfile?.profilePicPath;
-  console.log('profilePicPath', profilePicPath);
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -222,10 +221,14 @@ export default function Header({
       <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%',}} key="lgscreen">
         {createMenu}
         <CentralButton buttonType={ButtonType.LOGOUT} isEnabled onClick={handleLogOut}/>
-        <img src={`${CloudFrontDistributionUrl}${profilePicPath}`} alt="Profile" style={{ marginLeft: '24px', height: '62px', width: '62px', objectFit: 'cover', border: '4px #FFF solid', borderRadius: '31px', boxSizing: 'border-box' }} />
+        <Box onClick={() => navigate('/userprofile')} style={{cursor: 'pointer'}}>
+          <img src={`${CloudFrontDistributionUrl}${profilePicPath}`} alt="Profile" style={{ marginLeft: '24px', height: '62px', width: '62px', objectFit: 'cover', border: '4px #FFF solid', borderRadius: '31px', boxSizing: 'border-box' }} />
+        </Box>
       </Box>
     ) : (
-      <img src={`${CloudFrontDistributionUrl}${profilePicPath}`} alt="Profile"  style={{height: '62px', width: '62px', objectFit: 'cover', border: '4px #FFF solid', borderRadius: '31px', boxSizing: 'border-box' }} />
+      <Box onClick={() => navigate('/userprofile')} style={{cursor: 'pointer'}}>
+        <img src={`${CloudFrontDistributionUrl}${profilePicPath}`} alt="Profile"  style={{height: '62px', width: '62px', objectFit: 'cover', border: '4px #FFF solid', borderRadius: '31px', boxSizing: 'border-box' }} />
+      </Box>
     )
   ]
 
