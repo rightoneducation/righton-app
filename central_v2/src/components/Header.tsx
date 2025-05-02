@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, Fade, IconButton, Paper } from '@mui/material';
-import rightonlogo from '../images/rightonlogo.svg';
+import rightonlogo from '../images/rightOnLogoHeader.svg';
 import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
 import qmark from '../images/qmark.svg';
@@ -49,7 +49,7 @@ const HeaderContainer = styled(Box, {
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
-    padding: `${theme.sizing.smPadding}px ${theme.sizing.xLgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.xLgPadding}px`,
+    padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
     boxSizing: 'border-box',
     position: 'relative',
     backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
