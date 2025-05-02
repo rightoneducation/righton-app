@@ -54,7 +54,9 @@ export enum ButtonType {
   SIGNOUT = 'signout',
   TEST = 'test',
   RETRY = 'retry',
-  CANCEL = 'cancel'
+  CANCEL = 'cancel',
+  YES = 'yes',
+  NO = 'no',
 }
 
 export enum ButtonColor {
@@ -241,6 +243,13 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CANCEL]: {
     textKey: ButtonType.CANCEL,
+    color: ButtonColor.RED,
+  },
+  [ButtonType.YES]: {
+    textKey: ButtonType.YES,
+  },
+  [ButtonType.NO]: {
+    textKey: ButtonType.NO,
     color: ButtonColor.RED,
   },
 };

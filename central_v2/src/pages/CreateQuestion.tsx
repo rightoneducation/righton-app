@@ -28,6 +28,7 @@ import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackgro
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 import ModalBackground from '../components/modal/ModalBackground';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
+import DiscardModal from '../components/modal/DiscardModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
@@ -99,6 +100,7 @@ export default function CreateQuestion({
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
+  const [isDiscardModalOpen, setIsDiscardModalOpen] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
@@ -374,6 +376,16 @@ export default function CreateQuestion({
   const handleBackToExplore = () => {
     setIsCCSSVisible(false);
   };
+
+  const handleDiscardClick = (value: boolean) => {
+    if (value){
+      setIsDiscardModalOpen(false);
+      window.localStorage.setItem(StorageKey, '');
+      navigate('/');
+      return;
+    }
+    setIsDiscardModalOpen(false);
+  }
   
   const handleSaveQuestion = async () => {
     try {
@@ -439,8 +451,7 @@ export default function CreateQuestion({
   }
 
   const handleDiscardQuestion = () => {
-    window.localStorage.setItem(StorageKey, '');
-    navigate('/questions');
+    setIsDiscardModalOpen(true);
   }
 
   const handleAIError = () => {
@@ -480,11 +491,16 @@ export default function CreateQuestion({
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
-       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible} handleCloseModal={handleCloseModal}/>
+       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible || isDiscardModalOpen} handleCloseModal={handleCloseModal}/>
        <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={isCCSSVisible}
           handleCCSSSubmit={handleCCSSSubmit}
+        />
+        <DiscardModal 
+          isModalOpen={isDiscardModalOpen}
+          screenSize={screenSize}
+          handleDiscardClick={handleDiscardClick}
         />
        <ImageUploadModal 
           draftQuestion={draftQuestion} 
