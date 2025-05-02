@@ -289,11 +289,12 @@ export default function CreateGameCardBase({
             variant="outlined"
             sx={{
               '& .MuiInputBase-root': {
-                height: '119px',
+                height: screenSize === ScreenSize.SMALL ? '138px' : '119px',
                 fontFamily: 'Rubik',
+                padding: '12px 10px'
               },
               '& .MuiOutlinedInput-input': {
-                paddingBottom: 2,
+                paddingBottom: screenSize === ScreenSize.SMALL ? 2:1,
               },
             }}
             multiline
@@ -307,8 +308,8 @@ export default function CreateGameCardBase({
                 <InputAdornment
                   position="start"
                   sx={{
-                    alignSelf: 'flex-start',
-                    mt: '10px',
+                    alignSelf: "flex-start",
+                    mt: screenSize === ScreenSize.SMALL ? "12px" : "7px",
                   }}
                 >
                   <ErrorIcon src={errorIcon} alt="error icon" />
