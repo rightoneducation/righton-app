@@ -156,6 +156,8 @@ export default function GoogleSignup({
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
     const centralData = useCentralDataState();
     const centralDataDispatch = useCentralDataDispatch();
+    console.log(apiClients.auth.getCurrentSession());
+    console.log(apiClients.auth.getFirstAndLastName());
 
     // Local temporary states
     const [title, setTitle] = useState('Title...') 
@@ -169,9 +171,8 @@ export default function GoogleSignup({
       userName: '',
       email: '',
       password: '',
-    }
-    console.log('userProfileInit', userProfileInit);
-
+  }
+  
     const handleGetStarted = async () => {
       try {
         if(frontImage && backImage) {
