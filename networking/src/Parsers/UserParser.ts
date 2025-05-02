@@ -32,6 +32,7 @@ export class UserParser {
       dynamoId: user.dynamoId,
       frontIdPath: user.frontIdPath,
       backIdPath: user.backIdPath,
+      profilePicPath: user.profilePicPath,
       title: user.title ?? '',
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',

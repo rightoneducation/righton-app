@@ -269,12 +269,23 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     }
   };
 
-  public userProfileImageUpdate = async (user: IUserProfile, newProfilePic: File | null, frontImage?: File | null,
+  public userProfileImageUpdate = async (user: IUserProfile, oldUser: IUserProfile, newProfilePic: File | null, frontImage?: File | null,
     backImage?: File | null
   ) => {
-    console.log("Inside userProfileImageUpdate!!", user)
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
     let updatedUser = JSON.parse(JSON.stringify(createUserInput));
+
+    let oldUserInput = UserParser.parseAWSUserfromAuthUser(oldUser);
+
+    if(updatedUser.userName != oldUserInput.userName){
+      try {
+        console.log("Updating userName in Cognito!!")
+        await this.authAPIClient.updateCognitoUsername(updatedUser.userName)
+      }
+      catch (error: any) {
+        throw new Error (JSON.stringify(error));
+      }
+    }
     
     if (frontImage && backImage) {
       try {
@@ -283,28 +294,45 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
           this.authAPIClient.awsUploadImagePrivate(backImage) as any
         ]);
         updatedUser = {...updatedUser, frontIdPath: upadtingImages[0].path, backIdPath: upadtingImages[1].path}
-        console.log("Going to update images with these: ", upadtingImages)
+        console.log("Uploaded front image and back Image: ", upadtingImages)
       }
       catch (error: any) {
         throw new Error (JSON.stringify(error));
       }
     }
-
-    try {
-      if(newProfilePic){
-        const images = await Promise.all([
-          this.authAPIClient.awsUploadImagePrivate(newProfilePic) as any,
-        ]);
-        updatedUser = { ...updatedUser, profilePicPath: images[0].path};
-        console.log("After returning from s3!!", updatedUser)
+    if(frontImage || backImage){
+      if (frontImage) {
+        try {
+          const uploadedFront = await this.authAPIClient.awsUploadImagePrivate(frontImage) as any;
+          updatedUser = { ...updatedUser, frontIdPath: uploadedFront.path };
+          console.log("Uploaded front image:", uploadedFront);
+        } catch (error: any) {
+          throw new Error(`Front image upload failed: ${JSON.stringify(error)}`);
+        }
       }
-
-      await this.userAPIClient.updateUser(updatedUser);
-      this.setLocalUserProfile(updatedUser);
-      return {updatedUser};
-    } catch (error: any) {
-      throw new Error (JSON.stringify(error));
+      if (backImage) {
+        try {
+          const uploadedBack = await this.authAPIClient.awsUploadImagePrivate(backImage) as any;
+          updatedUser = { ...updatedUser, backIdPath: uploadedBack.path };
+          console.log("Uploaded back image:", uploadedBack);
+        } catch (error: any) {
+          throw new Error(`Back image upload failed: ${JSON.stringify(error)}`);
+        }
+      }
     }
+
+    if (newProfilePic) {
+      try {
+        const uploadedImage = await this.authAPIClient.awsUploadImagePrivate(newProfilePic) as any;
+        updatedUser = { ...updatedUser, profilePicPath: uploadedImage.path };
+      } catch (error: any) {
+        throw new Error(`Profile image upload failed: ${JSON.stringify(error)}`);
+      }
+    }
+    console.log("FINALIZED UPDATEDUSER: ", updatedUser)
+    await this.userAPIClient.updateUser(updatedUser);
+    this.setLocalUserProfile(updatedUser);
+    return { updatedUser };
   };
 
   public signOut = async () => {

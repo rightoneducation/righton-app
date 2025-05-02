@@ -16,6 +16,7 @@ export interface IAuthAPIClient {
   getCurrentUserName(): Promise<string>;
   getFirstAndLastName(): Promise<{firstName: string, lastName: string}>;
   getCurrentSession(): Promise<AuthSession>;
+  updateCognitoUsername(newUsername: string): Promise<void>;
   getUserNickname(): Promise<string | null>;
   awsUserCleaner(userProfile: IUserProfile): Promise<void>;
   awsSignUp(username: string, email: string, password: string): void;

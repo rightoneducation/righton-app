@@ -43,8 +43,10 @@ export default function UserProfile({
     screenSize
 }: UserProfileProps) {
   const theme = useTheme();
-  const buttonEditInformation = ButtonType.EDITINFORMATION;
-  const [isEditInformation, setIsEditInformation] = useState(true);
+  const [isEditInformationHighlight, setEditInformationHighlight] = useState(true);
+  const [isSaveInformationHighlight, setSaveInformationHighlight] = useState(false);
+
+  const [isEditInformation, setIsEditInformation] = useState(false);
 
   const buttonChangePassword = ButtonType.CHANGEPASSWORD;
   const [isChangePassword , setIsChangePassword ] = useState(true);
@@ -54,11 +56,6 @@ export default function UserProfile({
   const [draftUserProfile, setDraftUserProfile] = useState<IUserProfile>(centralData.userProfile);  
   const [newProfilePic, setNewProfilePic] = useState<File | null>(null);
 
-  console.log("Printing central on intial render: ", centralData.userProfile)
-  console.log("Printing draft on intial render: ", draftUserProfile)
-
-
-
   const buttonTypeUpload = ButtonType.UPLOAD;
   const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
   const [isUploadBackEnabled, setIsUploadBackEnabled] = useState(true);
@@ -67,19 +64,10 @@ export default function UserProfile({
   const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
-  
-
-  // Information user can edit
-//   const [title, setTitle] = useState(centralData.userProfile.title) 
-//   const [firstName, setFirstName] = useState(centralData.userProfile.firstName) 
-//   const [lastName, setLastName] = useState(centralData.userProfile.lastName) 
-//   const [email, setEmail] = useState(centralData.userProfile.email) 
 
   const [frontImage, setFrontImage] = useState<File | null>(null); 
-
   const [backImage, setBackImage] = useState<File | null>(null); 
-  // TODO: remove this useEffect and set random default pic when user signs up
-  // this is just for demo purposes
+
   useEffect(() => {
     if (centralData.userProfile) {
         setDraftUserProfile(centralData.userProfile)
@@ -91,6 +79,12 @@ export default function UserProfile({
   const handleEditPicture = () => {
     setIsModalOpen(true);
   };
+
+  const handleEditInformation = () => {
+    setIsEditInformation(true);
+    setEditInformationHighlight(false)
+    setSaveInformationHighlight(true)
+  }
 
   const handleImageUploadClick = () => {
     setIsImageUploadVisible(true);
@@ -123,38 +117,14 @@ export default function UserProfile({
 
 
     const handleGetStarted = async () => {
+      setEditInformationHighlight(true)
+      setSaveInformationHighlight(false)
       try {
-        console.log("Inside HandleGetStarted. Printing Draft: ", draftUserProfile)
         const updatedUser = { ...draftUserProfile };
-
-        console.log("Title: ", draftUserProfile.title)
-        console.log("firstName: ", draftUserProfile.firstName)
-        console.log("lastName: ", draftUserProfile.lastName)
-
-
-        if (draftUserProfile.title !== centralData.userProfile.title) {
-          updatedUser.title = draftUserProfile.title;
-        }
-        
-        if (draftUserProfile.firstName !== centralData.userProfile.firstName) {
-          updatedUser.firstName = draftUserProfile.firstName;
-        }
-        
-        if (draftUserProfile.lastName !== centralData.userProfile.lastName) {
-          updatedUser.lastName = draftUserProfile.lastName;
-        }
-        
-        if (draftUserProfile.email !== centralData.userProfile.email) {
-          updatedUser.email = draftUserProfile.email;
-        }
-
-        const response = await apiClients.centralDataManager?.userProfileImageUpdate(updatedUser, newProfilePic, frontImage ?? null, backImage ?? null);
+        const response = await apiClients.centralDataManager?.userProfileImageUpdate(updatedUser, centralData.userProfile, newProfilePic, frontImage ?? null, backImage ?? null);
         if (response?.updatedUser){
-            console.log("Inside HandleGetStarted. Going to central dispatch updatedUSER!!!: ", response.updatedUser)
             centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
-            } 
-        
-
+        } 
       } catch (error) {
         console.error(error);
       }
@@ -300,14 +270,21 @@ export default function UserProfile({
                     )}
                     <UsernameTextContainer>
                         <SubHeadingText>Username</SubHeadingText>
-                        <BodyText>( Note: username cannot be edited )</BodyText>
+                        <BodyText>( Note: email cannot be edited )</BodyText>
                     </UsernameTextContainer>
                     <UsernameInputContainer>
                         <img src={Adpic} alt="Adpic" style={{ width: '26px' }} />
                         <TextContainerStyled
                             variant="outlined"
                             placeholder="Username..."
-                            value={centralData.userProfile.userName}
+                            value={draftUserProfile.userName}
+                            onChange={(event) => 
+                                setDraftUserProfile({
+                                    ...draftUserProfile, 
+                                    userName: event.target.value  
+                                  })
+                              }
+                            disabled={!isEditInformation}
                         />
                     </UsernameInputContainer>
                     <SubHeadingText>Information</SubHeadingText>
@@ -321,7 +298,8 @@ export default function UserProfile({
                                       ...draftUserProfile, 
                                       title: event.target.value  
                                     })
-                                  }  
+                                  }
+                                disabled={!isEditInformation}  
                             >
                                 <MenuItem value="Title...">Title...</MenuItem>
                                 <MenuItem value="Mr.">Mr.</MenuItem>
@@ -338,7 +316,8 @@ export default function UserProfile({
                                         ...draftUserProfile, 
                                         firstName: event.target.value  
                                       })
-                                  }                        
+                                  }
+                                disabled={!isEditInformation}                        
                             />
                             <TextContainerStyled
                                 variant="outlined"
@@ -350,18 +329,14 @@ export default function UserProfile({
                                         lastName: event.target.value  
                                       })
                                   }
+                                disabled={!isEditInformation}
                             />
                         </UserInfoItemContainer>
                         <TextContainerStyled
                             variant="outlined"
                             placeholder="School Email..."
                             value={draftUserProfile.email}
-                            onChange={(event) => 
-                                setDraftUserProfile({
-                                    ...draftUserProfile, 
-                                    email: event.target.value  
-                                  })
-                              }
+                            disabled
                         />
                         <SubHeadingTextLight>Teacher ID Image</SubHeadingTextLight>
                         <UploadImagesContainer>
@@ -385,6 +360,7 @@ export default function UserProfile({
                                         setFrontImage(e.target.files[0]); // Store the selected image
                                     }
                                     }}
+                                    disabled={!isEditInformation}
                                 />
                                 {renderFrontImageSection()}    
                             </ImageContainer>    
@@ -408,12 +384,13 @@ export default function UserProfile({
                                             setBackImage(e.target.files[0]); // Store the selected image
                                         }
                                     }}
+                                    disabled={!isEditInformation}
                                 />
                                 {renderBackImageSection()}
                             </ImageContainer>
                         </UploadImagesContainer>
                     </UserInfoContainer>
-                   <CentralButton buttonType={ButtonType.EDITINFORMATION} isEnabled smallScreenOverride/>
+                   <CentralButton buttonType={ButtonType.EDITINFORMATION} isEnabled={isEditInformationHighlight} smallScreenOverride onClick={handleEditInformation}/>
                     <SubHeadingText>
                         Password
                     </SubHeadingText>
@@ -422,7 +399,7 @@ export default function UserProfile({
                         placeholder="Password..."
                         value="********"
                     />
-                    <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleGetStarted}/>
+                    <CentralButton buttonType={ButtonType.SAVE} isEnabled={isSaveInformationHighlight} smallScreenOverride onClick={handleGetStarted}/>
                 </UserProfileGridItem>
                 <Grid  
                     sm
