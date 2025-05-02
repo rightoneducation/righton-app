@@ -25,6 +25,7 @@ import {
   StorageKey,
   TemplateType,
 } from '../lib/CentralModels';
+import DiscardModal from '../components/modal/DiscardModal';
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
@@ -239,6 +240,7 @@ export default function CreateGame({
   const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
+  const [isDiscardModalOpen, setIsDiscardModalOpen] = useState<boolean>(false);
   const [saveQuestionError, setSaveQuestionError] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
@@ -349,9 +351,18 @@ export default function CreateGame({
   };
 
   const handleDiscardGame = () => {
-    window.localStorage.setItem(StorageKey, '');
-    navigate('/questions');
+    setIsDiscardModalOpen(true);
   };
+
+  const handleDiscardClick = (value: boolean) => {
+    if (value){
+      setIsDiscardModalOpen(false);
+      window.localStorage.setItem(StorageKey, '');
+      navigate('/');
+      return;
+    }
+    setIsDiscardModalOpen(false);
+  }
 
   const handleGameImageUploadClick = () => {
     setDraftGame((prev) => ({
@@ -823,6 +834,7 @@ export default function CreateGame({
   };
 
   const handleCloseQuestionModal = () => {
+    setIsDiscardModalOpen(false);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
@@ -1266,10 +1278,14 @@ export default function CreateGame({
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
-        isModalOpen={openModal}
+        isModalOpen={openModal || isDiscardModalOpen}
         handleCloseModal={handleCloseQuestionModal}
       />
-
+      <DiscardModal 
+          isModalOpen={isDiscardModalOpen}
+          screenSize={screenSize}
+          handleDiscardClick={handleDiscardClick}
+        />
       <CreatingTemplateModal
         isModalOpen={draftGame.isCreatingTemplate}
         templateType={TemplateType.GAME}

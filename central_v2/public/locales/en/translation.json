@@ -39,7 +39,9 @@
     "signout": "Debug Sign Out",
     "test": "Test",
     "cancel": "Cancel",
-    "retry": "Retry"
+    "retry": "Retry",
+    "yes": "Yes",
+    "no": "No"
   },
   "imageButton": {
     "imageupload": "Upload Image",
