@@ -181,7 +181,7 @@ export default function CreateGameCardBase({
         maxWidth: '672px',
         padding: screenSize === ScreenSize.LARGE ? '28px' : '24px',
         borderRadius: '8px',
-        boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)",
+         boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)",
       }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>
@@ -289,7 +289,7 @@ export default function CreateGameCardBase({
             variant="outlined"
             sx={{
               '& .MuiInputBase-root': {
-                height: '138px',
+                height: '119px',
                 fontFamily: 'Rubik',
               },
               '& .MuiOutlinedInput-input': {
@@ -329,7 +329,7 @@ export default function CreateGameCardBase({
             height:
               screenSize === ScreenSize.LARGE ||
               screenSize === ScreenSize.MEDIUM
-                ? '204px'
+                ? '185px'
                 : '100%',
           }}
         >
@@ -343,7 +343,7 @@ export default function CreateGameCardBase({
                 height:
                   screenSize === ScreenSize.LARGE ||
                   screenSize === ScreenSize.MEDIUM
-                    ? '204px'
+                    ? '185px'
                     : '202px',
               }}
             >

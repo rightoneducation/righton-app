@@ -439,6 +439,14 @@ export default function CreateGame({
     navigate('/questions');
   };
 
+  useEffect(() => {
+    console.log("Can Create Game: ", (gameFormIsValid && allDQAreValid))
+    console.log("Draft Game:", draftGame);
+    console.log("Questions List:", draftQuestionsList);
+    console.log("Selected Index:", selectedQuestionIndex);
+    console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
+  }, [draftQuestionsList, selectedQuestionIndex, draftGame, gameFormIsValid, allDQAreValid]);
+
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
