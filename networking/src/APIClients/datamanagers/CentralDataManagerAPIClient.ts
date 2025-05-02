@@ -185,7 +185,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
           cognitoId: currentCognitoUser.userId,
           ...currentDynamoDBUser
         };
-      this.setLocalUserProfile(userProfile);
+      this.setLocalUserProfile(userProfile); 
       this.authAPIClient.isUserAuth = true;
      }
       return userProfile;

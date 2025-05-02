@@ -167,7 +167,9 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
   const handleLoginClick = async () => {
     try {
       setIsLoggingIn(true);
-      await apiClients.centralDataManager?.loginUserAndRetrieveUserProfile(userName, password);
+      const localProfile = await apiClients.centralDataManager?.loginUserAndRetrieveUserProfile(userName, password);
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
+      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
       setIsLoggingIn(false);
       navigate('/');
     } catch (error) {
