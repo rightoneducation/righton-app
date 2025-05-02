@@ -194,6 +194,31 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     }
   };
 
+  public loginGoogleAndRetrieveUserProfile = async () => {
+    let userProfile = null;
+    try {
+      const response = await this.authAPIClient.awsSignInFederated();
+      const currentSession = await this.authAPIClient.getCurrentSession();
+      const cognitoId = currentSession?.userSub;
+      if (!cognitoId) 
+        return null;
+      const currentDynamoDBUser = await this.userAPIClient.getUser(cognitoId);
+      if  (currentDynamoDBUser !== null){
+        userProfile = {
+          cognitoId: cognitoId,
+          ...currentDynamoDBUser
+        };
+      }
+      if  (currentDynamoDBUser && userProfile){
+        this.setLocalUserProfile(userProfile); 
+        this.authAPIClient.isUserAuth = true;
+      }
+      return userProfile;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
+
   public signUpSendConfirmationCode = async (user: IUserProfile) => {
     return this.authAPIClient.awsSignUp(user.userName, user.email, user.password ?? '');
   };
@@ -238,7 +263,8 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     if(getEmail){
       user.email = getEmail;
     }
-
+    console.log(this.authAPIClient.verifyAuth());
+    console.log(this.authAPIClient.getCurrentSession());
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
     let updatedUser = JSON.parse(JSON.stringify(user));
     let firstName = createUserInput.firstName;

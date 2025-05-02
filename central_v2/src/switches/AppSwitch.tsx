@@ -49,7 +49,8 @@ function AppSwitch({
     loadMore,
     fetchElement,
     fetchElements,
-    handleLogOut
+    handleLogOut,
+    validateUser
   } = useCentralDataManager({gameQuestion});
   
   const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
@@ -100,7 +101,7 @@ function AppSwitch({
     case ScreenType.AUTH: 
     case ScreenType.NEXTSTEP: {
       screenComponent = (
-        <AuthGuard handleLogOut={handleLogOut}>
+        <AuthGuard handleLogOut={handleLogOut} validateUser={validateUser}>
           <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
         </AuthGuard>
       );

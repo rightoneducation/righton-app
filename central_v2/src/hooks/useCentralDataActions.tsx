@@ -36,6 +36,7 @@ interface UseCentralDataManagerReturnProps {
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
   handleLogOut: () => void;
+  validateUser: () => void;
 }
 
 /* 
@@ -532,10 +533,10 @@ export default function useCentralDataManager({
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
         return;
       }
-      // case for google oauth sign in, cognito present, but no local profile
+      // case for google oauth sign up, cognito present, but no local profile
       const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
       centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
-      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
+      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.GOOGLE_SIGNUP });
       return;
     }
     apiClients.centralDataManager?.clearLocalUserProfile();
@@ -565,6 +566,7 @@ export default function useCentralDataManager({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
-    handleLogOut
+    handleLogOut,
+    validateUser,
   };
 }
