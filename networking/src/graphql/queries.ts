@@ -23,6 +23,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     questionsMade
     frontIdPath
     backIdPath
+    profilePicPath
     favoriteGameTemplateIds
     favoriteQuestionTemplateIds
     createdAt
@@ -60,6 +61,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
@@ -100,6 +102,7 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
@@ -143,6 +146,10 @@ export const userByCognitoId = /* GraphQL */ `query UserByCognitoId(
       questionsMade
       frontIdPath
       backIdPath
+<<<<<<< HEAD
+=======
+      profilePicPath
+>>>>>>> muhammad-qureshi--userProfileFunction
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
@@ -186,6 +193,7 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
