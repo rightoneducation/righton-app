@@ -181,6 +181,7 @@ export default function CreateGameCardBase({
         maxWidth: '672px',
         padding: screenSize === ScreenSize.LARGE ? '28px' : '24px',
         borderRadius: '8px',
+        boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)",
       }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>

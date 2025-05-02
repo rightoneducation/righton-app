@@ -256,10 +256,6 @@ export const updateQuestionTitleChangeAtIndex = (
           isFirstEdit && {
             highlightCard: CreateQuestionHighlightCard.CORRECTANSWER,
           }),
-        questionTemplate: {
-          ...questionItem.questionTemplate,
-          title,
-        },
       };
       return updatedItem;
     }
@@ -699,3 +695,25 @@ export const updateDraftListWithLibraryQuestion = (
 
   return { updatedList: updatedQuestions, addNew: true };
 };
+
+
+export const handleQuestionListErrors = (
+  draftQuestionsList: TDraftQuestionsList[],
+): TDraftQuestionsList[] => {
+  return draftQuestionsList.map((question, index) => {
+    const { questionCard, correctCard, incorrectCards } = question.question;
+    const incorrectCardsAreComplete = incorrectCards.every((card) => card.isCardComplete);
+
+   const hasError = 
+   !questionCard.isCardComplete ||
+   !correctCard.isCardComplete ||
+   !incorrectCardsAreComplete;
+
+    return {
+      ...question,
+      isQuestionCardErrored: hasError,
+      isQuestionCardSubmitted: true,
+    }
+  })
+};
+

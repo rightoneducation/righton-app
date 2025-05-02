@@ -71,7 +71,12 @@ export default function DetailedQuestionCardBase({
   }
 
   return (
-    <BaseCardStyled id="detailed-card" elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
+    <BaseCardStyled sx={{
+      ...(isCreateGame && {  
+        boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)", 
+        padding: screenSize === ScreenSize.LARGE ? "28px" : (theme) => `${theme.sizing.mdPadding}px`,
+      })
+    }} elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
     <CreateQuestionTitleBarStyled screenSize={screenSize}>
       <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
@@ -90,21 +95,23 @@ export default function DetailedQuestionCardBase({
            row
            value={questionType} 
            onChange={handleQuestionTypeChange}
-           style={{overflow: 'hidden', flexWrap: 'nowrap'}}
+           style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
          >
            <RadioLabelStyled
+             disabled
              value={PublicPrivateType.PUBLIC}
-             control={<RadioStyled style={{cursor: 'pointer'}}/>}
+             control={<RadioStyled style={{ cursor: 'pointer' }}/>}
              label="Multiple Choice"
              isSelected={questionType === PublicPrivateType.PUBLIC}
              style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap'})}}
            />
            <RadioLabelStyled
+             disabled
              value={PublicPrivateType.PRIVATE}
-             control={<RadioStyled style={{cursor: 'pointer'}}/>}
+             control={<RadioStyled style={{ cursor: 'pointer' }}/>}
              label="Short Answer"
              isSelected={questionType === PublicPrivateType.PRIVATE}
-             style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap'})}}
+             style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap' })}}
            />
          </RadioGroup>
        </RadioContainerStyled>

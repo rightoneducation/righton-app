@@ -123,6 +123,10 @@ export default function QuestionElements({
   handleImageUploadClick,
 }: IQuestionElements) {
   const theme = useTheme();
+  const { questionCard, correctCard } = draftQuestion;
+  const isQuestionCardErrored = isCardErrored && !questionCard.isCardComplete;
+  const isCorrectCardErrored = isCardErrored && !correctCard.isCardComplete;
+
  
   return (
     <>
@@ -137,7 +141,7 @@ export default function QuestionElements({
           minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
           display: 'flex',
           flexDirection: 'column',
-          gap: `${theme.sizing.xLgPadding}px`,
+          gap: `${theme.sizing.mdPadding}px`,
         }}
       >
         <Box
@@ -157,7 +161,7 @@ export default function QuestionElements({
             handlePublicPrivateChange={handlePublicPrivateChange}
             handleAnswerType={handleAnswerType}
             isCardSubmitted={isCardSubmitted}
-            isCardErrored={isCardErrored}
+            isCardErrored={isQuestionCardErrored}
             isAIError={isAIError}
             isPublic={isPublic}
             isMultipleChoice={isMultipleChoice}
@@ -181,7 +185,7 @@ export default function QuestionElements({
                   handleDebouncedCorrectAnswerStepsChange
                 }
                 isCardSubmitted={isCardSubmitted}
-                isCardErrored={isCardErrored}
+                isCardErrored={isCorrectCardErrored}
                 isAIError={isAIError}
               />
             </Box>

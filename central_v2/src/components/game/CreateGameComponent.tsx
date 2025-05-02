@@ -36,6 +36,7 @@ interface ICreateGameComponent {
   selectedIndex: number;
   setSelectedIndex: (index: number) => void;
   addMoreQuestions: () => void;
+  isGameCardErrored: boolean;
 }
 
 const qt: IQuestionTemplate = {
@@ -68,7 +69,8 @@ export default function CreateGameComponent({
   iconButtons,
   selectedIndex,
   setSelectedIndex,
-  addMoreQuestions
+  addMoreQuestions,
+  isGameCardErrored,
 }: ICreateGameComponent) {
   const [enabled, setEnabled] = useState<boolean>(true)
 
@@ -119,11 +121,13 @@ questionTemplate: qt,
                 <CentralButton
                   buttonType={ButtonType.SAVE}
                   isEnabled
+                  buttonWidthOverride="160px"
                   onClick={handleSaveGame}
                 />
                 <CentralButton
                   buttonType={ButtonType.DISCARDBLUE}
                   isEnabled
+                  buttonWidthOverride="160px"
                   onClick={handleDiscard}
                 />
               </CreateGameSaveDiscardBoxContainer>
@@ -137,7 +141,6 @@ questionTemplate: qt,
           lg={4}
           screenSize={screenSize}
         >
-          <Box style={{ width: '100%' }}>
             <CreateGameCardBase
               draftGame={draftGame}
               screenSize={screenSize}
@@ -147,15 +150,13 @@ questionTemplate: qt,
               onGameDescription={onGameDescription}
               onGameTitle={onGameTitle}
               isCardSubmitted={draftGame.isGameCardSubmitted}
-              isCardErrored={draftGame.isGameCardErrored}
+              isCardErrored={isGameCardErrored}
               phaseTime={phaseTime}
               gameTitle={draftGame.gameTemplate.title}
               gameDescription={draftGame.gameTemplate.description}
               openCreateQuestion={draftGame.openCreateQuestion}
               openQuestionBank={draftGame.openQuestionBank}
-
             />
-          </Box>
         </CreateGameCardGridItem>
         <Grid sm md={1} lg={4} item />
       </CreateGameGridContainer>

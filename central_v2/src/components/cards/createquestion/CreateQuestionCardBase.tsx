@@ -175,7 +175,11 @@ export default function CreateQuestionCardBase({
   ]
 
   return (
-    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
+    <BaseCardStyled sx={{ 
+      ...(isCreateGame && 
+       { boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)",
+        padding: isCreateGame && screenSize === ScreenSize.LARGE ? `28px` : `${theme.sizing.mdPadding}`
+        })}} elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
           <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>

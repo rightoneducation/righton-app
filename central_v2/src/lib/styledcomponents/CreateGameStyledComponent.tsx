@@ -55,7 +55,7 @@ export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  gap: `${theme.sizing.lgPadding}px`,
+  gap: `${theme.sizing.mdPadding}px`,
   zIndex: 1,
   position: 'relative',
   paddingLeft: `${theme.sizing.mdPadding}px`,
@@ -150,7 +150,6 @@ export const CreateGameSaveDiscardGridItem = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'flex-start',
-  paddingTop: '16px',
   gap: '20px',
 }));
 

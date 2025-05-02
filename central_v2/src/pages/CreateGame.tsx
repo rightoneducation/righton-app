@@ -75,7 +75,8 @@ import {
     updateImageUploadClickAtIndex,
     openModalAtIndex,
     buildLibraryQuestionAtIndex,
-    updateDraftListWithLibraryQuestion, 
+    updateDraftListWithLibraryQuestion,
+    handleQuestionListErrors 
   } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
 
 
@@ -119,6 +120,8 @@ export default function CreateGame({
   const openModal = openModalAtIndex(draftGame, draftQuestionsList, selectedQuestionIndex);
   const gameFormIsValid = checkGameFormIsValid(draftGame);
   const allDQAreValid = checkDQsAreValid(draftQuestionsList);
+  const hasGameError = (draftGame.isGameCardErrored && !gameFormIsValid) 
+  || (draftGame.isGameCardSubmitted && (!gameFormIsValid || !allDQAreValid));
 
   /** CREATE GAME HANDLERS START HERE */
   const handleGameTitle = (val: string) => {
@@ -149,7 +152,12 @@ export default function CreateGame({
       setDraftQuestionsList(newDraft);
       setIconButtons([1]);
       setSelectedQuestionIndex(0);
-      setDraftGame((prev) => ({ ...prev, publicPrivateGame: value, questionCount: newDraft.length }));
+      setDraftGame((prev) => ({ 
+        ...prev, 
+        publicPrivateGame: value, 
+        questionCount: newDraft.length,
+        isGameCardErrored: false, 
+      }));
       return;
     }
     setDraftGame((prev) => ({ ...prev, publicPrivateGame: value, }));
@@ -225,6 +233,9 @@ export default function CreateGame({
           navigate('/');
       } else {
         setDraftGame((prev) => ({ ...prev, isGameCardErrored: true, isCreatingTemplate: false }));
+        if(!allDQAreValid) {
+          setDraftQuestionsList((prev) => handleQuestionListErrors(prev));
+        }
       }
     } catch (err) {
       console.log(`HandleSaveGame - error: `, err);
@@ -417,6 +428,8 @@ export default function CreateGame({
     setDraftGame((prev) => ({
       ...prev,
       questionCount: prev.questionCount + 1,
+      isGameCardErrored: false,
+      isGameCardSubmitted: false,
     }));
     setIconButtons((prev) => [...prev, prev.length + 1]);
   };
@@ -425,13 +438,6 @@ export default function CreateGame({
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
-
-  useEffect(() => {
-    console.log("Draft Game:", draftGame)
-    console.log("Questions List:", draftQuestionsList);
-    console.log("Selected Index:", selectedQuestionIndex);
-    console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
-  }, [draftQuestionsList, selectedQuestionIndex, draftGame]);
 
   return (
     <CreateGameMainContainer>
@@ -489,6 +495,7 @@ export default function CreateGame({
         <CreateGameComponent
           draftGame={draftGame}
           screenSize={screenSize}
+          isGameCardErrored={hasGameError}
           handleSaveGame={handleSaveGame}
           handleDiscard={handleDiscardGame}
           handlePublicPrivateChange={handlePublicPrivateGameChange}
