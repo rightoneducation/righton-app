@@ -15,6 +15,8 @@ const getBackgroundColor = (theme: any, buttonColor: ButtonColor) => {
       return 'transparent';
     case ButtonColor.LIGHTBLUE:
       return `${theme.palette.primary.buttonDraftDefault}`;
+    case ButtonColor.WHITE:
+      return `#FFF`;
     case ButtonColor.BLUE:
     default:
       return `${theme.palette.primary.buttonPrimaryDefault}`;
@@ -30,6 +32,8 @@ const getHoverColor = (theme: any, buttonColor: ButtonColor, buttonType: ButtonT
         return `rgba(255, 255, 255, 0.25)`;
       }
       return 'transparent';
+    case ButtonColor.WHITE:
+      return `rgba(255, 255, 255,0.80)`;
     case ButtonColor.LIGHTBLUE:
       return `${theme.palette.primary.buttonDraftHover}`;
     case ButtonColor.BLUE:
@@ -46,6 +50,8 @@ const getDisableColor = (theme: any, buttonColor: ButtonColor) => {
       return 'transparent';
     case ButtonColor.LIGHTBLUE:
       return `${theme.palette.primary.buttonDraftDisable}`;
+    case ButtonColor.WHITE:
+        return `rgba(255, 255, 255,0.50)`;
     case ButtonColor.BLUE:
     default:
       return `${theme.palette.primary.buttonPrimaryDisable}`;
@@ -102,7 +108,7 @@ export const ButtonTypography = styled(Typography, {
   fontWeight: '600',
   textTransform: 'none',
   padding: 0,
-  color: buttonType === ButtonType.CHANGEIMAGE ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
+  color: buttonType === ButtonType.CHANGEIMAGE || buttonType === ButtonType.LOGINHEADER ?  `${theme.palette.primary.buttonPrimaryDefault}` : '#FFFFFF',
   whiteSpace: 'nowrap',
 }));
 

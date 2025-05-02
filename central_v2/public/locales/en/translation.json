@@ -1,6 +1,7 @@
 {
   "button": {
     "login": "Login",
+    "loginheader": "Login",
     "signup": "Sign Up",
     "view": "View",
     "launch": "Launch",

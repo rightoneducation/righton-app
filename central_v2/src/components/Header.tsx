@@ -382,7 +382,7 @@ export default function Header({
                 ? loggedInUserComponents
                 :
                   <>
-                    <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
+                    <CentralButton buttonType={ButtonType.LOGINHEADER} isEnabled onClick={() => navigate('/login')}/>
                     <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
                   </>
               )
