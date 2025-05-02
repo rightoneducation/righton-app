@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, Fade, IconButton, Paper } from '@mui/material';
+import { CloudFrontDistributionUrl } from '@righton/networking';
 import rightonlogo from '../images/rightOnLogoHeader.svg';
 import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
@@ -13,7 +14,7 @@ import libPink from '../images/libPink.svg';
 import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
-import plus from '../images/plus.svg';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import createDropdownGame from '../images/createDropdownGame.svg';
 import createDropdownQuestion from '../images/createDropdownQuestion.svg'
 import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
@@ -168,8 +169,10 @@ export default function Header({
 }: HeaderProps) {
   const navigate = useNavigate();
   const theme = useTheme();
-  
+  const centralData = useCentralDataState();
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
+  const profilePicPath = centralData.userProfile?.profilePicPath;
+  console.log('profilePicPath', profilePicPath);
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -219,10 +222,10 @@ export default function Header({
       <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%',}} key="lgscreen">
         {createMenu}
         <CentralButton buttonType={ButtonType.LOGOUT} isEnabled onClick={handleLogOut}/>
-        <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
+        <img src={`${CloudFrontDistributionUrl}${profilePicPath}`} alt="Profile" style={{ marginLeft: '24px', height: '62px', width: '62px', objectFit: 'cover', border: '4px #FFF solid', borderRadius: '31px', boxSizing: 'border-box' }} />
       </Box>
     ) : (
-      <img src={profile} alt="Profile" />
+      <img src={`${CloudFrontDistributionUrl}${profilePicPath}`} alt="Profile"  style={{height: '62px', width: '62px', objectFit: 'cover', border: '4px #FFF solid', borderRadius: '31px', boxSizing: 'border-box' }} />
     )
   ]
 

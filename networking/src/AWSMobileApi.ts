@@ -10941,7 +10941,6 @@ export type UserByUserNameQuery = {
       userName: string,
       dynamoId?: string | null,
       cognitoId: string,
-<<<<<<< HEAD
       title?: string | null,
       firstName?: string | null,
       lastName?: string | null,
@@ -10961,44 +10960,6 @@ export type UserByUserNameQuery = {
   } | null,
 };
 
-export type UserByCognitoIdQueryVariables = {
-  cognitoId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelUserFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type UserByCognitoIdQuery = {
-  userByCognitoId?:  {
-    __typename: "ModelUserConnection",
-    items:  Array< {
-      __typename: "User",
-      id: string,
-      userName: string,
-      dynamoId?: string | null,
-      cognitoId: string,
-=======
->>>>>>> muhammad-qureshi--userProfileFunction
-      title?: string | null,
-      firstName?: string | null,
-      lastName?: string | null,
-      email: string,
-      password?: string | null,
-      gamesMade?: number | null,
-      questionsMade?: number | null,
-      frontIdPath?: string | null,
-      backIdPath?: string | null,
-      profilePicPath?: string | null,
-      favoriteGameTemplateIds?: string | null,
-      favoriteQuestionTemplateIds?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      owner?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
 
 export type UserByCognitoIdQueryVariables = {
   cognitoId: string,
