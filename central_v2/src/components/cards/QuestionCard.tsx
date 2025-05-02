@@ -6,6 +6,8 @@ import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';
 import FavouriteButton from '../button/favouritebutton/FavouriteButton';
+import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
+import { UserStatusType } from '../../lib/CentralModels';
 
 interface StyledQuestionCardProps {
   id: string;
@@ -101,13 +103,16 @@ export default function StyledQuestionCard({
   handleCloneButtonClick
 }: StyledQuestionCardProps) {
   const domainAndGrade = `${question.grade}.${question.domain}`;
+  const centralData = useCentralDataState();
   return (
     <QuestionCard>
       { isCarousel 
         ? <CarouselQuestionImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />  
         : <QuestionImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />       
       }
-      <FavouriteButton isEnabled id={id}/>
+      { centralData.userStatus === UserStatusType.LOGGEDIN &&
+        <FavouriteButton isEnabled id={id}/>
+      }
       <ContentContainer>
         <TitleContainer>
           <ButtonCCSS key={`${domainAndGrade}-${id}`}>
@@ -121,11 +126,13 @@ export default function StyledQuestionCard({
             isEnabled
             onClick={() => handleViewButtonClick(question)}
           />
-          <CentralButton
-            buttonType={ButtonType.CLONE}
-            isEnabled
-            onClick={() => handleCloneButtonClick(question)}
-          />
+          { centralData.userStatus === UserStatusType.LOGGEDIN &&
+            <CentralButton
+              buttonType={ButtonType.CLONE}
+              isEnabled
+              onClick={() => handleCloneButtonClick(question)}
+            />
+          }
         </BottomButtonBox>
       </ContentContainer>
     </QuestionCard>
