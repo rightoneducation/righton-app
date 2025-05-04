@@ -40,7 +40,8 @@ export const AtUserNameContainerAndAccount = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   width: '139px',
   gap: '8px',
-  alignItems: 'center'
+  alignItems: 'center',
+
 }));
 
 export const AtUserNameContainer = styled(Box)(({ theme }) => ({
@@ -50,13 +51,12 @@ export const AtUserNameContainer = styled(Box)(({ theme }) => ({
 export const AtUserNameText = styled(Typography)(({ theme }) => ({
   background: '#7E1E81',
   color: '#FFFFFF',
-  textAlign: 'center',
   padding: '4px',
   boxSizing: 'border-box',
   borderRadius: '25px',
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   alignItems: 'center',
 }));
 

@@ -17,7 +17,8 @@ import {
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
   AuthSession,
-  decodeJWT
+  decodeJWT,
+  updateUserAttributes
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
@@ -135,7 +136,20 @@ export class AuthAPIClient
       }
   }
   
-  
+  async updateCognitoUsername(newUsername: string): Promise<void> {
+    try {
+      await updateUserAttributes({
+        userAttributes: {
+          nickname: newUsername,
+        }
+      });
+      console.log('Username updated in Cognito successfully');
+    } catch (error) {
+      console.error('Failed to update username in Cognito:', error);
+      throw new Error('Could not update username in Cognito');
+    }
+  }
+
   async getUserNickname(): Promise<string | null> {
     try {
       const attributes = await fetchUserAttributes();
