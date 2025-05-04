@@ -4,6 +4,7 @@ import {
     IQuestionTemplate, 
     IGameTemplate } from "@righton/networking";
 import { CreateQuestionHighlightCard } from "./CentralModels";
+import { AnswerType } from "@righton/networking";
 
 // draft game type
 // Create Game
@@ -52,6 +53,9 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     correctCard: {
       answer: '',
       answerSteps: ['', '', ''],
+      answerSettings: {
+        answerType: AnswerType.MULTICHOICE,
+      },
       isFirstEdit: true,
       isCardComplete: false,
     },
