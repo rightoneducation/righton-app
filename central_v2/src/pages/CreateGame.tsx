@@ -7,7 +7,9 @@ import {
   PublicPrivateType,
   GradeTarget,
   SortType,
-  SortDirection
+  SortDirection,
+  AnswerType,
+  AnswerPrecision,
 } from '@righton/networking';
 import { Box, Fade } from '@mui/material';
 import {
@@ -79,6 +81,9 @@ import {
     updateDraftListWithLibraryQuestion,
     handleQuestionListErrors 
   } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
+  import {
+    updateDQwithAnswerSettings,
+  } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 
 
 interface CreateGameProps {
@@ -176,6 +181,16 @@ export default function CreateGame({
     window.localStorage.setItem(StorageKey, '');
     navigate('/');
   };
+
+  const handleDiscardClick = (value: boolean) => {
+    if (value){
+      setIsDiscardModalOpen(false);
+      window.localStorage.setItem(StorageKey, '');
+      navigate('/');
+      return;
+    }
+    setIsDiscardModalOpen(false);
+  }
 
   const handleGameImageUploadClick = () => {
     setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: !prev.isGameImageUploadVisible, }));
@@ -278,7 +293,7 @@ export default function CreateGame({
   };
 
   const handleDebouncedTitleChange = useCallback(// eslint-disable-line
-    (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
+    (title: string) => {
       setDraftQuestionsList((prev) => updateQuestionTitleChangeAtIndex(
         prev,
         selectedQuestionIndex,
@@ -312,6 +327,27 @@ export default function CreateGame({
     },
     [selectedQuestionIndex],
   );
+
+  const handleAnswerSettingsChange = (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType, answerPrecision?: AnswerPrecision ) => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((draftItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const currentDraftQuestion = draftItem.question;
+          const newQuestion = updateDQwithAnswerSettings(
+            currentDraftQuestion,
+            answerType,
+            answerPrecision,
+          );
+          return {
+            ...draftItem,
+            question: newQuestion,
+          };
+        }
+        return draftItem;
+      });
+    });
+  };
+
 
   const handleAnswerType = () => {
     setDraftQuestionsList((prev) => updateQuestionAnswerTypeAtIndex(prev, selectedQuestionIndex));

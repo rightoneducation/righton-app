@@ -3,6 +3,7 @@ import {
   IncorrectCard,
   IQuestionTemplate,
   PublicPrivateType,
+  AnswerType
 } from '@righton/networking';
 import {
   draftTemplate,
@@ -644,6 +645,9 @@ export const buildLibraryQuestionAtIndex = (
         answerSteps: question?.instructions
           ? question?.instructions
           : ['', '', ''],
+        answerSettings: {
+          answerType: question?.answerSettings?.answerType ?? AnswerType.MULTICHOICE,
+        },
         isFirstEdit: true,
         isCardComplete: true,
       },
