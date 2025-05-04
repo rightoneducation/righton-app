@@ -64,6 +64,7 @@ interface IncorrectAnswerCardProps {
   handleNextCardButtonClick?: (cardData: IncorrectCard) => void;
   completeAnswers: IncorrectCard[];
   incompleteAnswers: IncorrectCard[];
+  isReadOnly?: boolean;
 }
 
 export default function IncorrectAnswerCard({
@@ -82,7 +83,8 @@ export default function IncorrectAnswerCard({
   handleTopCardHeightChange,
   handleAIExplanationGenerated,
   completeAnswers,
-  incompleteAnswers
+  incompleteAnswers,
+  isReadOnly,
 } : IncorrectAnswerCardProps) {
   const theme = useTheme();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -186,6 +188,7 @@ export default function IncorrectAnswerCard({
           Incorrect Answer
         </QuestionTitleStyled>
         <TextContainerStyled 
+        disabled={isReadOnly}
           multiline 
           variant="outlined" 
           rows='1'
@@ -193,6 +196,20 @@ export default function IncorrectAnswerCard({
             '& .MuiOutlinedInput-root': {
               height: '43px',
               fontFamily: 'Rubik'
+            },
+         '& .MuiInputBase-input': {
+              '&::placeholder': {
+                color: '#47366C',
+                opacity: 0.5
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
             },
         }} 
           placeholder="Enter Incorrect Answer..." 
@@ -232,13 +249,28 @@ export default function IncorrectAnswerCard({
             />
           }
         </Box>
-        <TextContainerStyled 
+        <TextContainerStyled
+        disabled={isReadOnly} 
           multiline 
           variant="outlined"
           rows="4"
           sx={{
             '& .MuiOutlinedInput-root': {
               fontFamily: 'Rubik',
+            },
+            '& .MuiInputBase-input': {
+              '&::placeholder': {
+                color: '#47366C',
+                opacity: 0.5
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
             },
           }}
           placeholder="Enter Explanation here..." 

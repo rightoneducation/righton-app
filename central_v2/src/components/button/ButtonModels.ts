@@ -58,6 +58,7 @@ export enum ButtonType {
   TEST = 'test',
   RETRY = 'retry',
   CANCEL = 'cancel',
+  ADDTOGAME = 'addtogame',
   YES = 'yes',
   NO = 'no',
 }
@@ -178,6 +179,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.ADDSTEP]: {
     icon: add,
     textKey: ButtonType.ADDSTEP,
+  },
+  [ButtonType.ADDTOGAME]: {
+    icon: add,
+    textKey: ButtonType.ADDTOGAME,
   },
   [ButtonType.BROWSEFILES]: {
     icon: upload,

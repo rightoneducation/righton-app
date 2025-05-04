@@ -23,21 +23,24 @@ interface ViewQuestionsProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
   isViewGame: boolean;
+  isCreateGame?: boolean;
 }
 
 export default function ViewQuestionCards({
   screenSize,
   question,
-  isViewGame
+  isViewGame,
+  isCreateGame
 }: ViewQuestionsProps) {
   const theme = useTheme();
  
   return (
     <CardContainer>
-    {screenSize !== ScreenSize.LARGE &&
+    {!isCreateGame && screenSize !== ScreenSize.LARGE &&
       <OwnerTag isViewGame={isViewGame} screenSize={screenSize}/>
     }
     <DetailedQuestionContainer
+    sx={{ gap: isCreateGame && screenSize === ScreenSize.SMALL ? 0 : `${theme.sizing.mdPadding}px` }}
       container
     >
       <Grid
@@ -46,7 +49,7 @@ export default function ViewQuestionCards({
         item
         style={{ display: 'flex', justifyContent: 'flex-end' }}
       >
-        {screenSize === ScreenSize.LARGE &&
+        {!isCreateGame && screenSize === ScreenSize.LARGE &&
           <OwnerTag isViewGame={isViewGame} screenSize={screenSize}/>
         }
       </Grid>
@@ -61,7 +64,7 @@ export default function ViewQuestionCards({
           gap: `${theme.sizing.smPadding}px`,
         }}
       >
-        <DetailedQuestionCardBase dropShadow screenSize={screenSize} question={question} />
+        <DetailedQuestionCardBase isCreateGame={isCreateGame} dropShadow screenSize={screenSize} question={question} />
         <Grid
           container
           spacing={`${theme.sizing.smPadding}px`}

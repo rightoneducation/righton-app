@@ -54,6 +54,7 @@ export default function useCentralDataManager({
   const centralDataDispatch = useCentralDataDispatch();
 
   const isQuestions = useMatch('/questions');
+  const isCreateGame = useMatch('/create/game');
   const isLibrary = useMatch('/library') !== null;
 
   const debounceInterval = 800;
@@ -451,7 +452,7 @@ export default function useCentralDataManager({
   
   const fetchElements = async (libraryTab?: LibraryTabEnum) => {
     const getFetchType = (tab: LibraryTabEnum | null) => {
-      if (isLibrary && tab !== undefined) {
+      if ((isLibrary || isCreateGame) && tab !== undefined) {
         switch(tab){
           case LibraryTabEnum.FAVORITES: 
             return gameQuestion === GameQuestionType.GAME ? FetchType.FAVORITE_GAMES : FetchType.FAVORITE_QUESTIONS;

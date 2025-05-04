@@ -121,7 +121,7 @@ export default function StyledQuestionCard({
         </TitleContainer>
         <DescriptionText>{title}</DescriptionText>
         <BottomButtonBox>
-          <CentralButton
+         <CentralButton
             buttonType={ButtonType.VIEW}
             isEnabled
             onClick={() => handleViewButtonClick(question)}

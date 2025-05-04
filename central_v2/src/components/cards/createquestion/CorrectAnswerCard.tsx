@@ -44,7 +44,7 @@ export default function DetailedQuestionSubCard({
   handleAnswerSettingsChange,
   isCardSubmitted,
   isCardErrored,
-  isAIError
+  isAIError,
 }: DetailedQuestionSubCardProps) {
   const theme = useTheme();
   
@@ -89,7 +89,7 @@ export default function DetailedQuestionSubCard({
         >
           {index + 1}
         </Typography>
-        <TextContainerStyled 
+        <TextContainerStyled
             multiline 
             variant="outlined" 
             value={draftQuestion.correctCard.answerSteps[index]}
@@ -99,6 +99,20 @@ export default function DetailedQuestionSubCard({
               '& .MuiInputBase-root': {
                 fontFamily: 'Rubik',
               },
+             '& .MuiInputBase-input': {
+              '&::placeholder': {
+                color: '#47366C',
+                opacity: 0.5
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
+            },
             }} 
             placeholder={`Enter step ${index + 1}...`}
             error={(isCardErrored) && (!draftQuestion.correctCard.answerSteps[index] || draftQuestion.correctCard.answerSteps[index].length === 0)}
@@ -125,7 +139,7 @@ export default function DetailedQuestionSubCard({
       <QuestionTitleStyled sx={{ color: "#47366C"}}>
         Correct Answer
       </QuestionTitleStyled>
-      <TextContainerStyled 
+      <TextContainerStyled
         multiline 
         variant="outlined" 
         rows='1'
@@ -133,6 +147,20 @@ export default function DetailedQuestionSubCard({
               '& .MuiOutlinedInput-root': {
               fontFamily: 'Rubik',
               height: '43px',
+            },
+          '& .MuiInputBase-input': {
+              '&::placeholder': {
+                color: '#47366C',
+                opacity: 0.5
+              },
+              '&:focus': {
+                color: '#47366C',
+                opacity: 1,
+              },
+              '&:focus::placeholder': {
+                color: '#47366C',
+                opacity: 1,
+              },
             },
         }}
         placeholder="Enter Correct Answer..." 

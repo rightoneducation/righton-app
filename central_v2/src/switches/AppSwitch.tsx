@@ -128,13 +128,31 @@ function AppSwitch({
     }
     case ScreenType.CREATEGAME: {
       screenComponent = (
-          <CreateGame screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
+        <AuthGuard handleLogOut={handleLogOut}>
+          <CreateGame 
+          screenSize={screenSize}
+          setIsTabsOpen={setIsTabsOpen}
+          fetchElements={fetchElements}
+          handleChooseGrades={handleChooseGrades}
+          handleSortChange={handleSortChange}
+          handleSearchChange={handleSearchChange}
+          loadMore={loadMore}
+          />
+        </AuthGuard>
       );
       break;
     }
     case ScreenType.CLONEGAME: {
       screenComponent = (
-          <CreateGame screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
+          <CreateGame 
+            screenSize={screenSize}  
+            setIsTabsOpen={setIsTabsOpen}
+            fetchElements={fetchElements}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            loadMore={loadMore}
+          />
       );
       break;
     }

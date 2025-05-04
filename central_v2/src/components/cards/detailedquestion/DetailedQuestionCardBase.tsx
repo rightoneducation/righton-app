@@ -22,6 +22,7 @@ interface DetailedQuestionCardBaseProps {
   screenSize: ScreenSize;
   question: IQuestionTemplate;
   dropShadow?: boolean;
+  isCreateGame?: boolean;
 }
 
 interface CreateQuestionTitleBarStyledProps {
@@ -48,10 +49,17 @@ export const CreateQuestionContentRightContainerStyled = styled(Box)(({ theme })
 export default function DetailedQuestionCardBase({
   screenSize,
   question,
-  dropShadow
+  dropShadow,
+  isCreateGame,
 }: DetailedQuestionCardBaseProps) {
   const [questionType, setQuestionType] = React.useState<string>('A');
-  const [isPublic, setIsPublic] = React.useState<boolean>(false)
+  const [isPublic, setIsPublic] = React.useState<boolean>(false);
+
+    const isCreateGamePage = 
+    isCreateGame && screenSize === ScreenSize.LARGE ||
+    isCreateGame && screenSize === ScreenSize.MEDIUM ||
+    isCreateGame && screenSize === ScreenSize.SMALL;
+
   const handleQuestionTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -63,7 +71,12 @@ export default function DetailedQuestionCardBase({
   }
 
   return (
-    <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
+    <BaseCardStyled sx={{
+      ...(isCreateGame && {  
+        boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)", 
+        padding: screenSize === ScreenSize.LARGE ? "28px" : (theme) => `${theme.sizing.mdPadding}px`,
+      })
+    }} elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
     <CreateQuestionTitleBarStyled screenSize={screenSize}>
       <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
         <QuestionTitleStyled>Question</QuestionTitleStyled>
@@ -71,11 +84,38 @@ export default function DetailedQuestionCardBase({
           {question.ccss}
         </ButtonCCSS>
       </Box>
-      { screenSize !== ScreenSize.SMALL && 
+      { screenSize !== ScreenSize.SMALL && !isCreateGame &&
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
           <PublicPrivateButton isPublic={isPublic} isDisabled/>
         </Box>
       }
+      {isCreateGame && (
+         <RadioContainerStyled>
+         <RadioGroup
+           row
+           value={questionType} 
+           onChange={handleQuestionTypeChange}
+           style={{ overflow: 'hidden', flexWrap: 'nowrap' }}
+         >
+           <RadioLabelStyled
+             disabled
+             value={PublicPrivateType.PUBLIC}
+             control={<RadioStyled style={{ cursor: 'pointer' }}/>}
+             label="Multiple Choice"
+             isSelected={questionType === PublicPrivateType.PUBLIC}
+             style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap'})}}
+           />
+           <RadioLabelStyled
+             disabled
+             value={PublicPrivateType.PRIVATE}
+             control={<RadioStyled style={{ cursor: 'pointer' }}/>}
+             label="Short Answer"
+             isSelected={questionType === PublicPrivateType.PRIVATE}
+             style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap' })}}
+           />
+         </RadioGroup>
+       </RadioContainerStyled>
+      )}
     </CreateQuestionTitleBarStyled>
     <ContentContainerStyled screenSize={screenSize}>
       <Box
@@ -86,10 +126,10 @@ export default function DetailedQuestionCardBase({
           boxSizing: 'border-box',
         }}
       >
-        <img src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
+        <img src={`${CloudFrontDistributionUrl}${question.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover', borderRadius: isCreateGame ? "8px" : "0px",}}/>
       </Box>
       <CreateQuestionContentRightContainerStyled>
-        <RadioContainerStyled>
+        {!isCreateGame && <RadioContainerStyled>
           <RadioGroup
             row
             value={questionType} 
@@ -111,7 +151,7 @@ export default function DetailedQuestionCardBase({
               style={{cursor: 'pointer'}}
             />
           </RadioGroup>
-        </RadioContainerStyled>
+        </RadioContainerStyled>}
         <Box
           style={{
             width: '100%',
@@ -123,7 +163,7 @@ export default function DetailedQuestionCardBase({
           <Typography>{question.title}</Typography>
         </Box>
       </CreateQuestionContentRightContainerStyled>
-      { screenSize === ScreenSize.SMALL && 
+      { screenSize === ScreenSize.SMALL && !isCreateGame &&
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
           <PublicPrivateButton isPublic={isPublic} isDisabled={false}/>
         </Box>

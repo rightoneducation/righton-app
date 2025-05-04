@@ -42,7 +42,7 @@ import {
   CreateGameTitleText,
   GameContentContainerStyled,
 } from '../../../lib/styledcomponents/CreateGameStyledComponent';
-import { TPhaseTime, TGameTemplateProps } from '../../../hooks/useCreateGame';
+import { TPhaseTime, TGameTemplateProps } from '../../../lib/CreateGameModels';
 
 interface CreateGameCardBaseProps {
   draftGame: TGameTemplateProps;
@@ -106,7 +106,10 @@ export default function CreateGameCardBase({
         onMouseLeave={() => setIsImageHovered(false)}
         style={{
           width: '100%',
-          height: '196px',
+          height: screenSize === ScreenSize.LARGE ||
+          screenSize === ScreenSize.MEDIUM
+            ? '204px'
+            : '202px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -186,9 +189,11 @@ export default function CreateGameCardBase({
       sx={{
         height: responsiveHeight,
         gap: responsiveGap,
-        width: screenSize === ScreenSize.LARGE ? "100%": "100%",
+        width: "100%",
+        maxWidth: '672px',
         padding: screenSize === ScreenSize.LARGE ? '28px' : '24px',
         borderRadius: '8px',
+         boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)",
       }}
     >
       <CreateGameTitleBarStyled screenSize={screenSize}>
@@ -245,7 +250,7 @@ export default function CreateGameCardBase({
             <PublicPrivateButton
             isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
             onHandlePublicPrivateChange={handlePublicPrivateChange}  
-            isDisabled={false} />
+            isDisabled={openQuestionBank || openCreateQuestion} />
           </Box>
         )}
       </CreateGameTitleBarStyled>
@@ -296,11 +301,12 @@ export default function CreateGameCardBase({
             variant="outlined"
             sx={{
               '& .MuiInputBase-root': {
-                height: '138px',
+                height: screenSize === ScreenSize.SMALL ? '138px' : '119px',
                 fontFamily: 'Rubik',
+                padding: '12px 10px'
               },
               '& .MuiOutlinedInput-input': {
-                paddingBottom: 2,
+                paddingBottom: screenSize === ScreenSize.SMALL ? 2:1,
               },
             }}
             multiline
@@ -314,8 +320,8 @@ export default function CreateGameCardBase({
                 <InputAdornment
                   position="start"
                   sx={{
-                    alignSelf: 'flex-start',
-                    mt: '10px',
+                    alignSelf: "flex-start",
+                    mt: screenSize === ScreenSize.SMALL ? "12px" : "7px",
                   }}
                 >
                   <ErrorIcon src={errorIcon} alt="error icon" />
@@ -336,7 +342,7 @@ export default function CreateGameCardBase({
             height:
               screenSize === ScreenSize.LARGE ||
               screenSize === ScreenSize.MEDIUM
-                ? '204px'
+                ? '185px'
                 : '100%',
           }}
         >
@@ -350,7 +356,7 @@ export default function CreateGameCardBase({
                 height:
                   screenSize === ScreenSize.LARGE ||
                   screenSize === ScreenSize.MEDIUM
-                    ? '204px'
+                    ? '185px'
                     : '202px',
               }}
             >
@@ -380,7 +386,7 @@ export default function CreateGameCardBase({
                 <PublicPrivateButton
                 isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
                 onHandlePublicPrivateChange={handlePublicPrivateChange} 
-                isDisabled={false} />
+                isDisabled={openQuestionBank || openCreateQuestion} />
               </Box>
             </>
           )}

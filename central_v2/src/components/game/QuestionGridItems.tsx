@@ -26,19 +26,41 @@ import CreateQuestionCardBase from '../cards/createquestion/CreateQuestionCardBa
 import IncorrectAnswerCardStack from '../cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 
 const AISwitch = styled(Switch)(({ theme }) => ({
-  '& .MuiSwitch-thumb': {
-    background: theme.palette.primary.aiGradient,
-  },
+  padding: 8,
   '& .MuiSwitch-track': {
-    backgroundColor: '#111111',
+    borderRadius: 22 / 2,
+    backgroundColor: '#CCCCCC',
+    opacity: 1,
+    '&::before, &::after': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: 16,
+      height: 16,
+    },
+    '&::before': {
+      left: 12,
+    },
+    '&::after': {
+      right: 12,
+    },
   },
   '& .MuiSwitch-switchBase.Mui-checked': {
     color: '#FFFFFF',
   },
+  '& .MuiSwitch-thumb': {
+    background: theme.palette.primary.aiGradient,
+    boxShadow: 'none',
+    width: 16,
+    height: 16,
+    margin: 2,
+  },
   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#111111',
+    backgroundColor: '#CCCCCC',
   },
 }));
+
 
 interface IQuestionElements {
   screenSize: ScreenSize;
@@ -108,6 +130,10 @@ export default function QuestionElements({
   handleImageUploadClick,
 }: IQuestionElements) {
   const theme = useTheme();
+  const { questionCard, correctCard } = draftQuestion;
+  const isQuestionCardErrored = isCardErrored && !questionCard.isCardComplete;
+  const isCorrectCardErrored = isCardErrored && !correctCard.isCardComplete;
+
  
   return (
     <>
@@ -122,7 +148,7 @@ export default function QuestionElements({
           minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
           display: 'flex',
           flexDirection: 'column',
-          gap: `${theme.sizing.xLgPadding}px`,
+          gap: `${theme.sizing.mdPadding}px`,
         }}
       >
         <Box
@@ -130,6 +156,7 @@ export default function QuestionElements({
           style={{ width: '100%' }}
         >
           <CreateQuestionCardBase
+            isCreateGame
             screenSize={screenSize}
             isClone={isClone}
             isCloneImageChanged={isCloneImageChanged}
@@ -143,7 +170,7 @@ export default function QuestionElements({
             handlePublicPrivateChange={handlePublicPrivateChange}
             handleAnswerType={handleAnswerType}
             isCardSubmitted={isCardSubmitted}
-            isCardErrored={isCardErrored}
+            isCardErrored={isQuestionCardErrored}
             isAIError={isAIError}
             isPublic={isPublic}
             isMultipleChoice={isMultipleChoice}
@@ -170,7 +197,7 @@ export default function QuestionElements({
                 }
                 handleAnswerSettingsChange={handleAnswerSettingsChange}
                 isCardSubmitted={isCardSubmitted}
-                isCardErrored={isCardErrored}
+                isCardErrored={isCorrectCardErrored}
                 isAIError={isAIError}
               />
             </Box>
