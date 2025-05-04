@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import { CloudFrontDistributionUrl } from '@righton/networking';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
@@ -32,7 +33,7 @@ export default function QuestionCard({
             paddingTop: `${theme.sizing.smallPadding}px`,
             paddingBottom: `${theme.sizing.smallPadding}px`,
           }}
-          src={imageUrl}
+          src={`${CloudFrontDistributionUrl}${imageUrl}`}
           alt="Question"
         />
         <Typography variant="body1"> {questionText[0]} </Typography>

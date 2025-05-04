@@ -17,8 +17,6 @@ import LibraryTabs from './LibraryTabs';
 interface TabContainerProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
-  isLibraryInit: boolean;
-  setIsLibraryInit: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElements: (libraryTab: LibraryTabEnum) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -35,8 +33,6 @@ interface TabContainerProps {
 export default function LibraryTabsContainer({
   gameQuestion,
   screenSize,
-  isLibraryInit,
-  setIsLibraryInit,
   setIsTabsOpen,
   fetchElements,
   handleChooseGrades,
@@ -54,8 +50,6 @@ export default function LibraryTabsContainer({
         <LibraryTabs
           gameQuestion={gameQuestion}
           screenSize={screenSize}
-          isLibraryInit={isLibraryInit}
-          setIsLibraryInit={setIsLibraryInit}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}

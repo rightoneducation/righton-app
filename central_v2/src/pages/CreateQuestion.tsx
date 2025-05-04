@@ -1,11 +1,13 @@
-import React, { useState, useCallback } from 'react';
-import {Grid, Typography, Box, Switch, useTheme, styled, Fade} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { debounce } from 'lodash';
+import React, { useState, useCallback, useEffect } from 'react';
+import {Grid, Typography, Box, Switch, useTheme, styled, CircularProgress, Fade} from '@mui/material';
+import { useNavigate, useMatch } from 'react-router-dom';
+import { debounce, set } from 'lodash';
 import {
   PublicPrivateType,
   CentralQuestionTemplateInput,
   IncorrectCard,
+  AnswerType,
+  AnswerPrecision
 } from '@righton/networking';
 import useCreateQuestionLoader from '../loaders/useCreateQuestionLoader';
 import CreateQuestionCardBase from '../components/cards/createquestion/CreateQuestionCardBase'
@@ -15,7 +17,8 @@ import {
   BorderStyle,
   CreateQuestionHighlightCard,
   StorageKey,
-  TemplateType
+  TemplateType,
+  GameQuestionType
 } from '../lib/CentralModels';
 import CentralButton from '../components/button/Button';
 import CorrectAnswerCard from '../components/cards/createquestion/CorrectAnswerCard';
@@ -25,13 +28,15 @@ import CCSSTabsModalBackground from '../components/ccsstabs/CCSSTabsModalBackgro
 import IncorrectAnswerCardStack from '../components/cards/createquestion/stackedcards/IncorrectAnswerCardStack';
 import ModalBackground from '../components/modal/ModalBackground';
 import ImageUploadModal from '../components/modal/ImageUploadModal';
+import DiscardModal from '../components/modal/DiscardModal';
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { updateDQwithImage, updateDQwithImageURL, updateDQwithTitle, updateDQwithCCSS, updateDQwithQuestionClick, base64ToFile, fileToBase64 } from '../lib/helperfunctions/createquestion/CreateQuestionCardBaseHelperFunctions';
-import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import { updateDQwithCorrectAnswer, updateDQwithCorrectAnswerSteps, updateDQwithCorrectAnswerClick, updateDQwithAnswerSettings } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
 import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrectAnswerClick, updateDQwithIncorrectAnswers, handleIncorrectCardClick } from '../lib/helperfunctions/createquestion/IncorrectAnswerCardHelperFunctions';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
-import ErrorCard from '../components/cards/ErrorCard';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
+import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -73,24 +78,35 @@ const AISwitch = styled(Switch)(({ theme }) => ({
 
 interface CreateQuestionProps {
   screenSize: ScreenSize;
+  fetchElement: (type: GameQuestionType, id: string) => void;
+  fetchElements: () => void;
 }
 
 export default function CreateQuestion({
-  screenSize
+  screenSize,
+  fetchElement,
+  fetchElements
 }:CreateQuestionProps){
   const theme = useTheme();
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const centralData = useCentralDataState();
+  const route = useMatch('/clone/question/:questionId');
+  const isClone = route?.params.questionId !== null && route?.params.questionId !== undefined && route?.params.questionId.length > 0;
+  const [isCloneImageChanged, setIsCloneImageChanged] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isImageUploadVisible, setIsImageUploadVisible] = useState<boolean>(false);
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageURLVisible, setIsImageURLVisible] = useState<boolean>(false);
   const [isImagePreviewVisible, setIsImagePreviewVisible] = useState<boolean>(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState<boolean>(false);
+  const [isDiscardModalOpen, setIsDiscardModalOpen] = useState<boolean>(false);
   const [isCCSSVisible, setIsCCSSVisible] = useState<boolean>(false);
   const [isAIEnabled, setIsAIEnabled] = useState<boolean>(false);
   const [highlightCard, setHighlightCard] = useState<CreateQuestionHighlightCard>(CreateQuestionHighlightCard.QUESTIONCARD);
   const [publicPrivate, setPublicPrivate] = useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isMultipleChoice, setIsMultipleChoice] = useState<boolean>(true);
+  const [originalImageURl, setOriginalImageURL] = useState<string>('');
   const localData = useCreateQuestionLoader();
   
   const [incompleteIncorrectAnswers, setIncompleteIncorrectAnswers] = useState<IncorrectCard[]>( 
@@ -135,6 +151,10 @@ export default function CreateQuestion({
         correctCard: {
           answer: '',
           answerSteps: ['','',''],
+          answerSettings: {
+            answerType: AnswerType.NUMBER,
+            answerPrecision: AnswerPrecision.WHOLE,
+          },
           isFirstEdit: true,
           isCardComplete: false,
         },
@@ -150,6 +170,7 @@ export default function CreateQuestion({
   const [isAIError, setIsAIError] = useState<boolean>(false);
   // QuestionCardBase handler functions
   const handleImageChange = async (inputImage?: File, inputUrl?: string) => {
+    setIsCloneImageChanged(true);
     if (inputImage) {
       const newDraftQuestion = updateDQwithImage(draftQuestion, undefined, inputImage);
       setDraftQuestion(newDraftQuestion);
@@ -187,18 +208,22 @@ export default function CreateQuestion({
     }
   }
 
-  const handleDebouncedTitleChange = useCallback( // eslint-disable-line
-    debounce((title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
-      const { isFirstEdit } = draftQuestionInput.questionCard;
-      const newDraftQuestion = updateDQwithTitle(draftQuestionInput, title);
-      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
-      setDraftQuestion(newDraftQuestion);
-      console.log(newDraftQuestion);
-      if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
-        setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+  // debounced question changes when writing to localStorage
+  const handleDebouncedQuestionChange = useCallback( // eslint-disable-line
+    debounce((draftQuestionInput: CentralQuestionTemplateInput) => {
+      window.localStorage.setItem(StorageKey, JSON.stringify(draftQuestionInput));
     }, 1000),
     [] 
-  )
+  );
+
+  const handleTitleChange = (title: string) => {
+    const { isFirstEdit } = draftQuestion.questionCard;
+    const newDraftQuestion = updateDQwithTitle(draftQuestion, title);
+    setDraftQuestion(newDraftQuestion);
+    handleDebouncedQuestionChange(newDraftQuestion);
+    if (newDraftQuestion.questionCard.isCardComplete && isFirstEdit)
+      setHighlightCard((prev) => CreateQuestionHighlightCard.CORRECTANSWER);
+  }
 
   const handleCCSSSubmit = (ccssString: string) => {
     setIsCCSSVisible(false);
@@ -229,31 +254,32 @@ export default function CreateQuestion({
     setIsCCSSVisible(false);
   }
 
-  // CorrectAnswerCard handler functions
-  const handleDebouncedCorrectAnswerChange = useCallback( // eslint-disable-line
-    debounce((correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
-      const { isFirstEdit } = draftQuestionInput.correctCard;
-      const newDraftQuestion = updateDQwithCorrectAnswer(draftQuestionInput, correctAnswer);
-      console.log(newDraftQuestion);
-      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
-      setDraftQuestion(newDraftQuestion);
-      if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
-        setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
-    }, 1000),
-    [] 
-  )
-  
-  const handleDebouncedCorrectAnswerStepsChange = useCallback( // eslint-disable-line
-    debounce((steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
-      const { isFirstEdit } = draftQuestionInput.correctCard;
+  const handleCorrectAnswerChange = (correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => {
+    const { isFirstEdit } = draftQuestionInput.correctCard;
+    const newDraftQuestion = updateDQwithCorrectAnswer(draftQuestionInput, correctAnswer);
+    setDraftQuestion(newDraftQuestion);
+    handleDebouncedQuestionChange(newDraftQuestion);
+    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
+      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+  };
+
+  const handleCorrectAnswerStepsChange = (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => {
+    const { isFirstEdit } = draftQuestionInput.correctCard;
       const newDraftQuestion = updateDQwithCorrectAnswerSteps(draftQuestionInput, steps);
-      window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
       setDraftQuestion(newDraftQuestion);
+      handleDebouncedQuestionChange(newDraftQuestion);
       if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
         setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
-    }, 1000),
-    [] 
-  )
+  };
+
+  const handleAnswerSettingsChange = (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType,  answerPrecision?: AnswerPrecision,) => {
+    const { isFirstEdit } = draftQuestionInput.correctCard;
+    const newDraftQuestion = updateDQwithAnswerSettings(draftQuestionInput, answerType, answerPrecision);
+    window.localStorage.setItem(StorageKey, JSON.stringify(newDraftQuestion));
+    setDraftQuestion(newDraftQuestion);
+    if (newDraftQuestion.correctCard.isCardComplete && isFirstEdit)
+      setHighlightCard((prev) => CreateQuestionHighlightCard.INCORRECTANSWER1);
+  };
 
   // incorrect answer card functions
   const handleNextCardButtonClick = (cardData: IncorrectCard) => {
@@ -350,7 +376,17 @@ export default function CreateQuestion({
   const handleBackToExplore = () => {
     setIsCCSSVisible(false);
   };
-  // TODO: implement to save question on imageurl
+
+  const handleDiscardClick = (value: boolean) => {
+    if (value){
+      setIsDiscardModalOpen(false);
+      window.localStorage.setItem(StorageKey, '');
+      navigate('/');
+      return;
+    }
+    setIsDiscardModalOpen(false);
+  }
+  
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
@@ -359,14 +395,19 @@ export default function CreateQuestion({
           setIsCreatingTemplate(true);
           let result = null;
           let url = null;
-          if (draftQuestion.questionCard.image){
-            const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
-            // have to do a nested await here because aws-storage returns a nested promise object
-            result = await img.result;
-            if (result && result.path && result.path.length > 0)
-              url = result.path;
-          } else if (draftQuestion.questionCard.imageUrl){
-            url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+          // if the question is a clone and the image hasn't been changed, we can use the original imageUrl
+          if (!isClone || draftQuestion.questionCard.imageUrl !== originalImageURl){
+            if (draftQuestion.questionCard.image){
+              const img = await apiClients.questionTemplate.storeImageInS3(draftQuestion.questionCard.image) 
+              // have to do a nested await here because aws-storage returns a nested promise object
+              result = await img.result;
+              if (result && result.path && result.path.length > 0)
+                url = result.path;
+            } else if (draftQuestion.questionCard.imageUrl){
+              url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
+            }
+          } else {
+            url = draftQuestion.questionCard.imageUrl;
           }
           window.localStorage.setItem(StorageKey, '');
           console.log(draftQuestion.questionCard.imageUrl);
@@ -374,6 +415,7 @@ export default function CreateQuestion({
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
           }
           setIsCreatingTemplate(false);
+          fetchElements();
           navigate('/questions');
         }   
       } else {
@@ -409,8 +451,7 @@ export default function CreateQuestion({
   }
 
   const handleDiscardQuestion = () => {
-    window.localStorage.setItem(StorageKey, '');
-    navigate('/questions');
+    setIsDiscardModalOpen(true);
   }
 
   const handleAIError = () => {
@@ -422,17 +463,49 @@ export default function CreateQuestion({
     setIsAIError(false);
   }
 
+  useEffect(() => {
+    setIsLoading(false);
+    const selected = centralData.selectedQuestion;
+    const title = selected?.title;
+    if (selected !== null) {
+      // regex to detect (clone of) in title
+      const regex = /\(Clone of\)/i;
+      if (title && !regex.test(title))
+        selected.title = `(Clone of) ${title}`;
+      const draft = assembleQuestionTemplate(selected);
+      setDraftQuestion(prev => ({
+        ...prev,
+        ...draft,
+      }));
+      setOriginalImageURL(selected.imageUrl ?? '');
+      setCompleteIncorrectAnswers(draft.incorrectCards.filter((card) => card.isCardComplete));
+      setIncompleteIncorrectAnswers(draft.incorrectCards.filter((card) => !card.isCardComplete));
+    }
+    const id = route?.params.questionId;
+    if (!centralData.selectedQuestion && id){
+      setIsLoading(true);
+      fetchElement(GameQuestionType.QUESTION, id);
+    }
+  }, [centralData.selectedQuestion, route ]); // eslint-disable-line 
+
   return (
     <CreateQuestionMainContainer>
       <CreateQuestionBackground />
-       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible} handleCloseModal={handleCloseModal}/>
+       <ModalBackground isModalOpen={isImageUploadVisible || isImageURLVisible || isCreatingTemplate || isCCSSVisible || isDiscardModalOpen} handleCloseModal={handleCloseModal}/>
        <CCSSTabs
           screenSize={screenSize}
           isTabsOpen={isCCSSVisible}
           handleCCSSSubmit={handleCCSSSubmit}
         />
+        <DiscardModal 
+          isModalOpen={isDiscardModalOpen}
+          screenSize={screenSize}
+          handleDiscardClick={handleDiscardClick}
+        />
        <ImageUploadModal 
           draftQuestion={draftQuestion} 
+          isClone={isClone}
+          isCloneImageChanged={isCloneImageChanged}
           screenSize={screenSize}  
           isModalOpen={isImageUploadVisible} 
           handleImageChange={handleImageChange}
@@ -454,121 +527,137 @@ export default function CreateQuestion({
           paddingRight: `${theme.sizing.mdPadding}px`,
           boxSizing: 'border-box',
         }}>
-      <TitleText screenSize={ScreenSize.LARGE}>Create Question</TitleText>
-      { (screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) &&
-        <Box style={{
-          width: '100%', 
-          maxWidth: '672px',
-          display: 'flex',
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          gap: `${theme.sizing.xSmPadding}px`, 
-          paddingBottom: '16px',
-        }}>
-          <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
-          <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
-        </Box>
-      }
-      <CreateQuestionGridContainer container  wrap="nowrap" >
-        <Grid
-          sm
-          md={1}
-          lg={4}
-          item
-          style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', paddingTop: '16px', gap: '20px'}}
-        >
-          { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
-            <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
-              <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
-              <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
-              <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
+      <TitleText screenSize={ScreenSize.LARGE}> 
+        {isClone ? 'Clone' : 'Create'} Question
+      </TitleText>
+      {isLoading ? (
+        <CircularProgress
+          style={{ color: `${theme.palette.primary.circularProgress}` }}
+        />
+      ) : (
+        <>
+         {(screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) && 
+            <Box style={{
+              width: '100%', 
+              maxWidth: '672px',
+              display: 'flex',
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              gap: `${theme.sizing.xSmPadding}px`, 
+              paddingBottom: '16px',
+            }}>
+              <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride onClick={handleSaveQuestion} />
+              <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled smallScreenOverride onClick={handleDiscardQuestion} />
             </Box>
           }
-        </Grid>
-        <Grid
-          sm={12}
-          md={10}
-          lg={4}
-          item
-          style={{
-            width: '100%',
-            maxWidth: '672px',
-            minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: `${theme.sizing.xLgPadding}px`,
-          }}
-        >
-          <Box onClick={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)} style={{ width: '100%' }}>
-            <CreateQuestionCardBase
-              screenSize={screenSize}
-              draftQuestion={draftQuestion}
-              handleTitleChange={handleDebouncedTitleChange}
-              handleCCSSClick={handleCCSSClick}
-              isHighlight={highlightCard === CreateQuestionHighlightCard.QUESTIONCARD}
-              handleImageUploadClick={handleImageUploadClick}
-              handlePublicPrivateChange={handlePublicPrivateChange}
-              isCardSubmitted={isCardSubmitted}
-              isCardErrored={isCardErrored}
-              isAIError={isAIError}
-              isPublic={publicPrivate === PublicPrivateType.PUBLIC}
-              isMultipleChoice={isMultipleChoice}
-              handleAnswerType={handleAnswerType}
-            />
-          </Box>
-          <Grid
-            container
-            spacing={`${theme.sizing.smPadding}px`}
-          >
-            <SubCardGridItem 
+          <CreateQuestionGridContainer container  wrap="nowrap" >
+            <Grid
+              sm
+              md={1}
+              lg={4}
               item
-              sm={12}
-              md={6}
+              style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', paddingTop: '16px', gap: '20px'}}
             >
-              <Box onClick={() => handleClick(CreateQuestionHighlightCard.CORRECTANSWER)} style={{ width: '100%' }}>
-                <CorrectAnswerCard
-                  draftQuestion={draftQuestion}                   
-                  isHighlight={highlightCard === CreateQuestionHighlightCard.CORRECTANSWER}
-                  handleCorrectAnswerChange={handleDebouncedCorrectAnswerChange}
-                  handleCorrectAnswerStepsChange={handleDebouncedCorrectAnswerStepsChange}
+              { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
+                <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
+                  <CentralButton buttonType={ButtonType.SAVE} isEnabled onClick={handleSaveQuestion} />
+                  <CentralButton buttonType={ButtonType.SAVEDRAFT} isEnabled smallScreenOverride onClick={handleSaveDraftQuestion} />
+                  <CentralButton buttonType={ButtonType.DISCARDBLUE} isEnabled onClick={handleDiscardQuestion} />
+                </Box>
+              }
+            </Grid>
+            <Grid
+              sm={12}
+              md={10}
+              lg={4}
+              item
+              style={{
+                width: '100%',
+                maxWidth: '672px',
+                minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: `${theme.sizing.xLgPadding}px`,
+              }}
+            >
+              <Box onClick={() => handleClick(CreateQuestionHighlightCard.QUESTIONCARD)} style={{ width: '100%' }}>
+                <CreateQuestionCardBase
+                  screenSize={screenSize}
+                  isClone={isClone}
+                  isCloneImageChanged={isCloneImageChanged}
+                  draftQuestion={draftQuestion}
+                  handleTitleChange={handleTitleChange}
+                  handleCCSSClick={handleCCSSClick}
+                  isHighlight={highlightCard === CreateQuestionHighlightCard.QUESTIONCARD}
+                  handleImageUploadClick={handleImageUploadClick}
+                  handlePublicPrivateChange={handlePublicPrivateChange}
                   isCardSubmitted={isCardSubmitted}
                   isCardErrored={isCardErrored}
                   isAIError={isAIError}
+                  isPublic={publicPrivate === PublicPrivateType.PUBLIC}
+                  isMultipleChoice={isMultipleChoice}
+                  handleAnswerType={handleAnswerType}
                 />
               </Box>
-            </SubCardGridItem>
-            <SubCardGridItem
-              item
-              sm={12}
-              md={6}
-            >
-              <Box style={{width: '100%', display: 'flex', alignItems: 'center'}}>
-                <Typography style={{textAlign: 'right', fontWeight: 500}}>
-                  Try our AI-Generated Wrong Answer Explanation Prototype
-                </Typography>
-                <AISwitch checked={isAIEnabled} onChange={(prev) => handleAIIsEnabled()}/>
-              </Box>
-              <IncorrectAnswerCardStack 
-                draftQuestion={draftQuestion}
-                completeIncorrectAnswers={completeIncorrectAnswers}
-                incompleteIncorrectAnswers={incompleteIncorrectAnswers}
-                highlightCard={highlightCard} 
-                handleNextCardButtonClick={handleNextCardButtonClick}
-                handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
-                handleCardClick={handleClick} 
-                handleAIError={handleAIError}
-                isCardSubmitted={isCardSubmitted}
-                isAIEnabled={isAIEnabled}
-                isAIError={isAIError}
-              />
-            </SubCardGridItem>
-          </Grid>
-        </Grid>
-        <Grid  
-          sm
-          md={1}
-          lg={4} item />
-      </CreateQuestionGridContainer>
+              <Grid
+                container
+                spacing={`${theme.sizing.smPadding}px`}
+              >
+                <SubCardGridItem 
+                  item
+                  sm={12}
+                  md={6}
+                >
+                  <Box onClick={() => handleClick(CreateQuestionHighlightCard.CORRECTANSWER)} style={{ width: '100%' }}>
+                    <CorrectAnswerCard
+                      screenSize={screenSize}
+                      isClone={isClone}
+                      draftQuestion={draftQuestion}                   
+                      isHighlight={highlightCard === CreateQuestionHighlightCard.CORRECTANSWER}
+                      handleCorrectAnswerChange={handleCorrectAnswerChange}
+                      handleCorrectAnswerStepsChange={handleCorrectAnswerStepsChange}
+                      handleAnswerSettingsChange={handleAnswerSettingsChange}
+                      isCardSubmitted={isCardSubmitted}
+                      isCardErrored={isCardErrored}
+                      isAIError={isAIError}
+                    />
+                  </Box>
+                </SubCardGridItem>
+                <SubCardGridItem
+                  item
+                  sm={12}
+                  md={6}
+                >
+                  <Box style={{width: '100%', display: 'flex', alignItems: 'center'}}>
+                    <Typography style={{textAlign: 'right', fontWeight: 500}}>
+                      Try our AI-Generated Wrong Answer Explanation Prototype
+                    </Typography>
+                    <AISwitch checked={isAIEnabled} onChange={(prev) => handleAIIsEnabled()}/>
+                  </Box>
+                  <IncorrectAnswerCardStack 
+                    draftQuestion={draftQuestion}
+                    isClone={isClone}
+                    completeIncorrectAnswers={completeIncorrectAnswers}
+                    incompleteIncorrectAnswers={incompleteIncorrectAnswers}
+                    highlightCard={highlightCard} 
+                    handleNextCardButtonClick={handleNextCardButtonClick}
+                    handleIncorrectCardStackUpdate={handleIncorrectCardStackUpdate}
+                    handleCardClick={handleClick} 
+                    handleAIError={handleAIError}
+                    isCardSubmitted={isCardSubmitted}
+                    isAIEnabled={isAIEnabled}
+                    isAIError={isAIError}
+                  />
+                </SubCardGridItem>
+              </Grid>
+            </Grid>
+            <Grid  
+              sm
+              md={1}
+              lg={4} item />
+          </CreateQuestionGridContainer> 
+        </>
+      )}
       </Box>
     </CreateQuestionMainContainer>
   );

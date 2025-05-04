@@ -23,6 +23,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     questionsMade
     frontIdPath
     backIdPath
+    profilePicPath
     favoriteGameTemplateIds
     favoriteQuestionTemplateIds
     createdAt
@@ -60,6 +61,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
@@ -100,6 +102,7 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
@@ -114,6 +117,53 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
 ` as GeneratedQuery<
   APITypes.UserByUserNameQueryVariables,
   APITypes.UserByUserNameQuery
+>;
+export const userByCognitoId = /* GraphQL */ `query UserByCognitoId(
+  $cognitoId: String!
+  $sortDirection: ModelSortDirection
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  userByCognitoId(
+    cognitoId: $cognitoId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userName
+      dynamoId
+      cognitoId
+      title
+      firstName
+      lastName
+      email
+      password
+      gamesMade
+      questionsMade
+      frontIdPath
+      backIdPath
+<<<<<<< HEAD
+=======
+      profilePicPath
+>>>>>>> muhammad-qureshi--userProfileFunction
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.UserByCognitoIdQueryVariables,
+  APITypes.UserByCognitoIdQuery
 >;
 export const userByEmail = /* GraphQL */ `query UserByEmail(
   $email: String!
@@ -143,6 +193,7 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       questionsMade
       frontIdPath
       backIdPath
+      profilePicPath
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt

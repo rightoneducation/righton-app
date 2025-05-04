@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Paper, Fade, Typography, styled, useTheme } from '@mui/material';
-import { CentralQuestionTemplateInput } from '@righton/networking';
+import { CentralQuestionTemplateInput, CloudFrontDistributionUrl } from '@righton/networking';
 import imageUploadIcon from '../../images/imageUploadIcon.svg';
 import imageUploadClose from '../../images/imageUploadClose.svg';
 import CentralButton from '../button/Button';
@@ -76,6 +76,8 @@ const DashedBox = styled(Box)(({ theme }) => ({
 
 interface ImageUploadModalProps {
   screenSize: ScreenSize;
+  isClone: boolean;
+  isCloneImageChanged: boolean;
   isModalOpen: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   handleImageChange: (inputImage?: File, inputUrl?: string) => void;
@@ -85,6 +87,8 @@ interface ImageUploadModalProps {
 
 export default function ImageUploadModal({
   screenSize,
+  isClone,
+  isCloneImageChanged,
   isModalOpen,
   draftQuestion,
   handleImageChange,
@@ -100,6 +104,8 @@ export default function ImageUploadModal({
   let imageLink: string | null = null;
   if (imageUrl)
     imageLink = imageUrl;
+      if (isClone && !isCloneImageChanged)
+        imageLink = `${CloudFrontDistributionUrl}${imageUrl}`;
   else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
 
@@ -176,7 +182,7 @@ export default function ImageUploadModal({
               <CentralButton buttonType={ButtonType.SAVE} isEnabled smallScreenOverride buttonWidthOverride={screenSize === ScreenSize.SMALL ? '100%' : undefined} onClick={handleSaveClick}/>
             </Box>
           : <Box style={{width: '100%', position: 'relative'}}>
-              <ImageURLTextContainerStyled value={imageUrl} variant="outlined" rows='1' placeholder="Add Image URL" onChange={(e)=> setLocalURL(e.target.value)}/>
+              <ImageURLTextContainerStyled value={localURL} variant="outlined" rows='1' placeholder="Add Image URL" onChange={(e)=> setLocalURL(e.target.value)}/>
               <ImageURLUploadButton onClick={() => handleUrlChange(localURL ?? '')}>
                 Upload
               </ImageURLUploadButton>

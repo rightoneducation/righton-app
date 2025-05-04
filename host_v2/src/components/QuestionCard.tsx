@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme, styled} from '@mui/material/styles';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { GameSessionState } from '@righton/networking';
+import { GameSessionState, CloudFrontDistributionUrl } from '@righton/networking';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
@@ -56,7 +56,7 @@ export default function QuestionCard({
               height: 'auto',
 
             }}
-            src={imageUrl}
+            src={`${CloudFrontDistributionUrl}${imageUrl}`}
             alt="Question"
           />
         )}

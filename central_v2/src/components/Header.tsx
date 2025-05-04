@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Button, Typography, Collapse, Fade, IconButton, Paper } from '@mui/material';
-import rightonlogo from '../images/rightonlogo.svg';
+import { CloudFrontDistributionUrl } from '@righton/networking';
+import rightonlogo from '../images/rightOnLogoHeader.svg';
 import dice from '../images/dice.svg';
 import dicePink from '../images/dicePink.svg';
 import qmark from '../images/qmark.svg';
@@ -13,7 +14,7 @@ import libPink from '../images/libPink.svg';
 import profile from '../images/profileplaceholder.svg';
 import hamburger from '../images/hamburger.svg';
 import hamburgerX from '../images/hamburgerX.svg';
-import plus from '../images/plus.svg';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import createDropdownGame from '../images/createDropdownGame.svg';
 import createDropdownQuestion from '../images/createDropdownQuestion.svg'
 import { ScreenType, ScreenSize, GameQuestionType, UserStatusType } from '../lib/CentralModels';
@@ -24,7 +25,6 @@ import PublicPrivateButton from './button/publicprivatebutton/PublicPrivateButto
 import GameQuestionButton from './button/gamequestionbutton/GameQuestionButton';
 
 interface HeaderProps {
-  isValidatingUser: boolean;
   currentScreen: ScreenType;
   screenSize: ScreenSize;
   isLgScreen: boolean;
@@ -32,6 +32,7 @@ interface HeaderProps {
   setMenuOpen: (menuOpen: boolean) => void;
   gameQuestion?: GameQuestionType;
   setGameQuestion?: (gameQuestion: GameQuestionType) => void;
+  handleLogOut: () => void;
   userStatus: UserStatusType;
 }
 
@@ -49,7 +50,7 @@ const HeaderContainer = styled(Box, {
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
-    padding: `${theme.sizing.smPadding}px ${theme.sizing.xLgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.xLgPadding}px`,
+    padding: `${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px ${theme.sizing.smPadding}px ${theme.sizing.lgPadding}px`,
     boxSizing: 'border-box',
     position: 'relative',
     backgroundColor: `${theme.palette.primary.lightBlueBackgroundColor}`,
@@ -156,7 +157,6 @@ const ImageContainer = styled(Box, {
 }));
 
 export default function Header({
-  isValidatingUser,
   currentScreen,
   screenSize,
   isLgScreen,
@@ -164,12 +164,14 @@ export default function Header({
   setMenuOpen,
   gameQuestion,
   setGameQuestion,
+  handleLogOut,
   userStatus,
 }: HeaderProps) {
   const navigate = useNavigate();
   const theme = useTheme();
-  
+  const centralData = useCentralDataState();
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
+  const profilePicPath = centralData.userProfile?.profilePicPath;
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -191,7 +193,7 @@ export default function Header({
   };
 
   const createMenu = [
-    <CreateButtonContainer key="createMenu">
+    <CreateButtonContainer key="createMenu" style={{paddingRight: '24px'}}>
     <Box style={{zIndex: 9}}>
       <CentralButton buttonType={ButtonType.CREATE} isEnabled smallScreenOverride={screenSize === ScreenSize.SMALL} onClick={() => (setIsCreateMenuOpen(!isCreateMenuOpen))}/>                
     </Box>
@@ -216,12 +218,17 @@ export default function Header({
 
   const loggedInUserComponents = [
     isLgScreen ? (
-      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%'}} key="lgscreen">
+      <Box display="flex" justifyContent="center" alignItems="center" style={{height: '100%',}} key="lgscreen">
         {createMenu}
-        <img src={profile} alt="Profile" style={{ marginLeft: '24px' }} />
+        <CentralButton buttonType={ButtonType.LOGOUT} isEnabled onClick={handleLogOut}/>
+        <Box onClick={() => navigate('/userprofile')} style={{cursor: 'pointer'}}>
+          <img src={`${CloudFrontDistributionUrl}${profilePicPath}`} alt="Profile" style={{ marginLeft: '24px', height: '62px', width: '62px', objectFit: 'cover', border: '4px #FFF solid', borderRadius: '31px', boxSizing: 'border-box' }} />
+        </Box>
       </Box>
     ) : (
-      <img src={profile} alt="Profile" />
+      <Box onClick={() => navigate('/userprofile')} style={{cursor: 'pointer'}}>
+        <img src={`${CloudFrontDistributionUrl}${profilePicPath}`} alt="Profile"  style={{height: '62px', width: '62px', objectFit: 'cover', border: '4px #FFF solid', borderRadius: '31px', boxSizing: 'border-box' }} />
+      </Box>
     )
   ]
 
@@ -348,7 +355,7 @@ export default function Header({
                 </ButtonText>
               </TransparentButton>
               
-              { ((!isValidatingUser && userStatus === UserStatusType.LOGGEDIN) || (isValidatingUser && currentScreen === ScreenType.LIBRARY)) && 
+              { ((userStatus === UserStatusType.LOGGEDIN) || (currentScreen === ScreenType.LIBRARY)) && 
                 <TransparentButton
                   disableRipple
                   onClick={() =>
@@ -376,15 +383,15 @@ export default function Header({
           )}
         </ImageContainer>
         <Box style={{width: 'fit-content', display: 'flex', gap: '16px', justifyContent: 'center'}}>
-          {!isValidatingUser &&
-            userStatus === UserStatusType.LOGGEDIN 
-              ? loggedInUserComponents
-              :
-                <>
-                  <CentralButton buttonType={ButtonType.LOGIN} isEnabled onClick={() => navigate('/login')}/>
-                  <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
-                </>
-            
+          { userStatus !== UserStatusType.LOADING && (
+              userStatus === UserStatusType.LOGGEDIN 
+                ? loggedInUserComponents
+                :
+                  <>
+                    <CentralButton buttonType={ButtonType.LOGINHEADER} isEnabled onClick={() => navigate('/login')}/>
+                    <CentralButton buttonType={ButtonType.SIGNUP} isEnabled onClick={() => navigate('/signup')} />   
+                  </>
+              )
           }
         </Box>
         </HeaderFirstRow>

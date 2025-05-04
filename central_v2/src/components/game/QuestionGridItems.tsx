@@ -10,6 +10,7 @@ import {
 import { styled } from '@mui/material/styles';
 import {
   AnswerType,
+  AnswerPrecision,
   CentralQuestionTemplateInput,
   IncorrectCard,
   PublicPrivateType,
@@ -63,6 +64,8 @@ const AISwitch = styled(Switch)(({ theme }) => ({
 
 interface IQuestionElements {
   screenSize: ScreenSize;
+  isClone: boolean;
+  isCloneImageChanged: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
@@ -90,13 +93,16 @@ interface IQuestionElements {
     incompleteAnswers: IncorrectCard[],
     isAIEnabledCard?: boolean,
   ) => void;
-  handleDebouncedTitleChange: (title: string, draftQuestionInput: CentralQuestionTemplateInput) => void;
+  handleDebouncedTitleChange: (title: string) => void;
   handleDebouncedCorrectAnswerChange: (correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => void;
-  handleDebouncedCorrectAnswerStepsChange: (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => void
+  handleDebouncedCorrectAnswerStepsChange: (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => void;
+  handleAnswerSettingsChange: (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType, answerPrecision?: AnswerPrecision) => void;
 }
 
 export default function QuestionElements({
   screenSize,
+  isClone,
+  isCloneImageChanged,
   draftQuestion,
   isCardSubmitted,
   isCardErrored,
@@ -114,6 +120,7 @@ export default function QuestionElements({
   handleDebouncedCorrectAnswerChange,
   handleDebouncedTitleChange,
   handleDebouncedCorrectAnswerStepsChange,
+  handleAnswerSettingsChange,
   handleDiscardQuestion,
   handleSaveQuestion,
   handleCCSSClick,
@@ -151,6 +158,8 @@ export default function QuestionElements({
           <CreateQuestionCardBase
             isCreateGame
             screenSize={screenSize}
+            isClone={isClone}
+            isCloneImageChanged={isCloneImageChanged}
             draftQuestion={draftQuestion}
             handleTitleChange={handleDebouncedTitleChange}
             handleCCSSClick={handleCCSSClick}
@@ -176,6 +185,8 @@ export default function QuestionElements({
               style={{ width: '100%' }}
             >
               <CorrectAnswerCard
+                screenSize={screenSize}
+                isClone={isClone}
                 draftQuestion={draftQuestion}
                 isHighlight={
                   highlightCard === CreateQuestionHighlightCard.CORRECTANSWER
@@ -184,6 +195,7 @@ export default function QuestionElements({
                 handleCorrectAnswerStepsChange={
                   handleDebouncedCorrectAnswerStepsChange
                 }
+                handleAnswerSettingsChange={handleAnswerSettingsChange}
                 isCardSubmitted={isCardSubmitted}
                 isCardErrored={isCorrectCardErrored}
                 isAIError={isAIError}
@@ -204,6 +216,7 @@ export default function QuestionElements({
             </Box>
             <IncorrectAnswerCardStack
               draftQuestion={draftQuestion}
+              isClone={isClone}
               completeIncorrectAnswers={completeIncorrectAnswers}
               incompleteIncorrectAnswers={incompleteIncorrectAnswers}
               highlightCard={highlightCard}

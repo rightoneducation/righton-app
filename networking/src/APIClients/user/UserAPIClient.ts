@@ -8,12 +8,15 @@ import {
   DeleteUserInput,
   DeleteUserMutation,
   DeleteUserMutationVariables,
+  GetUserQueryVariables,
   UpdateUserInput,
   UpdateUserMutation,
   UpdateUserMutationVariables,
-  UserByUserNameQuery
+  UserByUserNameQuery,
+  GetUserQuery
 } from "../../AWSMobileApi";
 import {
+  getUser,
   createUser,
   deleteUser,
   updateUser, 
@@ -32,13 +35,10 @@ export class UserAPIClient
     try{
     const input: CreateUserInput = createUserInput
     const variables: CreateUserMutationVariables = { input }
-    console.log(input);
-    console.log(variables);
     const user = await this.callGraphQL<CreateUserMutation>(
         createUser,
         variables
     );
-    console.log(user);
     if (user.data.createUser)
       return UserParser.parseIUserfromAWSUser(user.data.createUser) as IUser;
     } catch (error) {
@@ -61,6 +61,20 @@ export class UserAPIClient
     return null;
   }
 
+  async getUser(
+    id: string
+  ): Promise<IUser | null> {
+    if (!id) return null;
+    const variables: GetUserQueryVariables = { id }
+    const user = await this.callGraphQL<GetUserQuery>(
+        getUser,
+        variables as unknown as GraphQLOptions
+    )
+    if (user.data.getUser)
+      return UserParser.parseIUserfromAWSUser(user.data.getUser) as IUser;
+    return null;
+  }
+
   async getUserByUserName(
     userName: string
   ): Promise<IUser | null> {
@@ -68,7 +82,6 @@ export class UserAPIClient
         userByUserName,
         {userName} as unknown as GraphQLOptions
     )
-    console.log(user);
     if (user.data.userByUserName?.items[0])
       return UserParser.parseIUserfromAWSUser(user.data.userByUserName.items[0]) as IUser;
     return null;
@@ -78,15 +91,12 @@ export class UserAPIClient
   async updateUser( 
     updateUserInput: UpdateUserInput
   ): Promise<IUser | null> {
-    console.log(updateUserInput);
     const input: UpdateUserInput = updateUserInput
     const variables: UpdateUserMutationVariables = { input }
-    console.log(variables);
     const user = await this.callGraphQL<UpdateUserMutation>(
         updateUser,
         variables
     )
-    console.log(user.data.updateUser);
     if (user.data.updateUser)
       return UserParser.parseIUserfromAWSUser(user.data.updateUser) as IUser;
     return null;

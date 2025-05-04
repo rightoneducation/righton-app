@@ -1,6 +1,7 @@
 {
   "button": {
     "login": "Login",
+    "loginheader": "Login",
     "signup": "Sign Up",
     "view": "View",
     "launch": "Launch",
@@ -18,6 +19,7 @@
     "cloneandedit": "Clone and Edit",
     "nextquestion": "Next Question",
     "save": "Save",
+    "savepassword": "Save Password",
     "savedraft": "Save Draft",
     "discard": "Discard",
     "discardblue": "Discard",
@@ -26,6 +28,7 @@
     "changeimage": "Change Image",
     "nextcard": "Next Card",
     "launchgame": "Launch Game",
+    "logout": "Log out",
     "createquestion": "Create Question",
     "questionbank": "Question Bank",
     "back": "Back",
@@ -38,7 +41,9 @@
     "test": "Test",
     "cancel": "Cancel",
     "retry": "Retry",
-    "addtogame": "Add to Game"
+    "addtogame": "Add to Game",
+    "yes": "Yes",
+    "no": "No"
   },
   "imageButton": {
     "imageupload": "Upload Image",

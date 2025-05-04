@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import {
   CentralQuestionTemplateInput,
   IncorrectCard,
@@ -30,6 +30,7 @@ import {
   TPhaseTime, 
   gameTemplate,
   emptyQuestionTemplate } from '../lib/CreateGameModels';
+import DiscardModal from '../components/modal/DiscardModal';  
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
@@ -104,14 +105,21 @@ export default function CreateGame({
   handleSortChange,
   loadMore,
  }: CreateGameProps) {
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const navigate = useNavigate();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const route = useMatch('/clone/game/:gameId');
+  const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
+  const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
+  const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
   >([draftTemplate]);
+  const [originalQuestionImageUrls, setOriginalQuestionImageUrls] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
     phaseOne: '',
     phaseTwo: '',
@@ -184,7 +192,6 @@ export default function CreateGame({
   const handleGameImageChange = async (inputImage?: File, inputUrl?: string,) => {
    setDraftGame((prev) => updateGameImageChange(prev, inputImage, inputUrl))
   };
-
   const handleSaveGame = async () => {
     try {
       setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true, isCreatingTemplate: true }));
@@ -311,6 +318,7 @@ export default function CreateGame({
   };
 
   const handleCloseQuestionModal = () => {
+    setIsDiscardModalOpen(false);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
@@ -444,10 +452,14 @@ export default function CreateGame({
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
-        isModalOpen={openModal}
+        isModalOpen={openModal || isDiscardModalOpen}
         handleCloseModal={handleCloseQuestionModal}
       />
-
+      <DiscardModal 
+          isModalOpen={isDiscardModalOpen}
+          screenSize={screenSize}
+          handleDiscardClick={handleDiscardClick}
+        />
       <CreatingTemplateModal
         isModalOpen={draftGame.isCreatingTemplate}
         templateType={TemplateType.GAME}
@@ -472,6 +484,10 @@ export default function CreateGame({
       <ImageUploadModal
         draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
         screenSize={screenSize}
+        isClone={isClone}
+        isCloneImageChanged={
+          draftQuestionsList[selectedQuestionIndex].isCloneQuestionImageChanged
+        }
         isModalOpen={
           draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
         }
@@ -483,6 +499,8 @@ export default function CreateGame({
       {/* Create Game Image Upload Modal */}
       <CreateGameImageUploadModal
         draftGame={draftGame}
+        isClone={isClone}
+        isCloneImageChanged={draftGame.isCloneGameImageChanged}
         screenSize={screenSize}
         isModalOpen={draftGame.isGameImageUploadVisible}
         handleImageChange={handleGameImageChange}
@@ -494,6 +512,8 @@ export default function CreateGame({
       <CreateGameBoxContainer>
         <CreateGameComponent
           draftGame={draftGame}
+          isClone={isClone}
+          isCloneImageChanged={draftGame.isCloneGameImageChanged}
           screenSize={screenSize}
           isGameCardErrored={hasGameError}
           handleSaveGame={handleSaveGame}
@@ -534,6 +554,10 @@ export default function CreateGame({
                   ): (
                   <QuestionElements
                     screenSize={screenSize}
+                    isClone={isClone}
+                    isCloneImageChanged={
+                      draftQuestionItem.isCloneQuestionImageChanged
+                    }
                     draftQuestion={draftQuestionItem.question}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,
@@ -555,6 +579,7 @@ export default function CreateGame({
                     handleDebouncedCorrectAnswerStepsChange={
                       handleDebouncedCorrectAnswerStepsChange
                     }
+                    handleAnswerSettingsChange={handleAnswerSettingsChange}
                     handleDebouncedTitleChange={handleDebouncedTitleChange}
                     handlePublicPrivateChange={
                       handlePublicPrivateQuestionChange

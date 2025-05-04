@@ -33,21 +33,21 @@ const BodyContainer = styled(Box)(() => {
 );
 
 interface AppContainerProps {
-  isValidatingUser: boolean;
   currentScreen: ScreenType;
   gameQuestion?: GameQuestionType;
   setIsTabsOpen?: (isTabsOpen: boolean) => void;
   setLibraryGameQuestionSwitch?: (gameQuestion: GameQuestionType) => void
+  handleLogOut: () => void;
   children: React.ReactNode;
   
 }
 
 function AppContainer({ 
-  isValidatingUser,
   currentScreen, 
   gameQuestion,
   setIsTabsOpen, 
   setLibraryGameQuestionSwitch,
+  handleLogOut,
   children 
 }: AppContainerProps) {
   const theme = useTheme();
@@ -77,7 +77,6 @@ function AppContainer({
           />
         }
         <Header
-          isValidatingUser={isValidatingUser}
           currentScreen={currentScreen}
           screenSize={screenSize}
           isLgScreen={isLgScreen}
@@ -85,6 +84,7 @@ function AppContainer({
           gameQuestion={gameQuestion}
           setGameQuestion={setLibraryGameQuestionSwitch}
           setMenuOpen={setMenuOpen}
+          handleLogOut={handleLogOut}
           userStatus={centralData.userStatus}
         />
       </HeaderContainer>

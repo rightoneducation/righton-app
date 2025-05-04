@@ -33,8 +33,6 @@ import tabPrivateIcon from '../../images/tabPrivate.svg';
 interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
-  isLibraryInit: boolean;
-  setIsLibraryInit: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -52,8 +50,6 @@ interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
 export default function LibraryTabs({
   gameQuestion,
   screenSize,
-  isLibraryInit,
-  setIsLibraryInit,
   setIsTabsOpen,
   handlePublicPrivateChange,
   handleChooseGrades,
@@ -90,9 +86,9 @@ const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBL
 const elements = gameQuestion === GameQuestionType.GAME ?
   getGameElements(openTab, isSearchResults, centralData)
   : getQuestionElements(openTab, isSearchResults, centralData);
-
-if (isLibraryInit) {
-  setIsLibraryInit(false);
+console.log(centralData.isLibraryInit);
+if (centralData.isLibraryInit) {
+  centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
   fetchElements(openTab);
 }
 

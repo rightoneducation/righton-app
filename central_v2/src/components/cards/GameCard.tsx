@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { IAPIClients, IGameTemplate } from '@righton/networking';
+import { IAPIClients, IGameTemplate, CloudFrontDistributionUrl  } from '@righton/networking';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ScreenSize, CloudFrontDistributionUrl } from '../../lib/CentralModels';
-import heart from '../../images/heart.svg';
-import eyeball from '../../images/eyeball.svg';
-import rocket from '../../images/rocket.svg';
+import { ScreenSize, UserStatusType } from '../../lib/CentralModels';
+import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import { ButtonCCSS } from '../../lib/styledcomponents/ButtonStyledComponents';
@@ -173,6 +171,7 @@ export default function StyledGameCard({
     const LAUNCH_GAME_URL = `http://dev-host.rightoneducation.com/new/Public/${game.id}`;
     window.location.href = LAUNCH_GAME_URL;
   }
+  const centralData = useCentralDataState();
   return (
     <GameCard isCarousel={isCarousel} screenSize={screenSize}>
       <GameImageContainer>
@@ -180,7 +179,9 @@ export default function StyledGameCard({
         ? <CarouselGameImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />
         : <GameImage src={`${CloudFrontDistributionUrl}${image}`} alt="Tag" />
       }
+      { centralData.userStatus === UserStatusType.LOGGEDIN &&
         <FavouriteButton isEnabled id={id}/>
+      }
       </GameImageContainer>
       <ContentContainer>
         <TitleTextTypography>{title}</TitleTextTypography>

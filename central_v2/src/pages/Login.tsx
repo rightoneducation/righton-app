@@ -16,6 +16,8 @@ import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import LoginErrorModal from '../components/modal/LoginErrorModal';
 import ModalBackground from '../components/modal/ModalBackground';
+import { UserStatusType } from '../lib/CentralModels';
+import { useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
@@ -140,11 +142,11 @@ const NoAccountText = styled(Typography)(({ theme }) => ({
 }));
 
 interface LoginProps{
-  handleForgotPasswordClick: () => void
-
+  handleForgotPasswordClick: () => void;
+  handleLogOut: () => void;
 }
 
-function Login({handleForgotPasswordClick} : LoginProps) {
+function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
   const theme = useTheme();
   const navigate = useNavigate(); // Initialize useNavigate
   const [userName, setUserName] = useState('');
@@ -159,13 +161,17 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  
+  const centralDataDispatch = useCentralDataDispatch();
 
   const handleLoginClick = async () => {
     try {
       setIsLoggingIn(true);
-      await apiClients.centralDataManager?.loginUserAndRetrieveUserProfile(userName, password);
+      const localProfile = await apiClients.centralDataManager?.loginUserAndRetrieveUserProfile(userName, password);
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
+      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
       setIsLoggingIn(false);
-      navigate('/'); // Navigate to the Signup page
+      navigate('/');
     } catch (error) {
       setIsModalOpen(true);
       setIsLoggingIn(false);
@@ -177,13 +183,18 @@ function Login({handleForgotPasswordClick} : LoginProps) {
     onSuccess: async (credentialResponse) => {
       try {
         const idToken = credentialResponse.access_token; // Use `access_token` for OAuth login
+        console.log("Google sending this back: ", credentialResponse)
 
         if (idToken) {
           console.log("logging user via google.")
+          console.log("▶️ OAuth origin is:", window.location.origin);
           const response = await apiClients.auth.awsSignInFederated();
-          // handleGoogleUserCreate()
+          // const userloggedin = await apiClients.auth.getCurrentSession()
+          // centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
           
-          console.log('User signed in:', response);
+          // handleGoogleUserCreate()
+          console.log("test")
+          // console.log('User signed in:', userloggedin);
         } else {
           console.error('Google sign-in token is missing');
         }
@@ -202,7 +213,7 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   
   return (
     <SignUpMainContainer>
-      <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <LoginErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleLogOut={handleLogOut}/>
       <ModalBackground isModalOpen={isModalOpen} handleCloseModal={() => setIsModalOpen(false)}/>
       <InnerBodyContainer>
         <UpperLogin>
@@ -248,7 +259,11 @@ function Login({handleForgotPasswordClick} : LoginProps) {
   );
 }
 
-export default function LoginSwitch() {
+interface LoginSwitchProps {
+  handleLogOut: () => void;
+}
+
+export default function LoginSwitch({handleLogOut}: LoginSwitchProps) {
   const [isPasswordForgot, setisPasswordForgot] = useState(false); // Track submission state
 
   const handleForgotPasswordClick = () => {
@@ -258,7 +273,7 @@ export default function LoginSwitch() {
   return isPasswordForgot? (
     <ResetPassword />
   ) : (
-    <Login handleForgotPasswordClick={handleForgotPasswordClick}/>
+    <Login handleForgotPasswordClick={handleForgotPasswordClick} handleLogOut={handleLogOut}/>
   )
 
 }
