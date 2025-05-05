@@ -174,9 +174,14 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   public loginUserAndRetrieveUserProfile = async (userName: string, password: string) => {
     let userProfile = null;
     try {
-      await this.authAPIClient.awsSignIn(userName, password);
+      const response = await this.authAPIClient.awsSignIn(userName, password);
+      console.log(response);
       const currentCognitoUser = await getCurrentUser();
+      console.log(currentCognitoUser);
       const attributes = await fetchUserAttributes();
+      const session = await this.authAPIClient.getCurrentSession();
+      console.log(session);
+      console.log(attributes);
       if (!attributes || !attributes.nickname) 
         return null;
       const currentDynamoDBUser = await this.userAPIClient.getUserByUserName(attributes.nickname);
@@ -197,7 +202,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   public loginGoogleAndRetrieveUserProfile = async () => {
     let userProfile = null;
     try {
-      const response = await this.authAPIClient.awsSignInFederated();
+      await this.authAPIClient.awsSignInFederated();
       const currentSession = await this.authAPIClient.getCurrentSession();
       const cognitoId = currentSession?.userSub;
       if (!cognitoId) 

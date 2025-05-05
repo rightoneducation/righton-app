@@ -189,7 +189,7 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
           console.log("logging user via google.")
           console.log("▶️ OAuth origin is:", window.location.origin);
           const response = await apiClients.auth.awsSignInFederated();
-          centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
+         // centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
           console.log("test")
         } else {
           console.error('Google sign-in token is missing');

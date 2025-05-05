@@ -515,6 +515,12 @@ export default function useCentralDataManager({
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
+  const handleLogOut = () => {
+    apiClients.centralDataManager?.signOut();
+    apiClients.centralDataManager?.clearLocalUserProfile();
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+  }
+
   const validateUser = async () => {
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     const status = await apiClients.auth.verifyAuth();
@@ -534,20 +540,19 @@ export default function useCentralDataManager({
         return;
       }
       // case for google oauth sign up, cognito present, but no local profile
-      const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
-      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
-      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.GOOGLE_SIGNUP });
-      return;
+      // google idtoken has a providerName whereas cognito does not
+      if (
+        (currentSession.tokens?.idToken?.payload?.identities as { providerName: string }[] | undefined)
+          ?.some(i => i.providerName === 'Google')
+      ) {
+        const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
+        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
+        centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.GOOGLE_SIGNUP });
+        return;
+      }
     }
-    apiClients.centralDataManager?.clearLocalUserProfile();
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    handleLogOut();
   };
-
-  const handleLogOut = () => {
-    apiClients.centralDataManager?.signOut();
-    apiClients.centralDataManager?.clearLocalUserProfile();
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-  }
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
