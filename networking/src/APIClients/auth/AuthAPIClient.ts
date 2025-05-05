@@ -116,17 +116,11 @@ export class AuthAPIClient
         authMode
       });
   
-      console.log("getUserByEmailDB AUTHAPICLIENT: ", response);
-  
       // Handle response
       if ("data" in response) {
-        console.log("User data:", response.data.userByEmail.items);
-  
         if (response.data.userByEmail.items?.length > 0) {
-          console.log("User found:", response.data.userByEmail.items[0]);
           return true
         } else {
-          console.log("No user found with that email");
           return false
         }
       } else {
@@ -142,7 +136,6 @@ export class AuthAPIClient
           nickname: newUsername,
         }
       });
-      console.log('Username updated in Cognito successfully');
     } catch (error) {
       console.error('Failed to update username in Cognito:', error);
       throw new Error('Could not update username in Cognito');

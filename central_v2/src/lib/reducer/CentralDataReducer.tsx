@@ -30,7 +30,8 @@ export type CentralDataAction =
   | { type: 'SET_IS_TABS_OPEN'; payload: boolean }
   | { type: 'SET_IS_FAV_TAB_OPEN'; payload: boolean }
   | { type: 'SET_PUBLIC_PRIVATE'; payload: PublicPrivateType }
-  | { type: 'SET_SORT'; payload: { field: SortType, direction: SortDirection | null } };
+  | { type: 'SET_SORT'; payload: { field: SortType, direction: SortDirection | null } }
+  | { type: 'SET_ADVANCE_GOOGLE_SIGNUP'; payload: { firstName: string, lastName: string, userStatus: UserStatusType } };
   
 export const centralDataReducer = (state: ICentralDataState, action: CentralDataAction): ICentralDataState => {
   switch (action.type) {
@@ -90,6 +91,8 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
       return {...state, publicPrivate: action.payload};
     case 'SET_SORT':
       return {...state, sort: action.payload};
+    case 'SET_ADVANCE_GOOGLE_SIGNUP':
+      return  {...state, userProfile: {...state.userProfile, firstName: action.payload.firstName, lastName: action.payload.lastName}, userStatus: action.payload.userStatus};
     default:
       return state;
   }

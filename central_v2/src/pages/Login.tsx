@@ -197,6 +197,12 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
     },
   });
 
+  const handleGoogleClick = async () => {
+    setIsLoggingIn(true);
+    googleLogin();
+  }
+
+
   const handleSignupClick = () => {
     navigate('/Signup'); // Navigate to the Signup page
   };
@@ -209,7 +215,7 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
         <UpperLogin>
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
           <UpperLoginText>Sign In to an Existing Account</UpperLoginText>
-          <GoogleLoginButton onClick={() => googleLogin()} variant="contained">
+          <GoogleLoginButton onClick={handleGoogleClick} variant="contained">
             <img src={GoogleImageSvg} alt="Google Icon" width="30px" height="30px" />
             Login with Google
           </GoogleLoginButton>

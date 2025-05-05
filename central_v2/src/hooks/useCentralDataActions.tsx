@@ -245,7 +245,6 @@ export default function useCentralDataManager({
             )
             .then((response) => {
               centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-              console.log(response);
               if (response){
                 switch (newPublicPrivate){
                   case PublicPrivateType.PRIVATE:
@@ -385,7 +384,6 @@ export default function useCentralDataManager({
 
   const getFav = async (user: IUserProfile) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    console.log(user);
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
@@ -526,14 +524,11 @@ export default function useCentralDataManager({
     if (status) {
       const currentSession = await apiClients.auth.getCurrentSession();
       const cognitoId = currentSession?.userSub;
-      console.log('cognitoId', cognitoId);
       if (!cognitoId) {
         handleLogOut();
         return;
       }
-      console.log('getUser');
       const localProfile = await apiClients.centralDataManager?.getUser(cognitoId);
-      console.log('localProfile', localProfile);
       if (localProfile) {
         if (!isUserProfileComplete(localProfile) || cognitoId !== localProfile.cognitoId) {
           handleLogOut();
@@ -559,8 +554,7 @@ export default function useCentralDataManager({
           ?.some(i => i.providerName === 'Google')
       ) {
         const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
-        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
-        centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.GOOGLE_SIGNUP });
+        centralDataDispatch({ type: 'SET_ADVANCE_GOOGLE_SIGNUP', payload: {firstName, lastName, userStatus: UserStatusType.GOOGLE_SIGNUP }});
         return;
       }
     }

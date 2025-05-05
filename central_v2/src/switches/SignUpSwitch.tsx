@@ -48,6 +48,7 @@ export default function SignUpSwitch({
       return (
         <GoogleSignup
           apiClients={apiClients}
+          centralData={centralData}
           frontImage={frontImage}
           setFrontImage={setFrontImage}
           backImage={backImage}
