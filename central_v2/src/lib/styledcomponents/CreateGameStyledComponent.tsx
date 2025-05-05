@@ -55,7 +55,7 @@ export const CreateGameBoxContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  gap: `${theme.sizing.lgPadding}px`,
+  gap: `${theme.sizing.mdPadding}px`,
   zIndex: 1,
   position: 'relative',
   paddingLeft: `${theme.sizing.mdPadding}px`,
@@ -98,7 +98,7 @@ export const CreateGameSaveDiscardBoxContainer = styled(Box, {
     screenSize !== ScreenSize.MEDIUM && {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'flex-Start',
+      justifyContent: 'center',
       alignItems: 'center',
       gap: `${theme.sizing.xSmPadding}px`,
       paddingRight: '30px',
@@ -110,7 +110,6 @@ export const CreateGameSaveDiscardBoxContainer = styled(Box, {
     justifyContent: 'center',
     alignItems: 'center',
     gap: `${theme.sizing.xSmPadding}px`,
-    paddingBottom: '16px',
   }),
 }));
 
@@ -151,7 +150,6 @@ export const CreateGameSaveDiscardGridItem = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'flex-start',
-  paddingTop: '16px',
   gap: '20px',
 }));
 

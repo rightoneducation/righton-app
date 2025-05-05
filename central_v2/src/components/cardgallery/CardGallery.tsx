@@ -29,6 +29,7 @@ interface CardGalleryProps<T> {
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
   isMyLibrary?: boolean;
+  isCreateGame?: boolean;
 }
 
 interface MostPopularComponentProps<T> {
@@ -38,6 +39,7 @@ interface MostPopularComponentProps<T> {
   numColumns: number;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleViewButtonClick: (element: T) => void;
+  isCreateGame?: boolean;
 }
 
 interface MostPopularGamesComponentProps {
@@ -49,6 +51,7 @@ interface MostPopularGamesComponentProps {
   isMyLibrary?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleViewButtonClick: (element: IGameTemplate) => void;
+  isCreateGame?: boolean;
 }
 
 function MostPopularGamesComponent({
@@ -60,6 +63,7 @@ function MostPopularGamesComponent({
   isMyLibrary,
   setIsTabsOpen,
   handleViewButtonClick,
+  isCreateGame,
 }: MostPopularGamesComponentProps) {
   const centralData = useCentralDataState();
   const favoriteGameTemplateIds = centralData.userProfile?.favoriteGameTemplateIds;
@@ -80,6 +84,7 @@ function MostPopularGamesComponent({
                 <StyledGameCard
                   screenSize={screenSize}
                   game={game}
+                  isCreateGame={isCreateGame}
                   id={game.id}
                   title={game.title}
                   description={game.description}
@@ -104,6 +109,7 @@ function MostPopularQuestionsComponent({
   numColumns,
   setIsTabsOpen,
   handleViewButtonClick,
+  isCreateGame,
 }: MostPopularComponentProps<IQuestionTemplate>) {
   const array = Array.from({ length: numColumns });
   const navigate = useNavigate();
@@ -188,7 +194,8 @@ export default function CardGallery<
   galleryType,
   setIsTabsOpen,
   handleView,
-  isMyLibrary
+  isMyLibrary,
+  isCreateGame
 }: CardGalleryProps<T>) {
   const maxCards = 12;
   const getNumColumns = () => {
@@ -248,6 +255,7 @@ export default function CardGallery<
           numColumns={getNumColumns()}
           setIsTabsOpen={setIsTabsOpen}
           isMyLibrary={isMyLibrary}
+          isCreateGame={isCreateGame}
           handleViewButtonClick={
             handleViewButtonClick as (element: IGameTemplate) => void
           }
@@ -255,6 +263,7 @@ export default function CardGallery<
       ) : (
         <MostPopularQuestionsComponent
           isLoading={isLoading ?? false}
+          isCreateGame={isCreateGame}
           mostPopularElements={reformatElements(
             galleryElements as IQuestionTemplate[],
           )}

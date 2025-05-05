@@ -13,9 +13,9 @@ export type AWSUser = {
   owner?: string | null
   frontIdPath?: string | null
   backIdPath?: string | null
+  profilePicPath?: string |null
   dynamoId?: string | null
   cognitoId?: string | null
-  profilePicPath?: string | null
   favoriteGameTemplateIds?: string | null
   favoriteQuestionTemplateIds?: string | null
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment } from '@mui/material';
+import { Typography, RadioGroup, Box, Fade, styled, useTheme, InputAdornment, Button } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { v4 as uuidv4 } from 'uuid';
 import { 
@@ -50,6 +50,7 @@ interface CreateQuestionCardBaseProps {
   isAIError: boolean;
   isPublic: boolean;
   isMultipleChoice: boolean;
+  isCreateGame?: boolean;
 }
 
 type ImagePlaceholderProps = {
@@ -111,12 +112,18 @@ export default function CreateQuestionCardBase({
   isCardErrored,
   isAIError,
   isPublic,
+  isCreateGame,
 }: CreateQuestionCardBaseProps) {
   const theme = useTheme();
   const { imageUrl, image } = draftQuestion.questionCard;
   const [questionType, setQuestionType] = React.useState<PublicPrivateType>(PublicPrivateType.PUBLIC);
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const [CCSSIsOpen, setCCSSIsOpen] = React.useState<boolean>(false);
+
+  const isCreateGamePage = 
+  isCreateGame && screenSize === ScreenSize.LARGE ||
+  isCreateGame && screenSize === ScreenSize.MEDIUM ||
+  isCreateGame && screenSize === ScreenSize.SMALL;
 
  let imageLink: string | null = null;
   if (imageUrl){
@@ -136,7 +143,6 @@ export default function CreateQuestionCardBase({
 
   const handleCCSSButtonClick = () => {
     handleCCSSClick();
-    // setCCSSIsOpen((prev) => !prev);
   }
 
   const imageContents = [
@@ -172,22 +178,31 @@ export default function CreateQuestionCardBase({
   ]
 
   return (
-    <BaseCardStyled elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete} isClone={isClone}>
+    <BaseCardStyled sx={{ 
+      ...(isCreateGame && 
+       { boxShadow: "0px 8px 16px -4px rgba(92, 118, 145, 0.4)",
+        padding: isCreateGame && screenSize === ScreenSize.LARGE ? `28px` : `${theme.sizing.mdPadding}`
+        })}} elevation={6} isHighlight={isHighlight} isCardComplete={draftQuestion.questionCard.isCardComplete} isClone={isClone}>
       <CreateQuestionTitleBarStyled screenSize={screenSize}>
         <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
           <QuestionTitleStyled sx={{ color: "#384466"}}>Create Question</QuestionTitleStyled>
           <Box>
 
-          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} sx={{ gap: "3px"}}>
+          <ButtonCCSS key={uuidv4()} onClick={handleCCSSButtonClick} sx={{ 
+            gap: "3px",
+            boxShadow: screenSize === ScreenSize.SMALL ? 
+            "0px 2px 9px 0px rgb(149, 0, 35, 30%)" 
+            : 'none'
+            }}>
             {draftQuestion.questionCard.ccss}
-            <SelectArrowContainer isSelectOpen={CCSSIsOpen}>
+            <Box>
             <img src={SelectArrow} alt="select-arrow" width={9} height={9} />
-            </SelectArrowContainer>
+            </Box>
           </ButtonCCSS>
           
           </Box>
         </Box>
-        {screenSize === ScreenSize.SMALL && (
+        {(isCreateGamePage || screenSize === ScreenSize.SMALL) && (
         <RadioContainerStyled>
           <RadioGroup
             row
@@ -200,19 +215,19 @@ export default function CreateQuestionCardBase({
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Multiple Choice"
               isSelected={isMultipleChoice}
-              style={{cursor: 'pointer'}}
+              style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap' })}}
             />
             <RadioLabelStyled
               value="short"
               control={<RadioStyled style={{cursor: 'pointer'}}/>}
               label="Short Answer"
               isSelected={!isMultipleChoice}
-              style={{cursor: 'pointer'}}
+              style={{cursor: 'pointer', ...(isCreateGamePage && { whiteSpace: 'nowrap' })}}
             />
           </RadioGroup>
         </RadioContainerStyled>
           )}
-        { screenSize !== ScreenSize.SMALL && 
+        {screenSize !== ScreenSize.SMALL && !isCreateGame &&
             <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
               <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
             </Box>
@@ -226,7 +241,7 @@ export default function CreateQuestionCardBase({
             </ImagePlaceholder>
         }
         <CreateQuestionContentRightContainerStyled>
-          {screenSize !== ScreenSize.SMALL && (
+          {!isCreateGamePage && screenSize !== ScreenSize.SMALL && (
         <RadioContainerStyled>
           <RadioGroup
             row
@@ -251,13 +266,28 @@ export default function CreateQuestionCardBase({
           </RadioGroup>
         </RadioContainerStyled>
           )}
-          <TextContainerStyled 
+          <TextContainerStyled
             multiline 
             variant="outlined" 
-            rows='5'
+            rows={isCreateGamePage ? '7': '5'}
             sx={{ 
               '& .MuiInputBase-root': {
                 fontFamily: 'Rubik',
+                ...(isCreateGamePage && { height: '196px' })
+              },
+              '& .MuiInputBase-input': {
+                '&::placeholder': {
+                  color: '#384466',
+                  opacity: 0.5
+                },
+                '&:focus': {
+                  color: '#384466',
+                  opacity: 1,
+                },
+                '&:focus::placeholder': {
+                  color: '#384466',
+                  opacity: 1,
+                },
               },
             }}
             placeholder="Enter question here..." 
@@ -286,9 +316,9 @@ export default function CreateQuestionCardBase({
             { isCardErrored &&
               <ErrorBox/>
             }
-              <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
+              {!isCreateGame && <Box style={{width: '100%', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
                 <PublicPrivateButton isPublic={isPublic} onHandlePublicPrivateChange={handlePublicPrivateChange} isDisabled={false}/>
-              </Box>
+              </Box>}
           </>
         }
       </ContentContainerStyled>

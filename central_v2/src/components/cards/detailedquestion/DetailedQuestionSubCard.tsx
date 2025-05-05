@@ -82,8 +82,8 @@ export default function DetailedQuestionSubCard({
       </QuestionTitleStyled>
       <AnswerIndicator>{answer}</AnswerIndicator>
       {cardType === CardType.CORRECT && instructions
-        ? instructions.map((instruction) =>
-            correctAnswerInstruction(instructions.indexOf(instruction)),
+        ? instructions.map((instruction, index) =>
+            correctAnswerInstruction(index),
           )
         : incorrectAnswerReasoning}
     </BaseCardStyled>

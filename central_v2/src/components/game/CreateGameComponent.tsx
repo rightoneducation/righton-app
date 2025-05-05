@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  PublicPrivateType } from '@righton/networking';
+import {  IQuestionTemplate, PublicPrivateType } from '@righton/networking';
 
 import { Box, Grid } from '@mui/material';
 import {
@@ -16,7 +16,7 @@ import {
 import CentralButton from '../button/Button';
 import { ButtonType, buttonContentMap } from '../button/ButtonModels';
 import CreateGameCardBase from '../cards/creategamecard/CreateGameCardBase';
-import { TGameTemplateProps, TPhaseTime } from '../../hooks/useCreateGame';
+import { TGameTemplateProps, TPhaseTime } from '../../lib/CreateGameModels';
 import ManageQuestionsButtons from '../button/managequestionsbutton/ManageQuestionButtons';
 
 interface ICreateGameComponent {
@@ -38,7 +38,22 @@ interface ICreateGameComponent {
   selectedIndex: number;
   setSelectedIndex: (index: number) => void;
   addMoreQuestions: () => void;
+  isGameCardErrored: boolean;
 }
+
+const qt: IQuestionTemplate = {
+  id: '',
+  title: '',
+  lowerCaseTitle: '',
+  version: 0,
+  ccss: '',
+  domain: '',
+  cluster: '',
+  grade: '',
+  gradeFilter: '',
+  standard: '',
+  gameTemplatesCount: 0,
+};
 
 export default function CreateGameComponent({
   draftGame,
@@ -58,7 +73,8 @@ export default function CreateGameComponent({
   iconButtons,
   selectedIndex,
   setSelectedIndex,
-  addMoreQuestions
+  addMoreQuestions,
+  isGameCardErrored,
 }: ICreateGameComponent) {
   const [enabled, setEnabled] = useState<boolean>(true)
   console.log(isCloneImageChanged);
@@ -69,6 +85,12 @@ export default function CreateGameComponent({
   const handleOpenQuestionBank = () => {
     onOpenQuestionBank();
   };
+
+  const createDraftQuestion = (): { gameQuestionId: string, questionTemplate: IQuestionTemplate} => ({
+gameQuestionId: "",
+questionTemplate: qt,
+  })
+  const questions = Array.from({ length: draftGame.questionCount }).map(() => createDraftQuestion());
 
   return (
     <>
@@ -83,12 +105,14 @@ export default function CreateGameComponent({
             buttonType={ButtonType.SAVE}
             isEnabled
             smallScreenOverride
+            buttonWidthOverride="105px"
             onClick={handleSaveGame}
           />
           <CentralButton
             buttonType={ButtonType.DISCARDBLUE}
             isEnabled
             smallScreenOverride
+            buttonWidthOverride="134px"
             onClick={handleDiscard}
           />
         </CreateGameSaveDiscardBoxContainer>
@@ -103,11 +127,13 @@ export default function CreateGameComponent({
                 <CentralButton
                   buttonType={ButtonType.SAVE}
                   isEnabled
+                  buttonWidthOverride="160px"
                   onClick={handleSaveGame}
                 />
                 <CentralButton
                   buttonType={ButtonType.DISCARDBLUE}
                   isEnabled
+                  buttonWidthOverride="160px"
                   onClick={handleDiscard}
                 />
               </CreateGameSaveDiscardBoxContainer>
@@ -121,7 +147,6 @@ export default function CreateGameComponent({
           lg={4}
           screenSize={screenSize}
         >
-          <Box style={{ width: '100%' }}>
             <CreateGameCardBase
               draftGame={draftGame}
               isClone={isClone}
@@ -133,22 +158,20 @@ export default function CreateGameComponent({
               onGameDescription={onGameDescription}
               onGameTitle={onGameTitle}
               isCardSubmitted={draftGame.isGameCardSubmitted}
-              isCardErrored={draftGame.isGameCardErrored}
+              isCardErrored={isGameCardErrored}
               phaseTime={phaseTime}
               gameTitle={draftGame.gameTemplate.title}
               gameDescription={draftGame.gameTemplate.description}
               openCreateQuestion={draftGame.openCreateQuestion}
               openQuestionBank={draftGame.openQuestionBank}
-
             />
-          </Box>
         </CreateGameCardGridItem>
         <Grid sm md={1} lg={4} item />
       </CreateGameGridContainer>
       {/* Question Count & Add Button */}
       <GameCreateButtonStack>
         <ManageQuestionsButtons 
-          questions={draftGame.gameTemplate.questionTemplates ?? []}
+          questions={questions}
           iconButtons={iconButtons}
           selectedIndex={selectedIndex}
           isCreate
@@ -162,14 +185,16 @@ export default function CreateGameComponent({
       }}>
         <CentralButton
         smallScreenOverride
-        buttonWidthOverride='100%'
+        buttonWidthOverride={(screenSize === ScreenSize.SMALL ||
+          screenSize === ScreenSize.MEDIUM) ? '222px': '100%'}
           buttonType={ButtonType.CREATEQUESTION}
          isEnabled={enabled}
           onClick={handleCreateQuestion}
         />
         <CentralButton
         smallScreenOverride
-        buttonWidthOverride='100%'
+        buttonWidthOverride={(screenSize === ScreenSize.SMALL ||
+          screenSize === ScreenSize.MEDIUM) ? '200px': '100%'}
           buttonType={ButtonType.QUESTIONBANK}
           isEnabled={enabled}
           onClick={handleOpenQuestionBank}

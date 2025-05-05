@@ -19,6 +19,7 @@ interface StyledGameCardProps {
   screenSize: ScreenSize;
   isFavorite: boolean;
   handleViewButtonClick: (element: IGameTemplate) => void;
+  isCreateGame?: boolean;
 }
 
 const GameImageContainer = styled(Box)({
@@ -162,6 +163,7 @@ export default function StyledGameCard({
   isCarousel,
   screenSize,
   isFavorite,
+  isCreateGame,
   handleViewButtonClick,
 }: StyledGameCardProps) {
   const domainAndGrades = getDomainAndGrades(game);
@@ -196,15 +198,15 @@ export default function StyledGameCard({
       </ContentContainer>
       <ButtonContainer>
         <CentralButton
-          buttonType={ButtonType.VIEW}
-          isEnabled
-          onClick={() => handleViewButtonClick(game)}
-        />
-        <CentralButton
-          buttonType={ButtonType.LAUNCH}
-          isEnabled
-          onClick={handleLaunchGame}
-        />
+           buttonType={isCreateGame ? ButtonType.ADDTOGAME : ButtonType.VIEW}
+           isEnabled
+           onClick={() => handleViewButtonClick(game)}
+         />
+        {!isCreateGame && <CentralButton
+           buttonType={ButtonType.LAUNCH}
+           isEnabled
+           onClick={handleLaunchGame}
+         />}
         </ButtonContainer>
     </GameCard>
   );

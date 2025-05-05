@@ -61,7 +61,7 @@ export default function OwnerCard({
             <AtUserNameContainerAndAccount>
                 <AtUserNameContainer >
                     <AtUserNameText>
-                        @clarkinator27
+                        @{draftUserProfile.userName}
                     </AtUserNameText>
                 </AtUserNameContainer>
                 <LeftAccountCreatedContainer>
