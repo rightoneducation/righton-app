@@ -29,6 +29,7 @@ export interface ICentralDataManagerAPIClient {
   getLocalUserProfile: () => IUserProfile | null;
   setLocalUserProfile: (userProfile: IUserProfile) => void;
   clearLocalUserProfile: () => void;
+  getUser: (cognitoId: string) => Promise<IUserProfile | null>;
   loginUserAndRetrieveUserProfile: (username: string, password: string) => Promise<IUserProfile | null>;
   favoriteGameTemplate: (gameId: string, user: IUserProfile) => Promise<IUserProfile | null>;
   favoriteQuestionTemplate: (questionId: string, isFavourite: boolean) => Promise<void>;

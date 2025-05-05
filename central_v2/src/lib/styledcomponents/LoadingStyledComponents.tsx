@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
 
-export const SignUpMainContainer = styled(Box)(({ theme }) => ({ // eslint-disable-line
+export const LoadingContainer = styled(Box)(({ theme }) => ({ // eslint-disable-line
   width: '100%',
   height: '100%',
   display: 'flex',

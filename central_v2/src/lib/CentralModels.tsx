@@ -4,7 +4,9 @@ export enum UserStatusType {
   LOGGEDIN,
   LOGGEDOUT,
   INCOMPLETE,
-  LOADING
+  LOADING,
+  GOOGLE_SIGNIN,
+  GOOGLE_SIGNUP,
 }
 
 export enum ScreenType {

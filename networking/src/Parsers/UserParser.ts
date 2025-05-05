@@ -4,6 +4,7 @@ import { AWSUser } from '../Models/AWS/AWSUser';
 
 export class UserParser {
   static parseIUserfromAWSUser(user: AWSUser): IUser {
+    console.log('Parsing user:', user);
     const parsedUser: IUser = {
       id: user.id ?? '',
       userName: user.userName,

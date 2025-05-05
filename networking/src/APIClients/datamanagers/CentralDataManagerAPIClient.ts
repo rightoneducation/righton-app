@@ -171,12 +171,27 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     window.localStorage.removeItem(userProfileLocalStorage);
   }
 
+  public getUser = async (cognitoId: string) => {
+    console.log('At GetUser');
+    const userProfile = await this.userAPIClient.getUserByCognitoId(cognitoId);
+    if (userProfile !== null){
+      this.setLocalUserProfile(userProfile);
+      return userProfile;
+    }
+    return null;
+  }
+
   public loginUserAndRetrieveUserProfile = async (userName: string, password: string) => {
     let userProfile = null;
     try {
-      await this.authAPIClient.awsSignIn(userName, password);
+      const response = await this.authAPIClient.awsSignIn(userName, password);
+      console.log(response);
       const currentCognitoUser = await getCurrentUser();
+      console.log(currentCognitoUser);
       const attributes = await fetchUserAttributes();
+      const session = await this.authAPIClient.getCurrentSession();
+      console.log(session);
+      console.log(attributes);
       if (!attributes || !attributes.nickname) 
         return null;
       const currentDynamoDBUser = await this.userAPIClient.getUserByUserName(attributes.nickname);
@@ -188,6 +203,31 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       this.setLocalUserProfile(userProfile); 
       this.authAPIClient.isUserAuth = true;
      }
+      return userProfile;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
+
+  public loginGoogleAndRetrieveUserProfile = async () => {
+    let userProfile = null;
+    try {
+      await this.authAPIClient.awsSignInFederated();
+      const currentSession = await this.authAPIClient.getCurrentSession();
+      const cognitoId = currentSession?.userSub;
+      if (!cognitoId) 
+        return null;
+      const currentDynamoDBUser = await this.userAPIClient.getUser(cognitoId);
+      if  (currentDynamoDBUser !== null){
+        userProfile = {
+          cognitoId: cognitoId,
+          ...currentDynamoDBUser
+        };
+      }
+      if  (currentDynamoDBUser && userProfile){
+        this.setLocalUserProfile(userProfile); 
+        this.authAPIClient.isUserAuth = true;
+      }
       return userProfile;
     } catch (error: any) {
       throw new Error(error);
@@ -238,7 +278,8 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     if(getEmail){
       user.email = getEmail;
     }
-
+    console.log(this.authAPIClient.verifyAuth());
+    console.log(this.authAPIClient.getCurrentSession());
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
     let updatedUser = JSON.parse(JSON.stringify(user));
     let firstName = createUserInput.firstName;

@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { useTheme, styled} from '@mui/material/styles';
-import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
+import { useTheme, styled,} from '@mui/material/styles';
+import {Box, Typography, Select, TextField, MenuItem, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
+import { ICentralDataState } from '../lib/context/ICentralDataState';
+
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import RightOnLogo from "../images/RightOnUserLogo.svg";
 import Adpic from "../images/@.svg"
@@ -133,6 +135,7 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 
 interface GoogleSignupProps {
     apiClients: IAPIClients;
+    centralData: ICentralDataState;
     frontImage: File | null;
     setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
     backImage: File | null;
@@ -141,12 +144,13 @@ interface GoogleSignupProps {
 
 export default function GoogleSignup({
     apiClients,
+    centralData,
     frontImage,
     setFrontImage, 
     backImage,
     setBackImage
 }: GoogleSignupProps) {
-
+    const theme = useTheme();
     const navigate = useNavigate(); // Initialize useNavigate
     const buttonTypeUpload = ButtonType.UPLOAD;
     const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
@@ -154,11 +158,9 @@ export default function GoogleSignup({
 
     const buttonTypeStarted = ButtonType.GETSTARTED;
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
-    const centralData = useCentralDataState();
+    const [isLoading, setIsLoading] = useState(false);
     const centralDataDispatch = useCentralDataDispatch();
-    console.log(apiClients.auth.getCurrentSession());
-    console.log(apiClients.auth.getFirstAndLastName());
-
+    
     // Local temporary states
     const [title, setTitle] = useState('Title...') 
     const [firstName, setFirstName] = useState(centralData.userProfile?.firstName || '') 
@@ -171,9 +173,10 @@ export default function GoogleSignup({
       userName: '',
       email: '',
       password: '',
-  }
-  
+    }
+
     const handleGetStarted = async () => {
+      setIsLoading(true);
       try {
         if(frontImage && backImage) {
           const updatedProfile = {
@@ -186,6 +189,7 @@ export default function GoogleSignup({
           const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(updatedProfile, frontImage, backImage);
           // need if statement for response
           if (response?.updatedUser){
+            setIsLoading(false);
             centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
             centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
             navigate("/")
@@ -346,6 +350,11 @@ export default function GoogleSignup({
                 onClick={handleGetStarted}
             />
           </GetStartedContainer>
+          {isLoading && 
+          <Box style={{width: '100%', display: 'flex', justifyContent: 'center',}}>
+            <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
+          </Box>
+        }
         </InnerBodyContainer>
     </SignUpMainContainer>
   )

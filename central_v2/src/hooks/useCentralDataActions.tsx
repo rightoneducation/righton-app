@@ -245,7 +245,6 @@ export default function useCentralDataManager({
             )
             .then((response) => {
               centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-              console.log(response);
               if (response){
                 switch (newPublicPrivate){
                   case PublicPrivateType.PRIVATE:
@@ -385,7 +384,6 @@ export default function useCentralDataManager({
 
   const getFav = async (user: IUserProfile) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    console.log(user);
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
@@ -515,44 +513,67 @@ export default function useCentralDataManager({
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
-  const validateUser = async () => {
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
-    const status = await apiClients.auth.verifyAuth();
-    if (status) {
-      const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
-      console.log('localProfile', localProfile);
-      const currentSession = await apiClients.auth.getCurrentSession();
-      const cognitoId = currentSession?.userSub;
-      if (localProfile) {
-        if (!isUserProfileComplete(localProfile) || cognitoId !== localProfile.cognitoId) {
-          apiClients.centralDataManager?.clearLocalUserProfile();
-          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-          return;
-        }
-        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
-        centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-        return;
-      }
-      // case for google oauth sign in, cognito present, but no local profile
-      const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
-      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: {firstName, lastName, cognitoId }});
-      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
-      return;
-    }
-    apiClients.centralDataManager?.clearLocalUserProfile();
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-  };
-
   const handleLogOut = () => {
     apiClients.centralDataManager?.signOut();
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   }
 
+  const validateUser = async () => {
+    const status = await apiClients.auth.verifyAuth();
+    if (status) {
+      const currentSession = await apiClients.auth.getCurrentSession();
+      const cognitoId = currentSession?.userSub;
+      if (!cognitoId) {
+        handleLogOut();
+        return;
+      }
+      const localProfile = await apiClients.centralDataManager?.getUser(cognitoId);
+      if (localProfile) {
+        if (!isUserProfileComplete(localProfile) || cognitoId !== localProfile.cognitoId) {
+          handleLogOut();
+          return;
+        }
+        // if there is a local profile
+        if (
+          (currentSession.tokens?.idToken?.payload?.identities as { providerName: string }[] | undefined)
+            ?.some(i => i.providerName === 'Google')
+        ) {
+          centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
+          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.GOOGLE_SIGNIN });
+          return;
+        }
+        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
+        centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
+        return;
+      }
+      // case for google oauth sign up, cognito present, but no local profile
+      // google idtoken has a providerName whereas cognito does not
+      if (
+        (currentSession.tokens?.idToken?.payload?.identities as { providerName: string }[] | undefined)
+          ?.some(i => i.providerName === 'Google')
+      ) {
+        const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
+        centralDataDispatch({ type: 'SET_ADVANCE_GOOGLE_SIGNUP', payload: {firstName, lastName, userStatus: UserStatusType.GOOGLE_SIGNUP }});
+        return;
+      }
+    }
+    handleLogOut();
+  };
+
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
-    validateUser();
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
+    const executeValidate = async () => {
+      try {
+        await validateUser();
+      } catch (err) {
+        console.error('Error validating user:', err);
+      }
+    };
+    // call it
+    executeValidate();
   }, []); // eslint-disable-line
 
   return {
