@@ -183,14 +183,8 @@ function Login({handleForgotPasswordClick, handleLogOut} : LoginProps) {
     onSuccess: async (credentialResponse) => {
       try {
         const idToken = credentialResponse.access_token; // Use `access_token` for OAuth login
-        console.log("Google sending this back: ", credentialResponse)
-
         if (idToken) {
-          console.log("logging user via google.")
-          console.log("▶️ OAuth origin is:", window.location.origin);
-          const response = await apiClients.auth.awsSignInFederated();
-         // centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
-          console.log("test")
+          await apiClients.auth.awsSignInFederated();
         } else {
           console.error('Google sign-in token is missing');
         }

@@ -9,6 +9,8 @@ import {
   DeleteUserMutation,
   DeleteUserMutationVariables,
   GetUserQueryVariables,
+  UserByCognitoIdQuery,
+  UserByCognitoIdQueryVariables,
   UpdateUserInput,
   UpdateUserMutation,
   UpdateUserMutationVariables,
@@ -17,6 +19,7 @@ import {
 } from "../../AWSMobileApi";
 import {
   getUser,
+  userByCognitoId,
   createUser,
   deleteUser,
   updateUser, 
@@ -72,6 +75,24 @@ export class UserAPIClient
     )
     if (user.data.getUser)
       return UserParser.parseIUserfromAWSUser(user.data.getUser) as IUser;
+    return null;
+  }
+
+  async getUserByCognitoId(
+    cognitoId: string
+  ): Promise<IUser | null> {
+    if (!cognitoId) return null;
+    console.log('userAPIClient');
+    console.log('variables', cognitoId);
+    const variables: UserByCognitoIdQueryVariables = { cognitoId }
+    console.log(variables);
+    const user = await this.callGraphQL<UserByCognitoIdQuery>(
+        userByCognitoId,
+        variables as unknown as GraphQLOptions
+    )
+    console.log(user);
+    if (user.data.userByCognitoId?.items[0])
+      return UserParser.parseIUserfromAWSUser(user.data.userByCognitoId.items[0]) as IUser;
     return null;
   }
 

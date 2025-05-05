@@ -522,17 +522,30 @@ export default function useCentralDataManager({
   }
 
   const validateUser = async () => {
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
     const status = await apiClients.auth.verifyAuth();
     if (status) {
-      const localProfile = apiClients.centralDataManager?.getLocalUserProfile();
-      console.log('localProfile', localProfile);
       const currentSession = await apiClients.auth.getCurrentSession();
       const cognitoId = currentSession?.userSub;
+      console.log('cognitoId', cognitoId);
+      if (!cognitoId) {
+        handleLogOut();
+        return;
+      }
+      console.log('getUser');
+      const localProfile = await apiClients.centralDataManager?.getUser(cognitoId);
+      console.log('localProfile', localProfile);
       if (localProfile) {
         if (!isUserProfileComplete(localProfile) || cognitoId !== localProfile.cognitoId) {
-          apiClients.centralDataManager?.clearLocalUserProfile();
-          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+          handleLogOut();
+          return;
+        }
+        // if there is a local profile
+        if (
+          (currentSession.tokens?.idToken?.payload?.identities as { providerName: string }[] | undefined)
+            ?.some(i => i.providerName === 'Google')
+        ) {
+          centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
+          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.GOOGLE_SIGNIN });
           return;
         }
         centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
@@ -557,7 +570,16 @@ export default function useCentralDataManager({
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
-    validateUser();
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
+    const executeValidate = async () => {
+      try {
+        await validateUser();
+      } catch (err) {
+        console.error('Error validating user:', err);
+      }
+    };
+    // call it
+    executeValidate();
   }, []); // eslint-disable-line
 
   return {

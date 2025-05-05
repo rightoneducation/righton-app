@@ -60,6 +60,8 @@ function AppSwitch({
     })
     handleLibraryInit(true);
   };
+
+  console.log('currentScreen', currentScreen);
   
   switch (currentScreen) {
     case ScreenType.QUESTIONS: {

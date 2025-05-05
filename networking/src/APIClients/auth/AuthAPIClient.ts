@@ -86,7 +86,6 @@ export class AuthAPIClient
 
   async getCurrentSession(): Promise<AuthSession> {
     const session =  await fetchAuthSession();
-    console.log(session);
     return session;
   }
 

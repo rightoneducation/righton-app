@@ -171,6 +171,16 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     window.localStorage.removeItem(userProfileLocalStorage);
   }
 
+  public getUser = async (cognitoId: string) => {
+    console.log('At GetUser');
+    const userProfile = await this.userAPIClient.getUserByCognitoId(cognitoId);
+    if (userProfile !== null){
+      this.setLocalUserProfile(userProfile);
+      return userProfile;
+    }
+    return null;
+  }
+
   public loginUserAndRetrieveUserProfile = async (userName: string, password: string) => {
     let userProfile = null;
     try {

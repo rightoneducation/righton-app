@@ -24,6 +24,7 @@ export default function AuthGuard ({
   
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
+  console.log(centralData.userStatus);
 
   // switch to render content based on Auth status of User
   // auth status is determined by the validateUser function in CentralDataManager
@@ -31,10 +32,11 @@ export default function AuthGuard ({
 
     // if a user is half way through the Google Sign Up process
     case UserStatusType.GOOGLE_SIGNUP:
-      return <Navigate to="/nextstep" replace />; 
+      break; 
 
     // this triggers both on a broken account and during the google signup/signin process
     case UserStatusType.GOOGLE_SIGNIN:
+      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
       return <Navigate to="/" replace />;
 
     // if a user missing either cognito or local credentials, their account is broken and they need to sign up again

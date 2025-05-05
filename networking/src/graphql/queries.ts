@@ -146,10 +146,7 @@ export const userByCognitoId = /* GraphQL */ `query UserByCognitoId(
       questionsMade
       frontIdPath
       backIdPath
-<<<<<<< HEAD
-=======
       profilePicPath
->>>>>>> muhammad-qureshi--userProfileFunction
       favoriteGameTemplateIds
       favoriteQuestionTemplateIds
       createdAt
