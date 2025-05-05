@@ -4,16 +4,15 @@ import { useTheme, CircularProgress } from '@mui/material';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { UserStatusType } from '../lib/CentralModels';
 import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
+import Loading from '../pages/Loading';
 
 interface AuthGuardProps {
   handleLogOut: () => void;
-  validateUser?: () => void;
   children: JSX.Element | null;
 }
 
 export default function AuthGuard ({
    handleLogOut,
-   validateUser,
    children
 }: AuthGuardProps){
   const theme = useTheme();
@@ -26,42 +25,46 @@ export default function AuthGuard ({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
 
-
   // switch to render content based on Auth status of User
   // auth status is determined by the validateUser function in CentralDataManager
   switch (centralData.userStatus) {
-    // if a user is not logged in and tries to access a page that requires auth
+
+    // if a user is half way through the Google Sign Up process
+    case UserStatusType.GOOGLE_SIGNUP:
+      return <Navigate to="/nextstep" replace />; 
+
+    // this triggers both on a broken account and during the google signup/signin process
+    case UserStatusType.GOOGLE_SIGNIN:
+      return <Navigate to="/" replace />;
+
+    // if a user missing either cognito or local credentials, their account is broken and they need to sign up again
+    case UserStatusType.INCOMPLETE:
+      handleLogOut();
+      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+      return <Navigate to="/" replace />;
+
+    // intermediate state while determining userStatus via validateUser in CentralDataManager
+    // happens on page load and whenever validateUser is called
+    case UserStatusType.LOADING:
+      return <Loading /> 
+    
+    // if a user is logged out, having no cognito and local credentials
     case UserStatusType.LOGGEDOUT:
+       // if logged out user tries to access pages that require authentication
       if (isLibrary || isAuthPage || isNextStep) {
         return <Navigate to="/" replace />;
       }
       break;
-    // this triggers both on a broken account and during the google signup/signin process
-    case UserStatusType.INCOMPLETE:
-      // Auth page is redirect from Google Login or Sign Up
-      // we need to redirect to either / or /nextstep, respectively
-      if (isAuthPage) {
-        
-        return <Navigate to="/nextstep" replace />;
-      }
-      // if the user is not moving through the Google process, their credentials are broken
-      // and we need to log them out
-      if (!isNextStep){
-        handleLogOut();
-        centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
-      }
-      break;
-    // intermediate state while determining userStatus via validateUser in CentralDataManager
-    // happens on page load and whenever validateUser is called
-    case UserStatusType.LOADING:
-      return <SignUpMainContainer> <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/> </SignUpMainContainer>      
+
     // when a user successfull is logged in with aws and local credentials
     case UserStatusType.LOGGEDIN:
     default:
+      // prevents logged in user from accessing auth pages
       if (isAuthPage || isLoginPage || isSignupPage) {
         return <Navigate to="/" replace />;
       }
-      break; 
+      break;
   }
+  // is user logged in or user logged out, render children
   return children as JSX.Element;
 }

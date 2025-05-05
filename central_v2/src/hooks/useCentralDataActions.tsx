@@ -36,7 +36,6 @@ interface UseCentralDataManagerReturnProps {
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
   handleLogOut: () => void;
-  validateUser: () => void;
 }
 
 /* 
@@ -567,7 +566,6 @@ export default function useCentralDataManager({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
-    handleLogOut,
-    validateUser,
+    handleLogOut
   };
 }
