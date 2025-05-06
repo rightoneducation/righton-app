@@ -405,7 +405,7 @@ export default function Header({
           <HeaderSecondRow>
             <Fade in={currentScreen === ScreenType.LIBRARY} timeout={{enter: 1000, exit: 0}}  style={{transition: 'height 0.5s ease-in-out'}}>
               <div>
-              <GameQuestionButton isDisabled={false} gameQuestion={gameQuestion} setGameQuestion={setGameQuestion}/>
+                <GameQuestionButton screenSize={screenSize} isDisabled={false} gameQuestion={gameQuestion} setGameQuestion={setGameQuestion}/>
               </div>
             </Fade>
           </HeaderSecondRow>
