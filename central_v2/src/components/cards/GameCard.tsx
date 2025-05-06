@@ -18,6 +18,7 @@ interface StyledGameCardProps {
   isCarousel: boolean;
   screenSize: ScreenSize;
   isFavorite: boolean;
+  isMyLibraryQuestion?: boolean;
   handleViewButtonClick: (element: IGameTemplate) => void;
   isCreateGame?: boolean;
 }
@@ -163,6 +164,7 @@ export default function StyledGameCard({
   isCarousel,
   screenSize,
   isFavorite,
+  isMyLibraryQuestion,
   isCreateGame,
   handleViewButtonClick,
 }: StyledGameCardProps) {
@@ -202,7 +204,7 @@ export default function StyledGameCard({
            isEnabled
            onClick={() => handleViewButtonClick(game)}
          />
-        {!isCreateGame && <CentralButton
+        {!isCreateGame && !isMyLibraryQuestion && <CentralButton
            buttonType={ButtonType.LAUNCH}
            isEnabled
            onClick={handleLaunchGame}

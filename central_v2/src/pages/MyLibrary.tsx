@@ -6,12 +6,15 @@ import {
   IUserProfile,
   GradeTarget,
   SortType,
-  SortDirection
+  SortDirection,
+  IQuestionTemplate
 } from '@righton/networking';
 import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
 import { ScreenSize, GameQuestionType, LibraryTabEnum, UserStatusType } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
+import QuestionTabs from '../components/questiontabs/QuestionTabs';
+import QuestionTabsModalBackground from '../components/questiontabs/QuestionTabsModalBackground';
 
 interface MyLibraryProps {
   gameQuestion: GameQuestionType;
@@ -40,10 +43,67 @@ export default function MyLibrary({
   fetchElements
 }: MyLibraryProps) {
   const theme = useTheme();
-  const centralData = useCentralDataState();
+  const centralData = useCentralDataState(); 
+  const [selectedQuestion, setSelectedQuestion] =
+    useState<IQuestionTemplate | null>(null);
+  const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
+
+  const handleQuestionView = (
+    question: IQuestionTemplate,
+    questions: IQuestionTemplate[],
+  ) => {
+    setSelectedQuestion(question);
+    setQuestionSet(questions);
+    setIsTabsOpen(true);
+  };
+
+  const handleBackToExplore = () => {
+    setSelectedQuestion(null);
+    setIsTabsOpen(false);
+  }
+
+  const handlePrevQuestion = () => {
+    const index = questionSet.findIndex(
+      (question) => question.id === selectedQuestion?.id,
+    );
+    if (index > 0) {
+      setSelectedQuestion(questionSet[index - 1]);
+    } else {
+      setSelectedQuestion(questionSet[questionSet.length - 1]);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    const index = questionSet.findIndex(
+      (question) => question.id === selectedQuestion?.id,
+    );
+    if (index < questionSet.length - 1) {
+      setSelectedQuestion(questionSet[index + 1]);
+    } else {
+      setSelectedQuestion(questionSet[0]);
+    }
+  };
+
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
+      {selectedQuestion && (
+            <>
+              <QuestionTabsModalBackground
+                isTabsOpen={centralData.isTabsOpen}
+                handleBackToExplore={handleBackToExplore}
+              />
+              <QuestionTabs
+                screenSize={screenSize}
+                isTabsOpen={centralData.isTabsOpen}
+                question={selectedQuestion}
+                questions={questionSet}
+                handleBackToExplore={handleBackToExplore}
+                handlePrevQuestion={handlePrevQuestion}
+                handleNextQuestion={handleNextQuestion}
+              />
+            </>
+          )}
       {centralData.userStatus === UserStatusType.LOADING
         ? <CircularProgress style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',   color: theme.palette.primary.darkBlueCardColor, zIndex: 1}}/>
         : <LibraryTabsContainer 
@@ -55,6 +115,7 @@ export default function MyLibrary({
             handleSearchChange={handleSearchChange}
             handlePublicPrivateChange={handlePublicPrivateChange}
             fetchElements={fetchElements}
+            handleQuestionView={handleQuestionView}
           />
       }
     </MyLibraryMainContainer>
