@@ -6,7 +6,8 @@ import {
   Tabs,
   Grid,
   Modal,
-  CircularProgress
+  CircularProgress,
+  useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,7 +20,7 @@ import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestion
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import DetailedQuestionSubCard from '../cards/detailedquestion/DetailedQuestionSubCard';
-import { CardType, ScreenSize } from '../../lib/CentralModels';
+import { CardType, ScreenSize, UserStatusType } from '../../lib/CentralModels';
 import OwnerTag from '../profile/OwnerTag';
 import { 
   TabContainer, 
@@ -71,6 +72,7 @@ export default function QuestionTabs({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const isScreenLgst = useMediaQuery('(min-width: 1200px)');
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setOpenTab(newValue);
   };
@@ -156,40 +158,85 @@ export default function QuestionTabs({
                       buttonType={ButtonType.PREVIOUSQUESTION}
                       isEnabled
                       isOnQuestionTab
+                      iconOnlyOverride={!isScreenLgst}
                       onClick={handlePrevQuestion}
                     />
                     <CentralButton
                       buttonType={ButtonType.BACKTOEXPLORE}
                       isEnabled
                       isOnQuestionTab
+                      iconOnlyOverride={!isScreenLgst}
                       onClick={handleBackToExplore}
                     />
                   </ButtonContainerLeft>
-                  <ButtonContainerRight>
-                    <Box>
-                      {!isLoading ? 
-                        <CentralButton 
-                          buttonType={!isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE} 
-                          isEnabled 
+                  <ButtonContainerLeft>
+                    <ButtonContainerRight>
+                      {screenSize !== ScreenSize.SMALL &&
+                      <>
+                        {centralData.userStatus === UserStatusType.LOGGEDIN &&
+                          <Box>
+                            {!isLoading ? 
+                              <CentralButton 
+                                buttonType={!isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE} 
+                                isEnabled 
+                                isOnQuestionTab
+                                iconOnlyOverride={!isScreenLgst}
+                                onClick={handleFavoriteButtonClick}
+                              />
+                              : <Box><CircularProgress style={{ color: '#FFF' }}/></Box>
+                            }
+                          </Box>
+                        }
+                      <Box>
+                        <CentralButton
+                          buttonType={ButtonType.CLONEANDEDIT}
+                          isEnabled
                           isOnQuestionTab
-                          onClick={handleFavoriteButtonClick}
+                          iconOnlyOverride={!isScreenLgst}
+                          onClick={handleCloneButtonClick}
                         />
-                        : <Box><CircularProgress style={{ color: '#FFF' }}/></Box>
+                      </Box>
+                      </>
                       }
-                    </Box>
-                    <CentralButton
-                      buttonType={ButtonType.CLONEANDEDIT}
-                      isEnabled
-                      isOnQuestionTab
-                      onClick={handleCloneButtonClick}
-                    />
-                    <CentralButton
-                      buttonType={ButtonType.NEXTQUESTION}
-                      isEnabled
-                      isOnQuestionTab
-                      onClick={handleNextQuestion}
-                    />
-                  </ButtonContainerRight>
+                      <CentralButton
+                        buttonType={ButtonType.NEXTQUESTION}
+                        isEnabled
+                        isOnQuestionTab
+                        iconOnlyOverride={!isScreenLgst}
+                        onClick={handleNextQuestion}
+                      />
+                    </ButtonContainerRight>
+                    <ButtonContainerRight>
+                    {screenSize === ScreenSize.SMALL &&
+                      <>
+                        {centralData.userStatus === UserStatusType.LOGGEDIN &&
+                          <Box>
+                            {!isLoading ? 
+                              <CentralButton 
+                                buttonType={!isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE} 
+                                isEnabled 
+                                isOnQuestionTab
+                                iconOnlyOverride={!isScreenLgst}
+                                onClick={handleFavoriteButtonClick}
+                              />
+                              : <Box><CircularProgress style={{ color: '#FFF' }}/></Box>
+                            }
+                          </Box>
+                        }
+                      <Box>
+                        <CentralButton
+                          buttonType={ButtonType.CLONEANDEDIT}
+                          isEnabled
+                          isOnQuestionTab
+                          iconOnlyOverride={!isScreenLgst}
+                          onClick={handleCloneButtonClick}
+                        />
+                      </Box>
+                      </>
+                      
+                      }
+                      </ButtonContainerRight>
+                  </ButtonContainerLeft>
                 </ButtonContainer>
                 <CardContainer style={{paddingBottom: '50px'}}>
                   {screenSize !== ScreenSize.LARGE &&
