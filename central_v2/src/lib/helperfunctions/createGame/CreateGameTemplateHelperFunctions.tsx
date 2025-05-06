@@ -194,6 +194,9 @@ export const buildGameTemplate = (
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
 ): GameTemplate => {
+  const questionTemplatesOrder = draftQuestionsList.map((question, index) => {
+    return { questionTemplateId: question.questionTemplate.id, index };
+  })
   return {
     title: draftGame.gameTemplate.title,
     lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
@@ -204,6 +207,7 @@ export const buildGameTemplate = (
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
     ccss: draftQuestionsList[0].question.questionCard.ccss,
+    questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
     grade: draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
     gradeFilter:
       draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',

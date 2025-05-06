@@ -217,6 +217,7 @@ mutation CreateQuestion(
     instructions
     standard
     cluster
+    choices
     domain
     grade
     order
@@ -248,7 +249,8 @@ mutation CreateQuestion(
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
     // createQuestions
     const promises = questionTemplates.map(async (question) => {
-      const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
+      const {choices, owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
+      const shuffledChoices = JSON.parse(choices).sort(() => Math.random() - 0.5);
       console.log(
         {
           ...trimmedQuestion,
@@ -272,6 +274,7 @@ mutation CreateQuestion(
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,
           isHintEnabled: true,
+          choices: JSON.stringify(shuffledChoices),
           order: 0
         }
       });
