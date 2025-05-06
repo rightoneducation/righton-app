@@ -49,6 +49,10 @@ export default function OwnerCard({
     imageLink = `${CloudFrontDistributionUrl}${draftUserProfile.profilePicPath}`;
   }
 
+  const gamesMade = draftUserProfile.gamesMade || 0;
+  const questionsMade = draftUserProfile.questionsMade || 0;
+  const gamesUsed = draftUserProfile.favoriteGameTemplateIds?.length || 0;
+
   return (
     screenSize === ScreenSize.LARGE ? (
         <LeftProfileContainer>
@@ -81,7 +85,7 @@ export default function OwnerCard({
                         Games Made
                     </LeftBottomGamesText>
                     <LeftBottomGamesNumber>
-                        16
+                        {gamesMade}
                     </LeftBottomGamesNumber>
                 </LeftBottomGamesContainer>
                 <LeftBottomGamesContainer>
@@ -89,7 +93,7 @@ export default function OwnerCard({
                         Question Made
                     </LeftBottomGamesText>
                     <LeftBottomGamesNumber>
-                        120
+                        {questionsMade}
                     </LeftBottomGamesNumber>
                 </LeftBottomGamesContainer>
             </LeftBottomGamesQuestionContainer>
@@ -98,7 +102,7 @@ export default function OwnerCard({
                         Games Used
                     </LeftBottomGamesText>
                     <LeftBottomGamesNumber>
-                        16
+                        {gamesUsed}
                     </LeftBottomGamesNumber>
             </LeftBottomGamesContainer>
         </LeftBottomContainer>
@@ -126,7 +130,7 @@ export default function OwnerCard({
                                 Games Made
                             </LeftBottomGamesText>
                             <LeftBottomGamesNumber>
-                                16
+                                {gamesMade}
                             </LeftBottomGamesNumber>
                         </LeftBottomGamesContainer>
                         <LeftBottomGamesContainer>
@@ -134,7 +138,7 @@ export default function OwnerCard({
                                 Questions Made
                             </LeftBottomGamesText>
                             <LeftBottomGamesNumber>
-                                120
+                                {questionsMade}
                             </LeftBottomGamesNumber>
                         </LeftBottomGamesContainer>
                         <LeftBottomGamesContainer>
@@ -142,7 +146,7 @@ export default function OwnerCard({
                                 Games Used
                             </LeftBottomGamesText>
                             <LeftBottomGamesNumber>
-                                16
+                                {gamesUsed}
                             </LeftBottomGamesNumber>
                         </LeftBottomGamesContainer>          
                     </LeftBottomContainer>
