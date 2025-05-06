@@ -24,43 +24,7 @@ import { SubCardGridItem } from '../../lib/styledcomponents/QuestionTabsStyledCo
 import CorrectAnswerCard from '../cards/createquestion/CorrectAnswerCard';
 import CreateQuestionCardBase from '../cards/createquestion/CreateQuestionCardBase';
 import IncorrectAnswerCardStack from '../cards/createquestion/stackedcards/IncorrectAnswerCardStack';
-
-const AISwitch = styled(Switch)(({ theme }) => ({
-  padding: 8,
-  '& .MuiSwitch-track': {
-    borderRadius: 22 / 2,
-    backgroundColor: '#CCCCCC',
-    opacity: 1,
-    '&::before, &::after': {
-      content: '""',
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      width: 16,
-      height: 16,
-    },
-    '&::before': {
-      left: 12,
-    },
-    '&::after': {
-      right: 12,
-    },
-  },
-  '& .MuiSwitch-switchBase.Mui-checked': {
-    color: '#FFFFFF',
-  },
-  '& .MuiSwitch-thumb': {
-    background: theme.palette.primary.aiGradient,
-    boxShadow: 'none',
-    width: 16,
-    height: 16,
-    margin: 2,
-  },
-  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#CCCCCC',
-  },
-}));
-
+import { AISwitch } from '../../lib/styledcomponents/AISwitchStyledComponent';
 
 interface IQuestionElements {
   screenSize: ScreenSize;

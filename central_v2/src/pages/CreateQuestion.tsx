@@ -37,6 +37,7 @@ import { getNextHighlightCard, handleMoveAnswerToComplete, updateDQwithIncorrect
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { assembleQuestionTemplate } from '../lib/helperfunctions/createGame/CreateGameTemplateHelperFunctions';
+import { AISwitch } from '../lib/styledcomponents/AISwitchStyledComponent';
 
 type TitleTextProps = {
   screenSize: ScreenSize;
@@ -59,21 +60,6 @@ const SubCardGridItem = styled(Grid)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: `${theme.sizing.xSmPadding}px`,
-}));
-
-const AISwitch = styled(Switch)(({ theme }) => ({
-  '& .MuiSwitch-thumb': {
-    background: theme.palette.primary.aiGradient,
-  },
-  '& .MuiSwitch-track': {
-    backgroundColor: "#111111",
-  },
-  '& .MuiSwitch-switchBase.Mui-checked': {
-    color: '#FFFFFF',
-  },
-  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#111111',
-  },
 }));
 
 interface CreateQuestionProps {
