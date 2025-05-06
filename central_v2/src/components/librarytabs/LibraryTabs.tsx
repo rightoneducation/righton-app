@@ -44,7 +44,8 @@ interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   fetchElements: (libraryTab: LibraryTabEnum) => void;
-  handleView: (element: T, elements: T[]) => void;
+  handleGameView: (element: IGameTemplate, elements: IGameTemplate[]) => void;
+  handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
 }
 
 export default function LibraryTabs({
@@ -56,7 +57,8 @@ export default function LibraryTabs({
   handleSortChange,
   handleSearchChange,
   fetchElements,
-  handleView
+  handleGameView,
+  handleQuestionView
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
 const centralData = useCentralDataState();
 const centralDataDispatch = useCentralDataDispatch();
@@ -156,7 +158,7 @@ return (
           elementType={ElementType.GAME}
           galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
           setIsTabsOpen={setIsTabsOpen}
-          handleView={handleView}
+          handleView={handleGameView}
           isLoading={centralData.isLoading}
           isMyLibrary
         />
@@ -169,9 +171,10 @@ return (
           elementType={ElementType.GAME}
           galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
           setIsTabsOpen={setIsTabsOpen}
-          handleView={handleView}
+          handleView={handleQuestionView}
           isLoading={centralData.isLoading}
           isMyLibrary
+          isMyLibraryQuestion
         />
       }
     </ContentContainer>

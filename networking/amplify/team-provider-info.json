@@ -25,7 +25,7 @@
         },
         "createGameTest": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
-          "s3Key": "amplify-builds/createGameTest-324a487a7167484b6331-build.zip"
+          "s3Key": "amplify-builds/createGameTest-33346b654c6a384b3653-build.zip"
         },
         "teacherIdAuth": {
           "deploymentBucketName": "amplify-mobile-dev-567ab-deployment",
@@ -54,6 +54,9 @@
       },
       "storage": {
         "rightoncentralstorage": {}
+      },
+      "api": {
+        "mobile": {}
       }
     }
   }

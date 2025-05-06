@@ -29,6 +29,7 @@ interface CardGalleryProps<T> {
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
   isMyLibrary?: boolean;
+  isMyLibraryQuestion?: boolean;
   isCreateGame?: boolean;
 }
 
@@ -49,6 +50,7 @@ interface MostPopularGamesComponentProps {
   numColumns: number;
   isLoading: boolean;
   isMyLibrary?: boolean;
+  isMyLibraryQuestion?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleViewButtonClick: (element: IGameTemplate) => void;
   isCreateGame?: boolean;
@@ -61,6 +63,7 @@ function MostPopularGamesComponent({
   isLoading,
   numColumns,
   isMyLibrary,
+  isMyLibraryQuestion,
   setIsTabsOpen,
   handleViewButtonClick,
   isCreateGame,
@@ -91,6 +94,7 @@ function MostPopularGamesComponent({
                   image={game.imageUrl || placeHolder}
                   isCarousel={false}
                   isFavorite={isFavorite}
+                  isMyLibraryQuestion={isMyLibraryQuestion}
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
                   }
@@ -195,6 +199,7 @@ export default function CardGallery<
   setIsTabsOpen,
   handleView,
   isMyLibrary,
+  isMyLibraryQuestion,
   isCreateGame
 }: CardGalleryProps<T>) {
   const maxCards = 12;
@@ -255,6 +260,7 @@ export default function CardGallery<
           numColumns={getNumColumns()}
           setIsTabsOpen={setIsTabsOpen}
           isMyLibrary={isMyLibrary}
+          isMyLibraryQuestion={isMyLibraryQuestion}
           isCreateGame={isCreateGame}
           handleViewButtonClick={
             handleViewButtonClick as (element: IGameTemplate) => void

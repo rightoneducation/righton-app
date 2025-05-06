@@ -1,10 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Slide,
   Tabs,
   Grid,
-  Modal
+  Modal,
+  CircularProgress,
+  useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +20,7 @@ import DetailedQuestionCardBase from '../cards/detailedquestion/DetailedQuestion
 import CentralButton from '../button/Button';
 import { ButtonType } from '../button/ButtonModels';
 import DetailedQuestionSubCard from '../cards/detailedquestion/DetailedQuestionSubCard';
-import { CardType, ScreenSize } from '../../lib/CentralModels';
+import { CardType, ScreenSize, UserStatusType } from '../../lib/CentralModels';
 import OwnerTag from '../profile/OwnerTag';
 import { 
   TabContainer, 
@@ -33,6 +36,9 @@ import {
   SubCardGridItem,
   GridItem
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
+import { APIClientsContext } from '../../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
+import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -48,6 +54,7 @@ interface TabContainerProps {
   handleBackToExplore: () => void;
   handlePrevQuestion: () => void;
   handleNextQuestion: () => void;
+  handleCloneButtonClick: () => void;
 }
 
 export default function QuestionTabs({
@@ -58,12 +65,20 @@ export default function QuestionTabs({
   handleBackToExplore,
   handlePrevQuestion,
   handleNextQuestion,
+  handleCloneButtonClick
 }: TabContainerProps) {
   const theme = useTheme();
   const [openTab, setOpenTab] = React.useState(0);
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const isScreenLgst = useMediaQuery('(min-width: 1200px)');
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setOpenTab(newValue);
   };
+  const [isLoading, setIsLoading] = React.useState(false);
+  const isFavorite = centralData.userProfile?.favoriteGameTemplateIds?.includes(question.id) ?? false;
+
   const tabMap: { [key: number]: string } = {
     0: 'Explore Questions',
     1: 'My Questions',
@@ -84,6 +99,16 @@ export default function QuestionTabs({
      return value;
     return '';
   }
+
+  const handleFavoriteButtonClick = async () => {
+    setIsLoading(true);
+    const response = await apiClients.centralDataManager?.favoriteGameTemplate(question.id, centralData.userProfile);
+    if (response) {
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Modal
       disableAutoFocus
@@ -133,33 +158,85 @@ export default function QuestionTabs({
                       buttonType={ButtonType.PREVIOUSQUESTION}
                       isEnabled
                       isOnQuestionTab
+                      iconOnlyOverride={!isScreenLgst}
                       onClick={handlePrevQuestion}
                     />
                     <CentralButton
                       buttonType={ButtonType.BACKTOEXPLORE}
                       isEnabled
                       isOnQuestionTab
+                      iconOnlyOverride={!isScreenLgst}
                       onClick={handleBackToExplore}
                     />
                   </ButtonContainerLeft>
-                  <ButtonContainerRight>
-                    <CentralButton 
-                      buttonType={ButtonType.FAVORITE} 
-                      isEnabled 
-                      isOnQuestionTab
-                    />
-                    <CentralButton
-                      buttonType={ButtonType.CLONEANDEDIT}
-                      isEnabled
-                      isOnQuestionTab
-                    />
-                    <CentralButton
-                      buttonType={ButtonType.NEXTQUESTION}
-                      isEnabled
-                      isOnQuestionTab
-                      onClick={handleNextQuestion}
-                    />
-                  </ButtonContainerRight>
+                  <ButtonContainerLeft>
+                    <ButtonContainerRight>
+                      {screenSize !== ScreenSize.SMALL &&
+                      <>
+                        {centralData.userStatus === UserStatusType.LOGGEDIN &&
+                          <Box>
+                            {!isLoading ? 
+                              <CentralButton 
+                                buttonType={!isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE} 
+                                isEnabled 
+                                isOnQuestionTab
+                                iconOnlyOverride={!isScreenLgst}
+                                onClick={handleFavoriteButtonClick}
+                              />
+                              : <Box><CircularProgress style={{ color: '#FFF' }}/></Box>
+                            }
+                          </Box>
+                        }
+                      <Box>
+                        <CentralButton
+                          buttonType={ButtonType.CLONEANDEDIT}
+                          isEnabled
+                          isOnQuestionTab
+                          iconOnlyOverride={!isScreenLgst}
+                          onClick={handleCloneButtonClick}
+                        />
+                      </Box>
+                      </>
+                      }
+                      <CentralButton
+                        buttonType={ButtonType.NEXTQUESTION}
+                        isEnabled
+                        isOnQuestionTab
+                        iconOnlyOverride={!isScreenLgst}
+                        onClick={handleNextQuestion}
+                      />
+                    </ButtonContainerRight>
+                    <ButtonContainerRight>
+                    {screenSize === ScreenSize.SMALL &&
+                      <>
+                        {centralData.userStatus === UserStatusType.LOGGEDIN &&
+                          <Box>
+                            {!isLoading ? 
+                              <CentralButton 
+                                buttonType={!isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE} 
+                                isEnabled 
+                                isOnQuestionTab
+                                iconOnlyOverride={!isScreenLgst}
+                                onClick={handleFavoriteButtonClick}
+                              />
+                              : <Box><CircularProgress style={{ color: '#FFF' }}/></Box>
+                            }
+                          </Box>
+                        }
+                      <Box>
+                        <CentralButton
+                          buttonType={ButtonType.CLONEANDEDIT}
+                          isEnabled
+                          isOnQuestionTab
+                          iconOnlyOverride={!isScreenLgst}
+                          onClick={handleCloneButtonClick}
+                        />
+                      </Box>
+                      </>
+                      
+                      }
+                      </ButtonContainerRight>
+                  </ButtonContainerLeft>
                 </ButtonContainer>
                 <CardContainer style={{paddingBottom: '50px'}}>
                   {screenSize !== ScreenSize.LARGE &&

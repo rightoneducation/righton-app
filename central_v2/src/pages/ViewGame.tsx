@@ -41,6 +41,7 @@ export default function ViewGame({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const route = useMatch('/games/:gameId');
+  const libRoute = useMatch('/library/games/:gameId');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -74,6 +75,16 @@ export default function ViewGame({
     setSelectedQuestionIndex(index);
   };
 
+  const handleBackClick = () => {
+    console.log('handleBackClick');
+    console.log(libRoute);
+    if (libRoute) {
+      navigate('/library');
+    } else {
+      navigate('/');
+    }
+  }
+
   return (
     <CreateGameMainContainer>
       <CreateGameBackground />
@@ -97,7 +108,7 @@ export default function ViewGame({
                 gap: `${theme.sizing.xSmPadding}px`, 
                 paddingBottom: '16px',
               }}>
-                 <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={() => navigate('/')} smallScreenOverride/>
+                 <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick} smallScreenOverride/>
                  <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
               </Box>
             }
@@ -111,7 +122,7 @@ export default function ViewGame({
                 >
                   { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
                     <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
-                      <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={() => navigate('/')}/>
+                      <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick}/>
                       <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame}/>
                     </Box>
                   }
