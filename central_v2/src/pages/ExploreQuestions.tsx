@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme, Box } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -54,7 +54,9 @@ export default function ExploreQuestions({
 }:ExploreQuestionsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const [hasInitialized, setHasInitialized] = useState(false);
   
   if (!hasInitialized) {
@@ -104,6 +106,15 @@ export default function ExploreQuestions({
     setIsTabsOpen(false);
   };
 
+  const handleCloneButtonClick = () => {
+    setIsTabsOpen(false);
+    centralDataDispatch({
+      type: 'SET_SELECTED_QUESTION',
+      payload: selectedQuestion,
+    });
+    navigate(`/clone/question/${selectedQuestion?.id}`);
+  };
+
   return (
     <ExploreGamesMainContainer id="scrollableDiv">
       {selectedQuestion && (
@@ -120,6 +131,7 @@ export default function ExploreQuestions({
             handleBackToExplore={handleBackToExplore}
             handlePrevQuestion={handlePrevQuestion}
             handleNextQuestion={handleNextQuestion}
+            handleCloneButtonClick={handleCloneButtonClick}
           />
         </>
       )}

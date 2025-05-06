@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { CircularProgress } from '@mui/material';
 import { 
@@ -9,7 +10,7 @@ import {
   SortDirection,
   IQuestionTemplate
 } from '@righton/networking';
-import { useCentralDataState } from '../hooks/context/useCentralDataContext';
+import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import LibraryTabsContainer from '../components/librarytabs/LibraryTabsContainer';
 import { ScreenSize, GameQuestionType, LibraryTabEnum, UserStatusType } from '../lib/CentralModels';
 import { MyLibraryMainContainer, MyLibraryBackground } from '../lib/styledcomponents/MyLibraryStyledComponent';
@@ -43,7 +44,9 @@ export default function MyLibrary({
   fetchElements
 }: MyLibraryProps) {
   const theme = useTheme();
+  const navigate = useNavigate();
   const centralData = useCentralDataState(); 
+  const centralDataDispatch = useCentralDataDispatch();
   const [selectedQuestion, setSelectedQuestion] =
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
@@ -84,6 +87,15 @@ export default function MyLibrary({
     }
   };
 
+  const handleCloneButtonClick = () => {
+    setIsTabsOpen(false);
+    centralDataDispatch({
+      type: 'SET_SELECTED_QUESTION',
+      payload: selectedQuestion,
+    });
+    navigate(`/clone/question/${selectedQuestion?.id}`);
+  };
+
   return (
     <MyLibraryMainContainer>
       <MyLibraryBackground/>
@@ -101,6 +113,7 @@ export default function MyLibrary({
                 handleBackToExplore={handleBackToExplore}
                 handlePrevQuestion={handlePrevQuestion}
                 handleNextQuestion={handleNextQuestion}
+                handleCloneButtonClick={handleCloneButtonClick}
               />
             </>
           )}

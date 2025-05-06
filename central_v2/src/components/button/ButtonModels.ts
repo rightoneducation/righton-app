@@ -31,6 +31,7 @@ export enum ButtonType {
   PREVIOUSQUESTION = 'previousquestion',
   BACKTOEXPLORE = 'backtoexplore',
   FAVORITE = 'favorite',
+  UNFAVORITE = 'unfavorite',
   CLONEANDEDIT = 'cloneandedit',
   NEXTQUESTION = 'nextquestion',
   SAVE = 'save',
@@ -142,6 +143,10 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.FAVORITE]: {
     icon: favorite,
     textKey: ButtonType.FAVORITE,
+  },
+  [ButtonType.UNFAVORITE]: {
+    icon: favorite,
+    textKey: ButtonType.UNFAVORITE,
   },
   [ButtonType.CLONEANDEDIT]: {
     icon: clone,

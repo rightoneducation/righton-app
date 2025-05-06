@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Slide,
   Tabs,
   Grid,
-  Modal
+  Modal,
+  CircularProgress
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
@@ -33,6 +35,9 @@ import {
   SubCardGridItem,
   GridItem
 } from '../../lib/styledcomponents/QuestionTabsStyledComponents';
+import { APIClientsContext } from '../../lib/context/APIClientsContext';
+import { useTSAPIClientsContext } from '../../hooks/context/useAPIClientsContext';
+import { useCentralDataState, useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 
 interface TabContainerProps {
   isTabsOpen: boolean;
@@ -48,6 +53,7 @@ interface TabContainerProps {
   handleBackToExplore: () => void;
   handlePrevQuestion: () => void;
   handleNextQuestion: () => void;
+  handleCloneButtonClick: () => void;
 }
 
 export default function QuestionTabs({
@@ -58,12 +64,19 @@ export default function QuestionTabs({
   handleBackToExplore,
   handlePrevQuestion,
   handleNextQuestion,
+  handleCloneButtonClick
 }: TabContainerProps) {
   const theme = useTheme();
   const [openTab, setOpenTab] = React.useState(0);
+  const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setOpenTab(newValue);
   };
+  const [isLoading, setIsLoading] = React.useState(false);
+  const isFavorite = centralData.userProfile?.favoriteGameTemplateIds?.includes(question.id) ?? false;
+
   const tabMap: { [key: number]: string } = {
     0: 'Explore Questions',
     1: 'My Questions',
@@ -84,6 +97,16 @@ export default function QuestionTabs({
      return value;
     return '';
   }
+
+  const handleFavoriteButtonClick = async () => {
+    setIsLoading(true);
+    const response = await apiClients.centralDataManager?.favoriteGameTemplate(question.id, centralData.userProfile);
+    if (response) {
+      centralDataDispatch({ type: 'SET_USER_PROFILE', payload: response });
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Modal
       disableAutoFocus
@@ -143,15 +166,22 @@ export default function QuestionTabs({
                     />
                   </ButtonContainerLeft>
                   <ButtonContainerRight>
-                    <CentralButton 
-                      buttonType={ButtonType.FAVORITE} 
-                      isEnabled 
-                      isOnQuestionTab
-                    />
+                    <Box>
+                      {!isLoading ? 
+                        <CentralButton 
+                          buttonType={!isFavorite ? ButtonType.FAVORITE : ButtonType.UNFAVORITE} 
+                          isEnabled 
+                          isOnQuestionTab
+                          onClick={handleFavoriteButtonClick}
+                        />
+                        : <Box><CircularProgress style={{ color: '#FFF' }}/></Box>
+                      }
+                    </Box>
                     <CentralButton
                       buttonType={ButtonType.CLONEANDEDIT}
                       isEnabled
                       isOnQuestionTab
+                      onClick={handleCloneButtonClick}
                     />
                     <CentralButton
                       buttonType={ButtonType.NEXTQUESTION}
