@@ -11,6 +11,7 @@ export type CreateUserInput = {
   firstName?: string | null,
   lastName?: string | null,
   email: string,
+  owner: string,
   password?: string | null,
   gamesMade?: number | null,
   gamesUsed?: number | null,
@@ -30,6 +31,7 @@ export type ModelUserConditionInput = {
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   email?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
   password?: ModelStringInput | null,
   gamesMade?: ModelIntInput | null,
   gamesUsed?: ModelIntInput | null,
@@ -44,7 +46,6 @@ export type ModelUserConditionInput = {
   not?: ModelUserConditionInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export type ModelStringInput = {
@@ -109,6 +110,7 @@ export type User = {
   firstName?: string | null,
   lastName?: string | null,
   email: string,
+  owner: string,
   password?: string | null,
   gamesMade?: number | null,
   gamesUsed?: number | null,
@@ -120,7 +122,6 @@ export type User = {
   favoriteQuestionTemplateIds?: string | null,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateUserInput = {
@@ -132,6 +133,7 @@ export type UpdateUserInput = {
   firstName?: string | null,
   lastName?: string | null,
   email?: string | null,
+  owner?: string | null,
   password?: string | null,
   gamesMade?: number | null,
   gamesUsed?: number | null,
@@ -1337,6 +1339,7 @@ export type ModelUserFilterInput = {
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   email?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
   password?: ModelStringInput | null,
   gamesMade?: ModelIntInput | null,
   gamesUsed?: ModelIntInput | null,
@@ -1351,7 +1354,6 @@ export type ModelUserFilterInput = {
   and?: Array< ModelUserFilterInput | null > | null,
   or?: Array< ModelUserFilterInput | null > | null,
   not?: ModelUserFilterInput | null,
-  owner?: ModelStringInput | null,
 };
 
 export enum ModelSortDirection {
@@ -2069,6 +2071,7 @@ export type CreateUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     email: string,
+    owner: string,
     password?: string | null,
     gamesMade?: number | null,
     gamesUsed?: number | null,
@@ -2080,7 +2083,6 @@ export type CreateUserMutation = {
     favoriteQuestionTemplateIds?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2100,6 +2102,7 @@ export type UpdateUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     email: string,
+    owner: string,
     password?: string | null,
     gamesMade?: number | null,
     gamesUsed?: number | null,
@@ -2111,7 +2114,6 @@ export type UpdateUserMutation = {
     favoriteQuestionTemplateIds?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2131,6 +2133,7 @@ export type DeleteUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     email: string,
+    owner: string,
     password?: string | null,
     gamesMade?: number | null,
     gamesUsed?: number | null,
@@ -2142,7 +2145,6 @@ export type DeleteUserMutation = {
     favoriteQuestionTemplateIds?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -10882,6 +10884,7 @@ export type GetUserQuery = {
     firstName?: string | null,
     lastName?: string | null,
     email: string,
+    owner: string,
     password?: string | null,
     gamesMade?: number | null,
     gamesUsed?: number | null,
@@ -10893,7 +10896,6 @@ export type GetUserQuery = {
     favoriteQuestionTemplateIds?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -10918,6 +10920,7 @@ export type ListUsersQuery = {
       firstName?: string | null,
       lastName?: string | null,
       email: string,
+      owner: string,
       password?: string | null,
       gamesMade?: number | null,
       gamesUsed?: number | null,
@@ -10929,7 +10932,6 @@ export type ListUsersQuery = {
       favoriteQuestionTemplateIds?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -10956,6 +10958,7 @@ export type UserByUserNameQuery = {
       firstName?: string | null,
       lastName?: string | null,
       email: string,
+      owner: string,
       password?: string | null,
       gamesMade?: number | null,
       gamesUsed?: number | null,
@@ -10967,7 +10970,6 @@ export type UserByUserNameQuery = {
       favoriteQuestionTemplateIds?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -10994,6 +10996,7 @@ export type UserByCognitoIdQuery = {
       firstName?: string | null,
       lastName?: string | null,
       email: string,
+      owner: string,
       password?: string | null,
       gamesMade?: number | null,
       gamesUsed?: number | null,
@@ -11005,7 +11008,6 @@ export type UserByCognitoIdQuery = {
       favoriteQuestionTemplateIds?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -11032,6 +11034,7 @@ export type UserByEmailQuery = {
       firstName?: string | null,
       lastName?: string | null,
       email: string,
+      owner: string,
       password?: string | null,
       gamesMade?: number | null,
       gamesUsed?: number | null,
@@ -11043,7 +11046,44 @@ export type UserByEmailQuery = {
       favoriteQuestionTemplateIds?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type UserByOwnerQueryVariables = {
+  owner: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type UserByOwnerQuery = {
+  userByOwner?:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      userName: string,
+      dynamoId?: string | null,
+      cognitoId: string,
+      title?: string | null,
+      firstName?: string | null,
+      lastName?: string | null,
+      email: string,
+      owner: string,
+      password?: string | null,
+      gamesMade?: number | null,
+      gamesUsed?: number | null,
+      questionsMade?: number | null,
+      frontIdPath?: string | null,
+      backIdPath?: string | null,
+      profilePicPath?: string | null,
+      favoriteGameTemplateIds?: string | null,
+      favoriteQuestionTemplateIds?: string | null,
+      createdAt: string,
+      updatedAt: string,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -20410,6 +20450,7 @@ export type OnCreateUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     email: string,
+    owner: string,
     password?: string | null,
     gamesMade?: number | null,
     gamesUsed?: number | null,
@@ -20421,7 +20462,6 @@ export type OnCreateUserSubscription = {
     favoriteQuestionTemplateIds?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -20441,6 +20481,7 @@ export type OnUpdateUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     email: string,
+    owner: string,
     password?: string | null,
     gamesMade?: number | null,
     gamesUsed?: number | null,
@@ -20452,7 +20493,6 @@ export type OnUpdateUserSubscription = {
     favoriteQuestionTemplateIds?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -20472,6 +20512,7 @@ export type OnDeleteUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     email: string,
+    owner: string,
     password?: string | null,
     gamesMade?: number | null,
     gamesUsed?: number | null,
@@ -20483,7 +20524,6 @@ export type OnDeleteUserSubscription = {
     favoriteQuestionTemplateIds?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 

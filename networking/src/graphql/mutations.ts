@@ -21,6 +21,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     firstName
     lastName
     email
+    owner
     password
     gamesMade
     gamesUsed
@@ -32,7 +33,6 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     favoriteQuestionTemplateIds
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -53,6 +53,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     firstName
     lastName
     email
+    owner
     password
     gamesMade
     gamesUsed
@@ -64,7 +65,6 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     favoriteQuestionTemplateIds
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -85,6 +85,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     firstName
     lastName
     email
+    owner
     password
     gamesMade
     gamesUsed
@@ -96,7 +97,6 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     favoriteQuestionTemplateIds
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
