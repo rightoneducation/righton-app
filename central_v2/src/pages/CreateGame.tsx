@@ -84,6 +84,7 @@ import {
   import {
     updateDQwithAnswerSettings,
   } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 
 
 interface CreateGameProps {
@@ -112,6 +113,7 @@ export default function CreateGame({
  }: CreateGameProps) {
   const navigate = useNavigate();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const centralData = useCentralDataState();
   const route = useMatch('/clone/game/:gameId');
   const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
@@ -251,6 +253,20 @@ export default function CreateGame({
               console.error(`Failed to create one or more game questions:`, err);
             }
           }
+
+           // update user stats
+           const existingNumGames = centralData.userProfile?.gamesMade || 0;
+           const existingNumQuestions = centralData.userProfile?.questionsMade || 0;
+           const newNumGames = existingNumGames + 1;
+            // add new questions to user number of questions
+           const newNumQuestions = existingNumQuestions + draftQuestionsList.filter((dq) => !dq.questionTemplate.id).length;
+           await apiClients.user.updateUser({
+               id: centralData.userProfile?.id || '',
+               gamesMade: newNumGames,
+               questionsMade: newNumQuestions,
+             }
+           );
+
           setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
           navigate('/');
       } else {

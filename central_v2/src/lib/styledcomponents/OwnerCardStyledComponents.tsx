@@ -88,7 +88,8 @@ export const LeftBottomContainer = styled(Box)(({ theme }) => ({
 
 export const LeftBottomGamesQuestionContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  gap: '8px'
+  gap: '8px',
+  width: '100%',
 }));
 
 export const LeftBottomGamesContainer = styled(Box)(({ theme }) => ({

@@ -49,6 +49,10 @@ export default function OwnerCard({
     imageLink = `${CloudFrontDistributionUrl}${draftUserProfile.profilePicPath}`;
   }
 
+  const gamesMade = draftUserProfile.gamesMade || 0;
+  const questionsMade = draftUserProfile.questionsMade || 0;
+  const gamesUsed = draftUserProfile.favoriteGameTemplateIds?.length || 0;
+
   return (
     screenSize === ScreenSize.LARGE ? (
         <LeftProfileContainer>
@@ -74,6 +78,7 @@ export default function OwnerCard({
                 </LeftAccountCreatedContainer>
             </AtUserNameContainerAndAccount>
         </LeftProfileTopContainer>
+        <Box style={{display: 'flex', flexDirection: 'column', width: '100%', gap: '8px'}}>
         <LeftBottomContainer>
             <LeftBottomGamesQuestionContainer>
                 <LeftBottomGamesContainer>
@@ -81,7 +86,7 @@ export default function OwnerCard({
                         Games Made
                     </LeftBottomGamesText>
                     <LeftBottomGamesNumber>
-                        16
+                        {gamesMade}
                     </LeftBottomGamesNumber>
                 </LeftBottomGamesContainer>
                 <LeftBottomGamesContainer>
@@ -89,20 +94,21 @@ export default function OwnerCard({
                         Question Made
                     </LeftBottomGamesText>
                     <LeftBottomGamesNumber>
-                        120
+                        {questionsMade}
                     </LeftBottomGamesNumber>
                 </LeftBottomGamesContainer>
             </LeftBottomGamesQuestionContainer>
-            <LeftBottomGamesContainer>
-                    <LeftBottomGamesText>
-                        Games Used
-                    </LeftBottomGamesText>
-                    <LeftBottomGamesNumber>
-                        16
-                    </LeftBottomGamesNumber>
-            </LeftBottomGamesContainer>
         </LeftBottomContainer>
-        </LeftProfileContainer>
+        <LeftBottomGamesContainer>
+            <LeftBottomGamesText>
+                Games Used
+            </LeftBottomGamesText>
+            <LeftBottomGamesNumber>
+                {gamesUsed}
+            </LeftBottomGamesNumber>
+          </LeftBottomGamesContainer>
+        </Box>
+      </LeftProfileContainer>  
     ) : (
         <TopProfileContainer>
             <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
@@ -126,7 +132,7 @@ export default function OwnerCard({
                                 Games Made
                             </LeftBottomGamesText>
                             <LeftBottomGamesNumber>
-                                16
+                                {gamesMade}
                             </LeftBottomGamesNumber>
                         </LeftBottomGamesContainer>
                         <LeftBottomGamesContainer>
@@ -134,7 +140,7 @@ export default function OwnerCard({
                                 Questions Made
                             </LeftBottomGamesText>
                             <LeftBottomGamesNumber>
-                                120
+                                {questionsMade}
                             </LeftBottomGamesNumber>
                         </LeftBottomGamesContainer>
                         <LeftBottomGamesContainer>
@@ -142,7 +148,7 @@ export default function OwnerCard({
                                 Games Used
                             </LeftBottomGamesText>
                             <LeftBottomGamesNumber>
-                                16
+                                {gamesUsed}
                             </LeftBottomGamesNumber>
                         </LeftBottomGamesContainer>          
                     </LeftBottomContainer>

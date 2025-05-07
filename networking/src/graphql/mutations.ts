@@ -23,6 +23,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     email
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
@@ -54,6 +55,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     email
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
@@ -85,6 +87,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     email
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath

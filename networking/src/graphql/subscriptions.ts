@@ -23,6 +23,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
     email
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
@@ -54,6 +55,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
     email
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
@@ -85,6 +87,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
     email
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath

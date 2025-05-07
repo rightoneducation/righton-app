@@ -229,6 +229,37 @@ mutation CreateQuestion(
   }
 }
 `;
+
+const updateUser = /* GraphQL */ `mutation UpdateUser(
+  $input: UpdateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  updateUser(input: $input, condition: $condition) {
+    id
+    userName
+    dynamoId
+    cognitoId
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    gamesUsed
+    questionsMade
+    frontIdPath
+    backIdPath
+    profilePicPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+`;
+
   let statusCode = 200;
   let responseBody ={};
   try {

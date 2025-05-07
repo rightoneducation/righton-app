@@ -19,6 +19,7 @@ type User @model
   email: String! @index(name: "emailIndex", queryField: "userByEmail")
   password: String
   gamesMade: Int
+  gamesUsed: Int
   questionsMade: Int
   frontIdPath: String
   backIdPath: String
