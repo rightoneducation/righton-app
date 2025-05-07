@@ -78,6 +78,7 @@ export default function OwnerCard({
                 </LeftAccountCreatedContainer>
             </AtUserNameContainerAndAccount>
         </LeftProfileTopContainer>
+        <Box style={{display: 'flex', flexDirection: 'column', width: '100%', gap: '8px'}}>
         <LeftBottomContainer>
             <LeftBottomGamesQuestionContainer>
                 <LeftBottomGamesContainer>
@@ -97,16 +98,17 @@ export default function OwnerCard({
                     </LeftBottomGamesNumber>
                 </LeftBottomGamesContainer>
             </LeftBottomGamesQuestionContainer>
-            <LeftBottomGamesContainer>
-                    <LeftBottomGamesText>
-                        Games Used
-                    </LeftBottomGamesText>
-                    <LeftBottomGamesNumber>
-                        {gamesUsed}
-                    </LeftBottomGamesNumber>
-            </LeftBottomGamesContainer>
         </LeftBottomContainer>
-        </LeftProfileContainer>
+        <LeftBottomGamesContainer>
+            <LeftBottomGamesText>
+                Games Used
+            </LeftBottomGamesText>
+            <LeftBottomGamesNumber>
+                {gamesUsed}
+            </LeftBottomGamesNumber>
+          </LeftBottomGamesContainer>
+        </Box>
+      </LeftProfileContainer>  
     ) : (
         <TopProfileContainer>
             <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>

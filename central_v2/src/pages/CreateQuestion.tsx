@@ -400,6 +400,16 @@ export default function CreateQuestion({
           if (url){
             apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
           }
+
+          // update user stats
+          const existingNumQuestions = centralData.userProfile?.questionsMade || 0;
+          const newNumQuestions = existingNumQuestions + 1;
+          await apiClients.user.updateUser({
+              id: centralData.userProfile?.id || '',
+              questionsMade: newNumQuestions,
+            }
+          );
+          
           setIsCreatingTemplate(false);
           fetchElements();
           navigate('/questions');
