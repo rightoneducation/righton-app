@@ -9,6 +9,8 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser(filter: $filter, owner: $owner) {
       id
       userName
+      dynamoId
+      cognitoId
       title
       firstName
       lastName
@@ -35,6 +37,8 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser(filter: $filter, owner: $owner) {
       id
       userName
+      dynamoId
+      cognitoId
       title
       firstName
       lastName
@@ -61,6 +65,8 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser(filter: $filter, owner: $owner) {
       id
       userName
+      dynamoId
+      cognitoId
       title
       firstName
       lastName
@@ -500,7 +506,6 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `
   ) {
     onCreatePrivateQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -522,6 +527,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -533,7 +539,6 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `
   ) {
     onUpdatePrivateQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -555,6 +560,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -566,7 +572,6 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `
   ) {
     onDeletePrivateQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -588,6 +593,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -599,7 +605,6 @@ export const onCreateDraftQuestionTemplate = /* GraphQL */ `
   ) {
     onCreateDraftQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -621,6 +626,7 @@ export const onCreateDraftQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -632,7 +638,6 @@ export const onUpdateDraftQuestionTemplate = /* GraphQL */ `
   ) {
     onUpdateDraftQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -654,6 +659,7 @@ export const onUpdateDraftQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -665,7 +671,6 @@ export const onDeleteDraftQuestionTemplate = /* GraphQL */ `
   ) {
     onDeleteDraftQuestionTemplate(filter: $filter, owner: $owner) {
       id
-      owner
       title
       lowerCaseTitle
       version
@@ -687,6 +692,7 @@ export const onDeleteDraftQuestionTemplate = /* GraphQL */ `
       createdAt
       updatedAt
       type
+      owner
       __typename
     }
   }
@@ -1266,7 +1272,6 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1284,6 +1289,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -1328,7 +1334,6 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1346,6 +1351,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -1390,7 +1396,6 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
       }
       privateQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1408,6 +1413,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -1452,7 +1458,6 @@ export const onCreateDraftGameQuestions = /* GraphQL */ `
       }
       draftQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1470,6 +1475,7 @@ export const onCreateDraftGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -1514,7 +1520,6 @@ export const onUpdateDraftGameQuestions = /* GraphQL */ `
       }
       draftQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1532,6 +1537,7 @@ export const onUpdateDraftGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt
@@ -1576,7 +1582,6 @@ export const onDeleteDraftGameQuestions = /* GraphQL */ `
       }
       draftQuestionTemplate {
         id
-        owner
         title
         lowerCaseTitle
         version
@@ -1594,6 +1599,7 @@ export const onDeleteDraftGameQuestions = /* GraphQL */ `
         createdAt
         updatedAt
         type
+        owner
         __typename
       }
       createdAt

@@ -1,4 +1,4 @@
-import { Amplify  } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
 import { CookieStorage  } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
@@ -17,12 +17,14 @@ import {
   ResendSignUpCodeOutput,
   ConfirmSignUpOutput,
   AuthSession,
+  decodeJWT,
+  updateUserAttributes
 } from 'aws-amplify/auth';
 import { uploadData, downloadData } from 'aws-amplify/storage';
 import amplifyconfig from "../../amplifyconfiguration.json";
 import { IAuthAPIClient } from './interfaces/IAuthAPIClient';
 import { fetchUserAttributes } from 'aws-amplify/auth';
-import { userCleaner } from "../../graphql";
+import { userCleaner, userByEmail } from "../../graphql";
 import { IUserProfile } from "../../Models/IUserProfile";
 
 export class AuthAPIClient
@@ -68,8 +70,23 @@ export class AuthAPIClient
     return username
   }
 
+  async getFirstAndLastName(): Promise<{firstName: string, lastName: string}> {
+    const session = await fetchAuthSession();
+    const idToken = session.tokens?.idToken;
+    let firstName = '';
+    let lastName = '';
+    if (!idToken) throw new Error('No ID token in session');
+    const { payload } = decodeJWT(String(idToken));
+    if (payload && payload.given_name && payload.family_name) {
+      firstName = String(payload.given_name);
+      lastName = String(payload.family_name);
+    }
+    return {firstName, lastName};
+  }
+
   async getCurrentSession(): Promise<AuthSession> {
-    return await fetchAuthSession();
+    const session =  await fetchAuthSession();
+    return session;
   }
 
   async awsUserCleaner(user: IUserProfile): Promise<void> {
@@ -79,6 +96,50 @@ export class AuthAPIClient
     const variables = { input };
     const client = generateClient({});
     client.graphql({query: userCleaner, variables, authMode: authMode });
+  }
+
+  async getUserByEmailDB(email: string): Promise<boolean> {
+      // Determine auth mode
+      // const authSession = await fetchAuthSession(); // Can still keep this if needed
+      const authMode = "userPool";
+  
+      // 🔑 Correct way to pass variables
+      const variables = { email };
+  
+      // Generate client
+      const client = generateClient({});
+  
+      // Run query
+      const response = await client.graphql({
+        query: userByEmail, // Make sure userByEmail is imported/generated properly
+        variables,
+        authMode
+      });
+  
+      // Handle response
+      if ("data" in response) {
+        if (response.data.userByEmail.items?.length > 0) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        console.error("Unexpected result from GraphQL query:", response);
+        return false
+      }
+  }
+  
+  async updateCognitoUsername(newUsername: string): Promise<void> {
+    try {
+      await updateUserAttributes({
+        userAttributes: {
+          nickname: newUsername,
+        }
+      });
+    } catch (error) {
+      console.error('Failed to update username in Cognito:', error);
+      throw new Error('Could not update username in Cognito');
+    }
   }
 
   async getUserNickname(): Promise<string | null> {
@@ -208,3 +269,4 @@ export class AuthAPIClient
     return imageUrl;
   }
 }
+

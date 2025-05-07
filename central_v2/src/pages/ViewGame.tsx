@@ -4,7 +4,7 @@ import {
   IGameTemplate,
   PublicPrivateType,
 } from '@righton/networking';
-import { Box, CircularProgress, useTheme } from '@mui/material';
+import { Box, Grid, CircularProgress, useTheme } from '@mui/material';
 import CentralButton from '../components/button/Button';
 import { ButtonType } from '../components/button/ButtonModels';
 import DetailedGameCardBase from '../components/cards/detailedgame/DetailedGameCardBase';
@@ -41,6 +41,7 @@ export default function ViewGame({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const centralData = useCentralDataState();
   const route = useMatch('/games/:gameId');
+  const libRoute = useMatch('/library/games/:gameId');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
@@ -65,10 +66,24 @@ export default function ViewGame({
     window.location.href = LAUNCH_GAME_URL;
   };
 
+  const handleCloneGame = () => {
+    navigate(`/clone/game/${centralData.selectedGame?.id}`);
+  };
+
   // game questions index handlers
   const handleQuestionIndexChange = (index: number) => {
     setSelectedQuestionIndex(index);
   };
+
+  const handleBackClick = () => {
+    console.log('handleBackClick');
+    console.log(libRoute);
+    if (libRoute) {
+      navigate('/library');
+    } else {
+      navigate('/');
+    }
+  }
 
   return (
     <CreateGameMainContainer>
@@ -83,13 +98,49 @@ export default function ViewGame({
          centralData.selectedGame &&
           <CreateGameBoxContainer>
             <TitleText screenSize={screenSize}>View Game</TitleText>
+            { (screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM) &&
+              <Box style={{
+                width: '100%', 
+                maxWidth: '672px',
+                display: 'flex',
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                gap: `${theme.sizing.xSmPadding}px`, 
+                paddingBottom: '16px',
+              }}>
+                 <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick} smallScreenOverride/>
+                 <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame} smallScreenOverride/>
+              </Box>
+            }
             <CreateGameGridContainer container wrap="nowrap">
+               <Grid
+                  sm
+                  md={1}
+                  lg={4}
+                  item
+                  style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', paddingTop: '16px', gap: '20px'}}
+                >
+                  { (screenSize !== ScreenSize.SMALL && screenSize !== ScreenSize.MEDIUM) &&
+                    <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-Start', alignItems: 'center', gap: `${theme.sizing.xSmPadding}px`, paddingRight: '30px'}}>
+                      <CentralButton buttonType={ButtonType.BACK} isEnabled onClick={handleBackClick}/>
+                      <CentralButton buttonType={ButtonType.CLONE} isEnabled onClick={handleCloneGame}/>
+                    </Box>
+                  }
+                </Grid>
               <CreateGameCardGridItem
                 item
                 sm={12}
                 md={10}
                 lg={4}
                 screenSize={screenSize}
+                style={{
+                  width: '100%',
+                  maxWidth: '672px',
+                  minWidth: screenSize !== ScreenSize.SMALL ? '672px' : '0px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: `${theme.sizing.xLgPadding}px`,
+                }}
               >
                   <DetailedGameCardBase 
                     screenSize={screenSize}
@@ -97,6 +148,10 @@ export default function ViewGame({
                     dropShadow
                   />
                 </CreateGameCardGridItem>
+                 <Grid  
+                          sm
+                          md={1}
+                          lg={4} item />
             </CreateGameGridContainer>
             <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
               <GameCreateButtonStack sx={{ 

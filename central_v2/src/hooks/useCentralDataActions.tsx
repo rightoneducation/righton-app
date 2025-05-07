@@ -20,8 +20,8 @@ interface UseCentralDataManagerProps {
 }
 
 interface UseCentralDataManagerReturnProps {
-  isValidatingUser: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
+  handleLibraryInit: (isInit: boolean) => void;
   fetchElement: (type: GameQuestionType, id: string) => void;
   fetchElements: (libraryTab?: LibraryTabEnum) => void;
   isUserProfileComplete: (profile: IUserProfile) => boolean;
@@ -35,6 +35,7 @@ interface UseCentralDataManagerReturnProps {
   handleSearchChange: (searchString: string) => void;
   getPublicPrivateElements: (newPublicPrivate: PublicPrivateType) => void;
   loadMore: () => void;
+  handleLogOut: () => void;
 }
 
 /* 
@@ -52,17 +53,18 @@ export default function useCentralDataManager({
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
 
-  const navigate = useNavigate();
-  const isGames = useMatch('/');
   const isQuestions = useMatch('/questions');
   const isCreateGame = useMatch('/create/game');
   const isLibrary = useMatch('/library') !== null;
-  const [isValidatingUser, setIsValidatingUser] = useState(true);
 
   const debounceInterval = 800;
 
   const setIsTabsOpen = (isOpen: boolean) => {
     centralDataDispatch({ type: 'SET_IS_TABS_OPEN', payload: isOpen });
+  }
+
+  const handleLibraryInit = (isInit: boolean) => {
+    centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: isInit });
   }
 
   const handleChooseGrades = (grades: GradeTarget[]) => {
@@ -243,7 +245,6 @@ export default function useCentralDataManager({
             )
             .then((response) => {
               centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
-              console.log(response);
               if (response){
                 switch (newPublicPrivate){
                   case PublicPrivateType.PRIVATE:
@@ -383,7 +384,6 @@ export default function useCentralDataManager({
 
   const getFav = async (user: IUserProfile) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
-    console.log(user);
     switch (gameQuestion){
       case GameQuestionType.QUESTION:
         apiClients?.centralDataManager?.searchForQuestionTemplates(
@@ -422,8 +422,12 @@ export default function useCentralDataManager({
   };
 
   const isUserProfileComplete = (profile: IUserProfile): boolean => {
-    return Object.entries(profile).every(([key, value]) => value !== undefined && value !== null && value !== "");
+    return Object.entries(profile).every(([key, value]) => {
+        if (key === "password") return true; 
+        return value !== undefined && value !== null && value !== "";
+    });
   };
+  
 
   const fetchElement = async (type: GameQuestionType, id: string) => {
     centralDataDispatch({ type: 'SET_IS_LOADING', payload: true });
@@ -509,38 +513,72 @@ export default function useCentralDataManager({
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
+  const handleLogOut = () => {
+    apiClients.centralDataManager?.signOut();
+    apiClients.centralDataManager?.clearLocalUserProfile();
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+  }
+
   const validateUser = async () => {
-    setIsValidatingUser(true);
     const status = await apiClients.auth.verifyAuth();
     if (status) {
-      const localProfile = await apiClients.centralDataManager?.refreshLocalUserProfile();
+      const currentSession = await apiClients.auth.getCurrentSession();
+      const cognitoId = currentSession?.userSub;
+      if (!cognitoId) {
+        handleLogOut();
+        return;
+      }
+      const localProfile = await apiClients.centralDataManager?.getUser(cognitoId);
       if (localProfile) {
-        if (!isUserProfileComplete(localProfile)) {
-          // navigate('/nextstep');
-          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.INCOMPLETE });
-          setIsValidatingUser(false);
+        if (!isUserProfileComplete(localProfile) || cognitoId !== localProfile.cognitoId) {
+          handleLogOut();
           return;
         }
+        // if there is a local profile
+        if (
+          (currentSession.tokens?.idToken?.payload?.identities as { providerName: string }[] | undefined)
+            ?.some(i => i.providerName === 'Google')
+        ) {
+          centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
+          centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.GOOGLE_SIGNIN });
+          return;
+        }
+        centralDataDispatch({ type: 'SET_USER_PROFILE', payload: localProfile });
         centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-        setIsValidatingUser(false);
+        return;
+      }
+      // case for google oauth sign up, cognito present, but no local profile
+      // google idtoken has a providerName whereas cognito does not
+      if (
+        (currentSession.tokens?.idToken?.payload?.identities as { providerName: string }[] | undefined)
+          ?.some(i => i.providerName === 'Google')
+      ) {
+        const { firstName, lastName } = await apiClients.auth.getFirstAndLastName();
+        centralDataDispatch({ type: 'SET_ADVANCE_GOOGLE_SIGNUP', payload: {firstName, lastName, userStatus: UserStatusType.GOOGLE_SIGNUP }});
         return;
       }
     }
-    apiClients.centralDataManager?.clearLocalUserProfile();
-    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+    handleLogOut();
   };
 
   // useEffect for verifying that user data (Cognito and User Profile) is complete and valid
   // runs only on initial app load
   useEffect(() => {
-    console.log('validateUser useEffect running');
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
-    validateUser();
+    const executeValidate = async () => {
+      try {
+        await validateUser();
+      } catch (err) {
+        console.error('Error validating user:', err);
+      }
+    };
+    // call it
+    executeValidate();
   }, []); // eslint-disable-line
 
   return {
-    isValidatingUser,
     setIsTabsOpen,
+    handleLibraryInit,
     fetchElement,
     fetchElements,
     isUserProfileComplete,
@@ -549,5 +587,6 @@ export default function useCentralDataManager({
     handleSearchChange,
     getPublicPrivateElements,
     loadMore,
+    handleLogOut
   };
 }

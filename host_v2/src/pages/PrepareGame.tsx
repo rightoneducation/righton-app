@@ -45,11 +45,15 @@ export default function PrepareGame( {
           ? ScreenSize.MEDIUM 
           : ScreenSize.SMALL;
     const handleButtonClick = () => {
+      console.log('handleButtonClick');
       const currentTimeMillis = Date.now().toString(); 
       const nextState = getNextGameSessionState(localGameSession.currentState, localGameSession.questions.length, localGameSession.currentQuestionIndex);
       const hostTeamAnswers = apiClients.hostDataManager?.initHostTeamAnswers(localGameSession);
+      console.log('here now');
+      console.log(hostTeamAnswers);
       if (hostTeamAnswers)
         dispatchHostTeamAnswers({type: 'update_host_team_answers', payload: {...hostTeamAnswers}});
+      console.log('nextState', nextState);
       const questionUpdates = localGameSession.questions.map(async (question) => 
         apiClients.question.updateQuestion({
           id: question.id, 
@@ -63,6 +67,7 @@ export default function PrepareGame( {
       );
       Promise.all(questionUpdates)
       .then((questions) => {
+        console.log('now here');
         const updatedGameSession = {...localGameSession, questions};
         dispatch({type: 'synch_local_gameSession', payload: {...updatedGameSession, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis}});
         apiClients.hostDataManager?.updateGameSession({id: localGameSession.id, currentState: nextState, currentQuestionIndex: 0, startTime: currentTimeMillis});

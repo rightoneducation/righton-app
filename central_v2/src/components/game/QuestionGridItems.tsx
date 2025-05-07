@@ -10,6 +10,7 @@ import {
 import { styled } from '@mui/material/styles';
 import {
   AnswerType,
+  AnswerPrecision,
   CentralQuestionTemplateInput,
   IncorrectCard,
   PublicPrivateType,
@@ -23,46 +24,12 @@ import { SubCardGridItem } from '../../lib/styledcomponents/QuestionTabsStyledCo
 import CorrectAnswerCard from '../cards/createquestion/CorrectAnswerCard';
 import CreateQuestionCardBase from '../cards/createquestion/CreateQuestionCardBase';
 import IncorrectAnswerCardStack from '../cards/createquestion/stackedcards/IncorrectAnswerCardStack';
-
-const AISwitch = styled(Switch)(({ theme }) => ({
-  padding: 8,
-  '& .MuiSwitch-track': {
-    borderRadius: 22 / 2,
-    backgroundColor: '#CCCCCC',
-    opacity: 1,
-    '&::before, &::after': {
-      content: '""',
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      width: 16,
-      height: 16,
-    },
-    '&::before': {
-      left: 12,
-    },
-    '&::after': {
-      right: 12,
-    },
-  },
-  '& .MuiSwitch-switchBase.Mui-checked': {
-    color: '#FFFFFF',
-  },
-  '& .MuiSwitch-thumb': {
-    background: theme.palette.primary.aiGradient,
-    boxShadow: 'none',
-    width: 16,
-    height: 16,
-    margin: 2,
-  },
-  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: '#CCCCCC',
-  },
-}));
-
+import { AISwitch } from '../../lib/styledcomponents/AISwitchStyledComponent';
 
 interface IQuestionElements {
   screenSize: ScreenSize;
+  isClone: boolean;
+  isCloneImageChanged: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   isCardSubmitted: boolean;
   isCardErrored: boolean;
@@ -90,13 +57,16 @@ interface IQuestionElements {
     incompleteAnswers: IncorrectCard[],
     isAIEnabledCard?: boolean,
   ) => void;
-  handleDebouncedTitleChange: (title: string, draftQuestionInput: CentralQuestionTemplateInput) => void;
+  handleDebouncedTitleChange: (title: string) => void;
   handleDebouncedCorrectAnswerChange: (correctAnswer: string, draftQuestionInput: CentralQuestionTemplateInput) => void;
-  handleDebouncedCorrectAnswerStepsChange: (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => void
+  handleDebouncedCorrectAnswerStepsChange: (steps: string[], draftQuestionInput: CentralQuestionTemplateInput) => void;
+  handleAnswerSettingsChange: (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType, answerPrecision?: AnswerPrecision) => void;
 }
 
 export default function QuestionElements({
   screenSize,
+  isClone,
+  isCloneImageChanged,
   draftQuestion,
   isCardSubmitted,
   isCardErrored,
@@ -114,6 +84,7 @@ export default function QuestionElements({
   handleDebouncedCorrectAnswerChange,
   handleDebouncedTitleChange,
   handleDebouncedCorrectAnswerStepsChange,
+  handleAnswerSettingsChange,
   handleDiscardQuestion,
   handleSaveQuestion,
   handleCCSSClick,
@@ -151,6 +122,8 @@ export default function QuestionElements({
           <CreateQuestionCardBase
             isCreateGame
             screenSize={screenSize}
+            isClone={isClone}
+            isCloneImageChanged={isCloneImageChanged}
             draftQuestion={draftQuestion}
             handleTitleChange={handleDebouncedTitleChange}
             handleCCSSClick={handleCCSSClick}
@@ -176,6 +149,8 @@ export default function QuestionElements({
               style={{ width: '100%' }}
             >
               <CorrectAnswerCard
+                screenSize={screenSize}
+                isClone={isClone}
                 draftQuestion={draftQuestion}
                 isHighlight={
                   highlightCard === CreateQuestionHighlightCard.CORRECTANSWER
@@ -184,6 +159,7 @@ export default function QuestionElements({
                 handleCorrectAnswerStepsChange={
                   handleDebouncedCorrectAnswerStepsChange
                 }
+                handleAnswerSettingsChange={handleAnswerSettingsChange}
                 isCardSubmitted={isCardSubmitted}
                 isCardErrored={isCorrectCardErrored}
                 isAIError={isAIError}
@@ -204,6 +180,7 @@ export default function QuestionElements({
             </Box>
             <IncorrectAnswerCardStack
               draftQuestion={draftQuestion}
+              isClone={isClone}
               completeIncorrectAnswers={completeIncorrectAnswers}
               incompleteIncorrectAnswers={incompleteIncorrectAnswers}
               highlightCard={highlightCard}

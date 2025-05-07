@@ -4,7 +4,9 @@ export enum UserStatusType {
   LOGGEDIN,
   LOGGEDOUT,
   INCOMPLETE,
-  LOADING
+  LOADING,
+  GOOGLE_SIGNIN,
+  GOOGLE_SIGNUP,
 }
 
 export enum ScreenType {
@@ -14,10 +16,14 @@ export enum ScreenType {
   LOGIN,
   SIGNUP, 
   CREATEGAME,
+  CLONEGAME,
   VIEWGAME,
   CREATEQUESTION,
+  CLONEQUESTION,
   CONFIRMATION,
-  NEXTSTEP
+  NEXTSTEP,
+  USERPROFILE,
+  AUTH
 }
 
 export enum ScreenSize {
@@ -29,6 +35,11 @@ export enum ScreenSize {
 export enum CardType {
   CORRECT,
   INCORRECT,
+}
+
+export enum AnswerSettingsDropdownType {
+  TYPE,
+  PRECISION
 }
 
 export enum BorderStyle {
@@ -60,9 +71,6 @@ export enum TemplateType {
 
 // key for storage to localStorage  
 export const StorageKey = 'rightOnCentral';
-
-// public cloudfront distribution URL for the RightOn Central app
-export const CloudFrontDistributionUrl = 'https://d1api4wn3jnenc.cloudfront.net/';
 
 // type that shapes retreived storage for createQuestion 
 export type CreateQuestionLocalData = {

@@ -2,7 +2,9 @@ import {
     PublicPrivateType, 
     CentralQuestionTemplateInput, 
     IQuestionTemplate, 
-    IGameTemplate } from "@righton/networking";
+    IGameTemplate,
+    AnswerType
+} from "@righton/networking";
 import { CreateQuestionHighlightCard } from "./CentralModels";
 
 // draft game type
@@ -18,6 +20,7 @@ export type TGameTemplateProps = {
   isGameImageUploadVisible: boolean;
   isGameURLUploadVisible: boolean;
   isCreatingTemplate: boolean;
+  isCloneGameImageChanged: boolean;
   image?: File | null;
   imageUrl?: string | undefined;
 };
@@ -35,6 +38,7 @@ export type TDraftQuestionsList = {
   isCreatingTemplate: boolean;
   isQuestionCardErrored: boolean;
   isQuestionCardSubmitted: boolean;
+  isCloneQuestionImageChanged: boolean;
   highlightCard: CreateQuestionHighlightCard;
   isMultipleChoice: boolean;
   questionTemplate: IQuestionTemplate;
@@ -52,6 +56,9 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     correctCard: {
       answer: '',
       answerSteps: ['', '', ''],
+      answerSettings: {
+        answerType: AnswerType.MULTICHOICE,
+      },
       isFirstEdit: true,
       isCardComplete: false,
     },
@@ -107,6 +114,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     isCreatingTemplate: false,
     isQuestionCardErrored: false,
     isQuestionCardSubmitted: false,
+    isCloneQuestionImageChanged: false,
     highlightCard: CreateQuestionHighlightCard.QUESTIONCARD,
     isMultipleChoice: true,
     isLibraryViewOnly: false,
@@ -144,6 +152,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     publicPrivateGame: PublicPrivateType.PUBLIC,
     isGameImageUploadVisible: false,
     isGameURLUploadVisible: false,
+    isCloneGameImageChanged: false,
     isCreatingTemplate: false,
     image: null,
     imageUrl: '',

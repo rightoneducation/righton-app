@@ -49,14 +49,21 @@ const CloseButton = styled('img')(({ theme }) => ({
 interface CreatingTemplateModalProps {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleLogOut: () => void;
 }
 
 export default function LoginErrorModal({
   isModalOpen,
   setIsModalOpen,
+  handleLogOut,
 }: CreatingTemplateModalProps) {
   const theme = useTheme();
   const apiClients = useTSAPIClientsContext(APIClientsContext);
+
+  const handleRetry = async () => {
+    handleLogOut();
+    setIsModalOpen(false);
+  }
 
   return (
     <Fade in={isModalOpen} mountOnEnter unmountOnExit timeout={1000}  style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%)'}}>

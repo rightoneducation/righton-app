@@ -25,11 +25,12 @@ interface StyledCardProps {
   isAIExplanationGenerated: boolean;
   isTopCard?: boolean;
   isAIRegenEnabled: boolean;
+  isClone: boolean;
 }
 
 const AnswerCard = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete' && prop !== 'isCardClicked' && prop !== 'isAIEnabled' && prop !== 'isAIExplanationGenerated' && prop !== 'isTopCard' && prop !== 'isAIRegenEnabled',
-})<StyledCardProps>(({ theme, isHighlight, isCardComplete, isCardClicked, isAIEnabled, isAIExplanationGenerated, isAIRegenEnabled, isTopCard }) => ({
+  shouldForwardProp: (prop) => prop !== 'isHighlight' && prop !== 'isCardComplete' && prop !== 'isCardClicked' && prop !== 'isAIEnabled' && prop !== 'isAIExplanationGenerated' && prop !== 'isTopCard' && prop !== 'isAIRegenEnabled' && prop !== 'isClone',
+})<StyledCardProps>(({ theme, isHighlight, isCardComplete, isCardClicked, isAIEnabled, isAIExplanationGenerated, isAIRegenEnabled, isTopCard, isClone }) => ({
   width: '100%',
   padding: `${theme.sizing.mdPadding}px`,
   paddingBottom: isAIEnabled && isAIExplanationGenerated && isTopCard && !isAIRegenEnabled ? '70px' : `${theme.sizing.mdPadding}px`,
@@ -40,7 +41,7 @@ const AnswerCard = styled(Paper, {
   flexDirection: 'column',
   gap: `10px`,
   boxShadow: isHighlight ? `0px 0px 25px 0px ${theme.palette.primary.extraDarkBlue}` : '',
-  opacity: isCardComplete && !isCardClicked ? 0.6 : 1,
+  opacity: isCardComplete && !isCardClicked && !isClone ? 0.6 : 1,
   transition: 'box-shadow 0.6s, opacity  0.6s',
   position: 'relative',
   overflow: 'hidden'
@@ -48,6 +49,7 @@ const AnswerCard = styled(Paper, {
 
 interface IncorrectAnswerCardProps {
   apiClients: IAPIClients;
+  isClone: boolean;
   answerData: IncorrectCard;
   draftQuestion: CentralQuestionTemplateInput;
   isHighlight?: boolean;
@@ -67,6 +69,7 @@ interface IncorrectAnswerCardProps {
 
 export default function IncorrectAnswerCard({
   apiClients,
+  isClone,
   answerData,
   draftQuestion,
   isHighlight,
@@ -180,7 +183,7 @@ export default function IncorrectAnswerCard({
 
   return (
     <Box style={{display: 'flex', flexDirection: 'column', gap: '30px'}}>
-      <AnswerCard ref={cardRef} elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIGeneratedLocal} isAIRegenEnabled={isAIRegenEnabled} isTopCard={isTopCard ?? false} onClick={handleLocalCardClick}>
+      <AnswerCard ref={cardRef} elevation={6} isHighlight={isHighlight ?? false} isCardComplete={answerData.isCardComplete} isCardClicked={isCardClicked} isAIEnabled={isAIEnabled} isAIExplanationGenerated={isAIGeneratedLocal} isAIRegenEnabled={isAIRegenEnabled} isTopCard={isTopCard ?? false} isClone={isClone} onClick={handleLocalCardClick}>
         <QuestionTitleStyled sx={{ color: "#47366C"}}>
           Incorrect Answer
         </QuestionTitleStyled>

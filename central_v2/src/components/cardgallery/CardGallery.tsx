@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Grid, Box } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -7,6 +8,7 @@ import {
   ElementType,
   GalleryType,
 } from '@righton/networking';
+import { useCentralDataDispatch, useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import StyledGameCard from '../cards/GameCard';
 import StyledQuestionCard from '../cards/QuestionCard';
 import { ScreenSize } from '../../lib/CentralModels';
@@ -15,7 +17,6 @@ import SkeletonGameCard from '../cards/GameCardSkeleton';
 import SkeletonQuestionCard from '../cards/QuestionCardSkeleton';
 import { MostPopularContainer } from '../../lib/styledcomponents/ExploreStyledComponents';
 import GalleryHeaderText from './GalleryHeaderText';
-import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 
 interface CardGalleryProps<T> {
   screenSize: ScreenSize;
@@ -28,6 +29,7 @@ interface CardGalleryProps<T> {
   setIsTabsOpen: (isOpen: boolean) => void;
   handleView: (element: T, elements: T[]) => void;
   isMyLibrary?: boolean;
+  isMyLibraryQuestion?: boolean;
   isCreateGame?: boolean;
 }
 
@@ -48,6 +50,7 @@ interface MostPopularGamesComponentProps {
   numColumns: number;
   isLoading: boolean;
   isMyLibrary?: boolean;
+  isMyLibraryQuestion?: boolean;
   setIsTabsOpen: (isOpen: boolean) => void;
   handleViewButtonClick: (element: IGameTemplate) => void;
   isCreateGame?: boolean;
@@ -60,6 +63,7 @@ function MostPopularGamesComponent({
   isLoading,
   numColumns,
   isMyLibrary,
+  isMyLibraryQuestion,
   setIsTabsOpen,
   handleViewButtonClick,
   isCreateGame,
@@ -90,6 +94,7 @@ function MostPopularGamesComponent({
                   image={game.imageUrl || placeHolder}
                   isCarousel={false}
                   isFavorite={isFavorite}
+                  isMyLibraryQuestion={isMyLibraryQuestion}
                   handleViewButtonClick={
                     handleViewButtonClick as (element: IGameTemplate) => void
                   }
@@ -111,12 +116,23 @@ function MostPopularQuestionsComponent({
   isCreateGame,
 }: MostPopularComponentProps<IQuestionTemplate>) {
   const array = Array.from({ length: numColumns });
+  const navigate = useNavigate();
   const elementsLength = Object.values(mostPopularElements).reduce(
     (acc, column) => acc + column.length,
     0,
   );
   const centralData = useCentralDataState();
+  const centralDataDispatch = useCentralDataDispatch();
   const favoriteQuestionTemplateIds = centralData.userProfile?.favoriteQuestionTemplateIds;
+
+  const handleCloneButtonClick = (element: IQuestionTemplate) => {
+    centralDataDispatch({
+      type: 'SET_SELECTED_QUESTION',
+      payload: element,
+    });
+    navigate(`/clone/question/${element.id}`);
+  }
+
   return (
     <Grid container spacing={4}   columns={{ xs: 12, sm: 12, md: 12, lg: 7 }} id="scrollableDiv">
       {(elementsLength === 0 && isLoading)
@@ -154,6 +170,11 @@ function MostPopularQuestionsComponent({
                               element: IQuestionTemplate,
                             ) => void
                           }
+                          handleCloneButtonClick={
+                            handleCloneButtonClick as (
+                              element: IQuestionTemplate,
+                            ) => void
+                          }
                         />
                       );
                     })}
@@ -178,6 +199,7 @@ export default function CardGallery<
   setIsTabsOpen,
   handleView,
   isMyLibrary,
+  isMyLibraryQuestion,
   isCreateGame
 }: CardGalleryProps<T>) {
   const maxCards = 12;
@@ -238,6 +260,7 @@ export default function CardGallery<
           numColumns={getNumColumns()}
           setIsTabsOpen={setIsTabsOpen}
           isMyLibrary={isMyLibrary}
+          isMyLibraryQuestion={isMyLibraryQuestion}
           isCreateGame={isCreateGame}
           handleViewButtonClick={
             handleViewButtonClick as (element: IGameTemplate) => void

@@ -14,8 +14,16 @@ export interface IUserAPIClient {
     deleteUserInput: DeleteUserInput
   ): Promise<IUser | null>;
 
+  getUserByCognitoId(
+    cognitoId: string
+  ): Promise<IUser | null>;
+
   getUserByUserName(
     userName: string
+  ): Promise<IUser | null>;
+
+  getUser(
+    id: string
   ): Promise<IUser | null>;
 
   updateUser( 

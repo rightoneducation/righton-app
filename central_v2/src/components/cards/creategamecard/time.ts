@@ -34,4 +34,9 @@ export const reverseTimesMap = times.reduce((acc, time) => {
   return acc;
 }, {} as {[key:string]: number});
 
+export const timeLookup = (value: number) => {
+  const timeObj = times.find((time) => time.value === value);
+  return timeObj ? timeObj.label : '';
+}
+
   export default times

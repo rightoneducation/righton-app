@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, styled} from '@mui/material/styles';
-import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
+import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button, CircularProgress} from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import { IAPIClients, IUserProfile } from '@righton/networking';
 import { useGoogleLogin } from '@react-oauth/google';
@@ -388,9 +388,6 @@ export default function SignUp({
 
         if (idToken) {
           const response = await apiClients.auth.awsSignInFederated();
-          // handleGoogleUserCreate()
-          
-          console.log('User signed in:', response);
         } else {
           console.error('Google sign-in token is missing');
         }
@@ -402,6 +399,12 @@ export default function SignUp({
       console.error('Google Sign-In Failed');
     },
   });
+
+  const handleGoogleClick = async () => {
+    setLoading(true);
+    googleLogin();
+  }
+
   return (
     <SignUpMainContainer>
       <SignUpErrorModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
@@ -411,7 +414,7 @@ export default function SignUp({
           <img src={RightOnLogo} alt="Right On Logo" style={{ width: '200px', height: '200px' }} />
           <UpperSignupSubStepText>Step 1: New Account Registration</UpperSignupSubStepText>
           {/* <UpperSignupSubGoogle>Sign Up with Google</UpperSignupSubGoogle> */}
-          <GoogleSignUpButton onClick={() => googleLogin()} variant="contained">
+          <GoogleSignUpButton onClick={handleGoogleClick} variant="contained">
             <img src={GoogleImageSvg} alt="Google Icon" width="30px" height="30px" />
             Sign up with Google
           </GoogleSignUpButton>
@@ -708,6 +711,11 @@ export default function SignUp({
                 <CentralButton buttonType={buttonType} isEnabled={isEnabled}  onClick={() => navigate('/login')}/>
               </LowestContainer>
         </LowerLogin>
+        {loading && 
+          <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+              <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
+          </Box>
+        } 
       </InnerBodyContainer>
     </SignUpMainContainer>
   );

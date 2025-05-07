@@ -29,6 +29,7 @@ export interface ICentralDataManagerAPIClient {
   getLocalUserProfile: () => IUserProfile | null;
   setLocalUserProfile: (userProfile: IUserProfile) => void;
   clearLocalUserProfile: () => void;
+  getUser: (cognitoId: string) => Promise<IUserProfile | null>;
   loginUserAndRetrieveUserProfile: (username: string, password: string) => Promise<IUserProfile | null>;
   favoriteGameTemplate: (gameId: string, user: IUserProfile) => Promise<IUserProfile | null>;
   favoriteQuestionTemplate: (questionId: string, isFavourite: boolean) => Promise<void>;
@@ -36,4 +37,6 @@ export interface ICentralDataManagerAPIClient {
   signUpConfirmAndBuildBackendUser(user: IUserProfile, confirmationCode: string, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
   signOut: () => void;
   signUpGoogleBuildBackendUser(user: IUserProfile, frontImage: File, backImage: File): Promise<{ updatedUser: any; images: any[] }>;
+  userProfileImageUpdate(user: IUserProfile, oldUser: IUserProfile, newProfilePic: File | null, frontImage?: File | null,
+    backImage?: File | null): Promise<{updatedUser: any}>;
 }

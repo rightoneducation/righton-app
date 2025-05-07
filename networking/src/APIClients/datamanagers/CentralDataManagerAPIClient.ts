@@ -8,7 +8,7 @@ import { IUserAPIClient } from '../user';
 import { UserParser } from '../../Parsers/UserParser';
 import {
   getCurrentUser,
-  fetchUserAttributes
+  fetchUserAttributes,
 } from 'aws-amplify/auth';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -171,12 +171,27 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     window.localStorage.removeItem(userProfileLocalStorage);
   }
 
+  public getUser = async (cognitoId: string) => {
+    console.log('At GetUser');
+    const userProfile = await this.userAPIClient.getUserByCognitoId(cognitoId);
+    if (userProfile !== null){
+      this.setLocalUserProfile(userProfile);
+      return userProfile;
+    }
+    return null;
+  }
+
   public loginUserAndRetrieveUserProfile = async (userName: string, password: string) => {
     let userProfile = null;
     try {
-      await this.authAPIClient.awsSignIn(userName, password);
+      const response = await this.authAPIClient.awsSignIn(userName, password);
+      console.log(response);
       const currentCognitoUser = await getCurrentUser();
+      console.log(currentCognitoUser);
       const attributes = await fetchUserAttributes();
+      const session = await this.authAPIClient.getCurrentSession();
+      console.log(session);
+      console.log(attributes);
       if (!attributes || !attributes.nickname) 
         return null;
       const currentDynamoDBUser = await this.userAPIClient.getUserByUserName(attributes.nickname);
@@ -185,9 +200,34 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
           cognitoId: currentCognitoUser.userId,
           ...currentDynamoDBUser
         };
-      this.setLocalUserProfile(userProfile);
+      this.setLocalUserProfile(userProfile); 
       this.authAPIClient.isUserAuth = true;
      }
+      return userProfile;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
+
+  public loginGoogleAndRetrieveUserProfile = async () => {
+    let userProfile = null;
+    try {
+      await this.authAPIClient.awsSignInFederated();
+      const currentSession = await this.authAPIClient.getCurrentSession();
+      const cognitoId = currentSession?.userSub;
+      if (!cognitoId) 
+        return null;
+      const currentDynamoDBUser = await this.userAPIClient.getUser(cognitoId);
+      if  (currentDynamoDBUser !== null){
+        userProfile = {
+          cognitoId: cognitoId,
+          ...currentDynamoDBUser
+        };
+      }
+      if  (currentDynamoDBUser && userProfile){
+        this.setLocalUserProfile(userProfile); 
+        this.authAPIClient.isUserAuth = true;
+      }
       return userProfile;
     } catch (error: any) {
       throw new Error(error);
@@ -215,8 +255,12 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       ]);
       const dynamoId = uuidv4();
       createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      await this.userAPIClient.createUser(createUserInput);
+
+      const randomIndex = Math.floor(Math.random() * 5) + 1;
+      
+      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg`};
+      
+      await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
 
@@ -229,16 +273,17 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
 
 
   public signUpGoogleBuildBackendUser = async (user: IUserProfile, frontImage: File, backImage: File) => {
-    console.log(user);
     // Need to put it in Email into user.
     let getEmail = await this.authAPIClient.getUserEmail();
     if(getEmail){
       user.email = getEmail;
     }
-
-    // CreatUserInput is done to avoid putting cognito ID into the dynamoDB
+    console.log(this.authAPIClient.verifyAuth());
+    console.log(this.authAPIClient.getCurrentSession());
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
     let updatedUser = JSON.parse(JSON.stringify(user));
+    let firstName = createUserInput.firstName;
+    let lastName = createUserInput.lastName;
     try {
       const currentUser = await getCurrentUser();
       updatedUser = { ...updatedUser, cognitoId: currentUser.userId };
@@ -247,9 +292,12 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         this.authAPIClient.awsUploadImagePrivate(backImage) as any
       ]);
       const dynamoId = uuidv4();
-      createUserInput = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      updatedUser = { ...createUserInput, id: dynamoId, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
-      await this.userAPIClient.createUser(createUserInput);
+      
+      createUserInput = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId };
+      const randomIndex = Math.floor(Math.random() * 5) + 1;
+
+      updatedUser = { ...createUserInput, id: dynamoId, firstName, lastName, frontIdPath: images[0].path, backIdPath: images[1].path, cognitoId: currentUser.userId, dynamoId: dynamoId, profilePicPath: `defaultProfilePic${randomIndex}.jpg` };
+      await this.userAPIClient.createUser(updatedUser);
       this.setLocalUserProfile(updatedUser);
       this.authAPIClient.isUserAuth = true;
       //TODO: set user status to LOGGED_IN
@@ -259,6 +307,72 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       this.authAPIClient.awsUserCleaner(updatedUser);
       throw new Error (JSON.stringify(error));
     }
+  };
+
+  public userProfileImageUpdate = async (user: IUserProfile, oldUser: IUserProfile, newProfilePic: File | null, frontImage?: File | null,
+    backImage?: File | null
+  ) => {
+    let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
+    let updatedUser = JSON.parse(JSON.stringify(createUserInput));
+
+    let oldUserInput = UserParser.parseAWSUserfromAuthUser(oldUser);
+
+    if(updatedUser.userName != oldUserInput.userName){
+      try {
+        console.log("Updating userName in Cognito!!")
+        await this.authAPIClient.updateCognitoUsername(updatedUser.userName)
+      }
+      catch (error: any) {
+        throw new Error (JSON.stringify(error));
+      }
+    }
+    
+    if (frontImage && backImage) {
+      try {
+        const upadtingImages = await Promise.all([
+          this.authAPIClient.awsUploadImagePrivate(frontImage) as any,
+          this.authAPIClient.awsUploadImagePrivate(backImage) as any
+        ]);
+        updatedUser = {...updatedUser, frontIdPath: upadtingImages[0].path, backIdPath: upadtingImages[1].path}
+        console.log("Uploaded front image and back Image: ", upadtingImages)
+      }
+      catch (error: any) {
+        throw new Error (JSON.stringify(error));
+      }
+    }
+    if(frontImage || backImage){
+      if (frontImage) {
+        try {
+          const uploadedFront = await this.authAPIClient.awsUploadImagePrivate(frontImage) as any;
+          updatedUser = { ...updatedUser, frontIdPath: uploadedFront.path };
+          console.log("Uploaded front image:", uploadedFront);
+        } catch (error: any) {
+          throw new Error(`Front image upload failed: ${JSON.stringify(error)}`);
+        }
+      }
+      if (backImage) {
+        try {
+          const uploadedBack = await this.authAPIClient.awsUploadImagePrivate(backImage) as any;
+          updatedUser = { ...updatedUser, backIdPath: uploadedBack.path };
+          console.log("Uploaded back image:", uploadedBack);
+        } catch (error: any) {
+          throw new Error(`Back image upload failed: ${JSON.stringify(error)}`);
+        }
+      }
+    }
+
+    if (newProfilePic) {
+      try {
+        const uploadedImage = await this.authAPIClient.awsUploadImagePrivate(newProfilePic) as any;
+        updatedUser = { ...updatedUser, profilePicPath: uploadedImage.path };
+      } catch (error: any) {
+        throw new Error(`Profile image upload failed: ${JSON.stringify(error)}`);
+      }
+    }
+    console.log("FINALIZED UPDATEDUSER: ", updatedUser)
+    await this.userAPIClient.updateUser(updatedUser);
+    this.setLocalUserProfile(updatedUser);
+    return { updatedUser };
   };
 
   public signOut = async () => {

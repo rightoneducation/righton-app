@@ -33,6 +33,7 @@ export interface ICentralDataState {
   isLoadingInfiniteScroll: boolean;
   searchTerms: string;
   selectedGrades: GradeTarget[];
+  isLibraryInit: boolean;
   isTabsOpen: boolean;
   isFavTabOpen: boolean;
   publicPrivate: PublicPrivateType;

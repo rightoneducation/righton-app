@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { GameQuestionType } from '../../../lib/CentralModels';
+import { ScreenSize, GameQuestionType } from '../../../lib/CentralModels';
 
 interface GameQuestionContainerProps {
   isDisabled: boolean;
+  screenSize: ScreenSize;
 }
 
 const GameQuestionContainer = styled(Button,{
-  shouldForwardProp: (prop) => prop !== 'isDisabled',
-})<GameQuestionContainerProps>(({theme, isDisabled}) => ({
-  width: '416px',
+  shouldForwardProp: (prop) => prop !== 'isDisabled' && prop !== 'screenSize',
+})<GameQuestionContainerProps>(({theme, isDisabled, screenSize}) => ({
+  width: screenSize === ScreenSize.SMALL ? ' 316px' : '416px',
   minHeight: '68px',
   borderRadius: '8px',
   background: `${theme.palette.primary.sliderGrey}`,
@@ -23,9 +24,9 @@ const GameQuestionContainer = styled(Button,{
 }));
 
 const GameQuestionSelectionPill = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isPublic',
-})<{ isPublic: boolean }>(({ theme, isPublic }) => ({
-  width: '200px',
+  shouldForwardProp: (prop) => prop !== 'isPublic' && prop !== 'screenSize',
+})<{ isPublic: boolean, screenSize: ScreenSize }>(({ theme, isPublic, screenSize }) => ({
+  width: screenSize === ScreenSize.SMALL ? '154px' : '208px',
   height: '52px',
   borderRadius: '8px',
   background: `${theme.palette.primary.sliderBlue}`,
@@ -33,7 +34,7 @@ const GameQuestionSelectionPill = styled(Box, {
     background: `${theme.palette.primary.sliderBlue}`,
   },
   position: 'absolute',
-  left: isPublic ? '8px' : '208px', 
+  left: isPublic ? '8px' : ( screenSize === ScreenSize.SMALL ? '154px' : '200px'), // eslint-disable-line
   transition: 'left 0.3s ease-in-out',   
   boxSizing: 'border-box',
   zIndex: 3,
@@ -49,14 +50,14 @@ const LabelContainer = styled(Box)(({theme}) => ({
 }))
 
 const SubContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isSelected',
-})<{ isSelected: boolean }>(({ theme, isSelected }) => ({
+  shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'screenSize',
+})<{ isSelected: boolean, screenSize: ScreenSize }>(({ theme, isSelected, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
   position: 'relative',
-  width: '200px',
+  width: screenSize === ScreenSize.SMALL ? '150px' : '200px',
   opacity: isSelected ? 1 : 0.5,
   transition: 'opacity 0.3 ease-in-out'
 }));
@@ -78,12 +79,14 @@ const GameQuestionText = styled(Typography, {
 interface GameQuestionButtonInterface {
   isDisabled: boolean;
   gameQuestion?: GameQuestionType;
+  screenSize: ScreenSize;
   setGameQuestion?: (gameQuestion: GameQuestionType) => void;
 }
 
 export default function GameQuestionButton({
   isDisabled,
   gameQuestion,
+  screenSize,
   setGameQuestion
 }: GameQuestionButtonInterface) {
   const { t } = useTranslation();
@@ -93,15 +96,15 @@ export default function GameQuestionButton({
       setGameQuestion(gameQuestion === GameQuestionType.GAME ? GameQuestionType.QUESTION : GameQuestionType.GAME);
   }
   return (
-    <GameQuestionContainer isDisabled={isDisabled} onClick={!isDisabled ? handleGameQuestionSwitch : undefined}>
-      <GameQuestionSelectionPill isPublic={isPublic}/>
+    <GameQuestionContainer screenSize={screenSize} isDisabled={isDisabled} onClick={!isDisabled ? handleGameQuestionSwitch : undefined}>
+      <GameQuestionSelectionPill screenSize={screenSize} isPublic={isPublic}/>
       <LabelContainer>
-        <SubContainer isSelected={isPublic}>     
+        <SubContainer screenSize={screenSize} isSelected={isPublic}>     
           <GameQuestionText isSelected={isPublic}>
             {t(`gameQuestionButton.games`)}
           </GameQuestionText>
         </SubContainer>
-        <SubContainer isSelected={!isPublic}>
+        <SubContainer screenSize={screenSize} isSelected={!isPublic}>
           <GameQuestionText isSelected={!isPublic}>
             {t(`gameQuestionButton.questions`)}
           </GameQuestionText>

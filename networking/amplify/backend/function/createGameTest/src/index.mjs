@@ -217,6 +217,7 @@ mutation CreateQuestion(
     instructions
     standard
     cluster
+    choices
     domain
     grade
     order
@@ -228,6 +229,44 @@ mutation CreateQuestion(
   }
 }
 `;
+
+const getUser = /* GraphQL */ `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    gamesUsed
+  }
+}
+`;
+
+const updateUser = /* GraphQL */ `mutation UpdateUser(
+  $input: UpdateUserInput!
+  $condition: ModelUserConditionInput
+) {
+  updateUser(input: $input, condition: $condition) {
+    id
+    userName
+    dynamoId
+    cognitoId
+    title
+    firstName
+    lastName
+    email
+    password
+    gamesMade
+    gamesUsed
+    questionsMade
+    frontIdPath
+    backIdPath
+    profilePicPath
+    favoriteGameTemplateIds
+    favoriteQuestionTemplateIds
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+`;
+
   let statusCode = 200;
   let responseBody ={};
   try {
@@ -248,7 +287,8 @@ mutation CreateQuestion(
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
     // createQuestions
     const promises = questionTemplates.map(async (question) => {
-      const {owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
+      const {choices, owner, version, createdAt, title, updatedAt, gameId, __typename, ...trimmedQuestion} = question;
+      const shuffledChoices = JSON.parse(choices).sort(() => Math.random() - 0.5);
       console.log(
         {
           ...trimmedQuestion,
@@ -272,6 +312,7 @@ mutation CreateQuestion(
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,
           isHintEnabled: true,
+          choices: JSON.stringify(shuffledChoices),
           order: 0
         }
       });
@@ -282,6 +323,25 @@ mutation CreateQuestion(
       return questionParsed;
     });
     const questionsParsed = await Promise.all(promises);
+
+    // update Owner to increment gamesUsed
+    const userId = gameTemplateParsed.owner;
+    const userRequest = await createAndSignRequest(getUser, { id: userId });
+    console.log(userRequest);
+    const userResponse = await fetch(userRequest);
+    console.log(userResponse);
+    const userJson = await userResponse.json();
+    console.log(userJson);
+    const userParsed = userJson.data.getUser;
+    const gamesUsed = userParsed.gamesUsed + 1;
+    const userUpdateRequest = await createAndSignRequest(updateUser, { input: { id: userId, gamesUsed } });
+    const userUpdateResponse = await fetch(userUpdateRequest);
+    const userUpdateJson = await userUpdateResponse.json();
+    const userUpdateParsed = userUpdateJson.data.updateUser;
+    console.log(userUpdateParsed);
+    console.log(userParsed);
+    console.log(userUpdateParsed);
+
     responseBody = gameSessionParsed.id;
   } catch (error) {
     console.error("Error occurred:", error);

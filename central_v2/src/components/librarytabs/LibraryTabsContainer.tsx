@@ -1,24 +1,25 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { 
   PublicPrivateType,
   GradeTarget,
   SortType,
   SortDirection,
+  IGameTemplate,
+  IQuestionTemplate
 } from '@righton/networking';
-
 import { ScreenSize, GameQuestionType, LibraryTabEnum } from '../../lib/CentralModels';
 import { 
   LibraryTabsStyledContainer,
   ContentFrame
 } from '../../lib/styledcomponents/MyLibraryStyledComponent';
 import LibraryTabs from './LibraryTabs';
+import { useCentralDataDispatch } from '../../hooks/context/useCentralDataContext';
 
 interface TabContainerProps {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
-  isLibraryInit: boolean;
-  setIsLibraryInit: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   fetchElements: (libraryTab: LibraryTabEnum) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
@@ -30,39 +31,43 @@ interface TabContainerProps {
   ) => void;
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
+  handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
 }
 
 export default function LibraryTabsContainer({
   gameQuestion,
   screenSize,
-  isLibraryInit,
-  setIsLibraryInit,
   setIsTabsOpen,
   fetchElements,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
-  handlePublicPrivateChange
+  handlePublicPrivateChange,
+  handleQuestionView
 }: TabContainerProps) {
   const theme = useTheme();
-  const handleView = () => {
-  }
+  const navigate = useNavigate();
+  const centralDataDispatch = useCentralDataDispatch();
 
+
+  const handleGameView = (element: IGameTemplate | IQuestionTemplate, elementss: (IGameTemplate | IQuestionTemplate)[]) => {
+    centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: element });
+    navigate(`/library/games/${element.id}`);
+  };
   return (
     <LibraryTabsStyledContainer>
       <ContentFrame>
         <LibraryTabs
           gameQuestion={gameQuestion}
           screenSize={screenSize}
-          isLibraryInit={isLibraryInit}
-          setIsLibraryInit={setIsLibraryInit}
           setIsTabsOpen={setIsTabsOpen}
           handleChooseGrades={handleChooseGrades}
           handleSortChange={handleSortChange}
           handleSearchChange={handleSearchChange}
           handlePublicPrivateChange={handlePublicPrivateChange}
           fetchElements={fetchElements}
-          handleView={handleView}
+          handleGameView={handleGameView}
+          handleQuestionView={handleQuestionView}
         />
       </ContentFrame>
     </LibraryTabsStyledContainer>

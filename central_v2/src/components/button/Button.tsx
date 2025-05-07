@@ -65,6 +65,7 @@ export default function CentralButton({
   return (
     <ButtonStyled
       buttonColor={buttonColor}
+      buttonType={buttonType}
       disabled={!isEnabled}
       isOnQuestionTab={isOnQuestionTab ?? false}
       onClick={handleButtonClick}
@@ -73,16 +74,16 @@ export default function CentralButton({
       <ButtonContent>
         {buttonObj.icon && (
           <ButtonIconContainer>
-            { buttonColor === ButtonColor.NULL
+            { ( buttonColor === ButtonColor.NULL && buttonType === ButtonType.CHANGEIMAGE )
               ? <ButtonIconBlue src={buttonObj.icon}/>
               : <img src={buttonObj.icon} alt={`${buttonText}`} />
             }
           </ButtonIconContainer>
         )}
-        {buttonText && !isSmallScreen && !iconOnlyOverride && <ButtonTypography buttonColor={buttonColor}> {buttonText} </ButtonTypography>}
+        {buttonText && !isSmallScreen && !iconOnlyOverride && <ButtonTypography buttonColor={buttonColor} buttonType={buttonType}> {buttonText} </ButtonTypography>}
         {buttonObj.rightIcon && (
           <ButtonIconContainer>
-            { buttonColor === ButtonColor.NULL
+            { ( buttonColor === ButtonColor.NULL && buttonType === ButtonType.CHANGEIMAGE )
               ? <ButtonIconBlue src={buttonObj.rightIcon}/>
               : <img src={buttonObj.rightIcon} alt={`${buttonText}`} />
             }

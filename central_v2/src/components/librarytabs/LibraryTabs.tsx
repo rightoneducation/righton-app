@@ -33,8 +33,6 @@ import tabPrivateIcon from '../../images/tabPrivate.svg';
 interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
   gameQuestion: GameQuestionType;
   screenSize: ScreenSize;
-  isLibraryInit: boolean;
-  setIsLibraryInit: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -46,21 +44,21 @@ interface LibraryTabsProps<T extends IGameTemplate | IQuestionTemplate> {
   handleSearchChange: (searchString: string) => void;
   handlePublicPrivateChange: (newPublicPrivate: PublicPrivateType ) => void;
   fetchElements: (libraryTab: LibraryTabEnum) => void;
-  handleView: (element: T, elements: T[]) => void;
+  handleGameView: (element: IGameTemplate, elements: IGameTemplate[]) => void;
+  handleQuestionView: (element: IQuestionTemplate, elements: IQuestionTemplate[]) => void;
 }
 
 export default function LibraryTabs({
   gameQuestion,
   screenSize,
-  isLibraryInit,
-  setIsLibraryInit,
   setIsTabsOpen,
   handlePublicPrivateChange,
   handleChooseGrades,
   handleSortChange,
   handleSearchChange,
   fetchElements,
-  handleView
+  handleGameView,
+  handleQuestionView
 }: LibraryTabsProps<IGameTemplate | IQuestionTemplate>) {
 const centralData = useCentralDataState();
 const centralDataDispatch = useCentralDataDispatch();
@@ -90,9 +88,9 @@ const [openTab, setOpenTab] = React.useState<LibraryTabEnum>(LibraryTabEnum.PUBL
 const elements = gameQuestion === GameQuestionType.GAME ?
   getGameElements(openTab, isSearchResults, centralData)
   : getQuestionElements(openTab, isSearchResults, centralData);
-
-if (isLibraryInit) {
-  setIsLibraryInit(false);
+console.log(centralData.isLibraryInit);
+if (centralData.isLibraryInit) {
+  centralDataDispatch({ type: 'SET_IS_LIBRARY_INIT', payload: false });
   fetchElements(openTab);
 }
 
@@ -160,7 +158,7 @@ return (
           elementType={ElementType.GAME}
           galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
           setIsTabsOpen={setIsTabsOpen}
-          handleView={handleView}
+          handleView={handleGameView}
           isLoading={centralData.isLoading}
           isMyLibrary
         />
@@ -173,9 +171,10 @@ return (
           elementType={ElementType.GAME}
           galleryType={ isSearchResults ? GalleryType.SEARCH_RESULTS : GalleryType.MOST_POPULAR}
           setIsTabsOpen={setIsTabsOpen}
-          handleView={handleView}
+          handleView={handleQuestionView}
           isLoading={centralData.isLoading}
           isMyLibrary
+          isMyLibraryQuestion
         />
       }
     </ContentContainer>

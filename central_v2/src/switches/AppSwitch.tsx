@@ -14,7 +14,10 @@ import CreateQuestion from '../pages/CreateQuestion';
 import CreateGame from '../pages/CreateGame';
 import ViewGame from '../pages/ViewGame';
 import MyLibrary from '../pages/MyLibrary';
+import UserProfile from '../pages/UserProfile';
+
 import { ScreenType, ScreenSize, GameQuestionType } from '../lib/CentralModels';
+// import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 
 interface AppSwitchProps {
   currentScreen: ScreenType;
@@ -27,7 +30,6 @@ function AppSwitch({
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [libraryGameQuestionSwitch, setLibraryGameQuestionSwitch] = useState<GameQuestionType>(GameQuestionType.GAME);
-  const [isLibraryInit, setIsLibraryInit] = useState<boolean>(true);
   const screenSize = isLargeScreen // eslint-disable-line
     ? ScreenSize.LARGE
     : isMediumScreen
@@ -38,8 +40,8 @@ function AppSwitch({
   const gameQuestion: GameQuestionType = 
     (currentScreen === ScreenType.GAMES|| (currentScreen === ScreenType.LIBRARY && libraryGameQuestionSwitch === GameQuestionType.GAME)) ? GameQuestionType.GAME : GameQuestionType.QUESTION;
   const {
-    isValidatingUser,
     setIsTabsOpen,
+    handleLibraryInit,
     handleChooseGrades,
     handleSortChange,
     handleSearchChange,
@@ -47,23 +49,22 @@ function AppSwitch({
     loadMore,
     fetchElement,
     fetchElements,
+    handleLogOut
   } = useCentralDataManager({gameQuestion});
-
+  
   const handleLibraryGameQuestionSwitch = (gameQuestionValue: GameQuestionType) => {
     setLibraryGameQuestionSwitch(gameQuestionValue);
     handleSortChange({
       field: gameQuestionValue === GameQuestionType.GAME ? SortType.listGameTemplates : SortType.listQuestionTemplates,
       direction: SortDirection.ASC,
     })
-    setIsLibraryInit(true);  
+    handleLibraryInit(true);
   };
-
-  
   
   switch (currentScreen) {
     case ScreenType.QUESTIONS: {
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <ExploreQuestions 
             screenSize={screenSize} 
             fetchElements={fetchElements}
@@ -79,14 +80,11 @@ function AppSwitch({
     }
     case ScreenType.LIBRARY: {
       screenComponent = (
-        <AuthGuard isValidatingUser={isValidatingUser}>
+        <AuthGuard handleLogOut={handleLogOut}>
           <MyLibrary 
-            isValidatingUser={isValidatingUser}
             gameQuestion={gameQuestion}
             screenSize={screenSize}
             setIsTabsOpen={setIsTabsOpen}
-            isLibraryInit={isLibraryInit}
-            setIsLibraryInit={setIsLibraryInit}
             handleChooseGrades={handleChooseGrades}
             handleSortChange={handleSortChange}
             handleSearchChange={handleSearchChange}
@@ -99,29 +97,38 @@ function AppSwitch({
     }
     case ScreenType.SIGNUP:
     case ScreenType.CONFIRMATION:
+    case ScreenType.AUTH: 
     case ScreenType.NEXTSTEP: {
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <SignUpSwitch setIsTabsOpen={setIsTabsOpen}/>
-          </AuthGuard>
+        </AuthGuard>
       );
       break;
     }
     case ScreenType.LOGIN: {
       screenComponent = (
-          <Login />
+        <AuthGuard handleLogOut={handleLogOut}>
+          <Login handleLogOut={handleLogOut}/>
+        </AuthGuard>
       );
       break;
     }
     case ScreenType.CREATEQUESTION: {
       screenComponent = (
-          <CreateQuestion screenSize={screenSize}/>
+          <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
+      );
+      break;
+    }
+    case ScreenType.CLONEQUESTION: {
+      screenComponent = (
+          <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
       );
       break;
     }
     case ScreenType.CREATEGAME: {
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <CreateGame 
           screenSize={screenSize}
           setIsTabsOpen={setIsTabsOpen}
@@ -135,18 +142,38 @@ function AppSwitch({
       );
       break;
     }
+    case ScreenType.CLONEGAME: {
+      screenComponent = (
+          <CreateGame 
+            screenSize={screenSize}  
+            setIsTabsOpen={setIsTabsOpen}
+            fetchElements={fetchElements}
+            handleChooseGrades={handleChooseGrades}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            loadMore={loadMore}
+          />
+      );
+      break;
+    }
     case ScreenType.VIEWGAME: {
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <ViewGame screenSize={screenSize} fetchElement={fetchElement} />
         </AuthGuard>
       );
       break;
     }
+    case ScreenType.USERPROFILE: {
+      screenComponent = (
+        <UserProfile screenSize={screenSize} />
+      );
+      break
+    }
     case ScreenType.GAMES:
     default:{
       screenComponent = (
-        <AuthGuard>
+        <AuthGuard handleLogOut={handleLogOut}>
           <ExploreGames 
             screenSize={screenSize} 
             setIsTabsOpen={setIsTabsOpen}
@@ -159,10 +186,11 @@ function AppSwitch({
         </AuthGuard>
       );
     }
+
   }
 
   return (
-    <AppContainer isValidatingUser={isValidatingUser} setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion}>
+    <AppContainer setIsTabsOpen={setIsTabsOpen} currentScreen={currentScreen} setLibraryGameQuestionSwitch={handleLibraryGameQuestionSwitch} gameQuestion={gameQuestion} handleLogOut={handleLogOut}>
       {screenComponent}
     </AppContainer>
   )

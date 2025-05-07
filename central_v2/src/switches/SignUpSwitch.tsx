@@ -7,6 +7,8 @@ import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import SignUp from '../pages/SignUp';
 import Confirmation from '../pages/Confirmation';
 import GoogleSignup from '../pages/GoogleSignup';
+import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
+import { UserStatusType } from '../lib/CentralModels';
 
 interface SignUpSwitchProps{
   setIsTabsOpen: (isOpen: boolean) => void;
@@ -18,17 +20,15 @@ export default function SignUpSwitch({
   const apiClients = useTSAPIClientsContext(APIClientsContext);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
 
-  const [isUserSubmitted, setIsUserSubmitted] = useState(false); // Track submission state
-  const [isGoogleAuthenticated, setIsGoogleAuthenticated] = useState(true); // Track submission state
-
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [backImage, setBackImage] = useState<File | null>(null);
   const [step, setStep] = useState<'signup' | 'confirmation' | 'googlesignup'>('signup');
   const googlenextstep = useMatch('/nextstep') !== null;
   
   // Override step dynamically if googlenextstep is true
-  const currentStep = googlenextstep ? 'googlesignup' : step;
-  
+  const centralData = useCentralDataState();
+  const currentStep = centralData.userStatus === UserStatusType.GOOGLE_SIGNUP ? 'googlesignup' : step;
+
   const handlerImageUpload = async (file: File) => {
     const fileName = file.name;
     const fileType = file.type;
@@ -48,6 +48,7 @@ export default function SignUpSwitch({
       return (
         <GoogleSignup
           apiClients={apiClients}
+          centralData={centralData}
           frontImage={frontImage}
           setFrontImage={setFrontImage}
           backImage={backImage}

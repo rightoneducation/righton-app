@@ -5,6 +5,9 @@ import {
   CreatePublicGameTemplateInput,
   PublicPrivateType,
   IAPIClients,
+  CentralQuestionTemplateInput,
+  IQuestionTemplate,
+  AnswerType
 } from '@righton/networking';
 import {
   TDraftQuestionsList,
@@ -191,6 +194,9 @@ export const buildGameTemplate = (
   draftQuestionsList: TDraftQuestionsList[],
   gameImgUrl?: string | null,
 ): GameTemplate => {
+  const questionTemplatesOrder = draftQuestionsList.map((question, index) => {
+    return { questionTemplateId: question.questionTemplate.id, index };
+  })
   return {
     title: draftGame.gameTemplate.title,
     lowerCaseTitle: draftGame.gameTemplate.title.toLowerCase(),
@@ -201,6 +207,7 @@ export const buildGameTemplate = (
     phaseOneTime: draftGame.gameTemplate.phaseOneTime,
     phaseTwoTime: draftGame.gameTemplate.phaseTwoTime,
     ccss: draftQuestionsList[0].question.questionCard.ccss,
+    questionTemplatesOrder: JSON.stringify(questionTemplatesOrder),
     grade: draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
     gradeFilter:
       draftQuestionsList[0].question.questionCard.ccss.split('.')[0] ?? '',
@@ -213,6 +220,7 @@ export const buildGameTemplate = (
     imageUrl: gameImgUrl,
   };
 };
+
 
 export const buildGameQuestion = (
   draftGame: TGameTemplateProps,
@@ -254,3 +262,43 @@ export const buildGameQuestionPromises = (
     );
   });
 };
+
+export const assembleQuestionTemplate = (template: IQuestionTemplate): CentralQuestionTemplateInput => {
+    const correctAnswer = template.choices?.find((choice) => choice.isAnswer);
+    const incorrectAnswers = template.choices?.filter((choice) => !choice.isAnswer);
+    const blankIncorrectAnswers = Array.from({ length: 3 }, (_, i) => ({
+        id: `card-${i + 1}`,
+        answer: '',
+        explanation: '',
+        isFirstEdit: true,
+        isCardComplete: true
+    }));
+    const incorrectCards = incorrectAnswers?.map((answer, index) => ({
+        id: `card-${index + 1}`,
+        answer: answer.text,
+        explanation: answer.reason,
+        isFirstEdit: true,
+        isCardComplete: true
+    })) ?? blankIncorrectAnswers;
+    
+    return {
+       questionCard: {
+            title: template.title,
+            ccss: template.ccss,
+            isFirstEdit: true,
+            isCardComplete: true,
+            imageUrl: template.imageUrl ?? '',
+        },
+        correctCard: {
+            answer: correctAnswer?.text ?? '',
+            answerSteps: template.instructions ?? [],
+            answerSettings: {
+                answerType: template.answerSettings?.answerType ?? AnswerType.STRING,
+                answerPrecision: template.answerSettings?.answerPrecision
+            },
+            isFirstEdit: true,
+            isCardComplete: true,
+        },
+        incorrectCards,
+    }
+}

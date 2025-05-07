@@ -18,6 +18,7 @@ const CardStackContainer = styled(Box)({
 
 interface IncorrectAnswerCardStackProps {
   highlightCard: CreateQuestionHighlightCard;
+  isClone: boolean;
   draftQuestion: CentralQuestionTemplateInput;
   incompleteIncorrectAnswers: IncorrectCard[];
   completeIncorrectAnswers: IncorrectCard[];
@@ -32,6 +33,7 @@ interface IncorrectAnswerCardStackProps {
 
 export default function IncorrectAnswerCardStack({
   highlightCard,
+  isClone,
   draftQuestion,
   incompleteIncorrectAnswers,
   completeIncorrectAnswers,
@@ -94,6 +96,7 @@ export default function IncorrectAnswerCardStack({
                 >
                   <IncorrectAnswerCard
                     apiClients={apiClients}
+                    isClone={isClone}
                     answerData={card} 
                     draftQuestion={draftQuestion}
                     isHighlight={highlightCard === card.id}
@@ -125,7 +128,8 @@ export default function IncorrectAnswerCardStack({
                 }}
               >
                 <IncorrectAnswerCard
-                  apiClients={apiClients}   
+                  apiClients={apiClients}  
+                  isClone={isClone} 
                   answerData={card} 
                   draftQuestion={draftQuestion}
                   isHighlight={highlightCard === card.id}
@@ -166,7 +170,8 @@ export default function IncorrectAnswerCardStack({
             }}
           >
             <IncorrectAnswerCard
-              apiClients={apiClients}   
+              apiClients={apiClients}
+              isClone={isClone}   
               answerData={card} 
               draftQuestion={draftQuestion}
               isHighlight={highlightCard === card.id}

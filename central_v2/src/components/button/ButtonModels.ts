@@ -1,7 +1,9 @@
 import login from '../../images/buttonIconLogin.svg';
+import loginheader from '../../images/buttonIconLoginHeader.svg';
 import signup from '../../images/buttonIconSignup.svg';
 import view from '../../images/buttonIconView.svg';
 import launch from '../../images/buttonIconLaunch.svg';
+import logout from '../../images/buttonIconLogOut.svg';
 import upload from '../../images/buttonIconUpload.svg';
 import previous from '../../images/buttonIconPrevious.svg';
 import favorite from '../../images/buttonIconFavorite.svg';
@@ -15,6 +17,7 @@ import bank from '../../images/buttonIconBank.svg';
 
 export enum ButtonType {
   LOGIN = 'login',
+  LOGINHEADER = 'loginheader',
   SIGNUP = 'signup',
   VIEW = 'view',
   LAUNCH = 'launch',
@@ -28,9 +31,11 @@ export enum ButtonType {
   PREVIOUSQUESTION = 'previousquestion',
   BACKTOEXPLORE = 'backtoexplore',
   FAVORITE = 'favorite',
+  UNFAVORITE = 'unfavorite',
   CLONEANDEDIT = 'cloneandedit',
   NEXTQUESTION = 'nextquestion',
   SAVE = 'save',
+  SAVEPASSWORD = 'savepassword',
   SAVEDRAFT = 'savedraft',
   DISCARD = 'discard',
   DISCARDBLUE = 'discardblue',
@@ -39,10 +44,12 @@ export enum ButtonType {
   CHANGEIMAGE = 'changeimage',
   NEXTCARD = 'nextcard',
   LAUNCHGAME = 'launchgame',
+  LOGOUT = 'logout',
   CREATEQUESTION = 'createquestion',
   QUESTIONBANK = 'questionbank',
   BACK = 'back',
   EDITPICTURE = 'editpicture',
+  EDITPROFILEPICTURE = 'editprofilepicture',
   EDITINFORMATION = 'editinformation',
   CHANGEPASSWORD = 'changepassword',
   CREATE = 'create',
@@ -53,12 +60,15 @@ export enum ButtonType {
   RETRY = 'retry',
   CANCEL = 'cancel',
   ADDTOGAME = 'addtogame',
+  YES = 'yes',
+  NO = 'no',
 }
 
 export enum ButtonColor {
   RED,
   BLUE,
   LIGHTBLUE,
+  WHITE,
   NULL
 }
 
@@ -74,14 +84,19 @@ type ButtonContentMapProps = {
 
 // textKey data is duplicated to improve clarity of object and centralize all button content properties
 export const buttonContentMap: ButtonContentMapProps = {
+  [ButtonType.LOGINHEADER]: {
+    icon: loginheader,
+    textKey: ButtonType.LOGIN,
+    color: ButtonColor.WHITE,
+  },
   [ButtonType.LOGIN]: {
     icon: login,
     textKey: ButtonType.LOGIN,
-    color: ButtonColor.RED,
   },
   [ButtonType.SIGNUP]: {
     icon: signup,
     textKey: ButtonType.SIGNUP,
+    color: ButtonColor.RED,
   },
   [ButtonType.VIEW]: {
     icon: view,
@@ -129,6 +144,10 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: favorite,
     textKey: ButtonType.FAVORITE,
   },
+  [ButtonType.UNFAVORITE]: {
+    icon: favorite,
+    textKey: ButtonType.UNFAVORITE,
+  },
   [ButtonType.CLONEANDEDIT]: {
     icon: clone,
     textKey: ButtonType.CLONEANDEDIT,
@@ -140,6 +159,11 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.SAVE]: {
     icon: save,
     textKey: ButtonType.SAVE,
+    width: '200px'
+  },
+  [ButtonType.SAVEPASSWORD]: {
+    icon: save,
+    textKey: ButtonType.SAVEPASSWORD,
     width: '200px'
   },
   [ButtonType.SAVEDRAFT]: {
@@ -185,6 +209,11 @@ export const buttonContentMap: ButtonContentMapProps = {
     icon: launch,
     textKey: ButtonType.LAUNCHGAME,
   },
+  [ButtonType.LOGOUT]: {
+    icon: logout,
+    textKey: ButtonType.LOGOUT,
+    color: ButtonColor.NULL,
+  },
   [ButtonType.CREATEQUESTION]: {
     icon: create,
     textKey: ButtonType.CREATEQUESTION,
@@ -200,8 +229,13 @@ export const buttonContentMap: ButtonContentMapProps = {
   [ButtonType.EDITPICTURE]: {
     textKey: ButtonType.EDITPICTURE,
   },
+  [ButtonType.EDITPROFILEPICTURE]: {
+    textKey: ButtonType.EDITPICTURE,
+    color: ButtonColor.NULL,
+  },
   [ButtonType.EDITINFORMATION]: {
     textKey: ButtonType.EDITINFORMATION,
+    width: '200px'
   },
   [ButtonType.CHANGEPASSWORD]: {
     textKey: ButtonType.CHANGEPASSWORD,
@@ -232,6 +266,13 @@ export const buttonContentMap: ButtonContentMapProps = {
   },
   [ButtonType.CANCEL]: {
     textKey: ButtonType.CANCEL,
+    color: ButtonColor.RED,
+  },
+  [ButtonType.YES]: {
+    textKey: ButtonType.YES,
+  },
+  [ButtonType.NO]: {
+    textKey: ButtonType.NO,
     color: ButtonColor.RED,
   },
 };

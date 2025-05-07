@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import {
   CentralQuestionTemplateInput,
   IncorrectCard,
@@ -7,7 +7,9 @@ import {
   PublicPrivateType,
   GradeTarget,
   SortType,
-  SortDirection
+  SortDirection,
+  AnswerType,
+  AnswerPrecision,
 } from '@righton/networking';
 import { Box, Fade } from '@mui/material';
 import {
@@ -30,6 +32,7 @@ import {
   TPhaseTime, 
   gameTemplate,
   emptyQuestionTemplate } from '../lib/CreateGameModels';
+import DiscardModal from '../components/modal/DiscardModal';  
 import ModalBackground from '../components/modal/ModalBackground';
 import CreatingTemplateModal from '../components/modal/CreatingTemplateModal';
 import CreateGameComponent from '../components/game/CreateGameComponent';
@@ -78,6 +81,10 @@ import {
     updateDraftListWithLibraryQuestion,
     handleQuestionListErrors 
   } from '../lib/helperfunctions/createGame/CreateQuestionsListHelpers';
+  import {
+    updateDQwithAnswerSettings,
+  } from '../lib/helperfunctions/createquestion/CorrectAnswerCardHelperFunctions';
+import { useCentralDataState } from '../hooks/context/useCentralDataContext';
 
 
 interface CreateGameProps {
@@ -104,14 +111,22 @@ export default function CreateGame({
   handleSortChange,
   loadMore,
  }: CreateGameProps) {
-  const apiClients = useTSAPIClientsContext(APIClientsContext);
   const navigate = useNavigate();
+  const apiClients = useTSAPIClientsContext(APIClientsContext);
+  const centralData = useCentralDataState();
+  const route = useMatch('/clone/game/:gameId');
+  const isClone = route?.params.gameId !== null && route?.params.gameId !== undefined && route?.params.gameId.length > 0;
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
+  const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
   const [iconButtons, setIconButtons] = useState<number[]>([1]);
   const [draftGame, setDraftGame] = useState<TGameTemplateProps>(gameTemplate);
+  const [originalGameImageUrl, setOriginalGameImageUrl] = useState<string>('');
   const [draftQuestionsList, setDraftQuestionsList] = useState<
     TDraftQuestionsList[]
   >([draftTemplate]);
+  const [originalQuestionImageUrls, setOriginalQuestionImageUrls] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [phaseTime, setPhaseTime] = useState<TPhaseTime>({
     phaseOne: '',
     phaseTwo: '',
@@ -169,6 +184,16 @@ export default function CreateGame({
     navigate('/');
   };
 
+  const handleDiscardClick = (value: boolean) => {
+    if (value){
+      setIsDiscardModalOpen(false);
+      window.localStorage.setItem(StorageKey, '');
+      navigate('/');
+      return;
+    }
+    setIsDiscardModalOpen(false);
+  }
+
   const handleGameImageUploadClick = () => {
     setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: !prev.isGameImageUploadVisible, }));
   };
@@ -184,7 +209,6 @@ export default function CreateGame({
   const handleGameImageChange = async (inputImage?: File, inputUrl?: string,) => {
    setDraftGame((prev) => updateGameImageChange(prev, inputImage, inputUrl))
   };
-
   const handleSaveGame = async () => {
     try {
       setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true, isCreatingTemplate: true }));
@@ -229,6 +253,20 @@ export default function CreateGame({
               console.error(`Failed to create one or more game questions:`, err);
             }
           }
+
+           // update user stats
+           const existingNumGames = centralData.userProfile?.gamesMade || 0;
+           const existingNumQuestions = centralData.userProfile?.questionsMade || 0;
+           const newNumGames = existingNumGames + 1;
+            // add new questions to user number of questions
+           const newNumQuestions = existingNumQuestions + draftQuestionsList.filter((dq) => !dq.questionTemplate.id).length;
+           await apiClients.user.updateUser({
+               id: centralData.userProfile?.id || '',
+               gamesMade: newNumGames,
+               questionsMade: newNumQuestions,
+             }
+           );
+
           setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
           navigate('/');
       } else {
@@ -271,7 +309,7 @@ export default function CreateGame({
   };
 
   const handleDebouncedTitleChange = useCallback(// eslint-disable-line
-    (title: string, draftQuestionInput: CentralQuestionTemplateInput) => {
+    (title: string) => {
       setDraftQuestionsList((prev) => updateQuestionTitleChangeAtIndex(
         prev,
         selectedQuestionIndex,
@@ -306,11 +344,33 @@ export default function CreateGame({
     [selectedQuestionIndex],
   );
 
+  const handleAnswerSettingsChange = (draftQuestionInput: CentralQuestionTemplateInput, answerType: AnswerType, answerPrecision?: AnswerPrecision ) => {
+    setDraftQuestionsList((prev) => {
+      return prev.map((draftItem, i) => {
+        if (i === selectedQuestionIndex) {
+          const currentDraftQuestion = draftItem.question;
+          const newQuestion = updateDQwithAnswerSettings(
+            currentDraftQuestion,
+            answerType,
+            answerPrecision,
+          );
+          return {
+            ...draftItem,
+            question: newQuestion,
+          };
+        }
+        return draftItem;
+      });
+    });
+  };
+
+
   const handleAnswerType = () => {
     setDraftQuestionsList((prev) => updateQuestionAnswerTypeAtIndex(prev, selectedQuestionIndex));
   };
 
   const handleCloseQuestionModal = () => {
+    setIsDiscardModalOpen(false);
     if (draftGame.isGameImageUploadVisible) {
       setDraftGame((prev) => ({ ...prev, isGameImageUploadVisible: false }));
     }
@@ -452,10 +512,14 @@ export default function CreateGame({
       <CreateGameBackground />
       {/* Modals for Question (below) */}
       <ModalBackground
-        isModalOpen={openModal}
+        isModalOpen={openModal || isDiscardModalOpen}
         handleCloseModal={handleCloseQuestionModal}
       />
-
+      <DiscardModal 
+          isModalOpen={isDiscardModalOpen}
+          screenSize={screenSize}
+          handleDiscardClick={handleDiscardClick}
+        />
       <CreatingTemplateModal
         isModalOpen={draftGame.isCreatingTemplate}
         templateType={TemplateType.GAME}
@@ -480,6 +544,10 @@ export default function CreateGame({
       <ImageUploadModal
         draftQuestion={draftQuestionsList[selectedQuestionIndex].question}
         screenSize={screenSize}
+        isClone={isClone}
+        isCloneImageChanged={
+          draftQuestionsList[selectedQuestionIndex].isCloneQuestionImageChanged
+        }
         isModalOpen={
           draftQuestionsList[selectedQuestionIndex].questionImageModalIsOpen
         }
@@ -491,6 +559,8 @@ export default function CreateGame({
       {/* Create Game Image Upload Modal */}
       <CreateGameImageUploadModal
         draftGame={draftGame}
+        isClone={isClone}
+        isCloneImageChanged={draftGame.isCloneGameImageChanged}
         screenSize={screenSize}
         isModalOpen={draftGame.isGameImageUploadVisible}
         handleImageChange={handleGameImageChange}
@@ -502,6 +572,8 @@ export default function CreateGame({
       <CreateGameBoxContainer>
         <CreateGameComponent
           draftGame={draftGame}
+          isClone={isClone}
+          isCloneImageChanged={draftGame.isCloneGameImageChanged}
           screenSize={screenSize}
           isGameCardErrored={hasGameError}
           handleSaveGame={handleSaveGame}
@@ -542,6 +614,10 @@ export default function CreateGame({
                   ): (
                   <QuestionElements
                     screenSize={screenSize}
+                    isClone={isClone}
+                    isCloneImageChanged={
+                      draftQuestionItem.isCloneQuestionImageChanged
+                    }
                     draftQuestion={draftQuestionItem.question}
                     completeIncorrectAnswers={draftQuestionItem.question.incorrectCards.filter(
                       (card) => card.isCardComplete,
@@ -563,6 +639,7 @@ export default function CreateGame({
                     handleDebouncedCorrectAnswerStepsChange={
                       handleDebouncedCorrectAnswerStepsChange
                     }
+                    handleAnswerSettingsChange={handleAnswerSettingsChange}
                     handleDebouncedTitleChange={handleDebouncedTitleChange}
                     handlePublicPrivateChange={
                       handlePublicPrivateQuestionChange

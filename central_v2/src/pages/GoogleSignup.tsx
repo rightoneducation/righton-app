@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { useTheme, styled} from '@mui/material/styles';
-import {Box, Typography, Select, TextField, MenuItem, InputAdornment, List, ListItem, ListItemText, Button,} from '@mui/material';
+import { useTheme, styled,} from '@mui/material/styles';
+import {Box, Typography, Select, TextField, MenuItem, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 import { APIClients, IAPIClients, IUserProfile } from '@righton/networking';
+import { ICentralDataState } from '../lib/context/ICentralDataState';
+
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
 import RightOnLogo from "../images/RightOnUserLogo.svg";
 import Adpic from "../images/@.svg"
@@ -19,28 +21,20 @@ import { UserStatusType } from '../lib/CentralModels';
 
 const InnerBodyContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid blue',
     flexDirection: 'column',
     gap: '24px',
     height: '100%',
     width: '100%',
     maxWidth: '500px',
     marginTop: '84px',
-    // paddingBottom: '40px',
-    // paddingLeft: '40px',
-    // paddingRight: '40px',
     boxSizing: 'border-box',
-    // border: '1px solid red'
   }));
 
 const UpperSignup = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid blue',
     flexDirection: 'column',
     alignItems: 'center',
     gap: '24px',
-    // border: '1px solid green'
-
   }));
 
 const UpperSignupSubStepText = styled(Typography)(({ theme }) => ({
@@ -54,7 +48,6 @@ const UpperSignupSubStepText = styled(Typography)(({ theme }) => ({
   
 const TitleandNameMUI = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid black',
     gap: '12px',
   }));
 
@@ -83,14 +76,12 @@ const TitleField = styled(TextField)(({ theme }) => ({
 
 const UsernameMUI = styled(Box)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid green',
     gap: '4px',
     alignItems: 'stretch'
   }));
 
 const TeacherIdText = styled(Typography)(({ theme }) => ({
     display: 'flex',
-    // border: '1px solid green',
     color: '#384466', 
     fontFamily: 'Rubik, sans-serif', 
     fontWeight: 400, 
@@ -103,7 +94,6 @@ const UploadImages= styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: '16px',
     justifyContent: 'flex-start',
-    // border: '1px purple solid',
     marginTop: '-20px'
 }));
 
@@ -145,25 +135,22 @@ const ImagePlaceHolder = styled('img')(({ theme }) => ({
 
 interface GoogleSignupProps {
     apiClients: IAPIClients;
-    // handleUserCreate: () => void;
+    centralData: ICentralDataState;
     frontImage: File | null;
     setFrontImage: React.Dispatch<React.SetStateAction<File | null>>;
     backImage: File | null;
     setBackImage: React.Dispatch<React.SetStateAction<File | null>>;
-    // confirmPassword: string;
-    // setConfirmPassword: (value: string) => void;
-    // setPressedGoogle: (value: boolean) => void
 }
-
 
 export default function GoogleSignup({
     apiClients,
+    centralData,
     frontImage,
     setFrontImage, 
     backImage,
     setBackImage
 }: GoogleSignupProps) {
-
+    const theme = useTheme();
     const navigate = useNavigate(); // Initialize useNavigate
     const buttonTypeUpload = ButtonType.UPLOAD;
     const [isUploadFrontEnabled, setIsUploadFrontEnabled] = useState(true);
@@ -171,17 +158,42 @@ export default function GoogleSignup({
 
     const buttonTypeStarted = ButtonType.GETSTARTED;
     const [isGetStartedEnabled, setIsGetStartedEnabled] = useState(true);
-    const centralData = useCentralDataState();
+    const [isLoading, setIsLoading] = useState(false);
     const centralDataDispatch = useCentralDataDispatch();
+    
+    // Local temporary states
+    const [title, setTitle] = useState('Title...') 
+    const [firstName, setFirstName] = useState(centralData.userProfile?.firstName || '') 
+    const [lastName, setLastName] = useState(centralData.userProfile?.lastName || '') 
+    const [userName, setUserName] = useState('') 
+    const userProfileInit = {
+      title: 'Title...',
+      firstName: centralData.userProfile?.firstName || '',
+      lastName: centralData.userProfile?.lastName || '',
+      userName: '',
+      email: '',
+      password: '',
+    }
 
     const handleGetStarted = async () => {
+      setIsLoading(true);
       try {
         if(frontImage && backImage) {
-          const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(centralData.userProfile, frontImage, backImage);
-          centralDataDispatch({type: 'SET_USER_PROFILE', payload: response?.updatedUser});
-          centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
-          // console.log("CurrentUserInfo: ", response?.updatedUser)
-          navigate("/")
+          const updatedProfile = {
+            ...userProfileInit, // ensures all keys are there
+            firstName,
+            lastName,
+            userName,
+            title,
+          };
+          const response = await apiClients.centralDataManager?.signUpGoogleBuildBackendUser(updatedProfile, frontImage, backImage);
+          // need if statement for response
+          if (response?.updatedUser){
+            setIsLoading(false);
+            centralDataDispatch({type: 'SET_USER_PROFILE', payload: response.updatedUser});
+            centralDataDispatch({type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN});
+            navigate("/")
+          } 
         }
       } catch (error) {
         console.error(error);
@@ -199,12 +211,9 @@ export default function GoogleSignup({
             <TitleandNameMUI>
                 <TitleField
                 select
-                value={centralData.userProfile.title}
+                value={title}
                 onChange={(event) => 
-                  centralDataDispatch({
-                    type: 'SET_USER_PROFILE', 
-                    payload: {title: event.target.value}
-                  })
+                  setTitle(event.target.value)
                 }
                 variant="outlined"
                 SelectProps={{
@@ -220,23 +229,19 @@ export default function GoogleSignup({
                 <TextContainerStyled
                 variant="outlined"
                 placeholder="First Name"
-                value={centralData.userProfile.firstName}
-                onChange={(event) => 
-                  centralDataDispatch({
-                    type: 'SET_USER_PROFILE', 
-                    payload: {firstName: event.target.value}
-                  })
+                value={firstName}
+                onChange={(event) => {
+                  setFirstName(event.target.value)
+                  }
                 }
                 />
                 <TextContainerStyled
                 variant="outlined"
                 placeholder="Last Name"
-                value={centralData.userProfile.lastName}
-                onChange={(event) => 
-                  centralDataDispatch({
-                    type: 'SET_USER_PROFILE', 
-                    payload: {lastName: event.target.value}
-                  })
+                value={lastName}
+                onChange={(event) => {
+                  setLastName(event.target.value)
+                }
                 }
                 />
           </TitleandNameMUI>
@@ -245,12 +250,9 @@ export default function GoogleSignup({
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
-              value={centralData.userProfile.userName}
+              value={userName}
               onChange={(event) => 
-                centralDataDispatch({
-                  type: 'SET_USER_PROFILE', 
-                  payload: {userName: event.target.value}
-                })
+                setUserName(event.target.value)
               }
               sx={{
                 backgroundColor: 'white'
@@ -299,8 +301,6 @@ export default function GoogleSignup({
                 }
 
             </UploadImageContainer>
-
-
             <UploadImageContainer>
                 <ImageText>Back</ImageText>
                 <input
@@ -350,6 +350,11 @@ export default function GoogleSignup({
                 onClick={handleGetStarted}
             />
           </GetStartedContainer>
+          {isLoading && 
+          <Box style={{width: '100%', display: 'flex', justifyContent: 'center',}}>
+            <CircularProgress style={{color: theme.palette.primary.darkBlueCardColor}}/>
+          </Box>
+        }
         </InnerBodyContainer>
     </SignUpMainContainer>
   )

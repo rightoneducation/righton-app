@@ -21,16 +21,18 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
     firstName
     lastName
     email
+    owner
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
+    profilePicPath
     favoriteGameTemplateIds
     favoriteQuestionTemplateIds
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -51,16 +53,18 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
     firstName
     lastName
     email
+    owner
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
+    profilePicPath
     favoriteGameTemplateIds
     favoriteQuestionTemplateIds
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -81,16 +85,18 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
     firstName
     lastName
     email
+    owner
     password
     gamesMade
+    gamesUsed
     questionsMade
     frontIdPath
     backIdPath
+    profilePicPath
     favoriteGameTemplateIds
     favoriteQuestionTemplateIds
     createdAt
     updatedAt
-    owner
     __typename
   }
 }

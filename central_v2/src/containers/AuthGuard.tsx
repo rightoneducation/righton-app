@@ -1,38 +1,72 @@
 import React from 'react';
 import { Navigate, useMatch } from 'react-router-dom';
-import { userProfileLocalStorage } from '@righton/networking';
+import { useTheme, CircularProgress } from '@mui/material';
 import { useCentralDataDispatch, useCentralDataState } from '../hooks/context/useCentralDataContext';
 import { UserStatusType } from '../lib/CentralModels';
-import { userProfileInit } from '../lib/context/CentralDataContext';
-
+import { SignUpMainContainer } from '../lib/styledcomponents/SignUpStyledComponents';
+import Loading from '../pages/Loading';
 
 interface AuthGuardProps {
-  isValidatingUser?: boolean;
+  handleLogOut: () => void;
   children: JSX.Element | null;
 }
 
 export default function AuthGuard ({
-   isValidatingUser,
+   handleLogOut,
    children
 }: AuthGuardProps){
+  const theme = useTheme();
   const isLibrary = useMatch('/library');
+  const isAuthPage = useMatch('/auth');
+  const isSignupPage = useMatch('/signup');
+  const isLoginPage = useMatch('/login');
+  const isNextStep = useMatch('/nextstep');
+  
   const centralData = useCentralDataState();
   const centralDataDispatch = useCentralDataDispatch();
-  console.log(centralData.userStatus === UserStatusType.INCOMPLETE);
-  // if user is incomplete, send them to nextstep to correct
-  if (centralData.userStatus === UserStatusType.INCOMPLETE) {
-    return <Navigate to="/nextstep" replace />;
-  }
-  // if user is logged in, but profile is not set, set it from local storage
-  if (centralData.userStatus === UserStatusType.LOGGEDIN && centralData.userProfile === userProfileInit) {
-    const localStorageUserProfile = window.localStorage.getItem(userProfileLocalStorage);
-    const newUserProfile = localStorageUserProfile ? JSON.parse(localStorageUserProfile as string) : userProfileInit;
-    centralDataDispatch({ type: 'SET_USER_PROFILE', payload: newUserProfile });
-  }
+  console.log(centralData.userStatus);
 
-  if (isLibrary && !isValidatingUser && centralData.userStatus === UserStatusType.LOGGEDOUT) {
-    return <Navigate to="/" replace />;
-  }
+  // switch to render content based on Auth status of User
+  // auth status is determined by the validateUser function in CentralDataManager
+  switch (centralData.userStatus) {
 
+    // if a user is half way through the Google Sign Up process
+    case UserStatusType.GOOGLE_SIGNUP:
+      break; 
+
+    // this triggers both on a broken account and during the google signup/signin process
+    case UserStatusType.GOOGLE_SIGNIN:
+      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
+      return <Navigate to="/" replace />;
+
+    // if a user missing either cognito or local credentials, their account is broken and they need to sign up again
+    case UserStatusType.INCOMPLETE:
+      handleLogOut();
+      centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+      return <Navigate to="/" replace />;
+
+    // intermediate state while determining userStatus via validateUser in CentralDataManager
+    // happens on page load and whenever validateUser is called
+    case UserStatusType.LOADING:
+      return <Loading /> 
+    
+    // if a user is logged out, having no cognito and local credentials
+    case UserStatusType.LOGGEDOUT:
+       // if logged out user tries to access pages that require authentication
+      if (isLibrary || isAuthPage || isNextStep) {
+        return <Navigate to="/" replace />;
+      }
+      break;
+
+    // when a user successfull is logged in with aws and local credentials
+    case UserStatusType.LOGGEDIN:
+    default:
+      // prevents logged in user from accessing auth pages
+      if (isAuthPage || isLoginPage || isSignupPage) {
+        return <Navigate to="/" replace />;
+      }
+      break;
+  }
+  // is user logged in or user logged out, render children
   return children as JSX.Element;
 }
