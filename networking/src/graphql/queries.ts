@@ -18,6 +18,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     firstName
     lastName
     email
+    owner
     password
     gamesMade
     gamesUsed
@@ -29,7 +30,6 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     favoriteQuestionTemplateIds
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -57,6 +57,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       firstName
       lastName
       email
+      owner
       password
       gamesMade
       gamesUsed
@@ -68,7 +69,6 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       favoriteQuestionTemplateIds
       createdAt
       updatedAt
-      owner
       __typename
     }
     nextToken
@@ -99,6 +99,7 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
       firstName
       lastName
       email
+      owner
       password
       gamesMade
       gamesUsed
@@ -110,7 +111,6 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
       favoriteQuestionTemplateIds
       createdAt
       updatedAt
-      owner
       __typename
     }
     nextToken
@@ -144,6 +144,7 @@ export const userByCognitoId = /* GraphQL */ `query UserByCognitoId(
       firstName
       lastName
       email
+      owner
       password
       gamesMade
       gamesUsed
@@ -155,7 +156,6 @@ export const userByCognitoId = /* GraphQL */ `query UserByCognitoId(
       favoriteQuestionTemplateIds
       createdAt
       updatedAt
-      owner
       __typename
     }
     nextToken
@@ -189,6 +189,7 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       firstName
       lastName
       email
+      owner
       password
       gamesMade
       gamesUsed
@@ -200,7 +201,6 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       favoriteQuestionTemplateIds
       createdAt
       updatedAt
-      owner
       __typename
     }
     nextToken
@@ -210,6 +210,51 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
 ` as GeneratedQuery<
   APITypes.UserByEmailQueryVariables,
   APITypes.UserByEmailQuery
+>;
+export const userByOwner = /* GraphQL */ `query UserByOwner(
+  $owner: String!
+  $sortDirection: ModelSortDirection
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  userByOwner(
+    owner: $owner
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userName
+      dynamoId
+      cognitoId
+      title
+      firstName
+      lastName
+      email
+      owner
+      password
+      gamesMade
+      gamesUsed
+      questionsMade
+      frontIdPath
+      backIdPath
+      profilePicPath
+      favoriteGameTemplateIds
+      favoriteQuestionTemplateIds
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.UserByOwnerQueryVariables,
+  APITypes.UserByOwnerQuery
 >;
 export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate($id: ID!) {
   getPublicGameTemplate(id: $id) {

@@ -230,6 +230,13 @@ mutation CreateQuestion(
 }
 `;
 
+const getUser = /* GraphQL */ `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    gamesUsed
+  }
+}
+`;
+
 const updateUser = /* GraphQL */ `mutation UpdateUser(
   $input: UpdateUserInput!
   $condition: ModelUserConditionInput
@@ -316,6 +323,25 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
       return questionParsed;
     });
     const questionsParsed = await Promise.all(promises);
+
+    // update Owner to increment gamesUsed
+    const userId = gameTemplateParsed.owner;
+    const userRequest = await createAndSignRequest(getUser, { id: userId });
+    console.log(userRequest);
+    const userResponse = await fetch(userRequest);
+    console.log(userResponse);
+    const userJson = await userResponse.json();
+    console.log(userJson);
+    const userParsed = userJson.data.getUser;
+    const gamesUsed = userParsed.gamesUsed + 1;
+    const userUpdateRequest = await createAndSignRequest(updateUser, { input: { id: userId, gamesUsed } });
+    const userUpdateResponse = await fetch(userUpdateRequest);
+    const userUpdateJson = await userUpdateResponse.json();
+    const userUpdateParsed = userUpdateJson.data.updateUser;
+    console.log(userUpdateParsed);
+    console.log(userParsed);
+    console.log(userUpdateParsed);
+
     responseBody = gameSessionParsed.id;
   } catch (error) {
     console.error("Error occurred:", error);
