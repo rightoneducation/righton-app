@@ -97,6 +97,7 @@ export class QuestionTemplateParser {
        
       const {
           id,
+          userId,
           title,
           lowerCaseTitle,
           owner,
@@ -124,6 +125,7 @@ export class QuestionTemplateParser {
       const updatedAt = new Date(awsQuestionTemplate.updatedAt ?? 0)
       const questionTemplate: IQuestionTemplate = {
           id,
+          userId,
           title,
           lowerCaseTitle: lowerCaseTitle ?? '',
           owner: owner ?? '',

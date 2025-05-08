@@ -434,15 +434,28 @@ export default function useCentralDataManager({
     switch (type){
       case GameQuestionType.QUESTION:
         apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id).then((response) => {
-          centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: response });
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          if (response) {
+            apiClients?.user.getUser(response.userId).then((userResponse) => {
+              if (userResponse) {
+              centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: response });
+              centralDataDispatch({ type: 'SET_SELECTED_QUESTION_PROFILE_PIC', payload: userResponse.profilePicPath });
+              centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+            }});
+          }
         });
       break;
       case GameQuestionType.GAME:
       default:
         apiClients?.gameTemplate.getGameTemplate(PublicPrivateType.PUBLIC, id).then((response) => {
-          centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: response });
-          centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+          if (response) {
+            apiClients?.user.getUser(response.userId).then((userResponse) => {
+              if (userResponse) {
+                centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: response });
+                centralDataDispatch({ type: 'SET_SELECTED_GAME_PROFILE_PIC', payload: userResponse.profilePicPath });
+                centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
+              }
+            });
+          }
         });
       break;
     }

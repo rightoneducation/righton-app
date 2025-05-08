@@ -229,7 +229,7 @@ export default function CreateGame({
             );
 
           // convert questions to array of promises & write to db
-          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, apiClients);
+          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
           const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
           // create an array of all the ids from the response 
@@ -303,7 +303,7 @@ export default function CreateGame({
             );
 
           // convert questions to array of promises & write to db
-          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, apiClients);
+          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
           const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
           // create an array of all the ids from the response 
@@ -483,8 +483,9 @@ export default function CreateGame({
       if (!allDQAreValid) {
         return;
       }
+      const userId = centralData.userProfile?.id || '';
       // process valid questions in order
-      const questionTemplate = buildQuestionTemplatePromises(draftQuestionsList, apiClients);
+      const questionTemplate = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
       await Promise.all(questionTemplate);
 
       // Reset data and re-direct user

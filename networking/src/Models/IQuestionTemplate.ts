@@ -9,6 +9,7 @@ export interface IQuestionTemplateOrder {
 
 export interface IQuestionTemplate {
   id: string,
+  userId: string,
   title: string,
   lowerCaseTitle: string,
   owner?: string,

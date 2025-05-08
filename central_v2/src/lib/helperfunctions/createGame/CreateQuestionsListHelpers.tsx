@@ -62,11 +62,13 @@ export const checkDQsAreValid = (
 
 export const buildQuestionTemplatePromises = (
   draftQuestionsList: TDraftQuestionsList[],
+  userId: string,
   apiClients: IAPIClients,
 ) => {
   return draftQuestionsList.map(async (dq, i) => {
     let result = null;
     let url = null;
+    dq.questionTemplate.userId = userId;
 
     // if existing question return its ID for Game Creation
     if (dq.questionTemplate.id) {

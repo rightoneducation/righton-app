@@ -90,6 +90,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
   // empty question template
   export const emptyQuestionTemplate: IQuestionTemplate = {
     id: '',
+    userId: '',
     title: '',
     lowerCaseTitle: '',
     version: 0,

@@ -57,6 +57,7 @@ export default function ViewGame({
     if (!centralData.selectedGame && id){
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, id);
+      
     }
 
   }, [centralData.selectedGame, route ]); // eslint-disable-line 

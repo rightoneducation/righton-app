@@ -1,6 +1,8 @@
 import React from 'react';
 import { Typography, Box, Grid, styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { IGameTemplate, IQuestionTemplate, CloudFrontDistributionUrl } from '@righton/networking';
+import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import placeHolderProfilePicture from '../../images/placeholderProfilePic.png';
 import OwnerNamePill from './OwnerNamePill';
 import { ScreenSize } from '../../lib/CentralModels';
@@ -79,15 +81,44 @@ const OwnerTagBody = styled(OwnerTagHeader)(({ theme }) => ({
   fontWeight: 300,
 }));
 
-export default function OwnerTag(
-  {
+export default function OwnerTag({
     screenSize,
     isViewGame
 }: OwnerTagProps) {
   const theme = useTheme();
-  const modifiedDate = '06/08/2024';
+  const centralData = useCentralDataState();
+
   const gamesUsed = '234';
   const userName = 'Mr. J. Jiminez';
+
+  // TODO: Get this data (adjust useCentralDataActions to get the data from fetchElements)
+  // let gamesUsed = 0;
+  // let userName = '';
+  // let createdAt = '';
+
+  // if (isViewGame) {
+  //   const selectedGame = centralData.selectedGame as IGameTemplate;
+  //   gamesUsed = selectedGame?.gamesUsed || 0;
+  //   userName = `${selectedGame?.title} ${selectedGame?.lowerCaseTitle}`;}
+  //   createdAt = selectedGame?.createdAt || '';
+  // } else {
+  //   const selectedQuestion = centralData.selectedQuestion as IQuestionTemplate;
+  //   gamesUsed = selectedQuestion?.gamesUsed || 0;
+  //   userName = selectedQuestion?.owner || '';
+  //   createdAt = selectedQuestion?.createdAt || '';
+  // }
+
+
+  const createdAt = centralData.selectedGame?.createdAt || '';
+
+  const date = new Date(createdAt);
+  const modifiedDate = date.toLocaleDateString('en-US', {
+    year:   'numeric',
+    month:  '2-digit',
+    day:    '2-digit',
+  });
+
+
   return (
     screenSize !== ScreenSize.SMALL ? 
       <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize}>
