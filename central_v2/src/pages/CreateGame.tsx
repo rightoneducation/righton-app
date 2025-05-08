@@ -279,6 +279,59 @@ export default function CreateGame({
       console.log(`HandleSaveGame - error: `, err);
     }
   };
+
+  const handleSaveDraftGame = async () => {
+    try {
+      const draftGameCopy = {...draftGame, publicPrivateGame: PublicPrivateType.DRAFT, isGameCardSubmitted: true, isCreatingTemplate: true};
+      setDraftGame(draftGameCopy);
+      
+      
+
+        // check for images on draft game 
+        let gameImgUrl: string | null = null;
+        if(draftGame.image || draftGame.imageUrl) {
+         gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        }
+
+          // create & store game template in variable to retrieve id after response
+          const createGame = buildGameTemplate(draftGameCopy, draftQuestionsList, gameImgUrl);
+          const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
+              draftGameCopy.publicPrivateGame,
+              createGame,
+            );
+
+          // convert questions to array of promises & write to db
+          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, apiClients);
+          const questionTemplateResponse = await Promise.all(newQuestionTemplates);
+
+          // create an array of all the ids from the response 
+          const questionTemplateIds = questionTemplateResponse.map(
+            (question) => String(question?.id),
+          );
+
+          // make sure we have a gameTemplate id as well as question template ids before creating a game question
+          if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+            try {
+              const createGameQuestions = buildGameQuestionPromises(
+                draftGameCopy, 
+                gameTemplateResponse.id, 
+                questionTemplateIds, 
+                apiClients
+              );
+              // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+                await Promise.all(createGameQuestions);
+            } catch (err) {
+              setDraftGame(prev => ({ ...prev, isCreatingTemplate: false }));
+              console.error(`Failed to create one or more game questions:`, err);
+            }
+          }
+
+          setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
+          navigate('/');
+    } catch (err) {
+      console.log(`HandleSaveGame - error: `, err);
+    }
+  };
   /** END OF CREATE GAME HANDLERS  */
 
   /** CREATE QUESTION HANDLERS START */
@@ -569,6 +622,7 @@ export default function CreateGame({
           screenSize={screenSize}
           isGameCardErrored={hasGameError}
           handleSaveGame={handleSaveGame}
+          handleSaveDraftGame={handleSaveDraftGame}
           handleDiscard={handleDiscardGame}
           handlePublicPrivateChange={handlePublicPrivateGameChange}
           handleImageUploadClick={handleGameImageUploadClick}
