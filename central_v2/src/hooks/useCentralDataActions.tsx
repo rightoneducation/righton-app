@@ -513,8 +513,9 @@ export default function useCentralDataManager({
       centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
   }, [apiClients.auth.isUserAuth]); // eslint-disable-line
 
-  const handleLogOut = () => {
-    apiClients.centralDataManager?.signOut();
+  const handleLogOut = async () => {
+    centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOADING });
+    await apiClients.centralDataManager?.signOut();
     apiClients.centralDataManager?.clearLocalUserProfile();
     centralDataDispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
   }

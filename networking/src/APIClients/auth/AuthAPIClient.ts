@@ -7,7 +7,7 @@ import {
   confirmSignUp, 
   signIn, 
   signInWithRedirect, 
-  signOut, 
+  signOut as amplifySignOut, 
   fetchAuthSession,
   getCurrentUser,
   resetPassword, 
@@ -217,7 +217,7 @@ export class AuthAPIClient
   }
 
   async awsSignOut(): Promise<void> {
-    await signOut();
+    await amplifySignOut();   
   }
 
   async awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput> {
