@@ -11,6 +11,7 @@ export const userProfileInit = {
     userName: '',
     email: '',
     password: '',
+    gamesUsed: 0,
 }
 
 // initialize centralDataState
