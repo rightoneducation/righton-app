@@ -319,6 +319,14 @@ export default function SignUp({
   const centralDataDispatch = useCentralDataDispatch();
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
+  const [localSignUp, setLocalSignUp] = useState({
+    title: centralData.userProfile.title ?? 'Title...',
+    firstName: centralData.userProfile.firstName ?? '',
+    lastName: centralData.userProfile.lastName ?? '',
+    email: centralData.userProfile.email ?? '',
+    userName: centralData.userProfile.userName ?? '',
+    password: centralData.userProfile.password ?? '',
+  });
 
   const [loading, setLoading] = useState(false);
 
@@ -346,32 +354,54 @@ export default function SignUp({
     setLoading(true);
     setPasswordError(""); // Reset error before validation
     setPasswordConfirmError("")
-    if (centralData.userProfile && centralData.userProfile.password && centralData.userProfile.password.length < 8) {
+    const { title, firstName, lastName, email, userName, password } = localSignUp;
+    const newProfile = {
+      ...centralData.userProfile,
+      title,
+      firstName,
+      lastName,
+      email,
+      userName,
+      password
+    }
+    if (password && password.length < 8) {
       setPasswordError("Password must be at least 8 characters long.");
       setLoading(false);
       return;
     }
 
-    if (!/[A-Za-z]/.test(centralData.userProfile.password ?? '')) {
+    if (!/[A-Za-z]/.test(password ?? '')) {
       setPasswordError("Password must include at least one letter.");
       setLoading(false);
       return;
     }
 
-    if (!/\d/.test(centralData.userProfile.password ?? '')) {
+    if (!/\d/.test(password ?? '')) {
       setPasswordError("Password must include at least one number.");
       setLoading(false);
       return;
     }
 
-    if (centralData.userProfile.password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setPasswordConfirmError("Passwords don't match");
       setLoading(false);
       return;
     }
 
     try {
-      await apiClients.centralDataManager?.signUpSendConfirmationCode(centralData.userProfile);
+      await apiClients.centralDataManager?.signUpSendConfirmationCode(newProfile);
+      centralDataDispatch({
+        type: 'SET_USER_PROFILE',
+        payload: {
+          ...centralData.userProfile,
+          title,
+          firstName,
+          lastName,
+          email,
+          userName,
+          password
+        },
+      });
       handleUserCreate(); // Trigger switch to confirmation
     } catch (error) {
       setIsModalOpen(true);
@@ -428,12 +458,11 @@ export default function SignUp({
           <MiddleTextFirstRow>
             <TitleField
               select
-              value={centralData.userProfile.title}
-              onChange={(event) => centralDataDispatch({
-                type: 'SET_USER_PROFILE',
-                payload: {...centralData.userProfile, title: event.target.value} 
-              })
-            }
+              value={localSignUp.title}
+              onChange={(event) => setLocalSignUp((prev) => ({
+                ...prev,
+                title: event.target.value,
+              }))}
               variant="outlined"
               SelectProps={{
                 IconComponent: DropDown, // Custom icon component
@@ -448,22 +477,20 @@ export default function SignUp({
             <TextContainerStyled
               variant="outlined"
               placeholder="First Name"
-              value={centralData.userProfile.firstName}
-              onChange={(event) => centralDataDispatch({
-                type: 'SET_USER_PROFILE', 
-                payload: {...centralData.userProfile, firstName: event.target.value}
-              })
-            }
+              value={localSignUp.firstName}
+              onChange={(event) => setLocalSignUp((prev) => ({
+                ...prev,
+                firstName: event.target.value,
+              }))}
             />
             <TextContainerStyled
               variant="outlined"
               placeholder="Last Name"
-              value={centralData.userProfile.lastName}
-              onChange={(event) => centralDataDispatch({
-                  type: 'SET_USER_PROFILE', 
-                  payload: {...centralData.userProfile, lastName: event.target.value}
-                })
-              }
+              value={localSignUp.lastName}
+              onChange={(event) => setLocalSignUp((prev) => ({
+                ...prev,
+                lastName: event.target.value,
+              }))}
             />
           </MiddleTextFirstRow>
           <MiddleTextSecondRow>
@@ -471,12 +498,11 @@ export default function SignUp({
             <TextContainerStyled
               variant="outlined"
               placeholder="Username..."
-              value={centralData.userProfile.userName}
-              onChange={(event) => centralDataDispatch({
-                type: 'SET_USER_PROFILE', 
-                payload: {...centralData.userProfile, userName: event.target.value}
-              })
-            }
+              value={localSignUp.userName}
+              onChange={(event) => setLocalSignUp((prev) => ({
+                ...prev,
+                userName: event.target.value,
+              }))}
               sx={{
                 backgroundColor: 'white'
               }}
@@ -485,12 +511,11 @@ export default function SignUp({
           <TextContainerStyled
             variant="outlined"
             placeholder="School Email..."
-            value={centralData.userProfile.email}
-            onChange={(event) => centralDataDispatch({
-              type: 'SET_USER_PROFILE', 
-              payload: {...centralData.userProfile, email: event.target.value}
-            })
-          }
+            value={localSignUp.email}
+            onChange={(event) => setLocalSignUp((prev) => ({
+              ...prev,
+              email: event.target.value,
+            }))}
           />
           <MiddleTextFourthRow>Teacher ID Image</MiddleTextFourthRow>
         </MiddleText>
@@ -584,12 +609,11 @@ export default function SignUp({
           <TextContainerStyled
             variant="outlined"
             placeholder="Password..."
-            value={centralData.userProfile.password}
-            onChange={(event) => centralDataDispatch({
-              type: 'SET_USER_PROFILE', 
-              payload: {...centralData.userProfile, password: event.target.value}
-            })
-          }
+            value={localSignUp.password}
+            onChange={(event) => setLocalSignUp((prev) => ({
+              ...prev,
+              password: event.target.value,
+            }))}
             error={!!passwordError}
             sx={{
               backgroundColor: 'white',
