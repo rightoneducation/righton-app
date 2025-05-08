@@ -376,7 +376,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
   };
 
   public signOut = async () => {
-    this.authAPIClient.awsSignOut();
+    await this.authAPIClient.awsSignOut();
     this.authAPIClient.isUserAuth = false;
     this.clearLocalUserProfile();
   };

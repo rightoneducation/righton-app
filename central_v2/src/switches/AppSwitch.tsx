@@ -116,13 +116,17 @@ function AppSwitch({
     }
     case ScreenType.CREATEQUESTION: {
       screenComponent = (
+        <AuthGuard handleLogOut={handleLogOut}>
           <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
+        </AuthGuard>
       );
       break;
     }
     case ScreenType.CLONEQUESTION: {
       screenComponent = (
+        <AuthGuard handleLogOut={handleLogOut}>
           <CreateQuestion screenSize={screenSize} fetchElement={fetchElement} fetchElements={fetchElements}/>
+        </AuthGuard>
       );
       break;
     }
