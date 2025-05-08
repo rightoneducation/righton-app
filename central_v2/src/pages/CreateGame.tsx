@@ -260,6 +260,7 @@ export default function CreateGame({
            const newNumGames = existingNumGames + 1;
             // add new questions to user number of questions
            const newNumQuestions = existingNumQuestions + draftQuestionsList.filter((dq) => !dq.questionTemplate.id).length;
+           console.log(centralData.userProfile?.id, newNumGames, newNumQuestions);
            await apiClients.user.updateUser({
                id: centralData.userProfile?.id || '',
                gamesMade: newNumGames,

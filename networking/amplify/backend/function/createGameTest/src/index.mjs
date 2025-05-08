@@ -41,6 +41,7 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate, publicPrivate) => {
       gameCode:  Math.floor(Math.random() * 9000) + 1000,
       questionTemplates,
       id: uuidv4(),
+      owner
   };
   return gameTemplate;
 };
@@ -230,12 +231,19 @@ mutation CreateQuestion(
 }
 `;
 
-const getUser = /* GraphQL */ `query GetUser($id: ID!) {
-  getUser(id: $id) {
-    gamesUsed
+const userByOwner = /* GraphQL */ `
+query UserByOwner(
+  $owner: String!
+) {
+  userByOwner(
+    owner: $owner
+  ) {
+    items {
+      gamesUsed
+    }
   }
 }
-`;
+`
 
 const updateUser = /* GraphQL */ `mutation UpdateUser(
   $input: UpdateUserInput!
@@ -278,12 +286,13 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json(), publicPrivate);
     console.log(gameTemplateParsed);
-    const { questionTemplates, ...game } = gameTemplateParsed;
+    const { questionTemplates, owner, ...game } = gameTemplateParsed;
 
     // createGameSession
     const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
     const gameSessionResponse = await fetch(gameSessionRequest);
     const gameSessionJson = await gameSessionResponse.json(); 
+    console.log(gameSessionJson);
     const gameSessionParsed = gameSessionJson.data.createGameSession; 
     // createQuestions
     const promises = questionTemplates.map(async (question) => {
@@ -325,18 +334,21 @@ const updateUser = /* GraphQL */ `mutation UpdateUser(
     const questionsParsed = await Promise.all(promises);
 
     // update Owner to increment gamesUsed
-    const userId = gameTemplateParsed.owner;
-    const userRequest = await createAndSignRequest(getUser, { id: userId });
+    console.log(gameTemplateParsed);
+    const userOwner = gameTemplateParsed.owner;
+    console.log(userOwner);
+    const userRequest = await createAndSignRequest(userByOwner, { owner: userOwner });
     console.log(userRequest);
     const userResponse = await fetch(userRequest);
     console.log(userResponse);
     const userJson = await userResponse.json();
     console.log(userJson);
-    const userParsed = userJson.data.getUser;
+    const userParsed = userJson.data.userByOwner;
     const gamesUsed = userParsed.gamesUsed + 1;
-    const userUpdateRequest = await createAndSignRequest(updateUser, { input: { id: userId, gamesUsed } });
+    const userUpdateRequest = await createAndSignRequest(updateUser, { input: { id: userParsed.id, gamesUsed } });
     const userUpdateResponse = await fetch(userUpdateRequest);
     const userUpdateJson = await userUpdateResponse.json();
+    console.log(userUpdateJson);
     const userUpdateParsed = userUpdateJson.data.updateUser;
     console.log(userUpdateParsed);
     console.log(userParsed);
