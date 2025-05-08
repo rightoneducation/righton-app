@@ -114,7 +114,6 @@ export class QuestionTemplateParser {
       const awsAnswerSettings = !isNullOrUndefined(answerSettings) ? JSON.parse(answerSettings) : null;
       if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
-          isNullOrUndefined(owner) ||
           isNullOrUndefined(version)) {
           throw new Error(
               "Question Template has null field for the attributes that are not nullable"
@@ -127,7 +126,7 @@ export class QuestionTemplateParser {
           id,
           title,
           lowerCaseTitle: lowerCaseTitle ?? '',
-          owner,
+          owner: owner ?? '',
           version,
           choices,
           instructions,

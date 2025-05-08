@@ -2,7 +2,7 @@ type User @model
 @auth(
   rules:  [
     { allow: public, provider: iam  },
-    { allow: owner, provider: userPools, identityClaim: "email"},
+    { allow: owner, provider: userPools },
     { allow: private, operations: [read], provider: userPools },  
   ]
 )
@@ -17,7 +17,6 @@ type User @model
   firstName: String
   lastName: String
   email: String! @index(name: "emailIndex", queryField: "userByEmail")
-  owner: String @index(name: "ownerIndex", queryField: "userByOwner")
   password: String
   gamesMade: Int
   gamesUsed: Int
@@ -120,6 +119,7 @@ type PublicGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -159,6 +159,7 @@ type PrivateGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -197,6 +198,7 @@ type DraftGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -237,6 +239,7 @@ type PublicQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -273,6 +276,7 @@ type PrivateQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -309,6 +313,7 @@ type DraftQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID
+  userId: String
   title: String
   lowerCaseTitle: String
   version: Int

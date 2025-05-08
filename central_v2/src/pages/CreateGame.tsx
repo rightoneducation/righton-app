@@ -220,9 +220,9 @@ export default function CreateGame({
         if(draftGame.image || draftGame.imageUrl) {
          gameImgUrl = await createGameImagePath(draftGame, apiClients);
         }
-
+          const userId = centralData.userProfile?.id || '';
           // create & store game template in variable to retrieve id after response
-          const createGame = buildGameTemplate(draftGame, draftQuestionsList, gameImgUrl);
+          const createGame = buildGameTemplate(draftGame, userId, draftQuestionsList, gameImgUrl);
           const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
               draftGame.publicPrivateGame,
               createGame,
@@ -293,9 +293,10 @@ export default function CreateGame({
         if(draftGame.image || draftGame.imageUrl) {
          gameImgUrl = await createGameImagePath(draftGame, apiClients);
         }
-
+          const userId = centralData.userProfile?.id || '';
+          console.log(userId);
           // create & store game template in variable to retrieve id after response
-          const createGame = buildGameTemplate(draftGameCopy, draftQuestionsList, gameImgUrl);
+          const createGame = buildGameTemplate(draftGameCopy, userId, draftQuestionsList, gameImgUrl);
           const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
               draftGameCopy.publicPrivateGame,
               createGame,

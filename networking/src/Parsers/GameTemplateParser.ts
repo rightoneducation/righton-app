@@ -53,6 +53,7 @@ export class GameTemplateParser {
         const sortedQuestionTemplates = sortQuestionTemplatesByOrder(questionTemplates, questionTemplatesOrder);
        const {
           id,
+          userId,
           title,
           lowerCaseTitle,
           owner,
@@ -74,6 +75,7 @@ export class GameTemplateParser {
 
       const gameTemplate: IGameTemplate = {
           id,
+          userId,
           title,
           lowerCaseTitle,
           owner,

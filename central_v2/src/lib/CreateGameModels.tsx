@@ -128,6 +128,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
 
   export const newGameTemplate: IGameTemplate = {
     id: '',
+    userId: '',
     title: '',
     lowerCaseTitle: '',
     owner: '',

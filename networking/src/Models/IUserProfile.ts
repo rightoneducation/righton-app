@@ -9,10 +9,12 @@ export type IUserProfile = {
   email: string
   password?: string
   gamesMade?: number
+  gamesUsed?: number
   questionsMade?: number
   frontIdPath?: string
   backIdPath?: string
   profilePicPath?: string;
   favoriteGameTemplateIds?: string[]
   favoriteQuestionTemplateIds?: string[]
+  createdAt?: string
 }
