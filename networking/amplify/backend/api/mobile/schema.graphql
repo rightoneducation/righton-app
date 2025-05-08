@@ -17,7 +17,7 @@ type User @model
   firstName: String
   lastName: String
   email: String! @index(name: "emailIndex", queryField: "userByEmail")
-  owner: String! @index(name: "ownerIndex", queryField: "userByOwner")
+  owner: String @index(name: "ownerIndex", queryField: "userByOwner")
   password: String
   gamesMade: Int
   gamesUsed: Int

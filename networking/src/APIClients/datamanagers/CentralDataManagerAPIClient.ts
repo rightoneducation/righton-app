@@ -309,7 +309,7 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
     }
   };
 
-  public userProfileImageUpdate = async (user: IUserProfile, oldUser: IUserProfile, newProfilePic: File | null, frontImage?: File | null,
+  public userProfileInformationUpdate = async (user: IUserProfile, oldUser: IUserProfile, frontImage?: File | null,
     backImage?: File | null
   ) => {
     let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
@@ -361,6 +361,16 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
       }
     }
 
+    await this.userAPIClient.updateUser(updatedUser);
+    this.setLocalUserProfile(updatedUser);
+    return { updatedUser };
+  };
+
+
+  public userProfileImageUpdate = async (user: IUserProfile, newProfilePic: File | null) => {
+    let createUserInput = UserParser.parseAWSUserfromAuthUser(user);
+    let updatedUser = JSON.parse(JSON.stringify(createUserInput));
+
     if (newProfilePic) {
       try {
         const uploadedImage = await this.authAPIClient.awsUploadImagePrivate(newProfilePic) as any;
@@ -369,11 +379,11 @@ export class CentralDataManagerAPIClient implements ICentralDataManagerAPIClient
         throw new Error(`Profile image upload failed: ${JSON.stringify(error)}`);
       }
     }
-    console.log("FINALIZED UPDATEDUSER: ", updatedUser)
     await this.userAPIClient.updateUser(updatedUser);
     this.setLocalUserProfile(updatedUser);
     return { updatedUser };
   };
+
 
   public signOut = async () => {
     this.authAPIClient.awsSignOut();
