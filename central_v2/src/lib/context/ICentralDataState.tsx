@@ -19,7 +19,13 @@ export interface ICentralDataState {
   privateGames: IGameTemplate[];
   draftGames: IGameTemplate[];
   favGames: IGameTemplate[];
-  selectedGame: IGameTemplate | null; // this is state that holds a game that has been selected from any of the above lists
+  selectedGame: {
+    game: IGameTemplate | null,
+    profilePic: string | null;
+    createdBy: string | null;
+    lastModified: string | null;
+    numUsed: number | null;
+  }; // this is state that holds a game that has been selected from any of the above lists
   selectedGameProfilePic: string | null; 
   recommendedQuestions: IQuestionTemplate[];
   mostPopularQuestions: IQuestionTemplate[];
@@ -28,7 +34,13 @@ export interface ICentralDataState {
   searchedQuestions: IQuestionTemplate[];
   draftQuestions: IQuestionTemplate[];
   favQuestions: IQuestionTemplate[];
-  selectedQuestion: IQuestionTemplate | null; // this is state that holds a question that has been selected from any of the above lists
+  selectedQuestion: {
+    question: IQuestionTemplate | null,
+    profilePic: string | null;
+    createdBy: string | null;
+    lastModified: string | null;
+    numUsed: number | null;
+  }; // this is state that holds a question that has been selected from any of the above lists
   selectedQuestionProfilePic: string | null;
   nextToken: string | null;
   isLoading: boolean;

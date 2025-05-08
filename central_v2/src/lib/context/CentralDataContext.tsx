@@ -25,7 +25,13 @@ const initCentralDataState: ICentralDataState = {
   privateGames: [],
   draftGames: [],
   favGames: [],
-  selectedGame: null,
+  selectedGame: {
+    game: null,
+    profilePic: null,
+    createdBy: null,
+    lastModified: null,
+    numUsed: null
+  },
   recommendedQuestions: [],
   mostPopularQuestions: [],
   searchedQuestions: [],
@@ -33,7 +39,13 @@ const initCentralDataState: ICentralDataState = {
   privateQuestions: [],
   draftQuestions: [],
   favQuestions: [],
-  selectedQuestion: null,
+  selectedQuestion: {
+    question: null,
+    profilePic: null,
+    createdBy: null,
+    lastModified: null,
+    numUsed: null
+  },
   nextToken: null,
   isLoading: false,
   isLoadingInfiniteScroll: false,
