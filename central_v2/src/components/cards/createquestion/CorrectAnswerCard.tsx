@@ -103,7 +103,7 @@ export default function DetailedQuestionSubCard({
               color: '#47366C',
               opacity: isCardErrored ? 1 : 0.5,
               '&::placeholder': {
-                color: isCardErrored ? '#D0254D': '#384466',
+                color: isCardErrored ? '#D0254D': '#47366C',
                 opacity: isCardErrored ? 1 : 0.5,
               },
               '&:focus': {
@@ -154,7 +154,7 @@ export default function DetailedQuestionSubCard({
               color: '#47366C',
               opacity: isCardErrored ? 1 : 0.5,
                 '&::placeholder': {
-                  color: isCardErrored ? '#D0254D': '#384466',
+                  color: isCardErrored ? '#D0254D': '#47366C',
                   opacity: isCardErrored ? 1 : 0.5,
               },
               '&:focus': {
