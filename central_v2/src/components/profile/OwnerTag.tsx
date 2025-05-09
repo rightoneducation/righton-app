@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box, Grid, styled, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { IGameTemplate, IQuestionTemplate, CloudFrontDistributionUrl } from '@righton/networking';
+import { CloudFrontDistributionUrl } from '@righton/networking';
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import placeHolderProfilePicture from '../../images/placeholderProfilePic.png';
 import OwnerNamePill from './OwnerNamePill';
@@ -93,27 +93,27 @@ export default function OwnerTag({
   let displayLastModified = '';
   let displayNumUsed = 0;
   if (isViewGame){
-    const { profilePic, createdName, lastModified, numUsed } = centralData.selectedGame;
-    displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
-    displayCreatedName = createdName ?? '';
-    displayLastModified = lastModified ?? '';
-    displayNumUsed = numUsed ?? 0;
-    displayLastModified = new Date(lastModified ?? '').toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-  } else {
-    const { profilePic, createdName, lastModified, numUsed } = centralData.selectedQuestion;
-    displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
-    displayCreatedName = createdName ?? '';
-    displayLastModified = lastModified ?? '';
-    displayNumUsed = numUsed ?? 0;
-    displayLastModified = new Date(lastModified ?? '').toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
+    if (centralData.selectedGame){
+      const { profilePic, createdName, lastModified, timesPlayed } = centralData.selectedGame;
+      displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
+      displayCreatedName = createdName ?? '';
+      displayNumUsed = timesPlayed ?? 0;
+      displayLastModified = (lastModified ?? new Date()).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+    }
+  } else if (centralData.selectedQuestion){ 
+      const { profilePic, createdName, lastModified, timesPlayed } = centralData.selectedQuestion;
+      displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
+      displayCreatedName = createdName ?? '';
+      displayNumUsed = timesPlayed ?? 0;
+      displayLastModified = (lastModified ?? new Date()).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
   }
   const isOwnerLoaded = displayCreatedName !== '' && displayLastModified !== '' && displayProfilePic !== '' && displayNumUsed !== undefined;
 
@@ -133,7 +133,7 @@ export default function OwnerTag({
                 <OwnerTagBody>{displayLastModified}</OwnerTagBody>
               </OwnerTagSubContainer>
               <OwnerTagSubContainer screenSize={screenSize}>
-                <OwnerTagHeader>Games Used:</OwnerTagHeader>
+                <OwnerTagHeader>Times Played:</OwnerTagHeader>
                 <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
               </OwnerTagSubContainer>
             </OwnerTagTextContainer>
@@ -163,7 +163,7 @@ export default function OwnerTag({
               </OwnerTagSubGridContainer>
               <OwnerTagSubGridContainer item xs={6}>
                 <OwnerTagSubContainer screenSize={screenSize}>
-                  <OwnerTagHeader>Games Used:</OwnerTagHeader>
+                  <OwnerTagHeader>Times Played:</OwnerTagHeader>
                   <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
                 </OwnerTagSubContainer>
               </OwnerTagSubGridContainer>

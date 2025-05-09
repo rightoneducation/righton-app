@@ -101,6 +101,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     gradeFilter: '',
     standard: '',
     gameTemplatesCount: 0,
+    timesPlayed: 0,
   };
 
   export const draftTemplate: TDraftQuestionsList = {
@@ -141,6 +142,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     questionTemplatesCount: 0,
     questionTemplatesOrder: [],
     imageUrl: null,
+    timesPlayed: 0,
     questionTemplates: [{ gameQuestionId: String(0), questionTemplate: emptyQuestionTemplate }],
   };
 

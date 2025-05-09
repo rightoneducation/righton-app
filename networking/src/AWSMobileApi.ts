@@ -164,6 +164,7 @@ export type CreatePublicGameTemplateInput = {
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   questionTemplatesCount: number,
   questionTemplatesOrder?: string | null,
   createdAt?: string | null,
@@ -187,6 +188,7 @@ export type ModelPublicGameTemplateConditionInput = {
   phaseOneTime?: ModelIntInput | null,
   phaseTwoTime?: ModelIntInput | null,
   imageUrl?: ModelStringInput | null,
+  timesPlayed?: ModelIntInput | null,
   questionTemplatesCount?: ModelIntInput | null,
   questionTemplatesOrder?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -216,6 +218,7 @@ export type PublicGameTemplate = {
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   questionTemplates?: ModelPublicGameQuestionsConnection | null,
   questionTemplatesCount: number,
   questionTemplatesOrder?: string | null,
@@ -260,6 +263,7 @@ export type PublicQuestionTemplate = {
   gradeFilter?: string | null,
   standard?: string | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   gameTemplates?: ModelPublicGameQuestionsConnection | null,
   gameTemplatesCount: number,
   createdAt?: string | null,
@@ -285,6 +289,7 @@ export type UpdatePublicGameTemplateInput = {
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   questionTemplatesCount?: number | null,
   questionTemplatesOrder?: string | null,
   createdAt?: string | null,
@@ -313,6 +318,7 @@ export type CreatePrivateGameTemplateInput = {
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   questionTemplatesCount: number,
   questionTemplatesOrder?: string | null,
   createdAt?: string | null,
@@ -336,6 +342,7 @@ export type ModelPrivateGameTemplateConditionInput = {
   phaseOneTime?: ModelIntInput | null,
   phaseTwoTime?: ModelIntInput | null,
   imageUrl?: ModelStringInput | null,
+  timesPlayed?: ModelIntInput | null,
   questionTemplatesCount?: ModelIntInput | null,
   questionTemplatesOrder?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -365,6 +372,7 @@ export type PrivateGameTemplate = {
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   questionTemplates?: ModelPrivateGameQuestionsConnection | null,
   questionTemplatesCount: number,
   questionTemplatesOrder?: string | null,
@@ -409,6 +417,7 @@ export type PrivateQuestionTemplate = {
   gradeFilter?: string | null,
   standard?: string | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   gameTemplates?: ModelPrivateGameQuestionsConnection | null,
   gameTemplatesCount: number,
   createdAt?: string | null,
@@ -434,6 +443,7 @@ export type UpdatePrivateGameTemplateInput = {
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   questionTemplatesCount?: number | null,
   questionTemplatesOrder?: string | null,
   createdAt?: string | null,
@@ -610,6 +620,7 @@ export type CreatePublicQuestionTemplateInput = {
   gradeFilter?: string | null,
   standard?: string | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   gameTemplatesCount: number,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -631,6 +642,7 @@ export type ModelPublicQuestionTemplateConditionInput = {
   gradeFilter?: ModelStringInput | null,
   standard?: ModelStringInput | null,
   imageUrl?: ModelStringInput | null,
+  timesPlayed?: ModelIntInput | null,
   gameTemplatesCount?: ModelIntInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -657,6 +669,7 @@ export type UpdatePublicQuestionTemplateInput = {
   gradeFilter?: string | null,
   standard?: string | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   gameTemplatesCount?: number | null,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -683,6 +696,7 @@ export type CreatePrivateQuestionTemplateInput = {
   gradeFilter?: string | null,
   standard?: string | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   gameTemplatesCount: number,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -704,6 +718,7 @@ export type ModelPrivateQuestionTemplateConditionInput = {
   gradeFilter?: ModelStringInput | null,
   standard?: ModelStringInput | null,
   imageUrl?: ModelStringInput | null,
+  timesPlayed?: ModelIntInput | null,
   gameTemplatesCount?: ModelIntInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -730,6 +745,7 @@ export type UpdatePrivateQuestionTemplateInput = {
   gradeFilter?: string | null,
   standard?: string | null,
   imageUrl?: string | null,
+  timesPlayed?: number | null,
   gameTemplatesCount?: number | null,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -1407,6 +1423,7 @@ export type ModelPublicGameTemplateFilterInput = {
   phaseOneTime?: ModelIntInput | null,
   phaseTwoTime?: ModelIntInput | null,
   imageUrl?: ModelStringInput | null,
+  timesPlayed?: ModelIntInput | null,
   questionTemplatesCount?: ModelIntInput | null,
   questionTemplatesOrder?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -1460,6 +1477,7 @@ export type ModelPrivateGameTemplateFilterInput = {
   phaseOneTime?: ModelIntInput | null,
   phaseTwoTime?: ModelIntInput | null,
   imageUrl?: ModelStringInput | null,
+  timesPlayed?: ModelIntInput | null,
   questionTemplatesCount?: ModelIntInput | null,
   questionTemplatesOrder?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -1527,6 +1545,7 @@ export type ModelPublicQuestionTemplateFilterInput = {
   gradeFilter?: ModelStringInput | null,
   standard?: ModelStringInput | null,
   imageUrl?: ModelStringInput | null,
+  timesPlayed?: ModelIntInput | null,
   gameTemplatesCount?: ModelIntInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -1559,6 +1578,7 @@ export type ModelPrivateQuestionTemplateFilterInput = {
   gradeFilter?: ModelStringInput | null,
   standard?: ModelStringInput | null,
   imageUrl?: ModelStringInput | null,
+  timesPlayed?: ModelIntInput | null,
   gameTemplatesCount?: ModelIntInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -1843,6 +1863,7 @@ export type ModelSubscriptionPublicGameTemplateFilterInput = {
   phaseOneTime?: ModelSubscriptionIntInput | null,
   phaseTwoTime?: ModelSubscriptionIntInput | null,
   imageUrl?: ModelSubscriptionStringInput | null,
+  timesPlayed?: ModelSubscriptionIntInput | null,
   questionTemplatesCount?: ModelSubscriptionIntInput | null,
   questionTemplatesOrder?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
@@ -1870,6 +1891,7 @@ export type ModelSubscriptionPrivateGameTemplateFilterInput = {
   phaseOneTime?: ModelSubscriptionIntInput | null,
   phaseTwoTime?: ModelSubscriptionIntInput | null,
   imageUrl?: ModelSubscriptionStringInput | null,
+  timesPlayed?: ModelSubscriptionIntInput | null,
   questionTemplatesCount?: ModelSubscriptionIntInput | null,
   questionTemplatesOrder?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
@@ -1923,6 +1945,7 @@ export type ModelSubscriptionPublicQuestionTemplateFilterInput = {
   gradeFilter?: ModelSubscriptionStringInput | null,
   standard?: ModelSubscriptionStringInput | null,
   imageUrl?: ModelSubscriptionStringInput | null,
+  timesPlayed?: ModelSubscriptionIntInput | null,
   gameTemplatesCount?: ModelSubscriptionIntInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
@@ -1948,6 +1971,7 @@ export type ModelSubscriptionPrivateQuestionTemplateFilterInput = {
   gradeFilter?: ModelSubscriptionStringInput | null,
   standard?: ModelSubscriptionStringInput | null,
   imageUrl?: ModelSubscriptionStringInput | null,
+  timesPlayed?: ModelSubscriptionIntInput | null,
   gameTemplatesCount?: ModelSubscriptionIntInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
@@ -2206,6 +2230,7 @@ export type CreatePublicGameTemplateMutation = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -2231,6 +2256,7 @@ export type CreatePublicGameTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -2256,6 +2282,7 @@ export type CreatePublicGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2284,6 +2311,7 @@ export type CreatePublicGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2324,6 +2352,7 @@ export type CreatePublicGameTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -2349,6 +2378,7 @@ export type CreatePublicGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2377,6 +2407,7 @@ export type CreatePublicGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2438,6 +2469,7 @@ export type UpdatePublicGameTemplateMutation = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -2463,6 +2495,7 @@ export type UpdatePublicGameTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -2488,6 +2521,7 @@ export type UpdatePublicGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2516,6 +2550,7 @@ export type UpdatePublicGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2556,6 +2591,7 @@ export type UpdatePublicGameTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -2581,6 +2617,7 @@ export type UpdatePublicGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2609,6 +2646,7 @@ export type UpdatePublicGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2670,6 +2708,7 @@ export type DeletePublicGameTemplateMutation = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -2695,6 +2734,7 @@ export type DeletePublicGameTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -2720,6 +2760,7 @@ export type DeletePublicGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2748,6 +2789,7 @@ export type DeletePublicGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2788,6 +2830,7 @@ export type DeletePublicGameTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -2813,6 +2856,7 @@ export type DeletePublicGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2841,6 +2885,7 @@ export type DeletePublicGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2902,6 +2947,7 @@ export type CreatePrivateGameTemplateMutation = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -2927,6 +2973,7 @@ export type CreatePrivateGameTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -2952,6 +2999,7 @@ export type CreatePrivateGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -2980,6 +3028,7 @@ export type CreatePrivateGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3020,6 +3069,7 @@ export type CreatePrivateGameTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -3045,6 +3095,7 @@ export type CreatePrivateGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3073,6 +3124,7 @@ export type CreatePrivateGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3134,6 +3186,7 @@ export type UpdatePrivateGameTemplateMutation = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -3159,6 +3212,7 @@ export type UpdatePrivateGameTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -3184,6 +3238,7 @@ export type UpdatePrivateGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3212,6 +3267,7 @@ export type UpdatePrivateGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3252,6 +3308,7 @@ export type UpdatePrivateGameTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -3277,6 +3334,7 @@ export type UpdatePrivateGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3305,6 +3363,7 @@ export type UpdatePrivateGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3366,6 +3425,7 @@ export type DeletePrivateGameTemplateMutation = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -3391,6 +3451,7 @@ export type DeletePrivateGameTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -3416,6 +3477,7 @@ export type DeletePrivateGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3444,6 +3506,7 @@ export type DeletePrivateGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3484,6 +3547,7 @@ export type DeletePrivateGameTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -3509,6 +3573,7 @@ export type DeletePrivateGameTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -3537,6 +3602,7 @@ export type DeletePrivateGameTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4293,6 +4359,7 @@ export type CreatePublicQuestionTemplateMutation = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -4318,6 +4385,7 @@ export type CreatePublicQuestionTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -4343,6 +4411,7 @@ export type CreatePublicQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4371,6 +4440,7 @@ export type CreatePublicQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4411,6 +4481,7 @@ export type CreatePublicQuestionTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -4436,6 +4507,7 @@ export type CreatePublicQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4464,6 +4536,7 @@ export type CreatePublicQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4523,6 +4596,7 @@ export type UpdatePublicQuestionTemplateMutation = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -4548,6 +4622,7 @@ export type UpdatePublicQuestionTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -4573,6 +4648,7 @@ export type UpdatePublicQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4601,6 +4677,7 @@ export type UpdatePublicQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4641,6 +4718,7 @@ export type UpdatePublicQuestionTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -4666,6 +4744,7 @@ export type UpdatePublicQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4694,6 +4773,7 @@ export type UpdatePublicQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4753,6 +4833,7 @@ export type DeletePublicQuestionTemplateMutation = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -4778,6 +4859,7 @@ export type DeletePublicQuestionTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -4803,6 +4885,7 @@ export type DeletePublicQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4831,6 +4914,7 @@ export type DeletePublicQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4871,6 +4955,7 @@ export type DeletePublicQuestionTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -4896,6 +4981,7 @@ export type DeletePublicQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4924,6 +5010,7 @@ export type DeletePublicQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -4983,6 +5070,7 @@ export type CreatePrivateQuestionTemplateMutation = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -5008,6 +5096,7 @@ export type CreatePrivateQuestionTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -5033,6 +5122,7 @@ export type CreatePrivateQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5061,6 +5151,7 @@ export type CreatePrivateQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5101,6 +5192,7 @@ export type CreatePrivateQuestionTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -5126,6 +5218,7 @@ export type CreatePrivateQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5154,6 +5247,7 @@ export type CreatePrivateQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5213,6 +5307,7 @@ export type UpdatePrivateQuestionTemplateMutation = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -5238,6 +5333,7 @@ export type UpdatePrivateQuestionTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -5263,6 +5359,7 @@ export type UpdatePrivateQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5291,6 +5388,7 @@ export type UpdatePrivateQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5331,6 +5429,7 @@ export type UpdatePrivateQuestionTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -5356,6 +5455,7 @@ export type UpdatePrivateQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5384,6 +5484,7 @@ export type UpdatePrivateQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5443,6 +5544,7 @@ export type DeletePrivateQuestionTemplateMutation = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -5468,6 +5570,7 @@ export type DeletePrivateQuestionTemplateMutation = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -5493,6 +5596,7 @@ export type DeletePrivateQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5521,6 +5625,7 @@ export type DeletePrivateQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5561,6 +5666,7 @@ export type DeletePrivateQuestionTemplateMutation = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -5586,6 +5692,7 @@ export type DeletePrivateQuestionTemplateMutation = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -5614,6 +5721,7 @@ export type DeletePrivateQuestionTemplateMutation = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -7257,6 +7365,7 @@ export type CreatePublicGameQuestionsMutation = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -7282,6 +7391,7 @@ export type CreatePublicGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -7307,6 +7417,7 @@ export type CreatePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -7331,6 +7442,7 @@ export type CreatePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -7367,6 +7479,7 @@ export type CreatePublicGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -7392,6 +7505,7 @@ export type CreatePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -7416,6 +7530,7 @@ export type CreatePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -7464,6 +7579,7 @@ export type CreatePublicGameQuestionsMutation = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -7489,6 +7605,7 @@ export type CreatePublicGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -7514,6 +7631,7 @@ export type CreatePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -7538,6 +7656,7 @@ export type CreatePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -7574,6 +7693,7 @@ export type CreatePublicGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -7599,6 +7719,7 @@ export type CreatePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -7623,6 +7744,7 @@ export type CreatePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -7688,6 +7810,7 @@ export type UpdatePublicGameQuestionsMutation = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -7713,6 +7836,7 @@ export type UpdatePublicGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -7738,6 +7862,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -7762,6 +7887,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -7798,6 +7924,7 @@ export type UpdatePublicGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -7823,6 +7950,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -7847,6 +7975,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -7895,6 +8024,7 @@ export type UpdatePublicGameQuestionsMutation = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -7920,6 +8050,7 @@ export type UpdatePublicGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -7945,6 +8076,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -7969,6 +8101,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8005,6 +8138,7 @@ export type UpdatePublicGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -8030,6 +8164,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8054,6 +8189,7 @@ export type UpdatePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8119,6 +8255,7 @@ export type DeletePublicGameQuestionsMutation = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -8144,6 +8281,7 @@ export type DeletePublicGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -8169,6 +8307,7 @@ export type DeletePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8193,6 +8332,7 @@ export type DeletePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8229,6 +8369,7 @@ export type DeletePublicGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -8254,6 +8395,7 @@ export type DeletePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8278,6 +8420,7 @@ export type DeletePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8326,6 +8469,7 @@ export type DeletePublicGameQuestionsMutation = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -8351,6 +8495,7 @@ export type DeletePublicGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -8376,6 +8521,7 @@ export type DeletePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8400,6 +8546,7 @@ export type DeletePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8436,6 +8583,7 @@ export type DeletePublicGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -8461,6 +8609,7 @@ export type DeletePublicGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8485,6 +8634,7 @@ export type DeletePublicGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8550,6 +8700,7 @@ export type CreatePrivateGameQuestionsMutation = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -8575,6 +8726,7 @@ export type CreatePrivateGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -8600,6 +8752,7 @@ export type CreatePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8624,6 +8777,7 @@ export type CreatePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8660,6 +8814,7 @@ export type CreatePrivateGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -8685,6 +8840,7 @@ export type CreatePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8709,6 +8865,7 @@ export type CreatePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8757,6 +8914,7 @@ export type CreatePrivateGameQuestionsMutation = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -8782,6 +8940,7 @@ export type CreatePrivateGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -8807,6 +8966,7 @@ export type CreatePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8831,6 +8991,7 @@ export type CreatePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8867,6 +9028,7 @@ export type CreatePrivateGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -8892,6 +9054,7 @@ export type CreatePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -8916,6 +9079,7 @@ export type CreatePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -8981,6 +9145,7 @@ export type UpdatePrivateGameQuestionsMutation = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -9006,6 +9171,7 @@ export type UpdatePrivateGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -9031,6 +9197,7 @@ export type UpdatePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -9055,6 +9222,7 @@ export type UpdatePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -9091,6 +9259,7 @@ export type UpdatePrivateGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -9116,6 +9285,7 @@ export type UpdatePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -9140,6 +9310,7 @@ export type UpdatePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -9188,6 +9359,7 @@ export type UpdatePrivateGameQuestionsMutation = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -9213,6 +9385,7 @@ export type UpdatePrivateGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -9238,6 +9411,7 @@ export type UpdatePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -9262,6 +9436,7 @@ export type UpdatePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -9298,6 +9473,7 @@ export type UpdatePrivateGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -9323,6 +9499,7 @@ export type UpdatePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -9347,6 +9524,7 @@ export type UpdatePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -9412,6 +9590,7 @@ export type DeletePrivateGameQuestionsMutation = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -9437,6 +9616,7 @@ export type DeletePrivateGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -9462,6 +9642,7 @@ export type DeletePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -9486,6 +9667,7 @@ export type DeletePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -9522,6 +9704,7 @@ export type DeletePrivateGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -9547,6 +9730,7 @@ export type DeletePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -9571,6 +9755,7 @@ export type DeletePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -9619,6 +9804,7 @@ export type DeletePrivateGameQuestionsMutation = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -9644,6 +9830,7 @@ export type DeletePrivateGameQuestionsMutation = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -9669,6 +9856,7 @@ export type DeletePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -9693,6 +9881,7 @@ export type DeletePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -9729,6 +9918,7 @@ export type DeletePrivateGameQuestionsMutation = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -9754,6 +9944,7 @@ export type DeletePrivateGameQuestionsMutation = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -9778,6 +9969,7 @@ export type DeletePrivateGameQuestionsMutation = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -11360,6 +11552,7 @@ export type GetPublicGameTemplateQuery = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -11385,6 +11578,7 @@ export type GetPublicGameTemplateQuery = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -11410,6 +11604,7 @@ export type GetPublicGameTemplateQuery = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -11438,6 +11633,7 @@ export type GetPublicGameTemplateQuery = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -11478,6 +11674,7 @@ export type GetPublicGameTemplateQuery = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -11503,6 +11700,7 @@ export type GetPublicGameTemplateQuery = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -11531,6 +11729,7 @@ export type GetPublicGameTemplateQuery = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -11595,6 +11794,7 @@ export type ListPublicGameTemplatesQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -11620,6 +11820,7 @@ export type ListPublicGameTemplatesQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -11645,6 +11846,7 @@ export type ListPublicGameTemplatesQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -11669,6 +11871,7 @@ export type ListPublicGameTemplatesQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -11705,6 +11908,7 @@ export type ListPublicGameTemplatesQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -11730,6 +11934,7 @@ export type ListPublicGameTemplatesQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -11754,6 +11959,7 @@ export type ListPublicGameTemplatesQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -11819,6 +12025,7 @@ export type PublicGameTemplatesByDateQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -11844,6 +12051,7 @@ export type PublicGameTemplatesByDateQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -11869,6 +12077,7 @@ export type PublicGameTemplatesByDateQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -11893,6 +12102,7 @@ export type PublicGameTemplatesByDateQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -11929,6 +12139,7 @@ export type PublicGameTemplatesByDateQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -11954,6 +12165,7 @@ export type PublicGameTemplatesByDateQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -11978,6 +12190,7 @@ export type PublicGameTemplatesByDateQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -12043,6 +12256,7 @@ export type PublicGameTemplatesByGradeQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -12068,6 +12282,7 @@ export type PublicGameTemplatesByGradeQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -12093,6 +12308,7 @@ export type PublicGameTemplatesByGradeQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -12117,6 +12333,7 @@ export type PublicGameTemplatesByGradeQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -12153,6 +12370,7 @@ export type PublicGameTemplatesByGradeQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -12178,6 +12396,7 @@ export type PublicGameTemplatesByGradeQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -12202,6 +12421,7 @@ export type PublicGameTemplatesByGradeQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -12267,6 +12487,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -12292,6 +12513,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -12317,6 +12539,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -12341,6 +12564,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -12377,6 +12601,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -12402,6 +12627,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -12426,6 +12652,7 @@ export type PublicGameTemplatesByPublicQuestionTemplatesCountQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -12484,6 +12711,7 @@ export type GetPrivateGameTemplateQuery = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -12509,6 +12737,7 @@ export type GetPrivateGameTemplateQuery = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -12534,6 +12763,7 @@ export type GetPrivateGameTemplateQuery = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -12562,6 +12792,7 @@ export type GetPrivateGameTemplateQuery = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -12602,6 +12833,7 @@ export type GetPrivateGameTemplateQuery = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -12627,6 +12859,7 @@ export type GetPrivateGameTemplateQuery = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -12655,6 +12888,7 @@ export type GetPrivateGameTemplateQuery = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -12719,6 +12953,7 @@ export type ListPrivateGameTemplatesQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -12744,6 +12979,7 @@ export type ListPrivateGameTemplatesQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -12769,6 +13005,7 @@ export type ListPrivateGameTemplatesQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -12793,6 +13030,7 @@ export type ListPrivateGameTemplatesQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -12829,6 +13067,7 @@ export type ListPrivateGameTemplatesQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -12854,6 +13093,7 @@ export type ListPrivateGameTemplatesQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -12878,6 +13118,7 @@ export type ListPrivateGameTemplatesQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -12943,6 +13184,7 @@ export type PrivateGameTemplatesByDateQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -12968,6 +13210,7 @@ export type PrivateGameTemplatesByDateQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -12993,6 +13236,7 @@ export type PrivateGameTemplatesByDateQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -13017,6 +13261,7 @@ export type PrivateGameTemplatesByDateQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -13053,6 +13298,7 @@ export type PrivateGameTemplatesByDateQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -13078,6 +13324,7 @@ export type PrivateGameTemplatesByDateQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -13102,6 +13349,7 @@ export type PrivateGameTemplatesByDateQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -13167,6 +13415,7 @@ export type PrivateGameTemplatesByGradeQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -13192,6 +13441,7 @@ export type PrivateGameTemplatesByGradeQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -13217,6 +13467,7 @@ export type PrivateGameTemplatesByGradeQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -13241,6 +13492,7 @@ export type PrivateGameTemplatesByGradeQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -13277,6 +13529,7 @@ export type PrivateGameTemplatesByGradeQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -13302,6 +13555,7 @@ export type PrivateGameTemplatesByGradeQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -13326,6 +13580,7 @@ export type PrivateGameTemplatesByGradeQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -13391,6 +13646,7 @@ export type PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -13416,6 +13672,7 @@ export type PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -13441,6 +13698,7 @@ export type PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -13465,6 +13723,7 @@ export type PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -13501,6 +13760,7 @@ export type PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -13526,6 +13786,7 @@ export type PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -13550,6 +13811,7 @@ export type PrivateGameTemplatesByPrivateQuestionTemplatesCountQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -14731,6 +14993,7 @@ export type GetPublicQuestionTemplateQuery = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -14756,6 +15019,7 @@ export type GetPublicQuestionTemplateQuery = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -14781,6 +15045,7 @@ export type GetPublicQuestionTemplateQuery = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -14809,6 +15074,7 @@ export type GetPublicQuestionTemplateQuery = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -14849,6 +15115,7 @@ export type GetPublicQuestionTemplateQuery = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -14874,6 +15141,7 @@ export type GetPublicQuestionTemplateQuery = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -14902,6 +15170,7 @@ export type GetPublicQuestionTemplateQuery = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -14964,6 +15233,7 @@ export type ListPublicQuestionTemplatesQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -14989,6 +15259,7 @@ export type ListPublicQuestionTemplatesQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -15014,6 +15285,7 @@ export type ListPublicQuestionTemplatesQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -15038,6 +15310,7 @@ export type ListPublicQuestionTemplatesQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -15074,6 +15347,7 @@ export type ListPublicQuestionTemplatesQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -15099,6 +15373,7 @@ export type ListPublicQuestionTemplatesQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -15123,6 +15398,7 @@ export type ListPublicQuestionTemplatesQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -15186,6 +15462,7 @@ export type PublicQuestionTemplatesByDateQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -15211,6 +15488,7 @@ export type PublicQuestionTemplatesByDateQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -15236,6 +15514,7 @@ export type PublicQuestionTemplatesByDateQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -15260,6 +15539,7 @@ export type PublicQuestionTemplatesByDateQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -15296,6 +15576,7 @@ export type PublicQuestionTemplatesByDateQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -15321,6 +15602,7 @@ export type PublicQuestionTemplatesByDateQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -15345,6 +15627,7 @@ export type PublicQuestionTemplatesByDateQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -15408,6 +15691,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -15433,6 +15717,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -15458,6 +15743,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -15482,6 +15768,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -15518,6 +15805,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -15543,6 +15831,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -15567,6 +15856,7 @@ export type PublicQuestionTemplatesByGradeQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -15630,6 +15920,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -15655,6 +15946,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -15680,6 +15972,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -15704,6 +15997,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -15740,6 +16034,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -15765,6 +16060,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -15789,6 +16085,7 @@ export type PublicQuestionTemplatesByPublicGameTemplatesCountQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -15845,6 +16142,7 @@ export type GetPrivateQuestionTemplateQuery = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -15870,6 +16168,7 @@ export type GetPrivateQuestionTemplateQuery = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -15895,6 +16194,7 @@ export type GetPrivateQuestionTemplateQuery = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -15923,6 +16223,7 @@ export type GetPrivateQuestionTemplateQuery = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -15963,6 +16264,7 @@ export type GetPrivateQuestionTemplateQuery = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -15988,6 +16290,7 @@ export type GetPrivateQuestionTemplateQuery = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -16016,6 +16319,7 @@ export type GetPrivateQuestionTemplateQuery = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -16078,6 +16382,7 @@ export type ListPrivateQuestionTemplatesQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -16103,6 +16408,7 @@ export type ListPrivateQuestionTemplatesQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -16128,6 +16434,7 @@ export type ListPrivateQuestionTemplatesQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -16152,6 +16459,7 @@ export type ListPrivateQuestionTemplatesQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -16188,6 +16496,7 @@ export type ListPrivateQuestionTemplatesQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -16213,6 +16522,7 @@ export type ListPrivateQuestionTemplatesQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -16237,6 +16547,7 @@ export type ListPrivateQuestionTemplatesQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -16300,6 +16611,7 @@ export type PrivateQuestionTemplatesByDateQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -16325,6 +16637,7 @@ export type PrivateQuestionTemplatesByDateQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -16350,6 +16663,7 @@ export type PrivateQuestionTemplatesByDateQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -16374,6 +16688,7 @@ export type PrivateQuestionTemplatesByDateQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -16410,6 +16725,7 @@ export type PrivateQuestionTemplatesByDateQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -16435,6 +16751,7 @@ export type PrivateQuestionTemplatesByDateQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -16459,6 +16776,7 @@ export type PrivateQuestionTemplatesByDateQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -16522,6 +16840,7 @@ export type PrivateQuestionTemplatesByGradeQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -16547,6 +16866,7 @@ export type PrivateQuestionTemplatesByGradeQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -16572,6 +16892,7 @@ export type PrivateQuestionTemplatesByGradeQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -16596,6 +16917,7 @@ export type PrivateQuestionTemplatesByGradeQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -16632,6 +16954,7 @@ export type PrivateQuestionTemplatesByGradeQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -16657,6 +16980,7 @@ export type PrivateQuestionTemplatesByGradeQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -16681,6 +17005,7 @@ export type PrivateQuestionTemplatesByGradeQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -16744,6 +17069,7 @@ export type PrivateQuestionTemplatesByPrivateGameTemplatesCountQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -16769,6 +17095,7 @@ export type PrivateQuestionTemplatesByPrivateGameTemplatesCountQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -16794,6 +17121,7 @@ export type PrivateQuestionTemplatesByPrivateGameTemplatesCountQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -16818,6 +17146,7 @@ export type PrivateQuestionTemplatesByPrivateGameTemplatesCountQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -16854,6 +17183,7 @@ export type PrivateQuestionTemplatesByPrivateGameTemplatesCountQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -16879,6 +17209,7 @@ export type PrivateQuestionTemplatesByPrivateGameTemplatesCountQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -16903,6 +17234,7 @@ export type PrivateQuestionTemplatesByPrivateGameTemplatesCountQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -18958,6 +19290,7 @@ export type GetPublicGameQuestionsQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -18983,6 +19316,7 @@ export type GetPublicGameQuestionsQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -19008,6 +19342,7 @@ export type GetPublicGameQuestionsQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -19032,6 +19367,7 @@ export type GetPublicGameQuestionsQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -19068,6 +19404,7 @@ export type GetPublicGameQuestionsQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -19093,6 +19430,7 @@ export type GetPublicGameQuestionsQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -19117,6 +19455,7 @@ export type GetPublicGameQuestionsQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -19165,6 +19504,7 @@ export type GetPublicGameQuestionsQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -19190,6 +19530,7 @@ export type GetPublicGameQuestionsQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -19215,6 +19556,7 @@ export type GetPublicGameQuestionsQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -19239,6 +19581,7 @@ export type GetPublicGameQuestionsQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -19275,6 +19618,7 @@ export type GetPublicGameQuestionsQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -19300,6 +19644,7 @@ export type GetPublicGameQuestionsQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -19324,6 +19669,7 @@ export type GetPublicGameQuestionsQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -19392,6 +19738,7 @@ export type ListPublicGameQuestionsQuery = {
         phaseOneTime?: number | null,
         phaseTwoTime?: number | null,
         imageUrl?: string | null,
+        timesPlayed?: number | null,
         questionTemplates?:  {
           __typename: "ModelPublicGameQuestionsConnection",
           items:  Array< {
@@ -19417,6 +19764,7 @@ export type ListPublicGameQuestionsQuery = {
               phaseOneTime?: number | null,
               phaseTwoTime?: number | null,
               imageUrl?: string | null,
+              timesPlayed?: number | null,
               questionTemplates?:  {
                 __typename: "ModelPublicGameQuestionsConnection",
                 items:  Array< {
@@ -19454,6 +19802,7 @@ export type ListPublicGameQuestionsQuery = {
               gradeFilter?: string | null,
               standard?: string | null,
               imageUrl?: string | null,
+              timesPlayed?: number | null,
               gameTemplates?:  {
                 __typename: "ModelPublicGameQuestionsConnection",
                 items:  Array< {
@@ -19503,6 +19852,7 @@ export type ListPublicGameQuestionsQuery = {
         gradeFilter?: string | null,
         standard?: string | null,
         imageUrl?: string | null,
+        timesPlayed?: number | null,
         gameTemplates?:  {
           __typename: "ModelPublicGameQuestionsConnection",
           items:  Array< {
@@ -19528,6 +19878,7 @@ export type ListPublicGameQuestionsQuery = {
               phaseOneTime?: number | null,
               phaseTwoTime?: number | null,
               imageUrl?: string | null,
+              timesPlayed?: number | null,
               questionTemplates?:  {
                 __typename: "ModelPublicGameQuestionsConnection",
                 items:  Array< {
@@ -19565,6 +19916,7 @@ export type ListPublicGameQuestionsQuery = {
               gradeFilter?: string | null,
               standard?: string | null,
               imageUrl?: string | null,
+              timesPlayed?: number | null,
               gameTemplates?:  {
                 __typename: "ModelPublicGameQuestionsConnection",
                 items:  Array< {
@@ -19632,6 +19984,7 @@ export type GetPrivateGameQuestionsQuery = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -19657,6 +20010,7 @@ export type GetPrivateGameQuestionsQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -19682,6 +20036,7 @@ export type GetPrivateGameQuestionsQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -19706,6 +20061,7 @@ export type GetPrivateGameQuestionsQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -19742,6 +20098,7 @@ export type GetPrivateGameQuestionsQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -19767,6 +20124,7 @@ export type GetPrivateGameQuestionsQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -19791,6 +20149,7 @@ export type GetPrivateGameQuestionsQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -19839,6 +20198,7 @@ export type GetPrivateGameQuestionsQuery = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -19864,6 +20224,7 @@ export type GetPrivateGameQuestionsQuery = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -19889,6 +20250,7 @@ export type GetPrivateGameQuestionsQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -19913,6 +20275,7 @@ export type GetPrivateGameQuestionsQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -19949,6 +20312,7 @@ export type GetPrivateGameQuestionsQuery = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -19974,6 +20338,7 @@ export type GetPrivateGameQuestionsQuery = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -19998,6 +20363,7 @@ export type GetPrivateGameQuestionsQuery = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -20066,6 +20432,7 @@ export type ListPrivateGameQuestionsQuery = {
         phaseOneTime?: number | null,
         phaseTwoTime?: number | null,
         imageUrl?: string | null,
+        timesPlayed?: number | null,
         questionTemplates?:  {
           __typename: "ModelPrivateGameQuestionsConnection",
           items:  Array< {
@@ -20091,6 +20458,7 @@ export type ListPrivateGameQuestionsQuery = {
               phaseOneTime?: number | null,
               phaseTwoTime?: number | null,
               imageUrl?: string | null,
+              timesPlayed?: number | null,
               questionTemplates?:  {
                 __typename: "ModelPrivateGameQuestionsConnection",
                 items:  Array< {
@@ -20128,6 +20496,7 @@ export type ListPrivateGameQuestionsQuery = {
               gradeFilter?: string | null,
               standard?: string | null,
               imageUrl?: string | null,
+              timesPlayed?: number | null,
               gameTemplates?:  {
                 __typename: "ModelPrivateGameQuestionsConnection",
                 items:  Array< {
@@ -20177,6 +20546,7 @@ export type ListPrivateGameQuestionsQuery = {
         gradeFilter?: string | null,
         standard?: string | null,
         imageUrl?: string | null,
+        timesPlayed?: number | null,
         gameTemplates?:  {
           __typename: "ModelPrivateGameQuestionsConnection",
           items:  Array< {
@@ -20202,6 +20572,7 @@ export type ListPrivateGameQuestionsQuery = {
               phaseOneTime?: number | null,
               phaseTwoTime?: number | null,
               imageUrl?: string | null,
+              timesPlayed?: number | null,
               questionTemplates?:  {
                 __typename: "ModelPrivateGameQuestionsConnection",
                 items:  Array< {
@@ -20239,6 +20610,7 @@ export type ListPrivateGameQuestionsQuery = {
               gradeFilter?: string | null,
               standard?: string | null,
               imageUrl?: string | null,
+              timesPlayed?: number | null,
               gameTemplates?:  {
                 __typename: "ModelPrivateGameQuestionsConnection",
                 items:  Array< {
@@ -21069,6 +21441,7 @@ export type OnCreatePublicGameTemplateSubscription = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -21094,6 +21467,7 @@ export type OnCreatePublicGameTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -21119,6 +21493,7 @@ export type OnCreatePublicGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21147,6 +21522,7 @@ export type OnCreatePublicGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21187,6 +21563,7 @@ export type OnCreatePublicGameTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -21212,6 +21589,7 @@ export type OnCreatePublicGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21240,6 +21618,7 @@ export type OnCreatePublicGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21301,6 +21680,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -21326,6 +21706,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -21351,6 +21732,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21379,6 +21761,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21419,6 +21802,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -21444,6 +21828,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21472,6 +21857,7 @@ export type OnUpdatePublicGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21533,6 +21919,7 @@ export type OnDeletePublicGameTemplateSubscription = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -21558,6 +21945,7 @@ export type OnDeletePublicGameTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -21583,6 +21971,7 @@ export type OnDeletePublicGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21611,6 +22000,7 @@ export type OnDeletePublicGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21651,6 +22041,7 @@ export type OnDeletePublicGameTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -21676,6 +22067,7 @@ export type OnDeletePublicGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21704,6 +22096,7 @@ export type OnDeletePublicGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21765,6 +22158,7 @@ export type OnCreatePrivateGameTemplateSubscription = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -21790,6 +22184,7 @@ export type OnCreatePrivateGameTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -21815,6 +22210,7 @@ export type OnCreatePrivateGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21843,6 +22239,7 @@ export type OnCreatePrivateGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21883,6 +22280,7 @@ export type OnCreatePrivateGameTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -21908,6 +22306,7 @@ export type OnCreatePrivateGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21936,6 +22335,7 @@ export type OnCreatePrivateGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -21997,6 +22397,7 @@ export type OnUpdatePrivateGameTemplateSubscription = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -22022,6 +22423,7 @@ export type OnUpdatePrivateGameTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -22047,6 +22449,7 @@ export type OnUpdatePrivateGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -22075,6 +22478,7 @@ export type OnUpdatePrivateGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -22115,6 +22519,7 @@ export type OnUpdatePrivateGameTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -22140,6 +22545,7 @@ export type OnUpdatePrivateGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -22168,6 +22574,7 @@ export type OnUpdatePrivateGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -22229,6 +22636,7 @@ export type OnDeletePrivateGameTemplateSubscription = {
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     questionTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -22254,6 +22662,7 @@ export type OnDeletePrivateGameTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -22279,6 +22688,7 @@ export type OnDeletePrivateGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -22307,6 +22717,7 @@ export type OnDeletePrivateGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -22347,6 +22758,7 @@ export type OnDeletePrivateGameTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -22372,6 +22784,7 @@ export type OnDeletePrivateGameTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -22400,6 +22813,7 @@ export type OnDeletePrivateGameTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23156,6 +23570,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -23181,6 +23596,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -23206,6 +23622,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23234,6 +23651,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23274,6 +23692,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -23299,6 +23718,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23327,6 +23747,7 @@ export type OnCreatePublicQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23386,6 +23807,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -23411,6 +23833,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -23436,6 +23859,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23464,6 +23888,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23504,6 +23929,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -23529,6 +23955,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23557,6 +23984,7 @@ export type OnUpdatePublicQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23616,6 +24044,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPublicGameQuestionsConnection",
       items:  Array< {
@@ -23641,6 +24070,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -23666,6 +24096,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23694,6 +24125,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23734,6 +24166,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPublicGameQuestionsConnection",
             items:  Array< {
@@ -23759,6 +24192,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23787,6 +24221,7 @@ export type OnDeletePublicQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPublicGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23846,6 +24281,7 @@ export type OnCreatePrivateQuestionTemplateSubscription = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -23871,6 +24307,7 @@ export type OnCreatePrivateQuestionTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -23896,6 +24333,7 @@ export type OnCreatePrivateQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23924,6 +24362,7 @@ export type OnCreatePrivateQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -23964,6 +24403,7 @@ export type OnCreatePrivateQuestionTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -23989,6 +24429,7 @@ export type OnCreatePrivateQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24017,6 +24458,7 @@ export type OnCreatePrivateQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24076,6 +24518,7 @@ export type OnUpdatePrivateQuestionTemplateSubscription = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -24101,6 +24544,7 @@ export type OnUpdatePrivateQuestionTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -24126,6 +24570,7 @@ export type OnUpdatePrivateQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24154,6 +24599,7 @@ export type OnUpdatePrivateQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24194,6 +24640,7 @@ export type OnUpdatePrivateQuestionTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -24219,6 +24666,7 @@ export type OnUpdatePrivateQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24247,6 +24695,7 @@ export type OnUpdatePrivateQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24306,6 +24755,7 @@ export type OnDeletePrivateQuestionTemplateSubscription = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null,
+    timesPlayed?: number | null,
     gameTemplates?:  {
       __typename: "ModelPrivateGameQuestionsConnection",
       items:  Array< {
@@ -24331,6 +24781,7 @@ export type OnDeletePrivateQuestionTemplateSubscription = {
           phaseOneTime?: number | null,
           phaseTwoTime?: number | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           questionTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -24356,6 +24807,7 @@ export type OnDeletePrivateQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24384,6 +24836,7 @@ export type OnDeletePrivateQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24424,6 +24877,7 @@ export type OnDeletePrivateQuestionTemplateSubscription = {
           gradeFilter?: string | null,
           standard?: string | null,
           imageUrl?: string | null,
+          timesPlayed?: number | null,
           gameTemplates?:  {
             __typename: "ModelPrivateGameQuestionsConnection",
             items:  Array< {
@@ -24449,6 +24903,7 @@ export type OnDeletePrivateQuestionTemplateSubscription = {
                 phaseOneTime?: number | null,
                 phaseTwoTime?: number | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 questionTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -24477,6 +24932,7 @@ export type OnDeletePrivateQuestionTemplateSubscription = {
                 gradeFilter?: string | null,
                 standard?: string | null,
                 imageUrl?: string | null,
+                timesPlayed?: number | null,
                 gameTemplates?:  {
                   __typename: "ModelPrivateGameQuestionsConnection",
                   nextToken?: string | null,
@@ -26024,6 +26480,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -26049,6 +26506,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26074,6 +26532,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26098,6 +26557,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26134,6 +26594,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26159,6 +26620,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26183,6 +26645,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26231,6 +26694,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -26256,6 +26720,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26281,6 +26746,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26305,6 +26771,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26341,6 +26808,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26366,6 +26834,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26390,6 +26859,7 @@ export type OnCreatePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26455,6 +26925,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -26480,6 +26951,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26505,6 +26977,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26529,6 +27002,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26565,6 +27039,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26590,6 +27065,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26614,6 +27090,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26662,6 +27139,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -26687,6 +27165,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26712,6 +27191,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26736,6 +27216,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26772,6 +27253,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26797,6 +27279,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26821,6 +27304,7 @@ export type OnUpdatePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26886,6 +27370,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -26911,6 +27396,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -26936,6 +27422,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -26960,6 +27447,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -26996,6 +27484,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -27021,6 +27510,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27045,6 +27535,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27093,6 +27584,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPublicGameQuestionsConnection",
         items:  Array< {
@@ -27118,6 +27610,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -27143,6 +27636,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27167,6 +27661,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27203,6 +27698,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPublicGameQuestionsConnection",
               items:  Array< {
@@ -27228,6 +27724,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27252,6 +27749,7 @@ export type OnDeletePublicGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27317,6 +27815,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -27342,6 +27841,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -27367,6 +27867,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27391,6 +27892,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27427,6 +27929,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -27452,6 +27955,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27476,6 +27980,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27524,6 +28029,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -27549,6 +28055,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -27574,6 +28081,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27598,6 +28106,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27634,6 +28143,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -27659,6 +28169,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27683,6 +28194,7 @@ export type OnCreatePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27748,6 +28260,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -27773,6 +28286,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -27798,6 +28312,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27822,6 +28337,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27858,6 +28374,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -27883,6 +28400,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -27907,6 +28425,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -27955,6 +28474,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -27980,6 +28500,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -28005,6 +28526,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -28029,6 +28551,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -28065,6 +28588,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -28090,6 +28614,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -28114,6 +28639,7 @@ export type OnUpdatePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -28179,6 +28705,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
       phaseOneTime?: number | null,
       phaseTwoTime?: number | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       questionTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -28204,6 +28731,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -28229,6 +28757,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -28253,6 +28782,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -28289,6 +28819,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -28314,6 +28845,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -28338,6 +28870,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -28386,6 +28919,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
       gradeFilter?: string | null,
       standard?: string | null,
       imageUrl?: string | null,
+      timesPlayed?: number | null,
       gameTemplates?:  {
         __typename: "ModelPrivateGameQuestionsConnection",
         items:  Array< {
@@ -28411,6 +28945,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
             phaseOneTime?: number | null,
             phaseTwoTime?: number | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             questionTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -28436,6 +28971,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -28460,6 +28996,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,
@@ -28496,6 +29033,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
             gradeFilter?: string | null,
             standard?: string | null,
             imageUrl?: string | null,
+            timesPlayed?: number | null,
             gameTemplates?:  {
               __typename: "ModelPrivateGameQuestionsConnection",
               items:  Array< {
@@ -28521,6 +29059,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
                   phaseOneTime?: number | null,
                   phaseTwoTime?: number | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   questionTemplatesCount: number,
                   questionTemplatesOrder?: string | null,
                   createdAt?: string | null,
@@ -28545,6 +29084,7 @@ export type OnDeletePrivateGameQuestionsSubscription = {
                   gradeFilter?: string | null,
                   standard?: string | null,
                   imageUrl?: string | null,
+                  timesPlayed?: number | null,
                   gameTemplatesCount: number,
                   createdAt?: string | null,
                   updatedAt?: string | null,

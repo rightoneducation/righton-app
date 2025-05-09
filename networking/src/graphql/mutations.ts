@@ -125,6 +125,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -147,6 +148,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -169,6 +171,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -197,6 +200,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -240,6 +244,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -262,6 +267,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -290,6 +296,7 @@ export const createPublicGameTemplate = /* GraphQL */ `mutation CreatePublicGame
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -358,6 +365,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -380,6 +388,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -402,6 +411,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -430,6 +440,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -473,6 +484,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -495,6 +507,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -523,6 +536,7 @@ export const updatePublicGameTemplate = /* GraphQL */ `mutation UpdatePublicGame
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -591,6 +605,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -613,6 +628,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -635,6 +651,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -663,6 +680,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -706,6 +724,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -728,6 +747,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -756,6 +776,7 @@ export const deletePublicGameTemplate = /* GraphQL */ `mutation DeletePublicGame
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -824,6 +845,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -846,6 +868,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -868,6 +891,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -896,6 +920,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -939,6 +964,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -961,6 +987,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -989,6 +1016,7 @@ export const createPrivateGameTemplate = /* GraphQL */ `mutation CreatePrivateGa
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1057,6 +1085,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -1079,6 +1108,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -1101,6 +1131,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1129,6 +1160,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1172,6 +1204,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -1194,6 +1227,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1222,6 +1256,7 @@ export const updatePrivateGameTemplate = /* GraphQL */ `mutation UpdatePrivateGa
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1290,6 +1325,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -1312,6 +1348,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -1334,6 +1371,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1362,6 +1400,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1405,6 +1444,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -1427,6 +1467,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1455,6 +1496,7 @@ export const deletePrivateGameTemplate = /* GraphQL */ `mutation DeletePrivateGa
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2221,6 +2263,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -2243,6 +2286,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -2265,6 +2309,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2293,6 +2338,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2336,6 +2382,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -2358,6 +2405,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2386,6 +2434,7 @@ export const createPublicQuestionTemplate = /* GraphQL */ `mutation CreatePublic
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2452,6 +2501,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -2474,6 +2524,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -2496,6 +2547,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2524,6 +2576,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2567,6 +2620,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -2589,6 +2643,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2617,6 +2672,7 @@ export const updatePublicQuestionTemplate = /* GraphQL */ `mutation UpdatePublic
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2683,6 +2739,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -2705,6 +2762,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -2727,6 +2785,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2755,6 +2814,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2798,6 +2858,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -2820,6 +2881,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2848,6 +2910,7 @@ export const deletePublicQuestionTemplate = /* GraphQL */ `mutation DeletePublic
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2914,6 +2977,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -2936,6 +3000,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -2958,6 +3023,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2986,6 +3052,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3029,6 +3096,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -3051,6 +3119,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3079,6 +3148,7 @@ export const createPrivateQuestionTemplate = /* GraphQL */ `mutation CreatePriva
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3145,6 +3215,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -3167,6 +3238,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -3189,6 +3261,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3217,6 +3290,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3260,6 +3334,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -3282,6 +3357,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3310,6 +3386,7 @@ export const updatePrivateQuestionTemplate = /* GraphQL */ `mutation UpdatePriva
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3376,6 +3453,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -3398,6 +3476,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -3420,6 +3499,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3448,6 +3528,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3491,6 +3572,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -3513,6 +3595,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3541,6 +3624,7 @@ export const deletePrivateQuestionTemplate = /* GraphQL */ `mutation DeletePriva
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -5208,6 +5292,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -5230,6 +5315,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5252,6 +5338,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5276,6 +5363,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5315,6 +5403,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5337,6 +5426,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5361,6 +5451,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5415,6 +5506,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5437,6 +5529,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5459,6 +5552,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5483,6 +5577,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5522,6 +5617,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5544,6 +5640,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5568,6 +5665,7 @@ export const createPublicGameQuestions = /* GraphQL */ `mutation CreatePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5640,6 +5738,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -5662,6 +5761,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5684,6 +5784,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5708,6 +5809,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5747,6 +5849,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5769,6 +5872,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5793,6 +5897,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5847,6 +5952,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5869,6 +5975,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5891,6 +5998,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5915,6 +6023,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5954,6 +6063,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5976,6 +6086,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6000,6 +6111,7 @@ export const updatePublicGameQuestions = /* GraphQL */ `mutation UpdatePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6072,6 +6184,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -6094,6 +6207,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6116,6 +6230,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6140,6 +6255,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6179,6 +6295,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6201,6 +6318,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6225,6 +6343,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6279,6 +6398,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -6301,6 +6421,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6323,6 +6444,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6347,6 +6469,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6386,6 +6509,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6408,6 +6532,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6432,6 +6557,7 @@ export const deletePublicGameQuestions = /* GraphQL */ `mutation DeletePublicGam
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6504,6 +6630,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -6526,6 +6653,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6548,6 +6676,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6572,6 +6701,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6611,6 +6741,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6633,6 +6764,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6657,6 +6789,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6711,6 +6844,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -6733,6 +6867,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6755,6 +6890,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6779,6 +6915,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6818,6 +6955,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6840,6 +6978,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6864,6 +7003,7 @@ export const createPrivateGameQuestions = /* GraphQL */ `mutation CreatePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6936,6 +7076,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -6958,6 +7099,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6980,6 +7122,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7004,6 +7147,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7043,6 +7187,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7065,6 +7210,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7089,6 +7235,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7143,6 +7290,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -7165,6 +7313,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7187,6 +7336,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7211,6 +7361,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7250,6 +7401,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7272,6 +7424,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7296,6 +7449,7 @@ export const updatePrivateGameQuestions = /* GraphQL */ `mutation UpdatePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7368,6 +7522,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -7390,6 +7545,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7412,6 +7568,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7436,6 +7593,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7475,6 +7633,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7497,6 +7656,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7521,6 +7681,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7575,6 +7736,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -7597,6 +7759,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7619,6 +7782,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7643,6 +7807,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7682,6 +7847,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7704,6 +7870,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7728,6 +7895,7 @@ export const deletePrivateGameQuestions = /* GraphQL */ `mutation DeletePrivateG
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt

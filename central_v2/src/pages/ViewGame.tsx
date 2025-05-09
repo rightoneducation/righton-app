@@ -50,7 +50,7 @@ export default function ViewGame({
 
   useEffect(() => {
     setIsLoading(false);
-    if (centralData.selectedGame.game !== null || centralData.selectedGame !== null) {
+    if (centralData?.selectedGame?.game) {
       setDraftGame(centralData.selectedGame.game);
     }
     let id = '';

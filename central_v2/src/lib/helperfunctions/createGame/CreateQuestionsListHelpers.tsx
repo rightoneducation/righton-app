@@ -70,6 +70,7 @@ export const buildQuestionTemplatePromises = (
     let result = null;
     let url = null;
     dqCopy.questionTemplate.userId = userId;
+    dqCopy.questionTemplate.timesPlayed = 0;
 
     // if existing question return its ID for Game Creation
     if (dqCopy.questionTemplate.id) {

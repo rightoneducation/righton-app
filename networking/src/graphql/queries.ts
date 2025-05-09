@@ -229,6 +229,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -251,6 +252,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -273,6 +275,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -301,6 +304,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -344,6 +348,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -366,6 +371,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -394,6 +400,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -468,6 +475,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -490,6 +498,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -512,6 +521,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -536,6 +546,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -575,6 +586,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -597,6 +609,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -621,6 +634,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -700,6 +714,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -722,6 +737,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -744,6 +760,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -768,6 +785,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -807,6 +825,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -829,6 +848,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -853,6 +873,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -932,6 +953,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -954,6 +976,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -976,6 +999,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1000,6 +1024,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1039,6 +1064,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -1061,6 +1087,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1085,6 +1112,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1164,6 +1192,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -1186,6 +1215,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -1208,6 +1238,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1232,6 +1263,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1271,6 +1303,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -1293,6 +1326,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1317,6 +1351,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1381,6 +1416,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -1403,6 +1439,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -1425,6 +1462,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1453,6 +1491,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1496,6 +1535,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -1518,6 +1558,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1546,6 +1587,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1620,6 +1662,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -1642,6 +1685,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -1664,6 +1708,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1688,6 +1733,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1727,6 +1773,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -1749,6 +1796,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1773,6 +1821,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1852,6 +1901,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -1874,6 +1924,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -1896,6 +1947,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1920,6 +1972,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1959,6 +2012,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -1981,6 +2035,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2005,6 +2060,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2084,6 +2140,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -2106,6 +2163,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -2128,6 +2186,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2152,6 +2211,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2191,6 +2251,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -2213,6 +2274,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2237,6 +2299,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2316,6 +2379,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -2338,6 +2402,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -2360,6 +2425,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2384,6 +2450,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2423,6 +2490,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -2445,6 +2513,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2469,6 +2538,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -3684,6 +3754,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -3706,6 +3777,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -3728,6 +3800,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3756,6 +3829,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3799,6 +3873,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -3821,6 +3896,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3849,6 +3925,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3921,6 +3998,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -3943,6 +4021,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -3965,6 +4044,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -3989,6 +4069,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4028,6 +4109,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -4050,6 +4132,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4074,6 +4157,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4151,6 +4235,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -4173,6 +4258,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -4195,6 +4281,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4219,6 +4306,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4258,6 +4346,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -4280,6 +4369,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4304,6 +4394,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4381,6 +4472,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -4403,6 +4495,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -4425,6 +4518,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4449,6 +4543,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4488,6 +4583,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -4510,6 +4606,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4534,6 +4631,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4611,6 +4709,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -4633,6 +4732,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -4655,6 +4755,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4679,6 +4780,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4718,6 +4820,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -4740,6 +4843,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4764,6 +4868,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4826,6 +4931,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -4848,6 +4954,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -4870,6 +4977,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -4898,6 +5006,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -4941,6 +5050,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -4963,6 +5073,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -4991,6 +5102,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -5063,6 +5175,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5085,6 +5198,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5107,6 +5221,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5131,6 +5246,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5170,6 +5286,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5192,6 +5309,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5216,6 +5334,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5293,6 +5412,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5315,6 +5435,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5337,6 +5458,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5361,6 +5483,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5400,6 +5523,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5422,6 +5546,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5446,6 +5571,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5523,6 +5649,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5545,6 +5672,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5567,6 +5695,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5591,6 +5720,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5630,6 +5760,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5652,6 +5783,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5676,6 +5808,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5753,6 +5886,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5775,6 +5909,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5797,6 +5932,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5821,6 +5957,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5860,6 +5997,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5882,6 +6020,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5906,6 +6045,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8007,6 +8147,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -8029,6 +8170,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -8051,6 +8193,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8075,6 +8218,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8114,6 +8258,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -8136,6 +8281,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8160,6 +8306,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8214,6 +8361,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -8236,6 +8384,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -8258,6 +8407,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8282,6 +8432,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8321,6 +8472,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -8343,6 +8495,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8367,6 +8520,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8445,6 +8599,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           items {
             id
@@ -8467,6 +8622,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               phaseOneTime
               phaseTwoTime
               imageUrl
+              timesPlayed
               questionTemplates {
                 items {
                   id
@@ -8504,6 +8660,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               gradeFilter
               standard
               imageUrl
+              timesPlayed
               gameTemplates {
                 items {
                   id
@@ -8556,6 +8713,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           items {
             id
@@ -8578,6 +8736,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               phaseOneTime
               phaseTwoTime
               imageUrl
+              timesPlayed
               questionTemplates {
                 items {
                   id
@@ -8615,6 +8774,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               gradeFilter
               standard
               imageUrl
+              timesPlayed
               gameTemplates {
                 items {
                   id
@@ -8685,6 +8845,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -8707,6 +8868,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -8729,6 +8891,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8753,6 +8916,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8792,6 +8956,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -8814,6 +8979,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8838,6 +9004,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8892,6 +9059,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -8914,6 +9082,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -8936,6 +9105,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8960,6 +9130,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8999,6 +9170,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -9021,6 +9193,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -9045,6 +9218,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -9123,6 +9297,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           items {
             id
@@ -9145,6 +9320,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               phaseOneTime
               phaseTwoTime
               imageUrl
+              timesPlayed
               questionTemplates {
                 items {
                   id
@@ -9182,6 +9358,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               gradeFilter
               standard
               imageUrl
+              timesPlayed
               gameTemplates {
                 items {
                   id
@@ -9234,6 +9411,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           items {
             id
@@ -9256,6 +9434,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               phaseOneTime
               phaseTwoTime
               imageUrl
+              timesPlayed
               questionTemplates {
                 items {
                   id
@@ -9293,6 +9472,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               gradeFilter
               standard
               imageUrl
+              timesPlayed
               gameTemplates {
                 items {
                   id

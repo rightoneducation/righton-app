@@ -45,6 +45,7 @@ export class QuestionTemplateParser {
             gradeFilter: grade,
             standard,
             imageUrl,
+            timesPlayed: 0,
             gameTemplatesCount: 0,
         }
         return questionTemplate
@@ -111,6 +112,7 @@ export class QuestionTemplateParser {
           gradeFilter,
           standard,
           imageUrl,
+          timesPlayed,
           gameTemplatesCount
       } = awsQuestionTemplate || {}
       const awsAnswerSettings = !isNullOrUndefined(answerSettings) ? JSON.parse(answerSettings) : null;
@@ -141,6 +143,7 @@ export class QuestionTemplateParser {
           gradeFilter: gradeFilter ?? '',
           standard: standard ?? '',
           imageUrl,
+          timesPlayed,
           gameTemplates,
           gameTemplatesCount,
           createdAt,

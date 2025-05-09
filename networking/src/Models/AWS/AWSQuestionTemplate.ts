@@ -18,6 +18,7 @@ export type AWSQuestionTemplate = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null | undefined,
+    timesPlayed?: number | null,
     gameTemplates?:  AWSModelGameQuestionConnection | null,
     gameTemplatesCount: number,
     createdAt?: string | null | undefined,

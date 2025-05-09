@@ -27,10 +27,10 @@ const initCentralDataState: ICentralDataState = {
   favGames: [],
   selectedGame: {
     game: null,
-    profilePic: null,
-    createdName: null,
-    lastModified: null,
-    numUsed: null
+    profilePic: '',
+    createdName: '',
+    lastModified: new Date(),
+    timesPlayed: 0
   },
   recommendedQuestions: [],
   mostPopularQuestions: [],
@@ -41,10 +41,10 @@ const initCentralDataState: ICentralDataState = {
   favQuestions: [],
   selectedQuestion: {
     question: null,
-    profilePic: null,
-    createdName: null,
-    lastModified: null,
-    numUsed: null
+    profilePic: '',
+    createdName: '',
+    lastModified: new Date(),
+    timesPlayed: 0
   },
   nextToken: null,
   isLoading: false,

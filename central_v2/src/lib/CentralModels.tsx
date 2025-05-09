@@ -89,7 +89,7 @@ export interface ISelectedQuestion {
   profilePic: string;
   createdName: string;
   lastModified: Date;
-  numUsed: number;
+  timesPlayed: number;
 }
 
 export interface ISelectedGame {
@@ -97,7 +97,7 @@ export interface ISelectedGame {
   profilePic: string;
   createdName: string;
   lastModified: Date;
-  numUsed: number;
+  timesPlayed: number;
 }
 
 

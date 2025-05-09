@@ -17,6 +17,7 @@ export type AWSGameTemplate = {
     phaseOneTime?: number | null | undefined,
     phaseTwoTime?: number | null | undefined,
     imageUrl?: string | null | undefined,
+    timesPlayed?: number | null,
     questionTemplates?: AWSModelGameQuestionConnection | null,
     questionTemplatesCount: number,
     questionTemplatesOrder: string,

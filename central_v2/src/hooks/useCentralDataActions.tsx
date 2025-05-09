@@ -444,7 +444,7 @@ export default function useCentralDataManager({
                   profilePic: userResponse.profilePicPath ?? '',
                   createdName: `${title} ${firstName.toUpperCase()}. ${userResponse.lastName}`,
                   lastModified: responseQuestion.updatedAt ?? new Date(),
-                  numUsed: 0,
+                  timesPlayed: responseQuestion.timesPlayed ?? 0,
                 }
                 centralDataDispatch({ type: 'SET_SELECTED_QUESTION', payload: selectedQuestion });
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -466,7 +466,7 @@ export default function useCentralDataManager({
                   profilePic: userResponse.profilePicPath ?? '',
                   createdName: `${title} ${firstName.toUpperCase()}. ${userResponse.lastName}`,
                   lastModified: responseGame.updatedAt ?? new Date(),
-                  numUsed: 0,
+                  timesPlayed: responseGame.timesPlayed ?? 0,
                 }
                 centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: selectedGame });
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
@@ -482,7 +482,7 @@ export default function useCentralDataManager({
       profilePic: '',
       createdName: '',
       lastModified: new Date(),
-      numUsed: 0,
+      timesPlayed: 0,
     };
   };
   

@@ -220,6 +220,7 @@ export const buildGameTemplate = (
     standard:
       draftQuestionsList[0].question.questionCard.ccss.split('.')[3] ?? '',
     imageUrl: gameImgUrl,
+    timesPlayed: 0,
   };
 };
 

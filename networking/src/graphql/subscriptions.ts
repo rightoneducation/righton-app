@@ -125,6 +125,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -147,6 +148,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -169,6 +171,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -197,6 +200,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -240,6 +244,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -262,6 +267,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -290,6 +296,7 @@ export const onCreatePublicGameTemplate = /* GraphQL */ `subscription OnCreatePu
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -358,6 +365,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -380,6 +388,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -402,6 +411,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -430,6 +440,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -473,6 +484,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -495,6 +507,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -523,6 +536,7 @@ export const onUpdatePublicGameTemplate = /* GraphQL */ `subscription OnUpdatePu
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -591,6 +605,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -613,6 +628,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -635,6 +651,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -663,6 +680,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -706,6 +724,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -728,6 +747,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -756,6 +776,7 @@ export const onDeletePublicGameTemplate = /* GraphQL */ `subscription OnDeletePu
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -824,6 +845,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -846,6 +868,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -868,6 +891,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -896,6 +920,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -939,6 +964,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -961,6 +987,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -989,6 +1016,7 @@ export const onCreatePrivateGameTemplate = /* GraphQL */ `subscription OnCreateP
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1057,6 +1085,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -1079,6 +1108,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -1101,6 +1131,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1129,6 +1160,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1172,6 +1204,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -1194,6 +1227,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1222,6 +1256,7 @@ export const onUpdatePrivateGameTemplate = /* GraphQL */ `subscription OnUpdateP
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1290,6 +1325,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -1312,6 +1348,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -1334,6 +1371,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1362,6 +1400,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1405,6 +1444,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -1427,6 +1467,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1455,6 +1496,7 @@ export const onDeletePrivateGameTemplate = /* GraphQL */ `subscription OnDeleteP
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2221,6 +2263,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -2243,6 +2286,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -2265,6 +2309,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2293,6 +2338,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2336,6 +2382,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -2358,6 +2405,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2386,6 +2434,7 @@ export const onCreatePublicQuestionTemplate = /* GraphQL */ `subscription OnCrea
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2452,6 +2501,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -2474,6 +2524,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -2496,6 +2547,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2524,6 +2576,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2567,6 +2620,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -2589,6 +2643,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2617,6 +2672,7 @@ export const onUpdatePublicQuestionTemplate = /* GraphQL */ `subscription OnUpda
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2683,6 +2739,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -2705,6 +2762,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -2727,6 +2785,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2755,6 +2814,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2798,6 +2858,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -2820,6 +2881,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2848,6 +2910,7 @@ export const onDeletePublicQuestionTemplate = /* GraphQL */ `subscription OnDele
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -2914,6 +2977,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -2936,6 +3000,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -2958,6 +3023,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -2986,6 +3052,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3029,6 +3096,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -3051,6 +3119,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3079,6 +3148,7 @@ export const onCreatePrivateQuestionTemplate = /* GraphQL */ `subscription OnCre
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3145,6 +3215,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -3167,6 +3238,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -3189,6 +3261,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3217,6 +3290,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3260,6 +3334,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -3282,6 +3357,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3310,6 +3386,7 @@ export const onUpdatePrivateQuestionTemplate = /* GraphQL */ `subscription OnUpd
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3376,6 +3453,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -3398,6 +3476,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -3420,6 +3499,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3448,6 +3528,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3491,6 +3572,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -3513,6 +3595,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3541,6 +3624,7 @@ export const onDeletePrivateQuestionTemplate = /* GraphQL */ `subscription OnDel
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -5103,6 +5187,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -5125,6 +5210,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5147,6 +5233,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5171,6 +5258,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5210,6 +5298,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5232,6 +5321,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5256,6 +5346,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5310,6 +5401,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5332,6 +5424,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5354,6 +5447,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5378,6 +5472,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5417,6 +5512,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5439,6 +5535,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5463,6 +5560,7 @@ export const onCreatePublicGameQuestions = /* GraphQL */ `subscription OnCreateP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5535,6 +5633,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -5557,6 +5656,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5579,6 +5679,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5603,6 +5704,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5642,6 +5744,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5664,6 +5767,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5688,6 +5792,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5742,6 +5847,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5764,6 +5870,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5786,6 +5893,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5810,6 +5918,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5849,6 +5958,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5871,6 +5981,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5895,6 +6006,7 @@ export const onUpdatePublicGameQuestions = /* GraphQL */ `subscription OnUpdateP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5967,6 +6079,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -5989,6 +6102,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6011,6 +6125,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6035,6 +6150,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6074,6 +6190,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6096,6 +6213,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6120,6 +6238,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6174,6 +6293,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -6196,6 +6316,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6218,6 +6339,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6242,6 +6364,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6281,6 +6404,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6303,6 +6427,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6327,6 +6452,7 @@ export const onDeletePublicGameQuestions = /* GraphQL */ `subscription OnDeleteP
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6399,6 +6525,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -6421,6 +6548,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6443,6 +6571,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6467,6 +6596,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6506,6 +6636,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6528,6 +6659,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6552,6 +6684,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6606,6 +6739,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -6628,6 +6762,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6650,6 +6785,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6674,6 +6810,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6713,6 +6850,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6735,6 +6873,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6759,6 +6898,7 @@ export const onCreatePrivateGameQuestions = /* GraphQL */ `subscription OnCreate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6831,6 +6971,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -6853,6 +6994,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -6875,6 +7017,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6899,6 +7042,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -6938,6 +7082,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -6960,6 +7105,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -6984,6 +7130,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7038,6 +7185,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -7060,6 +7208,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7082,6 +7231,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7106,6 +7256,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7145,6 +7296,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7167,6 +7319,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7191,6 +7344,7 @@ export const onUpdatePrivateGameQuestions = /* GraphQL */ `subscription OnUpdate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7263,6 +7417,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -7285,6 +7440,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7307,6 +7463,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7331,6 +7488,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7370,6 +7528,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7392,6 +7551,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7416,6 +7576,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7470,6 +7631,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -7492,6 +7654,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7514,6 +7677,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7538,6 +7702,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7577,6 +7742,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7599,6 +7765,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7623,6 +7790,7 @@ export const onDeletePrivateGameQuestions = /* GraphQL */ `subscription OnDelete
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt

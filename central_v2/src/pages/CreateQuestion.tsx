@@ -461,9 +461,9 @@ export default function CreateQuestion({
 
   useEffect(() => {
     setIsLoading(false);
-    const selected = centralData.selectedQuestion.question;
+    const selected = centralData?.selectedQuestion?.question;
     const title = selected?.title;
-    if (selected !== null) {
+    if (selected) {
       // regex to detect (clone of) in title
       const regex = /\(Clone of\)/i;
       if (title && !regex.test(title))
