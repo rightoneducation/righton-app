@@ -12,7 +12,13 @@ export type CentralDataAction =
   | { type: 'SET_PRIVATE_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_DRAFT_GAMES'; payload: IGameTemplate[] }
   | { type: 'SET_FAV_GAMES'; payload: IGameTemplate[] }
-  | { type: 'SET_SELECTED_GAME'; payload: IGameTemplate }
+  | { type: 'SET_SELECTED_GAME'; payload: {
+      game: IGameTemplate | null,
+      profilePic: string | null;
+      createdName: string | null;
+      lastModified: string | null;
+      numUsed: number | null;
+  } }
   | { type: 'SET_SELECTED_GAME_PROFILE_PIC'; payload: string | null }
   | { type: 'SET_RECOMMENDED_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_MOST_POPULAR_QUESTIONS'; payload: IQuestionTemplate[] }
@@ -21,8 +27,13 @@ export type CentralDataAction =
   | { type: 'SET_PRIVATE_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_DRAFT_QUESTIONS'; payload: IQuestionTemplate[] }
   | { type: 'SET_FAV_QUESTIONS'; payload: IQuestionTemplate[] }
-  | { type: 'SET_SELECTED_QUESTION'; payload: IQuestionTemplate }
-  | { type: 'SET_SELECTED_QUESTION_PROFILE_PIC'; payload: string | null }
+  | { type: 'SET_SELECTED_QUESTION'; payload: {
+      question: IQuestionTemplate | null,
+      profilePic: string | null;
+      createdName: string | null;
+      lastModified: string | null;
+      numUsed: number | null;
+  }}
   | { type: 'SET_IS_LOADING'; payload: boolean }
   | { type: 'SET_IS_LOADING_INFINITE_SCROLL'; payload: boolean }
   | { type: 'SET_NEXT_TOKEN'; payload: string | null}
@@ -57,8 +68,6 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
       return { ...state, favGames: action.payload };
     case 'SET_SELECTED_GAME':
       return { ...state, selectedGame: action.payload };
-    case 'SET_SELECTED_GAME_PROFILE_PIC':
-      return { ...state, selectedGameProfilePic: action.payload };
     case 'SET_RECOMMENDED_QUESTIONS':
       return { ...state, recommendedQuestions: action.payload };
     case 'SET_MOST_POPULAR_QUESTIONS':
@@ -75,8 +84,6 @@ export const centralDataReducer = (state: ICentralDataState, action: CentralData
       return { ...state, favQuestions: action.payload };
     case 'SET_SELECTED_QUESTION':
       return { ...state, selectedQuestion: action.payload };
-    case 'SET_SELECTED_QUESTION_PROFILE_PIC':
-      return { ...state, selectedQuestionProfilePic: action.payload };
     case 'SET_IS_LOADING':
       return {...state, isLoading: action.payload};
     case 'SET_IS_LOADING_INFINITE_SCROLL':

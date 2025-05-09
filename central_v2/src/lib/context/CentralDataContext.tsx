@@ -28,7 +28,7 @@ const initCentralDataState: ICentralDataState = {
   selectedGame: {
     game: null,
     profilePic: null,
-    createdBy: null,
+    createdName: null,
     lastModified: null,
     numUsed: null
   },
@@ -42,7 +42,7 @@ const initCentralDataState: ICentralDataState = {
   selectedQuestion: {
     question: null,
     profilePic: null,
-    createdBy: null,
+    createdName: null,
     lastModified: null,
     numUsed: null
   },

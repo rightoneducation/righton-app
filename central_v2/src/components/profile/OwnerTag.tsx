@@ -111,7 +111,7 @@ export default function OwnerTag({
   // }
 
 
-  const createdAt = centralData.selectedGame?.createdAt || '';
+  const createdAt = centralData.selectedGame?.game?.createdAt || '';
 
   const date = new Date(createdAt);
   const modifiedDate = date.toLocaleDateString('en-US', {

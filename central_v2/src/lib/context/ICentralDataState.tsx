@@ -22,11 +22,10 @@ export interface ICentralDataState {
   selectedGame: {
     game: IGameTemplate | null,
     profilePic: string | null;
-    createdBy: string | null;
+    createdName: string | null;
     lastModified: string | null;
     numUsed: number | null;
   }; // this is state that holds a game that has been selected from any of the above lists
-  selectedGameProfilePic: string | null; 
   recommendedQuestions: IQuestionTemplate[];
   mostPopularQuestions: IQuestionTemplate[];
   publicQuestions: IQuestionTemplate[];
@@ -37,11 +36,10 @@ export interface ICentralDataState {
   selectedQuestion: {
     question: IQuestionTemplate | null,
     profilePic: string | null;
-    createdBy: string | null;
+    createdName: string | null;
     lastModified: string | null;
     numUsed: number | null;
   }; // this is state that holds a question that has been selected from any of the above lists
-  selectedQuestionProfilePic: string | null;
   nextToken: string | null;
   isLoading: boolean;
   isLoadingInfiniteScroll: boolean;

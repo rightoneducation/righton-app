@@ -66,20 +66,21 @@ export const buildQuestionTemplatePromises = (
   apiClients: IAPIClients,
 ) => {
   return draftQuestionsList.map(async (dq, i) => {
+    const dqCopy = { ...dq };
     let result = null;
     let url = null;
-    dq.questionTemplate.userId = userId;
+    dqCopy.questionTemplate.userId = userId;
 
     // if existing question return its ID for Game Creation
-    if (dq.questionTemplate.id) {
-      return { id: dq.questionTemplate.id } as IQuestionTemplate;
+    if (dqCopy.questionTemplate.id) {
+      return { id: dqCopy.questionTemplate.id } as IQuestionTemplate;
     }
 
     // image file case
-    if (dq.question.questionCard.image) {
+    if (dqCopy.question.questionCard.image) {
       try {
         const img = await apiClients.questionTemplate.storeImageInS3(
-          dq.question.questionCard.image,
+          dqCopy.question.questionCard.image,
         );
         result = await img.result;
         if (result && result.path && result.path.length > 0) {
@@ -92,10 +93,10 @@ export const buildQuestionTemplatePromises = (
     }
 
     // image url case
-    else if (dq.question.questionCard.imageUrl) {
+    else if (dqCopy.question.questionCard.imageUrl) {
       try {
         url = await apiClients.questionTemplate.storeImageUrlInS3(
-          dq.question.questionCard.imageUrl,
+          dqCopy.question.questionCard.imageUrl,
         );
       } catch (err) {
         console.error('Error storing image URL:', err);
@@ -109,9 +110,9 @@ export const buildQuestionTemplatePromises = (
       try {
         newQuestionResponse =
           await apiClients.questionTemplate.createQuestionTemplate(
-            dq.publicPrivate,
+            dqCopy.publicPrivate,
             url,
-            dq.question,
+            dqCopy.question,
           );
       } catch (err) {
         console.error('Error creating question template:', err);
