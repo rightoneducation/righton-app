@@ -58,10 +58,12 @@ export default function OwnerCard({
         <LeftProfileContainer>
         <LeftProfileTopContainer>
             <LeftNameText>
-            {`${draftUserProfile.title} ${draftUserProfile.firstName}`}
+            {`${draftUserProfile.title} ${draftUserProfile.lastName}`}
             </LeftNameText>
             <img src={imageLink} alt="Right On Logo" style={{ width: '165px', height: '165px', borderRadius: '128px', objectFit: 'cover' }} />
-            <CentralButton buttonType={ButtonType.EDITPROFILEPICTURE} isEnabled onClick={handleEditPicture}/>
+            <Box style={{width: '140px'}}>
+                <CentralButton buttonType={ButtonType.EDITPROFILEPICTURE} isEnabled onClick={handleEditPicture}/>
+            </Box>
             <AtUserNameContainerAndAccount>
                 <AtUserNameContainer >
                     <AtUserNameText>
