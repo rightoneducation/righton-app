@@ -41,6 +41,7 @@ import {
   CreateGameTitleBarStyled,
   CreateGameTitleText,
   GameContentContainerStyled,
+  TooltipStyled
 } from '../../../lib/styledcomponents/CreateGameStyledComponent';
 import { TPhaseTime, TGameTemplateProps } from '../../../lib/CreateGameModels';
 
@@ -86,7 +87,8 @@ export default function CreateGameCardBase({
   const [isImageHovered, setIsImageHovered] = React.useState<boolean>(false);
   const isSmallerScreen =
     screenSize === ScreenSize.SMALL || screenSize === ScreenSize.MEDIUM;
-  const [completedCardClicked, setCompletedCardClicked] = React.useState<boolean>(false)
+  const [completedCardClicked, setCompletedCardClicked] = React.useState<boolean>(false);
+  const [publicPrivateWarning, setPublicPrivateWarning] = React.useState<boolean>(false);
   
   let imageLink: string | null = null;
   if (imageUrl){
@@ -177,6 +179,16 @@ export default function CreateGameCardBase({
         // temp solution for now
         setCompletedCardClicked(true)
       }
+    };
+
+    const handleOpenPublicPrivateWarning = () => {
+      if(openCreateQuestion || openQuestionBank) {
+        setPublicPrivateWarning(true);
+      }
+    }
+
+    const handleClosePublicPrivateWarning = () => {
+      setPublicPrivateWarning(false);
     }
 
   return (
@@ -239,6 +251,14 @@ export default function CreateGameCardBase({
         </Box>
 
         {screenSize !== ScreenSize.SMALL && (
+          <TooltipStyled
+          placement="top" 
+          open={publicPrivateWarning} 
+          onOpen={handleOpenPublicPrivateWarning}
+          onClose={handleClosePublicPrivateWarning} 
+          title="Cannot edit while adding questions"
+          arrow
+          >
           <Box
             sx={{
               display: 'flex',
@@ -250,8 +270,9 @@ export default function CreateGameCardBase({
             <PublicPrivateButton
             isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
             onHandlePublicPrivateChange={handlePublicPrivateChange}  
-            isDisabled={openQuestionBank || openCreateQuestion} />
+            isDisabled={openCreateQuestion || openQuestionBank} />
           </Box>
+            </TooltipStyled>
         )}
       </CreateGameTitleBarStyled>
       <GameContentContainerStyled screenSize={screenSize}>
@@ -374,6 +395,13 @@ export default function CreateGameCardBase({
           {screenSize === ScreenSize.SMALL && (
             <>
               {isCardErrored && <CreateGameErrorBox screenSize={screenSize} />}
+              <TooltipStyled
+                open={publicPrivateWarning} 
+                onOpen={handleOpenPublicPrivateWarning}
+                onClose={handleClosePublicPrivateWarning} 
+                title="Cannot edit while adding questions"
+                arrow
+                >
               <Box
                 style={{
                   width: '100%',
@@ -386,8 +414,9 @@ export default function CreateGameCardBase({
                 <PublicPrivateButton
                 isPublic={draftGame.publicPrivateGame === PublicPrivateType.PUBLIC} 
                 onHandlePublicPrivateChange={handlePublicPrivateChange} 
-                isDisabled={openQuestionBank || openCreateQuestion} />
+                isDisabled={openCreateQuestion || openQuestionBank} />
               </Box>
+                </TooltipStyled>
             </>
           )}
         </Box>

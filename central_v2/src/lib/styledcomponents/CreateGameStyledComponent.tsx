@@ -10,6 +10,9 @@ import {
   Typography,
   Stack,
   keyframes,
+  Tooltip,
+  TooltipProps, 
+  tooltipClasses
 } from '@mui/material';
 import { ScreenSize } from '../CentralModels';
 import mathSymbolsBackground from '../../images/mathSymbolsBackground.svg';
@@ -364,3 +367,37 @@ export const StyledFadeIn = styled(Box, {
     animation: `${fadeOut} 0.5s ${delay}s forwards`,
   }),
 }));
+
+// export const TooltipStyled = styled(Tooltip)(({ theme }) => ({
+//   '& .MuiTooltip-tooltip': {
+//     backgroundColor: `${theme.palette.primary.darkBlueCardColor} !important`, // Ensures the background applies
+//     color: `${theme.palette.primary.main} !important`, // Ensures text remains white
+//     fontSize: '14px',
+//     padding: '10px 15px',
+//     borderRadius: '8px',
+//     maxWidth: '250px', 
+//     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+//     marginRight: '23px !important'
+//   },
+//   '& .MuiTooltip-arrow': {
+//     color: `${theme.palette.primary.darkBlueCardColor} !important`, // Ensures arrow color matches the tooltip
+//   },
+// }));
+
+export const TooltipStyled = styled(({ className, ...props}: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({theme}) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: `${theme.palette.primary.sliderBlue} !important`, // Ensures the background applies
+    color: `${theme.palette.primary.main} !important`, // Ensures text remains white
+    fontSize: '12px',
+    padding: '4px 8px',
+    borderRadius: '8px',
+    maxWidth: '250px', 
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+    marginRight: '23px !important',
+    '& .MuiTooltip-arrow': {
+    color: `${theme.palette.primary.sliderBlue} !important`, // Ensures arrow color matches the tooltip
+  },
+  }
+}))
