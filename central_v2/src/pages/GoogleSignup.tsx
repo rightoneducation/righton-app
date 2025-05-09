@@ -173,6 +173,7 @@ export default function GoogleSignup({
       userName: '',
       email: '',
       password: '',
+      gamesUsed: 0
     }
 
     const handleGetStarted = async () => {
