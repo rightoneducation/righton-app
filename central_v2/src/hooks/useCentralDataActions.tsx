@@ -434,8 +434,6 @@ export default function useCentralDataManager({
     switch (type){
       case GameQuestionType.QUESTION:{
        const responseQuestion = await apiClients?.questionTemplate.getQuestionTemplate(PublicPrivateType.PUBLIC,id);
-       console.log('here');
-       console.log('responseQuestion', responseQuestion);
           if (responseQuestion) {
             const userResponse = await apiClients?.user.getUser(responseQuestion.userId);
               if (userResponse) {
@@ -470,7 +468,6 @@ export default function useCentralDataManager({
                   lastModified: responseGame.updatedAt ?? new Date(),
                   numUsed: 0,
                 }
-                console.log('selectedGame', selectedGame);
                 centralDataDispatch({ type: 'SET_SELECTED_GAME', payload: selectedGame });
                 centralDataDispatch({ type: 'SET_IS_LOADING', payload: false });
                 return selectedGame;

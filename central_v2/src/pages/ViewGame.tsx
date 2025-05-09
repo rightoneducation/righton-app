@@ -50,7 +50,7 @@ export default function ViewGame({
 
   useEffect(() => {
     setIsLoading(false);
-    if (centralData.selectedGame) {
+    if (centralData.selectedGame.game !== null || centralData.selectedGame !== null) {
       setDraftGame(centralData.selectedGame.game);
     }
     let id = '';
@@ -58,7 +58,7 @@ export default function ViewGame({
       id = route?.params.gameId ?? '';
     else if (libRoute)
       id = libRoute?.params.gameId ?? '';
-    if (centralData.selectedGame === null && id){
+    if (!centralData.selectedGame || !centralData.selectedGame.game && id){
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, id);
     }
