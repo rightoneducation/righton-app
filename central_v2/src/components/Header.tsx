@@ -391,7 +391,7 @@ export default function Header({
           </Box>
           <Box style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
             { userStatus !== UserStatusType.LOADING && (
-                userStatus === UserStatusType.LOGGEDIN 
+                (userStatus === UserStatusType.LOGGEDIN || userStatus === UserStatusType.GOOGLE_SIGNIN) 
                   ? loggedInUserComponents
                   :
                     <Box display="flex" style={{maxWidth: '300px', gap: '24px'}}>
