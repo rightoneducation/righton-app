@@ -180,8 +180,7 @@ export default function CreateGame({
   };
 
   const handleDiscardGame = () => {
-    window.localStorage.setItem(StorageKey, '');
-    navigate('/');
+    setIsDiscardModalOpen(true);
   };
 
   const handleDiscardClick = (value: boolean) => {
@@ -547,7 +546,6 @@ export default function CreateGame({
     setDraftGame((prev) => ({
       ...prev,
       questionCount: prev.questionCount + 1,
-      isGameCardErrored: false,
       isGameCardSubmitted: false,
     }));
     setIconButtons((prev) => [...prev, prev.length + 1]);
