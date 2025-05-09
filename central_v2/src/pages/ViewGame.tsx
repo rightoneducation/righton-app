@@ -53,13 +53,15 @@ export default function ViewGame({
     if (centralData.selectedGame) {
       setDraftGame(centralData.selectedGame.game);
     }
-    const id = route?.params.gameId;
-    if (!centralData.selectedGame && id){
+    let id = '';
+    if (route) 
+      id = route?.params.gameId ?? '';
+    else if (libRoute)
+      id = libRoute?.params.gameId ?? '';
+    if (centralData.selectedGame === null && id){
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, id);
-      
     }
-
   }, [centralData.selectedGame, route ]); // eslint-disable-line 
 
   const handleLaunchGame = () => {

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Typography, Box, Grid, styled } from '@mui/material';
+import { Typography, Box, Grid, styled, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { IGameTemplate, IQuestionTemplate, CloudFrontDistributionUrl } from '@righton/networking';
 import { useCentralDataState } from '../../hooks/context/useCentralDataContext';
 import placeHolderProfilePicture from '../../images/placeholderProfilePic.png';
 import OwnerNamePill from './OwnerNamePill';
 import { ScreenSize } from '../../lib/CentralModels';
+import rightOnLogo from '../../images/RightOnUserLogo.svg';
 
 interface OwnerTagProps {
   screenSize?: ScreenSize;
@@ -87,82 +88,90 @@ export default function OwnerTag({
 }: OwnerTagProps) {
   const theme = useTheme();
   const centralData = useCentralDataState();
-
-  const gamesUsed = '234';
-  const userName = 'Mr. J. Jiminez';
-
-
-  
-  // TODO: Get this data (adjust useCentralDataActions to get the data from fetchElements)
-  // let gamesUsed = 0;
-  // let userName = '';
-  // let createdAt = '';
-
-  // if (isViewGame) {
-  //   const selectedGame = centralData.selectedGame as IGameTemplate;
-  //   gamesUsed = selectedGame?.gamesUsed || 0;
-  //   userName = `${selectedGame?.title} ${selectedGame?.lowerCaseTitle}`;}
-  //   createdAt = selectedGame?.createdAt || '';
-  // } else {
-  //   const selectedQuestion = centralData.selectedQuestion as IQuestionTemplate;
-  //   gamesUsed = selectedQuestion?.gamesUsed || 0;
-  //   userName = selectedQuestion?.owner || '';
-  //   createdAt = selectedQuestion?.createdAt || '';
-  // }
-
-
-  const createdAt = centralData.selectedGame?.game?.createdAt || '';
-
-  const date = new Date(createdAt);
-  const modifiedDate = date.toLocaleDateString('en-US', {
-    year:   'numeric',
-    month:  '2-digit',
-    day:    '2-digit',
-  });
-
+  let displayProfilePic = rightOnLogo;
+  let displayCreatedName = '';
+  let displayLastModified = '';
+  let displayNumUsed = 0;
+  if (isViewGame){
+    const { profilePic, createdName, lastModified, numUsed } = centralData.selectedGame;
+    displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
+    displayCreatedName = createdName ?? '';
+    displayLastModified = lastModified ?? '';
+    displayNumUsed = numUsed ?? 0;
+    displayLastModified = new Date(lastModified ?? '').toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  } else {
+    const { profilePic, createdName, lastModified, numUsed } = centralData.selectedQuestion;
+    displayProfilePic = `${CloudFrontDistributionUrl}${profilePic}`;
+    displayCreatedName = createdName ?? '';
+    displayLastModified = lastModified ?? '';
+    displayNumUsed = numUsed ?? 0;
+    displayLastModified = new Date(lastModified ?? '').toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  }
+  const isOwnerLoaded = displayCreatedName !== '' && displayLastModified !== '' && displayProfilePic !== '' && displayNumUsed !== undefined;
 
   return (
     screenSize !== ScreenSize.SMALL ? 
       <OwnerTagFlexContainer isViewGame={isViewGame} screenSize={screenSize}>
-        <OwnerTagProfilePicture src={placeHolderProfilePicture} screenSize={screenSize}/>
-        <OwnerTagTextContainer screenSize={screenSize}>
-          <OwnerTagSubContainer screenSize={screenSize}>
-            <OwnerTagHeader>Created By:</OwnerTagHeader>
-            <OwnerNamePill ownerName={userName} />
-          </OwnerTagSubContainer>
-          <OwnerTagSubContainer screenSize={screenSize}>
-            <OwnerTagHeader>Last Modified:</OwnerTagHeader>
-            <OwnerTagBody>{modifiedDate}</OwnerTagBody>
-          </OwnerTagSubContainer>
-          <OwnerTagSubContainer screenSize={screenSize}>
-            <OwnerTagHeader>Games Used:</OwnerTagHeader>
-            <OwnerTagBody>{gamesUsed}</OwnerTagBody>
-          </OwnerTagSubContainer>
-        </OwnerTagTextContainer>
+        { isOwnerLoaded ?
+          <>
+            <OwnerTagProfilePicture src={displayProfilePic} screenSize={screenSize}/>
+            <OwnerTagTextContainer screenSize={screenSize}>
+              <OwnerTagSubContainer screenSize={screenSize}>
+                <OwnerTagHeader>Created By:</OwnerTagHeader>
+                <OwnerNamePill ownerName={displayCreatedName} />
+              </OwnerTagSubContainer>
+              <OwnerTagSubContainer screenSize={screenSize}>
+                <OwnerTagHeader>Last Modified:</OwnerTagHeader>
+                <OwnerTagBody>{displayLastModified}</OwnerTagBody>
+              </OwnerTagSubContainer>
+              <OwnerTagSubContainer screenSize={screenSize}>
+                <OwnerTagHeader>Games Used:</OwnerTagHeader>
+                <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
+              </OwnerTagSubContainer>
+            </OwnerTagTextContainer>
+          </>
+        : 
+        <CircularProgress style={{color: '#FFF'}} />
+        }
       </OwnerTagFlexContainer>
     :
       <OwnerTagGridContainer isViewGame={isViewGame}  container>
-        <OwnerTagSubGridContainer item xs={6}>
-          <OwnerTagProfilePicture src={placeHolderProfilePicture} screenSize={screenSize}/>
-        </OwnerTagSubGridContainer>
-        <OwnerTagSubGridContainer item xs={6}>
-          <OwnerTagSubContainer screenSize={screenSize}>
-            <OwnerTagHeader>Last Modified:</OwnerTagHeader>
-            <OwnerTagBody>{modifiedDate}</OwnerTagBody>
-          </OwnerTagSubContainer>
-        </OwnerTagSubGridContainer>
-        <OwnerTagSubGridContainer item xs={6}>
-          <OwnerTagSubContainer screenSize={screenSize}>
-            <OwnerTagHeader>Created By:</OwnerTagHeader>
-            <OwnerNamePill ownerName={userName} />
-          </OwnerTagSubContainer>
-        </OwnerTagSubGridContainer>
-        <OwnerTagSubGridContainer item xs={6}>
-          <OwnerTagSubContainer screenSize={screenSize}>
-            <OwnerTagHeader>Games Used:</OwnerTagHeader>
-            <OwnerTagBody>{gamesUsed}</OwnerTagBody>
-          </OwnerTagSubContainer>
-        </OwnerTagSubGridContainer>
+          { isOwnerLoaded ?
+            <>
+              <OwnerTagSubGridContainer item xs={6}>
+                <OwnerTagProfilePicture src={displayProfilePic} screenSize={screenSize}/>
+              </OwnerTagSubGridContainer>
+              <OwnerTagSubGridContainer item xs={6}>
+                <OwnerTagSubContainer screenSize={screenSize}>
+                  <OwnerTagHeader>Last Modified:</OwnerTagHeader>
+                  <OwnerTagBody>{displayLastModified}</OwnerTagBody>
+                </OwnerTagSubContainer>
+              </OwnerTagSubGridContainer>
+              <OwnerTagSubGridContainer item xs={6}>
+                <OwnerTagSubContainer screenSize={screenSize}>
+                  <OwnerTagHeader>Created By:</OwnerTagHeader>
+                  <OwnerNamePill ownerName={displayCreatedName} />
+                </OwnerTagSubContainer>
+              </OwnerTagSubGridContainer>
+              <OwnerTagSubGridContainer item xs={6}>
+                <OwnerTagSubContainer screenSize={screenSize}>
+                  <OwnerTagHeader>Games Used:</OwnerTagHeader>
+                  <OwnerTagBody>{displayNumUsed}</OwnerTagBody>
+                </OwnerTagSubContainer>
+              </OwnerTagSubGridContainer>
+            </> 
+          : <OwnerTagSubGridContainer item xs={12}>
+              <CircularProgress style={{color: '#FFF'}} />
+            </OwnerTagSubGridContainer>
+        }
       </OwnerTagGridContainer>
   );
 }
