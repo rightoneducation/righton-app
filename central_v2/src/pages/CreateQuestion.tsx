@@ -373,10 +373,29 @@ export default function CreateQuestion({
     setIsDiscardModalOpen(false);
   }
   
+  const handleCheckCardsCompleteOnSave = () => {
+    if (
+      draftQuestion.questionCard.ccss.length > 0 && 
+      draftQuestion.questionCard.ccss !== 'CCSS' &&
+      draftQuestion.questionCard.title.length > 0 &&
+      ((draftQuestion.questionCard.imageUrl && draftQuestion.questionCard.imageUrl?.length > 0) || draftQuestion.questionCard.image ) &&
+      draftQuestion.correctCard.answer.length > 0 &&
+      draftQuestion.correctCard.answerSteps.length > 0 &&
+      draftQuestion.correctCard.answerSteps.every((step) => step.length > 0) &&
+      draftQuestion.incorrectCards.length > 0 &&
+      draftQuestion.incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)
+    )
+      return true;
+    return false;
+  }
+
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && draftQuestion.incorrectCards.every((card) => card.isCardComplete)){
+      console.log(draftQuestion);
+      const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
+      console.log(isQuestionTemplateComplete);
+      if (isQuestionTemplateComplete){
         if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
           setIsCreatingTemplate(true);
           let result = null;
