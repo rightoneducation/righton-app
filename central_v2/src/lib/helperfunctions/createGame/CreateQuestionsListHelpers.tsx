@@ -35,28 +35,19 @@ export const checkDQsAreValid = (
   draftQuestionsList: TDraftQuestionsList[],
 ): boolean => {
   return draftQuestionsList.every((dq, index) => {
-    // const { ccss, image, imageUrl, title } = dq.question.questionCard;
-    // const {answer, answerSteps } = dq.question.correctCard;
-
-    // //question
-    // const hasCCSS = ccss !== "";
-    // const hasImage = image || imageUrl
-    // const hasTitle = title !== ""
-    // //correct answer
-    // const hasAnswer = answer !== ""
-    // const answerArr = answerSteps.map((answers) => answers !== "");
-
-    // //incorrect options
-    // dq.question.incorrectCards.every((card) => {
-    //   const { answer, explanation } = card;
-    //   return answer !== "" && explanation !== ""
-    // })
-    
-    const isValid =
-      dq.question.questionCard.isCardComplete &&
-      dq.question.correctCard.isCardComplete &&
-      dq.question.incorrectCards.every((card) => card.isCardComplete);
-    return isValid;
+    if (
+      dq.question.questionCard.ccss.length > 0 && 
+      dq.question.questionCard.ccss !== 'CCSS' &&
+      dq.question.questionCard.title.length > 0 &&
+      ((dq.question.questionCard.imageUrl && dq.question.questionCard.imageUrl?.length > 0) || dq.question.questionCard.image ) &&
+      dq.question.correctCard.answer.length > 0 &&
+      dq.question.correctCard.answerSteps.length > 0 &&
+      dq.question.correctCard.answerSteps.every((step) => step.length > 0) &&
+      dq.question.incorrectCards.length > 0 &&
+      dq.question.incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)
+    )
+      return true;
+    return false;
   });
 };
 
