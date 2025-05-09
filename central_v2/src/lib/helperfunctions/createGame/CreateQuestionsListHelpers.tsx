@@ -112,6 +112,7 @@ export const buildQuestionTemplatePromises = (
           await apiClients.questionTemplate.createQuestionTemplate(
             dqCopy.publicPrivate,
             url,
+            userId,
             dqCopy.question,
           );
       } catch (err) {

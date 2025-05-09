@@ -1,4 +1,4 @@
-import { CentralQuestionTemplateInput, IGameTemplate, IncorrectCard } from "@righton/networking";
+import { CentralQuestionTemplateInput, IGameTemplate, IQuestionTemplate, IncorrectCard } from "@righton/networking";
 
 export enum UserStatusType {
   LOGGEDIN,
@@ -83,6 +83,24 @@ export type CreateQuestionLocalData = {
 export type CreateGameLocalData = {
   gameTemplate: IGameTemplate | null;
 }
+
+export interface ISelectedQuestion {
+  question: IQuestionTemplate | null;
+  profilePic: string;
+  createdName: string;
+  lastModified: Date;
+  numUsed: number;
+}
+
+export interface ISelectedGame {
+  game: IGameTemplate | null;
+  profilePic: string;
+  createdName: string;
+  lastModified: Date;
+  numUsed: number;
+}
+
+
 export enum FetchType {
   EXPLORE_GAMES,
   EXPLORE_QUESTIONS,

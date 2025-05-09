@@ -16,7 +16,7 @@ import {
 import { APIClientsContext } from '../lib/context/APIClientsContext';
 import { useTSAPIClientsContext } from '../hooks/context/useAPIClientsContext';
 import { useCentralDataState, useCentralDataDispatch } from '../hooks/context/useCentralDataContext';
-import { ScreenSize } from '../lib/CentralModels';
+import { ScreenSize, GameQuestionType, ISelectedGame, ISelectedQuestion } from '../lib/CentralModels';
 import {
   ExploreGamesMainContainer,
   ExploreGamesUpperContainer,
@@ -31,6 +31,7 @@ import mathSymbolsBackground from '../images/mathSymbolsBackground.svg';
 interface ExploreQuestionsProps {
   screenSize: ScreenSize;
   setIsTabsOpen: (isTabsOpen: boolean) => void;
+  fetchElement: (type: GameQuestionType, id: string) => Promise<ISelectedGame | ISelectedQuestion>;
   fetchElements: () => void;
   handleChooseGrades: (grades: GradeTarget[]) => void;
   handleSortChange: (
@@ -46,6 +47,7 @@ interface ExploreQuestionsProps {
 export default function ExploreQuestions({
   screenSize,
   setIsTabsOpen,
+  fetchElement,
   fetchElements,
   handleChooseGrades,
   handleSortChange,
@@ -71,13 +73,17 @@ export default function ExploreQuestions({
     useState<IQuestionTemplate | null>(null);
   const [questionSet, setQuestionSet] = useState<IQuestionTemplate[]>([]);
   const isSearchResults = centralData.searchTerms.length > 0;
-  const handleView = (
+  const handleView = async (
     question: IQuestionTemplate,
     questions: IQuestionTemplate[],
   ) => {
     setSelectedQuestion(question);
     setQuestionSet(questions);
     setIsTabsOpen(true);
+    const selectedQ = await fetchElement(GameQuestionType.QUESTION, question.id);
+    if ('question' in selectedQ && selectedQ && selectedQ.question) {
+      setSelectedQuestion(selectedQ.question);
+    }
   };
 
   const handlePrevQuestion = () => {

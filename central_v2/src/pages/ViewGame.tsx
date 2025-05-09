@@ -50,16 +50,18 @@ export default function ViewGame({
 
   useEffect(() => {
     setIsLoading(false);
-    if (centralData.selectedGame) {
+    if (centralData.selectedGame.game !== null || centralData.selectedGame !== null) {
       setDraftGame(centralData.selectedGame.game);
     }
-    const id = route?.params.gameId;
-    if (!centralData.selectedGame && id){
+    let id = '';
+    if (route) 
+      id = route?.params.gameId ?? '';
+    else if (libRoute)
+      id = libRoute?.params.gameId ?? '';
+    if (!centralData.selectedGame || !centralData.selectedGame.game && id){
       setIsLoading(true);
       fetchElement(GameQuestionType.GAME, id);
-      
     }
-
   }, [centralData.selectedGame, route ]); // eslint-disable-line 
 
   const handleLaunchGame = () => {

@@ -61,8 +61,6 @@ export default function DetailedGameCardBase({
   let ccssChips: string[] = [];
   if (game?.questionTemplates)
     ccssChips = game.questionTemplates?.map((question) => question.questionTemplate.ccss);
-  console.log(game);
-  console.log(ccssChips);
   const handlePublicPrivateChange = () => {
     setIsPublic((prev) => !prev);
   }
