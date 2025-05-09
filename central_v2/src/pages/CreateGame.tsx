@@ -220,16 +220,16 @@ export default function CreateGame({
         if(draftGame.image || draftGame.imageUrl) {
          gameImgUrl = await createGameImagePath(draftGame, apiClients);
         }
-
+          const userId = centralData.userProfile?.id || '';
           // create & store game template in variable to retrieve id after response
-          const createGame = buildGameTemplate(draftGame, draftQuestionsList, gameImgUrl);
+          const createGame = buildGameTemplate(draftGame, userId, draftQuestionsList, gameImgUrl);
           const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
               draftGame.publicPrivateGame,
               createGame,
             );
 
           // convert questions to array of promises & write to db
-          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, apiClients);
+          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
           const questionTemplateResponse = await Promise.all(newQuestionTemplates);
 
           // create an array of all the ids from the response 
@@ -260,6 +260,7 @@ export default function CreateGame({
            const newNumGames = existingNumGames + 1;
             // add new questions to user number of questions
            const newNumQuestions = existingNumQuestions + draftQuestionsList.filter((dq) => !dq.questionTemplate.id).length;
+           console.log(centralData.userProfile?.id, newNumGames, newNumQuestions);
            await apiClients.user.updateUser({
                id: centralData.userProfile?.id || '',
                gamesMade: newNumGames,
@@ -278,6 +279,60 @@ export default function CreateGame({
       }
     } catch (err) {
       setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, }))
+      console.log(`HandleSaveGame - error: `, err);
+    }
+  };
+
+  const handleSaveDraftGame = async () => {
+    try {
+      const draftGameCopy = {...draftGame, publicPrivateGame: PublicPrivateType.DRAFT, isGameCardSubmitted: true, isCreatingTemplate: true};
+      setDraftGame(draftGameCopy);
+      
+      
+
+        // check for images on draft game 
+        let gameImgUrl: string | null = null;
+        if(draftGame.image || draftGame.imageUrl) {
+         gameImgUrl = await createGameImagePath(draftGame, apiClients);
+        }
+          const userId = centralData.userProfile?.id || '';
+          console.log(userId);
+          // create & store game template in variable to retrieve id after response
+          const createGame = buildGameTemplate(draftGameCopy, userId, draftQuestionsList, gameImgUrl);
+          const gameTemplateResponse = await apiClients.gameTemplate.createGameTemplate(
+              draftGameCopy.publicPrivateGame,
+              createGame,
+            );
+
+          // convert questions to array of promises & write to db
+          const newQuestionTemplates = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
+          const questionTemplateResponse = await Promise.all(newQuestionTemplates);
+
+          // create an array of all the ids from the response 
+          const questionTemplateIds = questionTemplateResponse.map(
+            (question) => String(question?.id),
+          );
+
+          // make sure we have a gameTemplate id as well as question template ids before creating a game question
+          if (gameTemplateResponse.id && questionTemplateIds.length > 0) {
+            try {
+              const createGameQuestions = buildGameQuestionPromises(
+                draftGameCopy, 
+                gameTemplateResponse.id, 
+                questionTemplateIds, 
+                apiClients
+              );
+              // create new gameQuestion with gameTemplate.id & questionTemplate.id pairing
+                await Promise.all(createGameQuestions);
+            } catch (err) {
+              setDraftGame(prev => ({ ...prev, isCreatingTemplate: false }));
+              console.error(`Failed to create one or more game questions:`, err);
+            }
+          }
+
+          setDraftGame((prev) => ({ ...prev, isCreatingTemplate: false, isGameCardSubmitted: false }));
+          navigate('/');
+    } catch (err) {
       console.log(`HandleSaveGame - error: `, err);
     }
   };
@@ -430,8 +485,9 @@ export default function CreateGame({
       if (!allDQAreValid) {
         return;
       }
+      const userId = centralData.userProfile?.id || '';
       // process valid questions in order
-      const questionTemplate = buildQuestionTemplatePromises(draftQuestionsList, apiClients);
+      const questionTemplate = buildQuestionTemplatePromises(draftQuestionsList, userId, apiClients);
       await Promise.all(questionTemplate);
 
       // Reset data and re-direct user
@@ -579,6 +635,7 @@ export default function CreateGame({
           isCloneImageChanged={draftGame.isCloneGameImageChanged}
           screenSize={screenSize}
           handleSaveGame={handleSaveGame}
+          handleSaveDraftGame={handleSaveDraftGame}
           handleDiscard={handleDiscardGame}
           handlePublicPrivateChange={handlePublicPrivateGameChange}
           handleImageUploadClick={handleGameImageUploadClick}

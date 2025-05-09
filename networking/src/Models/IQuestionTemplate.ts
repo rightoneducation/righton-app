@@ -9,6 +9,7 @@ export interface IQuestionTemplateOrder {
 
 export interface IQuestionTemplate {
   id: string,
+  userId: string,
   title: string,
   lowerCaseTitle: string,
   owner?: string,
@@ -23,6 +24,7 @@ export interface IQuestionTemplate {
   gradeFilter: string;
   standard: string;
   imageUrl?: string | null | undefined,
+  timesPlayed?: number | null,
   gameTemplates?: { gameTemplate: IGameTemplate, gameQuestionId: string }[] | null,
   gameTemplatesCount: number,
   createdAt?: Date | null,

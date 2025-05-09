@@ -23,7 +23,7 @@ export interface IAuthAPIClient {
   awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput>;
   awsSignIn(email: string, password: string): Promise<SignInOutput>;
   awsSignInFederated(): void;
-  awsSignOut(): void;
+  awsSignOut(): Promise<void>;
   awsResetPassword (username: string): Promise<ResetPasswordOutput>
   awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput>;
   awsUploadImagePublic<String>( 
@@ -35,6 +35,4 @@ export interface IAuthAPIClient {
   awsDownloadImagePublic(): Promise<string>;
   awsDownloadImagePrivate(): Promise<string>;
   getUserEmail(): Promise<string | null>;
-  getUserByEmailDB(email: string): Promise<boolean>
-
 }

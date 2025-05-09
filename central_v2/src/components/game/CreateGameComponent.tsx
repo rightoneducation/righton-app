@@ -24,6 +24,7 @@ interface ICreateGameComponent {
   isClone: boolean;
   isCloneImageChanged: boolean;
   handleSaveGame: () => Promise<void>;
+  handleSaveDraftGame: () => Promise<void>;
   draftGame: TGameTemplateProps;
   handleDiscard: () => void;
   handlePublicPrivateChange: (value: PublicPrivateType) => void;
@@ -42,6 +43,7 @@ interface ICreateGameComponent {
 
 const qt: IQuestionTemplate = {
   id: '',
+  userId: '',
   title: '',
   lowerCaseTitle: '',
   version: 0,
@@ -60,6 +62,7 @@ export default function CreateGameComponent({
   isCloneImageChanged,
   screenSize,
   handleSaveGame,
+  handleSaveDraftGame,
   handleDiscard,
   handlePublicPrivateChange,
   handleImageUploadClick,
@@ -106,6 +109,12 @@ questionTemplate: qt,
             buttonWidthOverride="105px"
             onClick={handleSaveGame}
           />
+          <CentralButton 
+            buttonType={ButtonType.SAVEDRAFT} 
+            isEnabled 
+            smallScreenOverride 
+            onClick={handleSaveDraftGame} 
+          />
           <CentralButton
             buttonType={ButtonType.DISCARDBLUE}
             isEnabled
@@ -127,6 +136,13 @@ questionTemplate: qt,
                   isEnabled
                   buttonWidthOverride="160px"
                   onClick={handleSaveGame}
+                />
+                <CentralButton 
+                  buttonType={ButtonType.SAVEDRAFT} 
+                  isEnabled 
+                  smallScreenOverride 
+                  buttonWidthOverride="160px"
+                  onClick={handleSaveDraftGame} 
                 />
                 <CentralButton
                   buttonType={ButtonType.DISCARDBLUE}

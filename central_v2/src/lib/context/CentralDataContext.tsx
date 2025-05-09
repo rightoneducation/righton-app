@@ -11,6 +11,7 @@ export const userProfileInit = {
     userName: '',
     email: '',
     password: '',
+    gamesUsed: 0,
 }
 
 // initialize centralDataState
@@ -24,7 +25,13 @@ const initCentralDataState: ICentralDataState = {
   privateGames: [],
   draftGames: [],
   favGames: [],
-  selectedGame: null,
+  selectedGame: {
+    game: null,
+    profilePic: '',
+    createdName: '',
+    lastModified: new Date(),
+    timesPlayed: 0
+  },
   recommendedQuestions: [],
   mostPopularQuestions: [],
   searchedQuestions: [],
@@ -32,7 +39,13 @@ const initCentralDataState: ICentralDataState = {
   privateQuestions: [],
   draftQuestions: [],
   favQuestions: [],
-  selectedQuestion: null,
+  selectedQuestion: {
+    question: null,
+    profilePic: '',
+    createdName: '',
+    lastModified: new Date(),
+    timesPlayed: 0
+  },
   nextToken: null,
   isLoading: false,
   isLoadingInfiniteScroll: false,

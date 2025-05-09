@@ -17,7 +17,6 @@ type User @model
   firstName: String
   lastName: String
   email: String! @index(name: "emailIndex", queryField: "userByEmail")
-  owner: String! @index(name: "ownerIndex", queryField: "userByOwner")
   password: String
   gamesMade: Int
   gamesUsed: Int
@@ -120,6 +119,7 @@ type PublicGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -134,6 +134,7 @@ type PublicGameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
+  timesPlayed: Int
   questionTemplates: [PublicQuestionTemplate] @manyToMany(relationName: "PublicGameQuestions") 
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
@@ -159,6 +160,7 @@ type PrivateGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -173,6 +175,7 @@ type PrivateGameTemplate @model
   phaseOneTime: Int
   phaseTwoTime: Int
   imageUrl: String
+  timesPlayed: Int
   questionTemplates: [PrivateQuestionTemplate] @manyToMany(relationName: "PrivateGameQuestions")
   questionTemplatesCount: Int! @default(value: "0")
   questionTemplatesOrder: AWSJSON
@@ -197,6 +200,7 @@ type DraftGameTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String
   lowerCaseTitle: String
   version: Int
@@ -237,6 +241,7 @@ type PublicQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -250,6 +255,7 @@ type PublicQuestionTemplate @model
   gradeFilter: String
   standard: String
   imageUrl: String
+  timesPlayed: Int
   gameTemplates: [PublicGameTemplate] @manyToMany(relationName: "PublicGameQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
@@ -273,6 +279,7 @@ type PrivateQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID!
+  userId: String
   title: String!
   lowerCaseTitle: String!
   version: Int!
@@ -286,6 +293,7 @@ type PrivateQuestionTemplate @model
   gradeFilter: String
   standard: String
   imageUrl: String
+  timesPlayed: Int
   gameTemplates: [PrivateGameTemplate] @manyToMany(relationName: "PrivateGameQuestions")
   gameTemplatesCount: Int! @default(value: "0")
   createdAt: AWSDateTime
@@ -309,6 +317,7 @@ type DraftQuestionTemplate @model
 @aws_cognito_user_pools
 {
   id: ID
+  userId: String
   title: String
   lowerCaseTitle: String
   version: Int

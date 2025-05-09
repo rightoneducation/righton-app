@@ -222,6 +222,7 @@ export interface IQuestionTemplateAPIClient {
   createQuestionTemplate<T extends PublicPrivateType>(
     type: T,
     imageUrl: string,
+    userId: string,
     createQuestionTemplateInput: CentralQuestionTemplateInput
   ): Promise<IQuestionTemplate>;
 

@@ -2,6 +2,7 @@ import { AWSModelGameQuestionConnection } from "./AWSModelGameQuestionConnection
 
 export type AWSQuestionTemplate = {
     id: string,
+    userId: string,
     title?: string | null,
     lowerCaseTitle?: string | null,
     owner?: string | null,
@@ -17,6 +18,7 @@ export type AWSQuestionTemplate = {
     gradeFilter?: string | null,
     standard?: string | null,
     imageUrl?: string | null | undefined,
+    timesPlayed?: number | null,
     gameTemplates?:  AWSModelGameQuestionConnection | null,
     gameTemplatesCount: number,
     createdAt?: string | null | undefined,

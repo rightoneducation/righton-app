@@ -2,6 +2,7 @@ import { AWSModelGameQuestionConnection } from "../AWS/AWSModelGameQuestionConne
 
 export type AWSGameTemplate = {
     id: string,
+    userId: string,
     title: string,
     lowerCaseTitle: string,
     owner: string,
@@ -16,6 +17,7 @@ export type AWSGameTemplate = {
     phaseOneTime?: number | null | undefined,
     phaseTwoTime?: number | null | undefined,
     imageUrl?: string | null | undefined,
+    timesPlayed?: number | null,
     questionTemplates?: AWSModelGameQuestionConnection | null,
     questionTemplatesCount: number,
     questionTemplatesOrder: string,

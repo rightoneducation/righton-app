@@ -18,7 +18,6 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     firstName
     lastName
     email
-    owner
     password
     gamesMade
     gamesUsed
@@ -30,6 +29,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     favoriteQuestionTemplateIds
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -57,7 +57,6 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       firstName
       lastName
       email
-      owner
       password
       gamesMade
       gamesUsed
@@ -69,6 +68,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       favoriteQuestionTemplateIds
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -99,7 +99,6 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
       firstName
       lastName
       email
-      owner
       password
       gamesMade
       gamesUsed
@@ -111,6 +110,7 @@ export const userByUserName = /* GraphQL */ `query UserByUserName(
       favoriteQuestionTemplateIds
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -144,7 +144,6 @@ export const userByCognitoId = /* GraphQL */ `query UserByCognitoId(
       firstName
       lastName
       email
-      owner
       password
       gamesMade
       gamesUsed
@@ -156,6 +155,7 @@ export const userByCognitoId = /* GraphQL */ `query UserByCognitoId(
       favoriteQuestionTemplateIds
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -189,7 +189,6 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       firstName
       lastName
       email
-      owner
       password
       gamesMade
       gamesUsed
@@ -201,6 +200,7 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
       favoriteQuestionTemplateIds
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -211,54 +211,10 @@ export const userByEmail = /* GraphQL */ `query UserByEmail(
   APITypes.UserByEmailQueryVariables,
   APITypes.UserByEmailQuery
 >;
-export const userByOwner = /* GraphQL */ `query UserByOwner(
-  $owner: String!
-  $sortDirection: ModelSortDirection
-  $filter: ModelUserFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  userByOwner(
-    owner: $owner
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      userName
-      dynamoId
-      cognitoId
-      title
-      firstName
-      lastName
-      email
-      owner
-      password
-      gamesMade
-      gamesUsed
-      questionsMade
-      frontIdPath
-      backIdPath
-      profilePicPath
-      favoriteGameTemplateIds
-      favoriteQuestionTemplateIds
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.UserByOwnerQueryVariables,
-  APITypes.UserByOwnerQuery
->;
 export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate($id: ID!) {
   getPublicGameTemplate(id: $id) {
     id
+    userId
     title
     lowerCaseTitle
     version
@@ -273,6 +229,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -280,6 +237,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
         publicQuestionTemplateID
         publicGameTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -294,6 +252,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -301,6 +260,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
               publicQuestionTemplateID
               publicGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -315,6 +275,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -329,6 +290,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
               }
               publicQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -342,6 +304,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -371,6 +334,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
         }
         publicQuestionTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -384,6 +348,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -391,6 +356,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
               publicQuestionTemplateID
               publicGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -405,6 +371,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -419,6 +386,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
               }
               publicQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -432,6 +400,7 @@ export const getPublicGameTemplate = /* GraphQL */ `query GetPublicGameTemplate(
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -491,6 +460,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -505,6 +475,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -512,6 +483,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -526,6 +498,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -533,6 +506,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -547,6 +521,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -557,6 +532,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -570,6 +546,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -595,6 +572,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -608,6 +586,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -615,6 +594,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -629,6 +609,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -639,6 +620,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -652,6 +634,7 @@ export const listPublicGameTemplates = /* GraphQL */ `query ListPublicGameTempla
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -716,6 +699,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -730,6 +714,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -737,6 +722,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -751,6 +737,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -758,6 +745,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -772,6 +760,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -782,6 +771,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -795,6 +785,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -820,6 +811,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -833,6 +825,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -840,6 +833,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -854,6 +848,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -864,6 +859,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -877,6 +873,7 @@ export const publicGameTemplatesByDate = /* GraphQL */ `query PublicGameTemplate
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -941,6 +938,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -955,6 +953,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -962,6 +961,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -976,6 +976,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -983,6 +984,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -997,6 +999,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1007,6 +1010,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1020,6 +1024,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1045,6 +1050,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -1058,6 +1064,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -1065,6 +1072,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1079,6 +1087,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1089,6 +1098,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1102,6 +1112,7 @@ export const publicGameTemplatesByGrade = /* GraphQL */ `query PublicGameTemplat
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1166,6 +1177,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -1180,6 +1192,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -1187,6 +1200,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -1201,6 +1215,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -1208,6 +1223,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1222,6 +1238,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1232,6 +1249,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1245,6 +1263,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1270,6 +1289,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -1283,6 +1303,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -1290,6 +1311,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1304,6 +1326,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1314,6 +1337,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1327,6 +1351,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1376,6 +1401,7 @@ export const publicGameTemplatesByPublicQuestionTemplatesCount = /* GraphQL */ `
 export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplate($id: ID!) {
   getPrivateGameTemplate(id: $id) {
     id
+    userId
     title
     lowerCaseTitle
     version
@@ -1390,6 +1416,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
     phaseOneTime
     phaseTwoTime
     imageUrl
+    timesPlayed
     questionTemplates {
       items {
         id
@@ -1397,6 +1424,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
         privateQuestionTemplateID
         privateGameTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -1411,6 +1439,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -1418,6 +1447,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
               privateQuestionTemplateID
               privateGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -1432,6 +1462,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1446,6 +1477,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
               }
               privateQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -1459,6 +1491,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1488,6 +1521,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
         }
         privateQuestionTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -1501,6 +1535,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -1508,6 +1543,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
               privateQuestionTemplateID
               privateGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -1522,6 +1558,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -1536,6 +1573,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
               }
               privateQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -1549,6 +1587,7 @@ export const getPrivateGameTemplate = /* GraphQL */ `query GetPrivateGameTemplat
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -1608,6 +1647,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -1622,6 +1662,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -1629,6 +1670,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -1643,6 +1685,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -1650,6 +1693,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1664,6 +1708,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1674,6 +1719,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1687,6 +1733,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1712,6 +1759,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -1725,6 +1773,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -1732,6 +1781,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1746,6 +1796,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1756,6 +1807,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1769,6 +1821,7 @@ export const listPrivateGameTemplates = /* GraphQL */ `query ListPrivateGameTemp
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1833,6 +1886,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -1847,6 +1901,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -1854,6 +1909,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -1868,6 +1924,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -1875,6 +1932,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1889,6 +1947,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1899,6 +1958,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1912,6 +1972,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -1937,6 +1998,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -1950,6 +2012,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -1957,6 +2020,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1971,6 +2035,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -1981,6 +2046,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -1994,6 +2060,7 @@ export const privateGameTemplatesByDate = /* GraphQL */ `query PrivateGameTempla
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2058,6 +2125,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -2072,6 +2140,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -2079,6 +2148,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -2093,6 +2163,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -2100,6 +2171,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2114,6 +2186,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2124,6 +2197,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2137,6 +2211,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2162,6 +2237,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -2175,6 +2251,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -2182,6 +2259,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2196,6 +2274,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2206,6 +2285,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2219,6 +2299,7 @@ export const privateGameTemplatesByGrade = /* GraphQL */ `query PrivateGameTempl
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2283,6 +2364,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -2297,6 +2379,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -2304,6 +2387,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -2318,6 +2402,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -2325,6 +2410,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2339,6 +2425,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2349,6 +2436,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2362,6 +2450,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2387,6 +2476,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -2400,6 +2490,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -2407,6 +2498,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2421,6 +2513,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -2431,6 +2524,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2444,6 +2538,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -2493,6 +2588,7 @@ export const privateGameTemplatesByPrivateQuestionTemplatesCount = /* GraphQL */
 export const getDraftGameTemplate = /* GraphQL */ `query GetDraftGameTemplate($id: ID!) {
   getDraftGameTemplate(id: $id) {
     id
+    userId
     title
     lowerCaseTitle
     version
@@ -2514,6 +2610,7 @@ export const getDraftGameTemplate = /* GraphQL */ `query GetDraftGameTemplate($i
         draftQuestionTemplateID
         draftGameTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -2535,6 +2632,7 @@ export const getDraftGameTemplate = /* GraphQL */ `query GetDraftGameTemplate($i
               draftQuestionTemplateID
               draftGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -2563,6 +2661,7 @@ export const getDraftGameTemplate = /* GraphQL */ `query GetDraftGameTemplate($i
               }
               draftQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -2605,6 +2704,7 @@ export const getDraftGameTemplate = /* GraphQL */ `query GetDraftGameTemplate($i
         }
         draftQuestionTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -2625,6 +2725,7 @@ export const getDraftGameTemplate = /* GraphQL */ `query GetDraftGameTemplate($i
               draftQuestionTemplateID
               draftGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -2653,6 +2754,7 @@ export const getDraftGameTemplate = /* GraphQL */ `query GetDraftGameTemplate($i
               }
               draftQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -2725,6 +2827,7 @@ export const listDraftGameTemplates = /* GraphQL */ `query ListDraftGameTemplate
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -2746,6 +2849,7 @@ export const listDraftGameTemplates = /* GraphQL */ `query ListDraftGameTemplate
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -2767,6 +2871,7 @@ export const listDraftGameTemplates = /* GraphQL */ `query ListDraftGameTemplate
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2791,6 +2896,7 @@ export const listDraftGameTemplates = /* GraphQL */ `query ListDraftGameTemplate
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2829,6 +2935,7 @@ export const listDraftGameTemplates = /* GraphQL */ `query ListDraftGameTemplate
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -2849,6 +2956,7 @@ export const listDraftGameTemplates = /* GraphQL */ `query ListDraftGameTemplate
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2873,6 +2981,7 @@ export const listDraftGameTemplates = /* GraphQL */ `query ListDraftGameTemplate
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -2950,6 +3059,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `query DraftGameTemplatesB
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -2971,6 +3081,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `query DraftGameTemplatesB
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -2992,6 +3103,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `query DraftGameTemplatesB
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3016,6 +3128,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `query DraftGameTemplatesB
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3054,6 +3167,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `query DraftGameTemplatesB
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -3074,6 +3188,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `query DraftGameTemplatesB
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3098,6 +3213,7 @@ export const draftGameTemplatesByDate = /* GraphQL */ `query DraftGameTemplatesB
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3175,6 +3291,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `query DraftGameTemplates
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -3196,6 +3313,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `query DraftGameTemplates
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -3217,6 +3335,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `query DraftGameTemplates
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3241,6 +3360,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `query DraftGameTemplates
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3279,6 +3399,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `query DraftGameTemplates
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -3299,6 +3420,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `query DraftGameTemplates
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3323,6 +3445,7 @@ export const draftGameTemplatesByGrade = /* GraphQL */ `query DraftGameTemplates
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3400,6 +3523,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `qu
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -3421,6 +3545,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `qu
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -3442,6 +3567,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `qu
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3466,6 +3592,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `qu
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3504,6 +3631,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `qu
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -3524,6 +3652,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `qu
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3548,6 +3677,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `qu
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3610,6 +3740,7 @@ export const draftGameTemplatesByDraftQuestionTemplatesCount = /* GraphQL */ `qu
 export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionTemplate($id: ID!) {
   getPublicQuestionTemplate(id: $id) {
     id
+    userId
     title
     lowerCaseTitle
     version
@@ -3623,6 +3754,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -3630,6 +3762,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
         publicQuestionTemplateID
         publicGameTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -3644,6 +3777,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -3651,6 +3785,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
               publicQuestionTemplateID
               publicGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -3665,6 +3800,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3679,6 +3815,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
               }
               publicQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -3692,6 +3829,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3721,6 +3859,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
         }
         publicQuestionTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -3734,6 +3873,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -3741,6 +3881,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
               publicQuestionTemplateID
               publicGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -3755,6 +3896,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -3769,6 +3911,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
               }
               publicQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -3782,6 +3925,7 @@ export const getPublicQuestionTemplate = /* GraphQL */ `query GetPublicQuestionT
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -3840,6 +3984,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -3853,6 +3998,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -3860,6 +4006,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -3874,6 +4021,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -3881,6 +4029,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3895,6 +4044,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -3905,6 +4055,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3918,6 +4069,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -3943,6 +4095,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -3956,6 +4109,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -3963,6 +4117,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -3977,6 +4132,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -3987,6 +4143,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4000,6 +4157,7 @@ export const listPublicQuestionTemplates = /* GraphQL */ `query ListPublicQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4063,6 +4221,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -4076,6 +4235,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -4083,6 +4243,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -4097,6 +4258,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -4104,6 +4266,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4118,6 +4281,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4128,6 +4292,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4141,6 +4306,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4166,6 +4332,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -4179,6 +4346,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -4186,6 +4354,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4200,6 +4369,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4210,6 +4380,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4223,6 +4394,7 @@ export const publicQuestionTemplatesByDate = /* GraphQL */ `query PublicQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4286,6 +4458,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -4299,6 +4472,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -4306,6 +4480,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -4320,6 +4495,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -4327,6 +4503,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4341,6 +4518,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4351,6 +4529,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4364,6 +4543,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4389,6 +4569,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -4402,6 +4583,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -4409,6 +4591,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4423,6 +4606,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4433,6 +4617,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4446,6 +4631,7 @@ export const publicQuestionTemplatesByGrade = /* GraphQL */ `query PublicQuestio
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4509,6 +4695,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -4522,6 +4709,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -4529,6 +4717,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -4543,6 +4732,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -4550,6 +4740,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4564,6 +4755,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4574,6 +4766,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4587,6 +4780,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4612,6 +4806,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -4625,6 +4820,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -4632,6 +4828,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4646,6 +4843,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -4656,6 +4854,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -4669,6 +4868,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -4717,6 +4917,7 @@ export const publicQuestionTemplatesByPublicGameTemplatesCount = /* GraphQL */ `
 export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestionTemplate($id: ID!) {
   getPrivateQuestionTemplate(id: $id) {
     id
+    userId
     title
     lowerCaseTitle
     version
@@ -4730,6 +4931,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
     gradeFilter
     standard
     imageUrl
+    timesPlayed
     gameTemplates {
       items {
         id
@@ -4737,6 +4939,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
         privateQuestionTemplateID
         privateGameTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -4751,6 +4954,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
           phaseOneTime
           phaseTwoTime
           imageUrl
+          timesPlayed
           questionTemplates {
             items {
               id
@@ -4758,6 +4962,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
               privateQuestionTemplateID
               privateGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -4772,6 +4977,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -4786,6 +4992,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
               }
               privateQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -4799,6 +5006,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -4828,6 +5036,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
         }
         privateQuestionTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -4841,6 +5050,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
           gradeFilter
           standard
           imageUrl
+          timesPlayed
           gameTemplates {
             items {
               id
@@ -4848,6 +5058,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
               privateQuestionTemplateID
               privateGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -4862,6 +5073,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
+                timesPlayed
                 questionTemplates {
                   nextToken
                   __typename
@@ -4876,6 +5088,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
               }
               privateQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -4889,6 +5102,7 @@ export const getPrivateQuestionTemplate = /* GraphQL */ `query GetPrivateQuestio
                 gradeFilter
                 standard
                 imageUrl
+                timesPlayed
                 gameTemplates {
                   nextToken
                   __typename
@@ -4947,6 +5161,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -4960,6 +5175,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -4967,6 +5183,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -4981,6 +5198,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -4988,6 +5206,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5002,6 +5221,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5012,6 +5232,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5025,6 +5246,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5050,6 +5272,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -5063,6 +5286,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5070,6 +5294,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5084,6 +5309,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5094,6 +5320,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5107,6 +5334,7 @@ export const listPrivateQuestionTemplates = /* GraphQL */ `query ListPrivateQues
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5170,6 +5398,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -5183,6 +5412,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5190,6 +5420,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -5204,6 +5435,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5211,6 +5443,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5225,6 +5458,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5235,6 +5469,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5248,6 +5483,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5273,6 +5509,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -5286,6 +5523,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5293,6 +5531,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5307,6 +5546,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5317,6 +5557,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5330,6 +5571,7 @@ export const privateQuestionTemplatesByDate = /* GraphQL */ `query PrivateQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5393,6 +5635,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -5406,6 +5649,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5413,6 +5657,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -5427,6 +5672,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5434,6 +5680,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5448,6 +5695,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5458,6 +5706,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5471,6 +5720,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5496,6 +5746,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -5509,6 +5760,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5516,6 +5768,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5530,6 +5783,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5540,6 +5794,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5553,6 +5808,7 @@ export const privateQuestionTemplatesByGrade = /* GraphQL */ `query PrivateQuest
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5616,6 +5872,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -5629,6 +5886,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -5636,6 +5894,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -5650,6 +5909,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -5657,6 +5917,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5671,6 +5932,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5681,6 +5943,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5694,6 +5957,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5719,6 +5983,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -5732,6 +5997,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -5739,6 +6005,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5753,6 +6020,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -5763,6 +6031,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -5776,6 +6045,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -5824,6 +6094,7 @@ export const privateQuestionTemplatesByPrivateGameTemplatesCount = /* GraphQL */
 export const getDraftQuestionTemplate = /* GraphQL */ `query GetDraftQuestionTemplate($id: ID!) {
   getDraftQuestionTemplate(id: $id) {
     id
+    userId
     title
     lowerCaseTitle
     version
@@ -5844,6 +6115,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `query GetDraftQuestionTem
         draftQuestionTemplateID
         draftGameTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -5865,6 +6137,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `query GetDraftQuestionTem
               draftQuestionTemplateID
               draftGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -5893,6 +6166,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `query GetDraftQuestionTem
               }
               draftQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -5935,6 +6209,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `query GetDraftQuestionTem
         }
         draftQuestionTemplate {
           id
+          userId
           title
           lowerCaseTitle
           version
@@ -5955,6 +6230,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `query GetDraftQuestionTem
               draftQuestionTemplateID
               draftGameTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -5983,6 +6259,7 @@ export const getDraftQuestionTemplate = /* GraphQL */ `query GetDraftQuestionTem
               }
               draftQuestionTemplate {
                 id
+                userId
                 title
                 lowerCaseTitle
                 version
@@ -6054,6 +6331,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `query ListDraftQuestion
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -6074,6 +6352,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `query ListDraftQuestion
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -6095,6 +6374,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `query ListDraftQuestion
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6119,6 +6399,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `query ListDraftQuestion
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6157,6 +6438,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `query ListDraftQuestion
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -6177,6 +6459,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `query ListDraftQuestion
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6201,6 +6484,7 @@ export const listDraftQuestionTemplates = /* GraphQL */ `query ListDraftQuestion
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6277,6 +6561,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `query DraftQuestionTe
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -6297,6 +6582,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `query DraftQuestionTe
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -6318,6 +6604,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `query DraftQuestionTe
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6342,6 +6629,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `query DraftQuestionTe
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6380,6 +6668,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `query DraftQuestionTe
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -6400,6 +6689,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `query DraftQuestionTe
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6424,6 +6714,7 @@ export const draftQuestionTemplatesByDate = /* GraphQL */ `query DraftQuestionTe
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6500,6 +6791,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `query DraftQuestionT
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -6520,6 +6812,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `query DraftQuestionT
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -6541,6 +6834,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `query DraftQuestionT
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6565,6 +6859,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `query DraftQuestionT
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6603,6 +6898,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `query DraftQuestionT
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -6623,6 +6919,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `query DraftQuestionT
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6647,6 +6944,7 @@ export const draftQuestionTemplatesByGrade = /* GraphQL */ `query DraftQuestionT
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6723,6 +7021,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `qu
   ) {
     items {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -6743,6 +7042,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `qu
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -6764,6 +7064,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `qu
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6788,6 +7089,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `qu
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6826,6 +7128,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `qu
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -6846,6 +7149,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `qu
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -6870,6 +7174,7 @@ export const draftQuestionTemplatesByDraftGameTemplatesCount = /* GraphQL */ `qu
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7827,6 +8132,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
     publicQuestionTemplateID
     publicGameTemplate {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -7841,6 +8147,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -7848,6 +8155,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -7862,6 +8170,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -7869,6 +8178,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7883,6 +8193,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7893,6 +8204,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7906,6 +8218,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -7931,6 +8244,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -7944,6 +8258,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -7951,6 +8266,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7965,6 +8281,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -7975,6 +8292,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -7988,6 +8306,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8028,6 +8347,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
     }
     publicQuestionTemplate {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -8041,6 +8361,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -8048,6 +8369,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
           publicQuestionTemplateID
           publicGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -8062,6 +8384,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -8069,6 +8392,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8083,6 +8407,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8093,6 +8418,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8106,6 +8432,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8131,6 +8458,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
           }
           publicQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -8144,6 +8472,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -8151,6 +8480,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                 publicQuestionTemplateID
                 publicGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8165,6 +8495,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8175,6 +8506,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                 }
                 publicQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8188,6 +8520,7 @@ export const getPublicGameQuestions = /* GraphQL */ `query GetPublicGameQuestion
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8251,6 +8584,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
       publicQuestionTemplateID
       publicGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -8265,6 +8599,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           items {
             id
@@ -8272,6 +8607,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
             publicQuestionTemplateID
             publicGameTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -8286,6 +8622,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               phaseOneTime
               phaseTwoTime
               imageUrl
+              timesPlayed
               questionTemplates {
                 items {
                   id
@@ -8309,6 +8646,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
             }
             publicQuestionTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -8322,6 +8660,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               gradeFilter
               standard
               imageUrl
+              timesPlayed
               gameTemplates {
                 items {
                   id
@@ -8360,6 +8699,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
       }
       publicQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -8373,6 +8713,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           items {
             id
@@ -8380,6 +8721,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
             publicQuestionTemplateID
             publicGameTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -8394,6 +8736,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               phaseOneTime
               phaseTwoTime
               imageUrl
+              timesPlayed
               questionTemplates {
                 items {
                   id
@@ -8417,6 +8760,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
             }
             publicQuestionTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -8430,6 +8774,7 @@ export const listPublicGameQuestions = /* GraphQL */ `query ListPublicGameQuesti
               gradeFilter
               standard
               imageUrl
+              timesPlayed
               gameTemplates {
                 items {
                   id
@@ -8485,6 +8830,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
     privateQuestionTemplateID
     privateGameTemplate {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -8499,6 +8845,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
       phaseOneTime
       phaseTwoTime
       imageUrl
+      timesPlayed
       questionTemplates {
         items {
           id
@@ -8506,6 +8853,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -8520,6 +8868,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -8527,6 +8876,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8541,6 +8891,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8551,6 +8902,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8564,6 +8916,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8589,6 +8942,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -8602,6 +8956,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -8609,6 +8964,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8623,6 +8979,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8633,6 +8990,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8646,6 +9004,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8686,6 +9045,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
     }
     privateQuestionTemplate {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -8699,6 +9059,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
       gradeFilter
       standard
       imageUrl
+      timesPlayed
       gameTemplates {
         items {
           id
@@ -8706,6 +9067,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
           privateQuestionTemplateID
           privateGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -8720,6 +9082,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             phaseOneTime
             phaseTwoTime
             imageUrl
+            timesPlayed
             questionTemplates {
               items {
                 id
@@ -8727,6 +9090,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8741,6 +9105,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8751,6 +9116,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8764,6 +9130,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8789,6 +9156,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
           }
           privateQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -8802,6 +9170,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
             gradeFilter
             standard
             imageUrl
+            timesPlayed
             gameTemplates {
               items {
                 id
@@ -8809,6 +9178,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 privateQuestionTemplateID
                 privateGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8823,6 +9193,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   phaseOneTime
                   phaseTwoTime
                   imageUrl
+                  timesPlayed
                   questionTemplatesCount
                   questionTemplatesOrder
                   createdAt
@@ -8833,6 +9204,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                 }
                 privateQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -8846,6 +9218,7 @@ export const getPrivateGameQuestions = /* GraphQL */ `query GetPrivateGameQuesti
                   gradeFilter
                   standard
                   imageUrl
+                  timesPlayed
                   gameTemplatesCount
                   createdAt
                   updatedAt
@@ -8909,6 +9282,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
       privateQuestionTemplateID
       privateGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -8923,6 +9297,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
         phaseOneTime
         phaseTwoTime
         imageUrl
+        timesPlayed
         questionTemplates {
           items {
             id
@@ -8930,6 +9305,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
             privateQuestionTemplateID
             privateGameTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -8944,6 +9320,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               phaseOneTime
               phaseTwoTime
               imageUrl
+              timesPlayed
               questionTemplates {
                 items {
                   id
@@ -8967,6 +9344,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
             }
             privateQuestionTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -8980,6 +9358,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               gradeFilter
               standard
               imageUrl
+              timesPlayed
               gameTemplates {
                 items {
                   id
@@ -9018,6 +9397,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
       }
       privateQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -9031,6 +9411,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
         gradeFilter
         standard
         imageUrl
+        timesPlayed
         gameTemplates {
           items {
             id
@@ -9038,6 +9419,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
             privateQuestionTemplateID
             privateGameTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -9052,6 +9434,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               phaseOneTime
               phaseTwoTime
               imageUrl
+              timesPlayed
               questionTemplates {
                 items {
                   id
@@ -9075,6 +9458,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
             }
             privateQuestionTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -9088,6 +9472,7 @@ export const listPrivateGameQuestions = /* GraphQL */ `query ListPrivateGameQues
               gradeFilter
               standard
               imageUrl
+              timesPlayed
               gameTemplates {
                 items {
                   id
@@ -9143,6 +9528,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
     draftQuestionTemplateID
     draftGameTemplate {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -9164,6 +9550,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -9185,6 +9572,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9209,6 +9597,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9247,6 +9636,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -9267,6 +9657,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9291,6 +9682,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9344,6 +9736,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
     }
     draftQuestionTemplate {
       id
+      userId
       title
       lowerCaseTitle
       version
@@ -9364,6 +9757,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
           draftQuestionTemplateID
           draftGameTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -9385,6 +9779,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9409,6 +9804,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9447,6 +9843,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
           }
           draftQuestionTemplate {
             id
+            userId
             title
             lowerCaseTitle
             version
@@ -9467,6 +9864,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
                 draftQuestionTemplateID
                 draftGameTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9491,6 +9889,7 @@ export const getDraftGameQuestions = /* GraphQL */ `query GetDraftGameQuestions(
                 }
                 draftQuestionTemplate {
                   id
+                  userId
                   title
                   lowerCaseTitle
                   version
@@ -9567,6 +9966,7 @@ export const listDraftGameQuestions = /* GraphQL */ `query ListDraftGameQuestion
       draftQuestionTemplateID
       draftGameTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -9588,6 +9988,7 @@ export const listDraftGameQuestions = /* GraphQL */ `query ListDraftGameQuestion
             draftQuestionTemplateID
             draftGameTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -9625,6 +10026,7 @@ export const listDraftGameQuestions = /* GraphQL */ `query ListDraftGameQuestion
             }
             draftQuestionTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -9676,6 +10078,7 @@ export const listDraftGameQuestions = /* GraphQL */ `query ListDraftGameQuestion
       }
       draftQuestionTemplate {
         id
+        userId
         title
         lowerCaseTitle
         version
@@ -9696,6 +10099,7 @@ export const listDraftGameQuestions = /* GraphQL */ `query ListDraftGameQuestion
             draftQuestionTemplateID
             draftGameTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version
@@ -9733,6 +10137,7 @@ export const listDraftGameQuestions = /* GraphQL */ `query ListDraftGameQuestion
             }
             draftQuestionTemplate {
               id
+              userId
               title
               lowerCaseTitle
               version

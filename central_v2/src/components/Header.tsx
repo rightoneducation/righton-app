@@ -402,6 +402,7 @@ export default function Header({
             }
           </Box>
         </HeaderFirstRow>
+        { currentScreen === ScreenType.LIBRARY &&
         <Collapse
           in
           style={{
@@ -417,6 +418,7 @@ export default function Header({
             </Fade>
           </HeaderSecondRow>
           </Collapse>
+        }
       </HeaderContainer>
   );
 }
