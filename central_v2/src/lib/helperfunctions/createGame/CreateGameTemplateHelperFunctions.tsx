@@ -27,8 +27,8 @@ export const checkGameFormIsValid = (
   draftGame: TGameTemplateProps,
 ): boolean => {
   return (
-    draftGame.gameTemplate.title !== '' &&
-    draftGame.gameTemplate.description !== '' &&
+    draftGame.gameTemplate.title.trim().length > 0  &&
+    draftGame.gameTemplate.description.trim().length > 0 &&
     draftGame.gameTemplate.phaseOneTime !== 0 &&
     draftGame.gameTemplate.phaseTwoTime !== 0
   );
