@@ -100,9 +100,11 @@ export default function DetailedQuestionSubCard({
                 fontFamily: 'Rubik',
               },
              '& .MuiInputBase-input': {
+              color: '#47366C',
+              opacity: isCardErrored ? 1 : 0.5,
               '&::placeholder': {
-                color: '#47366C',
-                opacity: 0.5
+                color: isCardErrored ? '#D0254D': '#384466',
+                opacity: isCardErrored ? 1 : 0.5,
               },
               '&:focus': {
                 color: '#47366C',
@@ -149,9 +151,11 @@ export default function DetailedQuestionSubCard({
               height: '43px',
             },
           '& .MuiInputBase-input': {
-              '&::placeholder': {
-                color: '#47366C',
-                opacity: 0.5
+              color: '#47366C',
+              opacity: isCardErrored ? 1 : 0.5,
+                '&::placeholder': {
+                  color: isCardErrored ? '#D0254D': '#384466',
+                  opacity: isCardErrored ? 1 : 0.5,
               },
               '&:focus': {
                 color: '#47366C',

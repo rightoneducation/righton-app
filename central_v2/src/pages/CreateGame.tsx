@@ -209,6 +209,7 @@ export default function CreateGame({
   const handleGameImageChange = async (inputImage?: File, inputUrl?: string,) => {
    setDraftGame((prev) => updateGameImageChange(prev, inputImage, inputUrl))
   };
+  
   const handleSaveGame = async () => {
     try {
       setDraftGame((prev) => ({ ...prev, isGameCardSubmitted: true, isCreatingTemplate: true }));
@@ -556,15 +557,6 @@ export default function CreateGame({
     window.localStorage.setItem(StorageKey, '');
     navigate('/questions');
   };
-
-  useEffect(() => {
-    console.log("Data user: ", centralData.userProfile?.id)
-    console.log("Can Create Game: ", (gameFormIsValid && allDQAreValid))
-    console.log("Draft Game:", draftGame);
-    console.log("Questions List:", draftQuestionsList);
-    console.log("Selected Index:", selectedQuestionIndex);
-    console.log("Selected Question:", draftQuestionsList[selectedQuestionIndex]);
-  }, [draftQuestionsList, selectedQuestionIndex, draftGame, gameFormIsValid, allDQAreValid, centralData.userProfile?.id]);
 
   return (
     <CreateGameMainContainer>
