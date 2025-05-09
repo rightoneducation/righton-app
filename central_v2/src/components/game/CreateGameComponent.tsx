@@ -44,6 +44,7 @@ interface ICreateGameComponent {
 
 const qt: IQuestionTemplate = {
   id: '',
+  userId: '',
   title: '',
   lowerCaseTitle: '',
   version: 0,

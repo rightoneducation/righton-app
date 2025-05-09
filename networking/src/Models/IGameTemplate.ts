@@ -2,6 +2,7 @@ import { IQuestionTemplate, IQuestionTemplateOrder } from './IQuestionTemplate';
 
 export interface IGameTemplate {
   id: string,
+  userId: string,
   title: string,
   lowerCaseTitle: string,
   owner: string,

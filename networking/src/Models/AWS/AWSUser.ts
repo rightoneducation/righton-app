@@ -7,6 +7,7 @@ export type AWSUser = {
   email: string
   password?: string | null
   gamesMade?: number | null
+  gamesUsed?: number | null
   questionsMade?: number | null
   createdAt?: string
   updatedAt?: string
