@@ -90,6 +90,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
   // empty question template
   export const emptyQuestionTemplate: IQuestionTemplate = {
     id: '',
+    userId: '',
     title: '',
     lowerCaseTitle: '',
     version: 0,
@@ -100,6 +101,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     gradeFilter: '',
     standard: '',
     gameTemplatesCount: 0,
+    timesPlayed: 0,
   };
 
   export const draftTemplate: TDraftQuestionsList = {
@@ -128,6 +130,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
 
   export const newGameTemplate: IGameTemplate = {
     id: '',
+    userId: '',
     title: '',
     lowerCaseTitle: '',
     owner: '',
@@ -139,6 +142,7 @@ export const newEmptyTemplate: CentralQuestionTemplateInput = {
     questionTemplatesCount: 0,
     questionTemplatesOrder: [],
     imageUrl: null,
+    timesPlayed: 0,
     questionTemplates: [{ gameQuestionId: String(0), questionTemplate: emptyQuestionTemplate }],
   };
 

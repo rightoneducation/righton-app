@@ -67,6 +67,7 @@ function AppSwitch({
         <AuthGuard handleLogOut={handleLogOut}>
           <ExploreQuestions 
             screenSize={screenSize} 
+            fetchElement={fetchElement}
             fetchElements={fetchElements}
             setIsTabsOpen={setIsTabsOpen}
             handleChooseGrades={handleChooseGrades}

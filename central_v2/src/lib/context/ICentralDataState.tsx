@@ -7,7 +7,7 @@ import {
   IUserProfile,
   IQuestionTemplate,
 } from '@righton/networking';
-import { UserStatusType } from '../CentralModels';
+import { ISelectedGame, ISelectedQuestion, UserStatusType } from '../CentralModels';
 
 export interface ICentralDataState {
   userProfile: IUserProfile;
@@ -19,7 +19,7 @@ export interface ICentralDataState {
   privateGames: IGameTemplate[];
   draftGames: IGameTemplate[];
   favGames: IGameTemplate[];
-  selectedGame: IGameTemplate | null; // this is state that holds a game that has been selected from any of the above lists
+  selectedGame: ISelectedGame | null; // this is state that holds a game that has been selected from any of the above lists
   recommendedQuestions: IQuestionTemplate[];
   mostPopularQuestions: IQuestionTemplate[];
   publicQuestions: IQuestionTemplate[];
@@ -27,7 +27,7 @@ export interface ICentralDataState {
   searchedQuestions: IQuestionTemplate[];
   draftQuestions: IQuestionTemplate[];
   favQuestions: IQuestionTemplate[];
-  selectedQuestion: IQuestionTemplate | null; // this is state that holds a question that has been selected from any of the above lists
+  selectedQuestion: ISelectedQuestion | null; // this is state that holds a question that has been selected from any of the above lists
   nextToken: string | null;
   isLoading: boolean;
   isLoadingInfiniteScroll: boolean;

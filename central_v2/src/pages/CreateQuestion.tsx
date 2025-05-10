@@ -373,10 +373,29 @@ export default function CreateQuestion({
     setIsDiscardModalOpen(false);
   }
   
+  const handleCheckCardsCompleteOnSave = () => {
+    if (
+      draftQuestion.questionCard.ccss.length > 0 && 
+      draftQuestion.questionCard.ccss !== 'CCSS' &&
+      draftQuestion.questionCard.title.length > 0 &&
+      ((draftQuestion.questionCard.imageUrl && draftQuestion.questionCard.imageUrl?.length > 0) || draftQuestion.questionCard.image ) &&
+      draftQuestion.correctCard.answer.length > 0 &&
+      draftQuestion.correctCard.answerSteps.length > 0 &&
+      draftQuestion.correctCard.answerSteps.every((step) => step.length > 0) &&
+      draftQuestion.incorrectCards.length > 0 &&
+      draftQuestion.incorrectCards.every((card) => card.answer.length > 0 && card.explanation.length > 0)
+    )
+      return true;
+    return false;
+  }
+
   const handleSaveQuestion = async () => {
     try {
       setIsCardSubmitted(true);
-      if (draftQuestion.questionCard.isCardComplete && draftQuestion.correctCard.isCardComplete && draftQuestion.incorrectCards.every((card) => card.isCardComplete)){
+      console.log(draftQuestion);
+      const isQuestionTemplateComplete = handleCheckCardsCompleteOnSave();
+      console.log(isQuestionTemplateComplete);
+      if (isQuestionTemplateComplete){
         if (draftQuestion.questionCard.image || draftQuestion.questionCard.imageUrl){
           setIsCreatingTemplate(true);
           let result = null;
@@ -398,7 +417,7 @@ export default function CreateQuestion({
           window.localStorage.setItem(StorageKey, '');
           console.log(draftQuestion.questionCard.imageUrl);
           if (url){
-            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, draftQuestion);
+            apiClients.questionTemplate.createQuestionTemplate(publicPrivate, url, centralData.userProfile?.id || '', draftQuestion);
           }
 
           // update user stats
@@ -438,7 +457,7 @@ export default function CreateQuestion({
         url = await apiClients.questionTemplate.storeImageUrlInS3(draftQuestion.questionCard.imageUrl);
       }
       window.localStorage.setItem(StorageKey, '');
-      apiClients.questionTemplate.createQuestionTemplate(PublicPrivateType.DRAFT, url, draftQuestion);
+      apiClients.questionTemplate.createQuestionTemplate(PublicPrivateType.DRAFT, url,centralData.userProfile?.id || '',  draftQuestion);
       setIsCreatingTemplate(false);
       navigate('/questions');
     } catch (e) {
@@ -461,9 +480,9 @@ export default function CreateQuestion({
 
   useEffect(() => {
     setIsLoading(false);
-    const selected = centralData.selectedQuestion;
+    const selected = centralData?.selectedQuestion?.question;
     const title = selected?.title;
-    if (selected !== null) {
+    if (selected) {
       // regex to detect (clone of) in title
       const regex = /\(Clone of\)/i;
       if (title && !regex.test(title))

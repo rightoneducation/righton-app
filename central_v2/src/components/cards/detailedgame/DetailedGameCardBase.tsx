@@ -20,7 +20,7 @@ import PublicPrivateButton from '../../button/publicprivatebutton/PublicPrivateB
 
 interface DetailedGameCardBaseProps {
   screenSize: ScreenSize;
-  game: IGameTemplate;
+  game: IGameTemplate | null;
   dropShadow?: boolean;
 }
 
@@ -59,10 +59,8 @@ export default function DetailedGameCardBase({
     setQuestionType((event.target as HTMLInputElement).value);
   };
   let ccssChips: string[] = [];
-  if (game.questionTemplates)
+  if (game?.questionTemplates)
     ccssChips = game.questionTemplates?.map((question) => question.questionTemplate.ccss);
-  console.log(game);
-  console.log(ccssChips);
   const handlePublicPrivateChange = () => {
     setIsPublic((prev) => !prev);
   }
@@ -71,7 +69,7 @@ export default function DetailedGameCardBase({
     <BaseCardStyled elevation={6} isHighlight={false} isCardComplete={false} dropShadow={dropShadow}>
     <CreateQuestionTitleBarStyled screenSize={screenSize}>
       <Box style={{width: '100%', display: 'flex', justifyContent: screenSize === ScreenSize.SMALL ? 'space-between' : 'flex-start', alignItems: 'center', gap: '14px'}}>
-        <QuestionTitleStyled>{game.title}</QuestionTitleStyled>
+        <QuestionTitleStyled>{game?.title || ''}</QuestionTitleStyled>
       </Box>
       { screenSize !== ScreenSize.SMALL && 
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center'}}>
@@ -93,7 +91,7 @@ export default function DetailedGameCardBase({
             justifyContent: 'space-between'
           }}
         >
-          <Typography>{game.description}</Typography>
+          <Typography>{game?.description ?? ''}</Typography>
           <Box style={{display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px'}}>
           { ccssChips.length > 0 && ccssChips.map((chip) => {
           return (
@@ -113,7 +111,7 @@ export default function DetailedGameCardBase({
           boxSizing: 'border-box',
         }}
       >
-        <img src={`${CloudFrontDistributionUrl}${game.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
+        <img src={`${CloudFrontDistributionUrl}${game?.imageUrl ?? ''}`} alt='question' style={{width: '100%', height: '200px', objectFit: 'cover'}}/>
       </Box>
       { screenSize === ScreenSize.SMALL && 
         <Box style={{display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
