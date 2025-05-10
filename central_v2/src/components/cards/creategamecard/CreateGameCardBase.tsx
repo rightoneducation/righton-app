@@ -99,8 +99,6 @@ export default function CreateGameCardBase({
   else if (image && image instanceof File)
     imageLink = URL.createObjectURL(image);
 
-  console.log(imageLink);
-
   const imageContents = [
     imageLink && (
       <Box

@@ -78,7 +78,6 @@ export default function CreateGameComponent({
   addMoreQuestions,
 }: ICreateGameComponent) {
   const [enabled, setEnabled] = useState<boolean>(true)
-  console.log(isCloneImageChanged);
   const handleCreateQuestion = () => {
     onCreateQuestion();
   };
