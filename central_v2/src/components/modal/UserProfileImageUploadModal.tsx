@@ -91,9 +91,8 @@ const AvatarAndTextContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     gap: '15px',
     width: '750px',
-    // border: '1px solid red',
     paddingTop: '16px',
-    paddingBottom: '16px',
+    // paddingBottom: '16px',
     boxSizing: 'border-box',
 }));
   
@@ -107,30 +106,28 @@ const ChooseAvatarText = styled(Typography)(({ theme }) => ({
 
 const AvatarContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    gap: '31px',
-    width: '750px',
-    background: 'linear-gradient(180deg, #0D68B1 0%, #02215F 100% )', 
-    paddingTop: '42px',
-    paddingBottom: '42px',
-    justifyContent: 'center',
-    borderRadius: '16px',
-    height: '174px',
+    // gap: '31px',
+    width: '100%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     boxSizing: 'border-box',
-    alignItems: 'center'
+
 }));
   
+const AvatarBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  background: 'linear-gradient(180deg, #0D68B1 0%, #02215F 100% )', 
+  paddingTop: '42px',
+  paddingBottom: '42px',
+  justifyContent: 'center',
+  borderRadius: '16px',
+  height: '174px',  
+  boxSizing: 'border-box',
+  alignItems: 'center',
 
-const AvatarImage = styled('img')<{ selected?: boolean }>(({ selected }) => ({
-    width: '90px',
-    height: '90px',
-    cursor: 'pointer',
-    // transform: selected ? 'scale(1.1)' : 'scale(1)',
-    border: selected ? '8px solid #FFF' : 'none',
-    borderRadius: '50%',
-    background: selected ? 'linear-gradient(135deg, #EFEFEF, #C2BEBE)' : 'none',
-    // objectFit: 'cover', 
-  }));
-  
+}));
 
 const SelectedText = styled(Typography)(({ theme }) => ({
     fontFamily: 'Rubik, sans-serif',  
@@ -141,9 +138,27 @@ const SelectedText = styled(Typography)(({ theme }) => ({
     marginTop: '8px', 
   }));
 
-const AvatarAndImageSelectedContainer = styled(Box)(({ theme }) => ({
-    boxSizing: 'border-box',
+const AvatarAndImageSelectedContainer = styled(Box)<{ selected?: boolean }>(({ selected }) => ({
+  boxSizing: 'border-box',
+  width:  selected ? '106px': 'none', 
+  height: selected ? '106px': 'none',
+  paddingLeft: selected ? '8px' :  'none',
+  paddingRight: selected ? '8px' :  'none',
+  borderRadius: selected ? '50%' :  'none',
+  background: selected ? 'linear-gradient(135deg, #EFEFEF, #C2BEBE)' : 'none',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
 }));
+
+const AvatarImage = styled('img')({
+  width: '90px',
+  height: '90px',
+  borderRadius: '50%',
+  objectFit: 'cover',
+  cursor: 'pointer',
+});
 
 interface UserProfileImageUploadModalProps {
   screenSize: ScreenSize;
@@ -195,8 +210,10 @@ export default function UserProfileImageUploadModal({
     { src: Avatar6, name: 'Avatar 6', path: 'defaultProfilePic6.jpg' },
   ];
 
-  const handleAvatarClick = (path: string) => {
+  const handleAvatarClick = (path: string, name: string) => {
+    setSelectedAvatar(name);
     handleImageChange(undefined, path);
+
   };
 
   return (
@@ -237,24 +254,31 @@ export default function UserProfileImageUploadModal({
         </DashedBox>
         <AvatarAndTextContainer>
             <ChooseAvatarText>Or you can choose one of the mosters below.</ChooseAvatarText>
-                <AvatarContainer>
-                    {avatars.map((avatar) => (
-                     <AvatarAndImageSelectedContainer key={avatar.name}>
-                        <AvatarImage
-                            key={avatar.name}
-                            src={avatar.src}
-                            alt={avatar.name}
-                            selected={selectedAvatar === avatar.name}
-                            onClick={() => handleAvatarClick(avatar.path)}
-                        />
-                        {draftUserProfile.profilePicPath === avatar.path && (
-                            <SelectedText>
-                            Currently selected
-                            </SelectedText>
-                        )}
-                     </AvatarAndImageSelectedContainer>
-                    ))}
-                </AvatarContainer>
+            <AvatarBox>
+              <AvatarContainer>
+                {avatars.map((avatar) => (
+                  <Box
+                    key={avatar.name}
+                    sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',}} // enough space for image + text
+                  >
+                    <AvatarAndImageSelectedContainer selected={draftUserProfile.profilePicPath === avatar.path}>
+                      <AvatarImage
+                        src={avatar.src}
+                        alt={avatar.name}
+                        onClick={() => handleAvatarClick(avatar.path, avatar.name)}
+                      />
+                    </AvatarAndImageSelectedContainer>
+                    {draftUserProfile.profilePicPath === avatar.path ? (
+                      <SelectedText>Currently selected</SelectedText>
+                    ) : (
+                      <Box sx={{ height: '20px' }} /> // empty space to reserve height
+                    )}
+                  </Box>
+                ))}
+              </AvatarContainer>
+            </AvatarBox>
+
+            
         </AvatarAndTextContainer>
         <Box style={{width: '100%', display: 'flex', flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row', justifyContent: 'center', alignItems: 'center', gap: `${theme.sizing.mdPadding}px`}}>
           <CentralButton 
